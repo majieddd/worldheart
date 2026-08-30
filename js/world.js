@@ -63,22 +63,33 @@ function initSpaceLayout(seed) {
   tangentBasis(center, e1, e2);
   const sites = [];
 
-  // Altitude is the map's signature: rocks hang at different heights, the
-  // swarm flies in altitude bands, and a tower's spherical range means high
-  // rocks command high lanes while low rocks guard the deep drifts.
+  // Altitude and attitude are the map's signature: every rock hangs at its
+  // own height AND tilts on its own axis (the tilt is baked into the height
+  // field, so tower normals, meshes, and grounding all agree). The swarm
+  // flies in altitude bands; high rocks command high lanes.
+  const finishSite = (d, r, kind, alt) => {
+    const az = rng() * Math.PI * 2;
+    const tx = e1.clone().multiplyScalar(Math.cos(az)).addScaledVector(e2, Math.sin(az));
+    // re-orthogonalize against this site's own direction
+    tx.addScaledVector(d, -tx.dot(d)).normalize();
+    const tiltMag = kind === 'heart' ? 0.06 : kind === 'portal' ? 0.12 : 0.16 + rng() * 0.3;
+    // Floor the sink depth: a rock so deep that no tower can reach even the
+    // low flight lane is a trap, not a choice.
+    sites.push({ dir: d, r, kind, alt: Math.max(alt, -4.5), tilt: tx, tiltMag });
+  };
   const placeAt = (ang, az, r, kind, alt) => {
     const d = center.clone().multiplyScalar(Math.cos(ang))
       .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
       .addScaledVector(e2, Math.sin(ang) * Math.sin(az))
       .normalize();
-    sites.push({ dir: d, r, kind, alt });
+    finishSite(d, r, kind, alt);
   };
 
   placeAt(0, 0, 4.8, 'heart', 0);
-  const portalAlts = [-2.5, 0.5, 3.5, -1.2, 2.2];
+  const portalAlts = [-4, 1, 6, -2, 3.5];
   for (let i = 0; i < 5; i++) {
     placeAt(theta * (0.38 + rng() * 0.1), (i / 5) * Math.PI * 2 + rng() * 0.4,
-      2.7 + rng() * 0.9, 'plat', (rng() - 0.5) * 4);
+      2.7 + rng() * 0.9, 'plat', (rng() - 0.5) * 7);
   }
   for (let i = 0; i < 5; i++) {
     placeAt(theta * (0.85 + rng() * 0.07), (i / 5) * Math.PI * 2 + 0.63 + rng() * 0.25,
@@ -87,7 +98,7 @@ function initSpaceLayout(seed) {
   // tall spire rocks: small footprint, commanding altitude
   for (let i = 0; i < 4; i++) {
     placeAt(theta * (0.5 + rng() * 0.22), (i / 4) * Math.PI * 2 + 0.4 + rng() * 0.5,
-      1.65, 'spire', 5.5 + rng() * 2.5);
+      1.65, 'spire', 6 + rng() * 3.5);
   }
   const tryPlace = (angMin, angMax, r, kind, altSpread, sepPad) => {
     const ang = theta * (angMin + rng() * (angMax - angMin));
@@ -99,12 +110,12 @@ function initSpaceLayout(seed) {
       const sep = Math.acos(clamp(d.dot(s.dir), -1, 1)) * R;
       if (sep < s.r + r + sepPad) return;
     }
-    sites.push({ dir: d, r, kind, alt: (rng() - 0.5) * altSpread });
+    finishSite(d, r, kind, (rng() - 0.5) * altSpread);
   };
   let guard = 0;
-  while (sites.length < 23 && guard++ < 320) tryPlace(0.52, 0.78, 1.7 + rng() * 1.3, 'plat', 9, 2.2);
+  while (sites.length < 23 && guard++ < 320) tryPlace(0.52, 0.78, 1.7 + rng() * 1.3, 'plat', 12, 2.2);
   guard = 0;
-  while (sites.length < 32 && guard++ < 320) tryPlace(0.16, 0.94, 1.15, 'small', 10, 1.8);
+  while (sites.length < 32 && guard++ < 320) tryPlace(0.16, 0.94, 1.15, 'small', 15, 1.8);
 
   SPACE = { center, theta, sites };
 }
@@ -124,7 +135,7 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
   // Space maps have no continents: a deep void with authored rock platforms
   // hanging at their own altitudes.
   if (SPACE) {
-    let h = -9;
+    let h = -14;
     for (const s of SPACE.sites) {
       const dot = dx * s.dir.x + dy * s.dir.y + dz * s.dir.z;
       const rAng = s.r / R;
@@ -132,9 +143,11 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
       const ang = Math.acos(clamp(dot, -1, 1));
       const edge = 1 - smoothstep(rAng * 0.6, rAng * 1.18, ang);
       if (edge <= 0) continue;
-      const rock = fbm3(nDetail, dx * 9 + 13, dy * 9, dz * 9, 2);
-      const surf = 1.3 + s.alt + rock * 0.5;
-      h = Math.max(h, lerp(-9, surf, edge));
+      const rock = fbm3(nDetail, dx * 9 + 13, dy * 9, dz * 9, 3);
+      // baked per-rock attitude: the surface planes away from radial
+      const lateral = (dx * s.tilt.x + dy * s.tilt.y + dz * s.tilt.z) * R;
+      const surf = 1.3 + s.alt + rock * 0.85 + lateral * s.tiltMag;
+      h = Math.max(h, lerp(-14, surf, edge));
     }
     return h;
   }
@@ -216,13 +229,16 @@ export function isBuildableDir(dir) {
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
   for (const s of SPACE.sites) {
     const dot = dir.x * s.dir.x + dir.y * s.dir.y + dir.z * s.dir.z;
-    if (Math.acos(clamp(dot, -1, 1)) < (s.r * 0.92) / R) return true;
+    if (Math.acos(clamp(dot, -1, 1)) < (s.r * 1.02) / R) return true;
   }
   return false;
 }
 
 export function surfacePoint(dir, out) {
-  const h = Math.max(terrainHeight(dir.x, dir.y, dir.z), 0.03);
+  // Ground maps clamp to the waterline; space maps follow the true rock
+  // surface so sunken platforms actually sink (only the void floor clamps).
+  const floor = SPACE ? -12 : 0.03;
+  const h = Math.max(terrainHeight(dir.x, dir.y, dir.z), floor);
   return out.copy(dir).multiplyScalar(R + h);
 }
 
@@ -421,7 +437,7 @@ function buildTerrainMesh() {
       b2.fromBufferAttribute(src, i + 1);
       c2.fromBufferAttribute(src, i + 2);
       const hC = (a2.length() + b2.length() + c2.length()) / 3 - R;
-      if (hC < -1.1) continue;
+      if (hC < -8.5) continue;
       for (let k = 0; k < 3; k++) {
         const vi = i + k;
         keepPos.push(src.getX(vi), src.getY(vi), src.getZ(vi));
@@ -470,6 +486,38 @@ function buildAsteroidBellies(rng) {
   }));
   mesh.name = 'bellies';
   return mesh;
+}
+
+// Free-floating tumble rocks at arbitrary radii: pure scenery that breaks
+// any residual read of a shell the platforms might sit on.
+function buildDrifters(rng) {
+  const N = 34;
+  const geo = new THREE.IcosahedronGeometry(1, 0);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x6a7080, roughness: 0.95, metalness: 0.05, flatShading: true });
+  const mesh = new THREE.InstancedMesh(geo, mat, N);
+  mesh.frustumCulled = false;
+  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  const e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
+  tangentBasis(SPACE.center, e1, e2);
+  const items = [];
+  for (let i = 0; i < N; i++) {
+    const ang = SPACE.theta * (0.1 + Math.sqrt(rng()) * 0.92);
+    const az = rng() * Math.PI * 2;
+    const pos = SPACE.center.clone().multiplyScalar(Math.cos(ang))
+      .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
+      .addScaledVector(e2, Math.sin(ang) * Math.sin(az))
+      .normalize()
+      .multiplyScalar(R + (rng() - 0.4) * 15);
+    items.push({
+      pos,
+      quat: new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(rng() - 0.5, rng() - 0.5, rng() - 0.5).normalize(), rng() * 6.28),
+      axis: new THREE.Vector3(rng() - 0.5, rng() - 0.5, rng() - 0.5).normalize(),
+      speed: (rng() - 0.5) * 0.5,
+      scale: new THREE.Vector3(0.4 + rng() * 0.7, 0.3 + rng() * 0.5, 0.4 + rng() * 0.7),
+    });
+  }
+  return { mesh, items };
 }
 
 // Faint drifting dust motes through the battlefield volume.
@@ -1390,6 +1438,8 @@ export class World {
           this.scene.add(buildAsteroidBellies(this.rng));
           this.dust = buildSpaceDust(this.rng);
           this.scene.add(this.dust.pts);
+          this.drifters = buildDrifters(this.rng);
+          this.scene.add(this.drifters.mesh);
         }
         break;
       }
@@ -1478,6 +1528,16 @@ export class World {
     if (this.fieldWall) this.fieldWall.mat.uniforms.uTime.value = t;
     if (this.cloudDeck) this.cloudDeck.mat.uniforms.uTime.value = t;
     if (this.dust) this.dust.mat.uniforms.uTime.value = t;
+    if (this.drifters) {
+      for (let i = 0; i < this.drifters.items.length; i++) {
+        const d = this.drifters.items[i];
+        _orientQ.setFromAxisAngle(d.axis, d.speed * dt);
+        d.quat.premultiply(_orientQ);
+        _m4.compose(d.pos, d.quat, d.scale);
+        this.drifters.mesh.setMatrixAt(i, _m4);
+      }
+      this.drifters.mesh.instanceMatrix.needsUpdate = true;
+    }
     if (this.clouds) {
       // Cover stays planet-wide: night-side clouds dim to slate rather than
       // vanishing, so orbit views never show a bald hemisphere.

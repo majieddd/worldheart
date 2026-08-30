@@ -253,17 +253,18 @@ export class OrbitRig {
 
     this.camera.up.set(0, 1, 0);
     this.camera.lookAt(0, 0, 0);
-    // Oblique framing: pitch up from the nadir as the camera closes in, so
-    // nearby play reads at a 3/4 angle and the horizon stays in frame.
+    // Grounded RTS framing: close in, the view pitches strongly toward the
+    // horizon so sky and distance fill the top of the frame; from orbit it
+    // settles back to a map-like look-down.
     const zoomT = (this.dist - c.distMin) / (c.distMax - c.distMin);
-    this.camera.rotateX(lerp(0.34, 0.05, Math.min(1, zoomT * 1.4)));
+    this.camera.rotateX(lerp(0.58, 0.04, Math.min(1, zoomT * 1.5)));
     if (roll) this.camera.rotateZ(roll);
 
-    // No-Man's-Sky lens: a narrow telephoto up close flattens the horizon so
-    // the world feels planet-sized underfoot; the lens widens as you pull
-    // out and the ball reveals itself.
+    // Wide immersive lens on the ground, telephoto from orbit: close-up
+    // feels inside the world, and the pulled-back view flattens toward a
+    // strategic map (the RTS convention).
     this.fovKickV = Math.max(0, this.fovKickV - dt * 26);
-    const targetFov = lerp(37, 55, this.zoomT) + this.fovKickV;
+    const targetFov = lerp(58, 30, this.zoomT) + this.fovKickV;
     const fov = this.camera.fov + (targetFov - this.camera.fov) * Math.min(1, dt * 7);
     if (Math.abs(this.camera.fov - fov) > 0.005) {
       this.camera.fov = fov;

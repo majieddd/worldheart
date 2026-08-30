@@ -100,7 +100,9 @@ export const CONFIG = {
     near: 2,
     far: Math.max(2600, R0 * 8),
     distMin: R0 + 4.8,
-    distMax: Math.min(R0 * 3.75, 460),
+    // The orbit lens is telephoto, so max distance carries extra headroom to
+    // keep the full planet in frame at 30 degrees.
+    distMax: Math.min(R0 * 4.6, 620),
     distStart: R0 * 2.15,
     latClamp: 1.42,      // radians, keeps the orbit off the exact poles
     rotSpeed: 0.0052,

@@ -138,6 +138,9 @@ class SurfaceBand {
     if (Math.abs(_n.y) < 0.93) _e1.set(0, 1, 0); else _e1.set(1, 0, 0);
     _e2.crossVectors(_n, _e1).normalize();
     _e1.crossVectors(_e2, _n).normalize();
+    // Space rings are level holograms at the anchor's own height; draping
+    // them over the void would plunge them off every rock edge.
+    const levelR = CONFIG.map.mode === 'space' ? center.length() + 0.2 : 0;
     for (let i = 0; i < this.segments; i++) {
       const a = (i / this.segments) * Math.PI * 2;
       const ca = Math.cos(a), sa = Math.sin(a);
@@ -147,8 +150,12 @@ class SurfaceBand {
           .addScaledVector(_e1, Math.sin(ang) * ca)
           .addScaledVector(_e2, Math.sin(ang) * sa)
           .normalize();
-        surfacePoint(_v, _v2);
-        _v2.addScaledVector(_v, 0.17);
+        if (levelR) {
+          _v2.copy(_v).multiplyScalar(levelR);
+        } else {
+          surfacePoint(_v, _v2);
+          _v2.addScaledVector(_v, 0.17);
+        }
         const o = (i * 2 + k) * 3;
         this.attr.array[o] = _v2.x;
         this.attr.array[o + 1] = _v2.y;
