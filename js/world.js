@@ -62,54 +62,49 @@ function initSpaceLayout(seed) {
   const e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
   tangentBasis(center, e1, e2);
   const sites = [];
-  const placeAt = (ang, az, r, kind) => {
+
+  // Altitude is the map's signature: rocks hang at different heights, the
+  // swarm flies in altitude bands, and a tower's spherical range means high
+  // rocks command high lanes while low rocks guard the deep drifts.
+  const placeAt = (ang, az, r, kind, alt) => {
     const d = center.clone().multiplyScalar(Math.cos(ang))
       .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
       .addScaledVector(e2, Math.sin(ang) * Math.sin(az))
       .normalize();
-    sites.push({ dir: d, r, kind });
+    sites.push({ dir: d, r, kind, alt });
   };
 
-  placeAt(0, 0, 4.8, 'heart');
+  placeAt(0, 0, 4.8, 'heart', 0);
+  const portalAlts = [-2.5, 0.5, 3.5, -1.2, 2.2];
   for (let i = 0; i < 5; i++) {
-    placeAt(theta * (0.4 + rng() * 0.08), (i / 5) * Math.PI * 2 + rng() * 0.3,
-      2.7 + rng() * 0.9, 'plat');
+    placeAt(theta * (0.38 + rng() * 0.1), (i / 5) * Math.PI * 2 + rng() * 0.4,
+      2.7 + rng() * 0.9, 'plat', (rng() - 0.5) * 4);
   }
   for (let i = 0; i < 5; i++) {
-    placeAt(theta * (0.86 + rng() * 0.06), (i / 5) * Math.PI * 2 + 0.63 + rng() * 0.2,
-      2.5, 'portal');
+    placeAt(theta * (0.85 + rng() * 0.07), (i / 5) * Math.PI * 2 + 0.63 + rng() * 0.25,
+      2.5, 'portal', portalAlts[i]);
   }
-  // mid-belt stepping stones, rejection-sampled against overlap
+  // tall spire rocks: small footprint, commanding altitude
+  for (let i = 0; i < 4; i++) {
+    placeAt(theta * (0.5 + rng() * 0.22), (i / 4) * Math.PI * 2 + 0.4 + rng() * 0.5,
+      1.65, 'spire', 5.5 + rng() * 2.5);
+  }
+  const tryPlace = (angMin, angMax, r, kind, altSpread, sepPad) => {
+    const ang = theta * (angMin + rng() * (angMax - angMin));
+    const az = rng() * Math.PI * 2;
+    const d = center.clone().multiplyScalar(Math.cos(ang))
+      .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
+      .addScaledVector(e2, Math.sin(ang) * Math.sin(az)).normalize();
+    for (const s of sites) {
+      const sep = Math.acos(clamp(d.dot(s.dir), -1, 1)) * R;
+      if (sep < s.r + r + sepPad) return;
+    }
+    sites.push({ dir: d, r, kind, alt: (rng() - 0.5) * altSpread });
+  };
   let guard = 0;
-  while (sites.length < 18 && guard++ < 300) {
-    const ang = theta * (0.55 + rng() * 0.24);
-    const az = rng() * Math.PI * 2;
-    const r = 1.7 + rng() * 1.3;
-    const d = center.clone().multiplyScalar(Math.cos(ang))
-      .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
-      .addScaledVector(e2, Math.sin(ang) * Math.sin(az)).normalize();
-    let ok = true;
-    for (const s of sites) {
-      const sep = Math.acos(clamp(d.dot(s.dir), -1, 1)) * R;
-      if (sep < s.r + r + 2.2) { ok = false; break; }
-    }
-    if (ok) sites.push({ dir: d, r, kind: 'plat' });
-  }
-  // tiny outlier rocks, decorative but buildable
+  while (sites.length < 23 && guard++ < 320) tryPlace(0.52, 0.78, 1.7 + rng() * 1.3, 'plat', 9, 2.2);
   guard = 0;
-  while (sites.length < 26 && guard++ < 300) {
-    const ang = theta * (0.18 + rng() * 0.76);
-    const az = rng() * Math.PI * 2;
-    const d = center.clone().multiplyScalar(Math.cos(ang))
-      .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
-      .addScaledVector(e2, Math.sin(ang) * Math.sin(az)).normalize();
-    let ok = true;
-    for (const s of sites) {
-      const sep = Math.acos(clamp(d.dot(s.dir), -1, 1)) * R;
-      if (sep < s.r + 1.2 + 1.8) { ok = false; break; }
-    }
-    if (ok) sites.push({ dir: d, r: 1.15, kind: 'small' });
-  }
+  while (sites.length < 32 && guard++ < 320) tryPlace(0.16, 0.94, 1.15, 'small', 10, 1.8);
 
   SPACE = { center, theta, sites };
 }
@@ -126,9 +121,10 @@ export function initTerrainField(seed) {
 // includeFine=false gives the gameplay surface: the same terrain minus the
 // cosmetic facet relief, so walkability never fractures on visual noise.
 export function terrainHeight(dx, dy, dz, includeFine = true) {
-  // Space maps have no continents: a deep void with authored rock platforms.
+  // Space maps have no continents: a deep void with authored rock platforms
+  // hanging at their own altitudes.
   if (SPACE) {
-    let h = -3.4;
+    let h = -9;
     for (const s of SPACE.sites) {
       const dot = dx * s.dir.x + dy * s.dir.y + dz * s.dir.z;
       const rAng = s.r / R;
@@ -137,8 +133,8 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
       const edge = 1 - smoothstep(rAng * 0.6, rAng * 1.18, ang);
       if (edge <= 0) continue;
       const rock = fbm3(nDetail, dx * 9 + 13, dy * 9, dz * 9, 2);
-      const surf = 1.3 + rock * 0.5;
-      h = Math.max(h, lerp(-3.4, surf, edge));
+      const surf = 1.3 + s.alt + rock * 0.5;
+      h = Math.max(h, lerp(-9, surf, edge));
     }
     return h;
   }
@@ -213,11 +209,16 @@ export function isWalkableDir(dir) {
 }
 
 // Where towers may stand. On ground maps this is walkability; on space maps
-// it is the solid top of a platform (the void is flight space, not floor).
+// it is any rock surface, sides included (towers align to the local normal,
+// so building on a spire's flank is the point, not an accident).
 export function isBuildableDir(dir) {
   if (!SPACE) return isWalkableDir(dir);
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
-  return terrainHeight(dir.x, dir.y, dir.z) > 0.55;
+  for (const s of SPACE.sites) {
+    const dot = dir.x * s.dir.x + dir.y * s.dir.y + dir.z * s.dir.z;
+    if (Math.acos(clamp(dot, -1, 1)) < (s.r * 0.92) / R) return true;
+  }
+  return false;
 }
 
 export function surfacePoint(dir, out) {
@@ -452,7 +453,7 @@ function buildAsteroidBellies(rng) {
   for (const s of SPACE.sites) {
     const p = new THREE.Vector3();
     surfacePoint(s.dir, p);
-    const depth = s.r * (0.75 + rng() * 0.4);
+    const depth = s.kind === 'spire' ? s.r * (2.6 + rng() * 0.8) : s.r * (0.75 + rng() * 0.4);
     const m = new THREE.Matrix4()
       .makeTranslation(
         s.dir.x * (R - depth * 0.42),
@@ -523,64 +524,52 @@ function buildSpaceDust(rng) {
   return { pts, mat };
 }
 
-// Soft fog deck over the world beyond a Battlefield's wall.
-export function buildFogSkirt(centerDir, theta) {
-  const SEG = 140, ROWS = 4;
-  const angs = [theta + 0.02, theta + 0.1, theta + 0.26, theta + 0.62];
-  const alphas = [0, 0.55, 0.8, 0.9];
-  const pos = new Float32Array(SEG * ROWS * 3);
-  const auv = new Float32Array(SEG * ROWS * 2);
-  tangentBasis(centerDir, _t1, _t2);
-  const d = new THREE.Vector3(), p = new THREE.Vector3();
-  for (let i = 0; i < SEG; i++) {
-    const a = (i / SEG) * Math.PI * 2;
-    for (let rIdx = 0; rIdx < ROWS; rIdx++) {
-      const ang = angs[rIdx];
-      d.copy(centerDir).multiplyScalar(Math.cos(ang))
-        .addScaledVector(_t1, Math.sin(ang) * Math.cos(a))
-        .addScaledVector(_t2, Math.sin(ang) * Math.sin(a))
-        .normalize();
-      surfacePoint(d, p);
-      p.addScaledVector(d, 2.4 + rIdx * 1.5);
-      const o = (i * ROWS + rIdx) * 3;
-      pos[o] = p.x; pos[o + 1] = p.y; pos[o + 2] = p.z;
-      auv[(i * ROWS + rIdx) * 2] = (i / SEG) * 26;
-      auv[(i * ROWS + rIdx) * 2 + 1] = alphas[rIdx];
-    }
-  }
-  const idx = [];
-  for (let i = 0; i < SEG; i++) {
-    const j = (i + 1) % SEG;
-    for (let rIdx = 0; rIdx < ROWS - 1; rIdx++) {
-      const a0 = i * ROWS + rIdx, a1 = i * ROWS + rIdx + 1;
-      const b0 = j * ROWS + rIdx, b1 = j * ROWS + rIdx + 1;
-      idx.push(a0, a1, b0, a1, b1, b0);
-    }
-  }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  geo.setAttribute('uv', new THREE.BufferAttribute(auv, 2));
-  geo.setIndex(idx);
+// Planet-wide cloud deck with a clearing over the battlefield. From orbit
+// the whole world reads as weathered; only the war zone is open sky. Gaps in
+// the deck let hazy terrain show through so the planet stays a planet.
+export function buildCloudDeck(centerDir, theta) {
+  const geo = new THREE.SphereGeometry(R + 5.4, 128, 88);
   const mat = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, side: THREE.DoubleSide,
-    uniforms: { uTime: { value: 0 }, uCol: { value: new THREE.Color(0xb6c3d8) } },
+    uniforms: {
+      uTime: { value: 0 },
+      uCenter: { value: centerDir.clone() },
+      uTheta: { value: theta },
+      uSun: { value: SUN_DIR },
+    },
     vertexShader: /* glsl */ `
-      varying vec2 vUv;
-      void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+      varying vec3 vDir;
+      void main() {
+        vDir = normalize(position);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
     `,
     fragmentShader: /* glsl */ `
-      varying vec2 vUv;
-      uniform float uTime;
-      uniform vec3 uCol;
+      varying vec3 vDir;
+      uniform float uTime, uTheta;
+      uniform vec3 uCenter, uSun;
       void main() {
-        float drift = sin(vUv.x * 2.7 + uTime * 0.14) * sin(vUv.x * 1.3 - uTime * 0.09);
-        float a = vUv.y * (0.82 + drift * 0.12);
-        gl_FragColor = vec4(uCol, clamp(a, 0.0, 0.94));
+        vec3 d = normalize(vDir);
+        float ang = acos(clamp(dot(d, uCenter), -1.0, 1.0));
+        float outside = smoothstep(uTheta + 0.015, uTheta + 0.2, ang);
+        if (outside <= 0.001) discard;
+
+        // layered drifting puffs
+        float n1 = sin(d.x * 21.0 + uTime * 0.016 + sin(d.z * 13.0)) *
+                   sin(d.y * 17.0 - uTime * 0.011 + sin(d.x * 11.0));
+        float n2 = sin(d.z * 33.0 - uTime * 0.021 + sin(d.y * 19.0)) *
+                   sin(d.x * 27.0 + uTime * 0.013);
+        float puff = smoothstep(-0.5, 0.55, n1 * 0.65 + n2 * 0.35);
+
+        float light = clamp(dot(d, uSun) * 0.55 + 0.62, 0.3, 1.05);
+        vec3 col = mix(vec3(0.3, 0.34, 0.46), vec3(0.94, 0.96, 1.0), light * (0.55 + puff * 0.45));
+
+        float a = outside * (0.3 + puff * 0.62);
+        gl_FragColor = vec4(col, clamp(a, 0.0, 0.92));
       }
     `,
   });
   const mesh = new THREE.Mesh(geo, mat);
-  mesh.frustumCulled = false;
   mesh.renderOrder = 5;
   return { mesh, mat };
 }
@@ -1102,8 +1091,10 @@ function buildClouds(rng) {
   // Opaque with depth, drawn before the water pass: far-side clouds then sit
   // correctly behind the transparent ocean instead of compositing over it.
   // Fully self-lit with a baked vertical gradient: any real lighting model
-  // eventually shows a black backside against the sky.
-  const mat = new THREE.MeshBasicMaterial({ vertexColors: true });
+  // eventually shows a black backside against the sky. Per-cloud materials
+  // let the night side dim to slate instead of vanishing, so cover reads
+  // planet-wide from orbit.
+  const baseMat = new THREE.MeshBasicMaterial({ vertexColors: true });
   const cloudTop = new THREE.Color(0xeff4fc);
   const cloudBot = new THREE.Color(0xaebdd8);
   const clouds = [];
@@ -1128,7 +1119,7 @@ function buildClouds(rng) {
         c.setXYZ(vi, _cliffCol.r, _cliffCol.g, _cliffCol.b);
       }
     }
-    const mesh = new THREE.Mesh(geo, mat);
+    const mesh = new THREE.Mesh(geo, baseMat.clone());
     mesh.renderOrder = 1;
     const holder = new THREE.Group();
     const dir2 = new THREE.Vector3(rng() * 2 - 1, (rng() - 0.5) * 1.2, rng() * 2 - 1).normalize();
@@ -1343,7 +1334,9 @@ export function buildFieldWall(centerDir, theta) {
 const _orientQ = new THREE.Quaternion();
 export function orientOnSurface(obj, pos, yaw = 0) {
   _up.copy(pos).normalize();
-  groundNormal(_up, _t1).lerp(_up, 0.65).normalize();
+  // Ground maps keep structures mostly upright; space rocks let them cling
+  // to the local surface so flank placements read intentional.
+  groundNormal(_up, _t1).lerp(_up, SPACE ? 0.15 : 0.65).normalize();
   _orientQ.setFromUnitVectors(Y_AXIS, _t1);
   obj.quaternion.copy(_orientQ);
   if (yaw) obj.rotateY(yaw);
@@ -1429,10 +1422,10 @@ export class World {
     return this.fieldWall;
   }
 
-  addFogSkirt(centerDir, theta) {
-    this.fogSkirt = buildFogSkirt(centerDir, theta);
-    this.scene.add(this.fogSkirt.mesh);
-    return this.fogSkirt;
+  addCloudDeck(centerDir, theta) {
+    this.cloudDeck = buildCloudDeck(centerDir, theta);
+    this.scene.add(this.cloudDeck.mesh);
+    return this.cloudDeck;
   }
 
   addPortal(pos) {
@@ -1483,16 +1476,20 @@ export class World {
     const swayShader = this.decor?.treeMat.userData.shader;
     if (swayShader) swayShader.uniforms.uTime.value = t;
     if (this.fieldWall) this.fieldWall.mat.uniforms.uTime.value = t;
-    if (this.fogSkirt) this.fogSkirt.mat.uniforms.uTime.value = t;
+    if (this.cloudDeck) this.cloudDeck.mat.uniforms.uTime.value = t;
     if (this.dust) this.dust.mat.uniforms.uTime.value = t;
     if (this.clouds) {
-      // Clouds condense away across the terminator so the night side never
-      // shows black silhouettes against the horizon glow.
+      // Cover stays planet-wide: night-side clouds dim to slate rather than
+      // vanishing, so orbit views never show a bald hemisphere.
       for (const c of this.clouds) {
         c.holder.rotateOnAxis(c.axis, c.speed * dt);
         c.mesh.getWorldPosition(_pos).normalize();
-        const day = smoothstep(0.12, 0.48, _pos.dot(SUN_DIR));
-        c.mesh.scale.setScalar(Math.max(day, 0.0001));
+        const day = smoothstep(-0.4, 0.42, _pos.dot(SUN_DIR));
+        c.mesh.material.color.setRGB(
+          0.32 + day * 0.68,
+          0.36 + day * 0.64,
+          0.48 + day * 0.52,
+        );
       }
     }
 

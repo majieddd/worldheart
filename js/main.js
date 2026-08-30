@@ -117,7 +117,7 @@ async function boot() {
   world.addHeart(heartPos);
   world.crushDecorNear(heartPos, 4.2);
   if (nav.fieldCenter) world.addFieldWall(nav.fieldCenter, CONFIG.map.fieldTheta);
-  if (CONFIG.map.mode === 'battlefield') world.addFogSkirt(nav.fieldCenter, CONFIG.map.fieldTheta);
+  if (CONFIG.map.mode === 'battlefield') world.addCloudDeck(nav.fieldCenter, CONFIG.map.fieldTheta);
   const portalPositions = [];
   for (const pn of nav.portalNodes) {
     const pp = nav.nodePos(pn, new THREE.Vector3());
@@ -268,21 +268,24 @@ function stepFrame(dt, render) {
   if (ui) ui.update(dt);
   if (fx) {
     // Strategic scale: swell models with zoom, then hand over to icons.
+    // Bigger worlds get a stronger swell so a tower stays a landmark even
+    // when the board is a continent.
     const z = rig.zoomT;
-    if (towerMgr) towerMgr.zoomScale = 1 + z * 0.9;
-    if (enemies) enemies.zoomScale = 1 + z * 0.75;
-    const iconAlpha = Math.min(1, Math.max(0, (z - 0.52) / 0.26));
+    const swell = SWELL_MAX - 1;
+    if (towerMgr) towerMgr.zoomScale = 1 + z * swell;
+    if (enemies) enemies.zoomScale = 1 + z * swell * 0.8;
+    const iconAlpha = Math.min(1, Math.max(0, (z - 0.46) / 0.24));
     fx.icons.begin();
     if (iconAlpha > 0.01 && towerMgr && world.heart) {
       for (const t of towerMgr.towers) {
-        _fxTmp.copy(t.pos).addScaledVector(_fxTmp2.copy(t.pos).normalize(), 2.2 + z * 3);
-        fx.icons.add(_fxTmp, ICON_COLORS[t.typeKey] || 0x59f2ff, 9);
+        _fxTmp.copy(t.pos).addScaledVector(_fxTmp2.copy(t.pos).normalize(), 2.2 + z * 4);
+        fx.icons.add(_fxTmp, ICON_COLORS[t.typeKey] || 0x59f2ff, 10);
       }
-      _fxTmp.copy(world.heart.group.position).addScaledVector(_fxTmp2.copy(world.heart.group.position).normalize(), 3.4 + z * 3);
-      fx.icons.add(_fxTmp, 0xeafcff, 17, 1);
+      _fxTmp.copy(world.heart.group.position).addScaledVector(_fxTmp2.copy(world.heart.group.position).normalize(), 3.4 + z * 4);
+      fx.icons.add(_fxTmp, 0xeafcff, 18, 1);
       for (const p of world.portals) {
-        _fxTmp.copy(p.group.position).addScaledVector(_fxTmp2.copy(p.group.position).normalize(), 2.6 + z * 3);
-        fx.icons.add(_fxTmp, p.active ? 0xff3fa6 : 0x8a5f9e, 13, 1);
+        _fxTmp.copy(p.group.position).addScaledVector(_fxTmp2.copy(p.group.position).normalize(), 2.6 + z * 4);
+        fx.icons.add(_fxTmp, p.active ? 0xff3fa6 : 0x8a5f9e, 14, 1);
       }
     }
     fx.icons.commit(iconAlpha);
@@ -294,6 +297,7 @@ function stepFrame(dt, render) {
 const ICON_COLORS = {
   bolt: 0x59f2ff, cryo: 0xbff1ff, mortar: 0xffc857, tesla: 0x9db8ff, helios: 0xffd9a0,
 };
+const SWELL_MAX = 1.9 * Math.min(1.9, Math.sqrt(CONFIG.planetRadius / 30));
 
 function workMs() {
   let sum = 0;

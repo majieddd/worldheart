@@ -115,10 +115,10 @@ export class NavGraph {
       this.attempts = 1;
       this._buildGraph(space.center, theta, true);
       const heartSite = space.sites.find((s) => s.kind === 'heart');
-      this.heartNode = this.nearestNode(heartSite.dir);
+      this.heartNode = this.nearestWalkableNode(heartSite.dir);
       this.portalNodes = space.sites
         .filter((s) => s.kind === 'portal')
-        .map((s) => this.nearestNode(s.dir));
+        .map((s) => this.nearestWalkableNode(s.dir));
       this.fieldCenter = space.center.clone();
       this.recomputeFlow();
       return;
@@ -206,7 +206,9 @@ export class NavGraph {
       this.height[idx] = h;
       const p = Math.max(h, 0.03) + R;
       this.pos[idx * 3] = x * p; this.pos[idx * 3 + 1] = y * p; this.pos[idx * 3 + 2] = z * p;
-      this.walk[idx] = walkAll ? 1 : (isWalkableDir(_v) ? 1 : 0);
+      // Space flight lanes: the void is pathable, the rocks are not, so the
+      // flow field bends every lane around the platforms.
+      this.walk[idx] = walkAll ? (h < 0.55 ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0);
     }
 
     // CSR adjacency from unique triangle edges (kept nodes only)
@@ -281,6 +283,30 @@ export class NavGraph {
       }
     }
     return best;
+  }
+
+  // Nearest node that is actually pathable: BFS outward from the nearest
+  // node until one qualifies (goal and spawn anchors sit at rock edges).
+  nearestWalkableNode(dir) {
+    let start = this.nearestNode(dir);
+    if (start < 0) return -1;
+    if (this.walk[start]) return start;
+    const seen = new Set([start]);
+    let frontier = [start];
+    for (let hop = 0; hop < 24; hop++) {
+      const next = [];
+      for (const a of frontier) {
+        for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
+          const b = this.adj[e];
+          if (seen.has(b)) continue;
+          if (this.walk[b]) return b;
+          seen.add(b);
+          next.push(b);
+        }
+      }
+      frontier = next;
+    }
+    return start;
   }
 
   // Incremental node tracking for a moving agent: hill-descend to whichever

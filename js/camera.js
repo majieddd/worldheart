@@ -112,12 +112,13 @@ export class OrbitRig {
     }, { passive: false });
   }
 
-  // Pan angle per pixel proportional to camera altitude over the surface:
-  // the ground tracks the cursor at the same apparent rate at every zoom
-  // level and on every planet size.
+  // Pan angle per pixel proportional to camera altitude over the surface
+  // (and to the current lens), so the ground tracks the cursor at the same
+  // apparent rate at every zoom level and on every planet size.
   _panPerPixel() {
     const alt = Math.max(this.dist - CONFIG.planetRadius, 3);
-    return clamp((alt * 0.0031) / CONFIG.planetRadius, 0.00016, 0.0058);
+    const lens = Math.tan((this.camera.fov * Math.PI) / 360) / Math.tan((50 * Math.PI) / 360);
+    return clamp((alt * 0.0031 * lens) / CONFIG.planetRadius, 0.00014, 0.0058);
   }
 
   // Normalized zoom, 0 fully in, 1 fully out. Consumers drive the
@@ -258,9 +259,13 @@ export class OrbitRig {
     this.camera.rotateX(lerp(0.34, 0.05, Math.min(1, zoomT * 1.4)));
     if (roll) this.camera.rotateZ(roll);
 
+    // No-Man's-Sky lens: a narrow telephoto up close flattens the horizon so
+    // the world feels planet-sized underfoot; the lens widens as you pull
+    // out and the ball reveals itself.
     this.fovKickV = Math.max(0, this.fovKickV - dt * 26);
-    const fov = c.fov + this.fovKickV;
-    if (Math.abs(this.camera.fov - fov) > 0.01) {
+    const targetFov = lerp(37, 55, this.zoomT) + this.fovKickV;
+    const fov = this.camera.fov + (targetFov - this.camera.fov) * Math.min(1, dt * 7);
+    if (Math.abs(this.camera.fov - fov) > 0.005) {
       this.camera.fov = fov;
       this.camera.updateProjectionMatrix();
     }

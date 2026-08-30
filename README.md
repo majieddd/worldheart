@@ -10,7 +10,7 @@ Layouts are designed against three named modes:
 
 - **Planetary Battlefield**: the entire globe is in play.
 - **Battlefield**: one walled zone on a planet's surface, scaled so play inside feels identical to a planetary map. Towers cannot leave the bounds, the camera is confined to the zone, and the world beyond grays out under fog.
-- **Space Battlefield**: floating rock platforms over open void, in predetermined balanced positions of varying size. Placement stays freeform on every rock; the swarm flies its lanes, so coverage replaces mazing.
+- **Space Battlefield**: floating rock platforms over open void, in predetermined balanced positions of varying size and altitude, tall spire rocks included. Placement stays freeform on every rock, sides included (towers align to the local surface). The swarm flies lanes that bend around the rocks in three altitude bands, so matching coverage height replaces mazing.
 
 ## Worlds
 
@@ -23,7 +23,7 @@ Four worlds, selectable on the title screen. Every one is procedurally generated
 | Titan's Brow | Battlefield | Massive planet, radius 120 | One walled continental front; the colossus rolls past the horizon as scenery. 5 breaches |
 | Shattered Reach | Space Battlefield | Asteroid field, radius 70 shell | Rock platforms adrift over void; everything flies. 5 breaches |
 
-At strategic zoom, towers and creatures swell for readability and then hand over to a screen-fixed icon layer, and pan speed tracks camera altitude so the world drags at the same rate at every zoom.
+At strategic zoom, towers and creatures swell for readability (more on bigger worlds) and then hand over to a screen-fixed icon layer; the camera lens narrows as you zoom in so a planet feels vast underfoot and only reveals its curve from orbit; and pan speed tracks camera altitude so the world drags at the same rate at every zoom. Battlefield worlds sit under a planet-wide broken cloud deck with a clearing over the war zone.
 
 ## Play
 

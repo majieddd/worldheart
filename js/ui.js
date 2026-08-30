@@ -459,7 +459,9 @@ export class HUD {
 
     if (g.buildType && !this.seen.build) {
       this.seen.build = true;
-      this.toast('Click open ground to build. Every breach must keep a path to the heart.', 'info');
+      this.toast(CONFIG.map.mode === 'space'
+        ? 'Build on any rock, sides included. The swarm flies in low, mid, and high lanes: match your coverage.'
+        : 'Click open ground to build. Every breach must keep a path to the heart.', 'info');
     }
     e['hint-line'].textContent = g.buildType
       ? `Placing ${TOWER_TYPES[g.buildType].name}. Right-click to cancel.`

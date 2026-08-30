@@ -105,7 +105,10 @@ export class EnemyManager {
     this._buildRenderers(scene);
   }
 
-  setHeart(pos) { this.heartPos.copy(pos); }
+  setHeart(pos) {
+    this.heartPos.copy(pos);
+    this.heartDir = pos.clone().normalize();
+  }
 
   _buildRenderers(scene) {
     // Articulated species: each species is a set of instanced parts; every
@@ -186,8 +189,11 @@ export class EnemyManager {
     _tmp.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(0.02);
     _dir.add(_tmp).normalize();
     e.init(typeKey, type, _dir, portalNode, hpScale);
-    // In space everything soars above the platform tops.
-    e.alt = this.spaceMode ? Math.max(type.altitude, 2.7) : type.altitude;
+    // Space waves fly in three altitude bands; high rocks command high
+    // lanes, low rocks guard the deep drifts. Flyers ride slightly higher.
+    e.alt = this.spaceMode
+      ? 1.7 + (e.id % 3) * 1.8 + (type.flying ? 0.7 : 0)
+      : type.altitude;
     this.active.push(e);
     if (this.onSpawnFx) this.onSpawnFx(e);
     return e;
@@ -300,12 +306,24 @@ export class EnemyManager {
       e.dir.addScaledVector(e.fwd, ang).normalize();
       e.height = terrainHeight(e.dir.x, e.dir.y, e.dir.z);
 
-      // Heart contact
-      _tmp.copy(e.dir).multiplyScalar(R + Math.max(e.height, 0.03) + e.alt);
-      if (_tmp.distanceToSquared(this.heartPos) < heartR2 + e.alt * e.alt) {
-        e.reached = true;
-        if (this.onLeak) this.onLeak(e);
-        this._release(e);
+      // Heart contact. In space the bands dive on arrival, so contact is
+      // measured along the surface rather than in 3D (a low-band drifter
+      // must still be able to reach a heart on a tall rock).
+      if (this.spaceMode) {
+        const dot = e.dir.dot(this.heartDir);
+        const lateral = Math.acos(clamp(dot, -1, 1)) * R;
+        if (lateral < 3.4) {
+          e.reached = true;
+          if (this.onLeak) this.onLeak(e);
+          this._release(e);
+        }
+      } else {
+        _tmp.copy(e.dir).multiplyScalar(R + Math.max(e.height, 0.03) + e.alt);
+        if (_tmp.distanceToSquared(this.heartPos) < heartR2 + e.alt * e.alt) {
+          e.reached = true;
+          if (this.onLeak) this.onLeak(e);
+          this._release(e);
+        }
       }
     }
 

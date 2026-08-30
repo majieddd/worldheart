@@ -14,6 +14,8 @@ const _e1 = new THREE.Vector3();
 const _e2 = new THREE.Vector3();
 
 const PREVIEW_DOTS = 640;
+// Space lanes fly at altitude; preview dots ride the mid band there.
+const PATH_RAISE = CONFIG.map.mode === 'space' ? 2.6 : 0.24;
 
 class PathFlow {
   constructor(scene) {
@@ -66,7 +68,7 @@ class PathFlow {
         const t = (d - path.cum[i1 - 1]) / Math.max(path.cum[i1] - path.cum[i1 - 1], 1e-5);
         _v.lerpVectors(path.pts[i1 - 1], path.pts[i1], t);
         _n.copy(_v).normalize();
-        _v.addScaledVector(_n, 0.24);
+        _v.addScaledVector(_n, PATH_RAISE);
         this.posAttr.array[n * 3] = _v.x;
         this.posAttr.array[n * 3 + 1] = _v.y;
         this.posAttr.array[n * 3 + 2] = _v.z;
