@@ -270,9 +270,13 @@ html, body {
   display: flex; align-items: center; justify-content: center;
   background: rgba(7, 10, 22, 0.55);
   opacity: 0; pointer-events: none;
-  transition: opacity 320ms var(--ease-out);
+  /* visibility gates hit-testing for every child; children cannot override it
+     the way they can override pointer-events, so a faded-out menu can never
+     eat clicks (the invisible-map-card reset bug). */
+  visibility: hidden;
+  transition: opacity 320ms var(--ease-out), visibility 0s linear 320ms;
 }
-.overlay.show { opacity: 1; pointer-events: auto; }
+.overlay.show { opacity: 1; pointer-events: auto; visibility: visible; transition: opacity 320ms var(--ease-out); }
 .overlay-card {
   text-align: center;
   background: var(--surface-raised);
@@ -283,9 +287,9 @@ html, body {
   max-width: 640px;
 }
 
-.map-row { display: flex; gap: var(--sp-2); margin-top: var(--sp-4); }
+.map-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-4); }
 .map-card {
-  flex: 1;
+  flex: 1 1 44%;
   text-align: left;
   font-family: var(--font-body);
   color: var(--text);
@@ -299,6 +303,7 @@ html, body {
 .map-card:hover { transform: translateY(-2px); border-color: var(--hairline-strong); background: var(--surface-raised); }
 .map-card.selected { border-color: var(--accent); background: var(--surface-raised); }
 .map-card .m-name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-14); }
+.map-card .m-mode { color: var(--gold); margin-top: 2px; }
 .map-card .m-chip { color: var(--accent); margin-top: 2px; }
 .map-card .m-tag { font-size: var(--fs-11); color: var(--text-muted); line-height: 1.45; margin-top: 4px; }
 .overlay-card .o-mark { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-64); letter-spacing: 0.1em; line-height: 1.05; }

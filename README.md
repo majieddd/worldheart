@@ -4,15 +4,26 @@ A 3D tower defense fought across the surface of living procedural planets. Raise
 
 *The void found this world. Every breach must always have a path: seal nothing, shape everything.*
 
+## Map types
+
+Layouts are designed against three named modes:
+
+- **Planetary Battlefield**: the entire globe is in play.
+- **Battlefield**: one walled zone on a planet's surface, scaled so play inside feels identical to a planetary map. Towers cannot leave the bounds, the camera is confined to the zone, and the world beyond grays out under fog.
+- **Space Battlefield**: floating rock platforms over open void, in predetermined balanced positions of varying size. Placement stays freeform on every rock; the swarm flies its lanes, so coverage replaces mazing.
+
 ## Worlds
 
-Three worlds, selectable on the title screen. Every one is procedurally generated from a seed.
+Four worlds, selectable on the title screen. Every one is procedurally generated from a seed.
 
-| World | Scale | Front |
-|---|---|---|
-| Pocket World | Small globe, radius 30 | The whole planet is the battlefield, 4 breaches |
-| Giant World | Large globe, radius 48 | More continents, longer marches, 5 breaches |
-| Titan's Brow | Massive planet, radius 120 | War confined to one walled continental battlefield inside an energy perimeter; the rest of the colossus rolls past the horizon as scenery. 5 breaches |
+| World | Mode | Scale | Front |
+|---|---|---|---|
+| Pocket World | Planetary Battlefield | Small globe, radius 30 | Whole planet, 4 breaches |
+| Giant World | Planetary Battlefield | Large globe, radius 48 | More continents, longer marches, 5 breaches |
+| Titan's Brow | Battlefield | Massive planet, radius 120 | One walled continental front; the colossus rolls past the horizon as scenery. 5 breaches |
+| Shattered Reach | Space Battlefield | Asteroid field, radius 70 shell | Rock platforms adrift over void; everything flies. 5 breaches |
+
+At strategic zoom, towers and creatures swell for readability and then hand over to a screen-fixed icon layer, and pan speed tracks camera altitude so the world drags at the same rate at every zoom.
 
 ## Play
 

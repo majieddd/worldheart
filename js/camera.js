@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { CONFIG, REDUCED_MOTION } from './config.js';
 import { clamp, lerp, easeInOut, easeOutCubic } from './noise.js';
 
+const _aim = new THREE.Vector3();
+
 // Orbit rig around the planet center with inertia, damped zoom, trauma shake,
 // fov kicks, and a scripted intro flyby. Latitude is clamped so the rig never
 // crosses a pole; gameplay content is generated inside the clamp band.
@@ -24,6 +26,7 @@ export class OrbitRig {
     this.autoOrbit = 0;          // rad/s, used by the title screen
     this.flight = null;          // active tween {fromLon...toDist,t,dur}
     this.shakeEnabled = !REDUCED_MOTION;
+    this.confine = null;         // {center: Vector3, maxAng} battlefield camera bounds
 
     this.dragging = false;
     this.dragButton = 0;
@@ -79,7 +82,7 @@ export class OrbitRig {
         if (this.dragMoved > 4) {
           this.flight = null;
           this.autoOrbit = 0;
-          const s = CONFIG.camera.rotSpeed * this._distScale();
+          const s = this._panPerPixel();
           this.lon -= dx * s;
           this.lat += dy * s;
           this.lat = clamp(this.lat, -CONFIG.camera.latClamp, CONFIG.camera.latClamp);
@@ -109,8 +112,19 @@ export class OrbitRig {
     }, { passive: false });
   }
 
-  _distScale() {
-    return lerp(0.35, 1.15, (this.dist - CONFIG.camera.distMin) / (CONFIG.camera.distMax - CONFIG.camera.distMin));
+  // Pan angle per pixel proportional to camera altitude over the surface:
+  // the ground tracks the cursor at the same apparent rate at every zoom
+  // level and on every planet size.
+  _panPerPixel() {
+    const alt = Math.max(this.dist - CONFIG.planetRadius, 3);
+    return clamp((alt * 0.0031) / CONFIG.planetRadius, 0.00016, 0.0058);
+  }
+
+  // Normalized zoom, 0 fully in, 1 fully out. Consumers drive the
+  // strategic-scale presentation (model swell, icon layer) from this.
+  get zoomT() {
+    const c = CONFIG.camera;
+    return clamp((this.dist - c.distMin) / (c.distMax - c.distMin), 0, 1);
   }
 
   zoomBy(amount) {
@@ -192,6 +206,25 @@ export class OrbitRig {
         this.velLat *= damp;
       }
       this.dist = lerp(this.dist, this.targetDist, 1 - Math.exp(-c.zoomDamp * dt));
+    }
+
+    // Battlefield confinement: the aim point never leaves the walled zone.
+    if (this.confine) {
+      const cosLat0 = Math.cos(this.lat);
+      _aim.set(Math.sin(this.lon) * cosLat0, Math.sin(this.lat), Math.cos(this.lon) * cosLat0);
+      const c = this.confine.center;
+      const ang = Math.acos(clamp(_aim.dot(c), -1, 1));
+      if (ang > this.confine.maxAng) {
+        const t = this.confine.maxAng / ang;
+        const s = Math.sin(ang);
+        _aim.multiplyScalar(Math.sin(t * ang) / s)
+          .addScaledVector(c, Math.sin((1 - t) * ang) / s)
+          .normalize();
+        this.lat = Math.asin(clamp(_aim.y, -1, 1));
+        this.lon = Math.atan2(_aim.x, _aim.z);
+        this.velLon *= 0.5;
+        this.velLat *= 0.5;
+      }
     }
 
     const cosLat = Math.cos(this.lat);

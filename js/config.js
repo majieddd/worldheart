@@ -10,14 +10,22 @@ export function storeLocal(key, value) {
   try { localStorage.setItem(key, value); } catch { /* private mode */ }
 }
 
-// The three worlds. Frequencies are relative multipliers over the pocket
-// baseline; `fieldTheta` confines the battlefield to a spherical cap and
-// marks everything beyond it as scenery.
+// The worlds, each tagged with its map type. The taxonomy the layouts are
+// designed against:
+//   planetary   Planetary Battlefield: the entire globe is in play.
+//   battlefield Battlefield: one walled zone on a planet's surface, scaled
+//               so play inside feels identical to a planetary map; the
+//               camera is confined, the outside grays into fog.
+//   space       Space Battlefield: floating rock platforms over open void,
+//               predetermined balanced positions of varying size; placement
+//               stays freeform on each rock, enemies fly the lanes.
+// `fieldTheta` confines the battlefield to a spherical cap.
 export const MAPS = {
   pocket: {
     name: 'Pocket World',
+    mode: 'planetary', modeLabel: 'planetary battlefield',
     tag: 'The classic: a whole globe at war.',
-    chip: 'small · 4 breaches',
+    chip: 'small world · 4 breaches',
     radius: 30, terrainDetail: 6, navDetail: 5, pickDetail: 4,
     freqMul: 1, fineAbsolute: true,
     portalWakes: [1, 4, 9, 14],
@@ -28,8 +36,9 @@ export const MAPS = {
   },
   giant: {
     name: 'Giant World',
+    mode: 'planetary', modeLabel: 'planetary battlefield',
     tag: 'More continents, longer marches, five breaches.',
-    chip: 'large · 5 breaches',
+    chip: 'large world · 5 breaches',
     radius: 48, terrainDetail: 6, navDetail: 6, pickDetail: 4,
     freqMul: 1.45, fineAbsolute: true,
     portalWakes: [1, 3, 7, 11, 15],
@@ -40,8 +49,9 @@ export const MAPS = {
   },
   titan: {
     name: "Titan's Brow",
-    tag: 'A colossus. The war holds one walled battlefield; the world rolls on past the horizon.',
-    chip: 'massive · walled front · 5 breaches',
+    mode: 'battlefield', modeLabel: 'battlefield',
+    tag: 'A colossus. The war holds one walled front; the world rolls on past the horizon.',
+    chip: 'massive world · 5 breaches',
     radius: 120, terrainDetail: 7, navDetail: 7, pickDetail: 5,
     freqMul: 2.1, fineAbsolute: true,
     portalWakes: [1, 3, 7, 11, 15],
@@ -49,6 +59,19 @@ export const MAPS = {
     startGold: 450,
     waterSegs: [320, 214],
     decorMul: 1,
+  },
+  reach: {
+    name: 'Shattered Reach',
+    mode: 'space', modeLabel: 'space battlefield',
+    tag: 'Rock platforms adrift over open void. The swarm flies; you hold the stones you choose.',
+    chip: 'asteroid field · 5 breaches',
+    radius: 70, terrainDetail: 6, navDetail: 7, pickDetail: 5,
+    freqMul: 1, fineAbsolute: true,
+    portalWakes: [1, 3, 7, 11, 15],
+    fieldTheta: 0.5,
+    startGold: 450,
+    waterSegs: [8, 6],
+    decorMul: 0.4,
   },
 };
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
 import { clamp } from './noise.js';
-import { R, isWalkableDir, surfacePoint, groundNormal, orientOnSurface } from './world.js';
+import { R, isBuildableDir, surfacePoint, groundNormal, orientOnSurface } from './world.js';
 import { TOWER_TYPES, TOWER_SCALE, tierCost, buildTowerVisual, GHOST_MAT_OK, GHOST_MAT_BAD } from './towers.js';
 
 // Player-facing game logic: build mode with a live ghost, the placement rule
@@ -327,7 +327,7 @@ export class Game {
 
   _validate(def) {
     if (!this.cursorValid) return { ok: false, reason: 'terrain' };
-    if (!isWalkableDir(this.cursorDir)) return { ok: false, reason: 'terrain' };
+    if (!isBuildableDir(this.cursorDir)) return { ok: false, reason: 'terrain' };
     if (this.cursorPos.distanceTo(this.world.heart.group.position) < 3.7) return { ok: false, reason: 'heart' };
     for (const p of this.world.portals) {
       if (this.cursorPos.distanceTo(p.group.position) < 3.0) return { ok: false, reason: 'portal' };
@@ -362,7 +362,7 @@ export class Game {
     this.validity = this._validate(def);
     if (!this.validity.ok) {
       const msgs = {
-        terrain: 'Needs open walkable ground',
+        terrain: CONFIG.map.mode === 'space' ? 'Towers need solid rock underfoot' : 'Needs open walkable ground',
         heart: 'Too close to the Worldheart',
         portal: 'Too close to a breach',
         overlap: 'Overlaps another tower',

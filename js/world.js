@@ -43,17 +43,105 @@ export function inBattlefield(dx, dy, dz, margin = 0) {
 
 let nWarp, nBase, nDetail, nRidge, nMoist;
 
+// Space Battlefield layout: predetermined, balanced platform positions of
+// varying size, regenerated deterministically per seed. Null on ground maps.
+export let SPACE = null;
+
+function initSpaceLayout(seed) {
+  const rng = mulberry32(seed ^ 0x50ACE);
+  const center = new THREE.Vector3();
+  for (let t = 0; t < 400; t++) {
+    center.set(rng() * 2 - 1, (rng() * 2 - 1) * 0.5, rng() * 2 - 1);
+    if (center.lengthSq() > 1 || center.lengthSq() < 0.01) continue;
+    center.normalize();
+    if (center.dot(SUN_DIR) >= 0.3) break;
+  }
+  if (center.dot(SUN_DIR) < 0.3) center.copy(SUN_DIR);
+
+  const theta = CONFIG.map.fieldTheta;
+  const e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
+  tangentBasis(center, e1, e2);
+  const sites = [];
+  const placeAt = (ang, az, r, kind) => {
+    const d = center.clone().multiplyScalar(Math.cos(ang))
+      .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
+      .addScaledVector(e2, Math.sin(ang) * Math.sin(az))
+      .normalize();
+    sites.push({ dir: d, r, kind });
+  };
+
+  placeAt(0, 0, 4.8, 'heart');
+  for (let i = 0; i < 5; i++) {
+    placeAt(theta * (0.4 + rng() * 0.08), (i / 5) * Math.PI * 2 + rng() * 0.3,
+      2.7 + rng() * 0.9, 'plat');
+  }
+  for (let i = 0; i < 5; i++) {
+    placeAt(theta * (0.86 + rng() * 0.06), (i / 5) * Math.PI * 2 + 0.63 + rng() * 0.2,
+      2.5, 'portal');
+  }
+  // mid-belt stepping stones, rejection-sampled against overlap
+  let guard = 0;
+  while (sites.length < 18 && guard++ < 300) {
+    const ang = theta * (0.55 + rng() * 0.24);
+    const az = rng() * Math.PI * 2;
+    const r = 1.7 + rng() * 1.3;
+    const d = center.clone().multiplyScalar(Math.cos(ang))
+      .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
+      .addScaledVector(e2, Math.sin(ang) * Math.sin(az)).normalize();
+    let ok = true;
+    for (const s of sites) {
+      const sep = Math.acos(clamp(d.dot(s.dir), -1, 1)) * R;
+      if (sep < s.r + r + 2.2) { ok = false; break; }
+    }
+    if (ok) sites.push({ dir: d, r, kind: 'plat' });
+  }
+  // tiny outlier rocks, decorative but buildable
+  guard = 0;
+  while (sites.length < 26 && guard++ < 300) {
+    const ang = theta * (0.18 + rng() * 0.76);
+    const az = rng() * Math.PI * 2;
+    const d = center.clone().multiplyScalar(Math.cos(ang))
+      .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
+      .addScaledVector(e2, Math.sin(ang) * Math.sin(az)).normalize();
+    let ok = true;
+    for (const s of sites) {
+      const sep = Math.acos(clamp(d.dot(s.dir), -1, 1)) * R;
+      if (sep < s.r + 1.2 + 1.8) { ok = false; break; }
+    }
+    if (ok) sites.push({ dir: d, r: 1.15, kind: 'small' });
+  }
+
+  SPACE = { center, theta, sites };
+}
+
 export function initTerrainField(seed) {
   nWarp = makeNoise3D(seed ^ 0x9e3779b9);
   nBase = makeNoise3D(seed);
   nDetail = makeNoise3D(seed ^ 0x51ab3c);
   nRidge = makeNoise3D(seed ^ 0x7f4a7c15);
   nMoist = makeNoise3D(seed ^ 0x2545f4);
+  if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
 // includeFine=false gives the gameplay surface: the same terrain minus the
 // cosmetic facet relief, so walkability never fractures on visual noise.
 export function terrainHeight(dx, dy, dz, includeFine = true) {
+  // Space maps have no continents: a deep void with authored rock platforms.
+  if (SPACE) {
+    let h = -3.4;
+    for (const s of SPACE.sites) {
+      const dot = dx * s.dir.x + dy * s.dir.y + dz * s.dir.z;
+      const rAng = s.r / R;
+      if (dot < Math.cos(rAng * 1.5)) continue;
+      const ang = Math.acos(clamp(dot, -1, 1));
+      const edge = 1 - smoothstep(rAng * 0.6, rAng * 1.18, ang);
+      if (edge <= 0) continue;
+      const rock = fbm3(nDetail, dx * 9 + 13, dy * 9, dz * 9, 2);
+      const surf = 1.3 + rock * 0.5;
+      h = Math.max(h, lerp(-3.4, surf, edge));
+    }
+    return h;
+  }
   const w = 0.26;
   const wx = dx + nWarp(dx * F_WARP + 7.7, dy * F_WARP, dz * F_WARP) * w;
   const wy = dy + nWarp(dx * F_WARP, dy * F_WARP + 3.1, dz * F_WARP) * w;
@@ -124,6 +212,14 @@ export function isWalkableDir(dir) {
   return true;
 }
 
+// Where towers may stand. On ground maps this is walkability; on space maps
+// it is the solid top of a platform (the void is flight space, not floor).
+export function isBuildableDir(dir) {
+  if (!SPACE) return isWalkableDir(dir);
+  if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
+  return terrainHeight(dir.x, dir.y, dir.z) > 0.55;
+}
+
 export function surfacePoint(dir, out) {
   const h = Math.max(terrainHeight(dir.x, dir.y, dir.z), 0.03);
   return out.copy(dir).multiplyScalar(R + h);
@@ -150,7 +246,23 @@ for (const k of Object.keys(PALETTE)) C[k] = new THREE.Color(PALETTE[k]);
 const SEABED = new THREE.Color(0x2e4a66);
 const MOSS = new THREE.Color(0x2a7d58);
 
+const SPACE_ROCK = new THREE.Color(0x8b8f9c);
+const SPACE_RUST = new THREE.Color(0xa08d76);
+const SPACE_UNDER = new THREE.Color(0x474c5c);
+
 function faceColor(dir, h, slope, jrand, out) {
+  if (SPACE) {
+    const roll = fbm3(nDetail, dir.x * 7 + 5, dir.y * 7, dir.z * 7, 2);
+    if (h < 0.75) {
+      out.copy(SPACE_UNDER);
+    } else {
+      out.copy(SPACE_ROCK).lerp(SPACE_RUST, clamp(0.5 + roll * 0.9, 0, 1));
+      if (slope > 0.8) out.lerp(SPACE_UNDER, 0.45);
+    }
+    const j = 1 + (jrand - 0.5) * 0.2;
+    out.multiplyScalar(j);
+    return out;
+  }
   if (h < 0) {
     out.copy(C.sand).lerp(SEABED, smoothstep(-0.03, -1.25, h));
   } else if (h < 0.13) {
@@ -295,11 +407,182 @@ function buildTerrainMesh() {
     }
   }
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  // Space maps render only the rock: cull faces that sit in the void so the
+  // starfield shows through between platforms.
+  if (SPACE) {
+    const src = geo.attributes.position;
+    const keepPos = [];
+    const keepCol = [];
+    const a2 = new THREE.Vector3(), b2 = new THREE.Vector3(), c2 = new THREE.Vector3();
+    for (let i = 0; i < src.count; i += 3) {
+      a2.fromBufferAttribute(src, i);
+      b2.fromBufferAttribute(src, i + 1);
+      c2.fromBufferAttribute(src, i + 2);
+      const hC = (a2.length() + b2.length() + c2.length()) / 3 - R;
+      if (hC < -1.1) continue;
+      for (let k = 0; k < 3; k++) {
+        const vi = i + k;
+        keepPos.push(src.getX(vi), src.getY(vi), src.getZ(vi));
+        keepCol.push(colors[vi * 3], colors[vi * 3 + 1], colors[vi * 3 + 2]);
+      }
+    }
+    geo.dispose();
+    const g2 = new THREE.BufferGeometry();
+    g2.setAttribute('position', new THREE.BufferAttribute(new Float32Array(keepPos), 3));
+    g2.setAttribute('color', new THREE.BufferAttribute(new Float32Array(keepCol), 3));
+    g2.computeVertexNormals();
+    const mat2 = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.92, metalness: 0.05 });
+    const mesh2 = new THREE.Mesh(g2, mat2);
+    mesh2.name = 'terrain';
+    return mesh2;
+  }
+
   geo.computeVertexNormals();
   const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, metalness: 0 });
   const mesh = new THREE.Mesh(geo, mat);
   mesh.name = 'terrain';
   return mesh;
+}
+
+// Rough undersides so each platform reads as a floating asteroid chunk.
+function buildAsteroidBellies(rng) {
+  const parts = [];
+  const col = new THREE.Color(0x565b6b);
+  for (const s of SPACE.sites) {
+    const p = new THREE.Vector3();
+    surfacePoint(s.dir, p);
+    const depth = s.r * (0.75 + rng() * 0.4);
+    const m = new THREE.Matrix4()
+      .makeTranslation(
+        s.dir.x * (R - depth * 0.42),
+        s.dir.y * (R - depth * 0.42),
+        s.dir.z * (R - depth * 0.42),
+      )
+      .multiply(new THREE.Matrix4().makeRotationY(rng() * 6.28))
+      .multiply(new THREE.Matrix4().makeScale(s.r * 1.02, depth, s.r * 1.02));
+    parts.push({ geo: new THREE.IcosahedronGeometry(1, 1), matrix: m, color: col });
+  }
+  const geo = mergeGeoms(parts);
+  const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+    vertexColors: true, roughness: 0.95, metalness: 0.05, flatShading: true,
+  }));
+  mesh.name = 'bellies';
+  return mesh;
+}
+
+// Faint drifting dust motes through the battlefield volume.
+function buildSpaceDust(rng) {
+  const N = 420;
+  const pos = new Float32Array(N * 3);
+  const phase = new Float32Array(N);
+  const e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
+  tangentBasis(SPACE.center, e1, e2);
+  const v = new THREE.Vector3();
+  for (let i = 0; i < N; i++) {
+    const ang = SPACE.theta * Math.sqrt(rng());
+    const az = rng() * Math.PI * 2;
+    v.copy(SPACE.center).multiplyScalar(Math.cos(ang))
+      .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
+      .addScaledVector(e2, Math.sin(ang) * Math.sin(az))
+      .normalize()
+      .multiplyScalar(R + 0.5 + rng() * 7);
+    pos.set([v.x, v.y, v.z], i * 3);
+    phase[i] = rng() * Math.PI * 2;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('aPhase', new THREE.BufferAttribute(phase, 1));
+  const mat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: { uTime: { value: 0 } },
+    vertexShader: /* glsl */ `
+      attribute float aPhase;
+      varying float vA;
+      uniform float uTime;
+      void main() {
+        vec3 p = position + vec3(sin(uTime * 0.21 + aPhase), sin(uTime * 0.17 + aPhase * 2.0), cos(uTime * 0.19 + aPhase)) * 0.6;
+        vA = 0.35 + 0.3 * sin(uTime * 0.6 + aPhase * 3.0);
+        vec4 mv = modelViewMatrix * vec4(p, 1.0);
+        gl_PointSize = 2.2;
+        gl_Position = projectionMatrix * mv;
+      }
+    `,
+    fragmentShader: /* glsl */ `
+      varying float vA;
+      void main() {
+        vec2 d = gl_PointCoord - 0.5;
+        float m = smoothstep(0.5, 0.1, length(d));
+        gl_FragColor = vec4(vec3(0.55, 0.72, 0.85) * m, m * vA * 0.4);
+      }
+    `,
+  });
+  const pts = new THREE.Points(geo, mat);
+  pts.frustumCulled = false;
+  pts.renderOrder = 7;
+  return { pts, mat };
+}
+
+// Soft fog deck over the world beyond a Battlefield's wall.
+export function buildFogSkirt(centerDir, theta) {
+  const SEG = 140, ROWS = 4;
+  const angs = [theta + 0.02, theta + 0.1, theta + 0.26, theta + 0.62];
+  const alphas = [0, 0.55, 0.8, 0.9];
+  const pos = new Float32Array(SEG * ROWS * 3);
+  const auv = new Float32Array(SEG * ROWS * 2);
+  tangentBasis(centerDir, _t1, _t2);
+  const d = new THREE.Vector3(), p = new THREE.Vector3();
+  for (let i = 0; i < SEG; i++) {
+    const a = (i / SEG) * Math.PI * 2;
+    for (let rIdx = 0; rIdx < ROWS; rIdx++) {
+      const ang = angs[rIdx];
+      d.copy(centerDir).multiplyScalar(Math.cos(ang))
+        .addScaledVector(_t1, Math.sin(ang) * Math.cos(a))
+        .addScaledVector(_t2, Math.sin(ang) * Math.sin(a))
+        .normalize();
+      surfacePoint(d, p);
+      p.addScaledVector(d, 2.4 + rIdx * 1.5);
+      const o = (i * ROWS + rIdx) * 3;
+      pos[o] = p.x; pos[o + 1] = p.y; pos[o + 2] = p.z;
+      auv[(i * ROWS + rIdx) * 2] = (i / SEG) * 26;
+      auv[(i * ROWS + rIdx) * 2 + 1] = alphas[rIdx];
+    }
+  }
+  const idx = [];
+  for (let i = 0; i < SEG; i++) {
+    const j = (i + 1) % SEG;
+    for (let rIdx = 0; rIdx < ROWS - 1; rIdx++) {
+      const a0 = i * ROWS + rIdx, a1 = i * ROWS + rIdx + 1;
+      const b0 = j * ROWS + rIdx, b1 = j * ROWS + rIdx + 1;
+      idx.push(a0, a1, b0, a1, b1, b0);
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('uv', new THREE.BufferAttribute(auv, 2));
+  geo.setIndex(idx);
+  const mat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, side: THREE.DoubleSide,
+    uniforms: { uTime: { value: 0 }, uCol: { value: new THREE.Color(0xb6c3d8) } },
+    vertexShader: /* glsl */ `
+      varying vec2 vUv;
+      void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+    `,
+    fragmentShader: /* glsl */ `
+      varying vec2 vUv;
+      uniform float uTime;
+      uniform vec3 uCol;
+      void main() {
+        float drift = sin(vUv.x * 2.7 + uTime * 0.14) * sin(vUv.x * 1.3 - uTime * 0.09);
+        float a = vUv.y * (0.82 + drift * 0.12);
+        gl_FragColor = vec4(uCol, clamp(a, 0.0, 0.94));
+      }
+    `,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.frustumCulled = false;
+  mesh.renderOrder = 5;
+  return { mesh, mat };
 }
 
 function buildPickProxy() {
@@ -766,9 +1049,9 @@ function scatterDecor(rng) {
     if (h < 0.12) continue;
     const forest = forestAt(dir.x, dir.y, dir.z);
     const slope = slopeAt(dir);
-    if (forest > 0.78 && h > 0.24 && h < 2.0 && slope < 0.9 && spots.pine.length < caps.pine) {
+    if (!SPACE && forest > 0.78 && h > 0.24 && h < 2.0 && slope < 0.9 && spots.pine.length < caps.pine) {
       spots.pine.push({ dir: dir.clone(), h, s: 0.85 + rng() * 0.75 });
-    } else if (forest > 0.34 && forest < 0.55 && h > 0.2 && h < 1.6 && slope < 0.4 && rng() < 0.05 && spots.leaf.length < caps.leaf) {
+    } else if (!SPACE && forest > 0.34 && forest < 0.55 && h > 0.2 && h < 1.6 && slope < 0.4 && rng() < 0.05 && spots.leaf.length < caps.leaf) {
       spots.leaf.push({ dir: dir.clone(), h, s: 0.8 + rng() * 0.6 });
     } else if (h > 0.14 && h < 2.7 && slope > 0.18 && rng() < 0.16 && spots.rock.length < caps.rock) {
       spots.rock.push({ dir: dir.clone(), h: h - 0.1, s: 0.5 + rng() * 1.1 });
@@ -1090,11 +1373,13 @@ export class World {
       case 2:
         this.pickProxy = buildPickProxy();
         this.scene.add(this.pickProxy);
-        this.water = buildWater();
-        this.scene.add(this.water);
+        if (!SPACE) {
+          this.water = buildWater();
+          this.scene.add(this.water);
+        }
         break;
       case 3: {
-        this.scene.add(buildAtmosphere());
+        if (!SPACE) this.scene.add(buildAtmosphere());
         const sky = buildSky(this.rng);
         this.sky = sky.group;
         this.starMat = sky.starMat;
@@ -1104,9 +1389,15 @@ export class World {
       case 4: {
         this.decor = scatterDecor(this.rng);
         for (const s of this.decor.sets) this.scene.add(s.mesh);
-        const cl = buildClouds(this.rng);
-        this.clouds = cl.clouds;
-        this.scene.add(cl.group);
+        if (!SPACE) {
+          const cl = buildClouds(this.rng);
+          this.clouds = cl.clouds;
+          this.scene.add(cl.group);
+        } else {
+          this.scene.add(buildAsteroidBellies(this.rng));
+          this.dust = buildSpaceDust(this.rng);
+          this.scene.add(this.dust.pts);
+        }
         break;
       }
       case 5: {
@@ -1136,6 +1427,12 @@ export class World {
     this.fieldWall = buildFieldWall(centerDir, theta);
     this.scene.add(this.fieldWall.mesh);
     return this.fieldWall;
+  }
+
+  addFogSkirt(centerDir, theta) {
+    this.fogSkirt = buildFogSkirt(centerDir, theta);
+    this.scene.add(this.fogSkirt.mesh);
+    return this.fogSkirt;
   }
 
   addPortal(pos) {
@@ -1186,6 +1483,8 @@ export class World {
     const swayShader = this.decor?.treeMat.userData.shader;
     if (swayShader) swayShader.uniforms.uTime.value = t;
     if (this.fieldWall) this.fieldWall.mat.uniforms.uTime.value = t;
+    if (this.fogSkirt) this.fogSkirt.mat.uniforms.uTime.value = t;
+    if (this.dust) this.dust.mat.uniforms.uTime.value = t;
     if (this.clouds) {
       // Clouds condense away across the terminator so the night side never
       // shows black silhouettes against the horizon glow.

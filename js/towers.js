@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { PALETTE, REDUCED_MOTION } from './config.js';
+import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { clamp, lerp } from './noise.js';
 import { R, orientOnSurface } from './world.js';
 
@@ -60,6 +60,13 @@ export const TOWER_TYPES = {
     ],
   },
 };
+
+// On Space Battlefields there is no ground layer: everything flies, so the
+// mortar shells burst at the flight layer instead.
+if (CONFIG.map.mode === 'space') {
+  TOWER_TYPES.mortar.air = true;
+  TOWER_TYPES.mortar.desc = 'Lobbed shells, area damage at the flight layer. Minimum range.';
+}
 
 export function tierCost(typeKey, tier) {
   const base = TOWER_TYPES[typeKey].cost;
@@ -419,7 +426,8 @@ export class Tower {
   update(dt, enemies, fx) {
     this.buildT = Math.min(1, this.buildT + dt * 2.4);
     const rise = 1 - Math.pow(1 - this.buildT, 3);
-    this.group.scale.setScalar(TOWER_SCALE * (0.35 + rise * 0.65));
+    // zoomScale swells models at strategic zoom so they stay readable.
+    this.group.scale.setScalar(TOWER_SCALE * this.manager.zoomScale * (0.35 + rise * 0.65));
     this.group.position.y = (rise - 1) * 0.6;
 
     const st = this.stats;
@@ -617,6 +625,7 @@ export class TowerManager {
     this.nav = nav;
     this.towers = [];
     this.time = 0;
+    this.zoomScale = 1;
     this.onKillReward = null;
 
     // bolt tracers
@@ -660,7 +669,7 @@ export class TowerManager {
 
   enemyWorldPos(e, out) {
     const h = Math.max(e.height, 0.03);
-    return out.copy(e.dir).multiplyScalar(R + h + e.type.altitude + e.type.radius * 0.9);
+    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
   }
 
   place(typeKey, pos) {

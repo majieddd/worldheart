@@ -456,6 +456,85 @@ class BlobShadows {
 const _qFlat2 = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 
 // ---------------------------------------------------------------------------
+// Strategic icon layer: at far zoom, towers and landmarks read as
+// screen-fixed glyph dots (the Planetary Annihilation trick), fading in as
+// the models stop being individually legible.
+
+class StrategicIcons {
+  constructor(scene, max = 96) {
+    this.max = max;
+    const geo = new THREE.BufferGeometry();
+    this.aPos = new THREE.BufferAttribute(new Float32Array(max * 3), 3).setUsage(THREE.DynamicDrawUsage);
+    this.aCol = new THREE.BufferAttribute(new Float32Array(max * 3), 3).setUsage(THREE.DynamicDrawUsage);
+    this.aSize = new THREE.BufferAttribute(new Float32Array(max), 1).setUsage(THREE.DynamicDrawUsage);
+    this.aRing = new THREE.BufferAttribute(new Float32Array(max), 1).setUsage(THREE.DynamicDrawUsage);
+    geo.setAttribute('position', this.aPos);
+    geo.setAttribute('aColor', this.aCol);
+    geo.setAttribute('aSize', this.aSize);
+    geo.setAttribute('aRing', this.aRing);
+    this.mat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, depthTest: false,
+      uniforms: { uAlpha: { value: 0 } },
+      vertexShader: /* glsl */ `
+        attribute vec3 aColor;
+        attribute float aSize;
+        attribute float aRing;
+        varying vec3 vCol;
+        varying float vRing;
+        void main() {
+          vCol = aColor;
+          vRing = aRing;
+          gl_PointSize = aSize;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        varying vec3 vCol;
+        varying float vRing;
+        uniform float uAlpha;
+        void main() {
+          float d = length(gl_PointCoord - 0.5);
+          float disc = smoothstep(0.5, 0.4, d);
+          float hole = vRing > 0.5 ? smoothstep(0.18, 0.28, d) : 1.0;
+          float m = disc * hole;
+          float outline = smoothstep(0.5, 0.46, d) - smoothstep(0.42, 0.38, d);
+          vec3 col = mix(vCol, vec3(0.04, 0.06, 0.13), outline * 0.85);
+          gl_FragColor = vec4(col, m * uAlpha);
+        }
+      `,
+    });
+    this.points = new THREE.Points(geo, this.mat);
+    this.points.frustumCulled = false;
+    this.points.renderOrder = 14;
+    scene.add(this.points);
+    this._n = 0;
+  }
+
+  begin() { this._n = 0; }
+
+  add(pos, colorHex, size, ring = 0) {
+    if (this._n >= this.max) return;
+    const i = this._n++;
+    this.aPos.setXYZ(i, pos.x, pos.y, pos.z);
+    _c.setHex(colorHex);
+    this.aCol.setXYZ(i, _c.r, _c.g, _c.b);
+    this.aSize.setX(i, size);
+    this.aRing.setX(i, ring);
+  }
+
+  commit(alpha) {
+    this.mat.uniforms.uAlpha.value = alpha;
+    this.points.visible = alpha > 0.01;
+    if (!this.points.visible) return;
+    this.points.geometry.setDrawRange(0, this._n);
+    this.aPos.needsUpdate = true;
+    this.aCol.needsUpdate = true;
+    this.aSize.needsUpdate = true;
+    this.aRing.needsUpdate = true;
+  }
+}
+
+// ---------------------------------------------------------------------------
 
 export class Effects {
   constructor(scene, camera) {
@@ -468,6 +547,7 @@ export class Effects {
     this.zaps.camera = camera;
     this.floaters = new DamageNumbers(camera);
     this.blobs = new BlobShadows(scene, 200);
+    this.icons = new StrategicIcons(scene);
   }
 
   // Composite recipes -------------------------------------------------------
@@ -516,6 +596,6 @@ export class Effects {
     this.rings.update(dt);
     this.zaps.update(dt);
     this.floaters.update(dt);
-    if (enemyList) this.blobs.updateFrom(enemyList);
+    if (enemyList && this.blobs.mesh.visible) this.blobs.updateFrom(enemyList);
   }
 }

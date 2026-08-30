@@ -103,7 +103,10 @@ async function boot() {
   nav.build();
   // Capped maps must register the battlefield before any mesh building so
   // terrain tinting, decor scatter, and walkability all agree on the wall.
-  if (nav.fieldCenter) setBattlefield(nav.fieldCenter, CONFIG.map.fieldTheta);
+  if (nav.fieldCenter) {
+    setBattlefield(nav.fieldCenter, CONFIG.map.fieldTheta);
+    rig.confine = { center: nav.fieldCenter.clone(), maxAng: CONFIG.map.fieldTheta * 0.94 };
+  }
   for (let i = 1; i < world.buildStepCount; i++) {
     await progress(BOOT_LABELS[i + 1]);
     world.buildStep(i);
@@ -114,6 +117,7 @@ async function boot() {
   world.addHeart(heartPos);
   world.crushDecorNear(heartPos, 4.2);
   if (nav.fieldCenter) world.addFieldWall(nav.fieldCenter, CONFIG.map.fieldTheta);
+  if (CONFIG.map.mode === 'battlefield') world.addFogSkirt(nav.fieldCenter, CONFIG.map.fieldTheta);
   const portalPositions = [];
   for (const pn of nav.portalNodes) {
     const pp = nav.nodePos(pn, new THREE.Vector3());
@@ -125,6 +129,7 @@ async function boot() {
   enemies = new EnemyManager(scene, nav);
   enemies.setHeart(heartPos);
   fx = new Effects(scene, rig.camera);
+  if (CONFIG.map.mode === 'space') fx.blobs.mesh.visible = false;
   enemies.onLandFx = (e) => {
     towerMgr.enemyWorldPos(e, _fxTmp);
     fx.rings.spawn(_fxTmp, 0x86909f, 1.15, 0.42);
@@ -182,7 +187,7 @@ async function boot() {
 
   document.getElementById('boot').classList.add('done');
   rig.introFlight(heartPos.clone().normalize());
-  rig.autoOrbit = 0.045;
+  rig.autoOrbit = rig.confine ? 0 : 0.045;
   ui.showTitle();
 
   let prev = performance.now();
@@ -261,9 +266,34 @@ function stepFrame(dt, render) {
   }
   if (game) game.update(dt);
   if (ui) ui.update(dt);
-  if (fx) fx.update(simDt, enemies ? enemies.active : null);
+  if (fx) {
+    // Strategic scale: swell models with zoom, then hand over to icons.
+    const z = rig.zoomT;
+    if (towerMgr) towerMgr.zoomScale = 1 + z * 0.9;
+    if (enemies) enemies.zoomScale = 1 + z * 0.75;
+    const iconAlpha = Math.min(1, Math.max(0, (z - 0.52) / 0.26));
+    fx.icons.begin();
+    if (iconAlpha > 0.01 && towerMgr && world.heart) {
+      for (const t of towerMgr.towers) {
+        _fxTmp.copy(t.pos).addScaledVector(_fxTmp2.copy(t.pos).normalize(), 2.2 + z * 3);
+        fx.icons.add(_fxTmp, ICON_COLORS[t.typeKey] || 0x59f2ff, 9);
+      }
+      _fxTmp.copy(world.heart.group.position).addScaledVector(_fxTmp2.copy(world.heart.group.position).normalize(), 3.4 + z * 3);
+      fx.icons.add(_fxTmp, 0xeafcff, 17, 1);
+      for (const p of world.portals) {
+        _fxTmp.copy(p.group.position).addScaledVector(_fxTmp2.copy(p.group.position).normalize(), 2.6 + z * 3);
+        fx.icons.add(_fxTmp, p.active ? 0xff3fa6 : 0x8a5f9e, 13, 1);
+      }
+    }
+    fx.icons.commit(iconAlpha);
+    fx.update(simDt, enemies ? enemies.active : null);
+  }
   if (render) post.render(scene, rig.camera, dt);
 }
+
+const ICON_COLORS = {
+  bolt: 0x59f2ff, cryo: 0xbff1ff, mortar: 0xffc857, tesla: 0x9db8ff, helios: 0xffd9a0,
+};
 
 function workMs() {
   let sum = 0;

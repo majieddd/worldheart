@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { CONFIG } from './config.js';
 import { mulberry32 } from './noise.js';
-import { R, SUN_DIR, initTerrainField, terrainHeight, isWalkableDir, surfacePoint } from './world.js';
+import { R, SUN_DIR, SPACE, initTerrainField, terrainHeight, isWalkableDir, surfacePoint } from './world.js';
+import * as WORLD from './world.js';
 
 // Walkability graph over a geodesic icosphere (detail 5, 10242 nodes).
 // A single-source Dijkstra from the Worldheart yields a flow field every
@@ -105,6 +106,24 @@ export class NavGraph {
   build() {
     const theta = CONFIG.map.fieldTheta;
     this.portalTarget = CONFIG.map.portalWakes.length;
+
+    // Space Battlefields are authored, not searched: the platform layout is
+    // deterministic per seed, the whole cap is flight space (pathable), and
+    // the heart and breach sites come straight from the layout.
+    if (CONFIG.map.mode === 'space') {
+      const space = WORLD.SPACE;
+      this.attempts = 1;
+      this._buildGraph(space.center, theta, true);
+      const heartSite = space.sites.find((s) => s.kind === 'heart');
+      this.heartNode = this.nearestNode(heartSite.dir);
+      this.portalNodes = space.sites
+        .filter((s) => s.kind === 'portal')
+        .map((s) => this.nearestNode(s.dir));
+      this.fieldCenter = space.center.clone();
+      this.recomputeFlow();
+      return;
+    }
+
     for (let attempt = 0; attempt < 14; attempt++) {
       this.attempts = attempt + 1;
       if (attempt > 0) {
@@ -144,7 +163,7 @@ export class NavGraph {
     return SUN_DIR.clone();
   }
 
-  _buildGraph(capCenter = null, capTheta = 0) {
+  _buildGraph(capCenter = null, capTheta = 0, walkAll = false) {
     if (!this._ico) this._ico = buildIcosphere(DETAIL);
     const { verts, faces } = this._ico;
     const total = verts.length;
@@ -187,7 +206,7 @@ export class NavGraph {
       this.height[idx] = h;
       const p = Math.max(h, 0.03) + R;
       this.pos[idx * 3] = x * p; this.pos[idx * 3 + 1] = y * p; this.pos[idx * 3 + 2] = z * p;
-      this.walk[idx] = isWalkableDir(_v) ? 1 : 0;
+      this.walk[idx] = walkAll ? 1 : (isWalkableDir(_v) ? 1 : 0);
     }
 
     // CSR adjacency from unique triangle edges (kept nodes only)

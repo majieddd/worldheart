@@ -89,6 +89,7 @@ export class HUD {
 
       <div class="panel" id="settings-pop">
         <div class="set-row"><span>World</span><span class="marker" style="color:var(--text)">${CONFIG.map.name}</span></div>
+        <div class="set-row"><span>Mode</span><span class="marker" style="color:var(--gold)">${CONFIG.map.modeLabel}</span></div>
         <div class="set-row"><span>Quality</span><button class="btn" id="set-quality">Auto</button></div>
         <div class="set-row"><span>Screen shake</span><button class="btn" id="set-shake">On</button></div>
         <div class="set-row"><span>Seed</span><span class="marker" id="set-seed" style="color:var(--text)">0</span></div>
@@ -198,6 +199,7 @@ export class HUD {
       card.className = 'map-card' + (key === CONFIG.mapKey ? ' selected' : '');
       card.innerHTML = `
         <div class="m-name">${m.name}</div>
+        <div class="m-mode marker">${m.modeLabel}</div>
         <div class="m-chip marker">${m.chip}</div>
         <div class="m-tag">${m.tag}</div>
       `;

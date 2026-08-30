@@ -92,6 +92,8 @@ export class EnemyManager {
   constructor(scene, nav) {
     this.scene = scene;
     this.nav = nav;
+    this.spaceMode = CONFIG.map.mode === 'space';
+    this.zoomScale = 1;
     this.pool = [];
     this.active = [];
     this.onLeak = null;
@@ -184,6 +186,8 @@ export class EnemyManager {
     _tmp.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(0.02);
     _dir.add(_tmp).normalize();
     e.init(typeKey, type, _dir, portalNode, hpScale);
+    // In space everything soars above the platform tops.
+    e.alt = this.spaceMode ? Math.max(type.altitude, 2.7) : type.altitude;
     this.active.push(e);
     if (this.onSpawnFx) this.onSpawnFx(e);
     return e;
@@ -270,7 +274,7 @@ export class EnemyManager {
       for (let k = 0; k < this.active.length; k++) {
         if (k === i) continue;
         const o = this.active[k];
-        if (o.type.flying !== type.flying) continue;
+        if (!this.spaceMode && o.type.flying !== type.flying) continue;
         _tmp.copy(e.dir).sub(o.dir);
         const d2 = _tmp.lengthSq();
         const rad = (type.radius + o.type.radius) * 1.25 / R;
@@ -297,8 +301,8 @@ export class EnemyManager {
       e.height = terrainHeight(e.dir.x, e.dir.y, e.dir.z);
 
       // Heart contact
-      _tmp.copy(e.dir).multiplyScalar(R + Math.max(e.height, 0.03) + type.altitude);
-      if (_tmp.distanceToSquared(this.heartPos) < heartR2 + type.altitude * type.altitude) {
+      _tmp.copy(e.dir).multiplyScalar(R + Math.max(e.height, 0.03) + e.alt);
+      if (_tmp.distanceToSquared(this.heartPos) < heartR2 + e.alt * e.alt) {
         e.reached = true;
         if (this.onLeak) this.onLeak(e);
         this._release(e);
@@ -418,14 +422,14 @@ export class EnemyManager {
       const type = e.type;
       const parts = this.species[e.typeKey];
       const hRaw = Math.max(e.height, 0.03);
-      const bob = type.flying ? Math.sin(t * 3.1 + e.phase) * 0.2 : 0;
-      _tmp.copy(e.dir).multiplyScalar(R + hRaw + type.altitude + bob);
+      const bob = (type.flying || this.spaceMode) ? Math.sin(t * 3.1 + e.phase) * 0.2 : 0;
+      _tmp.copy(e.dir).multiplyScalar(R + hRaw + e.alt + bob);
       _up.copy(e.dir);
       _look.copy(_tmp).add(e.fwd);
       _mBasis.lookAt(_tmp, _look, _up);
       _q.setFromRotationMatrix(_mBasis);
       const pop = e.spawnT < 0.35 ? 0.25 + 0.75 * (e.spawnT / 0.35) : 1;
-      const bodyScale = pop * (type.boss ? 1.55 : 1.28);
+      const bodyScale = pop * (type.boss ? 1.55 : 1.28) * this.zoomScale;
       _s.set(bodyScale, bodyScale, bodyScale);
       _frame.compose(_tmp, _q, _s);
 
