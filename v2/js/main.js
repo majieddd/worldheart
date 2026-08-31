@@ -679,10 +679,15 @@ function camTest() {
   // measured at the ground, so these numbers must come out the same on every
   // world; that identity is what keeps one tuning framing a planetoid and a
   // colossal planet alike, and it is the thing to guard.
+  // settle(45), not 20. The lens eases at dt*7, so 20 frames leaves 8.4% of
+  // the gap unclosed. That was 1.4 degrees on the old 17-degree fov span and
+  // squeaked under the 1.5 tolerance; on a wider span it reads as a failure
+  // the lens does not actually have. The tolerance below is unchanged, this
+  // only lets the value it measures finish arriving.
   rig.flight = null; rig.velLon = 0; rig.velLat = 0;
-  rig.targetDist = rig.dist = rig.distMin; settle(20);
+  rig.targetDist = rig.dist = rig.distMin; settle(45);
   const fovNear = rig.camera.fov, viewNear = (viewAngle() * 180) / Math.PI;
-  rig.targetDist = rig.dist = rig.distMax; settle(20);
+  rig.targetDist = rig.dist = rig.distMax; settle(45);
   const fovFar = rig.camera.fov, viewFar = (viewAngle() * 180) / Math.PI;
   add('lens and view angle match the tuned endpoints', Math.abs(fovNear - CAM_TUNE.fovNear) < 1.5
     && Math.abs(fovFar - CAM_TUNE.fovFar) < 1.5
