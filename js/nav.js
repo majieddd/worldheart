@@ -168,7 +168,9 @@ export class NavGraph {
       if (theta) {
         const rng = mulberry32(CONFIG.seed ^ 0xCA97);
         for (let c = 0; c < 5; c++) {
-          const center = this._pickCapCenter(rng, relax);
+          const center = this._pickCapCenter(rng, relax, theta);
+          // A front that is mostly sea is not a battlefield; try another seed.
+          if (this.capLandFrac < 0.76 - relax * 0.3) break;
           this._buildGraph(center, theta);
           if (this._chooseSites(relax, center, theta)) {
             this.fieldCenter = center;
@@ -183,16 +185,45 @@ export class NavGraph {
     throw new Error('worldgen failed to find a playable seed');
   }
 
-  _pickCapCenter(rng, relax) {
+  // A battlefield must sit on ground the player can actually build on. Sunlit
+  // placement alone once dropped the front over open ocean, where most of the
+  // visible field refused every tower.
+  _pickCapCenter(rng, relax, theta) {
     const v = new THREE.Vector3();
-    for (let t = 0; t < 400; t++) {
+    const e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
+    const probe = new THREE.Vector3();
+    const SAMPLES = 56;
+    let best = null, bestLand = -1;
+
+    for (let t = 0; t < 700; t++) {
       v.set(rng() * 2 - 1, (rng() * 2 - 1) * 0.58, rng() * 2 - 1);
       if (v.lengthSq() > 1 || v.lengthSq() < 0.01) continue;
       v.normalize();
       if (v.dot(SUN_DIR) < 0.2 - relax * 0.35) continue;
-      return v.clone();
+      // Anchor on dry ground before paying for the full cap survey.
+      if (terrainHeight(v.x, v.y, v.z, false) < 0.15) continue;
+
+      if (Math.abs(v.y) < 0.93) e1.set(0, 1, 0); else e1.set(1, 0, 0);
+      e2.crossVectors(v, e1).normalize();
+      e1.crossVectors(e2, v).normalize();
+
+      let land = 0;
+      for (let s = 0; s < SAMPLES; s++) {
+        // sunflower spiral: even coverage of the cap with few samples
+        const ang = theta * Math.sqrt((s + 0.5) / SAMPLES);
+        const az = s * 2.39996323;
+        probe.copy(v).multiplyScalar(Math.cos(ang))
+          .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
+          .addScaledVector(e2, Math.sin(ang) * Math.sin(az))
+          .normalize();
+        if (terrainHeight(probe.x, probe.y, probe.z, false) >= 0.05) land++;
+      }
+      const frac = land / SAMPLES;
+      if (frac > bestLand) { bestLand = frac; best = v.clone(); }
+      if (bestLand >= 0.86) break;
     }
-    return SUN_DIR.clone();
+    this.capLandFrac = bestLand;
+    return best || SUN_DIR.clone();
   }
 
   _buildGraph(capCenter = null, capTheta = 0, walkAll = false, detail = DETAIL, coarse = false) {

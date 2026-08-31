@@ -50,6 +50,7 @@ export class OrbitRig {
     this.flight = null;          // active tween {fromLon...toDist,t,dur}
     this.shakeEnabled = !REDUCED_MOTION;
     this.confine = null;         // {center: Vector3, maxAng} battlefield bounds
+    this.confineHits = 0;        // times the boundary clamped the view
     this.viewYaw = 0;            // ctrl+middle drag / Q,E: spin the view
     this.tiltOffset = 0;         // ctrl+middle drag: manual pitch offset
     this.appliedTilt = 0;        // total pitch used this frame
@@ -187,7 +188,8 @@ export class OrbitRig {
   }
 
   get distMax() {
-    return CONFIG.planetRadius * (1 + CAM_TUNE.maxAlt);
+    // Always leave a usable zoom band, however the two height sliders are set.
+    return Math.max(CONFIG.planetRadius * (1 + CAM_TUNE.maxAlt), this.distMin + 2);
   }
 
   // Normalized zoom, 0 fully in, 1 fully out. Consumers drive the
@@ -520,6 +522,7 @@ export class OrbitRig {
         this.lon = Math.atan2(_aim.x, _aim.z);
         this.velLon *= 0.5;
         this.velLat *= 0.5;
+        this.confineHits++;
       }
     }
 

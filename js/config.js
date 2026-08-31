@@ -197,7 +197,7 @@ export const CAM_RANGES = {
   tiltNear: { min: -25, max: 85, step: 1, def: 42, label: 'Tilt · close', unit: '°' },
   tiltFar: { min: -25, max: 85, step: 1, def: 2, label: 'Tilt · orbit', unit: '°' },
   minAlt: { min: 1, max: 90, step: 0.5, def: 7, label: 'Min height', unit: '' },
-  maxAlt: { min: 0.15, max: 14, step: 0.05, def: 3.6, label: 'Max height', unit: '×R' },
+  maxAlt: { min: 0.02, max: 14, step: 0.02, def: 3.6, label: 'Max height', unit: '×R' },
   panMul: { min: 10, max: 400, step: 5, def: 100, label: 'Pan speed', unit: '%' },
   zoomSpeed: { min: 10, max: 400, step: 5, def: 100, label: 'Zoom speed', unit: '%' },
 };

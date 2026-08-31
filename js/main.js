@@ -378,23 +378,20 @@ function camTest() {
     ptr('pointerdown', sx, sy, 0, false);
     if (!rig.grabValid || !rig.rayHit) { ptr('pointerup', sx, sy, 0, false); return null; }
     _cref.copy(rig.grabDir).multiplyScalar(rig.grabR);
+    const hitsBefore = rig.confineHits;
     let offGlobe = false;
     for (let i = 1; i <= steps; i++) {
       ptr('pointermove', sx + (dx * i) / steps, sy + (dy * i) / steps, -1, false);
       if (!rig.rayHit) offGlobe = true;
+      stepFrame(1 / 60, false);
     }
     ptr('pointerup', sx + dx, sy + dy, 0, false);
     rig.velLon = 0; rig.velLat = 0;
     stepFrame(1 / 60, false);
     if (offGlobe) return null;
-    // A drag that ran into the battlefield boundary is meant to stop short;
-    // that is confinement working, not a tracking error.
-    if (rig.confine) {
-      const cl2 = Math.cos(rig.lat);
-      _cdir.set(Math.sin(rig.lon) * cl2, Math.sin(rig.lat), Math.cos(rig.lon) * cl2);
-      const ang = Math.acos(Math.max(-1, Math.min(1, _cdir.dot(rig.confine.center))));
-      if (ang > rig.confine.maxAng - 0.01) return null;
-    }
+    // A drag that ran into the battlefield boundary at any point is meant to
+    // stop short; that is confinement working, not a tracking error.
+    if (rig.confineHits !== hitsBefore) return null;
     const p = project(_cref);
     const err = Math.hypot(p[0] - (sx + dx), p[1] - (sy + dy));
     return Number.isFinite(err) ? err : null;
@@ -415,7 +412,7 @@ function camTest() {
   };
   const gesture = () => {
     const g = apparentRadiusPx() * 0.28 * (rig.confine ? 0.55 : 1);
-    return Math.max(24, Math.min(130, Math.round(g)));
+    return Math.max(40, Math.min(130, Math.round(g)));
   };
   rig.targetDist = rig.dist = rig.distMin + (rig.distMax - rig.distMin) * 0.4;
   settle();
