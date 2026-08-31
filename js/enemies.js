@@ -173,6 +173,11 @@ export class EnemyManager {
         mesh.count = 0;
         mesh.frustumCulled = false;
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        // Instanced, so the whole swarm costs one shadow draw per body part.
+        // Glow parts stay out of the map for the same reason tower energy does:
+        // a shadow cast by a light source reads as a modelling error.
+        mesh.castShadow = p.mat !== glowMat;
+        mesh.receiveShadow = true;
         scene.add(mesh);
         return { mesh, per: p.per, glow: p.mat === glowMat };
       });

@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { CONFIG, CAM_TUNE, PALETTE } from './config.js';
+import { CONFIG, CAM_TUNE, PALETTE, LIGHTING } from './config.js';
 import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
-import { World, R, surfacePoint, setBattlefield, raycastTerrain } from './world.js';
+import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR } from './world.js';
 import { NavGraph } from './nav.js';
 import { EnemyManager } from './enemies.js';
 import { Effects } from './effects.js';
@@ -18,6 +18,12 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.toneMapping = THREE.NoToneMapping;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
+// Soft shadows. PCFSoft costs more than PCF but this scene has hard flat
+// facets everywhere, and a hard-edged shadow on top of them reads as a second
+// facet rather than as light. autoUpdate stays on: towers, creatures and the
+// shadow box itself all move.
+renderer.shadowMap.enabled = LIGHTING.shadows.enabled;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const PIXEL_RATIO_CAP = 1.75;
 let pixelRatio = Math.min(devicePixelRatio || 1, PIXEL_RATIO_CAP);
 
@@ -94,6 +100,85 @@ let game = null;
 let waves = null;
 let ui = null;
 
+/* ---- environment map and sun shadows ---------------------------------- */
+const _shadowFocus = new THREE.Vector3();
+const _shadowDir = new THREE.Vector3();
+
+/* Runs once, after the sky and terrain exist. */
+function setupLighting() {
+  // The sky group is already dome plus stars plus gas giant plus sun sprite,
+  // so the environment costs one PMREM render at boot and nothing per frame.
+  // fromScene walks any Object3D, so the Group is handed over as-is rather
+  // than reparented out of the live scene.
+  if (world.sky) {
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const rt = pmrem.fromScene(world.sky);
+    scene.environment = rt.texture;
+    scene.environmentIntensity = LIGHTING.envIntensity;
+    pmrem.dispose();
+  }
+
+  const sun = world.sun;
+  if (!sun || !renderer.shadowMap.enabled) return;
+  const S = LIGHTING.shadows;
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(S.mapSize, S.mapSize);
+  // Both biases earn their keep on this geometry. bias fights the acne that
+  // flat facets produce when a face is nearly parallel to the sun; normalBias
+  // is the one that matters more here, because it offsets along the normal and
+  // faceted normals are exactly what a per-vertex offset handles well.
+  sun.shadow.bias = S.bias;
+  sun.shadow.normalBias = S.normalBias;
+  const c = sun.shadow.camera;
+  c.near = 1;
+  c.far = S.depth * 2;
+  updateShadowCamera();
+}
+
+/* Shadows are the first thing to go when the frame budget is tight: they cost
+   a whole extra scene pass over every caster. Dropping the map to 1024 rather
+   than switching them off keeps the diorama read, which is the entire reason
+   they were added, and halves the memory. Off entirely only if a tier below
+   'low' is ever added. */
+function setShadowTier(q) {
+  const sun = world?.sun;
+  if (!sun || !renderer.shadowMap.enabled) return;
+  const size = q === 'low' ? 1024 : LIGHTING.shadows.mapSize;
+  if (sun.shadow.mapSize.x === size) return;
+  sun.shadow.mapSize.set(size, size);
+  // The map is allocated lazily from mapSize, so an existing one has to be
+  // released or the change silently does nothing.
+  sun.shadow.map?.dispose();
+  sun.shadow.map = null;
+}
+
+/* Runs per frame. The rig is a focus-orbit rig, so rig.lon/lat IS the point
+   pinned to screen centre: fitting the shadow box to it puts the whole map
+   budget where the player is actually looking. Radius follows zoomT so a
+   close view gets a tight, dense box and orbit still covers what is visible.
+   Recomputed from lon/lat rather than read off the rig because camera.js does
+   not expose its focus vector, and that file is deliberately not touched. */
+function updateShadowCamera() {
+  const sun = world?.sun;
+  if (!sun || !sun.castShadow) return;
+  const S = LIGHTING.shadows;
+  const cosLat = Math.cos(rig.lat);
+  _shadowDir.set(Math.sin(rig.lon) * cosLat, Math.sin(rig.lat), Math.cos(rig.lon) * cosLat);
+  _shadowFocus.copy(_shadowDir).multiplyScalar(R);
+
+  const radius = S.radiusNear + (S.radiusFar - S.radiusNear) * rig.zoomT;
+  const c = sun.shadow.camera;
+  if (c.right !== radius) {
+    c.left = -radius; c.right = radius; c.top = radius; c.bottom = -radius;
+    c.updateProjectionMatrix();
+  }
+  // Stand the light off along the sun direction far enough that the near plane
+  // clears terrain relief between the light and the focus.
+  sun.position.copy(_shadowFocus).addScaledVector(SUN_DIR, S.depth);
+  sun.target.position.copy(_shadowFocus);
+  sun.target.updateMatrixWorld();
+}
+
 async function boot() {
   resize();
   const totalSteps = world.buildStepCount + 2;
@@ -120,6 +205,7 @@ async function boot() {
     await progress(BOOT_LABELS[i + 1]);
     world.buildStep(i);
   }
+  setupLighting();
   await progress(BOOT_LABELS[7]);
 
   const heartPos = nav.nodePos(nav.heartNode, new THREE.Vector3());
@@ -163,8 +249,8 @@ async function boot() {
   ui = new HUD({ game, waves, world, nav, rig, renderer, audio });
   ui.makeThumbnails();
   ui.onQuality = (q) => {
-    if (q === 'low') { post.setQuality('low'); pixelRatio = 1.1; }
-    else if (q === 'high') { post.setQuality('high'); pixelRatio = Math.min(devicePixelRatio || 1, PIXEL_RATIO_CAP); }
+    if (q === 'low') { post.setQuality('low'); pixelRatio = 1.1; setShadowTier('low'); }
+    else if (q === 'high') { post.setQuality('high'); pixelRatio = Math.min(devicePixelRatio || 1, PIXEL_RATIO_CAP); setShadowTier('high'); }
     resize();
   };
 
@@ -219,6 +305,7 @@ async function boot() {
       qualityLocked = true;
       if (fps() < 45) {
         post.setQuality('low');
+        setShadowTier('low');
         pixelRatio = Math.min(pixelRatio, 1.25);
         resize();
       }
@@ -274,6 +361,10 @@ canvas.addEventListener('webglcontextrestored', () => {
 function stepFrame(dt, render) {
   rig.update(dt);
   camFill.position.copy(rig.camera.position);
+  // After rig.update so the box tracks this frame's focus, not last frame's.
+  // Inside stepFrame rather than the rAF loop so WH.step() advances it too:
+  // a scripted verification run has to see the same shadows a player does.
+  updateShadowCamera();
   world.update(dt, rig.camera.position);
   const simActive = game && game.state === 'playing' && !game.paused;
   const simDt = simActive ? dt * game.speed : 0;

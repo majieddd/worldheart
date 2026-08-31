@@ -1512,6 +1512,11 @@ export class World {
         break;
       case 1:
         this.terrain = buildTerrainMesh();
+        // Terrain RECEIVES but never CASTS. At terrainDetail 7 the globe is
+        // 327,680 triangles, so making it a caster re-renders all of it into
+        // the shadow map every frame; and it has no self-shadowing to show at
+        // gameplay zoom anyway. Everything that stands ON it casts instead.
+        this.terrain.receiveShadow = true;
         this.scene.add(this.terrain);
         break;
       case 2:
@@ -1530,7 +1535,13 @@ export class World {
       }
       case 4: {
         this.decor = scatterDecor(this.rng);
-        for (const s of this.decor.sets) this.scene.add(s.mesh);
+        // Decor is instanced, so casting costs one shadow draw per set rather
+        // than one per tree. This is most of what sells the diorama read.
+        for (const s of this.decor.sets) {
+          s.mesh.castShadow = true;
+          s.mesh.receiveShadow = true;
+          this.scene.add(s.mesh);
+        }
         if (!SPACE) {
           const cl = buildClouds(this.rng);
           this.clouds = cl.clouds;
@@ -1549,7 +1560,13 @@ export class World {
         this.scene.add(hemi);
         const sun = new THREE.DirectionalLight(PALETTE.sunlight, 2.35);
         sun.position.copy(SUN_DIR).multiplyScalar(120);
+        // Kept on the World so main.js can fit its shadow camera to the focus
+        // point each frame. A directional light's shadow box is world-sized by
+        // default, which on an R240 planet means a 2048 map spread over the
+        // whole globe: correct, and far too coarse to show a tower's footing.
+        this.sun = sun;
         this.scene.add(sun);
+        this.scene.add(sun.target);
         const rim = new THREE.DirectionalLight(0x3f6bff, 0.85);
         rim.position.set(-SUN_DIR.x, SUN_DIR.y * 0.3, -SUN_DIR.z).multiplyScalar(120);
         this.scene.add(rim);

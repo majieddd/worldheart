@@ -140,6 +140,51 @@ export const CONFIG = {
 };
 
 // All hexes are sRGB. Three converts to linear internally.
+/* LIGHTING. Two gaps a 2026-08-31 render audit found, both silent:
+
+   1. Every metal in the game was paying for a reflection it never received.
+      `scene.environment` was never set, yet towers.js carries metalness up to
+      0.55 and the heart trim 0.35. In the standard BRDF metalness drives
+      diffuse albedo toward zero and routes that energy into a specular lobe,
+      so metal with nothing to reflect renders DARKER AND FLATTER than
+      metalness:0 would. The sky is already a full procedural dome, so the fix
+      is one PMREM render at boot and nothing per frame.
+   2. Nothing cast a shadow anywhere: a grep for castShadow/receiveShadow/
+      shadowMap across all 14 modules returned nothing. DESIGN.md asks for a
+      hand-carved museum diorama, and the diorama read is mostly contact shadow.
+
+   envIntensity stays below 1 on purpose. A full-strength environment washes
+   out the flat facet shading the dioramic look depends on; this is a metal
+   fix, not an ambient-light fix.
+
+   The shadow camera is FOCUS-FITTED, and it has to be. Terrain at detail 7 is
+   327,680 triangles: making it a caster means re-rendering all of it into the
+   map every frame on a colossal world. Terrain RECEIVES but never CASTS, the
+   casters are towers, creatures, decor, heart and portals, and the orthographic
+   box tracks rig.lon/lat, which is already the point pinned to screen centre.
+   Radius scales with camera altitude so the box stays tight when zoomed in and
+   still covers what is visible from orbit. */
+export const LIGHTING = {
+  envIntensity: 0.62,
+  shadows: {
+    enabled: true,
+    mapSize: 2048,       // 1024 on the low tier, set in main.js
+    // Half-width of the ortho shadow box in world units, lerped across zoom.
+    radiusNear: 26,
+    radiusFar: Math.min(R0 * 0.55, 150),
+    depth: Math.max(140, R0 * 0.9),   // ortho near/far span, must clear terrain relief
+    bias: -0.0009,
+    // normalBias is in WORLD UNITS, and this world's casters are small: a tree
+    // is 1-2 units and a tower 2-3. A first pass set this to 0.55 by analogy
+    // with scenes built at human scale, which offset the shadow lookup by a
+    // third of a tree and erased most of the coverage. Measured under a 12deg
+    // raking light, dark pixels in the play area went 639 at 0.55 to 1,414 at
+    // 0, i.e. the bias alone was suppressing more than half the shadow. 0.02
+    // keeps enough offset to stop facet acne without eating the shadow itself.
+    normalBias: 0.02,
+  },
+};
+
 export const PALETTE = {
   space: 0x0a0e21,
   horizon: 0x2a3670,
