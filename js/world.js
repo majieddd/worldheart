@@ -135,19 +135,22 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
   // Space maps have no continents: a deep void with authored rock platforms
   // hanging at their own altitudes.
   if (SPACE) {
+    // Each rock is a slab of finite thickness: the rim drops a fixed amount
+    // below its own surface, never all the way to the void floor (blending
+    // to the global void stretched every rock into a stone needle).
     let h = -14;
     for (const s of SPACE.sites) {
       const dot = dx * s.dir.x + dy * s.dir.y + dz * s.dir.z;
       const rAng = s.r / R;
       if (dot < Math.cos(rAng * 1.5)) continue;
       const ang = Math.acos(clamp(dot, -1, 1));
-      const edge = 1 - smoothstep(rAng * 0.6, rAng * 1.18, ang);
+      const edge = 1 - smoothstep(rAng * 0.55, rAng * 1.12, ang);
       if (edge <= 0) continue;
       const rock = fbm3(nDetail, dx * 9 + 13, dy * 9, dz * 9, 3);
-      // baked per-rock attitude: the surface planes away from radial
       const lateral = (dx * s.tilt.x + dy * s.tilt.y + dz * s.tilt.z) * R;
       const surf = 1.3 + s.alt + rock * 0.85 + lateral * s.tiltMag;
-      h = Math.max(h, lerp(-14, surf, edge));
+      const drop = clamp(s.r * 1.1, 2.2, 4.2);
+      h = Math.max(h, surf - Math.pow(1 - edge, 1.6) * drop);
     }
     return h;
   }
@@ -436,8 +439,11 @@ function buildTerrainMesh() {
       a2.fromBufferAttribute(src, i);
       b2.fromBufferAttribute(src, i + 1);
       c2.fromBufferAttribute(src, i + 2);
-      const hC = (a2.length() + b2.length() + c2.length()) / 3 - R;
-      if (hC < -8.5) continue;
+      const la = a2.length() - R, lb = b2.length() - R, lc = c2.length() - R;
+      const hC = (la + lb + lc) / 3;
+      if (hC < -9.6) continue;
+      // seam faces bridging a rock bottom to the void stretch into needles
+      if (Math.max(la, lb, lc) - Math.min(la, lb, lc) > 4.5) continue;
       for (let k = 0; k < 3; k++) {
         const vi = i + k;
         keepPos.push(src.getX(vi), src.getY(vi), src.getZ(vi));
@@ -469,13 +475,11 @@ function buildAsteroidBellies(rng) {
   for (const s of SPACE.sites) {
     const p = new THREE.Vector3();
     surfacePoint(s.dir, p);
-    const depth = s.kind === 'spire' ? s.r * (2.6 + rng() * 0.8) : s.r * (0.75 + rng() * 0.4);
+    const depth = s.kind === 'spire' ? s.r * (1.9 + rng() * 0.5) : s.r * (0.7 + rng() * 0.35);
+    // anchored to the rock's actual surface, hanging just beneath it
+    p.addScaledVector(s.dir, -(depth * 0.55 + 0.6));
     const m = new THREE.Matrix4()
-      .makeTranslation(
-        s.dir.x * (R - depth * 0.42),
-        s.dir.y * (R - depth * 0.42),
-        s.dir.z * (R - depth * 0.42),
-      )
+      .makeTranslation(p.x, p.y, p.z)
       .multiply(new THREE.Matrix4().makeRotationY(rng() * 6.28))
       .multiply(new THREE.Matrix4().makeScale(s.r * 1.02, depth, s.r * 1.02));
     parts.push({ geo: new THREE.IcosahedronGeometry(1, 1), matrix: m, color: col });
