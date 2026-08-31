@@ -53,7 +53,7 @@ export class OrbitRig {
     this.confineHits = 0;        // times the boundary clamped the view
     this.viewYaw = 0;            // ctrl+middle drag / Q,E: spin the view
     this.tiltOffset = 0;         // ctrl+middle drag: manual pitch offset
-    this.appliedTilt = 0;        // total pitch used this frame
+    this.appliedTilt = CAM_TUNE.tiltNear * (Math.PI / 180);
     this.rotating = false;
 
     this.dragging = false;
@@ -184,12 +184,13 @@ export class OrbitRig {
 
   // Live zoom bounds from the player's tuning.
   get distMin() {
-    return CONFIG.planetRadius + CAM_TUNE.minAlt;
+    return CONFIG.planetRadius * (1 + CAM_TUNE.minAlt);
   }
 
   get distMax() {
     // Always leave a usable zoom band, however the two height sliders are set.
-    return Math.max(CONFIG.planetRadius * (1 + CAM_TUNE.maxAlt), this.distMin + 2);
+    const d = this.distMin;
+    return Math.max(CONFIG.planetRadius * (1 + CAM_TUNE.maxAlt), d + 2, d * 1.06);
   }
 
   // Normalized zoom, 0 fully in, 1 fully out. Consumers drive the
@@ -198,11 +199,28 @@ export class OrbitRig {
     return clamp((this.dist - this.distMin) / Math.max(this.distMax - this.distMin, 1), 0, 1);
   }
 
+  // Wheel steps are geometric in altitude but normalised to the zoom band, so
+  // one notch always covers the same fraction of the range whatever the planet
+  // size or how narrow the height limits are. Sizing steps against absolute
+  // distance instead made a notch jump half the band on a colossal world.
   zoomBy(amount) {
-    this.targetDist = clamp(
-      this.targetDist * Math.exp(amount * (CAM_TUNE.zoomSpeed / 100)),
-      this.distMin, this.distMax,
-    );
+    const R0 = CONFIG.planetRadius;
+    const dMin = this.distMin, dMax = this.distMax;
+    const aMin = Math.max(dMin - R0, 0.05);
+    const aMax = Math.max(dMax - R0, aMin * 1.0001);
+    const span = Math.log(aMax / aMin);
+    const alt = clamp(this.targetDist - R0, aMin, aMax);
+    // Scaled so the shipped 15% crosses the range in about twenty notches:
+    // fine control by default, with headroom above for a fast zoom.
+    const step = amount * 3 * (CAM_TUNE.zoomSpeed / 100);
+    let nextAlt;
+    if (span > 1e-4) {
+      const t = clamp(Math.log(alt / aMin) / span + step, 0, 1);
+      nextAlt = aMin * Math.exp(t * span);
+    } else {
+      nextAlt = clamp(alt + (aMax - aMin) * step, aMin, aMax);
+    }
+    this.targetDist = clamp(R0 + nextAlt, dMin, dMax);
   }
 
   // Ground units per screen pixel at the aim point, split into the screen
@@ -559,11 +577,17 @@ export class OrbitRig {
     // Grounded RTS framing: close in, the view pitches toward the horizon so
     // sky and distance fill the top of the frame; from orbit it settles back
     // to a map-like look-down. Both ends are player-tunable.
+    // Smoothstep across the whole zoom range, then eased over time. The old
+    // curve finished pitching two thirds of the way out and stopped dead,
+    // which read as a wall in the middle of a scroll; this has zero slope at
+    // both ends and no instant response to a jump in zoom.
     const tiltNear = CAM_TUNE.tiltNear * (Math.PI / 180);
     const tiltFar = CAM_TUNE.tiltFar * (Math.PI / 180);
-    this.appliedTilt = clamp(
-      lerp(tiltNear, tiltFar, Math.min(1, this.zoomT * 1.5)) + this.tiltOffset, -0.62, 1.55,
+    const zt = this.zoomT;
+    const tiltTarget = clamp(
+      lerp(tiltNear, tiltFar, zt * zt * (3 - 2 * zt)) + this.tiltOffset, -0.62, 1.55,
     );
+    this.appliedTilt += (tiltTarget - this.appliedTilt) * Math.min(1, dt * 6);
     this.camera.rotateX(this.appliedTilt);
     if (roll) this.camera.rotateZ(roll);
     this.camera.updateMatrixWorld();

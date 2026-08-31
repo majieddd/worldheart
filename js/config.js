@@ -114,7 +114,7 @@ export const CONFIG = {
     latClamp: 1.42,      // radians, keeps the orbit off the exact poles
     rotSpeed: 0.0052,
     inertia: 6.5,        // exponential damping rate for released drags
-    zoomDamp: 8,
+    zoomDamp: 5.5,       // lower glides further; the wheel should feel eased
     shakeMax: 0.55 * Math.max(1, R0 / 42),
   },
 
@@ -192,14 +192,17 @@ export const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').mat
 // panel writes them, and they persist per browser. Ranges double as the
 // slider bounds and the load-time sanity clamp.
 export const CAM_RANGES = {
-  fovNear: { min: 15, max: 170, step: 1, def: 100, label: 'Lens · close', unit: '°' },
-  fovFar: { min: 8, max: 170, step: 1, def: 30, label: 'Lens · orbit', unit: '°' },
-  tiltNear: { min: -25, max: 85, step: 1, def: 42, label: 'Tilt · close', unit: '°' },
-  tiltFar: { min: -25, max: 85, step: 1, def: 2, label: 'Tilt · orbit', unit: '°' },
-  minAlt: { min: 1, max: 90, step: 0.5, def: 7, label: 'Min height', unit: '' },
-  maxAlt: { min: 0.02, max: 14, step: 0.02, def: 3.6, label: 'Max height', unit: '×R' },
+  fovNear: { min: 8, max: 170, step: 1, def: 15, label: 'Lens · close', unit: '°' },
+  fovFar: { min: 8, max: 170, step: 1, def: 45, label: 'Lens · orbit', unit: '°' },
+  tiltNear: { min: -25, max: 85, step: 1, def: 44, label: 'Tilt · close', unit: '°' },
+  tiltFar: { min: -25, max: 85, step: 1, def: 30, label: 'Tilt · orbit', unit: '°' },
+  // Both heights are multiples of the planet radius so one setting frames a
+  // planetoid and a colossal planet the same way. 0.21 is the 50 units this
+  // was tuned to on a radius-240 world.
+  minAlt: { min: 0.01, max: 3, step: 0.01, def: 0.21, label: 'Min height', unit: '×R' },
+  maxAlt: { min: 0.02, max: 14, step: 0.01, def: 0.25, label: 'Max height', unit: '×R' },
   panMul: { min: 10, max: 400, step: 5, def: 100, label: 'Pan speed', unit: '%' },
-  zoomSpeed: { min: 10, max: 400, step: 5, def: 100, label: 'Zoom speed', unit: '%' },
+  zoomSpeed: { min: 5, max: 400, step: 5, def: 15, label: 'Zoom speed', unit: '%' },
 };
 
 export const CAM_TUNE = (() => {
