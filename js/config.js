@@ -194,8 +194,16 @@ export const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').mat
 export const CAM_RANGES = {
   fovNear: { min: 5, max: 170, step: 1, def: 8, label: 'Lens · close', unit: '°' },
   fovFar: { min: 5, max: 170, step: 1, def: 25, label: 'Lens · orbit', unit: '°' },
-  tiltNear: { min: -20, max: 88, step: 1, def: 49, label: 'Tilt · close', unit: '°' },
-  tiltFar: { min: -20, max: 88, step: 1, def: 18, label: 'Tilt · orbit', unit: '°' },
+  // How high the camera sits above the ground it is looking at, measured at
+  // that point rather than at the camera. Low is a grounded view that just
+  // catches the horizon; high looks down like a map. Measuring it at the
+  // ground is what makes it independent of world size: the pitch at the
+  // camera has to be solved per planet to hold the same angle, because
+  // sin(pitch) = (R/Rc)*cos(view) carries the planet radius in it.
+  // Renamed from tiltNear/tiltFar so tunings saved under the old, differently
+  // meaning keys are not read back inverted.
+  viewNear: { min: 6, max: 88, step: 1, def: 19, label: 'View angle · close', unit: '°' },
+  viewFar: { min: 6, max: 88, step: 1, def: 53, label: 'View angle · orbit', unit: '°' },
   // Camera height above the ground, in planet radii, so one setting frames a
   // planetoid and a colossal planet the same way.
   minAlt: { min: 0.01, max: 4, step: 0.01, def: 0.25, label: 'Min height', unit: '×R' },

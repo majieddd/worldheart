@@ -508,6 +508,17 @@ function camTest() {
   // the zoom. It used to sag into a grazing near-flat look about a fifth of
   // the way out, where the pitch collided with the closing horizon, so a
   // single scroll passed through a framing neither end had asked for.
+  // How high the camera sits above the ground at screen centre, measured at
+  // that ground point. This is what the framing actually reads as, and unlike
+  // the rig's own pitch it does not carry the planet radius in it.
+  function viewAngle() {
+    const cl = Math.cos(rig.lat);
+    _cref.set(Math.sin(rig.lon) * cl, Math.sin(rig.lat), Math.cos(rig.lon) * cl);
+    _cprobe.copy(rig.camera.position).addScaledVector(_cref, -CONFIG.planetRadius);
+    const up = _cprobe.dot(_cref);
+    return Math.atan2(up, Math.sqrt(Math.max(0, _cprobe.lengthSq() - up * up)));
+  }
+
   // Shake displaces the camera by design, so measure with it off: a few
   // degrees of jitter would otherwise read as the sag being looked for.
   const shakeWas = rig.shakeEnabled;
@@ -522,11 +533,7 @@ function camTest() {
     rig.velLon = 0; rig.velLat = 0;
     rig.dist = rig.targetDist = rig.distMin + ((rig.distMax - rig.distMin) * i) / 40;
     settle(3);
-    const cl = Math.cos(rig.lat);
-    _cref.set(Math.sin(rig.lon) * cl, Math.sin(rig.lat), Math.cos(rig.lon) * cl);
-    _cprobe.copy(rig.camera.position).addScaledVector(_cref, -CONFIG.planetRadius);
-    const up = _cprobe.dot(_cref);
-    const elev = Math.atan2(up, Math.sqrt(Math.max(0, _cprobe.lengthSq() - up * up)));
+    const elev = viewAngle();
     if (i > 0) worstSag = Math.max(worstSag, prevElev - elev);
     prevElev = elev;
     minElev = Math.min(minElev, elev);
@@ -550,25 +557,22 @@ function camTest() {
     limits: [+rig.distMin.toFixed(1), +rig.distMax.toFixed(1)],
   });
 
-  // 4. Lens and pitch honor the tuning at both ends.
-  rig.targetDist = rig.dist = rig.distMin; settle(80);
-  const fovNear = rig.camera.fov, tiltNear = (rig.appliedTilt * 180) / Math.PI;
-  rig.targetDist = rig.dist = rig.distMax; settle(90);
-  const fovFar = rig.camera.fov, tiltFar = (rig.appliedTilt * 180) / Math.PI;
-  // A small world's horizon can sit tighter than the tuned pitch, and no
-  // camera can look further off nadir than that and still meet the ground, so
-  // the endpoint to hold is the tuned angle or the horizon, whichever binds.
-  const reach = (h, tuned) => Math.min(tuned, (rig._horizonAt(h) * 180) / Math.PI * 0.97);
-  const wantNear = reach(rig.distMin, CAM_TUNE.tiltNear);
-  const wantFar = reach(rig.distMax, CAM_TUNE.tiltFar);
-  add('lens and pitch match the tuned endpoints', Math.abs(fovNear - CAM_TUNE.fovNear) < 1.5
+  // 4. Lens and view angle honor the tuning at both ends. The view angle is
+  // measured at the ground, so these numbers must come out the same on every
+  // world; that identity is what keeps one tuning framing a planetoid and a
+  // colossal planet alike, and it is the thing to guard.
+  rig.flight = null; rig.velLon = 0; rig.velLat = 0;
+  rig.targetDist = rig.dist = rig.distMin; settle(20);
+  const fovNear = rig.camera.fov, viewNear = (viewAngle() * 180) / Math.PI;
+  rig.targetDist = rig.dist = rig.distMax; settle(20);
+  const fovFar = rig.camera.fov, viewFar = (viewAngle() * 180) / Math.PI;
+  add('lens and view angle match the tuned endpoints', Math.abs(fovNear - CAM_TUNE.fovNear) < 1.5
     && Math.abs(fovFar - CAM_TUNE.fovFar) < 1.5
-    && Math.abs(tiltNear - wantNear) < 1.5
-    && Math.abs(tiltFar - wantFar) < 1.5, {
+    && Math.abs(viewNear - CAM_TUNE.viewNear) < 1.2
+    && Math.abs(viewFar - CAM_TUNE.viewFar) < 1.2, {
     fov: [+fovNear.toFixed(1), +fovFar.toFixed(1)],
-    tiltDeg: [+tiltNear.toFixed(1), +tiltFar.toFixed(1)],
-    achievable: [+wantNear.toFixed(1), +wantFar.toFixed(1)],
-    tuned: { fov: [CAM_TUNE.fovNear, CAM_TUNE.fovFar], tilt: [CAM_TUNE.tiltNear, CAM_TUNE.tiltFar] },
+    viewDeg: [+viewNear.toFixed(1), +viewFar.toFixed(1)],
+    tuned: { fov: [CAM_TUNE.fovNear, CAM_TUNE.fovFar], view: [CAM_TUNE.viewNear, CAM_TUNE.viewFar] },
   });
 
   // 5. Keyboard navigation moves the view and stops cleanly on release.

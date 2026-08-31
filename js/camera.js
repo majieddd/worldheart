@@ -70,7 +70,10 @@ export class OrbitRig {
     this.confineHits = 0;        // times the boundary clamped the view
     this.viewYaw = 0;            // ctrl+middle drag / Q,E: spin the view
     this.tiltOffset = 0;         // ctrl+middle drag: manual pitch offset
-    this.appliedTilt = CAM_TUNE.tiltNear * (Math.PI / 180);
+    this.appliedTilt = Math.asin(clamp(
+      (CONFIG.planetRadius / (CONFIG.planetRadius + this.defaultDist))
+      * Math.cos(CAM_TUNE.viewNear * (Math.PI / 180)), -1, 1,
+    ));
     this.rotating = false;
 
     this.dragging = false;
@@ -376,8 +379,11 @@ export class OrbitRig {
       .addScaledVector(_north, Math.sin(this.viewYaw)).normalize();
 
     // Horizon from this height; pitch beyond it would stare into empty sky.
+    // The pitch is solved from a view angle that already keeps it under this,
+    // so the clamp is a guard against a bad external write rather than part of
+    // the framing, and its margin stays small enough not to bend a low view.
     const horizon = Math.asin(clamp(R0 / Rc, -1, 1));
-    const tilt = clamp(this.appliedTilt, -0.35, horizon - 0.012);
+    const tilt = clamp(this.appliedTilt, -0.35, horizon - 0.0005);
     const alpha = Math.asin(clamp((Rc / R0) * Math.sin(tilt), -1, 1)) - tilt;
 
     _axis.crossVectors(_focusDir, _head).normalize();
@@ -629,26 +635,28 @@ export class OrbitRig {
     // sky and distance fill the top of the frame; from orbit it settles back
     // to a map-like look-down.
     //
-    // The pitch is carried as a FRACTION of the horizon rather than as an
-    // absolute angle, because the horizon closes in as the camera climbs
-    // (asin(R/Rc) shrinks) far faster than a smoothstep opens the pitch at the
-    // start of its curve. Interpolating the angle directly let the two collide
-    // around a fifth of the way out: the pitch pinned against the horizon and
-    // the view went grazing-flat before recovering, so a single zoom passed
-    // through a look the player never asked for at either end. Holding the
-    // fraction keeps a constant margin to the horizon the whole way, and still
-    // lands on exactly the tuned angles at both ends of the band.
+    // What the player reads as "how grounded is this" is the angle the camera
+    // sits at above the ground it is looking at, measured AT that point. The
+    // rig's pitch is measured at the camera instead, and the two differ by the
+    // planet: sin(pitch) = (R/Rc)*cos(view). So a fixed pitch is a different
+    // view on every world, which is why one tuning framed the colossal planet
+    // and the planetoid quite differently. Interpolate the view angle, which
+    // is size-independent, and solve the pitch that delivers it here.
+    //
+    // This is also inherently horizon-safe: cos(view) <= 1 puts the pitch at
+    // or under asin(R/Rc), the horizon, for any world and any height, so the
+    // old fraction-of-horizon juggling is no longer needed.
     const zt = this.zoomT;
-    const hNear = this._horizonAt(this.distMin);
-    const hFar = this._horizonAt(this.distMax);
-    const hNow = this._horizonAt(this.dist);
-    // A small world's horizon can be tighter than the tuned pitch; cap the
-    // fraction just under 1 so the framing degrades smoothly instead of
-    // welding itself to the limb.
-    const fNear = Math.min(CAM_TUNE.tiltNear * (Math.PI / 180) / hNear, 0.97);
-    const fFar = Math.min(CAM_TUNE.tiltFar * (Math.PI / 180) / hFar, 0.97);
-    const frac = lerp(fNear, fFar, zt * zt * (3 - 2 * zt));
-    const tiltTarget = clamp(frac * hNow + this.tiltOffset, -0.35, hNow - 0.012);
+    const viewNear = CAM_TUNE.viewNear * (Math.PI / 180);
+    const viewFar = CAM_TUNE.viewFar * (Math.PI / 180);
+    // A manual pitch nudge lowers the view toward the horizon, keeping the
+    // drag direction it had when it fed the pitch directly.
+    const view = clamp(
+      lerp(viewNear, viewFar, zt * zt * (3 - 2 * zt)) - this.tiltOffset, 0.06, 1.5,
+    );
+    const R0 = CONFIG.planetRadius;
+    const Rc = R0 + Math.max(this.dist, 0.2);
+    const tiltTarget = Math.asin(clamp((R0 / Rc) * Math.cos(view), -1, 1));
     // Height is already eased (zoomDamp), and the pitch is a pure function of
     // it, so the pitch inherits that smoothing. Easing it a second time on its
     // own clock only made it lag the height it is derived from, which reads as
