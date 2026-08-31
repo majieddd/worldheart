@@ -6,7 +6,7 @@ import { World, R, surfacePoint, setBattlefield, raycastTerrain } from './world.
 import { NavGraph } from './nav.js';
 import { EnemyManager } from './enemies.js';
 import { Effects } from './effects.js';
-import { TowerManager } from './towers.js';
+import { TowerManager, TOWER_TYPES } from './towers.js';
 import { Game } from './game.js';
 import { WaveDirector, portalCount } from './waves.js';
 import { HUD } from './ui.js';
@@ -112,7 +112,9 @@ async function boot() {
   // terrain tinting, decor scatter, and walkability all agree on the wall.
   if (nav.fieldCenter) {
     setBattlefield(nav.fieldCenter, CONFIG.map.fieldTheta);
-    rig.confine = { center: nav.fieldCenter.clone(), maxAng: CONFIG.map.fieldTheta * 0.94 };
+    // The focus is what sits at screen centre, so the limit can run right out
+    // to the wall: the player can now centre on the edge of the front.
+    rig.confine = { center: nav.fieldCenter.clone(), maxAng: CONFIG.map.fieldTheta * 1.02 };
   }
   for (let i = 1; i < world.buildStepCount; i++) {
     await progress(BOOT_LABELS[i + 1]);
@@ -408,7 +410,8 @@ function camTest() {
   // gentle nudge on a colossus and more than the whole disc of a pocket world.
   const apparentRadiusPx = () => {
     const t = Math.tan((rig.camera.fov * Math.PI) / 360);
-    return (CONFIG.planetRadius / Math.max(rig.dist, 1) / Math.max(t, 0.05)) * (H / 2);
+    const camDist = Math.max(rig.camera.position.length(), 1);
+    return (CONFIG.planetRadius / camDist / Math.max(t, 0.05)) * (H / 2);
   };
   const gesture = () => {
     const g = apparentRadiusPx() * 0.28 * (rig.confine ? 0.55 : 1);
@@ -478,6 +481,27 @@ function camTest() {
     && Number.isFinite(rig.lon) && Number.isFinite(rig.lat), {
       largestSingleStepRad: +maxJump.toFixed(4),
     });
+
+  // 2c. The view must stay welded to what it is looking at through a full
+  // zoom sweep. Pitching the camera in place instead of orbiting the focus
+  // used to slide the world sideways worst at mid-zoom, which read as a
+  // lurch in the middle of every scroll.
+  rig.lon = home[0]; rig.lat = home[1];
+  rig.targetDist = rig.dist = rig.distMin;
+  settle(60);
+  const clF = Math.cos(rig.lat);
+  _cref.set(Math.sin(rig.lon) * clF, Math.sin(rig.lat), Math.cos(rig.lon) * clF)
+    .multiplyScalar(CONFIG.planetRadius);
+  let worstDrift = 0;
+  for (let i = 0; i <= 60; i++) {
+    rig.targetDist = rig.distMin + ((rig.distMax - rig.distMin) * i) / 60;
+    settle(3);
+    const p = project(_cref);
+    worstDrift = Math.max(worstDrift, Math.hypot(p[0] - W * 0.5, p[1] - H * 0.5));
+  }
+  add('view stays centred through a full zoom', Number.isFinite(worstDrift) && worstDrift < 6, {
+    worstDriftPx: +worstDrift.toFixed(2),
+  });
 
   // 3. Zoom clamps and stays finite.
   for (let i = 0; i < 40; i++) rig.zoomBy(-0.6);
@@ -590,7 +614,7 @@ function workMs() {
 let navDebugPts = null;
 window.WH = {
   renderer, scene, world, rig, post, CONFIG, nav,
-  fps, workMs,
+  fps, workMs, TOWER_TYPES,
   drawCalls: () => renderer.info.render.calls,
   tris: () => renderer.info.render.triangles,
   navDebug(show = true) {

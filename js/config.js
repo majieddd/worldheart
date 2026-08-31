@@ -192,17 +192,16 @@ export const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').mat
 // panel writes them, and they persist per browser. Ranges double as the
 // slider bounds and the load-time sanity clamp.
 export const CAM_RANGES = {
-  fovNear: { min: 8, max: 170, step: 1, def: 15, label: 'Lens · close', unit: '°' },
-  fovFar: { min: 8, max: 170, step: 1, def: 45, label: 'Lens · orbit', unit: '°' },
-  tiltNear: { min: -25, max: 85, step: 1, def: 44, label: 'Tilt · close', unit: '°' },
-  tiltFar: { min: -25, max: 85, step: 1, def: 30, label: 'Tilt · orbit', unit: '°' },
-  // Both heights are multiples of the planet radius so one setting frames a
-  // planetoid and a colossal planet the same way. 0.21 is the 50 units this
-  // was tuned to on a radius-240 world.
-  minAlt: { min: 0.01, max: 3, step: 0.01, def: 0.21, label: 'Min height', unit: '×R' },
-  maxAlt: { min: 0.02, max: 14, step: 0.01, def: 0.25, label: 'Max height', unit: '×R' },
+  fovNear: { min: 5, max: 170, step: 1, def: 8, label: 'Lens · close', unit: '°' },
+  fovFar: { min: 5, max: 170, step: 1, def: 25, label: 'Lens · orbit', unit: '°' },
+  tiltNear: { min: -20, max: 88, step: 1, def: 49, label: 'Tilt · close', unit: '°' },
+  tiltFar: { min: -20, max: 88, step: 1, def: 18, label: 'Tilt · orbit', unit: '°' },
+  // Camera height above the ground, in planet radii, so one setting frames a
+  // planetoid and a colossal planet the same way.
+  minAlt: { min: 0.01, max: 4, step: 0.01, def: 0.25, label: 'Min height', unit: '×R' },
+  maxAlt: { min: 0.02, max: 14, step: 0.05, def: 0.95, label: 'Max height', unit: '×R' },
   panMul: { min: 10, max: 400, step: 5, def: 100, label: 'Pan speed', unit: '%' },
-  zoomSpeed: { min: 5, max: 400, step: 5, def: 15, label: 'Zoom speed', unit: '%' },
+  zoomSpeed: { min: 5, max: 400, step: 5, def: 10, label: 'Zoom speed', unit: '%' },
 };
 
 export const CAM_TUNE = (() => {

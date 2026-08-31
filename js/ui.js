@@ -391,7 +391,7 @@ export class HUD {
     this.game.state = 'playing';
     this.waves.begin();
     this.rig.autoOrbit = 0;
-    this.rig.flyTo(this.world.heart.group.position, this.rig.distMin + 14, 1.6);
+    this.rig.flyTo(this.world.heart.group.position, this.rig.defaultDist, 1.6);
     this.audio?.start();
     this.audio?.play('begin');
     this.refresh();

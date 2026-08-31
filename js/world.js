@@ -1402,7 +1402,15 @@ export function buildPortal(pos) {
 // player-tech energy, quiet enough to read as a boundary, not a spectacle.
 export function buildFieldWall(centerDir, theta) {
   const SEG = 200;
-  const HEIGHT = 3.4;
+  // The curtain has to read as a wall from across the field, so it grows with
+  // the field rather than staying a fixed 3.4 units, which on a colossal
+  // world's front was 2% of the width and vanished into the terrain.
+  const HEIGHT = Math.min(Math.max(CONFIG.planetRadius * theta * 0.1, 3.4), 16);
+  // Sunk below the surface so undulating terrain never opens a gap under the
+  // curtain. uGround tells the shader where that buried section ends, so the
+  // bright seam lands on the visible ground line instead of underneath it.
+  const BURY = 1.6;
+  const GROUND_UV = BURY / (BURY + HEIGHT);
   const pos = new Float32Array(SEG * 2 * 3);
   const uv = new Float32Array(SEG * 2 * 2);
   const dir = new THREE.Vector3();
@@ -1415,9 +1423,9 @@ export function buildFieldWall(centerDir, theta) {
       .addScaledVector(_t2, Math.sin(theta) * Math.sin(a))
       .normalize();
     surfacePoint(dir, pt);
-    pt.addScaledVector(dir, -0.5);
+    pt.addScaledVector(dir, -BURY);
     pos.set([pt.x, pt.y, pt.z], (i * 2) * 3);
-    pt.addScaledVector(dir, HEIGHT + 0.5);
+    pt.addScaledVector(dir, HEIGHT + BURY);
     pos.set([pt.x, pt.y, pt.z], (i * 2 + 1) * 3);
     uv[(i * 2) * 2] = i / SEG * 40; uv[(i * 2) * 2 + 1] = 0;
     uv[(i * 2 + 1) * 2] = i / SEG * 40; uv[(i * 2 + 1) * 2 + 1] = 1;
@@ -1434,7 +1442,11 @@ export function buildFieldWall(centerDir, theta) {
   const mat = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, side: THREE.DoubleSide,
     blending: THREE.AdditiveBlending,
-    uniforms: { uTime: { value: 0 }, uCol: { value: new THREE.Color(PALETTE.energy) } },
+    uniforms: {
+      uTime: { value: 0 },
+      uCol: { value: new THREE.Color(PALETTE.energy) },
+      uGround: { value: GROUND_UV },
+    },
     vertexShader: /* glsl */ `
       varying vec2 vUv;
       void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
@@ -1443,12 +1455,21 @@ export function buildFieldWall(centerDir, theta) {
       varying vec2 vUv;
       uniform float uTime;
       uniform vec3 uCol;
+      uniform float uGround;
       void main() {
-        float fade = pow(1.0 - vUv.y, 1.7);
-        float lattice = 0.5 + 0.5 * sin(vUv.x * 14.0 + uTime * 0.6) * sin(vUv.y * 9.0 - uTime * 0.9);
-        float scan = smoothstep(0.02, 0.0, abs(fract(vUv.y * 1.0 - uTime * 0.07) - 0.5) - 0.46);
-        float a = fade * (0.1 + lattice * 0.08) + scan * 0.12 * fade;
-        gl_FragColor = vec4(uCol * (0.8 + fade * 0.6), a);
+        // Height above the ground line, 0 at the surface and 1 at the top.
+        float y = clamp((vUv.y - uGround) / max(1.0 - uGround, 0.001), 0.0, 1.0);
+        float fade = pow(1.0 - y, 1.7);
+        float lattice = 0.5 + 0.5 * sin(vUv.x * 14.0 + uTime * 0.6) * sin(y * 9.0 - uTime * 0.9);
+        float scan = smoothstep(0.02, 0.0, abs(fract(y - uTime * 0.07) - 0.5) - 0.46);
+        // A hot seam sitting on the ground line: the thing the player reads as
+        // "the field stops here" even across bright sunlit terrain.
+        // Close in, this curtain covers half the screen, so the body stays
+        // near-transparent and the boundary is carried by a tight hot line on
+        // the ground. A bright curtain reads as a wash over the battlefield.
+        float seam = smoothstep(0.05, 0.0, y);
+        float a = fade * (0.05 + lattice * 0.06) + scan * 0.14 * fade + seam * 0.85;
+        gl_FragColor = vec4(uCol * (0.7 + fade * 0.4 + seam * 1.6), a);
       }
     `,
   });
@@ -1565,8 +1586,11 @@ export class World {
     return p;
   }
 
+  // The fraction drives emissive intensity, so it has to stay in range: a
+  // value above 1 scales the crystal's brightness without bound and the bloom
+  // pyramid smears it across the whole frame as flat white.
   setHeartHealth(frac) {
-    if (this.heart) this.heart.healthFrac = frac;
+    if (this.heart) this.heart.healthFrac = clamp(frac, 0, 1);
   }
 
   crushDecorNear(point, radius) {

@@ -14,15 +14,31 @@ const _camDir = new THREE.Vector3();
 const _camStart = new THREE.Vector3();
 const _probeHit = new THREE.Vector3();
 const _q = new THREE.Quaternion();
+const _focusDir = new THREE.Vector3();
+const _focusPt = new THREE.Vector3();
+const _east = new THREE.Vector3();
+const _north = new THREE.Vector3();
+const _head = new THREE.Vector3();
+const _axis = new THREE.Vector3();
 
-// Orbit rig around the planet center with inertia, damped zoom, trauma shake,
-// fov kicks, and a scripted intro flyby. Latitude is clamped so the rig never
-// crosses a pole; gameplay content is generated inside the clamp band.
+// Smallest world scale the height sliders are measured against. Chosen so a
+// planetoid's closest zoom holds about as many towers as a colossal planet's
+// does, since tower and unit models are one absolute size on every map.
+const MIN_CAM_SCALE = 150;
+
+// Focus rig: the camera orbits a point on the surface that is pinned to the
+// centre of the screen. `lon`/`lat` are that focus point, `dist` is the
+// camera's height above the ground, and pitch is measured from straight down.
+// The camera is placed at the angular offset that makes the view through
+// screen centre land exactly on the focus, so changing pitch or zoom never
+// slides the world sideways: what you are looking at stays under the
+// crosshair. Confinement, flights and panning all steer the focus, which is
+// why a walled battlefield can now be centred right on its own edge.
 //
-// Panning works in the tangent plane at the aim point using the camera's own
-// world basis, so drag direction stays screen-true under any view rotation or
-// pitch. Everything a player can feel (lens, pitch, height limits, speeds)
-// reads from CAM_TUNE every frame.
+// Panning works in the tangent plane at the focus using the camera's own world
+// basis, so drag direction stays screen-true under any view rotation or pitch.
+// Everything a player can feel (lens, pitch, height limits, speeds) reads from
+// CAM_TUNE every frame.
 
 const PAN_KEYS = {
   KeyW: [0, 1], ArrowUp: [0, 1],
@@ -39,8 +55,9 @@ export class OrbitRig {
 
     this.lon = 0.6;
     this.lat = 0.42;
-    this.dist = c.distStart;
-    this.targetDist = c.distStart;
+    this.focusDist = CONFIG.planetRadius;
+    this.dist = this.defaultDist;
+    this.targetDist = this.dist;
     this.velLon = 0;
     this.velLat = 0;
 
@@ -183,14 +200,43 @@ export class OrbitRig {
   }
 
   // Live zoom bounds from the player's tuning.
+  // A third of the way out: close enough to read the ground, far enough to see
+  // the shape of the fight.
+  get defaultDist() {
+    return lerp(this.distMin, this.distMax, 0.33);
+  }
+
+  // What the height sliders are multiples of: the size of the thing being
+  // played on, not the rock it sits on. A planetary map is the whole globe, so
+  // that is the planet radius. A battlefield or asteroid field is a cap, and
+  // its playable extent is the cap's surface radius, so one slider setting
+  // frames a walled front and a whole planet alike. Scaling a cap map off the
+  // planet instead parked the camera 60 units above a field 67 units wide,
+  // which is why Titan's Brow could never get close to anything.
+  // Towers and units are one absolute size on every map, so a scale that
+  // tracked radius alone framed a planetoid far too tightly: at R30 the
+  // closest zoom spanned 3.3 ground units, narrower than the worldheart's own
+  // no-build radius. The floor keeps the close view holding a comparable
+  // number of towers whatever the world is sized.
+  get camScale() {
+    const R = CONFIG.planetRadius;
+    const theta = CONFIG.map.fieldTheta;
+    // A cap map is already sized by its own playable extent, so it takes no
+    // floor: forcing one on the asteroid field pushed the camera so far out
+    // that almost no rock was in reach of a click.
+    if (theta) return R * theta * 2.2;
+    return Math.max(R, MIN_CAM_SCALE);
+  }
+
+  // Height of the camera above the ground, in units of camScale.
   get distMin() {
-    return CONFIG.planetRadius * (1 + CAM_TUNE.minAlt);
+    return this.camScale * CAM_TUNE.minAlt;
   }
 
   get distMax() {
     // Always leave a usable zoom band, however the two height sliders are set.
     const d = this.distMin;
-    return Math.max(CONFIG.planetRadius * (1 + CAM_TUNE.maxAlt), d + 2, d * 1.06);
+    return Math.max(this.camScale * CAM_TUNE.maxAlt, d + 2, d * 1.15);
   }
 
   // Normalized zoom, 0 fully in, 1 fully out. Consumers drive the
@@ -204,12 +250,11 @@ export class OrbitRig {
   // size or how narrow the height limits are. Sizing steps against absolute
   // distance instead made a notch jump half the band on a colossal world.
   zoomBy(amount) {
-    const R0 = CONFIG.planetRadius;
     const dMin = this.distMin, dMax = this.distMax;
-    const aMin = Math.max(dMin - R0, 0.05);
-    const aMax = Math.max(dMax - R0, aMin * 1.0001);
+    const aMin = Math.max(dMin, 0.05);
+    const aMax = Math.max(dMax, aMin * 1.0001);
     const span = Math.log(aMax / aMin);
-    const alt = clamp(this.targetDist - R0, aMin, aMax);
+    const alt = clamp(this.targetDist, aMin, aMax);
     // Scaled so the shipped 15% crosses the range in about twenty notches:
     // fine control by default, with headroom above for a fast zoom.
     const step = amount * 3 * (CAM_TUNE.zoomSpeed / 100);
@@ -220,7 +265,7 @@ export class OrbitRig {
     } else {
       nextAlt = clamp(alt + (aMax - aMin) * step, aMin, aMax);
     }
-    this.targetDist = clamp(R0 + nextAlt, dMin, dMax);
+    this.targetDist = clamp(nextAlt, dMin, dMax);
   }
 
   // Ground units per screen pixel at the aim point, split into the screen
@@ -228,12 +273,14 @@ export class OrbitRig {
   // the two differ and the world tracks the cursor in both.
   _panScale() {
     const R0 = CONFIG.planetRadius;
-    const alt = Math.max(this.dist - R0, 1.2);
+    // Scale from the true camera-to-focus distance: that is the depth of the
+    // ground at screen centre, so a pixel of drag maps to the right arc.
+    const L = Math.max(this.focusDist || this.dist, 0.6);
     const H = Math.max(this.canvas.clientHeight || innerHeight || 720, 1);
     const tanHalf = Math.tan((this.camera.fov * Math.PI) / 360);
-    const base = ((2 * alt * tanHalf) / (H * R0)) * (CAM_TUNE.panMul / 100);
+    const base = ((2 * L * tanHalf) / (H * R0)) * (CAM_TUNE.panMul / 100);
     const ct = Math.max(Math.cos(this.appliedTilt), 0.4);
-    return { h: base / ct, v: base / (ct * ct) };
+    return { h: base, v: base / ct };
   }
 
   // Direction on the grab sphere under a screen pixel. Rays that miss the
@@ -299,23 +346,50 @@ export class OrbitRig {
     return true;
   }
 
+  // Place the camera so the focus point sits dead centre at the current pitch.
+  //
+  // With the camera at radius Rc and the focus on the surface at radius R, an
+  // angular separation a puts the focus at tilt t from the camera's nadir
+  // where sin(a + t) = (Rc / R) sin t. Solving that for a is what keeps the
+  // crosshair welded to the ground through any pitch or zoom change. Beyond
+  // the horizon angle there is no solution, so the pitch is capped there.
+  _placeCamera(shakeX = 0, shakeY = 0, shakeZ = 0) {
+    const R0 = CONFIG.planetRadius;
+    const h = Math.max(this.dist, 0.2);
+    const Rc = R0 + h;
+
+    const cosLat = Math.cos(this.lat);
+    _focusDir.set(Math.sin(this.lon) * cosLat, Math.sin(this.lat), Math.cos(this.lon) * cosLat);
+    _focusPt.copy(_focusDir).multiplyScalar(R0);
+
+    if (Math.abs(_focusDir.y) < 0.94) _east.set(0, 1, 0); else _east.set(1, 0, 0);
+    _north.crossVectors(_focusDir, _east).normalize();
+    _east.crossVectors(_north, _focusDir).normalize();
+    _head.copy(_east).multiplyScalar(Math.cos(this.viewYaw))
+      .addScaledVector(_north, Math.sin(this.viewYaw)).normalize();
+
+    // Horizon from this height; pitch beyond it would stare into empty sky.
+    const horizon = Math.asin(clamp(R0 / Rc, -1, 1));
+    const tilt = clamp(this.appliedTilt, -0.35, horizon - 0.012);
+    const alpha = Math.asin(clamp((Rc / R0) * Math.sin(tilt), -1, 1)) - tilt;
+
+    _axis.crossVectors(_focusDir, _head).normalize();
+    _camDir.copy(_focusDir).applyAxisAngle(_axis, -alpha).normalize();
+
+    this.camera.position.copy(_camDir).multiplyScalar(Rc);
+    this.camera.position.x += shakeX;
+    this.camera.position.y += shakeY;
+    this.camera.position.z += shakeZ;
+    this.camera.up.copy(_camDir);
+    this.camera.lookAt(_focusPt);
+    this.camera.updateMatrixWorld();
+    this.focusDist = this.camera.position.distanceTo(_focusPt);
+  }
+
   // Cheap camera resync so several pointer events inside one frame each see
   // the pose their predecessor produced (otherwise a fast drag over-rotates).
   _syncCamera() {
-    const cosLat = Math.cos(this.lat);
-    this.camera.position.set(
-      Math.sin(this.lon) * cosLat * this.dist,
-      Math.sin(this.lat) * this.dist,
-      Math.cos(this.lon) * cosLat * this.dist,
-    );
-    this.camera.up.set(0, 1, 0);
-    if (this.viewYaw) {
-      _aim.copy(this.camera.position).normalize();
-      this.camera.up.applyAxisAngle(_aim, this.viewYaw);
-    }
-    this.camera.lookAt(0, 0, 0);
-    this.camera.rotateX(this.appliedTilt);
-    this.camera.updateMatrixWorld();
+    this._placeCamera();
   }
 
   // Exact grab-the-world panning: rotate the rig so the point grabbed at
@@ -466,14 +540,14 @@ export class OrbitRig {
       toLat = clamp(Math.asin(clamp(targetDir.y, -1, 1)), -c.latClamp * 0.85, c.latClamp * 0.85);
       toLon = Math.atan2(targetDir.x, targetDir.z);
     }
-    const fromDist = Math.min(this.distMax * 1.15, CONFIG.planetRadius * 5);
-    this.lon = toLon - 2.5;
-    this.lat = clamp(toLat + 0.55, -c.latClamp, c.latClamp);
+    const fromDist = this.distMax;
+    this.lon = toLon - 1.1;
+    this.lat = clamp(toLat + 0.28, -c.latClamp, c.latClamp);
     this.dist = fromDist; this.targetDist = fromDist;
     this.flight = {
       fromLon: this.lon, toLon,
       fromLat: this.lat, toLat,
-      fromDist, toDist: clamp(c.distStart, this.distMin, this.distMax),
+      fromDist, toDist: this.defaultDist,
       t: 0, dur: REDUCED_MOTION ? 0.01 : 3.4, ease: easeOutCubic,
     };
   }
@@ -544,53 +618,33 @@ export class OrbitRig {
       }
     }
 
-    const cosLat = Math.cos(this.lat);
-    const px = Math.sin(this.lon) * cosLat;
-    const py = Math.sin(this.lat);
-    const pz = Math.cos(this.lon) * cosLat;
-    this.camera.position.set(px * this.dist, py * this.dist, pz * this.dist);
-
-    // Trauma shake: squared response, decaying, applied as a positional wobble
-    // plus a slight roll. Never enters simulation state.
-    this.trauma = Math.max(0, this.trauma - dt * 1.7);
-    let roll = 0;
-    if (this.trauma > 0 && this.shakeEnabled) {
-      this._noiseT += dt * 34;
-      const sq = this.trauma * this.trauma;
-      const amp = c.shakeMax * sq * (this.dist / 60);
-      const n1 = Math.sin(this._noiseT * 1.1) * Math.sin(this._noiseT * 0.63 + 2.1);
-      const n2 = Math.sin(this._noiseT * 0.91 + 4.2) * Math.sin(this._noiseT * 1.37);
-      const n3 = Math.sin(this._noiseT * 1.23 + 1.3) * Math.sin(this._noiseT * 0.77 + 3.7);
-      this.camera.position.x += n1 * amp;
-      this.camera.position.y += n2 * amp;
-      this.camera.position.z += n3 * amp * 0.6;
-      roll = n3 * sq * 0.012;
-    }
-
-    this.camera.up.set(0, 1, 0);
-    if (this.viewYaw) {
-      _aim.copy(this.camera.position).normalize();
-      this.camera.up.applyAxisAngle(_aim, this.viewYaw);
-    }
-    this.camera.lookAt(0, 0, 0);
-
-    // Grounded RTS framing: close in, the view pitches toward the horizon so
+    // Grounded RTS framing: close in the view pitches toward the horizon so
     // sky and distance fill the top of the frame; from orbit it settles back
-    // to a map-like look-down. Both ends are player-tunable.
-    // Smoothstep across the whole zoom range, then eased over time. The old
-    // curve finished pitching two thirds of the way out and stopped dead,
-    // which read as a wall in the middle of a scroll; this has zero slope at
-    // both ends and no instant response to a jump in zoom.
+    // to a map-like look-down. Smoothstep across the whole zoom range, then
+    // eased over time, so a curve that stops pitching partway never reads as
+    // a wall mid-scroll.
     const tiltNear = CAM_TUNE.tiltNear * (Math.PI / 180);
     const tiltFar = CAM_TUNE.tiltFar * (Math.PI / 180);
     const zt = this.zoomT;
     const tiltTarget = clamp(
-      lerp(tiltNear, tiltFar, zt * zt * (3 - 2 * zt)) + this.tiltOffset, -0.62, 1.55,
+      lerp(tiltNear, tiltFar, zt * zt * (3 - 2 * zt)) + this.tiltOffset, -0.35, 1.52,
     );
     this.appliedTilt += (tiltTarget - this.appliedTilt) * Math.min(1, dt * 6);
-    this.camera.rotateX(this.appliedTilt);
-    if (roll) this.camera.rotateZ(roll);
-    this.camera.updateMatrixWorld();
+
+    // Trauma shake: squared response, decaying, a positional wobble only.
+    // Never enters simulation state.
+    this.trauma = Math.max(0, this.trauma - dt * 1.7);
+    let sx = 0, sy = 0, sz = 0;
+    if (this.trauma > 0 && this.shakeEnabled) {
+      this._noiseT += dt * 34;
+      const sq = this.trauma * this.trauma;
+      const amp = c.shakeMax * sq * clamp(this.dist / 60, 0.3, 3);
+      sx = Math.sin(this._noiseT * 1.1) * Math.sin(this._noiseT * 0.63 + 2.1) * amp;
+      sy = Math.sin(this._noiseT * 0.91 + 4.2) * Math.sin(this._noiseT * 1.37) * amp;
+      sz = Math.sin(this._noiseT * 1.23 + 1.3) * Math.sin(this._noiseT * 0.77 + 3.7) * amp * 0.6;
+    }
+
+    this._placeCamera(sx, sy, sz);
 
     // Wide immersive lens on the ground, telephoto from orbit. Player-tunable.
     this.fovKickV = Math.max(0, this.fovKickV - dt * 26);
