@@ -239,6 +239,13 @@ export class OrbitRig {
     return Math.max(this.camScale * CAM_TUNE.maxAlt, d + 2, d * 1.15);
   }
 
+  // Angle from straight down to the horizon, seen from a camera at height h.
+  // The pitch has to stay inside this or the view slides off the limb.
+  _horizonAt(h) {
+    const R0 = CONFIG.planetRadius;
+    return Math.asin(clamp(R0 / (R0 + Math.max(h, 0.2)), -1, 1));
+  }
+
   // Normalized zoom, 0 fully in, 1 fully out. Consumers drive the
   // strategic-scale presentation (model swell, icon layer) from this.
   get zoomT() {
@@ -620,16 +627,33 @@ export class OrbitRig {
 
     // Grounded RTS framing: close in the view pitches toward the horizon so
     // sky and distance fill the top of the frame; from orbit it settles back
-    // to a map-like look-down. Smoothstep across the whole zoom range, then
-    // eased over time, so a curve that stops pitching partway never reads as
-    // a wall mid-scroll.
-    const tiltNear = CAM_TUNE.tiltNear * (Math.PI / 180);
-    const tiltFar = CAM_TUNE.tiltFar * (Math.PI / 180);
+    // to a map-like look-down.
+    //
+    // The pitch is carried as a FRACTION of the horizon rather than as an
+    // absolute angle, because the horizon closes in as the camera climbs
+    // (asin(R/Rc) shrinks) far faster than a smoothstep opens the pitch at the
+    // start of its curve. Interpolating the angle directly let the two collide
+    // around a fifth of the way out: the pitch pinned against the horizon and
+    // the view went grazing-flat before recovering, so a single zoom passed
+    // through a look the player never asked for at either end. Holding the
+    // fraction keeps a constant margin to the horizon the whole way, and still
+    // lands on exactly the tuned angles at both ends of the band.
     const zt = this.zoomT;
-    const tiltTarget = clamp(
-      lerp(tiltNear, tiltFar, zt * zt * (3 - 2 * zt)) + this.tiltOffset, -0.35, 1.52,
-    );
-    this.appliedTilt += (tiltTarget - this.appliedTilt) * Math.min(1, dt * 6);
+    const hNear = this._horizonAt(this.distMin);
+    const hFar = this._horizonAt(this.distMax);
+    const hNow = this._horizonAt(this.dist);
+    // A small world's horizon can be tighter than the tuned pitch; cap the
+    // fraction just under 1 so the framing degrades smoothly instead of
+    // welding itself to the limb.
+    const fNear = Math.min(CAM_TUNE.tiltNear * (Math.PI / 180) / hNear, 0.97);
+    const fFar = Math.min(CAM_TUNE.tiltFar * (Math.PI / 180) / hFar, 0.97);
+    const frac = lerp(fNear, fFar, zt * zt * (3 - 2 * zt));
+    const tiltTarget = clamp(frac * hNow + this.tiltOffset, -0.35, hNow - 0.012);
+    // Height is already eased (zoomDamp), and the pitch is a pure function of
+    // it, so the pitch inherits that smoothing. Easing it a second time on its
+    // own clock only made it lag the height it is derived from, which reads as
+    // the view sagging flat while a fast scroll is still in flight.
+    this.appliedTilt = tiltTarget;
 
     // Trauma shake: squared response, decaying, a positional wobble only.
     // Never enters simulation state.

@@ -325,6 +325,7 @@ const ICON_COLORS = {
 const _ct = new THREE.Vector3();
 const _cdir = new THREE.Vector3();
 const _cref = new THREE.Vector3();
+const _cprobe = new THREE.Vector3();
 
 function camTest() {
   const rep = { map: CONFIG.mapKey, pass: true, checks: [] };
@@ -503,6 +504,40 @@ function camTest() {
     worstDriftPx: +worstDrift.toFixed(2),
   });
 
+  // 2d. The view angle must open steadily from grounded to look-down across
+  // the zoom. It used to sag into a grazing near-flat look about a fifth of
+  // the way out, where the pitch collided with the closing horizon, so a
+  // single scroll passed through a framing neither end had asked for.
+  // Shake displaces the camera by design, so measure with it off: a few
+  // degrees of jitter would otherwise read as the sag being looked for.
+  const shakeWas = rig.shakeEnabled;
+  rig.shakeEnabled = false;
+  rig.trauma = 0;
+  let prevElev = -1e3, worstSag = 0, minElev = 1e3;
+  for (let i = 0; i <= 40; i++) {
+    // Drive height directly and cancel any tween or drift: a wave event can
+    // fire flyTo mid-sweep, and a height that stops rising would show up as
+    // sag that the pitch curve is not responsible for.
+    rig.flight = null;
+    rig.velLon = 0; rig.velLat = 0;
+    rig.dist = rig.targetDist = rig.distMin + ((rig.distMax - rig.distMin) * i) / 40;
+    settle(3);
+    const cl = Math.cos(rig.lat);
+    _cref.set(Math.sin(rig.lon) * cl, Math.sin(rig.lat), Math.cos(rig.lon) * cl);
+    _cprobe.copy(rig.camera.position).addScaledVector(_cref, -CONFIG.planetRadius);
+    const up = _cprobe.dot(_cref);
+    const elev = Math.atan2(up, Math.sqrt(Math.max(0, _cprobe.lengthSq() - up * up)));
+    if (i > 0) worstSag = Math.max(worstSag, prevElev - elev);
+    prevElev = elev;
+    minElev = Math.min(minElev, elev);
+  }
+  rig.shakeEnabled = shakeWas;
+  add('view angle opens steadily through the zoom',
+    Number.isFinite(worstSag) && worstSag < 0.012 && minElev > 0.14, {
+      worstSagDeg: +((worstSag * 180) / Math.PI).toFixed(2),
+      flattestDeg: +((minElev * 180) / Math.PI).toFixed(1),
+    });
+
   // 3. Zoom clamps and stays finite.
   for (let i = 0; i < 40; i++) rig.zoomBy(-0.6);
   settle(30);
@@ -520,12 +555,19 @@ function camTest() {
   const fovNear = rig.camera.fov, tiltNear = (rig.appliedTilt * 180) / Math.PI;
   rig.targetDist = rig.dist = rig.distMax; settle(90);
   const fovFar = rig.camera.fov, tiltFar = (rig.appliedTilt * 180) / Math.PI;
+  // A small world's horizon can sit tighter than the tuned pitch, and no
+  // camera can look further off nadir than that and still meet the ground, so
+  // the endpoint to hold is the tuned angle or the horizon, whichever binds.
+  const reach = (h, tuned) => Math.min(tuned, (rig._horizonAt(h) * 180) / Math.PI * 0.97);
+  const wantNear = reach(rig.distMin, CAM_TUNE.tiltNear);
+  const wantFar = reach(rig.distMax, CAM_TUNE.tiltFar);
   add('lens and pitch match the tuned endpoints', Math.abs(fovNear - CAM_TUNE.fovNear) < 1.5
     && Math.abs(fovFar - CAM_TUNE.fovFar) < 1.5
-    && Math.abs(tiltNear - CAM_TUNE.tiltNear) < 1.5
-    && Math.abs(tiltFar - CAM_TUNE.tiltFar) < 1.5, {
+    && Math.abs(tiltNear - wantNear) < 1.5
+    && Math.abs(tiltFar - wantFar) < 1.5, {
     fov: [+fovNear.toFixed(1), +fovFar.toFixed(1)],
     tiltDeg: [+tiltNear.toFixed(1), +tiltFar.toFixed(1)],
+    achievable: [+wantNear.toFixed(1), +wantFar.toFixed(1)],
     tuned: { fov: [CAM_TUNE.fovNear, CAM_TUNE.fovFar], tilt: [CAM_TUNE.tiltNear, CAM_TUNE.tiltFar] },
   });
 
