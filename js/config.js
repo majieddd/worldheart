@@ -188,7 +188,7 @@ export const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').mat
 // slider bounds and the load-time sanity clamp.
 export const CAM_RANGES = {
   fovNear: { min: 40, max: 150, step: 1, def: 100, label: 'Lens · close', unit: '°' },
-  fovFar: { min: 20, max: 60, step: 1, def: 30, label: 'Lens · orbit', unit: '°' },
+  fovFar: { min: 20, max: 150, step: 1, def: 30, label: 'Lens · orbit', unit: '°' },
   tiltNear: { min: 0, max: 60, step: 1, def: 42, label: 'Tilt · close', unit: '°' },
   tiltFar: { min: 0, max: 25, step: 1, def: 2, label: 'Tilt · orbit', unit: '°' },
   minAlt: { min: 2, max: 30, step: 0.5, def: 7, label: 'Min height', unit: '' },
