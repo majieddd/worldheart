@@ -37,15 +37,15 @@ export const MAPS = {
   giant: {
     name: 'Giant World',
     mode: 'planetary', modeLabel: 'planetary battlefield',
-    tag: 'More continents, longer marches, five breaches.',
-    chip: 'large world · 5 breaches',
-    radius: 48, terrainDetail: 6, navDetail: 6, pickDetail: 4,
-    freqMul: 1.45, fineAbsolute: true,
+    tag: 'A colossal globe. Continents past counting, marches that cross oceans.',
+    chip: 'colossal world · 5 breaches',
+    radius: 240, terrainDetail: 7, navDetail: 7, pickDetail: 5,
+    freqMul: 1.7, fineAbsolute: true,
     portalWakes: [1, 3, 7, 11, 15],
     fieldTheta: null,
-    startGold: 450,
-    waterSegs: [232, 156],
-    decorMul: 1.7,
+    startGold: 500,
+    waterSegs: [320, 214],
+    decorMul: 9,
   },
   titan: {
     name: "Titan's Brow",
@@ -97,8 +97,10 @@ export const CONFIG = {
 
   camera: {
     fov: 50,
-    near: 2,
-    far: Math.max(2600, R0 * 8),
+    // Near scales with the world so the depth buffer keeps precision when the
+    // far plane has to reach a colossal planet's vista.
+    near: Math.max(2, R0 / 60),
+    far: Math.max(2600, R0 * 30),
     distMin: R0 + 4.8,
     // The orbit lens is telephoto, so max distance carries extra headroom to
     // keep the full planet in frame at 30 degrees.
@@ -185,13 +187,13 @@ export const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').mat
 // panel writes them, and they persist per browser. Ranges double as the
 // slider bounds and the load-time sanity clamp.
 export const CAM_RANGES = {
-  fovNear: { min: 40, max: 75, step: 1, def: 58, label: 'Lens · close', unit: '°' },
-  fovFar: { min: 22, max: 55, step: 1, def: 30, label: 'Lens · orbit', unit: '°' },
-  tiltNear: { min: 0, max: 45, step: 1, def: 33, label: 'Tilt · close', unit: '°' },
-  tiltFar: { min: 0, max: 20, step: 1, def: 2, label: 'Tilt · orbit', unit: '°' },
-  minAlt: { min: 2, max: 16, step: 0.5, def: 4.8, label: 'Min height', unit: '' },
-  zoomOutMul: { min: 60, max: 140, step: 5, def: 100, label: 'Zoom out range', unit: '%' },
-  panMul: { min: 50, max: 220, step: 10, def: 100, label: 'Pan speed', unit: '%' },
+  fovNear: { min: 40, max: 150, step: 1, def: 100, label: 'Lens · close', unit: '°' },
+  fovFar: { min: 20, max: 60, step: 1, def: 30, label: 'Lens · orbit', unit: '°' },
+  tiltNear: { min: 0, max: 60, step: 1, def: 42, label: 'Tilt · close', unit: '°' },
+  tiltFar: { min: 0, max: 25, step: 1, def: 2, label: 'Tilt · orbit', unit: '°' },
+  minAlt: { min: 2, max: 30, step: 0.5, def: 7, label: 'Min height', unit: '' },
+  maxAlt: { min: 0.4, max: 6, step: 0.1, def: 3.6, label: 'Max height', unit: '×R' },
+  panMul: { min: 30, max: 260, step: 10, def: 100, label: 'Pan speed', unit: '%' },
   zoomSpeed: { min: 50, max: 220, step: 10, def: 100, label: 'Zoom speed', unit: '%' },
 };
 

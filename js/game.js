@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
 import { clamp } from './noise.js';
-import { R, isBuildableDir, surfacePoint, groundNormal, orientOnSurface } from './world.js';
+import { R, isBuildableDir, surfacePoint, groundNormal, orientOnSurface, raycastTerrain } from './world.js';
 import { TOWER_TYPES, TOWER_SCALE, tierCost, buildTowerVisual, GHOST_MAT_OK, GHOST_MAT_BAD } from './towers.js';
 
 // Player-facing game logic: build mode with a live ghost, the placement rule
@@ -10,6 +10,7 @@ import { TOWER_TYPES, TOWER_SCALE, tierCost, buildTowerVisual, GHOST_MAT_OK, GHO
 const _v = new THREE.Vector3();
 const _v2 = new THREE.Vector3();
 const _n = new THREE.Vector3();
+const _hit = new THREE.Vector3();
 const _e1 = new THREE.Vector3();
 const _e2 = new THREE.Vector3();
 
@@ -263,9 +264,13 @@ export class Game {
 
   _hover(x, y) {
     this.rig.raycaster(x, y, this.raycaster);
-    const hits = this.raycaster.intersectObject(this.world.pickProxy, false);
-    if (!hits.length) { this.cursorValid = false; if (this.buildType) this.ghostHolder.visible = false; return; }
-    this.cursorDir.copy(hits[0].point).normalize();
+    const ray = this.raycaster.ray;
+    if (!raycastTerrain(ray.origin, ray.direction, _hit)) {
+      this.cursorValid = false;
+      if (this.buildType) this.ghostHolder.visible = false;
+      return;
+    }
+    this.cursorDir.copy(_hit).normalize();
     surfacePoint(this.cursorDir, this.cursorPos);
     this.cursorValid = true;
     if (this.buildType) this._updateGhost();

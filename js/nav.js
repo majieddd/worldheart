@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG } from './config.js';
 import { mulberry32 } from './noise.js';
-import { R, SUN_DIR, SPACE, initTerrainField, terrainHeight, isWalkableDir, surfacePoint } from './world.js';
+import { R, SUN_DIR, SPACE, initTerrainField, terrainHeight, isWalkableDir, isLandDir, surfacePoint } from './world.js';
 import * as WORLD from './world.js';
 
 // Walkability graph over a geodesic icosphere (detail 5, 10242 nodes).
@@ -124,6 +124,14 @@ export class NavGraph {
       return;
     }
 
+    // Seed search on a colossal world would cost seconds per attempt at full
+    // resolution, so candidate seeds are judged on a cheap scout graph and
+    // only the winner is built at full detail.
+    // One level below full: fine enough to resolve real coastlines (a coarser
+    // scout shatters continents into islands that do not exist at play
+    // resolution) and cheap because the land test skips slope and forest.
+    const scoutDetail = DETAIL > 6 ? DETAIL - 1 : 0;
+
     for (let attempt = 0; attempt < 14; attempt++) {
       this.attempts = attempt + 1;
       if (attempt > 0) {
@@ -133,6 +141,16 @@ export class NavGraph {
       // Criteria relax as attempts mount so worldgen always converges on the
       // best seed the neighborhood offers.
       const relax = Math.min(attempt / 8, 1);
+      if (!theta && scoutDetail) {
+        this._buildGraph(null, 0, false, scoutDetail, true);
+        if (!this._chooseSites(relax)) continue;
+        this._buildGraph(null, 0, false, DETAIL);
+        for (let r = relax; r <= 1.0001; r = Math.min(1, r + 0.25)) {
+          if (this._chooseSites(r)) return;
+          if (r >= 1) break;
+        }
+        continue;
+      }
       if (theta) {
         const rng = mulberry32(CONFIG.seed ^ 0xCA97);
         for (let c = 0; c < 5; c++) {
@@ -163,9 +181,11 @@ export class NavGraph {
     return SUN_DIR.clone();
   }
 
-  _buildGraph(capCenter = null, capTheta = 0, walkAll = false) {
-    if (!this._ico) this._ico = buildIcosphere(DETAIL);
-    const { verts, faces } = this._ico;
+  _buildGraph(capCenter = null, capTheta = 0, walkAll = false, detail = DETAIL, coarse = false) {
+    if (!this._icoCache) this._icoCache = new Map();
+    let ico = this._icoCache.get(detail);
+    if (!ico) { ico = buildIcosphere(detail); this._icoCache.set(detail, ico); }
+    const { verts, faces } = ico;
     const total = verts.length;
 
     let keep = null, oldToNew = null;
@@ -208,7 +228,8 @@ export class NavGraph {
       this.pos[idx * 3] = x * p; this.pos[idx * 3 + 1] = y * p; this.pos[idx * 3 + 2] = z * p;
       // Space flight lanes: the void is pathable, the rocks are not, so the
       // flow field bends every lane around the platforms.
-      this.walk[idx] = walkAll ? (h < 0.55 ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0);
+      this.walk[idx] = walkAll ? (h < 0.55 ? 1 : 0)
+        : (coarse ? (isLandDir(_v) ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0));
     }
 
     // CSR adjacency from unique triangle edges (kept nodes only)
@@ -332,20 +353,40 @@ export class NavGraph {
     return dx * dx + dy * dy + dz * dz;
   }
 
+  // Generation-marked scratch: worldgen calls this once per node on graphs of
+  // 160k+, so it must not allocate.
+  _scratch() {
+    if (!this._mark || this._mark.length !== this.n) {
+      this._mark = new Int32Array(this.n);
+      this._gen = 0;
+      this._fA = [];
+      this._fB = [];
+    }
+    this._gen++;
+    return this._mark;
+  }
+
   _openness(i, hops = 3) {
-    const seen = new Set([i]);
-    let frontier = [i];
+    const mark = this._scratch();
+    const g = this._gen;
+    let frontier = this._fA, next = this._fB;
+    frontier.length = 0;
+    mark[i] = g;
+    frontier.push(i);
+    let count = 1;
     for (let h = 0; h < hops; h++) {
-      const nf = [];
-      for (const a of frontier) {
+      next.length = 0;
+      for (let k = 0; k < frontier.length; k++) {
+        const a = frontier[k];
         for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
           const b = this.adj[e];
-          if (this.walk[b] && !seen.has(b)) { seen.add(b); nf.push(b); }
+          if (this.walk[b] && mark[b] !== g) { mark[b] = g; next.push(b); count++; }
         }
       }
-      frontier = nf;
+      const swap = frontier; frontier = next; next = swap;
     }
-    return seen.size;
+    this._fA = frontier; this._fB = next;
+    return count;
   }
 
   _chooseSites(relax = 0, capCenter = null, capTheta = 0) {
@@ -374,8 +415,13 @@ export class NavGraph {
     for (let i = 1; i < sizes.length; i++) if (sizes[i] > sizes[main]) main = i;
     // Capped battlefields demand a higher land fraction: a walled front that
     // is mostly shallow sea reads washy and plays cramped.
+    // Enough connected ground to host a war, not a fixed share of the globe:
+    // on a colossal planet a 12% landmass would be an impossible supercontinent.
     const baseFrac = capCenter ? 0.2 : 0.12;
-    const minRegion = Math.max(560, Math.round(n * (baseFrac - relax * (baseFrac * 0.45))));
+    const minRegion = Math.min(
+      Math.max(560, Math.round(n * (baseFrac - relax * (baseFrac * 0.45)))),
+      Math.round(6000 * (1 - relax * 0.35)),
+    );
     if (sizes[main] < minRegion) return false;
     this.region = region;
     this.mainRegion = main;
@@ -455,10 +501,19 @@ export class NavGraph {
     const n = this.n;
     this.dist.fill(Infinity);
     this.next.fill(-1);
-    const heap = new MinHeap(n * 6);
+    // The heap and visited set are reused: on a colossal world these are
+    // multi-megabyte buffers and every build re-solves the field.
+    if (!this._heap || this._heapFor !== n) {
+      this._heap = new MinHeap(n * 6 + 8);
+      this._done = new Uint8Array(n);
+      this._heapFor = n;
+    }
+    const heap = this._heap;
+    heap.n = 0;
+    const done = this._done;
+    done.fill(0);
     this.dist[source] = 0;
     heap.push(source, 0);
-    const done = new Uint8Array(n);
     while (heap.n > 0) {
       const a = heap.pop();
       if (done[a]) continue;
@@ -566,18 +621,27 @@ export class NavGraph {
     if (temp.size === 0) return { ok: true };
 
     // Reachability sweep from the heart with the candidate footprint blocked.
-    const n = this.n;
-    const seen = new Uint8Array(n);
-    const stack = [this.heartNode];
-    seen[this.heartNode] = 1;
+    // Runs on every hover, so it marks a persistent generation array instead
+    // of allocating a visited buffer the size of the graph.
+    const mark = this._scratch();
+    const g = this._gen;
+    const stack = this._fA;
+    stack.length = 0;
+    stack.push(this.heartNode);
+    mark[this.heartNode] = g;
     let need = this.portalNodes.length;
-    const isPortal = new Set(this.portalNodes);
+    const isPortal = this._portalSet || (this._portalSet = new Set());
+    if (this._portalSetFor !== this.portalNodes) {
+      isPortal.clear();
+      for (const p of this.portalNodes) isPortal.add(p);
+      this._portalSetFor = this.portalNodes;
+    }
     while (stack.length && need > 0) {
       const a = stack.pop();
       for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
         const b = this.adj[e];
-        if (seen[b] || !this.walk[b] || this.block[b] !== 0 || temp.has(b)) continue;
-        seen[b] = 1;
+        if (mark[b] === g || !this.walk[b] || this.block[b] !== 0 || temp.has(b)) continue;
+        mark[b] = g;
         if (isPortal.has(b)) need--;
         stack.push(b);
       }

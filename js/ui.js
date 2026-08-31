@@ -127,9 +127,11 @@ export class HUD {
             bend the swarm through your maze, and keep the heart alight.
             <em>Every breach must always have a path: seal nothing, shape everything.</em></div>
           <div class="o-body" style="margin-top:var(--sp-3);font-size:var(--fs-12)">
-            Drag to orbit, scroll to zoom, <span class="kbd">Ctrl</span> + middle-drag to rotate the view
-            (middle-click resets). Keys <span class="kbd">1</span> to <span class="kbd">5</span> choose a tower,
-            click to build. <span class="kbd">U</span> upgrade, <span class="kbd">X</span> sell,
+            Drag or <span class="kbd">WASD</span> to move, scroll or <span class="kbd">+</span>
+            <span class="kbd">-</span> to zoom, <span class="kbd">Q</span> <span class="kbd">E</span> or
+            <span class="kbd">Ctrl</span> + middle-drag to rotate (<span class="kbd">R</span> resets).
+            Keys <span class="kbd">1</span> to <span class="kbd">5</span> choose a tower, click to build.
+            <span class="kbd">U</span> upgrade, <span class="kbd">X</span> sell,
             <span class="kbd">Space</span> pause, <span class="kbd">F</span> speed. Camera feel sliders live in settings.</div>
           <div class="map-row" id="map-row"></div>
           <div class="o-actions">

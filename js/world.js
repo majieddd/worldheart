@@ -224,15 +224,87 @@ export function isWalkableDir(dir) {
   return true;
 }
 
+// Coarse "is this land" test for seed scouting. Slope and forest rejection is
+// meaningless at scout spacing (it shatters a continent into islands that do
+// not exist at play resolution), so seed selection only asks about landmass.
+export function isLandDir(dir) {
+  if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
+  const h = terrainHeight(dir.x, dir.y, dir.z, false);
+  return h >= 0.05 && h <= CONFIG.walkMaxHeight + 1.2;
+}
+
 // Where towers may stand. On ground maps this is walkability; on space maps
 // it is any rock surface, sides included (towers align to the local normal,
 // so building on a spire's flank is the point, not an accident).
 export function isBuildableDir(dir) {
   if (!SPACE) return isWalkableDir(dir);
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
+  let onRock = false;
   for (const s of SPACE.sites) {
     const dot = dir.x * s.dir.x + dir.y * s.dir.y + dir.z * s.dir.z;
-    if (Math.acos(clamp(dot, -1, 1)) < (s.r * 1.02) / R) return true;
+    if (Math.acos(clamp(dot, -1, 1)) < (s.r * 0.86) / R) { onRock = true; break; }
+  }
+  if (!onRock) return false;
+  // Rock faces steeper than ~45 degrees are cliffs: a tower planted there
+  // leans into the stone instead of standing on it.
+  groundNormal(dir, _bn);
+  return _bn.dot(dir) > 0.71;
+}
+const _bn = new THREE.Vector3();
+
+// Analytic ray-to-surface intersection: enter the terrain shell, march, then
+// bisect. Exact at any planet scale and free of the tessellation error a mesh
+// proxy carries (a coarse proxy on a huge world lands clicks units away from
+// where the player aimed).
+const _rp = new THREE.Vector3();
+export function raycastTerrain(origin, dir, out) {
+  const isSpace = !!SPACE;
+  const rMax = R + (isSpace ? 13 : 6.5);
+  const rMin = R - (isSpace ? 13 : 0.5);
+  const floor = isSpace ? -1e9 : 0.03;
+
+  const b = origin.dot(dir);
+  const oo = origin.lengthSq();
+  const discOut = b * b - (oo - rMax * rMax);
+  if (discOut <= 0) return false;
+  const sOut = Math.sqrt(discOut);
+  let t0 = -b - sOut;
+  let t1 = -b + sOut;
+  if (t1 <= 0) return false;
+  if (t0 < 0) t0 = 0;
+  const discIn = b * b - (oo - rMin * rMin);
+  if (discIn > 0) {
+    const tIn = -b - Math.sqrt(discIn);
+    if (tIn > t0) t1 = Math.min(t1, tIn);
+  }
+  if (t1 <= t0) return false;
+
+  const depthAt = (t) => {
+    _rp.copy(dir).multiplyScalar(t).add(origin);
+    const len = _rp.length();
+    if (len < 1e-6) return 1;
+    const inv = 1 / len;
+    const h = terrainHeight(_rp.x * inv, _rp.y * inv, _rp.z * inv);
+    return len - (R + Math.max(h, floor));
+  };
+
+  const span = t1 - t0;
+  const steps = Math.min(512, Math.max(16, Math.ceil(span / 0.45)));
+  const step = span / steps;
+  if (depthAt(t0) <= 0) { out.copy(dir).multiplyScalar(t0).add(origin); return true; }
+  let prev = t0;
+  for (let i = 1; i <= steps; i++) {
+    const t = t0 + i * step;
+    if (depthAt(t) <= 0) {
+      let lo = prev, hi = t;
+      for (let k = 0; k < 22; k++) {
+        const mid = (lo + hi) * 0.5;
+        if (depthAt(mid) <= 0) hi = mid; else lo = mid;
+      }
+      out.copy(dir).multiplyScalar(hi).add(origin);
+      return true;
+    }
+    prev = t;
   }
   return false;
 }
@@ -753,6 +825,9 @@ function buildAtmosphere() {
 function buildSky(rng) {
   const group = new THREE.Group();
   group.name = 'sky';
+  // Vista distances scale with the planet so the backdrop never crowds a
+  // colossal world (a fixed 1250-unit gas giant would sit in orbit of one).
+  const VIS = Math.max(1, R / 60);
 
   const domeMat = new THREE.ShaderMaterial({
     side: THREE.BackSide,
@@ -783,7 +858,7 @@ function buildSky(rng) {
       }
     `,
   });
-  const dome = new THREE.Mesh(new THREE.SphereGeometry(1600, 32, 20), domeMat);
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(1600 * VIS, 32, 20), domeMat);
   dome.frustumCulled = false;
   dome.renderOrder = -10;
   group.add(dome);
@@ -796,7 +871,7 @@ function buildSky(rng) {
   const sTint = new Float32Array(N * 3);
   const tv = new THREE.Vector3();
   for (let i = 0; i < N; i++) {
-    tv.set(rng() * 2 - 1, rng() * 2 - 1, rng() * 2 - 1).normalize().multiplyScalar(1500);
+    tv.set(rng() * 2 - 1, rng() * 2 - 1, rng() * 2 - 1).normalize().multiplyScalar(1500 * VIS);
     sp.set([tv.x, tv.y, tv.z], i * 3);
     sPhase[i] = rng() * Math.PI * 2;
     sSize[i] = 0.8 + Math.pow(rng(), 2.6) * 1.2;
@@ -876,7 +951,7 @@ function buildSky(rng) {
       }
     `,
   });
-  const gSphere = new THREE.Mesh(new THREE.SphereGeometry(130, 48, 32), gMat);
+  const gSphere = new THREE.Mesh(new THREE.SphereGeometry(130 * VIS, 48, 32), gMat);
   giant.add(gSphere);
   const ringMat = new THREE.ShaderMaterial({
     side: THREE.DoubleSide,
@@ -906,10 +981,10 @@ function buildSky(rng) {
       }
     `,
   });
-  const ring = new THREE.Mesh(new THREE.RingGeometry(150, 275, 96), ringMat);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(150 * VIS, 275 * VIS, 96), ringMat);
   ring.rotation.x = Math.PI / 2 - 0.32;
   giant.add(ring);
-  giant.position.set(-0.92, 0.24, 0.18).normalize().multiplyScalar(1250);
+  giant.position.set(-0.92, 0.24, 0.18).normalize().multiplyScalar(1250 * VIS);
   giant.lookAt(0, 0, 0);
   giant.rotateZ(0.35);
   giant.renderOrder = -8;
@@ -933,8 +1008,8 @@ function buildSky(rng) {
   const sun = new THREE.Sprite(new THREE.SpriteMaterial({
     map: sunTex, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true,
   }));
-  sun.position.copy(SUN_DIR).multiplyScalar(1480);
-  sun.scale.setScalar(190);
+  sun.position.copy(SUN_DIR).multiplyScalar(1480 * VIS);
+  sun.scale.setScalar(190 * VIS);
   sun.renderOrder = -6;
   group.add(sun);
 
@@ -1387,12 +1462,15 @@ const _orientQ = new THREE.Quaternion();
 export function orientOnSurface(obj, pos, yaw = 0) {
   _up.copy(pos).normalize();
   // Ground maps keep structures mostly upright; space rocks let them cling
-  // to the local surface so flank placements read intentional.
-  groundNormal(_up, _t1).lerp(_up, SPACE ? 0.15 : 0.65).normalize();
+  // to the local surface so tilted placements read intentional.
+  groundNormal(_up, _t1).lerp(_up, SPACE ? 0.22 : 0.65).normalize();
   _orientQ.setFromUnitVectors(Y_AXIS, _t1);
   obj.quaternion.copy(_orientQ);
   if (yaw) obj.rotateY(yaw);
   obj.position.copy(pos);
+  // Seat structures into the rock: the faceted mesh sags below the analytic
+  // surface between vertices, and a hair of sink beats a visible gap.
+  if (SPACE) obj.position.addScaledVector(_up, -0.3);
 }
 
 // ---------------------------------------------------------------------------
@@ -1416,8 +1494,6 @@ export class World {
         this.scene.add(this.terrain);
         break;
       case 2:
-        this.pickProxy = buildPickProxy();
-        this.scene.add(this.pickProxy);
         if (!SPACE) {
           this.water = buildWater();
           this.scene.add(this.water);

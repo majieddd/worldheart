@@ -19,9 +19,13 @@ Four worlds, selectable on the title screen. Every one is procedurally generated
 | World | Mode | Scale | Front |
 |---|---|---|---|
 | Pocket World | Planetary Battlefield | Small globe, radius 30 | Whole planet, 4 breaches |
-| Giant World | Planetary Battlefield | Large globe, radius 48 | More continents, longer marches, 5 breaches |
-| Titan's Brow | Battlefield | Massive planet, radius 120 | One walled continental front; the colossus rolls past the horizon as scenery. 5 breaches |
-| Shattered Reach | Space Battlefield | Asteroid field, radius 70 shell | Rock platforms adrift over void; everything flies. 5 breaches |
+| Giant World | Planetary Battlefield | Colossal globe, radius 240 | Continents past counting, ocean-crossing marches, 5 breaches |
+| Titan's Brow | Battlefield | Massive planet, radius 150 | One walled continental front; the colossus rolls past the horizon as scenery. 5 breaches |
+| Shattered Reach | Space Battlefield | Asteroid field, radius 70 shell | Rock platforms adrift over void at varying altitude; everything flies. 5 breaches |
+
+## Camera
+
+Panning locks the point of the world under your cursor to the cursor, at any lens, pitch, rotation, or zoom (measured to within a pixel by the built-in harness, `WH.camTest()` in the console). Every part of the feel is a live slider under the settings gear: lens and pitch at each end of the zoom, minimum and maximum height, and pan and zoom sensitivity. Settings persist per browser; "Reset camera feel" restores the defaults.
 
 At strategic zoom, towers and creatures swell for readability (more on bigger worlds) and then hand over to a screen-fixed icon layer; the camera lens narrows as you zoom in so a planet feels vast underfoot and only reveals its curve from orbit; and pan speed tracks camera altitude so the world drags at the same rate at every zoom. Battlefield worlds sit under a planet-wide broken cloud deck with a clearing over the war zone.
 
@@ -45,8 +49,9 @@ Append `?seed=12345` to any URL for a specific world; the title screen's setting
 
 | Input | Action |
 |---|---|
-| Drag | Orbit the planet |
-| Scroll or pinch | Zoom |
+| Drag / WASD / arrows | Move across the world |
+| Scroll, pinch, or + and - | Zoom |
+| Ctrl + middle-drag, or Q and E | Rotate the view (R or middle-click resets) |
 | 1 to 5 | Select a tower to build |
 | Left click | Build, or select a tower |
 | Right click or Esc | Cancel, deselect |

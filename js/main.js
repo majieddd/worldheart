@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { CONFIG, PALETTE } from './config.js';
+import { CONFIG, CAM_TUNE, PALETTE } from './config.js';
 import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
-import { World, R, surfacePoint, setBattlefield } from './world.js';
+import { World, R, surfacePoint, setBattlefield, raycastTerrain } from './world.js';
 import { NavGraph } from './nav.js';
 import { EnemyManager } from './enemies.js';
 import { Effects } from './effects.js';
@@ -34,9 +34,16 @@ const camFill = new THREE.DirectionalLight(0x9fb6e8, 0.42);
 scene.add(camFill);
 const _fxTmp = new THREE.Vector3();
 const _fxTmp2 = new THREE.Vector3();
+rig.surfaceProbe = raycastTerrain;
+
+// A hidden, minimized, or mid-rotation viewport reports 0x0. Sizing to that
+// collapses the canvas to a pixel and poisons the projection matrix, so the
+// last good size is kept until a real one arrives.
+let viewW = 1280, viewH = 720;
 
 function resize() {
-  const w = innerWidth, h = innerHeight;
+  if (innerWidth > 16 && innerHeight > 16) { viewW = innerWidth; viewH = innerHeight; }
+  const w = viewW, h = viewH;
   renderer.setPixelRatio(1);
   renderer.setSize(Math.round(w * pixelRatio), Math.round(h * pixelRatio), false);
   canvas.style.width = w + 'px';
@@ -116,8 +123,12 @@ async function boot() {
   const heartPos = nav.nodePos(nav.heartNode, new THREE.Vector3());
   world.addHeart(heartPos);
   world.crushDecorNear(heartPos, 4.2);
-  if (nav.fieldCenter) world.addFieldWall(nav.fieldCenter, CONFIG.map.fieldTheta);
-  if (CONFIG.map.mode === 'battlefield') world.addCloudDeck(nav.fieldCenter, CONFIG.map.fieldTheta);
+  // The energy wall reads as a containment fence on a planet surface; in open
+  // space the void itself is the boundary and a ring just looks bolted on.
+  if (CONFIG.map.mode === 'battlefield') {
+    world.addFieldWall(nav.fieldCenter, CONFIG.map.fieldTheta);
+    world.addCloudDeck(nav.fieldCenter, CONFIG.map.fieldTheta);
+  }
   const portalPositions = [];
   for (const pn of nav.portalNodes) {
     const pp = nav.nodePos(pn, new THREE.Vector3());
@@ -234,9 +245,14 @@ async function boot() {
 // Pause the simulation whenever the tab is hidden: a background tab gets no
 // frames, and a giant catch-up step on return reads as a freeze.
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden && game && game.state === 'playing' && !game.paused) {
-    game.paused = true;
-    ui?.reflectPause?.();
+  if (document.hidden) {
+    if (game && game.state === 'playing' && !game.paused) {
+      game.paused = true;
+      ui?.reflectPause?.();
+    }
+  } else {
+    // A tab restored from hidden may have been sized while degenerate.
+    resize();
   }
 });
 
@@ -297,6 +313,274 @@ function stepFrame(dt, render) {
 const ICON_COLORS = {
   bolt: 0x59f2ff, cryo: 0xbff1ff, mortar: 0xffc857, tesla: 0x9db8ff, helios: 0xffd9a0,
 };
+
+// ---------------------------------------------------------------------------
+// Camera navigation harness. Every control path is exercised against a
+// measurable property rather than by eye: the decisive one is that a fixed
+// world point must track the cursor on screen under any view rotation, pitch,
+// lens, and zoom. Run with WH.camTest().
+
+const _ct = new THREE.Vector3();
+const _cdir = new THREE.Vector3();
+const _cref = new THREE.Vector3();
+
+function camTest() {
+  const rep = { map: CONFIG.mapKey, pass: true, checks: [] };
+  const add = (name, ok, detail) => {
+    rep.checks.push(Object.assign({ name, ok }, detail || {}));
+    if (!ok) rep.pass = false;
+  };
+  const saved = {
+    lon: rig.lon, lat: rig.lat, dist: rig.dist, target: rig.targetDist,
+    yaw: rig.viewYaw, tilt: rig.tiltOffset, build: game && game.buildType,
+  };
+  if (game) game.buildType = null;
+
+  // Measure against the live render viewport, which the resize guard keeps
+  // sane even when the window reports nothing.
+  const W = viewW, H = viewH;
+  const project = (v) => {
+    _ct.copy(v).project(rig.camera);
+    return [(_ct.x * 0.5 + 0.5) * W, (-_ct.y * 0.5 + 0.5) * H];
+  };
+  const aimRef = () => {
+    const cl = Math.cos(rig.lat);
+    _cdir.set(Math.sin(rig.lon) * cl, Math.sin(rig.lat), Math.cos(rig.lon) * cl);
+    surfacePoint(_cdir, _cref);
+    return _cref;
+  };
+  const ptr = (type, x, y, button, ctrl) => canvas.dispatchEvent(new PointerEvent(type, {
+    pointerId: 991, clientX: x, clientY: y, button, buttons: button === 1 ? 4 : 1,
+    ctrlKey: !!ctrl, bubbles: true,
+  }));
+  const dragBy = (dx, dy, button = 0, ctrl = false, steps = 10) => {
+    const sx = W * 0.5, sy = H * 0.5;
+    ptr('pointerdown', sx, sy, button, ctrl);
+    for (let i = 1; i <= steps; i++) ptr('pointermove', sx + (dx * i) / steps, sy + (dy * i) / steps, -1, ctrl);
+    ptr('pointerup', sx + dx, sy + dy, button, ctrl);
+  };
+  const settle = (frames = 40) => { for (let i = 0; i < frames; i++) stepFrame(1 / 60, false); };
+  const key = (type, code) => dispatchEvent(new KeyboardEvent(type, { code, bubbles: true }));
+
+  // The measurement that defines "the world follows my cursor": the point of
+  // the globe grabbed at pointer-down must sit under the cursor when the drag
+  // ends, in pixels, whatever the lens, pitch, rotation, or zoom.
+  // Returns the tracking error in pixels, or null when the gesture left the
+  // globe (cursor over open sky), where keeping a point pinned is undefined
+  // and the tangent-plane fallback takes over instead.
+  const trackError = (dx, dy, steps = 10, resetTo = null) => {
+    const sx = W * 0.5, sy = H * 0.5;
+    // Each sub-test starts from the same pose so tracking accuracy is measured
+    // independently of where previous drags left the camera.
+    if (resetTo) { rig.lon = resetTo[0]; rig.lat = resetTo[1]; }
+    rig.velLon = 0; rig.velLat = 0; rig.flight = null;
+    for (let i = 0; i < 6; i++) stepFrame(1 / 60, false);
+    ptr('pointerdown', sx, sy, 0, false);
+    if (!rig.grabValid || !rig.rayHit) { ptr('pointerup', sx, sy, 0, false); return null; }
+    _cref.copy(rig.grabDir).multiplyScalar(rig.grabR);
+    let offGlobe = false;
+    for (let i = 1; i <= steps; i++) {
+      ptr('pointermove', sx + (dx * i) / steps, sy + (dy * i) / steps, -1, false);
+      if (!rig.rayHit) offGlobe = true;
+    }
+    ptr('pointerup', sx + dx, sy + dy, 0, false);
+    rig.velLon = 0; rig.velLat = 0;
+    stepFrame(1 / 60, false);
+    if (offGlobe) return null;
+    // A drag that ran into the battlefield boundary is meant to stop short;
+    // that is confinement working, not a tracking error.
+    if (rig.confine) {
+      const cl2 = Math.cos(rig.lat);
+      _cdir.set(Math.sin(rig.lon) * cl2, Math.sin(rig.lat), Math.cos(rig.lon) * cl2);
+      const ang = Math.acos(Math.max(-1, Math.min(1, _cdir.dot(rig.confine.center))));
+      if (ang > rig.confine.maxAng - 0.01) return null;
+    }
+    const p = project(_cref);
+    const err = Math.hypot(p[0] - (sx + dx), p[1] - (sy + dy));
+    return Number.isFinite(err) ? err : null;
+  };
+
+  // 1. Cursor tracking under every view rotation and drag direction. Confined
+  // maps test from the middle of their battlefield with shorter gestures, so
+  // the measurement is about tracking rather than about hitting the wall.
+  const home = rig.confine
+    ? [Math.atan2(rig.confine.center.x, rig.confine.center.z),
+      Math.asin(Math.max(-1, Math.min(1, rig.confine.center.y)))]
+    : [0.5, 0.25];
+  // Gestures scale to how large the world actually appears: a 130px drag is a
+  // gentle nudge on a colossus and more than the whole disc of a pocket world.
+  const apparentRadiusPx = () => {
+    const t = Math.tan((rig.camera.fov * Math.PI) / 360);
+    return (CONFIG.planetRadius / Math.max(rig.dist, 1) / Math.max(t, 0.05)) * (H / 2);
+  };
+  const gesture = () => {
+    const g = apparentRadiusPx() * 0.28 * (rig.confine ? 0.55 : 1);
+    return Math.max(24, Math.min(130, Math.round(g)));
+  };
+  rig.targetDist = rig.dist = rig.distMin + (rig.distMax - rig.distMin) * 0.4;
+  settle();
+  const L = gesture();
+  const D = Math.round(L * 0.7);
+  const yaws = [0, 45, 90, 135, 180, 225, 270, 315];
+  const drags = [[L, 0], [-L, 0], [0, L], [0, -L], [D, D], [-D, D], [D, -D], [-D, -D]];
+  let worstPx = 0, worstCase = null, sumPx = 0, samples = 0, offGlobe = 0;
+  for (const yawDeg of yaws) {
+    for (const [dx, dy] of drags) {
+      rig.viewYaw = (yawDeg * Math.PI) / 180;
+      const err = trackError(dx, dy, 10, home);
+      if (err === null) { offGlobe++; continue; }
+      sumPx += err; samples++;
+      if (err > worstPx) { worstPx = err; worstCase = { yaw: yawDeg, drag: [dx, dy] }; }
+    }
+  }
+  add('grabbed point stays under cursor under rotation',
+    samples >= 16 && worstPx < 8, {
+      worstErrorPx: +worstPx.toFixed(2),
+      meanErrorPx: +(sumPx / Math.max(samples, 1)).toFixed(2),
+      dragLengthPx: L, worstCase, samples, skippedAtBoundary: offGlobe,
+    });
+  rig.viewYaw = 0;
+
+  // 2. Same tracking across the whole zoom range. The drag shrinks as the
+  // planet shrinks on screen, since a fixed pixel drag from orbit would swing
+  // the grabbed point around the far side.
+  const zoomErrs = [];
+  for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+    rig.targetDist = rig.distMin + (rig.distMax - rig.distMin) * t;
+    rig.dist = rig.targetDist;
+    settle();
+    const len = gesture();
+    const err = trackError(len, Math.round(len * 0.4), 10, home);
+    zoomErrs.push(err === null ? null : +err.toFixed(2));
+  }
+  add('cursor tracking holds across zoom',
+    zoomErrs.filter((e) => e !== null).length >= 2
+    && zoomErrs.every((e) => e === null || e < 8), { errorPxByZoom: zoomErrs });
+
+  // 2b. Dragging off the globe must stay smooth and bounded, never NaN or a
+  // snap: the cursor there points at sky, so motion continues on a tangent.
+  rig.targetDist = rig.dist = rig.distMin + (rig.distMax - rig.distMin) * 0.4;
+  rig.lon = 0.5; rig.lat = 0.25; settle();
+  let maxJump = 0;
+  const sx0 = W * 0.5, sy0 = H * 0.5;
+  ptr('pointerdown', sx0, sy0, 0, false);
+  let pl = rig.lon, pa = rig.lat;
+  for (let i = 1; i <= 40; i++) {
+    ptr('pointermove', sx0, sy0 - i * 22, -1, false);
+    let d = rig.lon - pl;
+    while (d > Math.PI) d -= Math.PI * 2;
+    while (d < -Math.PI) d += Math.PI * 2;
+    maxJump = Math.max(maxJump, Math.hypot(d, rig.lat - pa));
+    pl = rig.lon; pa = rig.lat;
+  }
+  ptr('pointerup', sx0, sy0 - 880, 0, false);
+  rig.velLon = 0; rig.velLat = 0;
+  settle(4);
+  add('dragging past the horizon stays bounded',
+    Number.isFinite(maxJump) && maxJump <= 1.02
+    && Number.isFinite(rig.lon) && Number.isFinite(rig.lat), {
+      largestSingleStepRad: +maxJump.toFixed(4),
+    });
+
+  // 3. Zoom clamps and stays finite.
+  for (let i = 0; i < 40; i++) rig.zoomBy(-0.6);
+  settle(30);
+  const zMin = rig.dist;
+  for (let i = 0; i < 60; i++) rig.zoomBy(0.6);
+  settle(40);
+  const zMax = rig.dist;
+  add('zoom clamps to tuned height limits', zMin >= rig.distMin - 0.6 && zMax <= rig.distMax + 0.6, {
+    reachedMin: +zMin.toFixed(1), reachedMax: +zMax.toFixed(1),
+    limits: [+rig.distMin.toFixed(1), +rig.distMax.toFixed(1)],
+  });
+
+  // 4. Lens and pitch honor the tuning at both ends.
+  rig.targetDist = rig.dist = rig.distMin; settle(80);
+  const fovNear = rig.camera.fov, tiltNear = (rig.appliedTilt * 180) / Math.PI;
+  rig.targetDist = rig.dist = rig.distMax; settle(90);
+  const fovFar = rig.camera.fov, tiltFar = (rig.appliedTilt * 180) / Math.PI;
+  add('lens and pitch match the tuned endpoints', Math.abs(fovNear - CAM_TUNE.fovNear) < 1.5
+    && Math.abs(fovFar - CAM_TUNE.fovFar) < 1.5
+    && Math.abs(tiltNear - CAM_TUNE.tiltNear) < 1.5
+    && Math.abs(tiltFar - CAM_TUNE.tiltFar) < 1.5, {
+    fov: [+fovNear.toFixed(1), +fovFar.toFixed(1)],
+    tiltDeg: [+tiltNear.toFixed(1), +tiltFar.toFixed(1)],
+    tuned: { fov: [CAM_TUNE.fovNear, CAM_TUNE.fovFar], tilt: [CAM_TUNE.tiltNear, CAM_TUNE.tiltFar] },
+  });
+
+  // 5. Keyboard navigation moves the view and stops cleanly on release.
+  rig.targetDist = rig.dist = rig.distMin + (rig.distMax - rig.distMin) * 0.3;
+  settle(20);
+  const kLon = rig.lon, kLat = rig.lat;
+  key('keydown', 'KeyD');
+  settle(18);
+  key('keyup', 'KeyD');
+  const kMoved = Math.hypot(rig.lon - kLon, rig.lat - kLat);
+  settle(30);
+  const kDrift = Math.hypot(rig.velLon, rig.velLat);
+  add('keyboard pan moves and releases without drift', kMoved > 1e-4 && kDrift < 1e-3, {
+    movedRad: +kMoved.toFixed(5), residualVelocity: +kDrift.toFixed(6),
+  });
+
+  // 6. Ctrl + middle drag rotates; ctrl + middle click resets.
+  rig.viewYaw = 0; rig.tiltOffset = 0;
+  dragBy(150, 60, 1, true);
+  const rotYaw = rig.viewYaw, rotTilt = rig.tiltOffset;
+  dragBy(0, 0, 1, true, 1);
+  add('view rotation applies and click-resets', Math.abs(rotYaw) > 0.2 && Math.abs(rotTilt) > 0.05
+    && rig.viewYaw === 0 && rig.tiltOffset === 0, {
+    yawAfterDrag: +rotYaw.toFixed(3), tiltAfterDrag: +rotTilt.toFixed(3),
+  });
+
+  // 7. Inertia decays to rest.
+  rig.viewYaw = 0;
+  dragBy(220, 0);
+  const flick = Math.abs(rig.velLon);
+  for (let i = 0; i < 120; i++) stepFrame(1 / 60, false);
+  add('flick inertia settles', flick > 0 && Math.abs(rig.velLon) < 1e-4, {
+    launchVelocity: +flick.toFixed(4), after2s: +Math.abs(rig.velLon).toFixed(6),
+  });
+
+  // 8. Battlefield confinement holds under abusive input.
+  if (rig.confine) {
+    for (let i = 0; i < 12; i++) { dragBy(400, 260); settle(4); }
+    settle(60);
+    const cl = Math.cos(rig.lat);
+    _cdir.set(Math.sin(rig.lon) * cl, Math.sin(rig.lat), Math.cos(rig.lon) * cl);
+    const ang = Math.acos(Math.max(-1, Math.min(1, _cdir.dot(rig.confine.center))));
+    add('camera stays inside the battlefield', ang <= rig.confine.maxAng + 0.02, {
+      aimAngle: +ang.toFixed(3), limit: +rig.confine.maxAng.toFixed(3),
+    });
+  }
+
+  // 9. No non-finite state anywhere in the rig.
+  const finite = [rig.lon, rig.lat, rig.dist, rig.targetDist, rig.viewYaw, rig.tiltOffset,
+    rig.velLon, rig.velLat, rig.camera.fov, rig.camera.position.x, rig.camera.position.y,
+    rig.camera.position.z].every(Number.isFinite);
+  add('camera state finite', finite, {});
+
+  // 10. Frame cost of navigation at both extremes.
+  const timeAt = (t) => {
+    rig.targetDist = rig.dist = rig.distMin + (rig.distMax - rig.distMin) * t;
+    settle(10);
+    const t0 = performance.now();
+    for (let i = 0; i < 120; i++) stepFrame(1 / 60, false);
+    return +((performance.now() - t0) / 120).toFixed(3);
+  };
+  const msNear = timeAt(0), msFar = timeAt(1);
+  add('sim + camera step under 6ms', msNear < 6 && msFar < 6, { msNear, msFar });
+
+  // restore
+  rig.lon = saved.lon; rig.lat = saved.lat;
+  rig.dist = saved.dist; rig.targetDist = saved.target;
+  rig.viewYaw = saved.yaw; rig.tiltOffset = saved.tilt;
+  rig.velLon = 0; rig.velLat = 0;
+  if (game) game.buildType = saved.build;
+  settle(2);
+
+  rep.failed = rep.checks.filter((c) => !c.ok).map((c) => c.name);
+  return rep;
+}
 const SWELL_MAX = 1.9 * Math.min(1.9, Math.sqrt(CONFIG.planetRadius / 30));
 
 function workMs() {
@@ -322,6 +606,7 @@ window.WH = {
     }
   },
   give(n = 1000) { game.gold += n; },
+  camTest: () => camTest(),
   // Deterministic sim advance for scripted verification; rAF-independent.
   step(seconds = 1, fps60 = 60) {
     const n = Math.round(seconds * fps60);
