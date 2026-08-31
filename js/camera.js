@@ -559,7 +559,7 @@ export class OrbitRig {
     const tiltNear = CAM_TUNE.tiltNear * (Math.PI / 180);
     const tiltFar = CAM_TUNE.tiltFar * (Math.PI / 180);
     this.appliedTilt = clamp(
-      lerp(tiltNear, tiltFar, Math.min(1, this.zoomT * 1.5)) + this.tiltOffset, -0.25, 1.25,
+      lerp(tiltNear, tiltFar, Math.min(1, this.zoomT * 1.5)) + this.tiltOffset, -0.62, 1.55,
     );
     this.camera.rotateX(this.appliedTilt);
     if (roll) this.camera.rotateZ(roll);

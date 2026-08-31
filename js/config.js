@@ -25,7 +25,7 @@ export const MAPS = {
     name: 'Pocket World',
     mode: 'planetary', modeLabel: 'planetary battlefield',
     tag: 'The classic: a whole globe at war.',
-    chip: 'small world · 4 breaches',
+    chip: 'planetoid · 4 breaches',
     radius: 30, terrainDetail: 6, navDetail: 5, pickDetail: 4,
     freqMul: 1, fineAbsolute: true,
     portalWakes: [1, 4, 9, 14],
@@ -37,8 +37,8 @@ export const MAPS = {
   giant: {
     name: 'Giant World',
     mode: 'planetary', modeLabel: 'planetary battlefield',
-    tag: 'A colossal globe. Continents past counting, marches that cross oceans.',
-    chip: 'colossal world · 5 breaches',
+    tag: 'A full planet at war. Continents past counting, marches that cross oceans.',
+    chip: 'planet · 5 breaches',
     radius: 240, terrainDetail: 7, navDetail: 7, pickDetail: 5,
     freqMul: 1.7, fineAbsolute: true,
     portalWakes: [1, 3, 7, 11, 15],
@@ -50,12 +50,17 @@ export const MAPS = {
   titan: {
     name: "Titan's Brow",
     mode: 'battlefield', modeLabel: 'battlefield',
-    tag: 'A colossus. The war holds one walled front; the world rolls on past the horizon.',
-    chip: 'massive world · 5 breaches',
-    radius: 150, terrainDetail: 7, navDetail: 7, pickDetail: 5,
-    freqMul: 2.4, fineAbsolute: true,
+    tag: 'One walled front on a full planet. The world rolls on past the horizon.',
+    chip: 'planet · walled front · 5 breaches',
+    // Same planet class as Giant World: a Battlefield is a section of a real
+    // planet, so a campaign can fight several fronts on one world and later
+    // play the whole globe with those regions still in place.
+    // navDetail 9 is affordable because the graph is pruned to the cap: a
+    // walled front needs corridors many nodes wide or every tower severs them.
+    radius: 240, terrainDetail: 7, navDetail: 9, pickDetail: 5,
+    freqMul: 1.7, fineAbsolute: true,
     portalWakes: [1, 3, 7, 11, 15],
-    fieldTheta: 0.42,
+    fieldTheta: 0.28,
     startGold: 450,
     waterSegs: [320, 214],
     decorMul: 1.15,
@@ -187,14 +192,14 @@ export const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').mat
 // panel writes them, and they persist per browser. Ranges double as the
 // slider bounds and the load-time sanity clamp.
 export const CAM_RANGES = {
-  fovNear: { min: 40, max: 150, step: 1, def: 100, label: 'Lens · close', unit: '°' },
-  fovFar: { min: 20, max: 150, step: 1, def: 30, label: 'Lens · orbit', unit: '°' },
-  tiltNear: { min: 0, max: 60, step: 1, def: 42, label: 'Tilt · close', unit: '°' },
-  tiltFar: { min: 0, max: 25, step: 1, def: 2, label: 'Tilt · orbit', unit: '°' },
-  minAlt: { min: 2, max: 30, step: 0.5, def: 7, label: 'Min height', unit: '' },
-  maxAlt: { min: 0.4, max: 6, step: 0.1, def: 3.6, label: 'Max height', unit: '×R' },
-  panMul: { min: 30, max: 260, step: 10, def: 100, label: 'Pan speed', unit: '%' },
-  zoomSpeed: { min: 50, max: 220, step: 10, def: 100, label: 'Zoom speed', unit: '%' },
+  fovNear: { min: 15, max: 170, step: 1, def: 100, label: 'Lens · close', unit: '°' },
+  fovFar: { min: 8, max: 170, step: 1, def: 30, label: 'Lens · orbit', unit: '°' },
+  tiltNear: { min: -25, max: 85, step: 1, def: 42, label: 'Tilt · close', unit: '°' },
+  tiltFar: { min: -25, max: 85, step: 1, def: 2, label: 'Tilt · orbit', unit: '°' },
+  minAlt: { min: 1, max: 90, step: 0.5, def: 7, label: 'Min height', unit: '' },
+  maxAlt: { min: 0.15, max: 14, step: 0.05, def: 3.6, label: 'Max height', unit: '×R' },
+  panMul: { min: 10, max: 400, step: 5, def: 100, label: 'Pan speed', unit: '%' },
+  zoomSpeed: { min: 10, max: 400, step: 5, def: 100, label: 'Zoom speed', unit: '%' },
 };
 
 export const CAM_TUNE = (() => {

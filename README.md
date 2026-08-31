@@ -18,10 +18,12 @@ Four worlds, selectable on the title screen. Every one is procedurally generated
 
 | World | Mode | Scale | Front |
 |---|---|---|---|
-| Pocket World | Planetary Battlefield | Small globe, radius 30 | Whole planet, 4 breaches |
-| Giant World | Planetary Battlefield | Colossal globe, radius 240 | Continents past counting, ocean-crossing marches, 5 breaches |
-| Titan's Brow | Battlefield | Massive planet, radius 150 | One walled continental front; the colossus rolls past the horizon as scenery. 5 breaches |
+| Pocket World | Planetary Battlefield | Planetoid, radius 30 | Whole world, 4 breaches |
+| Giant World | Planetary Battlefield | Planet, radius 240 | Continents past counting, ocean-crossing marches, 5 breaches |
+| Titan's Brow | Battlefield | Planet, radius 240 | One walled front on a full planet; the world rolls on past the horizon. 5 breaches |
 | Shattered Reach | Space Battlefield | Asteroid field, radius 70 shell | Rock platforms adrift over void at varying altitude; everything flies. 5 breaches |
+
+Titan's Brow and Giant World are the same class of world, deliberately: a Battlefield is a section of a real planet, so a campaign can fight several fronts on one world and later play the whole globe with those regions still in place. A walled front prunes its navigation graph to the cap, which buys it a far finer grid than a whole planet could afford.
 
 ## Camera
 

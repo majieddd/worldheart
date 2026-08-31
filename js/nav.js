@@ -11,7 +11,10 @@ import * as WORLD from './world.js';
 
 const DETAIL = CONFIG.navDetail;
 
-function buildIcosphere(detail) {
+// Subdivided icosphere. When a cap is given, faces outside it are dropped
+// between levels, so a Battlefield can afford a much finer graph than the
+// whole globe would: the cost tracks the played area, not the planet.
+function buildIcosphere(detail, capCenter = null, capTheta = 0) {
   const t = (1 + Math.sqrt(5)) / 2;
   let verts = [
     [-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0],
@@ -48,6 +51,17 @@ function buildIcosphere(detail) {
       next.push([a, ab, ca], [b, bc, ab], [c, ca, bc], [ab, bc, ca]);
     }
     faces = next;
+
+    // Margin shrinks with face size: at coarse levels a triangle can straddle
+    // the whole cap while none of its corners sit inside it.
+    if (capCenter && d >= 2) {
+      const cosLimit = Math.cos(Math.min(Math.PI, capTheta + 0.12 + 2.2 / Math.pow(2, d)));
+      const inCap = (vi) => {
+        const v = verts[vi];
+        return v[0] * capCenter.x + v[1] * capCenter.y + v[2] * capCenter.z >= cosLimit;
+      };
+      faces = faces.filter(([a, b, c]) => inCap(a) || inCap(b) || inCap(c));
+    }
   }
   return { verts, faces };
 }
@@ -182,9 +196,16 @@ export class NavGraph {
   }
 
   _buildGraph(capCenter = null, capTheta = 0, walkAll = false, detail = DETAIL, coarse = false) {
-    if (!this._icoCache) this._icoCache = new Map();
-    let ico = this._icoCache.get(detail);
-    if (!ico) { ico = buildIcosphere(detail); this._icoCache.set(detail, ico); }
+    let ico;
+    if (capCenter) {
+      // Cap-pruned spheres depend on where the field landed, so they are built
+      // per attempt rather than cached; pruning keeps that cheap.
+      ico = buildIcosphere(detail, capCenter, capTheta);
+    } else {
+      if (!this._icoCache) this._icoCache = new Map();
+      ico = this._icoCache.get(detail);
+      if (!ico) { ico = buildIcosphere(detail); this._icoCache.set(detail, ico); }
+    }
     const { verts, faces } = ico;
     const total = verts.length;
 
@@ -206,6 +227,11 @@ export class NavGraph {
       n = total;
     }
     this.n = n;
+    // Node spacing at this resolution (derived from the detail level, since a
+    // cap-pruned sphere carries only part of the globe), and the factor that
+    // keeps a tower footprint meaningful against the grid.
+    this.spacing = Math.sqrt((4 * Math.PI * R * R) / (10 * Math.pow(4, detail) + 2));
+    this.footprintScale = Math.max(1, Math.min(1.7, this.spacing / 1.05));
 
     this.dirs = new Float32Array(n * 3);
     this.pos = new Float32Array(n * 3);
@@ -459,7 +485,11 @@ export class NavGraph {
     for (let i = 0; i < n; i++) {
       if (!this.walk[i] || region[i] !== main) continue;
       if (this.dist[i] === Infinity) continue;
-      if (this.dist[i] < maxD * (0.42 - relax * 0.12)) continue;
+      // Spread breaches around the heart, but keep the march to a few minutes:
+      // on a colossal world a fraction-of-the-world gate would put portals an
+      // ocean away and waves would spend the game walking.
+      if (this.dist[i] < Math.min(maxD * (0.42 - relax * 0.12), 140)) continue;
+      if (this.dist[i] > 300) continue;
       if (!capCenter && Math.abs(this.dirs[i * 3 + 1]) > 0.86) continue;
       if (this._openness(i, 2) < 12 - relax * 4) continue;
       cands.push(i);

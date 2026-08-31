@@ -323,7 +323,7 @@ export class Game {
     this.rangeRing.show(true);
     this.rangeRing.place(this.cursorPos, def.tiers[0].range, 0.28);
     this.footRing.show(true);
-    this.footRing.place(this.cursorPos, def.footprint, 0.15);
+    this.footRing.place(this.cursorPos, this._fp(def), 0.15);
 
     this._validateT -= 1;
     if (force || this._validateT <= 0 || this._lastGhostDir.distanceToSquared(this.cursorDir) > 0.00002) {
@@ -339,24 +339,31 @@ export class Game {
     }
   }
 
+  // Footprints grow with the navigation grid so blocking means the same thing
+  // on a planetoid and on a colossal planet.
+  _fp(def) {
+    return def.footprint * (this.nav.footprintScale || 1);
+  }
+
   _validate(def) {
     if (!this.cursorValid) return { ok: false, reason: 'terrain' };
     if (!isBuildableDir(this.cursorDir)) return { ok: false, reason: 'terrain' };
+    const fp = this._fp(def);
     if (this.cursorPos.distanceTo(this.world.heart.group.position) < 3.7) return { ok: false, reason: 'heart' };
     for (const p of this.world.portals) {
       if (this.cursorPos.distanceTo(p.group.position) < 3.0) return { ok: false, reason: 'portal' };
     }
     for (const t of this.towerMgr.towers) {
-      if (this.cursorPos.distanceTo(t.pos) < def.footprint + t.def.footprint * 0.85) {
+      if (this.cursorPos.distanceTo(t.pos) < fp + this._fp(t.def) * 0.85) {
         return { ok: false, reason: 'overlap' };
       }
     }
     for (const e of this.enemies.active) {
       if (e.type.flying) continue;
       this.towerMgr.enemyWorldPos(e, _v2);
-      if (_v2.distanceTo(this.cursorPos) < def.footprint + 0.75) return { ok: false, reason: 'enemies' };
+      if (_v2.distanceTo(this.cursorPos) < fp + 0.75) return { ok: false, reason: 'enemies' };
     }
-    const nv = this.nav.validatePlacement(this.cursorPos, def.footprint);
+    const nv = this.nav.validatePlacement(this.cursorPos, fp);
     if (!nv.ok) return { ok: false, reason: nv.reason === 'path' ? 'path' : 'landmark' };
     if (this.gold < def.cost) return { ok: false, reason: 'gold' };
     return { ok: true };
@@ -365,7 +372,7 @@ export class Game {
   _refreshPaths(withGhost) {
     const def = this.buildType ? TOWER_TYPES[this.buildType] : null;
     const paths = (withGhost && def && this.cursorValid)
-      ? this.nav.previewPaths(this.cursorPos, def.footprint)
+      ? this.nav.previewPaths(this.cursorPos, this._fp(def))
       : this.nav.previewPaths();
     this.pathFlow.setPaths(paths);
   }
@@ -392,8 +399,8 @@ export class Game {
     }
     this.gold -= def.cost;
     const tower = this.towerMgr.place(this.buildType, this.cursorPos);
-    this.nav.blockNodes(this.cursorPos, def.footprint, tower.id);
-    const crushed = this.world.crushDecorNear(this.cursorPos, def.footprint + 0.5);
+    this.nav.blockNodes(this.cursorPos, this._fp(def), tower.id);
+    const crushed = this.world.crushDecorNear(this.cursorPos, this._fp(def) + 0.5);
     this.fx.buildPuff(this.cursorPos);
     this.fx.floaters.spawn(this.cursorPos, `-${def.cost}`, '#ffc857', 13);
     if (crushed > 0) this.fx.burstGlow(this.cursorPos, 0x66b06d, 8, 2.4, 0.6, 0.7, 0.9);
