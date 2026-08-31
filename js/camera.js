@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CONFIG, REDUCED_MOTION } from './config.js';
+import { CONFIG, CAM_TUNE, REDUCED_MOTION } from './config.js';
 import { clamp, lerp, easeInOut, easeOutCubic } from './noise.js';
 
 const _aim = new THREE.Vector3();
@@ -27,6 +27,9 @@ export class OrbitRig {
     this.flight = null;          // active tween {fromLon...toDist,t,dur}
     this.shakeEnabled = !REDUCED_MOTION;
     this.confine = null;         // {center: Vector3, maxAng} battlefield camera bounds
+    this.viewYaw = 0;            // ctrl+middle drag: spin the view on screen
+    this.tiltOffset = 0;         // ctrl+middle drag: manual pitch offset
+    this.rotating = false;
 
     this.dragging = false;
     this.dragButton = 0;
@@ -48,10 +51,12 @@ export class OrbitRig {
     el.addEventListener('contextmenu', (e) => e.preventDefault());
 
     el.addEventListener('pointerdown', (e) => {
-      el.setPointerCapture(e.pointerId);
+      try { el.setPointerCapture(e.pointerId); } catch { /* synthetic or stale pointer */ }
       this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (e.button === 1) e.preventDefault();
       if (this.pointers.size === 1) {
         this.dragging = true;
+        this.rotating = e.button === 1 && e.ctrlKey;
         this.dragButton = e.button;
         this.dragMoved = 0;
         this.lastX = e.clientX; this.lastY = e.clientY;
@@ -79,15 +84,22 @@ export class OrbitRig {
         const dy = e.clientY - this.lastY;
         this.lastX = e.clientX; this.lastY = e.clientY;
         this.dragMoved += Math.abs(dx) + Math.abs(dy);
-        if (this.dragMoved > 4) {
+        if (this.rotating) {
+          // ctrl + middle drag: yaw spins the view, vertical adjusts pitch
+          this.viewYaw -= dx * 0.0052;
+          this.tiltOffset = clamp(this.tiltOffset + dy * 0.0042, -0.9, 0.9);
+        } else if (this.dragMoved > 4) {
           this.flight = null;
           this.autoOrbit = 0;
           const s = this._panPerPixel();
-          this.lon -= dx * s;
-          this.lat += dy * s;
+          const cy = Math.cos(this.viewYaw), sy = Math.sin(this.viewYaw);
+          const rx = dx * cy - dy * sy;
+          const ry = dx * sy + dy * cy;
+          this.lon -= rx * s;
+          this.lat += ry * s;
           this.lat = clamp(this.lat, -CONFIG.camera.latClamp, CONFIG.camera.latClamp);
-          this.velLon = -dx * s * 60;
-          this.velLat = dy * s * 60;
+          this.velLon = -rx * s * 60;
+          this.velLat = ry * s * 60;
         }
       } else if (this.onHover) {
         this.onHover(e.clientX, e.clientY);
@@ -100,6 +112,12 @@ export class OrbitRig {
       if (this.pointers.size < 2) this.pinchDist = 0;
       if (this.pointers.size === 0 && this.dragging) {
         this.dragging = false;
+        if (this.rotating) {
+          // a plain ctrl+middle click resets the view rotation
+          if (this.dragMoved <= 4) { this.viewYaw = 0; this.tiltOffset = 0; }
+          this.rotating = false;
+          return;
+        }
         if (this.dragMoved <= 4 && this.onTap) this.onTap(e.clientX, e.clientY, this.dragButton);
       }
     };
@@ -112,24 +130,35 @@ export class OrbitRig {
     }, { passive: false });
   }
 
+  // Live zoom bounds: the base range scaled by the player's camera tuning.
+  get distMin() {
+    return CONFIG.planetRadius + CAM_TUNE.minAlt;
+  }
+
+  get distMax() {
+    return CONFIG.camera.distMax * (CAM_TUNE.zoomOutMul / 100);
+  }
+
   // Pan angle per pixel proportional to camera altitude over the surface
   // (and to the current lens), so the ground tracks the cursor at the same
   // apparent rate at every zoom level and on every planet size.
   _panPerPixel() {
     const alt = Math.max(this.dist - CONFIG.planetRadius, 3);
     const lens = Math.tan((this.camera.fov * Math.PI) / 360) / Math.tan((50 * Math.PI) / 360);
-    return clamp((alt * 0.0031 * lens) / CONFIG.planetRadius, 0.00014, 0.0058);
+    return clamp((alt * 0.0031 * lens * (CAM_TUNE.panMul / 100)) / CONFIG.planetRadius, 0.0001, 0.009);
   }
 
   // Normalized zoom, 0 fully in, 1 fully out. Consumers drive the
   // strategic-scale presentation (model swell, icon layer) from this.
   get zoomT() {
-    const c = CONFIG.camera;
-    return clamp((this.dist - c.distMin) / (c.distMax - c.distMin), 0, 1);
+    return clamp((this.dist - this.distMin) / Math.max(this.distMax - this.distMin, 1), 0, 1);
   }
 
   zoomBy(amount) {
-    this.targetDist = clamp(this.targetDist * Math.exp(amount), CONFIG.camera.distMin, CONFIG.camera.distMax);
+    this.targetDist = clamp(
+      this.targetDist * Math.exp(amount * (CAM_TUNE.zoomSpeed / 100)),
+      this.distMin, this.distMax,
+    );
   }
 
   // Fly the rig to look at a world-space point on the planet.
@@ -143,7 +172,7 @@ export class OrbitRig {
       fromLon: this.lon, toLon: this.lon + dLon,
       fromLat: this.lat, toLat: clamp(lat, -CONFIG.camera.latClamp, CONFIG.camera.latClamp),
       fromDist: this.targetDist,
-      toDist: clamp(dist ?? this.targetDist, CONFIG.camera.distMin, CONFIG.camera.distMax),
+      toDist: clamp(dist ?? this.targetDist, this.distMin, this.distMax),
       t: 0, dur: REDUCED_MOTION ? 0.01 : dur, ease: easeInOut,
     };
     this.velLon = 0; this.velLat = 0;
@@ -206,6 +235,8 @@ export class OrbitRig {
         this.velLon *= damp;
         this.velLat *= damp;
       }
+      // Live tuning can tighten the bounds under the current position.
+      this.targetDist = clamp(this.targetDist, this.distMin, this.distMax);
       this.dist = lerp(this.dist, this.targetDist, 1 - Math.exp(-c.zoomDamp * dt));
     }
 
@@ -252,19 +283,26 @@ export class OrbitRig {
     }
 
     this.camera.up.set(0, 1, 0);
+    if (this.viewYaw) {
+      _aim.copy(this.camera.position).normalize();
+      this.camera.up.applyAxisAngle(_aim, this.viewYaw);
+    }
     this.camera.lookAt(0, 0, 0);
     // Grounded RTS framing: close in, the view pitches strongly toward the
     // horizon so sky and distance fill the top of the frame; from orbit it
-    // settles back to a map-like look-down.
-    const zoomT = (this.dist - c.distMin) / (c.distMax - c.distMin);
-    this.camera.rotateX(lerp(0.58, 0.04, Math.min(1, zoomT * 1.5)));
+    // settles back to a map-like look-down. Both ends are player-tunable.
+    const zt = this.zoomT;
+    const tiltNear = CAM_TUNE.tiltNear * (Math.PI / 180);
+    const tiltFar = CAM_TUNE.tiltFar * (Math.PI / 180);
+    const tilt = lerp(tiltNear, tiltFar, Math.min(1, zt * 1.5)) + this.tiltOffset;
+    this.camera.rotateX(clamp(tilt, -0.25, 1.25));
     if (roll) this.camera.rotateZ(roll);
 
     // Wide immersive lens on the ground, telephoto from orbit: close-up
     // feels inside the world, and the pulled-back view flattens toward a
-    // strategic map (the RTS convention).
+    // strategic map (the RTS convention). Both ends are player-tunable.
     this.fovKickV = Math.max(0, this.fovKickV - dt * 26);
-    const targetFov = lerp(58, 30, this.zoomT) + this.fovKickV;
+    const targetFov = lerp(CAM_TUNE.fovNear, CAM_TUNE.fovFar, this.zoomT) + this.fovKickV;
     const fov = this.camera.fov + (targetFov - this.camera.fov) * Math.min(1, dt * 7);
     if (Math.abs(this.camera.fov - fov) > 0.005) {
       this.camera.fov = fov;

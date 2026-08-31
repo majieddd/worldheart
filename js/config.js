@@ -180,3 +180,38 @@ export const PALETTE = {
 };
 
 export const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Player-tunable camera feel. The rig reads these every frame, the settings
+// panel writes them, and they persist per browser. Ranges double as the
+// slider bounds and the load-time sanity clamp.
+export const CAM_RANGES = {
+  fovNear: { min: 40, max: 75, step: 1, def: 58, label: 'Lens · close', unit: '°' },
+  fovFar: { min: 22, max: 55, step: 1, def: 30, label: 'Lens · orbit', unit: '°' },
+  tiltNear: { min: 0, max: 45, step: 1, def: 33, label: 'Tilt · close', unit: '°' },
+  tiltFar: { min: 0, max: 20, step: 1, def: 2, label: 'Tilt · orbit', unit: '°' },
+  minAlt: { min: 2, max: 16, step: 0.5, def: 4.8, label: 'Min height', unit: '' },
+  zoomOutMul: { min: 60, max: 140, step: 5, def: 100, label: 'Zoom out range', unit: '%' },
+  panMul: { min: 50, max: 220, step: 10, def: 100, label: 'Pan speed', unit: '%' },
+  zoomSpeed: { min: 50, max: 220, step: 10, def: 100, label: 'Zoom speed', unit: '%' },
+};
+
+export const CAM_TUNE = (() => {
+  const out = {};
+  let saved = null;
+  try { saved = JSON.parse(stored('whCamTune') || 'null'); } catch { saved = null; }
+  for (const k of Object.keys(CAM_RANGES)) {
+    const r = CAM_RANGES[k];
+    const v = saved && typeof saved[k] === 'number' ? saved[k] : r.def;
+    out[k] = Math.min(r.max, Math.max(r.min, v));
+  }
+  return out;
+})();
+
+export function saveCamTune() {
+  storeLocal('whCamTune', JSON.stringify(CAM_TUNE));
+}
+
+export function resetCamTune() {
+  for (const k of Object.keys(CAM_RANGES)) CAM_TUNE[k] = CAM_RANGES[k].def;
+  saveCamTune();
+}

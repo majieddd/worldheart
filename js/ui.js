@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CONFIG, MAPS, PALETTE, storeLocal } from './config.js';
+import { CONFIG, MAPS, PALETTE, storeLocal, CAM_RANGES, CAM_TUNE, saveCamTune, resetCamTune } from './config.js';
 import { TOWER_TYPES, tierCost, buildTowerVisual, TOWER_SCALE, MAT } from './towers.js';
 
 // DOM HUD. All chrome lives here; the scene renders beneath it. Per the
@@ -93,6 +93,9 @@ export class HUD {
         <div class="set-row"><span>Quality</span><button class="btn" id="set-quality">Auto</button></div>
         <div class="set-row"><span>Screen shake</span><button class="btn" id="set-shake">On</button></div>
         <div class="set-row"><span>Seed</span><span class="marker" id="set-seed" style="color:var(--text)">0</span></div>
+        <div class="marker" style="margin-top:var(--sp-2)">camera feel</div>
+        <div id="cam-sliders"></div>
+        <button class="btn" id="cam-reset" style="width:100%;font-size:var(--fs-12)">Reset camera feel</button>
       </div>
 
       <div id="toast-anchor"></div>
@@ -124,9 +127,10 @@ export class HUD {
             bend the swarm through your maze, and keep the heart alight.
             <em>Every breach must always have a path: seal nothing, shape everything.</em></div>
           <div class="o-body" style="margin-top:var(--sp-3);font-size:var(--fs-12)">
-            Drag to orbit, scroll to zoom. Keys <span class="kbd">1</span> to <span class="kbd">5</span> choose a tower,
+            Drag to orbit, scroll to zoom, <span class="kbd">Ctrl</span> + middle-drag to rotate the view
+            (middle-click resets). Keys <span class="kbd">1</span> to <span class="kbd">5</span> choose a tower,
             click to build. <span class="kbd">U</span> upgrade, <span class="kbd">X</span> sell,
-            <span class="kbd">Space</span> pause, <span class="kbd">F</span> speed.</div>
+            <span class="kbd">Space</span> pause, <span class="kbd">F</span> speed. Camera feel sliders live in settings.</div>
           <div class="map-row" id="map-row"></div>
           <div class="o-actions">
             <button class="btn primary" id="btn-begin" style="font-family:var(--font-display)">Begin the defense</button>
@@ -155,6 +159,7 @@ export class HUD {
 
     this._buildCards();
     this._buildMapCards();
+    this._buildCamSliders();
     this.el = {};
     for (const id of [
       'lives-fill', 'lives-num', 'gold-num', 'score-line', 'wave-label', 'wave-sub',
@@ -211,6 +216,41 @@ export class HUD {
       });
       row.appendChild(card);
     }
+  }
+
+  // Live camera-feel sliders: every value applies on the next frame and
+  // persists per browser.
+  _buildCamSliders() {
+    const box = document.getElementById('cam-sliders');
+    this._camRows = [];
+    for (const key of Object.keys(CAM_RANGES)) {
+      const r = CAM_RANGES[key];
+      const row = document.createElement('div');
+      row.className = 'cam-row';
+      row.innerHTML = `
+        <div class="cam-top"><span>${r.label}</span><b>${CAM_TUNE[key]}${r.unit}</b></div>
+        <input type="range" class="cam-slider" min="${r.min}" max="${r.max}" step="${r.step}" value="${CAM_TUNE[key]}">
+      `;
+      const input = row.querySelector('input');
+      const val = row.querySelector('b');
+      input.addEventListener('input', () => {
+        CAM_TUNE[key] = Number(input.value);
+        val.textContent = `${CAM_TUNE[key]}${r.unit}`;
+        saveCamTune();
+      });
+      box.appendChild(row);
+      this._camRows.push({ key, input, val, unit: r.unit });
+    }
+    document.getElementById('cam-reset').addEventListener('click', () => {
+      resetCamTune();
+      for (const row of this._camRows) {
+        row.input.value = CAM_TUNE[row.key];
+        row.val.textContent = `${CAM_TUNE[row.key]}${row.unit}`;
+      }
+      this.rig.viewYaw = 0;
+      this.rig.tiltOffset = 0;
+      this.audio?.play('click');
+    });
   }
 
   // All restarts persist their intent in localStorage and reload the clean
@@ -349,7 +389,7 @@ export class HUD {
     this.game.state = 'playing';
     this.waves.begin();
     this.rig.autoOrbit = 0;
-    this.rig.flyTo(this.world.heart.group.position, CONFIG.camera.distMin + 14, 1.6);
+    this.rig.flyTo(this.world.heart.group.position, this.rig.distMin + 14, 1.6);
     this.audio?.start();
     this.audio?.play('begin');
     this.refresh();
