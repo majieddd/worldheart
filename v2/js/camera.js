@@ -238,10 +238,24 @@ export class OrbitRig {
     return this.camScale * CAM_TUNE.minAlt;
   }
 
+  /* The FAR limit is measured against the planet radius, not camScale, and the
+     two are deliberately different scales.
+
+     distMin is a gameplay framing: camScale carries a floor so a tiny world
+     still holds a comparable number of towers in view, which is the right
+     instinct up close and has nothing to do with the planet's size.
+
+     distMax is a picture of the planet, and what decides that picture is the
+     angular radius asin(R/(R+h)), which depends only on h/R. Multiplying by
+     camScale broke exactly that: on the planetoid camScale floors at 150
+     against R=30, so a setting meaning "4 radii out" silently became twenty,
+     and camTest caught it as cursor tracking degrading to 26px of error at the
+     far end while the giant world sat at 0. Against R the same number frames
+     every world alike, which is what the slider's own "xR" label promises. */
   get distMax() {
     // Always leave a usable zoom band, however the two height sliders are set.
     const d = this.distMin;
-    return Math.max(this.camScale * CAM_TUNE.maxAlt, d + 2, d * 1.15);
+    return Math.max(CONFIG.planetRadius * CAM_TUNE.maxAlt, d + 2, d * 1.15);
   }
 
   // Angle from straight down to the horizon, seen from a camera at height h.
