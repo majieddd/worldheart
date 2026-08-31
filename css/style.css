@@ -202,6 +202,10 @@ html, body {
 #build-bar { display: flex; gap: var(--sp-2); align-items: flex-end; }
 
 .build-card {
+  /* Positioned so .build-key anchors to the CARD. Without this the key was
+     absolute with no positioned ancestor, so it resolved against #hud (the
+     only one, being position:fixed) and landed on top of the cost text. */
+  position: relative;
   width: 86px;
   background: var(--surface);
   border: 1px solid var(--hairline);
@@ -219,7 +223,13 @@ html, body {
 .build-thumb { width: 100%; aspect-ratio: 1; border-radius: var(--r-2); background: rgba(8, 11, 24, 0.55); display: block; }
 .build-name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-11); letter-spacing: 0.05em; margin-top: 6px; color: var(--text); white-space: nowrap; }
 .build-cost { font-family: var(--font-display); font-size: var(--fs-12); font-weight: 600; color: var(--gold); margin-top: 1px; font-variant-numeric: tabular-nums; }
-.build-key { position: absolute; margin-top: -12px; margin-left: 4px; }
+/* Top-right corner of its own card, out of the name/cost column entirely.
+   The negative margins it used to carry were compensating for the broken
+   anchor above; with a real anchor they are not needed. */
+.build-key {
+  position: absolute; top: 5px; right: 5px; margin: 0;
+  pointer-events: none;
+}
 
 #hud .hint-line { font-size: var(--fs-12); color: var(--text-muted); text-align: center; min-height: 18px; text-shadow: 0 1px 8px rgba(9, 12, 28, 0.9); }
 
