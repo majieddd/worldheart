@@ -1,0 +1,786 @@
+import * as THREE from 'three';
+import { CONFIG } from './config.js';
+import { mulberry32 } from './noise.js';
+import { R, SUN_DIR, SPACE, initTerrainField, terrainHeight, isWalkableDir, isLandDir, surfacePoint } from './world.js';
+import * as WORLD from './world.js';
+
+// Walkability graph over a geodesic icosphere (detail 5, 10242 nodes).
+// A single-source Dijkstra from the Worldheart yields a flow field every
+// ground enemy steers by; tower placement blocks footprint nodes and is
+// validated by checking every portal still reaches the heart.
+
+const DETAIL = CONFIG.navDetail;
+
+// Subdivided icosphere. When a cap is given, faces outside it are dropped
+// between levels, so a Battlefield can afford a much finer graph than the
+// whole globe would: the cost tracks the played area, not the planet.
+function buildIcosphere(detail, capCenter = null, capTheta = 0) {
+  const t = (1 + Math.sqrt(5)) / 2;
+  let verts = [
+    [-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0],
+    [0, -1, t], [0, 1, t], [0, -1, -t], [0, 1, -t],
+    [t, 0, -1], [t, 0, 1], [-t, 0, -1], [-t, 0, 1],
+  ].map((v) => {
+    const l = Math.hypot(...v);
+    return [v[0] / l, v[1] / l, v[2] / l];
+  });
+  let faces = [
+    [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
+    [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
+    [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
+    [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1],
+  ];
+
+  for (let d = 0; d < detail; d++) {
+    const cache = new Map();
+    const mid = (a, b) => {
+      const key = a < b ? a * 1048576 + b : b * 1048576 + a;
+      let m = cache.get(key);
+      if (m !== undefined) return m;
+      const va = verts[a], vb = verts[b];
+      const v = [va[0] + vb[0], va[1] + vb[1], va[2] + vb[2]];
+      const l = Math.hypot(...v);
+      m = verts.length;
+      verts.push([v[0] / l, v[1] / l, v[2] / l]);
+      cache.set(key, m);
+      return m;
+    };
+    const next = [];
+    for (const [a, b, c] of faces) {
+      const ab = mid(a, b), bc = mid(b, c), ca = mid(c, a);
+      next.push([a, ab, ca], [b, bc, ab], [c, ca, bc], [ab, bc, ca]);
+    }
+    faces = next;
+
+    // Margin shrinks with face size: at coarse levels a triangle can straddle
+    // the whole cap while none of its corners sit inside it.
+    if (capCenter && d >= 2) {
+      const cosLimit = Math.cos(Math.min(Math.PI, capTheta + 0.12 + 2.2 / Math.pow(2, d)));
+      const inCap = (vi) => {
+        const v = verts[vi];
+        return v[0] * capCenter.x + v[1] * capCenter.y + v[2] * capCenter.z >= cosLimit;
+      };
+      faces = faces.filter(([a, b, c]) => inCap(a) || inCap(b) || inCap(c));
+    }
+  }
+  return { verts, faces };
+}
+
+class MinHeap {
+  constructor(cap) {
+    this.idx = new Int32Array(cap);
+    this.key = new Float32Array(cap);
+    this.n = 0;
+  }
+  push(i, k) {
+    let c = this.n++;
+    this.idx[c] = i; this.key[c] = k;
+    while (c > 0) {
+      const p = (c - 1) >> 1;
+      if (this.key[p] <= this.key[c]) break;
+      this._swap(p, c); c = p;
+    }
+  }
+  pop() {
+    const top = this.idx[0];
+    this.n--;
+    if (this.n > 0) {
+      this.idx[0] = this.idx[this.n]; this.key[0] = this.key[this.n];
+      let c = 0;
+      for (;;) {
+        const l = c * 2 + 1, r = l + 1;
+        let m = c;
+        if (l < this.n && this.key[l] < this.key[m]) m = l;
+        if (r < this.n && this.key[r] < this.key[m]) m = r;
+        if (m === c) break;
+        this._swap(m, c); c = m;
+      }
+    }
+    return top;
+  }
+  _swap(a, b) {
+    let t = this.idx[a]; this.idx[a] = this.idx[b]; this.idx[b] = t;
+    let k = this.key[a]; this.key[a] = this.key[b]; this.key[b] = k;
+  }
+}
+
+const _v = new THREE.Vector3();
+const _v2 = new THREE.Vector3();
+const CELLS = 40;
+
+export class NavGraph {
+  constructor() {
+    this.n = 0;
+    this.attempts = 0;
+  }
+
+  // Builds the graph for CONFIG.seed, bumping the seed until the world has a
+  // large connected walkable region with valid heart and portal sites. Maps
+  // with a battlefield cap also search for a viable cap center per seed.
+  build() {
+    const theta = CONFIG.map.fieldTheta;
+    this.portalTarget = CONFIG.map.portalWakes.length;
+
+    // Space Battlefields are authored, not searched: the platform layout is
+    // deterministic per seed, the whole cap is flight space (pathable), and
+    // the heart and breach sites come straight from the layout.
+    if (CONFIG.map.mode === 'space') {
+      const space = WORLD.SPACE;
+      this.attempts = 1;
+      this._buildGraph(space.center, theta, true);
+      const heartSite = space.sites.find((s) => s.kind === 'heart');
+      this.heartNode = this.nearestWalkableNode(heartSite.dir);
+      this.portalNodes = space.sites
+        .filter((s) => s.kind === 'portal')
+        .map((s) => this.nearestWalkableNode(s.dir));
+      this.fieldCenter = space.center.clone();
+      this.recomputeFlow();
+      return;
+    }
+
+    // Seed search on a colossal world would cost seconds per attempt at full
+    // resolution, so candidate seeds are judged on a cheap scout graph and
+    // only the winner is built at full detail.
+    // One level below full: fine enough to resolve real coastlines (a coarser
+    // scout shatters continents into islands that do not exist at play
+    // resolution) and cheap because the land test skips slope and forest.
+    const scoutDetail = DETAIL > 6 ? DETAIL - 1 : 0;
+
+    for (let attempt = 0; attempt < 14; attempt++) {
+      this.attempts = attempt + 1;
+      if (attempt > 0) {
+        CONFIG.seed = (CONFIG.seed + 7919) >>> 0;
+        initTerrainField(CONFIG.seed);
+      }
+      // Criteria relax as attempts mount so worldgen always converges on the
+      // best seed the neighborhood offers.
+      const relax = Math.min(attempt / 8, 1);
+      if (!theta && scoutDetail) {
+        this._buildGraph(null, 0, false, scoutDetail, true);
+        if (!this._chooseSites(relax)) continue;
+        this._buildGraph(null, 0, false, DETAIL);
+        for (let r = relax; r <= 1.0001; r = Math.min(1, r + 0.25)) {
+          if (this._chooseSites(r)) return;
+          if (r >= 1) break;
+        }
+        continue;
+      }
+      if (theta) {
+        const rng = mulberry32(CONFIG.seed ^ 0xCA97);
+        for (let c = 0; c < 5; c++) {
+          const center = this._pickCapCenter(rng, relax, theta);
+          // A front that is mostly sea is not a battlefield; try another seed.
+          if (this.capLandFrac < 0.76 - relax * 0.3) break;
+          this._buildGraph(center, theta);
+          if (this._chooseSites(relax, center, theta)) {
+            this.fieldCenter = center;
+            return;
+          }
+        }
+      } else {
+        this._buildGraph();
+        if (this._chooseSites(relax)) return;
+      }
+    }
+    throw new Error('worldgen failed to find a playable seed');
+  }
+
+  // A battlefield must sit on ground the player can actually build on. Sunlit
+  // placement alone once dropped the front over open ocean, where most of the
+  // visible field refused every tower.
+  _pickCapCenter(rng, relax, theta) {
+    const v = new THREE.Vector3();
+    const e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
+    const probe = new THREE.Vector3();
+    const SAMPLES = 56;
+    let best = null, bestLand = -1;
+
+    for (let t = 0; t < 700; t++) {
+      v.set(rng() * 2 - 1, (rng() * 2 - 1) * 0.58, rng() * 2 - 1);
+      if (v.lengthSq() > 1 || v.lengthSq() < 0.01) continue;
+      v.normalize();
+      if (v.dot(SUN_DIR) < 0.2 - relax * 0.35) continue;
+      // Anchor on dry ground before paying for the full cap survey.
+      if (terrainHeight(v.x, v.y, v.z, false) < 0.15) continue;
+
+      if (Math.abs(v.y) < 0.93) e1.set(0, 1, 0); else e1.set(1, 0, 0);
+      e2.crossVectors(v, e1).normalize();
+      e1.crossVectors(e2, v).normalize();
+
+      let land = 0;
+      for (let s = 0; s < SAMPLES; s++) {
+        // sunflower spiral: even coverage of the cap with few samples
+        const ang = theta * Math.sqrt((s + 0.5) / SAMPLES);
+        const az = s * 2.39996323;
+        probe.copy(v).multiplyScalar(Math.cos(ang))
+          .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
+          .addScaledVector(e2, Math.sin(ang) * Math.sin(az))
+          .normalize();
+        if (terrainHeight(probe.x, probe.y, probe.z, false) >= 0.05) land++;
+      }
+      const frac = land / SAMPLES;
+      if (frac > bestLand) { bestLand = frac; best = v.clone(); }
+      if (bestLand >= 0.86) break;
+    }
+    this.capLandFrac = bestLand;
+    return best || SUN_DIR.clone();
+  }
+
+  _buildGraph(capCenter = null, capTheta = 0, walkAll = false, detail = DETAIL, coarse = false) {
+    let ico;
+    if (capCenter) {
+      // Cap-pruned spheres depend on where the field landed, so they are built
+      // per attempt rather than cached; pruning keeps that cheap.
+      ico = buildIcosphere(detail, capCenter, capTheta);
+    } else {
+      if (!this._icoCache) this._icoCache = new Map();
+      ico = this._icoCache.get(detail);
+      if (!ico) { ico = buildIcosphere(detail); this._icoCache.set(detail, ico); }
+    }
+    const { verts, faces } = ico;
+    const total = verts.length;
+
+    let keep = null, oldToNew = null;
+    let n;
+    if (capCenter) {
+      keep = new Uint8Array(total);
+      oldToNew = new Int32Array(total).fill(-1);
+      const cosLimit = Math.cos(capTheta + 0.02);
+      n = 0;
+      for (let i = 0; i < total; i++) {
+        const [x, y, z] = verts[i];
+        if (x * capCenter.x + y * capCenter.y + z * capCenter.z >= cosLimit) {
+          keep[i] = 1;
+          oldToNew[i] = n++;
+        }
+      }
+    } else {
+      n = total;
+    }
+    this.n = n;
+    // Node spacing at this resolution (derived from the detail level, since a
+    // cap-pruned sphere carries only part of the globe), and the factor that
+    // keeps a tower footprint meaningful against the grid.
+    this.spacing = Math.sqrt((4 * Math.PI * R * R) / (10 * Math.pow(4, detail) + 2));
+    this.footprintScale = Math.max(1, Math.min(1.7, this.spacing / 1.05));
+
+    this.dirs = new Float32Array(n * 3);
+    this.pos = new Float32Array(n * 3);
+    this.height = new Float32Array(n);
+    this.walk = new Uint8Array(n);
+    this.block = new Int16Array(n);
+    this.dist = new Float32Array(n);
+    this.next = new Int32Array(n);
+    this.flow = new Float32Array(n * 3);
+
+    for (let i = 0; i < total; i++) {
+      if (keep && !keep[i]) continue;
+      const idx = keep ? oldToNew[i] : i;
+      const [x, y, z] = verts[i];
+      this.dirs[idx * 3] = x; this.dirs[idx * 3 + 1] = y; this.dirs[idx * 3 + 2] = z;
+      _v.set(x, y, z);
+      const h = terrainHeight(x, y, z);
+      this.height[idx] = h;
+      const p = Math.max(h, 0.03) + R;
+      this.pos[idx * 3] = x * p; this.pos[idx * 3 + 1] = y * p; this.pos[idx * 3 + 2] = z * p;
+      // Space flight lanes: the void is pathable, the rocks are not, so the
+      // flow field bends every lane around the platforms.
+      this.walk[idx] = walkAll ? (h < 0.55 ? 1 : 0)
+        : (coarse ? (isLandDir(_v) ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0));
+    }
+
+    // CSR adjacency from unique triangle edges (kept nodes only)
+    const edgeSet = new Set();
+    const deg = new Int32Array(n);
+    const addEdge = (a0, b0) => {
+      let a = a0, b = b0;
+      if (keep) {
+        if (!keep[a0] || !keep[b0]) return;
+        a = oldToNew[a0]; b = oldToNew[b0];
+      }
+      const key = a < b ? a * 1048576 + b : b * 1048576 + a;
+      if (edgeSet.has(key)) return;
+      edgeSet.add(key);
+      deg[a]++; deg[b]++;
+    };
+    for (const [a, b, c] of faces) { addEdge(a, b); addEdge(b, c); addEdge(c, a); }
+
+    this.adjOff = new Int32Array(n + 1);
+    for (let i = 0; i < n; i++) this.adjOff[i + 1] = this.adjOff[i] + deg[i];
+    this.adj = new Int32Array(this.adjOff[n]);
+    this.cost = new Float32Array(this.adjOff[n]);
+    const cursor = new Int32Array(n);
+    for (const key of edgeSet) {
+      const a = Math.floor(key / 1048576), b = key % 1048576;
+      this.adj[this.adjOff[a] + cursor[a]++] = b;
+      this.adj[this.adjOff[b] + cursor[b]++] = a;
+    }
+    for (let i = 0; i < n; i++) {
+      for (let e = this.adjOff[i]; e < this.adjOff[i + 1]; e++) {
+        const j = this.adj[e];
+        const dx = this.pos[i * 3] - this.pos[j * 3];
+        const dy = this.pos[i * 3 + 1] - this.pos[j * 3 + 1];
+        const dz = this.pos[i * 3 + 2] - this.pos[j * 3 + 2];
+        const len = Math.hypot(dx, dy, dz);
+        const dh = Math.abs(this.height[i] - this.height[j]);
+        this.cost[e] = len * (1 + dh * 0.7);
+      }
+    }
+
+    // Spatial hash on direction cells for nearest-node lookups
+    this.cells = new Map();
+    for (let i = 0; i < n; i++) {
+      const key = this._cellKey(this.dirs[i * 3], this.dirs[i * 3 + 1], this.dirs[i * 3 + 2]);
+      let arr = this.cells.get(key);
+      if (!arr) this.cells.set(key, arr = []);
+      arr.push(i);
+    }
+  }
+
+  _cellKey(x, y, z) {
+    const qx = Math.min(CELLS - 1, Math.max(0, ((x + 1) * 0.5 * CELLS) | 0));
+    const qy = Math.min(CELLS - 1, Math.max(0, ((y + 1) * 0.5 * CELLS) | 0));
+    const qz = Math.min(CELLS - 1, Math.max(0, ((z + 1) * 0.5 * CELLS) | 0));
+    return (qx * CELLS + qy) * CELLS + qz;
+  }
+
+  nearestNode(dir) {
+    const qx = ((dir.x + 1) * 0.5 * CELLS) | 0;
+    const qy = ((dir.y + 1) * 0.5 * CELLS) | 0;
+    const qz = ((dir.z + 1) * 0.5 * CELLS) | 0;
+    let best = -1, bestD = Infinity;
+    for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) for (let oz = -1; oz <= 1; oz++) {
+      const cx = qx + ox, cy = qy + oy, cz = qz + oz;
+      if (cx < 0 || cy < 0 || cz < 0 || cx >= CELLS || cy >= CELLS || cz >= CELLS) continue;
+      const arr = this.cells.get((cx * CELLS + cy) * CELLS + cz);
+      if (!arr) continue;
+      for (const i of arr) {
+        const dx = this.dirs[i * 3] - dir.x, dy = this.dirs[i * 3 + 1] - dir.y, dz = this.dirs[i * 3 + 2] - dir.z;
+        const d = dx * dx + dy * dy + dz * dz;
+        if (d < bestD) { bestD = d; best = i; }
+      }
+    }
+    return best;
+  }
+
+  // Nearest node that is actually pathable: BFS outward from the nearest
+  // node until one qualifies (goal and spawn anchors sit at rock edges).
+  nearestWalkableNode(dir) {
+    let start = this.nearestNode(dir);
+    if (start < 0) return -1;
+    if (this.walk[start]) return start;
+    const seen = new Set([start]);
+    let frontier = [start];
+    for (let hop = 0; hop < 24; hop++) {
+      const next = [];
+      for (const a of frontier) {
+        for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
+          const b = this.adj[e];
+          if (seen.has(b)) continue;
+          if (this.walk[b]) return b;
+          seen.add(b);
+          next.push(b);
+        }
+      }
+      frontier = next;
+    }
+    return start;
+  }
+
+  // Incremental node tracking for a moving agent: hill-descend to whichever
+  // neighbor is angularly closer to dir.
+  descendNode(idx, dir) {
+    if (idx < 0) return this.nearestNode(dir);
+    for (let hop = 0; hop < 3; hop++) {
+      let best = idx;
+      let bestD = this._dirDist2(idx, dir);
+      for (let e = this.adjOff[idx]; e < this.adjOff[idx + 1]; e++) {
+        const j = this.adj[e];
+        const d = this._dirDist2(j, dir);
+        if (d < bestD) { bestD = d; best = j; }
+      }
+      if (best === idx) return idx;
+      idx = best;
+    }
+    return idx;
+  }
+
+  _dirDist2(i, dir) {
+    const dx = this.dirs[i * 3] - dir.x, dy = this.dirs[i * 3 + 1] - dir.y, dz = this.dirs[i * 3 + 2] - dir.z;
+    return dx * dx + dy * dy + dz * dz;
+  }
+
+  // Generation-marked scratch: worldgen calls this once per node on graphs of
+  // 160k+, so it must not allocate.
+  _scratch() {
+    if (!this._mark || this._mark.length !== this.n) {
+      this._mark = new Int32Array(this.n);
+      this._gen = 0;
+      this._fA = [];
+      this._fB = [];
+    }
+    this._gen++;
+    return this._mark;
+  }
+
+  _openness(i, hops = 3) {
+    const mark = this._scratch();
+    const g = this._gen;
+    let frontier = this._fA, next = this._fB;
+    frontier.length = 0;
+    mark[i] = g;
+    frontier.push(i);
+    let count = 1;
+    for (let h = 0; h < hops; h++) {
+      next.length = 0;
+      for (let k = 0; k < frontier.length; k++) {
+        const a = frontier[k];
+        for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
+          const b = this.adj[e];
+          if (this.walk[b] && mark[b] !== g) { mark[b] = g; next.push(b); count++; }
+        }
+      }
+      const swap = frontier; frontier = next; next = swap;
+    }
+    this._fA = frontier; this._fB = next;
+    return count;
+  }
+
+  _chooseSites(relax = 0, capCenter = null, capTheta = 0) {
+    const n = this.n;
+    // Connected walkable regions
+    const region = new Int32Array(n).fill(-1);
+    const sizes = [];
+    for (let i = 0; i < n; i++) {
+      if (!this.walk[i] || region[i] >= 0) continue;
+      const id = sizes.length;
+      let size = 0;
+      const stack = [i];
+      region[i] = id;
+      while (stack.length) {
+        const a = stack.pop();
+        size++;
+        for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
+          const b = this.adj[e];
+          if (this.walk[b] && region[b] < 0) { region[b] = id; stack.push(b); }
+        }
+      }
+      sizes.push(size);
+    }
+    if (!sizes.length) return false;
+    let main = 0;
+    for (let i = 1; i < sizes.length; i++) if (sizes[i] > sizes[main]) main = i;
+    // Capped battlefields demand a higher land fraction: a walled front that
+    // is mostly shallow sea reads washy and plays cramped.
+    // Enough connected ground to host a war, not a fixed share of the globe:
+    // on a colossal planet a 12% landmass would be an impossible supercontinent.
+    const baseFrac = capCenter ? 0.2 : 0.12;
+    const minRegion = Math.min(
+      Math.max(560, Math.round(n * (baseFrac - relax * (baseFrac * 0.45)))),
+      Math.round(6000 * (1 - relax * 0.35)),
+    );
+    if (sizes[main] < minRegion) return false;
+    this.region = region;
+    this.mainRegion = main;
+
+    // Heart: open, gently elevated, inside the camera's latitude band
+    const rng = mulberry32(CONFIG.seed ^ 0xF00D);
+    let heart = -1, heartScore = -1;
+    for (let tries = 0; tries < 1000; tries++) {
+      const i = (rng() * n) | 0;
+      if (!this.walk[i] || region[i] !== main) continue;
+      if (!capCenter && Math.abs(this.dirs[i * 3 + 1]) > 0.82) continue;
+      if (this.height[i] < 0.14 || this.height[i] > 1.6) continue;
+      // The heart anchors the main battlefield: keep it in the sun, and on
+      // capped maps pull it toward the field's center.
+      const sunDot = this.dirs[i * 3] * SUN_DIR.x + this.dirs[i * 3 + 1] * SUN_DIR.y + this.dirs[i * 3 + 2] * SUN_DIR.z;
+      if (!capCenter && sunDot < 0.12 - relax * 0.3) continue;
+      let open = this._openness(i) + sunDot * 6;
+      if (capCenter) {
+        const cd = this.dirs[i * 3] * capCenter.x + this.dirs[i * 3 + 1] * capCenter.y + this.dirs[i * 3 + 2] * capCenter.z;
+        const ang = Math.acos(Math.min(Math.max(cd, -1), 1));
+        open += (1 - Math.min(ang / capTheta, 1)) * 9;
+      }
+      if (open > heartScore) { heartScore = open; heart = i; }
+    }
+    if (heart < 0 || heartScore < 25 - relax * 8) return false;
+    this.heartNode = heart;
+
+    // Graph distances from the heart pick spread-out portal sites
+    this._dijkstra(heart, null);
+    const cands = [];
+    let maxD = 0;
+    for (let i = 0; i < n; i++) {
+      if (this.dist[i] < Infinity && this.walk[i]) maxD = Math.max(maxD, this.dist[i]);
+    }
+    for (let i = 0; i < n; i++) {
+      if (!this.walk[i] || region[i] !== main) continue;
+      if (this.dist[i] === Infinity) continue;
+      // Spread breaches around the heart, but keep the march to a few minutes:
+      // on a colossal world a fraction-of-the-world gate would put portals an
+      // ocean away and waves would spend the game walking.
+      if (this.dist[i] < Math.min(maxD * (0.42 - relax * 0.12), 140)) continue;
+      if (this.dist[i] > 300) continue;
+      if (!capCenter && Math.abs(this.dirs[i * 3 + 1]) > 0.86) continue;
+      if (this._openness(i, 2) < 12 - relax * 4) continue;
+      cands.push(i);
+    }
+    const target = this.portalTarget || 4;
+    if (cands.length < target + 2) return false;
+
+    // Portal separation is measured on unit-sphere chords; capped fields use
+    // a budget that fits the cap's diameter.
+    const sepBase = capCenter ? Math.pow(capTheta * 0.68, 2) : 0.2;
+    const sepMin = sepBase * (1 - relax * 0.6);
+
+    const portals = [];
+    let first = cands[0];
+    for (const c of cands) if (this.dist[c] > this.dist[first]) first = c;
+    portals.push(first);
+    while (portals.length < target) {
+      let best = -1, bestScore = -1;
+      for (const c of cands) {
+        let minSep = Infinity;
+        for (const p of portals) {
+          const dx = this.dirs[c * 3] - this.dirs[p * 3];
+          const dy = this.dirs[c * 3 + 1] - this.dirs[p * 3 + 1];
+          const dz = this.dirs[c * 3 + 2] - this.dirs[p * 3 + 2];
+          minSep = Math.min(minSep, dx * dx + dy * dy + dz * dz);
+        }
+        const score = minSep + this.dist[c] / maxD * 0.15;
+        if (score > bestScore) { bestScore = score; best = c; }
+      }
+      if (best < 0 || bestScore < sepMin) return false;
+      portals.push(best);
+    }
+    this.portalNodes = portals;
+    this.recomputeFlow();
+    return true;
+  }
+
+  _dijkstra(source, blockFilter) {
+    const n = this.n;
+    this.dist.fill(Infinity);
+    this.next.fill(-1);
+    // The heap and visited set are reused: on a colossal world these are
+    // multi-megabyte buffers and every build re-solves the field.
+    if (!this._heap || this._heapFor !== n) {
+      this._heap = new MinHeap(n * 6 + 8);
+      this._done = new Uint8Array(n);
+      this._heapFor = n;
+    }
+    const heap = this._heap;
+    heap.n = 0;
+    const done = this._done;
+    done.fill(0);
+    this.dist[source] = 0;
+    heap.push(source, 0);
+    while (heap.n > 0) {
+      const a = heap.pop();
+      if (done[a]) continue;
+      done[a] = 1;
+      const da = this.dist[a];
+      for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
+        const b = this.adj[e];
+        if (done[b] || !this.walk[b]) continue;
+        if (this.block[b] !== 0 && b !== source) continue;
+        if (blockFilter && blockFilter.has(b)) continue;
+        const nd = da + this.cost[e];
+        if (nd < this.dist[b]) {
+          this.dist[b] = nd;
+          this.next[b] = a;
+          heap.push(b, nd);
+        }
+      }
+    }
+  }
+
+  recomputeFlow() {
+    this._dijkstra(this.heartNode, null);
+    const n = this.n;
+    for (let i = 0; i < n; i++) {
+      const j = this.next[i];
+      if (j < 0) {
+        this.flow[i * 3] = 0; this.flow[i * 3 + 1] = 0; this.flow[i * 3 + 2] = 0;
+        continue;
+      }
+      let fx = this.pos[j * 3] - this.pos[i * 3];
+      let fy = this.pos[j * 3 + 1] - this.pos[i * 3 + 1];
+      let fz = this.pos[j * 3 + 2] - this.pos[i * 3 + 2];
+      const l = Math.hypot(fx, fy, fz) || 1;
+      this.flow[i * 3] = fx / l; this.flow[i * 3 + 1] = fy / l; this.flow[i * 3 + 2] = fz / l;
+    }
+  }
+
+  // Blend the flow of the tracked node and its neighbors, project to the
+  // tangent plane at dir. Returns progress (distance to heart) as well.
+  sampleFlow(nodeIdx, dir, out) {
+    let wSum = 0, fx = 0, fy = 0, fz = 0, dSum = 0;
+    const consider = (i) => {
+      const w = 1 / (this._dirDist2(i, dir) + 1e-5);
+      const hasFlow = this.next[i] >= 0;
+      if (hasFlow) {
+        fx += this.flow[i * 3] * w;
+        fy += this.flow[i * 3 + 1] * w;
+        fz += this.flow[i * 3 + 2] * w;
+        dSum += this.dist[i] * w;
+        wSum += w;
+      }
+    };
+    consider(nodeIdx);
+    for (let e = this.adjOff[nodeIdx]; e < this.adjOff[nodeIdx + 1]; e++) consider(this.adj[e]);
+
+    if (wSum === 0) {
+      // Stranded fallback: great-circle toward the heart.
+      const hx = this.pos[this.heartNode * 3], hy = this.pos[this.heartNode * 3 + 1], hz = this.pos[this.heartNode * 3 + 2];
+      _v.set(hx, hy, hz).normalize();
+      const d = _v.dot(dir);
+      _v.addScaledVector(dir, -d);
+      if (_v.lengthSq() < 1e-8) _v.set(0, 1, 0);
+      out.copy(_v.normalize());
+      return 1e6;
+    }
+    _v.set(fx / wSum, fy / wSum, fz / wSum);
+    const d = _v.dot(dir);
+    _v.addScaledVector(dir, -d);
+    if (_v.lengthSq() < 1e-8) _v.set(0, 1, 0);
+    out.copy(_v.normalize());
+    return dSum / wSum;
+  }
+
+  nodesInRadius(center, radius) {
+    _v2.copy(center).normalize();
+    const angR = radius / R;
+    const chord2 = Math.pow(2 * Math.sin(Math.min(angR, Math.PI) / 2), 2) * 1.15;
+    const span = Math.ceil(angR / (2 / CELLS)) + 1;
+    const qx = ((_v2.x + 1) * 0.5 * CELLS) | 0;
+    const qy = ((_v2.y + 1) * 0.5 * CELLS) | 0;
+    const qz = ((_v2.z + 1) * 0.5 * CELLS) | 0;
+    const found = [];
+    for (let ox = -span; ox <= span; ox++) for (let oy = -span; oy <= span; oy++) for (let oz = -span; oz <= span; oz++) {
+      const cx = qx + ox, cy = qy + oy, cz = qz + oz;
+      if (cx < 0 || cy < 0 || cz < 0 || cx >= CELLS || cy >= CELLS || cz >= CELLS) continue;
+      const arr = this.cells.get((cx * CELLS + cy) * CELLS + cz);
+      if (!arr) continue;
+      for (const i of arr) {
+        const dx = this.dirs[i * 3] - _v2.x, dy = this.dirs[i * 3 + 1] - _v2.y, dz = this.dirs[i * 3 + 2] - _v2.z;
+        if (dx * dx + dy * dy + dz * dz < chord2) found.push(i);
+      }
+    }
+    return found;
+  }
+
+  // Would blocking this footprint sever any portal from the heart?
+  validatePlacement(center, radius) {
+    const nodes = this.nodesInRadius(center, radius);
+    const temp = new Set();
+    for (const i of nodes) {
+      if (this.walk[i] && this.block[i] === 0) temp.add(i);
+    }
+    if (temp.has(this.heartNode)) return { ok: false, reason: 'heart' };
+    for (const p of this.portalNodes) if (temp.has(p)) return { ok: false, reason: 'portal' };
+    if (temp.size === 0) return { ok: true };
+
+    // Reachability sweep from the heart with the candidate footprint blocked.
+    // Runs on every hover, so it marks a persistent generation array instead
+    // of allocating a visited buffer the size of the graph.
+    const mark = this._scratch();
+    const g = this._gen;
+    const stack = this._fA;
+    stack.length = 0;
+    stack.push(this.heartNode);
+    mark[this.heartNode] = g;
+    let need = this.portalNodes.length;
+    const isPortal = this._portalSet || (this._portalSet = new Set());
+    if (this._portalSetFor !== this.portalNodes) {
+      isPortal.clear();
+      for (const p of this.portalNodes) isPortal.add(p);
+      this._portalSetFor = this.portalNodes;
+    }
+    while (stack.length && need > 0) {
+      const a = stack.pop();
+      for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
+        const b = this.adj[e];
+        if (mark[b] === g || !this.walk[b] || this.block[b] !== 0 || temp.has(b)) continue;
+        mark[b] = g;
+        if (isPortal.has(b)) need--;
+        stack.push(b);
+      }
+    }
+    return need > 0 ? { ok: false, reason: 'path' } : { ok: true };
+  }
+
+  blockNodes(center, radius, towerId) {
+    const nodes = this.nodesInRadius(center, radius);
+    for (const i of nodes) {
+      if (this.block[i] === 0) this.block[i] = towerId;
+    }
+    this.recomputeFlow();
+  }
+
+  unblockNodes(towerId) {
+    for (let i = 0; i < this.n; i++) {
+      if (this.block[i] === towerId) this.block[i] = 0;
+    }
+    this.recomputeFlow();
+  }
+
+  _traceChain(fromNode, out) {
+    let i = fromNode, guard = 0;
+    while (i >= 0 && guard++ < 900) {
+      out.push(this.pos[i * 3], this.pos[i * 3 + 1], this.pos[i * 3 + 2]);
+      if (i === this.heartNode) break;
+      i = this.next[i];
+    }
+    return out;
+  }
+
+  // All portal-to-heart polylines, optionally as if a footprint were blocked.
+  // One Dijkstra for the whole preview, flow restored afterward.
+  previewPaths(tempCenter = null, radius = 0) {
+    let temp = null;
+    if (tempCenter) {
+      temp = new Set();
+      for (const i of this.nodesInRadius(tempCenter, radius)) {
+        if (this.walk[i] && this.block[i] === 0) temp.add(i);
+      }
+    }
+    if (temp && temp.size) this._dijkstra(this.heartNode, temp);
+    const paths = this.portalNodes.map((p) => this._traceChain(p, []));
+    if (temp && temp.size) this.recomputeFlow();
+    return paths;
+  }
+
+  nodePos(i, out) {
+    return out.set(this.pos[i * 3], this.pos[i * 3 + 1], this.pos[i * 3 + 2]);
+  }
+  nodeDir(i, out) {
+    return out.set(this.dirs[i * 3], this.dirs[i * 3 + 1], this.dirs[i * 3 + 2]);
+  }
+
+  buildDebugPoints() {
+    const list = [];
+    for (let i = 0; i < this.n; i++) if (this.walk[i]) list.push(i);
+    const pos = new Float32Array(list.length * 3);
+    const col = new Float32Array(list.length * 3);
+    for (let k = 0; k < list.length; k++) {
+      const i = list[k];
+      _v.set(this.dirs[i * 3], this.dirs[i * 3 + 1], this.dirs[i * 3 + 2]);
+      pos[k * 3] = this.pos[i * 3] + _v.x * 0.12;
+      pos[k * 3 + 1] = this.pos[i * 3 + 1] + _v.y * 0.12;
+      pos[k * 3 + 2] = this.pos[i * 3 + 2] + _v.z * 0.12;
+      const blocked = this.block[i] !== 0;
+      const unreachable = this.next[i] < 0 && i !== this.heartNode;
+      col[k * 3] = blocked ? 1 : unreachable ? 0.9 : 0.15;
+      col[k * 3 + 1] = blocked ? 0.2 : unreachable ? 0.7 : 0.9;
+      col[k * 3 + 2] = blocked ? 0.25 : unreachable ? 0.1 : 0.5;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const mat = new THREE.PointsMaterial({ size: 3, sizeAttenuation: false, vertexColors: true, depthWrite: false });
+    const pts = new THREE.Points(geo, mat);
+    pts.renderOrder = 20;
+    return pts;
+  }
+}
