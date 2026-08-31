@@ -104,20 +104,47 @@ let ui = null;
 const _shadowFocus = new THREE.Vector3();
 const _shadowDir = new THREE.Vector3();
 
-/* Runs once, after the sky and terrain exist. */
+/* Runs once, after the sky and terrain exist.
+
+   EVERY STEP HERE IS OPTIONAL AND MUST FAIL SOFT. Lighting is an enhancement;
+   the game is playable without any of it. An earlier version called this
+   unguarded from boot(), so a throw anywhere inside rejected the boot promise
+   with no handler and the game hung on the boot screen showing nothing at all.
+   PMREM in particular allocates a cube render target, which is exactly the
+   kind of thing a constrained or sandboxed WebGL context can refuse while a
+   plain page allows it, so it cannot be assumed to succeed just because it
+   worked on the dev machine. Each block is isolated: losing the environment
+   map must not also cost the shadows. */
 function setupLighting() {
   // The sky group is already dome plus stars plus gas giant plus sun sprite,
   // so the environment costs one PMREM render at boot and nothing per frame.
   // fromScene walks any Object3D, so the Group is handed over as-is rather
   // than reparented out of the live scene.
-  if (world.sky) {
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const rt = pmrem.fromScene(world.sky);
-    scene.environment = rt.texture;
-    scene.environmentIntensity = LIGHTING.envIntensity;
-    pmrem.dispose();
+  try {
+    if (world.sky) {
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      const rt = pmrem.fromScene(world.sky);
+      scene.environment = rt.texture;
+      scene.environmentIntensity = LIGHTING.envIntensity;
+      pmrem.dispose();
+    }
+  } catch (err) {
+    // Metals fall back to reflecting nothing, which is how the game shipped
+    // before this existed. Worth a console line, not worth a dead boot.
+    console.warn('environment map unavailable, continuing without it:', err);
+    scene.environment = null;
   }
 
+  try {
+    setupSunShadow();
+  } catch (err) {
+    console.warn('shadows unavailable, continuing without them:', err);
+    renderer.shadowMap.enabled = false;
+    if (world.sun) world.sun.castShadow = false;
+  }
+}
+
+function setupSunShadow() {
   const sun = world.sun;
   if (!sun || !renderer.shadowMap.enabled) return;
   const S = LIGHTING.shadows;
@@ -792,4 +819,17 @@ window.WH = {
   },
 };
 
-boot();
+/* boot() was called bare. An async function's rejection with no handler is
+   silent in a page: the boot screen simply sits there forever and nothing
+   anywhere says why. That is the worst possible failure for a game someone
+   opened from a link, because it is indistinguishable from a slow load.
+   Surface it on the boot screen instead, and keep the console line for
+   whoever can open devtools. */
+boot().catch((err) => {
+  console.error('boot failed:', err);
+  const status = document.getElementById('boot-status');
+  if (status) {
+    status.textContent = 'Boot failed: ' + ((err && err.message) || String(err));
+    status.style.color = 'var(--danger-text, #ff8ba0)';
+  }
+});
