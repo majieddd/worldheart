@@ -6,6 +6,9 @@ import { R, terrainHeight } from './world.js';
 // Evolution tier, set by the 99 Planets shell and 0 in every other mode.
 export const EVO = { tier: 0 };
 
+// How many hits a tier-3 shield soaks before it breaks.
+const SHIELD_HITS = 3;
+
 // Each tier adds a trait AND a visual tell, so the swarm changing is legible
 // in play rather than only in the numbers.
 const EVO_TIERS = [
@@ -97,6 +100,7 @@ class Enemy {
     // Evolution state. Reset on every init because enemies come from a pool
     // and a recycled body must not inherit the last one's shield or split flag.
     this.shieldT = 0;
+    this.shieldHits = 0;
     this.isSplit = false;
     this.phase = Math.random() * Math.PI * 2;
     this.hopPrev = 0;
@@ -242,11 +246,22 @@ export class EnemyManager {
       dmg = Math.max(1, amount - armor);
     }
     if (e.brittle > 0) dmg *= 1.12;
-    // Tier 3 shield: a hit lands only if the enemy has been left alone for
-    // three seconds. Any hit re-arms the timer, so sustained fire beats it and
+    // Tier 3 shield: it soaks a few hits and then breaks, and only recharges
+    // after three seconds without being touched. So sustained fire beats it and
     // poking at it does not.
-    if (evo.shield && e.shieldT > 0) dmg = 0;
-    e.shieldT = evo.shield ? 3 : 0;
+    //
+    // The previous form re-armed a blanket 3-second immunity on EVERY hit,
+    // which inverted the whole intent: continuous fire could never land a
+    // second hit, so from evolution tier 3 onward every enemy - the wave-15
+    // boss included - was effectively immortal and the wave never cleared.
+    if (evo.shield) {
+      if (e.shieldT <= 0) e.shieldHits = SHIELD_HITS;   // left alone: recharged
+      e.shieldT = 3;                                    // this hit resets the recharge
+      if (e.shieldHits > 0) { e.shieldHits--; dmg = 0; }
+    } else {
+      e.shieldT = 0;
+      e.shieldHits = 0;
+    }
     e.hp -= dmg;
     e.flashT = 0.09;
     // Boss armor plates shed at HP thresholds and each births escorts.

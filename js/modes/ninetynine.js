@@ -40,6 +40,17 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     if (rig.confine) rig.confine.maxAng = theta * 1.02;
     // Possession reads this to fog the view once a unit walks out past it.
     if (possession) possession.frontier = game.frontier;
+    // The commander's post grows with the territory but stays well inside it:
+    // it is the last line at the core, not the frontline. Handing it the whole
+    // frontier made it the tank for every wave and it was ground down by ten.
+    // Read from the live list rather than the `commander` binding, which is
+    // declared further down: this runs during setup too.
+    if (allies) {
+      const post = Math.max(12, Math.min(CONFIG.planetRadius * theta * 0.4, 30));
+      for (const a of allies.active) {
+        if (a.type.commander && a.active && !a.dead) a.leash = post;
+      }
+    }
   }
 
   // Breach sites are authored across the FINAL cap, so an unremapped spawn at
@@ -113,15 +124,29 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // A cleared wave advances the run, and the draft holds the next one until it
   // resolves. Chained, not assigned: the HUD already owns onWaveClear and
   // replacing it outright would silently kill the wave banner.
+  // A completion that arrives while the core is mid-draft is QUEUED, never
+  // dropped. Returning early here let the director run the next wave while the
+  // core stood still, so the two counters drifted apart a wave at a time and
+  // the run silently stopped expanding, unlocking and evolving on schedule.
+  let pendingClears = 0;
+
   const prevClear = waves.onWaveClear;
   waves.onWaveClear = (n, reward) => {
     prevClear?.(n, reward);
-    if (run.getPhase() !== 'building') return;
-    waves.state = 'idle';          // hold the countdown while drafting
+    // Hold the director unconditionally: the core decides when the next wave
+    // may start. This has to happen even when the completion is queued, which
+    // is exactly the case the early return used to skip.
+    waves.state = 'idle';
+    if (run.getPhase() !== 'building') { pendingClears++; return; }
     handle(run.completeWave());
   };
 
   enemies.spawnNodeOverride = spawnNodeNearFrontier;
+
+  // The RUN decides when the planet is won, not the wave director. Both count
+  // to fifteen, so leaving the classic hook armed meant two endings raced for
+  // the same overlay.
+  waves.onVictory = () => {};
 
   // Placing a tower spends its card. The core owns the hand, so the shell
   // reports the placement and re-reads rather than mutating a local copy.
@@ -213,16 +238,25 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
       const draft = run.getDraft();
-      if (!draft) return;
-      ui.setDraftTimer(draft.remaining / 10);
-      const events = run.tick(dt);
-      if (events.length) {
-        handle(events);
-        // Draft settled: release the director for the next wave.
-        if (run.getPhase() === 'building') {
-          waves.state = 'countdown';
-          waves.countdown = CONFIG.waves.prepTime;
-        }
+      if (draft) {
+        ui.setDraftTimer(draft.remaining / 10);
+        const events = run.tick(dt);
+        if (events.length) handle(events);
+      }
+      if (run.getPhase() !== 'building') return;
+      // Drain a completion that landed while the core was drafting, one per
+      // frame: each one can open the next draft, so it must be allowed to.
+      if (pendingClears > 0) {
+        pendingClears--;
+        handle(run.completeWave());
+        return;
+      }
+      // Release the director. Checked every frame rather than only when a
+      // draft produced events, because a wave that resolves without opening
+      // one would otherwise leave the manager parked on 'idle' forever.
+      if (waves.state === 'idle') {
+        waves.state = 'countdown';
+        waves.countdown = CONFIG.waves.prepTime;
       }
     },
   };

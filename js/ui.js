@@ -407,6 +407,7 @@ export class HUD {
     });
     this.el['btn-continue'].addEventListener('click', () => {
       this.el['end-overlay'].classList.remove('show');
+      this._ended = false;
       this.game.paused = false;
       this.audio?.play('click');
     });
@@ -484,6 +485,13 @@ export class HUD {
   }
 
   showEnd(won, subtitle) {
+    // A run ends once. The classic wave director and a mode's own run core can
+    // both declare an ending for the same run, and whichever arrived second
+    // used to overwrite the first one's message with its generic default - so
+    // a 99 Planets win reported "15 waves repelled" instead of the planet it
+    // had just taken.
+    if (this._ended) return;
+    this._ended = true;
     const e = this.el;
     e['end-mark'].textContent = won ? 'THE DAWN HOLDS' : 'THE HEART FADES';
     e['end-sub'].textContent = subtitle

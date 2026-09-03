@@ -18,17 +18,37 @@ import { R, terrainHeight } from './world.js';
 export const ALLY_TYPES = {
   warden: {
     name: 'Warden', hp: 220, speed: 2.4, radius: 0.42, dps: 7,
-    aggro: 9, reach: 1.15, scale: 1,
+    aggro: 9, reach: 1.15, scale: 1, regen: 0.05,
   },
   // Commanders are permanent, far stronger, and carry the run: if one dies the
   // run ends, which is what makes taking a party into the fog a real gamble.
   commander: {
     name: 'Commander', hp: 1400, speed: 3.0, radius: 0.6, dps: 26,
-    aggro: 13, reach: 1.5, scale: 1.5, commander: true,
+    aggro: 13, reach: 1.5, scale: 1.5, commander: true, regen: 0.035,
+    // A commander never goes looking for a fight on its own. Its death ends the
+    // run, so that death has to be the consequence of a decision the PLAYER
+    // made - walking it into the fog - not of autopilot wandering it into a
+    // wave. It still hits anything that closes on it.
+    holdsGround: true,
   },
 };
 
 const MAX_ALLIES = 96;
+
+// A unit that can never heal turns a 15-wave run into pure attrition, and for
+// a commander - whose death ends the run - that is a loss with no decision in
+// it. Units recover only once nothing has hit them for a while, so healing is
+// something you earn by pulling back rather than a passive drip mid-fight.
+const REGEN_DELAY = 6;
+
+// The hold is a tactic, never a prison. A unit that can pin an enemy but not
+// kill it - a warden against a plated mite, say - would otherwise re-apply the
+// stun every frame forever: the enemy stops dead, the wave never clears and the
+// run stalls with one immortal straggler standing in a tower's shadow. So a
+// hold runs on a budget and then has to lapse, which guarantees every enemy
+// keeps moving and a wave always resolves one way or the other.
+const HOLD_BUDGET = 3;
+const HOLD_LAPSE = 4;
 
 // Damage per second an enemy deals to a unit it is in contact with, per point
 // of that enemy's leak damage. Tuned so a lone warden holds two mites for a
@@ -96,6 +116,7 @@ class Ally {
     this.swingT = 0;
     this.flashT = 0;
     this.wanderT = 0;
+    this.hurtT = 0;
     this.active = true;
     this.dead = false;
     this.possessed = false;
@@ -208,6 +229,7 @@ export class AllyManager {
     if (!a.active || a.dead) return 0;
     a.hp -= amount;
     a.flashT = 0.1;
+    a.hurtT = REGEN_DELAY;
     if (a.hp <= 0) {
       a.dead = true;
       const wasCommander = a.type.commander;
@@ -255,6 +277,32 @@ export class AllyManager {
     a.wanderT = 0;   // re-roll immediately so the order takes effect visibly
   }
 
+  // Spends the shared hold budget on an enemy and reports whether it may still
+  // be pinned. Charged once per update no matter how many units are engaged, so
+  // a bigger group holds for the same time rather than burning the budget
+  // faster.
+  _mayHold(e, dt) {
+    if (e._holdStamp !== this.time) {
+      e._holdStamp = this.time;
+      if (e._holdLapse > 0) e._holdLapse -= dt;
+      else {
+        e._holdT = (e._holdT || 0) + dt;
+        if (e._holdT > HOLD_BUDGET) { e._holdT = 0; e._holdLapse = HOLD_LAPSE; }
+      }
+    }
+    return !(e._holdLapse > 0);
+  }
+
+  // True when a target sits outside the leash measured from the unit's post -
+  // its patrol point when one is set, otherwise where it was summoned.
+  _beyondPost(a, target) {
+    const post = a.patrol || a.anchor;
+    const ang = Math.acos(Math.max(-1, Math.min(1, target.dir.dot(post))));
+    // A margin of one reach so a unit already trading blows at the very edge
+    // does not drop its target and immediately re-acquire it.
+    return ang > (a.leash + a.type.reach) / R;
+  }
+
   update(dt) {
     this.time += dt;
     for (let i = this.active.length - 1; i >= 0; i--) {
@@ -267,8 +315,24 @@ export class AllyManager {
       if (a.possessed) { this._ground(a); continue; }
 
       const type = a.type;
+      if (a.hurtT > 0) a.hurtT -= dt;
+      else if (a.hp < a.hpMax && type.regen) {
+        a.hp = Math.min(a.hpMax, a.hp + a.hpMax * type.regen * dt);
+      }
+
       if (a.target && (!a.target.active || a.target.dead)) a.target = null;
       if (!a.target) a.target = this._findEnemy(a, type.aggro);
+      // A chase is leashed to the post. Without this a unit walks after
+      // whatever it can see, arbitrarily far, which drags a garrison off the
+      // ground it was summoned to hold and can pull a commander into the fog
+      // on its own. A unit following a leader is exempt: the leader is its post.
+      if (a.target && !a.following && this._beyondPost(a, a.target)) a.target = null;
+      // Hold-ground units accept only what is already on top of them, so they
+      // defend without ever walking into a swarm.
+      if (a.target && type.holdsGround
+          && this.enemyPos(a.target, _tmp2).distanceTo(this.worldPos(a, _tmp)) > type.reach) {
+        a.target = null;
+      }
 
       if (a.target) {
         const d = this.enemyPos(a.target, _tmp2).distanceTo(this.worldPos(a, _tmp));
@@ -277,8 +341,9 @@ export class AllyManager {
           // Holding the enemy in place IS the aggro: a unit that merely traded
           // damage would be walked straight past on the way to the heart. The
           // hold is short and re-applied while engaged, so killing the unit
-          // frees the enemy immediately.
-          this.enemies.applyStun(a.target, 0.22);
+          // frees the enemy immediately - but it runs on a budget, so it can
+          // never become permanent. See HOLD_BUDGET.
+          if (this._mayHold(a.target, dt)) this.enemies.applyStun(a.target, 0.22);
           if (a.swingT <= 0) {
             a.swingT = 0.55;
             this.enemies.damage(a.target, type.dps * 0.55, { armorPierce: 2 });
