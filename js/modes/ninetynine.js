@@ -67,6 +67,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies }) 
     game.unlockedTowers = run.getUnlockedTowers();
     ui.unlockedTowers = game.unlockedTowers;
     game.tierCap = run.getTierCap();
+    game.hand = run.getHand();
+    ui.renderHand(game.hand);
     applyFrontier(run.getFrontierTheta());
   }
 
@@ -105,6 +107,10 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies }) 
   };
 
   enemies.spawnNodeOverride = spawnNodeNearFrontier;
+
+  // Placing a tower spends its card. The core owns the hand, so the shell
+  // reports the placement and re-reads rather than mutating a local copy.
+  game.onCardSpent = (index) => { run.playCard(index); syncFromRun(); };
 
   syncFromRun();
 

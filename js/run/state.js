@@ -20,6 +20,9 @@ export function createRunState({ seed, playerIds, startGold = DEFAULT_START_GOLD
     players: playerIds.map((id) => ({ id, gold: startGold })),
     powers: [],
     unlockedTowers: [STARTING_TOWER],
+    // The hand of placeable tower cards. Always refilled to HAND_SIZE at the
+    // top of a wave; placing a tower spends its card.
+    hand: [],
     lives: 20,
   };
 }

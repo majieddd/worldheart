@@ -40,6 +40,7 @@ export class HUD {
     // null means the whole roster is available, which is how every mode but
     // 99 Planets reads. The mode shell assigns the unlocked list.
     this.unlockedTowers = null;
+    this.handCards = null;      // card mode: the live hand buttons, else null
     this._lastCountdownText = '';
     this._build();
     this._wire();
@@ -277,6 +278,42 @@ export class HUD {
   }
 
   // Render each tower into an offscreen target for the build cards.
+  // Card mode. The build bar becomes a hand of exactly three cards drawn each
+  // wave, so what you can build is itself part of the run. Rebuilt whenever the
+  // hand changes, because a card is spent on placement and the indices shift.
+  renderHand(hand) {
+    this.hand = hand;
+    const bar = document.getElementById('build-bar');
+    bar.textContent = '';
+    this.cards = {};
+    this.handCards = [];
+    hand.forEach((key, i) => {
+      const def = TOWER_TYPES[key];
+      const card = document.createElement('button');
+      card.className = 'build-card';
+      card.dataset.type = key;
+      card.dataset.card = String(i);
+      card.innerHTML = `
+        <img class="build-thumb" alt="${def.name}">
+        <div class="build-name">${def.name.split(' ')[0]}</div>
+        <div class="build-cost">${def.cost}</div>
+        <span class="kbd build-key">${i + 1}</span>
+      `;
+      card.title = `${def.name}: ${def.desc}`;
+      const img = card.querySelector('.build-thumb');
+      if (this.thumbs[key]) img.src = this.thumbs[key];
+      bar.appendChild(card);
+      this.handCards.push(card);
+      card.addEventListener('click', () => this.game.toggleBuildCard(i));
+    });
+    if (!hand.length) {
+      const note = document.createElement('div');
+      note.className = 'hint-line';
+      note.textContent = 'Hand spent. Survive the wave for three more.';
+      bar.appendChild(note);
+    }
+  }
+
   makeThumbnails() {
     const size = 112;
     const rt = new THREE.WebGLRenderTarget(size, size);
@@ -539,17 +576,29 @@ export class HUD {
     fill.classList.toggle('hurt', frac <= 0.6 && frac > 0.3);
     fill.classList.toggle('critical', frac <= 0.3);
 
-    for (const key of Object.keys(this.cards)) {
-      const card = this.cards[key];
-      const unlocked = !this.unlockedTowers || this.unlockedTowers.includes(key);
-      card.classList.toggle('selected', g.buildType === key);
-      // Reuses the existing `locked` look so an unaffordable and a not-yet-
-      // unlocked tower read the same way; the title says which it is.
-      card.classList.toggle('locked', !unlocked || g.gold < TOWER_TYPES[key].cost);
-      card.disabled = !unlocked;
-      card.title = unlocked
-        ? `${TOWER_TYPES[key].name}: ${TOWER_TYPES[key].desc}`
-        : `${TOWER_TYPES[key].name} - locked. Survive more waves.`;
+    if (this.handCards) {
+      // Card mode: affordability is the only gate, and the armed card is the
+      // one selected by INDEX, since a hand may hold the same tower twice.
+      this.handCards.forEach((card, i) => {
+        const key = card.dataset.type;
+        const cost = g._cost ? g._cost(TOWER_TYPES[key]) : TOWER_TYPES[key].cost;
+        card.classList.toggle('selected', g.selectedCard === i);
+        card.classList.toggle('locked', g.gold < cost);
+        card.querySelector('.build-cost').textContent = String(cost);
+      });
+    } else {
+      for (const key of Object.keys(this.cards)) {
+        const card = this.cards[key];
+        const unlocked = !this.unlockedTowers || this.unlockedTowers.includes(key);
+        card.classList.toggle('selected', g.buildType === key);
+        // Reuses the existing `locked` look so an unaffordable and a not-yet-
+        // unlocked tower read the same way; the title says which it is.
+        card.classList.toggle('locked', !unlocked || g.gold < TOWER_TYPES[key].cost);
+        card.disabled = !unlocked;
+        card.title = unlocked
+          ? `${TOWER_TYPES[key].name}: ${TOWER_TYPES[key].desc}`
+          : `${TOWER_TYPES[key].name} - locked. Survive more waves.`;
+      }
     }
 
     if (g.buildType && !this.seen.build) {
