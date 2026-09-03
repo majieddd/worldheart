@@ -15,6 +15,17 @@ import { R, terrainHeight } from './world.js';
 // and buys time for towers, not a damage dealer. That is also what keeps
 // possession from being a damage upgrade.
 
+// Commander archetypes. The whole point is that they do not play the same: a
+// Bulwark plants and swings through a crowd, a Twinfang darts and cuts, a
+// Longsight holds ground and shoots, a Kettle lobs over cover, an Emberline
+// burns a line down. Each `strike` carries its own KIND, which is what
+// playerAttack dispatches on, and their sustained damage is deliberately kept
+// inside one band so the choice is a question of how you want to fight rather
+// than which one is strongest.
+//
+// Bodies differ too - a Bulwark is slow and thick, a Twinfang fast and thin -
+// so the archetype changes how the whole trip into the fog feels, not just the
+// button.
 export const ALLY_TYPES = {
   warden: {
     name: 'Warden', hp: 220, speed: 2.4, radius: 0.42, dps: 7,
@@ -23,12 +34,13 @@ export const ALLY_TYPES = {
     // under a wave-1 mite's 26 health by a factor of 2.9, so three swings are
     // always needed, and 1.8 keeps the swing on the ground: a wisp overhead is
     // 2.58 away, which a warden is not meant to answer.
-    strike: { dmg: 9, cd: 0.80, radius: 1.8, cleave: 0.5, pierce: 2 },
+    strike: { kind: 'melee', dmg: 9, cd: 0.80, radius: 1.8, cleave: 0.5,
+      pierce: 2, arcDeg: 120, kick: 0.10, trauma: 0.06, fov: 80 },
   },
   // Commanders are permanent, far stronger, and carry the run: if one dies the
   // run ends, which is what makes taking a party into the fog a real gamble.
   commander: {
-    name: 'Commander', hp: 1400, speed: 3.0, radius: 0.6, dps: 26,
+    name: 'Bulwark', hp: 1400, speed: 2.6, radius: 0.66, dps: 26,
     aggro: 13, reach: 1.5, scale: 1.5, commander: true, regen: 0.035,
     // A commander never goes looking for a fight on its own. Its death ends the
     // run, so that death has to be the consequence of a decision the PLAYER
@@ -40,7 +52,61 @@ export const ALLY_TYPES = {
     // clears the 2.42 to a wisp directly overhead by a small margin, which is
     // deliberate: a possessed commander is the only melee answer to flyers in
     // the game.
-    strike: { dmg: 26, cd: 0.90, radius: 2.6, cleave: 0.5, pierce: 3 },
+    // A heavy cleave: slow, wide, and it shoves what it hits. The wind-up is
+    // long enough to read, which is the trade for hitting a whole crowd.
+    strike: { kind: 'melee', dmg: 44, cd: 0.85, radius: 3.0, cleave: 0.75,
+      pierce: 5, arcDeg: 160, knockback: 1.1, kick: 0.34, trauma: 0.30, fov: 74 },
+  },
+
+  duelist: {
+    name: 'Twinfang', hp: 1050, speed: 3.6, radius: 0.5, dps: 26,
+    aggro: 13, reach: 1.4, scale: 1.35, commander: true, regen: 0.05,
+    holdsGround: true,
+    // Two quick cuts instead of one heavy one: half the damage per hit at more
+    // than twice the rate, a narrow arc, and the best armour pierce in the
+    // roster. Thin body, so the speed is the defence.
+    strike: { kind: 'melee', dmg: 17, cd: 0.34, radius: 2.4, cleave: 0.4,
+      pierce: 6, arcDeg: 70, kick: 0.13, trauma: 0.10, fov: 84 },
+  },
+
+  marksman: {
+    name: 'Longsight', hp: 900, speed: 3.0, radius: 0.48, dps: 26,
+    aggro: 16, reach: 1.4, scale: 1.4, commander: true, regen: 0.04,
+    holdsGround: true,
+    // Hitscan down the crosshair. It is the only archetype that answers a
+    // breach or a flyer from outside its own reach, and the only one that can
+    // miss, which is the trade.
+    strike: { kind: 'hitscan', dmg: 34, cd: 0.55, range: 34, corridor: 0.8,
+      pierce: 3, falloffFrom: 22, falloffMul: 0.55,
+      kick: 0.26, trauma: 0.14, fov: 78, cross: 'ranged' },
+  },
+
+  bombardier: {
+    name: 'Kettle', hp: 1150, speed: 2.9, radius: 0.56, dps: 26,
+    aggro: 14, reach: 1.5, scale: 1.45, commander: true, regen: 0.04,
+    holdsGround: true,
+    // An arcing shell that bursts where it lands. Splash ignores armour, which
+    // makes it the answer to a packed lane, and the arc means it can be thrown
+    // over a ridge at something the others have to walk to.
+    // Launch speed and lift are tuned together so a shell lands around 13 units
+    // out, which is where fighting actually happens. The first pass fired at
+    // 26 u/s and every shell sailed 35 units downrange, so the archetype could
+    // only hit things nobody was standing near.
+    strike: { kind: 'lob', dmg: 40, cd: 1.15, speed: 16, lift: 0.42, gravity: 16,
+      aoe: 3.4, pierce: 99, fuse: 2.6,
+      kick: 0.30, trauma: 0.22, fov: 80, cross: 'ranged' },
+  },
+
+  oracle: {
+    name: 'Emberline', hp: 1000, speed: 3.0, radius: 0.52, dps: 26,
+    aggro: 15, reach: 1.4, scale: 1.4, commander: true, regen: 0.045,
+    holdsGround: true,
+    // A held beam that ramps the longer it stays on one body, so it rewards
+    // tracking rather than clicking. It runs on heat instead of a cooldown:
+    // hold it too long and it locks.
+    strike: { kind: 'beam', dps: 52, cd: 0.06, range: 17, corridor: 0.6,
+      pierce: 4, ramp: 1.9, rampTime: 2.2, heatUp: 1.0, heatDown: 0.75,
+      kick: 0, trauma: 0.04, fov: 80, cross: 'ranged' },
   },
 };
 
@@ -73,6 +139,7 @@ const STRUCTURE_MUL = 2.5;
 // clears a path in front of itself, tight enough that it stays a party.
 const PARTY_LEASH = 13;
 const _strikeOrigin = new THREE.Vector3();
+const _strikeBearing = new THREE.Vector3();
 
 // Damage per second an enemy deals to a unit it is in contact with, per point
 // of that enemy's leak damage. Tuned so a lone warden holds two mites for a
@@ -172,6 +239,10 @@ class Ally {
     this.target = null;
     this.swingT = 0;
     this.swingDur = 0.55;
+    this.heat = 0;
+    this.heatLock = 0;
+    this.beamRamp = 0;
+    this.beamOn = null;
     this.flashT = 0;
     this.wanderT = 0;
     this.hurtT = 0;
@@ -195,6 +266,13 @@ export class AllyManager {
     this.pool = [];
     this.active = [];
     this.time = 0;
+    // A small pool of shells for the bombardier. Preallocated because a burst
+    // fires on a 1.15s cooldown and allocating a vector pair per shot would
+    // churn for no reason.
+    this._shells = Array.from({ length: 12 }, () => ({
+      live: false, t: 0, spec: null,
+      pos: new THREE.Vector3(), vel: new THREE.Vector3(),
+    }));
     this.onDeath = null;            // (ally) => void
     this.onCommanderLost = null;    // (ally) => void
     this.onPortalDestroyed = null;  // (portal) => void
@@ -384,11 +462,16 @@ export class AllyManager {
 
   update(dt) {
     this.time += dt;
+    this._updateShells(dt);
     for (let i = this.active.length - 1; i >= 0; i--) {
       const a = this.active[i];
       if (!a.active || a.dead) continue;
       if (a.flashT > 0) a.flashT -= dt;
       if (a.swingT > 0) a.swingT -= dt;
+      if (a.heatLock > 0) { a.heatLock -= dt; if (a.heatLock <= 0) a.heat = 0; }
+      else if (a.heat > 0 && a.type.strike?.heatDown) {
+        a.heat = Math.max(0, a.heat - a.type.strike.heatDown * dt);
+      }
 
       const type = a.type;
       if (a.hurtT > 0) a.hurtT -= dt;
@@ -552,11 +635,15 @@ export class AllyManager {
   // victim's maximum health so a strike can never delete a healthy enemy
   // outright. The old form was dps*1.4 every 0.45s, which was 3.1x the unit's
   // own AI throughput and killed a wave-1 mite in a single tap.
-  playerAttack(a) {
-    if (!a.active || a.dead || a.swingT > 0) return 0;
+  playerAttack(a, dt = 0) {
+    if (!a.active || a.dead) return 0;
     const s = a.type.strike;
+    if (s.kind === 'beam') return this._beamStrike(a, s, dt);
+    if (a.swingT > 0) return 0;
     a.swingT = s.cd;
     a.swingDur = s.cd;
+    if (s.kind === 'hitscan') return this._hitscanStrike(a, s);
+    if (s.kind === 'lob') return this._lobStrike(a, s);
     let hits = 0;
     _strikeOrigin.copy(this.worldPos(a, _tmp));
 
@@ -567,17 +654,27 @@ export class AllyManager {
     for (const e of this.enemies.active) {
       if (!e.active || e.dead) continue;
       const d = this.enemyPos(e, _tmp2).distanceTo(_strikeOrigin);
-      if (d <= s.radius && d < primaryD) { primaryD = d; primary = e; }
+      if (d <= s.radius && d < primaryD && this._inArc(a, _tmp2, s.arcDeg)) { primaryD = d; primary = e; }
     }
     for (const e of this.enemies.active) {
       if (!e.active || e.dead) continue;
       if (this.enemyPos(e, _tmp2).distanceTo(_strikeOrigin) > s.radius) continue;
+      if (!this._inArc(a, _tmp2, s.arcDeg)) continue;
       const amount = e === primary ? s.dmg : s.dmg * s.cleave;
       const landed = this.enemies.damage(e, amount, {
         armorPierce: s.pierce,
         capFrac: STRIKE_CAP_FRAC,
       });
       if (this.onStrikeHit) this.onStrikeHit(e, landed, e === primary);
+      if (s.knockback && e.active && !e.dead) {
+        // Shove the body back along the surface. A heavy swing that does not
+        // move anything does not read as heavy.
+        _axis.crossVectors(a.dir, e.dir);
+        if (_axis.lengthSq() > 1e-12) {
+          _axis.normalize();
+          e.dir.applyAxisAngle(_axis, s.knockback / R).normalize();
+        }
+      }
       hits++;
     }
     // The same swing brings down breaches, and a structure has no health bar to
@@ -593,6 +690,147 @@ export class AllyManager {
       }
     }
     return hits;
+  }
+
+  // Is `worldPoint` inside the unit's facing arc? Measured in the tangent plane,
+  // with the degenerate directly-on-top case counted as in front, because the
+  // tangent projection of something standing on your head is near zero length
+  // and would otherwise silently drop out of every swing.
+  _inArc(a, worldPoint, arcDeg) {
+    if (!arcDeg || arcDeg >= 359) return true;
+    _strikeBearing.copy(worldPoint).sub(_strikeOrigin);
+    _strikeBearing.addScaledVector(a.dir, -_strikeBearing.dot(a.dir));
+    if (_strikeBearing.lengthSq() < 1e-8) return true;
+    _strikeBearing.normalize();
+    return _strikeBearing.dot(a.fwd) >= Math.cos((arcDeg * 0.5) * Math.PI / 180);
+  }
+
+  // A shot straight down the crosshair. Everything inside a thin corridor along
+  // the aim is a candidate and the nearest one is hit, so a marksman can miss -
+  // which is the trade for being the only archetype that reaches past its own
+  // arm's length.
+  _hitscanStrike(a, s) {
+    _strikeOrigin.copy(this.worldPos(a, _tmp));
+    let best = null;
+    let bestAlong = Infinity;
+    for (const e of this.enemies.active) {
+      if (!e.active || e.dead) continue;
+      this.enemyPos(e, _tmp2).sub(_strikeOrigin);
+      const along = _tmp2.dot(a.fwd);
+      if (along <= 0 || along > s.range) continue;
+      const off = Math.sqrt(Math.max(0, _tmp2.lengthSq() - along * along));
+      if (off > s.corridor + (e.type.radius || 0.3)) continue;
+      if (along < bestAlong) { bestAlong = along; best = e; }
+    }
+    let hits = 0;
+    if (best) {
+      const fall = bestAlong > s.falloffFrom
+        ? 1 - (1 - s.falloffMul) * Math.min(1, (bestAlong - s.falloffFrom) / (s.range - s.falloffFrom))
+        : 1;
+      const landed = this.enemies.damage(best, s.dmg * fall, {
+        armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
+      });
+      if (this.onStrikeHit) this.onStrikeHit(best, landed, true);
+      hits++;
+    }
+    if (this.world) {
+      for (const p of this.world.portals) {
+        if (p.destroyed) continue;
+        _tmp2.copy(p.group.position).sub(_strikeOrigin);
+        const along = _tmp2.dot(a.fwd);
+        if (along <= 0 || along > s.range) continue;
+        if (Math.sqrt(Math.max(0, _tmp2.lengthSq() - along * along)) > 2.6) continue;
+        const felled = this.world.damagePortal(p, s.dmg * STRUCTURE_MUL);
+        if (felled && this.onPortalDestroyed) this.onPortalDestroyed(p);
+        hits++;
+        break;
+      }
+    }
+    if (this.onShotFired) this.onShotFired(a, _strikeOrigin, best, bestAlong);
+    return hits;
+  }
+
+  // Lob a shell along the aim with lift and let gravity bring it down. The arc
+  // is the whole point: it goes over the ridge the others have to walk around.
+  _lobStrike(a, s) {
+    const sh = this._shells.find((x) => !x.live) || this._shells[0];
+    sh.live = true;
+    sh.t = 0;
+    sh.spec = s;
+    this.worldPos(a, sh.pos);
+    sh.pos.addScaledVector(a.dir, 0.6);
+    sh.vel.copy(a.fwd).multiplyScalar(s.speed).addScaledVector(a.dir, s.speed * s.lift);
+    return 1;
+  }
+
+  _updateShells(dt) {
+    for (const sh of this._shells) {
+      if (!sh.live) continue;
+      sh.t += dt;
+      // Gravity points at the planet centre, so the arc bends the way the
+      // ground curves rather than toward some fixed idea of down.
+      _tmp.copy(sh.pos).normalize();
+      sh.vel.addScaledVector(_tmp, -sh.spec.gravity * dt);
+      sh.pos.addScaledVector(sh.vel, dt);
+      _tmp2.copy(sh.pos).normalize();
+      const ground = R + Math.max(terrainHeight(_tmp2.x, _tmp2.y, _tmp2.z), 0);
+      if (sh.pos.length() <= ground + 0.2 || sh.t > sh.spec.fuse) this._burst(sh);
+    }
+  }
+
+  _burst(sh) {
+    sh.live = false;
+    const s = sh.spec;
+    let hits = 0;
+    for (const e of this.enemies.active) {
+      if (!e.active || e.dead) continue;
+      const d = this.enemyPos(e, _tmp2).distanceTo(sh.pos);
+      if (d > s.aoe) continue;
+      const landed = this.enemies.damage(e, s.dmg * (1 - 0.5 * Math.min(1, d / s.aoe)), {
+        armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
+      });
+      if (this.onStrikeHit) this.onStrikeHit(e, landed, hits === 0);
+      hits++;
+    }
+    if (this.world) {
+      for (const p of this.world.portals) {
+        if (p.destroyed) continue;
+        if (p.group.position.distanceTo(sh.pos) > s.aoe + 2.2) continue;
+        const felled = this.world.damagePortal(p, s.dmg * STRUCTURE_MUL);
+        if (felled && this.onPortalDestroyed) this.onPortalDestroyed(p);
+      }
+    }
+    if (this.onShellBurst) this.onShellBurst(sh, hits);
+  }
+
+  // A held beam. Damage is per SECOND, and it ramps the longer it stays on the
+  // same body, so tracking is the skill rather than clicking. Heat replaces the
+  // cooldown: it climbs while firing and locks the weapon if it tops out.
+  _beamStrike(a, s, dt) {
+    if (a.heatLock > 0) return 0;
+    _strikeOrigin.copy(this.worldPos(a, _tmp));
+    let best = null;
+    let bestAlong = Infinity;
+    for (const e of this.enemies.active) {
+      if (!e.active || e.dead) continue;
+      this.enemyPos(e, _tmp2).sub(_strikeOrigin);
+      const along = _tmp2.dot(a.fwd);
+      if (along <= 0 || along > s.range) continue;
+      const off = Math.sqrt(Math.max(0, _tmp2.lengthSq() - along * along));
+      if (off > s.corridor + (e.type.radius || 0.3)) continue;
+      if (along < bestAlong) { bestAlong = along; best = e; }
+    }
+    a.heat = Math.min(1, a.heat + s.heatUp * dt);
+    if (a.heat >= 1) { a.heatLock = 1.8; }
+    if (!best) { a.beamRamp = 0; a.beamOn = null; return 0; }
+    if (a.beamOn !== best) { a.beamRamp = 0; a.beamOn = best; }
+    a.beamRamp = Math.min(s.rampTime, a.beamRamp + dt);
+    const ramp = 1 + (s.ramp - 1) * (a.beamRamp / s.rampTime);
+    const landed = this.enemies.damage(best, s.dps * ramp * dt, {
+      armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
+    });
+    if (this.onBeam) this.onBeam(a, best, landed, _strikeOrigin, bestAlong);
+    return 1;
   }
 
   // Rally. Loose bodies nearby join, and so does the whole garrison of any

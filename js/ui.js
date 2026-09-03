@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, MAPS, PALETTE, storeLocal, CAM_RANGES, CAM_TUNE, saveCamTune, resetCamTune } from './config.js';
 import { TOWER_TYPES, tierCost, buildTowerVisual, TOWER_SCALE, MAT } from './towers.js';
 import { powerSigil } from './ui-icons.js';
+import { TALENTS, loadProfile, buyTalent, isOwned, isReachable } from './modes/progress.js';
 
 // DOM HUD. All chrome lives here; the scene renders beneath it. Per the
 // design contract: per-shot and per-kill readouts update with zero animation,
@@ -158,6 +159,22 @@ export class HUD {
           <div class="map-row" id="map-row"></div>
           <div class="o-actions">
             <button class="btn primary" id="btn-begin" style="font-family:var(--font-display)">Begin the defense</button>
+            <button class="btn" id="btn-talents">Talents</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Where coins earned in a run are spent. Between runs, not during one:
+           permanent progress is a decision about the NEXT attempt. -->
+      <div class="overlay" id="talent-overlay">
+        <div class="overlay-card talent-panel">
+          <div class="o-mark">TALENTS</div>
+          <div class="o-sub"><span id="talent-coins">0</span> coins earned</div>
+          <div class="o-body" style="max-width:60ch">Every wave you clear pays coins, whether the run
+            is won or lost. Spend them here on unlocks you keep for good.</div>
+          <div id="talent-tiers"></div>
+          <div class="o-actions">
+            <button class="btn primary" id="btn-talents-close">Back</button>
           </div>
         </div>
       </div>
@@ -206,6 +223,7 @@ export class HUD {
       'fp-hud', 'fp-cross', 'fp-hit', 'fp-name', 'fp-hp', 'fp-swing', 'fp-keys', 'fp-rally',
       'title-overlay', 'end-overlay', 'end-card', 'end-mark', 'end-sub', 'end-waves', 'end-kills',
       'end-score', 'end-body', 'btn-continue', 'btn-retry', 'btn-new', 'btn-begin',
+      'btn-talents', 'btn-talents-close', 'talent-overlay', 'talent-coins', 'talent-tiers',
     ]) this.el[id] = document.getElementById(id);
     this.el['set-seed'].textContent = String(CONFIG.seed);
   }
@@ -425,6 +443,11 @@ export class HUD {
     this.el['tp-close'].addEventListener('click', () => this.game.select(null));
 
     this.el['btn-begin'].addEventListener('click', () => this.beginGame());
+    this.el['btn-talents'].addEventListener('click', () => this.showTalents());
+    this.el['btn-talents-close'].addEventListener('click', () => {
+      this.el['talent-overlay'].classList.remove('show');
+      this.audio?.play('click');
+    });
     this.el['btn-retry'].addEventListener('click', () => {
       storeLocal('whMap', CONFIG.mapKey);
       storeLocal('whSeed', String(CONFIG.seed));
@@ -479,6 +502,54 @@ export class HUD {
     this.refresh();
   }
 
+  // The talent tree. Rebuilt from the stored profile every time it opens, so it
+  // always shows what was actually banked rather than a cached view of it.
+  showTalents() {
+    this.el['talent-overlay'].classList.add('show');
+    this.renderTalents();
+    this.audio?.play('click');
+  }
+
+  renderTalents() {
+    const profile = loadProfile();
+    this.el['talent-coins'].textContent = String(profile.coins);
+    const host = this.el['talent-tiers'];
+    host.textContent = '';
+    const tiers = [...new Set(TALENTS.map((t) => t.tier))].sort((a, b) => a - b);
+    for (const tier of tiers) {
+      const row = document.createElement('div');
+      row.className = 'talent-row';
+      for (const t of TALENTS.filter((x) => x.tier === tier)) {
+        const owned = isOwned(profile, t);
+        const reachable = isReachable(profile, t);
+        const afford = profile.coins >= t.cost;
+        const b = document.createElement('button');
+        b.className = `talent-node ${owned ? 'owned' : reachable ? (afford ? 'ready' : 'poor') : 'locked'}`;
+        b.innerHTML = `
+          <div class="tn-kind">${t.kind}</div>
+          <div class="tn-name">${t.name}</div>
+          <div class="tn-desc">${t.desc}</div>
+          <div class="tn-cost">${owned ? 'owned' : reachable ? `${t.cost} coins` : 'locked'}</div>
+        `;
+        if (!owned && reachable) {
+          b.addEventListener('click', () => {
+            const r = buyTalent(t.id);
+            if (r.ok) {
+              this.toast(`${t.name} unlocked`, 'info');
+              this.audio?.play('build');
+              this.renderTalents();
+            } else {
+              this.toast(r.reason === 'coins' ? 'Not enough coins' : 'Locked', 'warn');
+              this.audio?.play('deny');
+            }
+          });
+        }
+        row.appendChild(b);
+      }
+      host.appendChild(row);
+    }
+  }
+
   showTitle() {
     this.el['title-overlay'].classList.add('show');
   }
@@ -522,7 +593,7 @@ export class HUD {
     e['fp-hud'].classList.add('show');
     e['fp-name'].textContent = unit.type.name;
     e['fp-rally'].style.display = unit.type.commander ? '' : 'none';
-    e['fp-cross'].dataset.kind = unit.type.strike?.kind || 'melee';
+    e['fp-cross'].dataset.kind = unit.type.strike?.cross || 'melee';
     this.updatePossession(unit);
   }
 

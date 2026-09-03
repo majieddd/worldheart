@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createRun, HAND_SIZE } from '../../js/run/run.js';
+import { createRun, HAND_CAP, coinsForWave } from '../../js/run/run.js';
 
 function newRun(seed = 1) { return createRun({ seed, playerIds: ['solo'] }); }
 function clearWave(run) {
@@ -8,9 +8,35 @@ function clearWave(run) {
   if (run.getDraft()) { run.vote('solo', 0); run.tick(0); }
 }
 
-test('the hand is always three cards', () => {
-  assert.equal(HAND_SIZE, 3);
-  assert.equal(newRun().getHand().length, 3);
+test('a run opens with exactly one card, the loadout tower', () => {
+  const run = newRun();
+  assert.equal(run.getHand().length, 1);
+  assert.deepEqual(run.getHand(), ['bolt']);
+});
+
+test('the loadout chooses the opening card', () => {
+  const run = createRun({
+    seed: 1, playerIds: ['solo'],
+    profile: { towers: ['bolt', 'mortar'], loadout: 'mortar', bonuses: {} },
+  });
+  assert.deepEqual(run.getHand(), ['mortar']);
+});
+
+test('a loadout the profile does not own falls back rather than granting it', () => {
+  const run = createRun({
+    seed: 1, playerIds: ['solo'],
+    profile: { towers: ['bolt'], loadout: 'helios', bonuses: {} },
+  });
+  assert.deepEqual(run.getHand(), ['bolt']);
+  assert.ok(!run.getUnlockedTowers().includes('helios'));
+});
+
+test('a profile unlock is available from wave one', () => {
+  const run = createRun({
+    seed: 1, playerIds: ['solo'],
+    profile: { towers: ['bolt', 'tesla', 'helios'], loadout: 'bolt', bonuses: {} },
+  });
+  assert.deepEqual(run.getUnlockedTowers().sort(), ['bolt', 'helios', 'tesla']);
 });
 
 test('the opening hand can only hold the starting tower', () => {
@@ -20,10 +46,12 @@ test('the opening hand can only hold the starting tower', () => {
 
 test('playing a card spends it', () => {
   const run = newRun();
+  clearWave(run);
   const before = run.getHand();
+  assert.equal(before.length, 2, 'one drawn per wave on top of the loadout');
   const played = run.playCard(1);
   assert.equal(played, before[1]);
-  assert.equal(run.getHand().length, 2);
+  assert.equal(run.getHand().length, 1);
 });
 
 test('an out-of-range or stale index plays nothing', () => {
@@ -31,24 +59,52 @@ test('an out-of-range or stale index plays nothing', () => {
   assert.equal(run.playCard(9), null);
   assert.equal(run.playCard(-1), null);
   assert.equal(run.playCard(1.5), null);
-  run.playCard(0); run.playCard(0); run.playCard(0);
+  run.playCard(0);
   assert.equal(run.getHand().length, 0);
   assert.equal(run.playCard(0), null, 'an empty hand must play nothing');
 });
 
-test('the hand refills to three every wave', () => {
+test('exactly one card arrives per wave', () => {
   const run = newRun();
-  run.playCard(0); run.playCard(0);
   assert.equal(run.getHand().length, 1);
+  clearWave(run);
+  assert.equal(run.getHand().length, 2);
   clearWave(run);
   assert.equal(run.getHand().length, 3);
 });
 
-test('a spent hand still refills', () => {
+test('unplayed cards are kept but never past the cap', () => {
   const run = newRun();
-  run.playCard(0); run.playCard(0); run.playCard(0);
+  for (let w = 0; w < 6; w++) clearWave(run);
+  assert.equal(run.getHand().length, HAND_CAP,
+    'holding should stop at the cap rather than growing without bound');
+});
+
+test('a spent hand refills one card at a time', () => {
+  const run = newRun();
+  run.playCard(0);
+  assert.equal(run.getHand().length, 0);
   clearWave(run);
-  assert.equal(run.getHand().length, 3);
+  assert.equal(run.getHand().length, 1);
+});
+
+test('the quartermaster bonus raises the cap by one', () => {
+  const run = createRun({
+    seed: 3, playerIds: ['solo'],
+    profile: { towers: ['bolt'], loadout: 'bolt', bonuses: { quartermaster: true } },
+  });
+  for (let w = 0; w < 8; w++) clearWave(run);
+  assert.equal(run.getHand().length, HAND_CAP + 1);
+});
+
+test('a cleared wave pays coins, and the boss pays a bonus', () => {
+  assert.equal(coinsForWave(1, false), 12);
+  assert.equal(coinsForWave(10, false), 30);
+  assert.equal(coinsForWave(15, true), 140);
+  const run = newRun();
+  assert.equal(run.getCoins(), 0);
+  clearWave(run);
+  assert.equal(run.getCoins(), coinsForWave(1, false));
 });
 
 test('unlocked towers can appear in later hands', () => {
@@ -75,7 +131,7 @@ test('a hand never contains a locked tower', () => {
 
 test('the hand is part of serialised state', () => {
   const run = newRun();
-  assert.ok(JSON.parse(run.serialise()).hand.length === 3);
+  assert.ok(JSON.parse(run.serialise()).hand.length === 1);
 });
 
 test('the same seed draws the same hands', () => {
@@ -95,5 +151,6 @@ test('a wave clear emits handDrawn', () => {
   const events = run.tick(0);
   const drawn = events.find((e) => e.type === 'handDrawn');
   assert.ok(drawn, 'no handDrawn event');
-  assert.equal(drawn.hand.length, 3);
+  assert.equal(drawn.hand.length, 2, 'the loadout card plus the one just drawn');
+  assert.ok(drawn.drew, 'the event should name the card that arrived');
 });

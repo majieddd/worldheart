@@ -20,23 +20,52 @@ import { createRunState, serialise, STARTING_TOWER } from './state.js';
 const UNLOCKABLE_TOWERS = ['cryo', 'mortar', 'tesla', 'helios', 'warden'];
 
 // Towers arrive as a hand of cards rather than an always-available shop, so
-// what you can build this wave is itself part of the run. Always exactly three.
-export const HAND_SIZE = 3;
+// what you can build this wave is itself part of the run.
+//
+// A run OPENS with exactly one card - the tower chosen in the loadout - and
+// earns exactly one more per wave, drawn at random from what is unlocked. That
+// is the roguelite draw the owner asked for. Unplayed cards are kept rather
+// than binned, up to a cap, which is what reconciles it with the earlier
+// instruction that the hand should be three: three is the ceiling you hold, one
+// is what arrives.
+export const HAND_CAP = 3;
+// Kept as an alias because it is part of the module's published surface.
+export const HAND_SIZE = HAND_CAP;
 
-export function createRun({ seed, playerIds, startGold }) {
+// What a cleared wave is worth toward permanent unlocks. Flat plus a slope, so
+// reaching wave 12 once is worth more than reaching wave 3 four times, and a
+// boss pays a real bonus for finishing.
+export function coinsForWave(wave, isBoss) {
+  return 10 + wave * 2 + (isBoss ? 100 : 0);
+}
+
+export function createRun({ seed, playerIds, startGold, profile }) {
   const state = createRunState({ seed, playerIds, startGold });
   const rng = makeRng(seed);
+  // The profile is injected, never read from storage: this module may not know
+  // that storage exists. An absent profile means a default run, which is what
+  // the tests use.
+  const prof = profile || { towers: ['bolt'], loadout: 'bolt', bonuses: {} };
+  const handCap = HAND_CAP + (prof.bonuses?.quartermaster ? 1 : 0);
+  // Everything the profile owns is available from wave one. The in-run unlocks
+  // then add whatever is left, so a player who has bought half the roster
+  // spends their run unlocking the other half rather than re-earning what they
+  // already own.
+  if (Array.isArray(prof.towers) && prof.towers.length) {
+    state.unlockedTowers = [...new Set(prof.towers)];
+  }
+  state.coins = 0;
   let draft = null;
   let modifiers = foldModifiers([]);
 
-  // Duplicates are allowed on purpose: with only Bolt unlocked a hand of three
-  // Bolts is the correct offer, and a later hand of two Mortars is a real roll
-  // rather than a bug.
-  function drawHand() {
-    state.hand = [];
-    for (let i = 0; i < HAND_SIZE; i++) {
-      state.hand.push(pick(rng, state.unlockedTowers));
-    }
+  // One card per wave, added to what is already in hand. Duplicates are allowed
+  // on purpose: with only Bolt unlocked, drawing another Bolt is the correct
+  // roll rather than a bug.
+  function drawCard() {
+    if (state.hand.length >= handCap) return null;
+    const tower = pick(rng, state.unlockedTowers);
+    state.hand.push(tower);
+    return tower;
   }
 
   function refreshModifiers() {
@@ -68,14 +97,16 @@ export function createRun({ seed, playerIds, startGold }) {
     }
 
     // Drawn after the unlock above, so a tower won this wave can appear in the
-    // very hand the player uses next.
-    drawHand();
-    events.push({ type: 'handDrawn', hand: [...state.hand] });
+    // very card the player is handed for it.
+    const drew = drawCard();
+    events.push({ type: 'handDrawn', hand: [...state.hand], drew });
 
     state.phase = 'building';
   }
 
-  drawHand();
+  // A run opens with the loadout tower and nothing else.
+  state.hand = [prof.loadout && state.unlockedTowers.includes(prof.loadout)
+    ? prof.loadout : state.unlockedTowers[0]];
 
   return {
     // ---- queries ----
@@ -89,6 +120,7 @@ export function createRun({ seed, playerIds, startGold }) {
     getUnlockedTowers: () => [...state.unlockedTowers],
     getTierCap: () => tierCapAfter(state.wavesCleared),
     getEvolutionTier: () => evolutionTierAfter(state.wavesCleared),
+    getCoins: () => state.coins,
     getPowers: () => [...state.powers],
     getHand: () => [...state.hand],
     // Spends a card. Returns the tower key played, or null if the index is not
@@ -112,11 +144,13 @@ export function createRun({ seed, playerIds, startGold }) {
       const wave = Math.min(state.wavesCleared + 1, TOTAL_WAVES);
       const events = [];
       state.wavesCleared += 1;
-      events.push({ type: 'waveCleared', wave });
+      const coins = coinsForWave(wave, isBossWave(wave));
+      state.coins += coins;
+      events.push({ type: 'waveCleared', wave, coins });
 
       if (isBossWave(wave)) {
         state.phase = 'victory';
-        events.push({ type: 'runWon', wave });
+        events.push({ type: 'runWon', wave, coins: state.coins });
         return events;
       }
 

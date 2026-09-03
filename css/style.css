@@ -463,3 +463,25 @@ input[type="range"].cam-slider::-moz-range-thumb {
 .draft-card .dc-sigil { display: block; margin: 0 auto 8px; color: var(--accent); opacity: 0.92; }
 .draft-card.uncommon .dc-sigil { color: #8fe3ff; }
 .draft-card.rare .dc-sigil { color: var(--gold); }
+
+/* ---- talent tree --------------------------------------------------------
+   Between runs. Tiers read top to bottom; a tier opens once anything in the
+   tier above it is owned, so there is always exactly one row of new choices
+   visible rather than a wall of grey. */
+.talent-panel { max-width: 900px; }
+#talent-tiers { display: flex; flex-direction: column; gap: var(--sp-3); margin: var(--sp-4) 0; }
+.talent-row { display: flex; gap: var(--sp-2); flex-wrap: wrap; justify-content: center; }
+.talent-node { flex: 1 1 190px; max-width: 230px; text-align: left; padding: 10px 12px;
+  border-radius: 10px; border: 1px solid var(--hairline); background: rgba(12, 16, 32, 0.6);
+  color: var(--text); cursor: pointer; transition: border-color 0.12s, transform 0.12s; }
+.talent-node .tn-kind { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
+.talent-node .tn-name { font-size: var(--fs-14); font-weight: 600; margin: 2px 0 4px; }
+.talent-node .tn-desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; min-height: 2.9em; }
+.talent-node .tn-cost { font-size: 11px; margin-top: 6px; color: var(--gold); }
+.talent-node.ready:hover { border-color: var(--accent); transform: translateY(-1px); }
+.talent-node.owned { border-color: rgba(58, 208, 160, 0.5); cursor: default; }
+.talent-node.owned .tn-cost { color: #3ad0a0; }
+.talent-node.poor { cursor: not-allowed; }
+.talent-node.poor .tn-cost { color: var(--text-faint); }
+.talent-node.locked { opacity: 0.4; cursor: not-allowed; }
+.talent-node.locked .tn-cost { color: var(--text-faint); }

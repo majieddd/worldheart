@@ -9,14 +9,22 @@ import { EVO } from '../enemies.js';
 import { SIM_RANDOM } from '../noise.js';
 import { CONFIG } from '../config.js';
 import * as THREE from 'three';
-import { bankVictory } from './progress.js';
+import { bankVictory, bankCoins, loadProfile } from './progress.js';
 
 export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, allies, possession, caches }) {
+  // What this player has permanently unlocked. Read here in the shell and
+  // handed to the core as a plain object, because js/run may not know that
+  // storage exists.
+  const profile = loadProfile();
   const run = createRun({
     seed: CONFIG.seed,
     playerIds: ['solo'],
-    startGold: CONFIG.economy.startGold,
+    startGold: CONFIG.economy.startGold + (profile.bonuses.interest ? 150 : 0),
+    profile,
   });
+  // A seeded stream for shell-side choices, kept separate from the core's so
+  // that adding a roll here cannot shift the run's own sequence.
+  const rng = makeRng((CONFIG.seed ^ 0x5bf03635) >>> 0);
 
   // One seeded stream for the whole simulation, so a seed replays identically.
   // Offset from the world seed so terrain and combat are not correlated.
@@ -113,6 +121,11 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       } else if (e.type === 'powerTaken') {
         ui.hideDraft();
         ui.toast(`${e.power.name} taken`, 'info');
+      } else if (e.type === 'waveCleared') {
+        if (e.coins) {
+          bankCoins(e.coins);
+          ui.toast(`+${e.coins} coins`, 'info');
+        }
       } else if (e.type === 'runWon') {
         const progress = bankVictory();
         ui.showEnd(true, `the planet is yours — ${progress.planetsBeaten} held`);
@@ -153,11 +166,23 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   game.onCardSpent = (index) => { run.playCard(index); syncFromRun(); };
 
   // ---- commanders -------------------------------------------------------
+  // Drawn from what the profile has unlocked, on the run's own seeded RNG so a
+  // seed still replays identically.
+  const COMMANDERS = ['commander', 'duelist', 'marksman', 'bombardier', 'oracle'];
+  function pickCommander() {
+    const owned = COMMANDERS.filter((k) => profile.commanders.includes(k));
+    const pool = owned.length ? owned : ['commander'];
+    return pool[Math.floor(rng() * pool.length) % pool.length];
+  }
+
   // One is granted at the start of the run and is permanent. Losing it ends
   // the run, which is the entire reason a trip into the fog is a gamble.
   let commander = null;
   if (allies && centre) {
-    commander = allies.spawn('commander', centre, centre, 8);
+    // Which commander leads the run. The archetypes play very differently, so
+    // this is a real choice rather than a skin - and it is the hook the talent
+    // tree hangs its commander unlocks on.
+    commander = allies.spawn(pickCommander(), centre, centre, 8);
     allies.onCommanderLost = () => {
       run.loseRun();
       game.state = 'defeat';
