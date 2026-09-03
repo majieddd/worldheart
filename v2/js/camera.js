@@ -384,6 +384,19 @@ export class OrbitRig {
     const h = Math.max(this.dist, 0.2);
     const Rc = R0 + h;
 
+    // The near plane has to follow the camera down. A fixed near derived from
+    // the planet radius cannot work once the minimum height is a slider: at
+    // the closest zoom on a colossal world the nearest tower vertex measured
+    // 3.97 units against a near plane of 4, so tower geometry was already
+    // being sliced, and a lower Min height or a taller tower widens that. Ties
+    // to altitude instead, which is what actually sets how close geometry can
+    // get, and stays well clear of the far plane for depth precision.
+    const wantNear = clamp(h * 0.12, 0.2, R0 / 40);
+    if (Math.abs(this.camera.near - wantNear) > wantNear * 0.02) {
+      this.camera.near = wantNear;
+      this.camera.updateProjectionMatrix();
+    }
+
     const cosLat = Math.cos(this.lat);
     _focusDir.set(Math.sin(this.lon) * cosLat, Math.sin(this.lat), Math.cos(this.lon) * cosLat);
     _focusPt.copy(_focusDir).multiplyScalar(R0);
