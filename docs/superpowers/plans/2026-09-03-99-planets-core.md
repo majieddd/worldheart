@@ -49,7 +49,7 @@ Each module is small and depends only on modules above it in that table. No cycl
 - Create: `js/run/rng.js`
 - Test: `tests/run/rng.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `tests/run/rng.test.mjs`:
 
@@ -1313,6 +1313,16 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const DIR = 'js/run';
+
+// Comments are stripped before scanning. The first version of this guard
+// flagged rng.js because its comment says the core never calls Math.random,
+// and a check that trips on prose is one people switch off.
+function code(src) {
+  return src
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|[^:])\/\/.*$/gm, '$1');
+}
+
 const BANNED = [
   { pattern: /from\s+['"]three['"]/, why: 'imports three' },
   { pattern: /\bdocument\./, why: 'touches the DOM' },
@@ -1377,7 +1387,7 @@ process.exit(result.status ?? 1);
 - [ ] **Step 4: Run the whole suite**
 
 Run: `node tools/test.mjs`
-Expected: PASS. Totals across all eight files: 75 tests, 0 failures.
+Expected: PASS. Totals across all eight files: 76 tests, 0 failures.
 
 - [ ] **Step 5: Commit**
 
@@ -1390,7 +1400,7 @@ git commit -m "99 Planets: enforce the portability contract and add a one-comman
 
 ## Definition of done
 
-- [ ] `node tools/test.mjs` passes with 75 tests and zero failures.
+- [x] `node tools/test.mjs` passes with 76 tests and zero failures.
 - [ ] `js/run/` contains exactly seven `.js` modules and imports nothing outside itself.
 - [ ] A run seeded with a given number replays to an identical power sequence.
 - [ ] Nothing in `js/` outside `js/run/` has been modified by this plan.
