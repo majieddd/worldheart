@@ -8,6 +8,7 @@ import { SIM_RANDOM } from './noise.js';
 import { makeRng } from './run/rng.js';
 import { EnemyManager, EVO as ENEMY_EVO } from './enemies.js';
 import { AllyManager, ALLY_TYPES } from './allies.js';
+import { Possession, CacheField } from './possess.js';
 import { Effects } from './effects.js';
 import { TowerManager, TOWER_TYPES, MODS as TOWER_MODS } from './towers.js';
 import { Game } from './game.js';
@@ -104,6 +105,8 @@ let waves = null;
 let ui = null;
 let mode99 = null;   // the 99 Planets shell, null in every other mode
 let allies = null;   // friendly units; only built for modes that summon them
+let possession = null;  // direct control of a unit, first person
+let caches = null;      // gold hidden in the fog
 
 /* ---- environment map and sun shadows ---------------------------------- */
 const _shadowFocus = new THREE.Vector3();
@@ -259,7 +262,10 @@ async function boot() {
   const portalPositions = [];
   for (const pn of nav.portalNodes) {
     const pp = nav.nodePos(pn, new THREE.Vector3());
-    world.addPortal(pp);
+    const portal = world.addPortal(pp);
+    // The wave director excludes breaches by NAV NODE, so the visual has to
+    // know which node it belongs to or a destroyed breach keeps spawning.
+    portal.node = pn;
     world.crushDecorNear(pp, 3.2);
     portalPositions.push(pp);
   }
@@ -321,15 +327,30 @@ async function boot() {
   window.WH.game = game;
   window.WH.waves = waves;
   towerMgr.allies = allies;
+  allies.world = world;
+  caches = new CacheField(scene);
+  possession = new Possession({ canvas, rig, allies, game, ui: null, caches, scene });
+  window.WH.possession = possession;
+  window.WH.caches = caches;
+  // A felled breach stops feeding waves and pays a bounty. Tracked by nav node
+  // because that is the identity the wave director filters on.
+  waves.destroyedNodes = new Set();
+  allies.onPortalDestroyed = (p) => {
+    if (p.node >= 0) waves.destroyedNodes.add(p.node);
+    game.gold += 180;
+    ui?.toast?.('Breach collapsed', 'info');
+    fx?.explosion?.(p.group.position, 4.5);
+  };
   window.WH.allies = allies;
   window.WH.ALLY_TYPES = ALLY_TYPES;
+  possession.ui = ui;
   window.WH.ui = ui;
 
   // The roguelite shell binds the pure run core to the game. Constructed last
   // so every callback it chains is already installed.
   if (CONFIG.map.mode === 'ninetynine') {
     const { createNinetyNine } = await import('./modes/ninetynine.js');
-    mode99 = createNinetyNine({ game, waves, world, nav, rig, ui, enemies });
+    mode99 = createNinetyNine({ game, waves, world, nav, rig, ui, enemies, allies, possession, caches });
     window.WH.mode99 = mode99;
   }
   window.WH.heartPos = heartPos;
@@ -413,7 +434,15 @@ canvas.addEventListener('webglcontextrestored', () => {
 });
 
 function stepFrame(dt, render) {
-  rig.update(dt);
+  // While a unit is possessed the orbit rig stands down entirely and the
+  // camera is placed on the unit's eye instead. That is also what lets a
+  // possessed unit walk past the frontier: the confine lives on the rig.
+  //
+  // Gated on `unit` rather than `active` so a body dying UNDER the player still
+  // gets one update to release control and the pointer lock. Gating on active
+  // left a dead reference held and onExit never fired.
+  if (possession && possession.unit) possession.update(dt);
+  if (!possession || !possession.active) rig.update(dt);
   camFill.position.copy(rig.camera.position);
   // After rig.update so the box tracks this frame's focus, not last frame's.
   // Inside stepFrame rather than the rAF loop so WH.step() advances it too:
@@ -427,6 +456,7 @@ function stepFrame(dt, render) {
   const simDt = simActive ? dt * game.speed : 0;
   if (simDt > 0) {
     allies?.update(simDt);
+    caches?.update(simDt);
     waves.update(simDt);
     enemies.update(simDt);
     towerMgr.update(simDt);

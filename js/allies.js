@@ -116,8 +116,10 @@ export class AllyManager {
     this.pool = [];
     this.active = [];
     this.time = 0;
-    this.onDeath = null;          // (ally) => void
-    this.onCommanderLost = null;  // (ally) => void
+    this.onDeath = null;            // (ally) => void
+    this.onCommanderLost = null;    // (ally) => void
+    this.onPortalDestroyed = null;  // (portal) => void
+    this.world = null;              // set by main; needed to siege breaches
     this._build(scene);
   }
 
@@ -286,6 +288,8 @@ export class AllyManager {
           advanceToward(a.dir, a.target.dir, (type.speed * dt) / R);
           steerToward(a.fwd, a.target.dir, dt * 6);
         }
+      } else if (this._attackPortal(a, dt)) {
+        a.state = 'siege';
       } else if (a.following) {
         const lead = a.following;
         if (!lead.active || lead.dead) {
@@ -323,6 +327,26 @@ export class AllyManager {
       if (this.enemyPos(e, _tmp2).distanceTo(_tmp) <= reach) incoming += e.type.damage;
     }
     if (incoming > 0) this.damage(a, incoming * CONTACT_DPS * dt);
+  }
+
+  // Breaches are structures, and units are the only thing that can bring one
+  // down: towers cannot reach out to them. This is what gives a party a reason
+  // to leave the circle. Returns true if the unit is busy sieging.
+  _attackPortal(a, dt) {
+    if (!this.world) return false;
+    this.worldPos(a, _tmp);
+    const reach = a.type.reach + 2.6;   // breaches are large, so a wider reach
+    for (const p of this.world.portals) {
+      if (p.destroyed) continue;
+      if (p.group.position.distanceTo(_tmp) > reach) continue;
+      if (a.swingT <= 0) {
+        a.swingT = 0.55;
+        const felled = this.world.damagePortal(p, a.type.dps * 0.55);
+        if (felled && this.onPortalDestroyed) this.onPortalDestroyed(p);
+      }
+      return true;
+    }
+    return false;
   }
 
   _ground(a) {
@@ -371,6 +395,16 @@ export class AllyManager {
       if (!e.active || e.dead) continue;
       if (this.enemyPos(e, _tmp2).distanceTo(_tmp) <= reach) {
         this.enemies.damage(e, a.type.dps * 1.4, { armorPierce: 4 });
+        hits++;
+      }
+    }
+    // The same swing brings down breaches, so clearing one by hand is possible.
+    if (this.world) {
+      for (const p of this.world.portals) {
+        if (p.destroyed) continue;
+        if (p.group.position.distanceTo(_tmp) > reach + 2.6) continue;
+        const felled = this.world.damagePortal(p, a.type.dps * 1.4);
+        if (felled && this.onPortalDestroyed) this.onPortalDestroyed(p);
         hits++;
       }
     }

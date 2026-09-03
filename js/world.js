@@ -1669,9 +1669,27 @@ export class World {
 
   addPortal(pos) {
     const p = buildPortal(pos);
+    // A breach is a structure, so it can be brought down. Units do this; towers
+    // cannot reach it, which is what gives units a job beyond blocking.
+    p.hpMax = 900;
+    p.hp = p.hpMax;
+    p.destroyed = false;
+    p.node = -1;              // filled in by the caller that knows the nav node
     this.scene.add(p.group);
     this.portals.push(p);
     return p;
+  }
+
+  // Returns true when this hit was the one that brought it down.
+  damagePortal(p, amount) {
+    if (!p || p.destroyed) return false;
+    p.hp -= amount;
+    p.flash = Math.max(p.flash, 0.35);
+    if (p.hp > 0) return false;
+    p.destroyed = true;
+    p.active = false;
+    p.group.visible = false;
+    return true;
   }
 
   // The fraction drives emissive intensity, so it has to stay in range: a

@@ -11,7 +11,7 @@ import { CONFIG } from '../config.js';
 import * as THREE from 'three';
 import { bankVictory } from './progress.js';
 
-export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies }) {
+export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, allies, possession, caches }) {
   const run = createRun({
     seed: CONFIG.seed,
     playerIds: ['solo'],
@@ -38,6 +38,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies }) 
     // pull back grows with the territory they hold.
     rig.frontierTheta = theta;
     if (rig.confine) rig.confine.maxAng = theta * 1.02;
+    // Possession reads this to fog the view once a unit walks out past it.
+    if (possession) possession.frontier = game.frontier;
   }
 
   // Breach sites are authored across the FINAL cap, so an unremapped spawn at
@@ -61,8 +63,20 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies }) 
 
   // Everything the renderer needs to know is derived from the core, never
   // tracked separately, so the two cannot drift apart.
+  // A living commander steadies the whole line. Applied ON TOP of the run's
+  // folded powers rather than inside them, because it is a battlefield
+  // condition, not something drafted: it must appear and vanish with the
+  // commander without touching the power list.
+  const COMMANDER_DMG_BONUS = 0.15;
+
+  function commanderAlive() {
+    return allies ? allies.active.some((a) => a.type.commander && a.active && !a.dead) : false;
+  }
+
   function syncFromRun() {
-    MODS.current = run.getModifiers();
+    const mods = run.getModifiers();
+    if (commanderAlive()) mods.dmgMul += COMMANDER_DMG_BONUS;
+    MODS.current = mods;
     EVO.tier = run.getEvolutionTier();
     game.unlockedTowers = run.getUnlockedTowers();
     ui.unlockedTowers = game.unlockedTowers;
@@ -82,6 +96,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies }) 
         ui.toast('The swarm evolves', 'danger');
       } else if (e.type === 'frontierGrew') {
         ui.toast('The frontier widens', 'info');
+        seedCaches(e.theta);
       } else if (e.type === 'draftOpened') {
         ui.showDraft(e.offers, (i) => { run.vote('solo', i); });
       } else if (e.type === 'powerTaken') {
@@ -111,6 +126,85 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies }) 
   // Placing a tower spends its card. The core owns the hand, so the shell
   // reports the placement and re-reads rather than mutating a local copy.
   game.onCardSpent = (index) => { run.playCard(index); syncFromRun(); };
+
+  // ---- commanders -------------------------------------------------------
+  // One is granted at the start of the run and is permanent. Losing it ends
+  // the run, which is the entire reason a trip into the fog is a gamble.
+  let commander = null;
+  if (allies && centre) {
+    commander = allies.spawn('commander', centre, centre, 8);
+    allies.onCommanderLost = () => {
+      run.loseRun();
+      game.state = 'defeat';
+      ui.showEnd(false, 'the commander fell');
+    };
+    // A commander buff appearing or vanishing has to reach the towers, and it
+    // only changes on death, so re-syncing here is enough.
+    allies.onDeath = (a) => { if (a.type.commander) syncFromRun(); };
+  }
+
+  // ---- click to possess, and posting a patrol ---------------------------
+  const _pd = new THREE.Vector3();
+
+  // A warden's garrison can be posted anywhere inside its leash. Right-click a
+  // spot with a barracks selected and everything it summoned musters there,
+  // including units it has not summoned yet.
+  function setPatrolFrom(tower, dir) {
+    if (!tower || tower.typeKey !== 'warden' || !allies) return false;
+    const reach = tower.stats.leash;
+    _pd.copy(tower.pos).normalize();
+    const arc = Math.acos(Math.max(-1, Math.min(1, _pd.dot(dir)))) * CONFIG.planetRadius;
+    if (arc > reach) {
+      ui.toast('Too far from the barracks to post a patrol', 'warn');
+      return false;
+    }
+    tower.patrolDir = dir.clone().normalize();
+    let n = 0;
+    for (const a of allies.active) {
+      if (a.homeTower === tower.id) { allies.setPatrol(a, tower.patrolDir); n++; }
+    }
+    ui.toast(n ? `Patrol posted: ${n} on station` : 'Patrol posted', 'info');
+    return true;
+  }
+
+  const prevTap = rig.onTap;
+  rig.onTap = (x, y, button) => {
+    // Right-click with a barracks selected posts its patrol.
+    if (button === 2 && game.selectedTower && game.selectedTower.typeKey === 'warden' && game.cursorValid) {
+      if (setPatrolFrom(game.selectedTower, game.cursorDir)) return;
+    }
+    // Only an idle left click takes a body; building and the tower panel keep
+    // their own use of the tap.
+    if (button === 0 && !game.buildType && possession && !possession.active && game.cursorValid) {
+      const unit = allies.nearestTo(game.cursorPos, 3.2);
+      if (unit) {
+        possession.enter(unit);
+        return;
+      }
+    }
+    prevTap?.(x, y, button);
+  };
+
+  if (possession) {
+    possession.onEnter = (u) => {
+      ui.toast(`Controlling ${u.type.name}. WASD to move, mouse to look, Space to strike, `
+        + `${u.type.commander ? 'G to rally, ' : ''}Esc to release.`, 'info');
+    };
+    possession.onExit = () => {
+      ui.toast('Control released', 'info');
+      // Hand the orbit rig back looking at what it was looking at, so the view
+      // does not snap to a stale focus from before possession.
+      if (world.heart) rig.flyTo(world.heart.group.position, rig.dist, 0.35);
+    };
+  }
+
+  // ---- caches in the fog ------------------------------------------------
+  // Seeded fresh each expansion, on the ring between the new frontier and the
+  // far edge, so there is always something worth walking into the dark for.
+  function seedCaches(theta) {
+    if (!caches || !centre) return;
+    caches.scatter(centre, theta * 1.15, Math.min(theta * 2.6, CONFIG.map.fieldTheta), 4);
+  }
 
   syncFromRun();
 
