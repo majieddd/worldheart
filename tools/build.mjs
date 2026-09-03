@@ -4,16 +4,53 @@
 // Outputs:
 //   dist/worldheart.html   complete standalone document (open anywhere)
 //   dist/artifact.html     body-only variant for hosts that wrap the page
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
 import { join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = normalize(join(fileURLToPath(import.meta.url), '..', '..'));
 
-const GAME_MODULES = [
-  'noise', 'config', 'audio', 'postfx', 'camera', 'world', 'nav',
-  'effects', 'towers', 'enemies', 'waves', 'ui', 'game', 'main',
-];
+// Module keys are paths relative to js/ without the extension, so js/run/rng.js
+// becomes 'run/rng'. This list used to be flat and hand-maintained, which meant
+// the bundler could not see subdirectories at all: js/run/* was silently
+// omitted from the single-file build, and the omission would only have shown up
+// once something finally imported it.
+export function moduleKey(relPath) {
+  return relPath.split('\\').join('/').replace(/\.js$/, '');
+}
+
+// Resolve a relative specifier against the importing module's own directory and
+// return the import-map key it should point at. './rng.js' inside 'run/run'
+// resolves to 'run/rng'; '../run/run.js' inside 'modes/ninetynine' to 'run/run'.
+export function resolveSpecifier(fromKey, spec) {
+  const fromDir = fromKey.includes('/') ? fromKey.slice(0, fromKey.lastIndexOf('/')) : '';
+  const parts = fromDir ? fromDir.split('/') : [];
+  for (const seg of spec.replace(/\.js$/, '').split('/')) {
+    if (seg === '.' || seg === '') continue;
+    else if (seg === '..') parts.pop();
+    else parts.push(seg);
+  }
+  return parts.join('/');
+}
+
+// Rewrite every relative import in a module to its bare import-map key.
+export function rewriteSpecifiers(src, key) {
+  return src.replace(
+    /(from\s+|import\s+)(['"])(\.\.?\/[^'"]+\.js)\2/g,
+    (_m, lead, quote, spec) => lead + quote + resolveSpecifier(key, spec) + quote,
+  );
+}
+
+// Every .js under js/, recursively, so a new module is picked up by existing.
+async function collectModules(dir, prefix = '') {
+  const out = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) out.push(...await collectModules(join(dir, entry.name), rel));
+    else if (entry.name.endsWith('.js')) out.push(rel);
+  }
+  return out;
+}
 
 function toDataUri(source) {
   return 'data:text/javascript;base64,' + Buffer.from(source, 'utf8').toString('base64');
@@ -31,11 +68,10 @@ async function build() {
     .replaceAll("'./three.core.min.js'", "'three-core'");
   imports['three'] = toDataUri(three);
 
-  for (const name of GAME_MODULES) {
-    let src = await readFile(join(root, 'js', `${name}.js`), 'utf8');
-    src = src.replace(/from\s+'\.\/([\w-]+)\.js'/g, "from '$1'");
-    src = src.replace(/import\s+'\.\/([\w-]+)\.js'/g, "import '$1'");
-    imports[name] = toDataUri(src);
+  for (const rel of await collectModules(join(root, 'js'))) {
+    const key = moduleKey(rel);
+    const src = await readFile(join(root, 'js', rel), 'utf8');
+    imports[key] = toDataUri(rewriteSpecifiers(src, key));
   }
 
   const css = await readFile(join(root, 'css', 'style.css'), 'utf8');
@@ -73,4 +109,5 @@ async function build() {
   console.log(`dist/worldheart.html ${size} MB, ${Object.keys(imports).length} modules inlined`);
 }
 
-build();
+// Only build when run directly, so the pure helpers above can be unit-tested.
+if (process.argv[1] && process.argv[1].endsWith('build.mjs')) build();
