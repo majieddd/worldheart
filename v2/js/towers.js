@@ -19,9 +19,9 @@ export const TOWER_TYPES = {
     desc: 'Rapid single-target rails. Hits air.',
     flavor: 'Twin rails sing in the dark.',
     tiers: [
-      { dmg: 9, rate: 4.6, range: 5.4 },
-      { dmg: 15, rate: 5.2, range: 5.9, crit: 0.15 },
-      { dmg: 24, rate: 6.0, range: 6.4, crit: 0.25 },
+      { dmg: 9, rate: 4.6, range: 8.1 },
+      { dmg: 15, rate: 5.2, range: 8.85, crit: 0.15 },
+      { dmg: 24, rate: 6.0, range: 9.6, crit: 0.25 },
     ],
   },
   cryo: {
@@ -29,9 +29,9 @@ export const TOWER_TYPES = {
     desc: 'Constant slow aura, ground and air. No damage.',
     flavor: 'Winter kept in a seed.',
     tiers: [
-      { slow: 0.38, range: 3.5 },
-      { slow: 0.48, range: 4.1 },
-      { slow: 0.55, range: 4.7, brittle: true },
+      { slow: 0.38, range: 5.25 },
+      { slow: 0.48, range: 6.15 },
+      { slow: 0.55, range: 7.05, brittle: true },
     ],
   },
   mortar: {
@@ -39,9 +39,9 @@ export const TOWER_TYPES = {
     desc: 'Lobbed shells, area damage. Ground only, minimum range.',
     flavor: 'It remembers the siege.',
     tiers: [
-      { dmg: 34, rate: 0.48, range: 6.6, minRange: 2.3, aoe: 2.3 },
-      { dmg: 56, rate: 0.52, range: 7.2, minRange: 2.3, aoe: 2.7 },
-      { dmg: 88, rate: 0.56, range: 7.8, minRange: 2.3, aoe: 3.1, shells: 2 },
+      { dmg: 34, rate: 0.48, range: 9.9, minRange: 2.3, aoe: 2.3 },
+      { dmg: 56, rate: 0.52, range: 10.8, minRange: 2.3, aoe: 2.7 },
+      { dmg: 88, rate: 0.56, range: 11.7, minRange: 2.3, aoe: 3.1, shells: 2 },
     ],
   },
   tesla: {
@@ -49,9 +49,9 @@ export const TOWER_TYPES = {
     desc: 'Charges, then chains lightning with a brief stun.',
     flavor: 'The sky owes it a debt.',
     tiers: [
-      { dmg: 30, charge: 1.5, chains: 3, range: 4.8, stun: 0.25, hop: 3.6 },
-      { dmg: 46, charge: 1.35, chains: 4, range: 5.3, stun: 0.3, hop: 3.9 },
-      { dmg: 68, charge: 1.2, chains: 6, range: 5.8, stun: 0.35, hop: 4.2 },
+      { dmg: 30, charge: 1.5, chains: 3, range: 7.2, stun: 0.25, hop: 3.6 },
+      { dmg: 46, charge: 1.35, chains: 4, range: 7.95, stun: 0.3, hop: 3.9 },
+      { dmg: 68, charge: 1.2, chains: 6, range: 8.7, stun: 0.35, hop: 4.2 },
     ],
   },
   helios: {
@@ -59,9 +59,22 @@ export const TOWER_TYPES = {
     desc: 'Continuous beam that ramps to triple damage on one target.',
     flavor: 'A patient sliver of the sun.',
     tiers: [
-      { dps: 26, ramp: 2.0, rampMax: 3, range: 7.4 },
-      { dps: 42, ramp: 1.7, rampMax: 3, range: 7.9 },
-      { dps: 64, ramp: 1.4, rampMax: 3.5, range: 8.4 },
+      { dps: 26, ramp: 2.0, rampMax: 3, range: 11.1 },
+      { dps: 42, ramp: 1.7, rampMax: 3, range: 11.85 },
+      { dps: 64, ramp: 1.4, rampMax: 3.5, range: 12.6 },
+    ],
+  },
+  warden: {
+    name: 'Warden Barracks', cost: 220, air: false, footprint: 1.5,
+    desc: 'Summons units that hold ground. No attack of its own.',
+    flavor: 'The door stays open. Someone always walks out.',
+    // Flagged so the UI and the tower panel can describe a building that has
+    // no damage numbers to show.
+    summoner: true,
+    tiers: [
+      { garrison: 2, summonTime: 7, leash: 7, range: 7 },
+      { garrison: 3, summonTime: 6, leash: 9, range: 9 },
+      { garrison: 5, summonTime: 5, leash: 11, range: 11 },
     ],
   },
 };
@@ -316,7 +329,44 @@ function buildHelios(tier) {
   return { group: g, head, pitch: null, refs };
 }
 
-const BUILDERS = { bolt: buildBolt, mortar: buildMortar, tesla: buildTesla, cryo: buildCryo, helios: buildHelios };
+function buildWarden(tier) {
+  const g = new THREE.Group();
+  const refs = {};
+  const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.78, 0.34, 6), MAT.rock);
+  ped.position.y = 0.17;
+  g.add(ped);
+
+  // A barracks reads as a doorway, not a gun: an open arch facing outward.
+  const arch = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.09, 6, 12, Math.PI), MAT.body);
+  arch.position.y = 0.34;
+  arch.rotation.y = Math.PI / 2;
+  g.add(arch);
+
+  const banner = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.9 + tier * 0.2, 0.07), MAT.body);
+  banner.position.set(0, 0.8 + tier * 0.1, -0.3);
+  g.add(banner);
+  const flag = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.26, 0.4), MAT.energy);
+  flag.position.set(0, 1.15 + tier * 0.2, -0.12);
+  g.add(flag);
+  refs.flag = flag;
+
+  // One muster stone per garrison slot, so the tier is readable at a glance.
+  const slots = 2 + tier;
+  for (let i = 0; i < slots; i++) {
+    const a = (i / slots) * Math.PI * 2;
+    const stone = new THREE.Mesh(new THREE.OctahedronGeometry(0.13), MAT.trim);
+    stone.position.set(Math.cos(a) * 0.56, 0.36, Math.sin(a) * 0.56);
+    g.add(stone);
+  }
+
+  const core = new THREE.Mesh(new THREE.OctahedronGeometry(0.16), MAT.energy);
+  core.position.y = 0.52;
+  g.add(core);
+  refs.core = core;
+  return { group: g, refs };
+}
+
+const BUILDERS = { bolt: buildBolt, mortar: buildMortar, tesla: buildTesla, cryo: buildCryo, helios: buildHelios, warden: buildWarden };
 
 // Stylized oversize: towers read as landmarks against the small planet.
 export const TOWER_SCALE = 1.45;
@@ -339,6 +389,9 @@ export class Tower {
     this.manager = manager;
     this.invested = this.def.cost;
     this.damageDealt = 0;
+    // Counts discrete shots for the every-fifth-volley power. Per tower,
+    // not global, so each emplacement earns its own big hit.
+    this.shotCount = 0;
     this.kills = 0;
     this.cooldown = 0;
     this.charge = 0;
@@ -386,6 +439,15 @@ export class Tower {
     };
   }
   get range() { return this.stats.range; }
+
+  // Advances the shot counter and reports the damage multiplier for THIS
+  // shot. Only discrete-shot towers call it; helios is a continuous beam
+  // and has no notion of a fifth shot.
+  _volleyMul() {
+    this.shotCount++;
+    const m = MODS.current;
+    return (m && m.everyFifthDouble && this.shotCount % 5 === 0) ? 2 : 1;
+  }
 
   upgrade() {
     if (this.tier >= 2) return false;
@@ -458,6 +520,7 @@ export class Tower {
       case 'tesla': this._updateTesla(dt, enemies, fx, st); break;
       case 'cryo': this._updateCryo(dt, enemies, fx, st); break;
       case 'helios': this._updateHelios(dt, enemies, fx, st); break;
+      case 'warden': this._updateWarden(dt, enemies, fx, st); break;
     }
   }
 
@@ -482,7 +545,7 @@ export class Tower {
       this.recoil = 1;
       const muzzle = this.refs.muzzles[this.muzzleFlip];
       muzzle.getWorldPosition(_v);
-      let dmg = st.dmg;
+      let dmg = st.dmg * this._volleyMul();
       let crit = false;
       if (st.crit && SIM_RANDOM.next() < st.crit) { dmg *= 2.2; crit = true; }
       this.manager.fireBolt(this, _v, t, dmg, crit);
@@ -503,8 +566,9 @@ export class Tower {
       this.cooldown = 1 / st.rate;
       this.recoil = 1;
       const shells = st.shells || 1;
+      const volley = this._volleyMul();
       for (let s = 0; s < shells; s++) {
-        this.manager.fireShell(this, _v2, st, s * 0.16);
+        this.manager.fireShell(this, _v2, st, s * 0.16, volley);
       }
       this.head.getWorldPosition(_v);
       _v.addScaledVector(_v3.copy(this.pos).normalize(), 0.8);
@@ -580,7 +644,40 @@ export class Tower {
       if (this._dist2(e) < r2) {
         this.manager.enemies.applySlow(e, st.slow, 0.35);
         if (st.brittle) this.manager.enemies.applyBrittle(e, 0.4);
+        // Deep Freeze converts the aura from a slow into a hold. Re-applied
+        // every frame the enemy is inside, so leaving the field releases it.
+        if (MODS.current && MODS.current.hardFreeze) this.manager.enemies.applyStun(e, 0.3);
       }
+    }
+  }
+
+  // A warden does not shoot. It keeps a garrison alive: it summons up to
+  // `garrison` units and replaces losses on a timer, so its value is bodies on
+  // the ground rather than damage per second.
+  _updateWarden(dt, enemies, fx, st) {
+    const allies = this.manager.allies;
+    if (!allies) return;
+    if (this.refs.core) {
+      this.refs.core.rotation.y += dt * 1.4;
+      this.refs.core.position.y = 0.52 + Math.sin(this.manager.time * 2.2) * 0.04;
+    }
+    if (this.refs.flag) this.refs.flag.rotation.z = Math.sin(this.manager.time * 1.7) * 0.16;
+
+    this.summonT = (this.summonT ?? 0) - dt;
+    if (this.summonT > 0) return;
+
+    const mine = allies.active.filter((a) => a.homeTower === this.id && a.active && !a.dead);
+    if (mine.length >= st.garrison) { this.summonT = 1; return; }
+
+    this.summonT = st.summonTime;
+    _v.copy(this.pos).normalize();
+    const a = allies.spawn('warden', _v, _v, st.leash);
+    if (a) {
+      a.homeTower = this.id;
+      // Inherit the tower's standing patrol order, so units summoned later
+      // join the same posting rather than milling at the door.
+      if (this.patrolDir) allies.setPatrol(a, this.patrolDir);
+      fx.burstGlow(this.pos, PALETTE.energy, 8, 2.2, 0.6, 0.7, 1.1);
     }
   }
 
@@ -676,13 +773,75 @@ export class TowerManager {
     this.shellMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     scene.add(this.shellMesh);
     this.shells = Array.from({ length: MAX_SHELLS }, () => ({
-      active: false, from: new THREE.Vector3(), to: new THREE.Vector3(), t: 0, dur: 1, st: null, tower: null, delay: 0,
+      active: false, from: new THREE.Vector3(), to: new THREE.Vector3(), t: 0, dur: 1, st: null, tower: null, delay: 0, volley: 1,
+    }));
+
+    // Burning ground left by Scorched Earth. A small fixed pool: the power is
+    // rare and a mortar cannot outpace it, so it never needs to grow.
+    this.burns = Array.from({ length: 24 }, () => ({
+      active: false, pos: new THREE.Vector3(), r: 0, t: 0, dps: 0, tower: null, tick: 0,
     }));
 
     // helios beams
     this.beams = new Map();
     this.beamGeo = new THREE.CylinderGeometry(1, 1, 1, 8, 1, true);
     this.beamGeo.translate(0, 0.5, 0);
+  }
+
+  // Scorched Earth: a mortar crater keeps burning. Ticks four times a second
+  // rather than every frame so the damage is frame-rate independent.
+  _leaveBurn(pos, st, tower) {
+    const b = this.burns.find((x) => !x.active);
+    if (!b) return;
+    b.active = true;
+    b.pos.copy(pos);
+    b.r = st.aoe * 0.9;
+    b.t = 4.5;
+    b.dps = st.dmg * 0.22;
+    b.tower = tower;
+    b.tick = 0;
+  }
+
+  _updateBurns(dt) {
+    const TICK = 0.25;
+    for (const b of this.burns) {
+      if (!b.active) continue;
+      b.t -= dt;
+      if (b.t <= 0) { b.active = false; continue; }
+      b.tick -= dt;
+      if (b.tick > 0) continue;
+      b.tick = TICK;
+      this.fx.glow.emit(b.pos.x, b.pos.y, b.pos.z, 0, 0, 0, 0xff7a3c, 2.2, 0.5, 0.5, 0);
+      const r2 = b.r * b.r;
+      for (const e of this.enemies.active) {
+        if (!e.active || e.dead || e.type.flying) continue;
+        this.enemyWorldPos(e, _v3);
+        if (_v3.distanceToSquared(b.pos) < r2) {
+          this.applyDamage(b.tower, e, b.dps * TICK, { armorPierce: 99, silent: true });
+        }
+      }
+    }
+  }
+
+  // Pierce Rounds: a bolt does not stop at its mark. Everything within a
+  // narrow corridor BEYOND the target takes the same hit, once.
+  _pierceThrough(bolt, hitPos) {
+    const OVERSHOOT = 5.5;
+    const CORRIDOR2 = 0.8 * 0.8;
+    _v.copy(hitPos).sub(bolt.from);
+    const flight = _v.length();
+    if (flight < 0.001) return;
+    _v.multiplyScalar(1 / flight);          // unit direction of travel
+    for (const e of this.enemies.active) {
+      if (!e.active || e.dead || e === bolt.target) continue;
+      this.enemyWorldPos(e, _v2);
+      _v2.sub(bolt.from);
+      const along = _v2.dot(_v);
+      // Only past the original mark, and only within the overshoot.
+      if (along <= flight || along > flight + OVERSHOOT) continue;
+      if (_v2.addScaledVector(_v, -along).lengthSq() > CORRIDOR2) continue;
+      this.applyDamage(bolt.tower, e, bolt.dmg, { crit: bolt.crit });
+    }
   }
 
   enemyWorldPos(e, out) {
@@ -749,10 +908,11 @@ export class TowerManager {
     b.t = 0;
   }
 
-  fireShell(tower, targetPos, st, delay) {
+  fireShell(tower, targetPos, st, delay, volley = 1) {
     const s = this.shells.find((x) => !x.active);
     if (!s) return;
     s.active = true;
+    s.volley = volley;
     tower.refs.tube?.getWorldPosition ? tower.refs.tube.getWorldPosition(s.from) : s.from.copy(tower.pos);
     s.from.addScaledVector(_v3.copy(tower.pos).normalize(), 0.5);
     s.to.copy(targetPos);
@@ -812,6 +972,7 @@ export class TowerManager {
     this.time += dt;
     const enemyList = this.enemies.active;
     for (const t of this.towers) t.update(dt, enemyList, this.fx);
+    this._updateBurns(dt);
 
     // bolts
     let bi = 0;
@@ -824,6 +985,7 @@ export class TowerManager {
         if (!dead) {
           this.enemyWorldPos(b.target, _v3);
           this.applyDamage(b.tower, b.target, b.dmg, { crit: b.crit });
+          if (MODS.current && MODS.current.pierce) this._pierceThrough(b, _v3);
           this.fx.impactSpark(_v3, PALETTE.energy);
         }
         continue;
@@ -855,9 +1017,10 @@ export class TowerManager {
           this.enemyWorldPos(e, _v3);
           if (_v3.distanceToSquared(s.to) < r2) {
             const fall = 1 - 0.5 * Math.sqrt(_v3.distanceToSquared(s.to) / r2);
-            this.applyDamage(s.tower, e, s.st.dmg * fall, { armorPierce: 99 });
+            this.applyDamage(s.tower, e, s.st.dmg * fall * s.volley, { armorPierce: 99 });
           }
         }
+        if (MODS.current && MODS.current.burnGround) this._leaveBurn(s.to, s.st, s.tower);
         continue;
       }
       const tt = s.t;

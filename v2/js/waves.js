@@ -111,7 +111,13 @@ export class WaveDirector {
   }
 
   activePortals() {
-    return this.nav.portalNodes.slice(0, portalCount(Math.max(this.wave, 1)));
+    const woken = this.nav.portalNodes.slice(0, portalCount(Math.max(this.wave, 1)));
+    // A breach that units have destroyed stops feeding the wave. Falling back
+    // to the full woken list when every breach is down matters: an empty list
+    // would divide by zero in the spawn loop and silently stall the run.
+    if (!this.destroyedNodes || !this.destroyedNodes.size) return woken;
+    const alive = woken.filter((n) => !this.destroyedNodes.has(n));
+    return alive.length ? alive : woken;
   }
 
   _startWave() {

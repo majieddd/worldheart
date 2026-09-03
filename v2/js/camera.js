@@ -26,6 +26,14 @@ const _axis = new THREE.Vector3();
 // does, since tower and unit models are one absolute size on every map.
 const MIN_CAM_SCALE = 150;
 
+// Absolute floor on camera height. Towers stand about 3 units tall, so any
+// closer than this and the camera is inside the thing it is framing.
+const MIN_CAM_HEIGHT = 6;
+
+// Height, in multiples of a cap's surface radius, at which the default lens and
+// pitch put the whole cap on screen. Measured, not guessed.
+const FRONTIER_FRAME = 3.9;
+
 // Focus rig: the camera orbits a point on the surface that is pinned to the
 // centre of the screen. `lon`/`lat` are that focus point, `dist` is the
 // camera's height above the ground, and pitch is measured from straight down.
@@ -66,6 +74,7 @@ export class OrbitRig {
     this.autoOrbit = 0;          // rad/s, used by the title screen
     this.flight = null;          // active tween {fromLon...toDist,t,dur}
     this.shakeEnabled = !REDUCED_MOTION;
+    this.frontierTheta = null;   // live cap angle when a mode drives one
     this.confine = null;         // {center: Vector3, maxAng} battlefield bounds
     this.confineHits = 0;        // times the boundary clamped the view
     this.viewYaw = 0;            // ctrl+middle drag / Q,E: spin the view
@@ -225,7 +234,10 @@ export class OrbitRig {
   // number of towers whatever the world is sized.
   get camScale() {
     const R = CONFIG.planetRadius;
-    const theta = CONFIG.map.fieldTheta;
+    // A mode with a growing frontier writes its CURRENT angle here, so how far
+    // the player may pull back expands with the territory they hold rather
+    // than being fixed at the final size from wave one.
+    const theta = this.frontierTheta ?? CONFIG.map.fieldTheta;
     // A cap map is already sized by its own playable extent, so it takes no
     // floor: forcing one on the asteroid field pushed the camera so far out
     // that almost no rock was in reach of a click.
@@ -235,7 +247,10 @@ export class OrbitRig {
 
   // Height of the camera above the ground, in units of camScale.
   get distMin() {
-    return this.camScale * CAM_TUNE.minAlt;
+    // Floored in absolute units. A frontier-scaled camScale shrinks with a
+    // small circle, and 0.04 of a 26-unit scale put the camera about a metre
+    // off the ground - inside the towers it was meant to be looking at.
+    return Math.max(this.camScale * CAM_TUNE.minAlt, MIN_CAM_HEIGHT);
   }
 
   /* The FAR limit is measured against the planet radius, not camScale, and the
@@ -253,9 +268,21 @@ export class OrbitRig {
      far end while the giant world sat at 0. Against R the same number frames
      every world alike, which is what the slider's own "xR" label promises. */
   get distMax() {
-    // Always leave a usable zoom band, however the two height sliders are set.
     const d = this.distMin;
-    return Math.max(CONFIG.planetRadius * CAM_TUNE.maxAlt, d + 2, d * 1.15);
+    const planetCeiling = CONFIG.planetRadius * CAM_TUNE.maxAlt;
+    if (this.frontierTheta !== null) {
+      // A growing frontier bounds the ceiling by the TERRITORY, so pulling back
+      // is limited by what you hold and expands as you take ground. The factor
+      // is the measured height at which the default lens and pitch frame a cap
+      // edge to edge, so max zoom always shows the circle and no more. It still
+      // tops out at the planet-relative ceiling: once the whole cap is in frame
+      // extra height buys nothing.
+      const capArc = CONFIG.planetRadius * this.frontierTheta;
+      const framed = Math.min(capArc * FRONTIER_FRAME, planetCeiling);
+      return Math.max(framed, d + 2, d * 1.6);
+    }
+    // Always leave a usable zoom band, however the two height sliders are set.
+    return Math.max(planetCeiling, d + 2, d * 1.15);
   }
 
   // Angle from straight down to the horizon, seen from a camera at height h.

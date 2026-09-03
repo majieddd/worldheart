@@ -196,6 +196,9 @@ export class Game {
     this.frontier = null;       // { centre, theta } - the buildable mask
     this.unlockedTowers = null; // null means the whole roster is available
     this.tierCap = null;        // null means the tower's own tier count is the limit
+    this.hand = null;           // card mode: array of tower keys, else null
+    this.selectedCard = -1;     // which card in the hand is armed
+    this.onCardSpent = null;    // (handIndex) => void, set by the mode shell
     this._validateT = 0;
     this._pathT = 0;
     this._lastGhostDir = new THREE.Vector3();
@@ -288,12 +291,27 @@ export class Game {
 
   // -- build mode -----------------------------------------------------------
 
-  toggleBuild(typeKey) {
+  // Card mode: arm a card by its position in the hand rather than by tower
+  // type, because a hand can legitimately hold the same tower twice and the
+  // type alone would not say which card to spend.
+  toggleBuildCard(index) {
+    if (!this.hand || index < 0 || index >= this.hand.length) return;
+    if (this.selectedCard === index) { this.cancelBuild(); return; }
+    this.selectedCard = index;
+    this.toggleBuild(this.hand[index], true);
+  }
+
+  toggleBuild(typeKey, fromCard = false) {
+    if (!fromCard && this.hand) {
+      // A hotkey in card mode arms the first matching card, so 1-3 still work.
+      const idx = this.hand.indexOf(typeKey);
+      if (idx >= 0 && this.selectedCard !== idx) { this.toggleBuildCard(idx); return; }
+    }
     if (this.buildType === typeKey) { this.cancelBuild(); return; }
     if (this.state !== 'playing') return;
     // The shop card is disabled too, but the 1-5 hotkeys bypass the card
     // entirely, so the roster has to be enforced here as well.
-    if (this.unlockedTowers && !this.unlockedTowers.includes(typeKey)) {
+    if (!this.hand && this.unlockedTowers && !this.unlockedTowers.includes(typeKey)) {
       if (this.onToast) this.onToast('That tower is not unlocked yet', 'warn');
       return;
     }
@@ -307,6 +325,7 @@ export class Game {
   }
 
   cancelBuild() {
+    this.selectedCard = -1;
     this.buildType = null;
     this.ghostHolder.visible = false;
     this.rangeRing.show(false);
@@ -436,6 +455,14 @@ export class Game {
     if (crushed > 0) this.fx.burstGlow(this.cursorPos, 0x66b06d, 8, 2.4, 0.6, 0.7, 0.9);
     this._refreshPaths(false);
     if (this.audio) this.audio.play('build');
+    // Card mode: the card is spent. Build mode ends because the hand has
+    // changed underneath it and a stale index must not stay armed.
+    if (this.hand && this.selectedCard >= 0) {
+      const spent = this.selectedCard;
+      this.selectedCard = -1;
+      this.cancelBuild();
+      if (this.onCardSpent) this.onCardSpent(spent);
+    }
     this._hud();
     // stay in build mode for chain-building; ghost revalidates next hover
     this._validateT = 0;

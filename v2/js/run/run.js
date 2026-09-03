@@ -17,13 +17,27 @@ import { openDraft, castVote, tickDraft } from './draft.js';
 import { createRunState, serialise, STARTING_TOWER } from './state.js';
 
 // Everything unlockable, minus the tower the run is granted at the start.
-const UNLOCKABLE_TOWERS = ['cryo', 'mortar', 'tesla', 'helios'];
+const UNLOCKABLE_TOWERS = ['cryo', 'mortar', 'tesla', 'helios', 'warden'];
+
+// Towers arrive as a hand of cards rather than an always-available shop, so
+// what you can build this wave is itself part of the run. Always exactly three.
+export const HAND_SIZE = 3;
 
 export function createRun({ seed, playerIds, startGold }) {
   const state = createRunState({ seed, playerIds, startGold });
   const rng = makeRng(seed);
   let draft = null;
   let modifiers = foldModifiers([]);
+
+  // Duplicates are allowed on purpose: with only Bolt unlocked a hand of three
+  // Bolts is the correct offer, and a later hand of two Mortars is a real roll
+  // rather than a bug.
+  function drawHand() {
+    state.hand = [];
+    for (let i = 0; i < HAND_SIZE; i++) {
+      state.hand.push(pick(rng, state.unlockedTowers));
+    }
+  }
 
   function refreshModifiers() {
     modifiers = foldModifiers(state.powers.map((id) => POWER_BY_ID[id]));
@@ -53,8 +67,15 @@ export function createRun({ seed, playerIds, startGold }) {
       events.push({ type: 'enemiesEvolved', tier: evo });
     }
 
+    // Drawn after the unlock above, so a tower won this wave can appear in the
+    // very hand the player uses next.
+    drawHand();
+    events.push({ type: 'handDrawn', hand: [...state.hand] });
+
     state.phase = 'building';
   }
+
+  drawHand();
 
   return {
     // ---- queries ----
@@ -69,6 +90,13 @@ export function createRun({ seed, playerIds, startGold }) {
     getTierCap: () => tierCapAfter(state.wavesCleared),
     getEvolutionTier: () => evolutionTierAfter(state.wavesCleared),
     getPowers: () => [...state.powers],
+    getHand: () => [...state.hand],
+    // Spends a card. Returns the tower key played, or null if the index is not
+    // a live card - the shell must not be able to build off a stale hand.
+    playCard(index) {
+      if (!Number.isInteger(index) || index < 0 || index >= state.hand.length) return null;
+      return state.hand.splice(index, 1)[0];
+    },
     getModifiers: () => modifiers,
     getPlayers: () => state.players,
     getDraft: () => draft,

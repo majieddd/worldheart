@@ -7,15 +7,22 @@ export const BOSS_WAVE = 15;
 
 // Frontier angle in radians. This is the half-angle of the spherical cap the
 // player owns; the shell turns it into a confine, a wall and a haze.
-export const THETA_START = 0.12;
+// A much tighter opening: the first circle should feel like a foothold, not a
+// region. 0.05 rad is about 12 units of surface radius on an R240 world, so a
+// handful of towers fills it and the first expansion is dramatic.
+export const THETA_START = 0.05;
 export const THETA_END = 0.52;
 
 // Fourteen expansions: after waves 1..14. Clearing the boss grants none,
 // because the planet itself is that reward.
 const EXPANSIONS = 14;
 
-const TOWER_UNLOCK_WAVES = [2, 4, 6, 8];
-const TIER_CAP_WAVES = [10, 12];
+// Five unlocks for five unlockable towers, so the roster is complete by wave
+// 10 and nothing is left permanently undrawable. Adding the Warden Barracks
+// without adding this wave meant one tower could never appear in a run.
+const TOWER_UNLOCK_WAVES = [2, 4, 6, 8, 10];
+// Pushed past the last unlock so the two beats never land on the same wave.
+const TIER_CAP_WAVES = [11, 13];
 const EVOLUTION_WAVES = [3, 6, 9, 12];
 
 export function isBossWave(wave) {

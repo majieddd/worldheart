@@ -1400,6 +1400,51 @@ export function buildPortal(pos) {
 
 // Containment perimeter for capped battlefields: a terrain-hugging ribbon of
 // player-tech energy, quiet enough to read as a boundary, not a spectacle.
+export function buildFogVeil(centerDir, theta) {
+  // A shell just above the highest terrain. Inside the frontier it is fully
+  // transparent; beyond it, fog closes over the ground. Driven by uniforms so
+  // the frontier can widen every wave without rebuilding anything - the same
+  // trick the cloud deck already uses.
+  const geo = new THREE.SphereGeometry(R + 4.5, 96, 64);
+  const mat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, side: THREE.FrontSide,
+    uniforms: {
+      uCenter: { value: centerDir.clone() },
+      uTheta: { value: theta },
+      uColor: { value: new THREE.Color(PALETTE.horizon) },
+      uDeep: { value: new THREE.Color(PALETTE.space) },
+    },
+    vertexShader: [
+      'varying vec3 vDir;',
+      'void main() {',
+      '  vDir = normalize(position);',
+      '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+      '}',
+    ].join(String.fromCharCode(10)),
+    fragmentShader: [
+      'varying vec3 vDir;',
+      'uniform vec3 uCenter;',
+      'uniform float uTheta;',
+      'uniform vec3 uColor;',
+      'uniform vec3 uDeep;',
+      'void main() {',
+      '  float ang = acos(clamp(dot(normalize(vDir), normalize(uCenter)), -1.0, 1.0));',
+      // A soft 0.05 rad shoulder so the frontier reads as weather, not a decal.
+      '  float f = smoothstep(uTheta, uTheta + 0.05, ang);',
+      // Thickens with distance so the far fog reads as depth rather than a flat wash.
+      '  float deep = smoothstep(uTheta + 0.03, uTheta + 0.20, ang);',
+      '  vec3 col = mix(uColor, uDeep, deep);',
+      '  float a = f * (0.86 + deep * 0.13);',
+      '  if (a < 0.004) discard;',
+      '  gl_FragColor = vec4(col, a);',
+      '}',
+    ].join(String.fromCharCode(10)),
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.frustumCulled = false;
+  mesh.renderOrder = 5;
+  return { mesh, mat, centerDir: centerDir.clone() };
+}
 export function buildFieldWall(centerDir, theta) {
   const SEG = 200;
   // The curtain has to read as a wall from across the field, so it grows with
@@ -1586,6 +1631,17 @@ export class World {
     return this.heart;
   }
 
+  addFogVeil(centerDir, theta) {
+    this.fogVeil = buildFogVeil(centerDir, theta);
+    this.scene.add(this.fogVeil.mesh);
+    return this.fogVeil;
+  }
+
+  // Widening the frontier is a uniform write, not a rebuild.
+  setFogTheta(theta) {
+    if (this.fogVeil) this.fogVeil.mat.uniforms.uTheta.value = theta;
+  }
+
   addFieldWall(centerDir, theta) {
     this.fieldWall = buildFieldWall(centerDir, theta);
     this.scene.add(this.fieldWall.mesh);
@@ -1613,9 +1669,27 @@ export class World {
 
   addPortal(pos) {
     const p = buildPortal(pos);
+    // A breach is a structure, so it can be brought down. Units do this; towers
+    // cannot reach it, which is what gives units a job beyond blocking.
+    p.hpMax = 900;
+    p.hp = p.hpMax;
+    p.destroyed = false;
+    p.node = -1;              // filled in by the caller that knows the nav node
     this.scene.add(p.group);
     this.portals.push(p);
     return p;
+  }
+
+  // Returns true when this hit was the one that brought it down.
+  damagePortal(p, amount) {
+    if (!p || p.destroyed) return false;
+    p.hp -= amount;
+    p.flash = Math.max(p.flash, 0.35);
+    if (p.hp > 0) return false;
+    p.destroyed = true;
+    p.active = false;
+    p.group.visible = false;
+    return true;
   }
 
   // The fraction drives emissive intensity, so it has to stay in range: a
