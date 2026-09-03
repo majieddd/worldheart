@@ -340,6 +340,37 @@ async function boot() {
   window.WH.waves = waves;
   towerMgr.allies = allies;
   allies.world = world;
+  // Rally reaches into barracks garrisons, so it has to be able to find them.
+  allies.towers = towerMgr;
+  // Enemies swing at whatever stands in front of them, so they need to be able
+  // to see the friendly bodies. Held as a plain reference rather than an import
+  // because allies.js already imports the enemy module.
+  enemies.allies = allies;
+
+  // Hit confirmation. A swing that lands has to SAY so - damage in the world,
+  // a kick on the crosshair, a jolt on the camera - and a swing the tier-3
+  // shield eats has to say that too, or a strike doing nothing three times in
+  // a row reads as a broken weapon rather than as armour holding.
+  const _fpHit = new THREE.Vector3();
+  allies.onStrikeHit = (enemy, landed, primary) => {
+    towerMgr.enemyWorldPos(enemy, _fpHit);
+    if (landed > 0) {
+      fx.floaters.spawn(_fpHit, String(Math.round(landed)), primary ? '#ffffff' : '#c8d4f0', primary ? 14 : 11);
+    } else {
+      fx.floaters.spawn(_fpHit, 'BLOCKED', '#8b97b8', 11);
+    }
+    if (primary) {
+      ui?.strikeFeedback?.(landed, landed <= 0);
+      rig.addTrauma(landed > 0 ? 0.05 : 0.03);
+    }
+  };
+
+  // Being hit in first person should land on the player, not only on a number.
+  allies.onHurt = (a, amount) => {
+    if (!possession || possession.unit !== a) return;
+    rig.addTrauma(Math.min(0.22, 0.05 + amount / 260));
+  };
+
   caches = new CacheField(scene);
   possession = new Possession({ canvas, rig, allies, game, ui: null, caches, scene });
   window.WH.possession = possession;

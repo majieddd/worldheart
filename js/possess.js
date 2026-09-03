@@ -138,6 +138,7 @@ export class Possession {
       this.keys.add(e.code);
       if (e.code === 'Escape' || e.code === 'Tab') { e.preventDefault(); this.exit(); }
       if (e.code === 'KeyG') { e.preventDefault(); this.rally(); }
+      if (e.code === 'KeyH') { e.preventDefault(); this.dismiss(); }
     });
     addEventListener('keyup', (e) => this.keys.delete(e.code));
     addEventListener('blur', () => this.keys.clear());
@@ -219,7 +220,17 @@ export class Possession {
       return 0;
     }
     const n = this.allies.gatherParty(this.unit);
-    this.ui?.toast?.(n ? `${n} joined the party` : 'Nobody in range', n ? 'info' : 'warn');
+    const size = this.allies.partySize(this.unit);
+    this.ui?.toast?.(n ? `${n} joined - party of ${size}` : 'Nobody in range', n ? 'info' : 'warn');
+    return n;
+  }
+
+  // Send the party home. Paired with rally so a group can be released at the
+  // gate rather than dragged back into the base.
+  dismiss() {
+    if (!this.active) return 0;
+    const n = this.allies.dismissParty(this.unit);
+    this.ui?.toast?.(n ? `${n} returned to post` : 'No party to dismiss', n ? 'info' : 'warn');
     return n;
   }
 
@@ -259,6 +270,7 @@ export class Possession {
 
     this.placeCamera();
     this._applyDistanceFog();
+    this.ui?.updatePossession?.(u);
   }
 
   // Thickens with how far past the frontier the unit has walked, so leaving

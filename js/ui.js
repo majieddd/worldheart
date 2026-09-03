@@ -123,6 +123,23 @@ export class HUD {
 
       <div id="damage-vignette"></div>
 
+      <!-- First person. Hidden until a unit is possessed. A possessed body is
+           mortal and a commander's death ends the run, so a health readout is
+           a prerequisite for that fight, not decoration. -->
+      <div id="fp-hud">
+        <div id="fp-cross"><span></span><span></span><span></span><span></span><i></i></div>
+        <div id="fp-hit"></div>
+        <div id="fp-panel">
+          <div id="fp-name">Commander</div>
+          <div class="bar" id="fp-hp-track"><div class="bar-fill" id="fp-hp"></div></div>
+          <div id="fp-swing-track"><div id="fp-swing"></div></div>
+          <div id="fp-keys">
+            <span><b>WASD</b> move</span><span><b>LMB</b> strike</span>
+            <span id="fp-rally"><b>G</b> rally</span><span><b>H</b> dismiss</span><span><b>Esc</b> release</span>
+          </div>
+        </div>
+      </div>
+
       <div class="overlay" id="title-overlay">
         <div class="overlay-card">
           <div class="o-mark">WORLDHEART</div>
@@ -185,6 +202,7 @@ export class HUD {
       'set-quality', 'set-shake', 'set-seed', 'toast-anchor', 'wave-banner', 'banner-big', 'banner-small',
       'hint-line', 'build-bar', 'tower-panel', 'tp-name', 'tp-tier', 'tp-desc', 'tp-stats',
       'tp-upgrade', 'tp-sell', 'tp-close', 'damage-vignette',
+      'fp-hud', 'fp-cross', 'fp-hit', 'fp-name', 'fp-hp', 'fp-swing', 'fp-keys', 'fp-rally',
       'title-overlay', 'end-overlay', 'end-card', 'end-mark', 'end-sub', 'end-waves', 'end-kills',
       'end-score', 'end-body', 'btn-continue', 'btn-retry', 'btn-new', 'btn-begin',
     ]) this.el[id] = document.getElementById(id);
@@ -493,6 +511,48 @@ export class HUD {
 
   hideDraft() {
     document.getElementById('draft-overlay').classList.remove('show');
+  }
+
+  // -- first person ---------------------------------------------------------
+
+  showPossession(unit) {
+    const e = this.el;
+    e['fp-hud'].classList.add('show');
+    e['fp-name'].textContent = unit.type.name;
+    e['fp-rally'].style.display = unit.type.commander ? '' : 'none';
+    e['fp-cross'].dataset.kind = unit.type.strike?.kind || 'melee';
+    this.updatePossession(unit);
+  }
+
+  updatePossession(unit) {
+    if (!unit) return;
+    const e = this.el;
+    const frac = Math.max(0, Math.min(1, unit.hp / unit.hpMax));
+    e['fp-hp'].style.width = `${frac * 100}%`;
+    e['fp-hp'].classList.toggle('low', frac < 0.35);
+    // The swing meter fills as the cooldown drains, so full means ready.
+    const dur = unit.swingDur || 0.55;
+    const ready = unit.swingT > 0 ? 1 - unit.swingT / dur : 1;
+    e['fp-swing'].style.width = `${Math.max(0, Math.min(1, ready)) * 100}%`;
+    e['fp-swing'].classList.toggle('ready', unit.swingT <= 0);
+    this.el['damage-vignette'].classList.toggle('fp-hurt', frac < 0.35);
+  }
+
+  hidePossession() {
+    this.el['fp-hud'].classList.remove('show');
+    this.el['damage-vignette'].classList.remove('fp-hurt');
+  }
+
+  // A hit confirmation the eye can actually catch: the crosshair kicks for a
+  // moment. Blocked reads differently from landed, because from evolution tier
+  // three a shield eats the first hits of an engagement and a swing that does
+  // nothing with no feedback reads as a broken weapon.
+  strikeFeedback(landed, blocked) {
+    const h = this.el['fp-hit'];
+    h.classList.remove('go', 'blocked');
+    void h.offsetWidth;              // restart the animation
+    h.classList.add('go');
+    if (blocked) h.classList.add('blocked');
   }
 
   showEnd(won, subtitle) {

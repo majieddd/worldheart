@@ -19,6 +19,11 @@ export const ALLY_TYPES = {
   warden: {
     name: 'Warden', hp: 220, speed: 2.4, radius: 0.42, dps: 7,
     aggro: 9, reach: 1.15, scale: 1, regen: 0.05,
+    // 9 per 0.80s is 11.25 dps, against the warden's own AI output of 7. It sits
+    // under a wave-1 mite's 26 health by a factor of 2.9, so three swings are
+    // always needed, and 1.8 keeps the swing on the ground: a wisp overhead is
+    // 2.58 away, which a warden is not meant to answer.
+    strike: { dmg: 9, cd: 0.80, radius: 1.8, cleave: 0.5, pierce: 2 },
   },
   // Commanders are permanent, far stronger, and carry the run: if one dies the
   // run ends, which is what makes taking a party into the fog a real gamble.
@@ -30,6 +35,12 @@ export const ALLY_TYPES = {
     // made - walking it into the fog - not of autopilot wandering it into a
     // wave. It still hits anything that closes on it.
     holdsGround: true,
+    // 26 per 0.90s is 28.9 dps, barely above the commander's own 26, so taking
+    // the body is a change of vantage rather than a damage upgrade. Radius 2.6
+    // clears the 2.42 to a wisp directly overhead by a small margin, which is
+    // deliberate: a possessed commander is the only melee answer to flyers in
+    // the game.
+    strike: { dmg: 26, cd: 0.90, radius: 2.6, cleave: 0.5, pierce: 3 },
   },
 };
 
@@ -49,6 +60,19 @@ const REGEN_DELAY = 6;
 // keeps moving and a wave always resolves one way or the other.
 const HOLD_BUDGET = 3;
 const HOLD_LAPSE = 4;
+
+// No single strike may remove more than this fraction of a body's maximum
+// health, which is what makes "never a one-shot" a rule rather than a number
+// that holds until someone retunes a dps field.
+const STRIKE_CAP_FRAC = 0.85;
+// Breaches are structures with no health bar to protect, and solo demolition is
+// a load-bearing part of the fog loop, so the cap does not apply and the blow
+// is scaled to keep that trip about as long as it was.
+const STRUCTURE_MUL = 2.5;
+// How far from its LEADER a party member will chase. Wide enough that a party
+// clears a path in front of itself, tight enough that it stays a party.
+const PARTY_LEASH = 13;
+const _strikeOrigin = new THREE.Vector3();
 
 // Damage per second an enemy deals to a unit it is in contact with, per point
 // of that enemy's leak damage. Tuned so a lone warden holds two mites for a
@@ -147,6 +171,7 @@ class Ally {
     this.state = 'roam';
     this.target = null;
     this.swingT = 0;
+    this.swingDur = 0.55;
     this.flashT = 0;
     this.wanderT = 0;
     this.hurtT = 0;
@@ -253,6 +278,10 @@ export class AllyManager {
   _release(a) {
     a.active = false;
     a.possessed = false;
+    a.following = null;
+    // Anything that was following this body is now following a pool object that
+    // is about to be handed to a different unit.
+    this._severFollowers(a);
     const i = this.active.indexOf(a);
     if (i >= 0) this.active.splice(i, 1);
     this.pool.push(a);
@@ -263,6 +292,7 @@ export class AllyManager {
     a.hp -= amount;
     a.flashT = 0.1;
     a.hurtT = REGEN_DELAY;
+    if (this.onHurt) this.onHurt(a, amount);
     if (a.hp <= 0) {
       a.dead = true;
       const wasCommander = a.type.commander;
@@ -282,6 +312,10 @@ export class AllyManager {
     this.worldPos(a, _tmp);
     for (const e of this.enemies.active) {
       if (!e.active || e.dead) continue;
+      // No ally reach is longer than 1.5 and a wisp rides at altitude 2.6, so a
+      // ground unit that targets one just walks under it forever while the wisp
+      // bites back. Flyers are the towers' problem.
+      if (e.type.flying && !a.type.commander) continue;
       const d2 = this.enemyPos(e, _tmp2).distanceToSquared(_tmp);
       if (d2 < bestD) { bestD = d2; best = e; }
     }
@@ -316,19 +350,31 @@ export class AllyManager {
   // faster.
   _mayHold(e, dt) {
     if (e._holdStamp !== this.time) {
+      // A budget half spent in a fight that ended minutes ago is not a budget.
+      if (this.time - (e._holdStamp ?? -1) > HOLD_LAPSE) e._holdT = 0;
       e._holdStamp = this.time;
-      if (e._holdLapse > 0) e._holdLapse -= dt;
-      else {
+      if (!(e._holdLapseUntil > this.time)) {
         e._holdT = (e._holdT || 0) + dt;
-        if (e._holdT > HOLD_BUDGET) { e._holdT = 0; e._holdLapse = HOLD_LAPSE; }
+        // An ABSOLUTE deadline, not a countdown. The countdown was only ever
+        // decremented from here, so an enemy whose last holder died mid-lapse
+        // had nothing left to tick it down and stayed hold-immune for the rest
+        // of the run - the same shape as the permanent-hold bug this budget
+        // was added to fix.
+        if (e._holdT > HOLD_BUDGET) { e._holdT = 0; e._holdLapseUntil = this.time + HOLD_LAPSE; }
       }
     }
-    return !(e._holdLapse > 0);
+    return !(e._holdLapseUntil > this.time);
   }
 
   // True when a target sits outside the leash measured from the unit's post -
   // its patrol point when one is set, otherwise where it was summoned.
   _beyondPost(a, target) {
+    // Following a leader moves the post to the leader and widens it, so a party
+    // fights what is near the party and still arrives together.
+    if (a.following && a.following.active && !a.following.dead) {
+      const lead = Math.acos(Math.max(-1, Math.min(1, target.dir.dot(a.following.dir))));
+      return lead > (PARTY_LEASH + a.type.reach) / R;
+    }
     const post = a.patrol || a.anchor;
     const ang = Math.acos(Math.max(-1, Math.min(1, target.dir.dot(post))));
     // A margin of one reach so a unit already trading blows at the very edge
@@ -344,26 +390,36 @@ export class AllyManager {
       if (a.flashT > 0) a.flashT -= dt;
       if (a.swingT > 0) a.swingT -= dt;
 
-      // A possessed unit is driven entirely by the player.
-      if (a.possessed) { this._ground(a); continue; }
-
       const type = a.type;
       if (a.hurtT > 0) a.hurtT -= dt;
       else if (a.hp < a.hpMax && type.regen) {
         a.hp = Math.min(a.hpMax, a.hp + a.hpMax * type.regen * dt);
       }
 
+      // A possessed unit is driven entirely by the player, but it still bleeds
+      // and still heals. The early return used to sit ABOVE both, which made
+      // possession total invulnerability: the one moment the player is exposed
+      // was the one moment nothing could touch them.
+      if (a.possessed) { this._takeContactDamage(a, dt); this._ground(a); continue; }
+
       if (a.target && (!a.target.active || a.target.dead)) a.target = null;
       if (!a.target) a.target = this._findEnemy(a, type.aggro);
       // A chase is leashed to the post. Without this a unit walks after
       // whatever it can see, arbitrarily far, which drags a garrison off the
       // ground it was summoned to hold and can pull a commander into the fog
-      // on its own. A unit following a leader is exempt: the leader is its post.
-      if (a.target && !a.following && this._beyondPost(a, a.target)) a.target = null;
+      // on its own. A follower's post is its LEADER: exempting followers
+      // entirely, as this once did, left a rallied warden with no tether at all,
+      // so the first enemy it saw took it across the planet and the party
+      // dissolved the moment it met anything.
+      if (a.target && this._beyondPost(a, a.target)) a.target = null;
       // Hold-ground units accept only what is already on top of them, so they
       // defend without ever walking into a swarm.
+      // Measured against the LONGER of the two reaches. An enemy that outreaches
+      // the unit could otherwise stand off, swing freely and never be answered,
+      // which against a commander is an unanswerable kill and the end of a run.
       if (a.target && type.holdsGround
-          && this.enemyPos(a.target, _tmp2).distanceTo(this.worldPos(a, _tmp)) > type.reach) {
+          && this.enemyPos(a.target, _tmp2).distanceTo(this.worldPos(a, _tmp))
+             > Math.max(type.reach, a.target.type.reach || 0) + 0.1) {
         a.target = null;
       }
 
@@ -376,9 +432,14 @@ export class AllyManager {
           // hold is short and re-applied while engaged, so killing the unit
           // frees the enemy immediately - but it runs on a budget, so it can
           // never become permanent. See HOLD_BUDGET.
-          if (this._mayHold(a.target, dt)) this.enemies.applyStun(a.target, 0.22);
+          // An enemy standing inside its OWN strike range has already stopped to
+          // fight; holding it as well spends the budget for no extra effect and
+          // stunlocks it out of ever swinging back.
+          const enemyReach = a.target.type.reach || 0;
+          if (d > enemyReach && this._mayHold(a.target, dt)) this.enemies.applyStun(a.target, 0.22);
           if (a.swingT <= 0) {
             a.swingT = 0.55;
+            a.swingDur = 0.55;
             this.enemies.damage(a.target, type.dps * 0.55, { armorPierce: 2 });
           }
         } else {
@@ -396,8 +457,16 @@ export class AllyManager {
           a.state = 'follow';
           const d = this.worldPos(lead, _tmp2).distanceTo(this.worldPos(a, _tmp));
           // A loose formation: close the gap only when it opens, so a party
-          // does not jitter on top of its leader.
-          if (d > 2.6) advanceToward(a.dir, lead.dir, (type.speed * 1.08 * dt) / R, a.fwd);
+          // does not jitter on top of its leader. The catch-up speed is derived
+          // from the LEADER's real speed rather than a fixed multiplier, because
+          // a possessed commander is driven at 1.25x and a flat 1.08 left every
+          // member losing ground for ever: the party became a string of units
+          // that never arrived and never fought.
+          if (d > 2.6) {
+            const leadSpeed = lead.type.speed * (lead.possessed ? 1.25 : 1);
+            const catchup = Math.min(type.speed * 2, Math.max(type.speed * 1.15, leadSpeed * 1.15));
+            advanceToward(a.dir, lead.dir, (catchup * dt) / R, a.fwd);
+          }
         }
       } else {
         a.state = 'roam';
@@ -477,26 +546,48 @@ export class AllyManager {
     reflatten(a.fwd.applyAxisAngle(a.dir, -yawDelta), a.dir);
   }
 
-  // A possessed unit swings wider than the AI does: everything in reach is hit.
+  // A player swing. Damage is a FLAT per-archetype number rather than a
+  // multiple of dps, so tuning a unit's sustained output can never silently
+  // move the one-shot line, and the whole hit is capped at a fraction of the
+  // victim's maximum health so a strike can never delete a healthy enemy
+  // outright. The old form was dps*1.4 every 0.45s, which was 3.1x the unit's
+  // own AI throughput and killed a wave-1 mite in a single tap.
   playerAttack(a) {
     if (!a.active || a.dead || a.swingT > 0) return 0;
-    a.swingT = 0.45;
+    const s = a.type.strike;
+    a.swingT = s.cd;
+    a.swingDur = s.cd;
     let hits = 0;
-    this.worldPos(a, _tmp);
-    const reach = a.type.reach * 2.2;
+    _strikeOrigin.copy(this.worldPos(a, _tmp));
+
+    // Nearest first, so the target the player is actually looking at takes the
+    // full blow and the cleave is the bonus rather than the point.
+    let primary = null;
+    let primaryD = Infinity;
     for (const e of this.enemies.active) {
       if (!e.active || e.dead) continue;
-      if (this.enemyPos(e, _tmp2).distanceTo(_tmp) <= reach) {
-        this.enemies.damage(e, a.type.dps * 1.4, { armorPierce: 4 });
-        hits++;
-      }
+      const d = this.enemyPos(e, _tmp2).distanceTo(_strikeOrigin);
+      if (d <= s.radius && d < primaryD) { primaryD = d; primary = e; }
     }
-    // The same swing brings down breaches, so clearing one by hand is possible.
+    for (const e of this.enemies.active) {
+      if (!e.active || e.dead) continue;
+      if (this.enemyPos(e, _tmp2).distanceTo(_strikeOrigin) > s.radius) continue;
+      const amount = e === primary ? s.dmg : s.dmg * s.cleave;
+      const landed = this.enemies.damage(e, amount, {
+        armorPierce: s.pierce,
+        capFrac: STRIKE_CAP_FRAC,
+      });
+      if (this.onStrikeHit) this.onStrikeHit(e, landed, e === primary);
+      hits++;
+    }
+    // The same swing brings down breaches, and a structure has no health bar to
+    // one-shot, so it takes the uncapped blow at a multiplier that keeps a solo
+    // demolition roughly as long as it used to be.
     if (this.world) {
       for (const p of this.world.portals) {
         if (p.destroyed) continue;
-        if (p.group.position.distanceTo(_tmp) > reach + 2.6) continue;
-        const felled = this.world.damagePortal(p, a.type.dps * 1.4);
+        if (p.group.position.distanceTo(_strikeOrigin) > s.radius + 2.6) continue;
+        const felled = this.world.damagePortal(p, s.dmg * STRUCTURE_MUL);
         if (felled && this.onPortalDestroyed) this.onPortalDestroyed(p);
         hits++;
       }
@@ -504,15 +595,34 @@ export class AllyManager {
     return hits;
   }
 
-  gatherParty(leader, radius = 14) {
+  // Rally. Loose bodies nearby join, and so does the whole garrison of any
+  // barracks within the wider radius - which is the point of the order: a
+  // commander should be able to collect troops from their post without having
+  // to walk each one out of its door.
+  gatherParty(leader, radius = 16, barracksRadius = 40) {
     if (!leader || !leader.active) return 0;
     let n = 0;
     this.worldPos(leader, _tmp);
+    const rallied = new Set();
+    if (this.towers) {
+      for (const t of this.towers.towers) {
+        if (t.typeKey !== 'warden') continue;
+        if (t.pos.distanceTo(_tmp) <= barracksRadius) rallied.add(t.id);
+      }
+    }
     for (const a of this.active) {
       if (a === leader || a.dead || !a.active || a.possessed) continue;
-      if (this.worldPos(a, _tmp2).distanceTo(_tmp) <= radius) { a.following = leader; n++; }
+      if (a.following === leader) continue;
+      const near = this.worldPos(a, _tmp2).distanceTo(_tmp) <= radius;
+      if (near || rallied.has(a.homeTower)) { a.following = leader; n++; }
     }
     return n;
+  }
+
+  // Sever anything following this unit. Called when a body leaves play, so a
+  // party is never left following a corpse or a recycled pool object.
+  _severFollowers(leader) {
+    for (const a of this.active) if (a.following === leader) a.following = null;
   }
 
   dismissParty(leader) {
@@ -556,7 +666,11 @@ export class AllyManager {
 
         const sc = a.type.scale;
         const bob = Math.sin(this.time * 6 + a.phase) * 0.035;
-        const swing = a.swingT > 0 ? Math.sin((1 - a.swingT / 0.55) * Math.PI) * 0.28 : 0;
+        // Normalised against the duration this particular swing was given. The
+      // 0.55 here was hardcoded while a player strike set 0.45, so a strike
+      // rendered starting a fifth of the way into its own arc and snapped.
+      const dur = a.swingDur || 0.55;
+      const swing = a.swingT > 0 ? Math.sin((1 - a.swingT / dur) * Math.PI) * 0.28 : 0;
 
         for (let p = 0; p < parts.length; p++) {
           const part = parts[p];

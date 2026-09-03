@@ -217,10 +217,10 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
 
   if (possession) {
     possession.onEnter = (u) => {
-      ui.toast(`Controlling ${u.type.name}. WASD to move, mouse to look, left click to strike, `
-        + `${u.type.commander ? 'G to rally, ' : ''}Esc to release.`, 'info');
+      ui.showPossession(u);
     };
     possession.onExit = () => {
+      ui.hidePossession();
       ui.toast('Control released', 'info');
       // Hand the orbit rig back looking at what it was looking at, so the view
       // does not snap to a stale focus from before possession.
