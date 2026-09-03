@@ -248,6 +248,11 @@ async function boot() {
     // for wave 1; the shell re-angles it as the frontier widens.
     world.addFieldWall(nav.fieldCenter, CONFIG.map.fieldTheta);
     world.addCloudDeck(nav.fieldCenter, CONFIG.map.fieldTheta);
+    // The roguelite hides everything past the frontier behind fog. Built at the
+    // final angle and then pulled in by the shell, same as the wall.
+    if (CONFIG.map.mode === 'ninetynine') {
+      world.addFogVeil(nav.fieldCenter, CONFIG.map.fieldTheta);
+    }
   }
   const portalPositions = [];
   for (const pn of nav.portalNodes) {
@@ -315,7 +320,7 @@ async function boot() {
   // so every callback it chains is already installed.
   if (CONFIG.map.mode === 'ninetynine') {
     const { createNinetyNine } = await import('./modes/ninetynine.js');
-    mode99 = createNinetyNine({ game, waves, world, nav, rig, ui });
+    mode99 = createNinetyNine({ game, waves, world, nav, rig, ui, enemies });
     window.WH.mode99 = mode99;
   }
   window.WH.heartPos = heartPos;

@@ -7,7 +7,10 @@ export const BOSS_WAVE = 15;
 
 // Frontier angle in radians. This is the half-angle of the spherical cap the
 // player owns; the shell turns it into a confine, a wall and a haze.
-export const THETA_START = 0.12;
+// A much tighter opening: the first circle should feel like a foothold, not a
+// region. 0.05 rad is about 12 units of surface radius on an R240 world, so a
+// handful of towers fills it and the first expansion is dramatic.
+export const THETA_START = 0.05;
 export const THETA_END = 0.52;
 
 // Fourteen expansions: after waves 1..14. Clearing the boss grants none,

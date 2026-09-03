@@ -8,9 +8,10 @@ import { MODS } from '../towers.js';
 import { EVO } from '../enemies.js';
 import { SIM_RANDOM } from '../noise.js';
 import { CONFIG } from '../config.js';
+import * as THREE from 'three';
 import { bankVictory } from './progress.js';
 
-export function createNinetyNine({ game, waves, world, nav, rig, ui }) {
+export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies }) {
   const run = createRun({
     seed: CONFIG.seed,
     playerIds: ['solo'],
@@ -22,13 +23,40 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui }) {
   SIM_RANDOM.next = makeRng((CONFIG.seed ^ 0x9e3779b9) >>> 0);
 
   const centre = nav.fieldCenter ? nav.fieldCenter.clone() : null;
+  const _sdir = new THREE.Vector3();
+  const _axis = new THREE.Vector3();
+  const _up = new THREE.Vector3();
+  let frontierTheta = 0;
 
   function applyFrontier(theta) {
+    frontierTheta = theta;
     game.frontier = centre ? { centre, theta } : null;
     world.setFieldWallTheta(theta);
+    world.setFogTheta(theta);
     // The camera follows the PLAYABLE area, not the built area, so the player
-    // is never panned out over ground they cannot use yet.
+    // is never panned out over ground they cannot use yet, and how far they may
+    // pull back grows with the territory they hold.
+    rig.frontierTheta = theta;
     if (rig.confine) rig.confine.maxAng = theta * 1.02;
+  }
+
+  // Breach sites are authored across the FINAL cap, so an unremapped spawn at
+  // wave 1 appears far outside a tiny circle and the walk in is most of the
+  // wave. Pull the spawn along the great circle from the cap centre toward its
+  // portal until it sits just outside the current frontier: the direction each
+  // breach attacks from is preserved, the distance is not.
+  function spawnNodeNearFrontier(portalNode) {
+    if (!centre || portalNode < 0) return -1;
+    nav.nodeDir(portalNode, _sdir);
+    const ang = Math.acos(Math.max(-1, Math.min(1, _sdir.dot(centre))));
+    const want = frontierTheta * 1.12;
+    if (ang <= want || ang < 1e-4) return portalNode;   // already close enough
+    _axis.crossVectors(centre, _sdir);
+    if (_axis.lengthSq() < 1e-12) return portalNode;    // portal is dead centre
+    _axis.normalize();
+    _up.copy(centre).applyAxisAngle(_axis, want).normalize();
+    const node = nav.nearestWalkableNode(_up);
+    return node >= 0 ? node : portalNode;
   }
 
   // Everything the renderer needs to know is derived from the core, never
@@ -75,6 +103,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui }) {
     waves.state = 'idle';          // hold the countdown while drafting
     handle(run.completeWave());
   };
+
+  enemies.spawnNodeOverride = spawnNodeNearFrontier;
 
   syncFromRun();
 

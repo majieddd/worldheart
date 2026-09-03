@@ -209,6 +209,14 @@ export class EnemyManager {
   spawn(typeKey, portalNode, hpScale = 1) {
     if (this.active.length >= CONFIG.limits.maxEnemies) return null;
     const type = ENEMY_TYPES[typeKey];
+    // A mode may pull the spawn point inward. 99 Planets does: its breach
+    // sites are authored across the FINAL cap, so at wave 1 an unremapped
+    // spawn appears ~125 units outside a ~12 unit circle and the walk in is
+    // most of the wave.
+    if (this.spawnNodeOverride) {
+      const remapped = this.spawnNodeOverride(portalNode);
+      if (remapped >= 0) portalNode = remapped;
+    }
     const e = this.pool.pop() || new Enemy();
     this.nav.nodeDir(portalNode, _dir);
     // slight scatter around the portal
