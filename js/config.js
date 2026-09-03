@@ -65,6 +65,25 @@ export const MAPS = {
     waterSegs: [320, 214],
     decorMul: 1.15,
   },
+  ninetynine: {
+    name: '99 Planets',
+    mode: 'ninetynine', modeLabel: 'roguelite campaign',
+    tag: 'One tower. Fifteen waves. The frontier widens with every one you survive.',
+    chip: 'roguelite · 15 waves · boss',
+    // Same planet class as Titan's Brow. fieldTheta is the FINAL frontier: the
+    // nav graph, terrain, decor and breach sites are all authored at this angle
+    // once, and the run masks a smaller area early on. Building small and
+    // growing is not possible - nav._buildGraph reallocates every array, and a
+    // rebuild would discard every tower footprint in nav.block.
+    radius: 240, terrainDetail: 7, navDetail: 9, pickDetail: 5,
+    freqMul: 1.7, fineAbsolute: true,
+    portalWakes: [1, 3, 7, 11, 15],
+    fieldTheta: 0.52,
+    startGold: 450,
+    waveCount: 15,
+    waterSegs: [320, 214],
+    decorMul: 1.15,
+  },
   reach: {
     name: 'Shattered Reach',
     mode: 'space', modeLabel: 'space battlefield',
@@ -119,7 +138,9 @@ export const CONFIG = {
   },
 
   waves: {
-    count: 30,
+    // 99 Planets is a fifteen-wave run. Everything that used to assume 30 now
+    // reads this, so the boss lands on the last wave whatever the mode.
+    count: MAP.waveCount ?? 30,
     prepTime: 22,        // seconds between waves
     firstPrep: 30,
     earlyBonusPerSec: 2,

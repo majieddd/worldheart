@@ -4,9 +4,11 @@ import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
 import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR } from './world.js';
 import { NavGraph } from './nav.js';
-import { EnemyManager } from './enemies.js';
+import { SIM_RANDOM } from './noise.js';
+import { makeRng } from './run/rng.js';
+import { EnemyManager, EVO as ENEMY_EVO } from './enemies.js';
 import { Effects } from './effects.js';
-import { TowerManager, TOWER_TYPES } from './towers.js';
+import { TowerManager, TOWER_TYPES, MODS as TOWER_MODS } from './towers.js';
 import { Game } from './game.js';
 import { WaveDirector, portalCount } from './waves.js';
 import { HUD } from './ui.js';
@@ -99,6 +101,7 @@ let towerMgr = null;
 let game = null;
 let waves = null;
 let ui = null;
+let mode99 = null;   // the 99 Planets shell, null in every other mode
 
 /* ---- environment map and sun shadows ---------------------------------- */
 const _shadowFocus = new THREE.Vector3();
@@ -240,7 +243,9 @@ async function boot() {
   world.crushDecorNear(heartPos, 4.2);
   // The energy wall reads as a containment fence on a planet surface; in open
   // space the void itself is the boundary and a ring just looks bolted on.
-  if (CONFIG.map.mode === 'battlefield') {
+  if (CONFIG.map.mode === 'battlefield' || CONFIG.map.mode === 'ninetynine') {
+    // 99 Planets builds the wall at the FINAL angle and then moves it inward
+    // for wave 1; the shell re-angles it as the frontier widens.
     world.addFieldWall(nav.fieldCenter, CONFIG.map.fieldTheta);
     world.addCloudDeck(nav.fieldCenter, CONFIG.map.fieldTheta);
   }
@@ -305,6 +310,14 @@ async function boot() {
   window.WH.game = game;
   window.WH.waves = waves;
   window.WH.ui = ui;
+
+  // The roguelite shell binds the pure run core to the game. Constructed last
+  // so every callback it chains is already installed.
+  if (CONFIG.map.mode === 'ninetynine') {
+    const { createNinetyNine } = await import('./modes/ninetynine.js');
+    mode99 = createNinetyNine({ game, waves, world, nav, rig, ui });
+    window.WH.mode99 = mode99;
+  }
   window.WH.heartPos = heartPos;
   window.WH.portalPositions = portalPositions;
 
@@ -393,6 +406,9 @@ function stepFrame(dt, render) {
   // a scripted verification run has to see the same shadows a player does.
   updateShadowCamera();
   world.update(dt, rig.camera.position);
+  // Drives the draft timer. Outside the simDt gate on purpose: the draft must
+  // keep counting while the director is held idle between waves.
+  if (mode99 && game && game.state === 'playing' && !game.paused) mode99.update(dt);
   const simActive = game && game.state === 'playing' && !game.paused;
   const simDt = simActive ? dt * game.speed : 0;
   if (simDt > 0) {
@@ -783,7 +799,7 @@ function workMs() {
 let navDebugPts = null;
 window.WH = {
   renderer, scene, world, rig, post, CONFIG, nav,
-  fps, workMs, TOWER_TYPES,
+  fps, workMs, TOWER_TYPES, TOWER_MODS, ENEMY_EVO, SIM_RANDOM, makeRng,
   drawCalls: () => renderer.info.render.calls,
   tris: () => renderer.info.render.triangles,
   navDebug(show = true) {

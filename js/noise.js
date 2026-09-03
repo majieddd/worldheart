@@ -2,6 +2,14 @@
 // One world seed drives every terrain query, so the visual mesh, the nav graph,
 // and unit grounding all read the exact same surface.
 
+// A single stream for anything that affects the SIMULATION: the crit roll,
+// spawn timing jitter, and portal scatter. It defaults to Math.random so the
+// classic modes behave exactly as they always have; 99 Planets swaps in a
+// seeded generator so a run replays identically from its seed. Cosmetic
+// randomness (turret yaw, sparks, bob phase) deliberately still uses
+// Math.random, because seeding it buys nothing and costs determinism nothing.
+export const SIM_RANDOM = { next: Math.random };
+
 export function mulberry32(seed) {
   let a = seed >>> 0;
   return function () {

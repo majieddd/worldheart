@@ -1,7 +1,24 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
-import { clamp } from './noise.js';
+import { clamp, SIM_RANDOM } from './noise.js';
 import { R, terrainHeight } from './world.js';
+
+// Evolution tier, set by the 99 Planets shell and 0 in every other mode.
+export const EVO = { tier: 0 };
+
+// Each tier adds a trait AND a visual tell, so the swarm changing is legible
+// in play rather than only in the numbers.
+const EVO_TIERS = [
+  { armour: 0, speedMul: 1, shield: false, split: false, tint: null },
+  { armour: 2, speedMul: 1, shield: false, split: false, tint: 0x8a97b5 },
+  { armour: 2, speedMul: 1.18, shield: false, split: false, tint: 0xc2a15a },
+  { armour: 3, speedMul: 1.18, shield: true, split: false, tint: 0x6fe0d0 },
+  { armour: 3, speedMul: 1.22, shield: true, split: true, tint: 0xd06fe0 },
+];
+
+export function evoTraits() {
+  return EVO_TIERS[Math.min(EVO.tier, EVO_TIERS.length - 1)];
+}
 
 // Enemy simulation: flow-field steering with turn limits, separation, and
 // surface reprojection for walkers; great-circle flight for flyers.
@@ -77,6 +94,10 @@ class Enemy {
     this.dead = false;
     this.reached = false;
     this.brittle = 0;
+    // Evolution state. Reset on every init because enemies come from a pool
+    // and a recycled body must not inherit the last one's shield or split flag.
+    this.shieldT = 0;
+    this.isSplit = false;
     this.phase = Math.random() * Math.PI * 2;
     this.hopPrev = 0;
     this.plates = 6;
@@ -191,7 +212,7 @@ export class EnemyManager {
     const e = this.pool.pop() || new Enemy();
     this.nav.nodeDir(portalNode, _dir);
     // slight scatter around the portal
-    _tmp.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(0.02);
+    _tmp.set(SIM_RANDOM.next() - 0.5, SIM_RANDOM.next() - 0.5, SIM_RANDOM.next() - 0.5).multiplyScalar(0.02);
     _dir.add(_tmp).normalize();
     e.init(typeKey, type, _dir, portalNode, hpScale);
     // Space waves fly in three altitude bands; high rocks command high
@@ -207,11 +228,17 @@ export class EnemyManager {
   damage(e, amount, opts = {}) {
     if (!e.active || e.dead) return 0;
     let dmg = amount;
+    const evo = evoTraits();
     if (!opts.trueDamage) {
-      const armor = Math.max(0, e.type.armor - (opts.armorPierce || 0));
+      const armor = Math.max(0, e.type.armor + evo.armour - (opts.armorPierce || 0));
       dmg = Math.max(1, amount - armor);
     }
     if (e.brittle > 0) dmg *= 1.12;
+    // Tier 3 shield: a hit lands only if the enemy has been left alone for
+    // three seconds. Any hit re-arms the timer, so sustained fire beats it and
+    // poking at it does not.
+    if (evo.shield && e.shieldT > 0) dmg = 0;
+    e.shieldT = evo.shield ? 3 : 0;
     e.hp -= dmg;
     e.flashT = 0.09;
     // Boss armor plates shed at HP thresholds and each births escorts.
@@ -226,6 +253,13 @@ export class EnemyManager {
     }
     if (e.hp <= 0 && !e.dead) {
       e.dead = true;
+      // Tier 4: mites divide. isSplit stops the cascade being infinite.
+      if (evo.split && e.typeKey === 'mite' && !e.isSplit) {
+        for (let i = 0; i < 2; i++) {
+          const child = this.spawn('mite', e.node, e.hpScaleUsed);
+          if (child) { child.isSplit = true; child.hp = Math.max(1, child.hp * 0.4); }
+        }
+      }
       if (this.onKill) this.onKill(e);
       if (this.onDeathFx) this.onDeathFx(e);
       this._release(e);
@@ -269,7 +303,8 @@ export class EnemyManager {
       if (e.stunT > 0) { e.stunT -= dt; continue; }
 
       const type = e.type;
-      let stepSpeed = e.speed * (1 - e.slowFrac);
+      if (e.shieldT > 0) e.shieldT -= dt;
+      let stepSpeed = e.speed * (1 - e.slowFrac) * evoTraits().speedMul;
       if (e.spawnT < 0.5) stepSpeed *= e.spawnT * 2;
 
       // Flyers ride the same corridors as walkers (the flow field ignores

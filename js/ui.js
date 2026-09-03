@@ -37,6 +37,9 @@ export class HUD {
     this.root = document.getElementById('hud');
     this.thumbs = {};
     this.seen = { build: false, leak: false };
+    // null means the whole roster is available, which is how every mode but
+    // 99 Planets reads. The mode shell assigns the unlocked list.
+    this.unlockedTowers = null;
     this._lastCountdownText = '';
     this._build();
     this._wire();
@@ -155,6 +158,17 @@ export class HUD {
             <button class="btn" id="btn-retry">Same world</button>
             <button class="btn" id="btn-new">New world</button>
           </div>
+        </div>
+      </div>
+
+      <!-- Must sit AFTER #end-overlay: overlays carry no z-index and stack by
+           DOM order, so a draft placed earlier would paint under the end card. -->
+      <div class="overlay" id="draft-overlay">
+        <div class="overlay-card draft-panel">
+          <div class="o-mark">CHOOSE A POWER</div>
+          <div class="o-sub" id="draft-sub">The frontier widens</div>
+          <div class="draft-cards" id="draft-cards"></div>
+          <div class="draft-timer"><span id="draft-timer-fill"></span></div>
         </div>
       </div>
     `;
@@ -367,7 +381,7 @@ export class HUD {
     });
 
     this.waves.onWaveStart = (n) => {
-      const boss = n % 10 === 0;
+      const boss = CONFIG.waves.count === 30 ? n % 10 === 0 : n === CONFIG.waves.count;
       this.banner(`WAVE ${n}`, boss ? 'the colossus stirs' : this._waveTag(n), boss);
       this.audio?.play(boss ? 'boss' : 'waveStart');
       this.refresh();
@@ -401,10 +415,42 @@ export class HUD {
     this.el['title-overlay'].classList.add('show');
   }
 
-  showEnd(won) {
+  // Cards are <button> elements on purpose. css/style.css sets
+  // `#hud > * { pointer-events: none }` at ID specificity and only buttons,
+  // .panel and .build-card get it back, so a <div> card would look completely
+  // correct and be completely unclickable.
+  showDraft(offers, onPick) {
+    const host = document.getElementById('draft-cards');
+    host.textContent = '';
+    offers.forEach((power, i) => {
+      const card = document.createElement('button');
+      card.className = `draft-card ${power.rarity}`;
+      card.innerHTML = `
+        <div class="dc-rarity">${power.rarity}</div>
+        <div class="dc-name">${power.name}</div>
+        <div class="dc-desc">${power.desc}</div>
+      `;
+      card.addEventListener('click', () => onPick(i));
+      host.appendChild(card);
+    });
+    this.setDraftTimer(1);
+    document.getElementById('draft-overlay').classList.add('show');
+  }
+
+  setDraftTimer(fraction) {
+    const fill = document.getElementById('draft-timer-fill');
+    if (fill) fill.style.width = `${Math.max(0, Math.min(1, fraction)) * 100}%`;
+  }
+
+  hideDraft() {
+    document.getElementById('draft-overlay').classList.remove('show');
+  }
+
+  showEnd(won, subtitle) {
     const e = this.el;
     e['end-mark'].textContent = won ? 'THE DAWN HOLDS' : 'THE HEART FADES';
-    e['end-sub'].textContent = won ? 'thirty waves repelled' : `fell on wave ${this.waves.wave}`;
+    e['end-sub'].textContent = subtitle
+      || (won ? `${CONFIG.waves.count} waves repelled` : `fell on wave ${this.waves.wave}`);
     e['end-card'].classList.toggle('danger', !won);
     e['end-waves'].textContent = String(this.waves.wave);
     e['end-kills'].textContent = fmt(this.game.kills);
@@ -495,8 +541,15 @@ export class HUD {
 
     for (const key of Object.keys(this.cards)) {
       const card = this.cards[key];
+      const unlocked = !this.unlockedTowers || this.unlockedTowers.includes(key);
       card.classList.toggle('selected', g.buildType === key);
-      card.classList.toggle('locked', g.gold < TOWER_TYPES[key].cost);
+      // Reuses the existing `locked` look so an unaffordable and a not-yet-
+      // unlocked tower read the same way; the title says which it is.
+      card.classList.toggle('locked', !unlocked || g.gold < TOWER_TYPES[key].cost);
+      card.disabled = !unlocked;
+      card.title = unlocked
+        ? `${TOWER_TYPES[key].name}: ${TOWER_TYPES[key].desc}`
+        : `${TOWER_TYPES[key].name} - locked. Survive more waves.`;
     }
 
     if (g.buildType && !this.seen.build) {

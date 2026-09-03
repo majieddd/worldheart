@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
 import { clamp } from './noise.js';
 import { R, isBuildableDir, surfacePoint, groundNormal, orientOnSurface, raycastTerrain } from './world.js';
-import { TOWER_TYPES, TOWER_SCALE, tierCost, buildTowerVisual, GHOST_MAT_OK, GHOST_MAT_BAD } from './towers.js';
+import { TOWER_TYPES, TOWER_SCALE, tierCost, buildTowerVisual, GHOST_MAT_OK, GHOST_MAT_BAD, MODS } from './towers.js';
+import { insideFrontier } from './run/frontier.js';
 
 // Player-facing game logic: build mode with a live ghost, the placement rule
 // pipeline, marching path previews, tower selection, and the economy.
@@ -189,6 +190,12 @@ export class Game {
     this.ghostMeshes = [];
     this.ghostCache = new Map();
     this.validity = { ok: false, reason: 'terrain' };
+
+    // Set by the 99 Planets shell; null in every other mode, which is what
+    // makes all three of these inert unless that mode is running.
+    this.frontier = null;       // { centre, theta } - the buildable mask
+    this.unlockedTowers = null; // null means the whole roster is available
+    this.tierCap = null;        // null means the tower's own tier count is the limit
     this._validateT = 0;
     this._pathT = 0;
     this._lastGhostDir = new THREE.Vector3();
@@ -232,11 +239,14 @@ export class Game {
 
   _wireCombat() {
     this.towerMgr.onKillReward = (enemy) => {
-      this.gold += enemy.type.bounty;
+      // Economy powers write goldMul; this is the only kill-bounty site.
+      const m = MODS.current;
+      const bounty = m ? Math.max(1, Math.round(enemy.type.bounty * m.goldMul)) : enemy.type.bounty;
+      this.gold += bounty;
       this.score += enemy.type.score;
       this.kills++;
       this.towerMgr.enemyWorldPos(enemy, _v);
-      this.fx.floaters.spawn(_v, `+${enemy.type.bounty}`, '#ffc857', 12);
+      this.fx.floaters.spawn(_v, `+${bounty}`, '#ffc857', 12);
       this.audio?.play('kill');
       this._hud();
     };
@@ -281,6 +291,12 @@ export class Game {
   toggleBuild(typeKey) {
     if (this.buildType === typeKey) { this.cancelBuild(); return; }
     if (this.state !== 'playing') return;
+    // The shop card is disabled too, but the 1-5 hotkeys bypass the card
+    // entirely, so the roster has to be enforced here as well.
+    if (this.unlockedTowers && !this.unlockedTowers.includes(typeKey)) {
+      if (this.onToast) this.onToast('That tower is not unlocked yet', 'warn');
+      return;
+    }
     this.buildType = typeKey;
     this.select(null);
     this._mountGhost(typeKey);
@@ -348,6 +364,11 @@ export class Game {
   _validate(def) {
     if (!this.cursorValid) return { ok: false, reason: 'terrain' };
     if (!isBuildableDir(this.cursorDir)) return { ok: false, reason: 'terrain' };
+    // 99 Planets: the frontier masks a world that was built at its FINAL size,
+    // so ground can be perfectly walkable and still be out of bounds.
+    if (this.frontier && !insideFrontier(this.frontier.centre, this.cursorDir, this.frontier.theta)) {
+      return { ok: false, reason: 'frontier' };
+    }
     const fp = this._fp(def);
     if (this.cursorPos.distanceTo(this.world.heart.group.position) < 3.7) return { ok: false, reason: 'heart' };
     for (const p of this.world.portals) {
@@ -365,8 +386,15 @@ export class Game {
     }
     const nv = this.nav.validatePlacement(this.cursorPos, fp);
     if (!nv.ok) return { ok: false, reason: nv.reason === 'path' ? 'path' : 'landmark' };
-    if (this.gold < def.cost) return { ok: false, reason: 'gold' };
+    if (this.gold < this._cost(def)) return { ok: false, reason: 'gold' };
     return { ok: true };
+  }
+
+  // Tower price after run modifiers. Economy powers write costMul; this is the
+  // only place the price is decided, so they cannot drift apart.
+  _cost(def) {
+    const m = MODS.current;
+    return m ? Math.max(1, Math.round(def.cost * m.costMul)) : def.cost;
   }
 
   _refreshPaths(withGhost) {
@@ -391,18 +419,20 @@ export class Game {
         path: 'PATH BLOCKED: every breach must reach the heart',
         landmark: 'Cannot build on a landmark',
         gold: 'Not enough gold',
+        frontier: 'Beyond the frontier. Survive a wave to push it out.',
       };
       if (this.onToast) this.onToast(msgs[this.validity.reason] || 'Cannot build here', this.validity.reason === 'path' ? 'danger' : 'warn');
       this.rig.addTrauma(0.06);
       this.audio?.play('deny');
       return;
     }
-    this.gold -= def.cost;
+    const paid = this._cost(def);
+    this.gold -= paid;
     const tower = this.towerMgr.place(this.buildType, this.cursorPos);
     this.nav.blockNodes(this.cursorPos, this._fp(def), tower.id);
     const crushed = this.world.crushDecorNear(this.cursorPos, this._fp(def) + 0.5);
     this.fx.buildPuff(this.cursorPos);
-    this.fx.floaters.spawn(this.cursorPos, `-${def.cost}`, '#ffc857', 13);
+    this.fx.floaters.spawn(this.cursorPos, `-${paid}`, '#ffc857', 13);
     if (crushed > 0) this.fx.burstGlow(this.cursorPos, 0x66b06d, 8, 2.4, 0.6, 0.7, 0.9);
     this._refreshPaths(false);
     if (this.audio) this.audio.play('build');
@@ -437,6 +467,12 @@ export class Game {
   upgradeSelected() {
     const t = this.selectedTower;
     if (!t || t.tier >= 2) return;
+    // 99 Planets raises this ceiling on waves 10 and 12. Null everywhere else,
+    // which leaves the tower's own tier count as the only limit.
+    if (this.tierCap !== null && t.tier + 1 >= this.tierCap) {
+      if (this.onToast) this.onToast('Upgrade locked until the next tier unlocks', 'warn');
+      return;
+    }
     const cost = tierCost(t.typeKey, t.tier + 1);
     if (this.gold < cost) {
       if (this.onToast) this.onToast('Not enough gold', 'warn');

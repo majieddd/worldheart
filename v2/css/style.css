@@ -392,3 +392,25 @@ input[type="range"].cam-slider::-moz-range-thumb {
     0% { opacity: 0; } 8% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; }
   }
 }
+
+/* ---------- 99 Planets: power draft ---------- */
+/* Cards are <button> so the #hud pointer-events cascade lets them through. */
+.draft-panel { max-width: 760px; }
+.draft-cards { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 18px 0 0; }
+.draft-card {
+  flex: 1 1 200px; max-width: 230px; padding: 14px 13px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line); border-radius: 10px;
+  text-align: left; color: var(--text); font: inherit; cursor: pointer;
+  transition: border-color 140ms ease, transform 140ms ease, background 140ms ease;
+}
+.draft-card:hover { border-color: var(--accent); transform: translateY(-2px); background: rgba(255, 255, 255, 0.06); }
+.draft-card .dc-rarity { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 7px; }
+.draft-card .dc-name { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+.draft-card .dc-desc { font-size: 12px; color: var(--dim); line-height: 1.5; }
+.draft-card.common .dc-rarity { color: var(--dim); }
+.draft-card.uncommon .dc-rarity { color: var(--accent); }
+.draft-card.rare .dc-rarity { color: var(--gold); }
+.draft-card.rare { border-color: rgba(255, 200, 87, 0.35); }
+.draft-timer { height: 3px; background: var(--line); border-radius: 2px; margin-top: 18px; overflow: hidden; }
+.draft-timer span { display: block; height: 100%; width: 100%; background: var(--accent); border-radius: 2px; transition: width 120ms linear; }

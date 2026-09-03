@@ -1476,7 +1476,9 @@ export function buildFieldWall(centerDir, theta) {
   const mesh = new THREE.Mesh(geo, mat);
   mesh.frustumCulled = false;
   mesh.renderOrder = 6;
-  return { mesh, mat };
+  // centerDir is cloned, not referenced: the caller passes a shared vector and
+  // a live reference would let a later mutation silently move the wall.
+  return { mesh, mat, centerDir: centerDir.clone(), theta };
 }
 
 const _orientQ = new THREE.Quaternion();
@@ -1588,6 +1590,19 @@ export class World {
     this.fieldWall = buildFieldWall(centerDir, theta);
     this.scene.add(this.fieldWall.mesh);
     return this.fieldWall;
+  }
+
+  // Move the wall to a new angle. Cheap by construction: SEG is fixed at 200,
+  // so vertex, uv and index counts are identical at every theta. This is what
+  // makes a frontier that widens every wave affordable, where regrowing the
+  // nav graph would not be.
+  setFieldWallTheta(theta) {
+    if (!this.fieldWall) return;
+    const centerDir = this.fieldWall.centerDir;
+    this.scene.remove(this.fieldWall.mesh);
+    this.fieldWall.mesh.geometry.dispose();
+    this.fieldWall = buildFieldWall(centerDir, theta);
+    this.scene.add(this.fieldWall.mesh);
   }
 
   addCloudDeck(centerDir, theta) {

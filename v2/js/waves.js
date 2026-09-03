@@ -1,4 +1,5 @@
 import { CONFIG } from './config.js';
+import { SIM_RANDOM } from './noise.js';
 
 // Wave direction: 30 authored waves, then endless scaling. Portals wake at
 // waves 1, 4, 9, 14. Bosses at 10, 20, 30. Early calls pay the remaining
@@ -26,11 +27,24 @@ export function waveReward(wave) {
 // Returns spawn groups: { type, count, gap, portal: 'all' | index-within-active }
 export function waveComp(wave) {
   const w = wave;
-  const boss = w % 10 === 0;
+  const total = CONFIG.waves.count;
+  // A short run gets exactly one boss, on its final wave. The classic 30-wave
+  // maps keep their bosses at 10, 20 and 30.
+  const boss = total === 30 ? w % 10 === 0 : w === total;
   const groups = [];
   const push = (type, count, gap, portal = 'spread') => groups.push({ type, count, gap, portal });
 
   if (boss) {
+    if (total !== 30) {
+      // The three-phase planetary boss: an armoured approach, its escorts,
+      // then the swarm that arrives while it is still standing.
+      push('colossus', 1, 4, 'far');
+      push('aegis', 4, 2.2);
+      push('husk', 18, 0.9);
+      push('mite', 24, 0.4);
+      push('wisp', 10, 1.1);
+      return groups;
+    }
     push('colossus', Math.max(1, Math.floor(w / 22)), 4, 'far');
     push('husk', 4 + w, 1.15);
     push('mite', 6 + w, 0.6);
@@ -121,7 +135,7 @@ export class WaveDirector {
       for (let i = 0; i < g.count; i++) {
         const portal = portals[i % portals.length];
         this.queues.push({
-          t: 1.2 + i * g.gap + Math.random() * 0.3,
+          t: 1.2 + i * g.gap + SIM_RANDOM.next() * 0.3,
           type: g.type, portal, scale,
         });
         this.pendingSpawns++;

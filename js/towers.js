@@ -1,7 +1,12 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
-import { clamp, lerp } from './noise.js';
+import { clamp, lerp, SIM_RANDOM } from './noise.js';
 import { R, orientOnSurface } from './world.js';
+
+// The run's modifier object, installed by the 99 Planets shell and null in
+// every other mode. Powers ONLY ever write to this; towers ONLY ever read it.
+// Without that rule twenty powers would each need hooks in twenty call sites.
+export const MODS = { current: null };
 
 // Tower construction, animation, targeting, and projectile simulation.
 // Each species has a distinct silhouette and a firing performance; tiers
@@ -366,7 +371,20 @@ export class Tower {
     this.buildT = 0;
   }
 
-  get stats() { return this.def.tiers[this.tier]; }
+  // The single seam every tower's numbers pass through, so a damage, rate,
+  // range or crit power lands everywhere at once.
+  get stats() {
+    const base = this.def.tiers[this.tier];
+    const m = MODS.current;
+    if (!m) return base;
+    return {
+      ...base,
+      dmg: base.dmg * m.dmgMul,
+      rate: base.rate * m.rateMul,
+      range: base.range * m.rangeMul,
+      crit: (base.crit || 0) + m.critAdd,
+    };
+  }
   get range() { return this.stats.range; }
 
   upgrade() {
@@ -466,7 +484,7 @@ export class Tower {
       muzzle.getWorldPosition(_v);
       let dmg = st.dmg;
       let crit = false;
-      if (st.crit && Math.random() < st.crit) { dmg *= 2.2; crit = true; }
+      if (st.crit && SIM_RANDOM.next() < st.crit) { dmg *= 2.2; crit = true; }
       this.manager.fireBolt(this, _v, t, dmg, crit);
       fx.glow.emit(_v.x, _v.y, _v.z, 0, 0, 0, PALETTE.energy, 2.6, 0.12, 0.55, 0);
       this.manager.audio?.play('shot');
