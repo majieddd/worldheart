@@ -61,6 +61,7 @@ const _fwd = new THREE.Vector3();
 const _up = new THREE.Vector3();
 const _right = new THREE.Vector3();
 const _axis = new THREE.Vector3();
+const _bearing = new THREE.Vector3();
 const _m4 = new THREE.Matrix4();
 const _q = new THREE.Quaternion();
 const _s = new THREE.Vector3();
@@ -70,17 +71,15 @@ let nextAllyId = 1;
 
 // Rotate `dir` toward `target` by at most maxAng radians. Both are unit
 // vectors on the sphere.
-function steerToward(dir, target, maxAng) {
-  const ang = Math.acos(clamp(dir.dot(target), -1, 1));
-  if (ang < 1e-5) return;
-  _axis.crossVectors(dir, target);
-  if (_axis.lengthSq() < 1e-12) return;
-  _axis.normalize();
-  dir.applyAxisAngle(_axis, Math.min(ang, maxAng)).normalize();
-}
-
 // Walk `dir` along the great circle toward `target`. Returns true on arrival.
-function advanceToward(dir, target, arcDist) {
+// `carry` is the unit's forward vector, rotated by the SAME angle so it travels
+// with the frame. Rotating dir on its own leaves fwd behind in world space, so
+// it tips a little further off the tangent plane with every step: twenty
+// seconds of walking in a straight line pitched the first person camera 18
+// degrees and slid the horizon off the screen, and every unit's rendered facing
+// leaned with it. Applying the same rotation is exact parallel transport on a
+// sphere, so both the heading and the right angle survive the move.
+function advanceToward(dir, target, arcDist, carry) {
   const ang = Math.acos(clamp(dir.dot(target), -1, 1));
   if (ang < 1e-6) return true;
   _axis.crossVectors(dir, target);
@@ -88,7 +87,41 @@ function advanceToward(dir, target, arcDist) {
   _axis.normalize();
   const step = Math.min(ang, arcDist);
   dir.applyAxisAngle(_axis, step).normalize();
+  if (carry) reflatten(carry.applyAxisAngle(_axis, step), dir);
   return step >= ang;
+}
+
+// Force `v` back into the tangent plane at `dir`. Parallel transport keeps the
+// right angle in exact arithmetic; this removes the float drift that would
+// otherwise accumulate over a fifteen wave run.
+function reflatten(v, dir) {
+  v.addScaledVector(dir, -v.dot(dir));
+  if (v.lengthSq() < 1e-8) {
+    _tmp.set(0, 1, 0);
+    if (Math.abs(dir.y) > 0.9) _tmp.set(1, 0, 0);
+    v.crossVectors(dir, _tmp);
+  }
+  return v.normalize();
+}
+
+// Turn `fwd` to face `targetPos` while staying tangent. steerToward used to be
+// handed the target's POSITION as if it were a direction, which pulled fwd
+// toward the planet centre instead of along the ground: the closer a unit got
+// to what it was chasing, the further its facing tipped out of the tangent
+// plane. The bearing has to be built by projecting the target onto the tangent
+// plane first.
+function faceToward(fwd, dir, targetPos, maxAng) {
+  _bearing.copy(targetPos);
+  _bearing.addScaledVector(dir, -_bearing.dot(dir));
+  if (_bearing.lengthSq() < 1e-10) return;
+  _bearing.normalize();
+  const ang = Math.acos(clamp(fwd.dot(_bearing), -1, 1));
+  if (ang < 1e-5) return;
+  _axis.crossVectors(fwd, _bearing);
+  if (_axis.lengthSq() < 1e-12) return;
+  _axis.normalize();
+  fwd.applyAxisAngle(_axis, Math.min(ang, maxAng));
+  reflatten(fwd, dir);
 }
 
 class Ally {
@@ -350,8 +383,8 @@ export class AllyManager {
           }
         } else {
           a.state = 'chase';
-          advanceToward(a.dir, a.target.dir, (type.speed * dt) / R);
-          steerToward(a.fwd, a.target.dir, dt * 6);
+          advanceToward(a.dir, a.target.dir, (type.speed * dt) / R, a.fwd);
+          faceToward(a.fwd, a.dir, a.target.dir, dt * 6);
         }
       } else if (this._attackPortal(a, dt)) {
         a.state = 'siege';
@@ -364,13 +397,13 @@ export class AllyManager {
           const d = this.worldPos(lead, _tmp2).distanceTo(this.worldPos(a, _tmp));
           // A loose formation: close the gap only when it opens, so a party
           // does not jitter on top of its leader.
-          if (d > 2.6) advanceToward(a.dir, lead.dir, (type.speed * 1.08 * dt) / R);
+          if (d > 2.6) advanceToward(a.dir, lead.dir, (type.speed * 1.08 * dt) / R, a.fwd);
         }
       } else {
         a.state = 'roam';
         a.wanderT -= dt;
         if (a.wanderT <= 0) this._reroll(a);
-        if (advanceToward(a.dir, a.wander, (type.speed * 0.55 * dt) / R)) this._reroll(a);
+        if (advanceToward(a.dir, a.wander, (type.speed * 0.55 * dt) / R, a.fwd)) this._reroll(a);
       }
 
       this._takeContactDamage(a, dt);
@@ -431,7 +464,9 @@ export class AllyManager {
     _axis.crossVectors(a.dir, _tmp2);
     if (_axis.lengthSq() < 1e-12) return;
     _axis.normalize();
-    a.dir.applyAxisAngle(_axis, (a.type.speed * 1.25 * dt) / R).normalize();
+    const step = (a.type.speed * 1.25 * dt) / R;
+    a.dir.applyAxisAngle(_axis, step).normalize();
+    reflatten(a.fwd.applyAxisAngle(_axis, step), a.dir);
     this._ground(a);
   }
 
@@ -439,14 +474,7 @@ export class AllyManager {
   // so it cannot drift off the tangent plane and corrupt the render basis.
   turnUnit(a, yawDelta) {
     if (!a.active || a.dead) return;
-    a.fwd.applyAxisAngle(a.dir, -yawDelta);
-    a.fwd.addScaledVector(a.dir, -a.fwd.dot(a.dir));
-    if (a.fwd.lengthSq() < 1e-8) {
-      _tmp.set(0, 1, 0);
-      if (Math.abs(a.dir.y) > 0.9) _tmp.set(1, 0, 0);
-      a.fwd.crossVectors(a.dir, _tmp);
-    }
-    a.fwd.normalize();
+    reflatten(a.fwd.applyAxisAngle(a.dir, -yawDelta), a.dir);
   }
 
   // A possessed unit swings wider than the AI does: everything in reach is hit.

@@ -293,15 +293,18 @@ export class HUD {
       card.className = 'build-card';
       card.dataset.type = key;
       card.dataset.card = String(i);
+      // An <img> with no src renders as a broken-image icon, so the thumb is
+      // only emitted once one exists; until then the slot is a styled initial.
+      const thumb = this.thumbs[key];
       card.innerHTML = `
-        <img class="build-thumb" alt="${def.name}">
+        ${thumb
+          ? `<img class="build-thumb" alt="${def.name}" src="${thumb}">`
+          : `<div class="build-thumb build-thumb-fallback">${def.name.charAt(0)}</div>`}
         <div class="build-name">${def.name.split(' ')[0]}</div>
         <div class="build-cost">${def.cost}</div>
         <span class="kbd build-key">${i + 1}</span>
       `;
       card.title = `${def.name}: ${def.desc}`;
-      const img = card.querySelector('.build-thumb');
-      if (this.thumbs[key]) img.src = this.thumbs[key];
       bar.appendChild(card);
       this.handCards.push(card);
       card.addEventListener('click', () => this.game.toggleBuildCard(i));
@@ -353,11 +356,19 @@ export class HUD {
         }
       }
       ctx.putImageData(img, 0, 0);
-      this.cards[typeKey].querySelector('img').src = cv.toDataURL();
+      // Cache it. This used to write straight into this.cards[typeKey], the
+      // classic shop card, and nothing else ever saw it - so the 99 Planets
+      // hand, which reads this.thumbs, rendered every card as a broken image,
+      // and in card mode this.cards is empty so the write threw as well.
+      this.thumbs[typeKey] = cv.toDataURL();
+      this.cards[typeKey]?.querySelector('img')?.setAttribute('src', this.thumbs[typeKey]);
       scene.remove(built.group);
       built.group.traverse((o) => o.geometry?.dispose());
     }
     rt.dispose();
+    // The mode shell renders its opening hand during setup, which can happen
+    // before this runs. Back-fill rather than depending on the order.
+    if (this.hand && this.hand.length) this.renderHand(this.hand);
   }
 
   // -- wiring ---------------------------------------------------------------

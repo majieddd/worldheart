@@ -194,6 +194,11 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
 
   const prevTap = rig.onTap;
   rig.onTap = (x, y, button) => {
+    // A possessed unit owns the mouse: left click swings and right drag looks,
+    // both handled in js/possess.js. Letting the tap fall through from here
+    // meant every swing also selected whatever tower happened to be under the
+    // crosshair, and a right click posted a patrol mid-fight.
+    if (possession && possession.active) return;
     // Right-click with a barracks selected posts its patrol.
     if (button === 2 && game.selectedTower && game.selectedTower.typeKey === 'warden' && game.cursorValid) {
       if (setPatrolFrom(game.selectedTower, game.cursorDir)) return;
@@ -212,7 +217,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
 
   if (possession) {
     possession.onEnter = (u) => {
-      ui.toast(`Controlling ${u.type.name}. WASD to move, mouse to look, Space to strike, `
+      ui.toast(`Controlling ${u.type.name}. WASD to move, mouse to look, left click to strike, `
         + `${u.type.commander ? 'G to rally, ' : ''}Esc to release.`, 'info');
     };
     possession.onExit = () => {

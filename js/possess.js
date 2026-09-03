@@ -137,19 +137,33 @@ export class Possession {
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
       this.keys.add(e.code);
       if (e.code === 'Escape' || e.code === 'Tab') { e.preventDefault(); this.exit(); }
-      if (e.code === 'Space') { e.preventDefault(); this.attack(); }
       if (e.code === 'KeyG') { e.preventDefault(); this.rally(); }
     });
     addEventListener('keyup', (e) => this.keys.delete(e.code));
     addEventListener('blur', () => this.keys.clear());
 
+    // Left click strikes. Space is the game's PAUSE key and always was, so
+    // binding the strike to it meant every swing also paused the game.
+    this.canvas.addEventListener('mousedown', (e) => {
+      if (!this.active) return;
+      if (e.button === 0) { e.preventDefault(); this.attack(); }
+    });
+
     // Mouse look. Pointer lock when the browser grants it, drag-look otherwise,
-    // so the mode is usable even where lock is refused.
+    // so the mode is usable even where lock is refused. The fallback drags on
+    // the RIGHT button now that the left one swings, because sharing a button
+    // between looking and attacking made every turn throw a punch.
     this.canvas.addEventListener('mousemove', (e) => {
       if (!this.active) return;
       const locked = document.pointerLockElement === this.canvas;
       if (locked) this.yawQueue += e.movementX * TURN_PER_PIXEL;
-      else if (e.buttons & 1) this.yawQueue += e.movementX * TURN_PER_PIXEL;
+      else if (e.buttons & 2) this.yawQueue += e.movementX * TURN_PER_PIXEL;
+    });
+
+    // Right-drag is the look fallback, so its menu has to stay out of the way
+    // while a unit is possessed.
+    this.canvas.addEventListener('contextmenu', (e) => {
+      if (this.active) e.preventDefault();
     });
   }
 

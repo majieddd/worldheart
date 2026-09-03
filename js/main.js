@@ -197,11 +197,23 @@ function updateShadowCamera() {
   const sun = world?.sun;
   if (!sun || !sun.castShadow) return;
   const S = LIGHTING.shadows;
-  const cosLat = Math.cos(rig.lat);
-  _shadowDir.set(Math.sin(rig.lon) * cosLat, Math.sin(rig.lat), Math.cos(rig.lon) * cosLat);
-  _shadowFocus.copy(_shadowDir).multiplyScalar(R);
-
-  const radius = S.radiusNear + (S.radiusFar - S.radiusNear) * rig.zoomT;
+  let radius;
+  // While a unit is possessed the ORBIT RIG IS NOT DRIVING, so rig.lon/lat stay
+  // frozen wherever the overhead camera was left - usually the heart. Fitting
+  // the shadow box to them meant the box stayed parked on the base while the
+  // player walked hundreds of units away, and everything past its edge sampled
+  // the shadow map out of bounds and banded across the ground. In first person
+  // the box follows the unit instead, at its tightest radius, which is also the
+  // densest: at eye level you only ever see the ground right around you.
+  if (possession && possession.unit) {
+    _shadowFocus.copy(possession.unit.dir).multiplyScalar(R);
+    radius = S.radiusNear;
+  } else {
+    const cosLat = Math.cos(rig.lat);
+    _shadowDir.set(Math.sin(rig.lon) * cosLat, Math.sin(rig.lat), Math.cos(rig.lon) * cosLat);
+    _shadowFocus.copy(_shadowDir).multiplyScalar(R);
+    radius = S.radiusNear + (S.radiusFar - S.radiusNear) * rig.zoomT;
+  }
   const c = sun.shadow.camera;
   if (c.right !== radius) {
     c.left = -radius; c.right = radius; c.top = radius; c.bottom = -radius;
