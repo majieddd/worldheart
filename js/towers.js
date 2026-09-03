@@ -675,6 +675,17 @@ export class TowerManager {
   place(typeKey, pos) {
     const tower = new Tower(typeKey, pos, this);
     this.towers.push(tower);
+    // Marked here rather than in buildTowerVisual because a tower rebuilds its
+    // visual on every upgrade, and holder is the one node every part hangs off.
+    // Emissive energy parts are excluded: a glowing element casting a hard
+    // shadow reads as solid geometry and kills the sense that it is light.
+    tower.holder.traverse((o) => {
+      if (!o.isMesh) return;
+      const m = o.material;
+      const emissive = m && m.emissiveIntensity > 0.9;
+      o.castShadow = !emissive;
+      o.receiveShadow = true;
+    });
     this.scene.add(tower.holder);
     return tower;
   }

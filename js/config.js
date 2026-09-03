@@ -140,6 +140,51 @@ export const CONFIG = {
 };
 
 // All hexes are sRGB. Three converts to linear internally.
+/* LIGHTING. Two gaps a 2026-08-31 render audit found, both silent:
+
+   1. Every metal in the game was paying for a reflection it never received.
+      `scene.environment` was never set, yet towers.js carries metalness up to
+      0.55 and the heart trim 0.35. In the standard BRDF metalness drives
+      diffuse albedo toward zero and routes that energy into a specular lobe,
+      so metal with nothing to reflect renders DARKER AND FLATTER than
+      metalness:0 would. The sky is already a full procedural dome, so the fix
+      is one PMREM render at boot and nothing per frame.
+   2. Nothing cast a shadow anywhere: a grep for castShadow/receiveShadow/
+      shadowMap across all 14 modules returned nothing. DESIGN.md asks for a
+      hand-carved museum diorama, and the diorama read is mostly contact shadow.
+
+   envIntensity stays below 1 on purpose. A full-strength environment washes
+   out the flat facet shading the dioramic look depends on; this is a metal
+   fix, not an ambient-light fix.
+
+   The shadow camera is FOCUS-FITTED, and it has to be. Terrain at detail 7 is
+   327,680 triangles: making it a caster means re-rendering all of it into the
+   map every frame on a colossal world. Terrain RECEIVES but never CASTS, the
+   casters are towers, creatures, decor, heart and portals, and the orthographic
+   box tracks rig.lon/lat, which is already the point pinned to screen centre.
+   Radius scales with camera altitude so the box stays tight when zoomed in and
+   still covers what is visible from orbit. */
+export const LIGHTING = {
+  envIntensity: 0.62,
+  shadows: {
+    enabled: true,
+    mapSize: 2048,       // 1024 on the low tier, set in main.js
+    // Half-width of the ortho shadow box in world units, lerped across zoom.
+    radiusNear: 26,
+    radiusFar: Math.min(R0 * 0.55, 150),
+    depth: Math.max(140, R0 * 0.9),   // ortho near/far span, must clear terrain relief
+    bias: -0.0009,
+    // normalBias is in WORLD UNITS, and this world's casters are small: a tree
+    // is 1-2 units and a tower 2-3. A first pass set this to 0.55 by analogy
+    // with scenes built at human scale, which offset the shadow lookup by a
+    // third of a tree and erased most of the coverage. Measured under a 12deg
+    // raking light, dark pixels in the play area went 639 at 0.55 to 1,414 at
+    // 0, i.e. the bias alone was suppressing more than half the shadow. 0.02
+    // keeps enough offset to stop facet acne without eating the shadow itself.
+    normalBias: 0.02,
+  },
+};
+
 export const PALETTE = {
   space: 0x0a0e21,
   horizon: 0x2a3670,
@@ -192,7 +237,14 @@ export const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').mat
 // panel writes them, and they persist per browser. Ranges double as the
 // slider bounds and the load-time sanity clamp.
 export const CAM_RANGES = {
-  fovNear: { min: 5, max: 170, step: 1, def: 8, label: 'Lens · close', unit: '°' },
+  // The lens WIDENS as you close in, and that is the inverse of what this
+  // shipped with. A narrow lens up close is a telephoto: it compresses depth,
+  // flattens the ground into a map, and reads as "zoomed in" rather than
+  // "standing there", which is exactly how 8 degrees felt. Human-ish at the
+  // near end gives the boots-on-the-ground presence; the narrow orbit lens is
+  // kept because that telescope-on-a-ball look is what makes the planet read
+  // as a sphere from far out.
+  fovNear: { min: 5, max: 170, step: 1, def: 58, label: 'Lens · close', unit: '°' },
   fovFar: { min: 5, max: 170, step: 1, def: 25, label: 'Lens · orbit', unit: '°' },
   // How high the camera sits above the ground it is looking at, measured at
   // that point rather than at the camera. Low is a grounded view that just
@@ -202,12 +254,40 @@ export const CAM_RANGES = {
   // sin(pitch) = (R/Rc)*cos(view) carries the planet radius in it.
   // Renamed from tiltNear/tiltFar so tunings saved under the old, differently
   // meaning keys are not read back inverted.
-  viewNear: { min: 6, max: 88, step: 1, def: 19, label: 'View angle · close', unit: '°' },
-  viewFar: { min: 6, max: 88, step: 1, def: 53, label: 'View angle · orbit', unit: '°' },
+  // 9, not 7. camTest floors the flattest view angle at 0.14 rad (8.02 deg)
+  // because the pitch solve degenerates as the view flattens onto the horizon:
+  // tilt approaches asin(R/Rc) and _placeCamera's clamp at horizon - 0.0005
+  // starts doing the framing instead of the tuning. 7 tripped that floor. The
+  // horizon's flatness is set by ALTITUDE, not by this, so the two degrees
+  // cost nothing visually and keep the guard intact.
+  viewNear: { min: 6, max: 88, step: 1, def: 9, label: 'View angle · close', unit: '°' },
+  // Orbit sits higher over the focus than it used to, and the reason is
+  // framing rather than taste. The rig looks at a point on the SURFACE, so
+  // the planet's centre projects below it: measured at 53 degrees the focus
+  // was dead centre at y=49.9% while the globe's centre was at y=77.2%, which
+  // is the "planet is not centred" complaint exactly. Looking further down
+  // closes that gap without touching the focus, so grab-the-world panning is
+  // unaffected: the focus stays welded to screen centre either way.
+  viewFar: { min: 6, max: 88, step: 1, def: 70, label: 'View angle · orbit', unit: '°' },
   // Camera height above the ground, in planet radii, so one setting frames a
   // planetoid and a colossal planet the same way.
-  minAlt: { min: 0.01, max: 4, step: 0.01, def: 0.25, label: 'Min height', unit: '×R' },
-  maxAlt: { min: 0.02, max: 14, step: 0.05, def: 0.95, label: 'Max height', unit: '×R' },
+  //
+  // This number IS the horizon. Dip below horizontal is acos(R/(R+h)), which
+  // depends only on h/R, so one setting gives the same horizon curve on a
+  // planetoid and a colossal planet: 0.25R dips 36.9 degrees and puts the
+  // horizon far below any sane frame, which is why the close view had no
+  // horizon in it at all and read as a top-down map. 0.06R dips 19.4 degrees
+  // and sits the horizon in frame with a slight, believable curve, 84 units
+  // out on the giant world and 11 on the planetoid.
+  minAlt: { min: 0.01, max: 4, step: 0.01, def: 0.06, label: 'Min height', unit: '×R' },
+  // Far enough out to actually SEE the ball. The planet's angular radius is
+  // asin(R/(R+h)), so at the old 0.95R it was 30.9 degrees against a 12.9
+  // degree half-frame: the globe overflowed every edge by 2.4x and orbit
+  // never showed a sphere, only a patch of ground that happened to curve.
+  // 4.0R puts the angular radius at 11.5 degrees, so the planet sits inside
+  // the frame with a margin and reads as a body in space. Scale-free, like
+  // minAlt: the same setting frames a planetoid and a colossal planet alike.
+  maxAlt: { min: 0.02, max: 14, step: 0.05, def: 4.0, label: 'Max height', unit: '×R' },
   panMul: { min: 10, max: 400, step: 5, def: 100, label: 'Pan speed', unit: '%' },
   zoomSpeed: { min: 5, max: 400, step: 5, def: 10, label: 'Zoom speed', unit: '%' },
 };

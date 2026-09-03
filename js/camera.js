@@ -145,7 +145,9 @@ export class OrbitRig {
           this.viewYaw -= dx * 0.0052;
           this.tiltOffset = clamp(this.tiltOffset + dy * 0.0042, -0.55, 0.75);
         } else if (this.dragMoved > 4) {
-          if (this.grabValid) this.panGrab(e.clientX, e.clientY);
+          // Pass the pixel delta so the grab solve can hold itself to a sane
+          // angular rate. Without it the limb is a singularity (see panGrab).
+          if (this.grabValid) this.panGrab(e.clientX, e.clientY, Math.hypot(dx, dy));
           else this.panPixels(dx, dy, true);
         }
       } else if (this.onHover) {
@@ -236,10 +238,24 @@ export class OrbitRig {
     return this.camScale * CAM_TUNE.minAlt;
   }
 
+  /* The FAR limit is measured against the planet radius, not camScale, and the
+     two are deliberately different scales.
+
+     distMin is a gameplay framing: camScale carries a floor so a tiny world
+     still holds a comparable number of towers in view, which is the right
+     instinct up close and has nothing to do with the planet's size.
+
+     distMax is a picture of the planet, and what decides that picture is the
+     angular radius asin(R/(R+h)), which depends only on h/R. Multiplying by
+     camScale broke exactly that: on the planetoid camScale floors at 150
+     against R=30, so a setting meaning "4 radii out" silently became twenty,
+     and camTest caught it as cursor tracking degrading to 26px of error at the
+     far end while the giant world sat at 0. Against R the same number frames
+     every world alike, which is what the slider's own "xR" label promises. */
   get distMax() {
     // Always leave a usable zoom band, however the two height sliders are set.
     const d = this.distMin;
-    return Math.max(this.camScale * CAM_TUNE.maxAlt, d + 2, d * 1.15);
+    return Math.max(CONFIG.planetRadius * CAM_TUNE.maxAlt, d + 2, d * 1.15);
   }
 
   // Angle from straight down to the horizon, seen from a camera at height h.
@@ -409,7 +425,7 @@ export class OrbitRig {
   // pointer-down sits back under the cursor. Correct by construction at any
   // lens, pitch, view rotation, zoom, and planet size, and self-correcting
   // because the anchor never moves during the gesture.
-  panGrab(clientX, clientY) {
+  panGrab(clientX, clientY, pxMoved = 0) {
     const prevLat = this.lat, prevLon = this.lon;
     this.flight = null;
     this.autoOrbit = 0;
@@ -445,14 +461,29 @@ export class OrbitRig {
       this._syncCamera();
     }
 
-    // A cursor on the globe may legitimately demand a large swing (near the
-    // limb the ground genuinely races under the pointer), so only the
-    // fabricated off-globe target is held to a tight leash. The generous
-    // on-globe cap is a backstop against teleporting, nothing more.
+    /* RATE LIMIT, not a flat cap. The old cap was a constant 1.0 rad on the
+       globe, which is 57 degrees of planet rotation permitted in a SINGLE
+       pointermove, and several of those arrive per frame. That is why dragging
+       near the edge span the world away: the screen-to-sphere map is singular
+       at the limb, where the surface turns parallel to the view ray and
+       d(angle)/d(pixel) goes to infinity, so a two-pixel jitter could ask for
+       a huge swing and the cap was too loose to refuse it.
+
+       The honest bound is angular scale per pixel. A screen-locked drag at the
+       sub-camera point rotates about fov/height radians per pixel, and the
+       limb legitimately needs more than that because of foreshortening, so the
+       tolerance is generous rather than tight. It is a leash on the
+       singularity, not on the feel: an ordinary drag never comes near it.
+
+       The floor keeps slow, sub-pixel-per-event drags from stalling, and the
+       old 1.0 stays as an absolute backstop. */
     const clNow = Math.cos(this.lat);
     _camDir.set(Math.sin(this.lon) * clNow, Math.sin(this.lat), Math.cos(this.lon) * clNow);
     const moved = Math.acos(clamp(_camStart.dot(_camDir), -1, 1));
-    const CAP = this.rayHit ? 1.0 : 0.12;
+    const vh = Math.max(this.canvas?.clientHeight || 0, 1);
+    const radPerPx = (this.camera.fov * Math.PI / 180) / vh;
+    const tol = this.rayHit ? 6 : 2;
+    const CAP = Math.min(1.0, Math.max(0.012, pxMoved * radPerPx * tol));
     if (moved > CAP) {
       const s = Math.sin(moved);
       const a = Math.sin((1 - CAP / moved) * moved) / s;
