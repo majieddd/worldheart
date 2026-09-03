@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, MAPS, PALETTE, storeLocal, CAM_RANGES, CAM_TUNE, saveCamTune, resetCamTune } from './config.js';
 import { TOWER_TYPES, tierCost, buildTowerVisual, TOWER_SCALE, MAT } from './towers.js';
+import { powerSigil } from './ui-icons.js';
 
 // DOM HUD. All chrome lives here; the scene renders beneath it. Per the
 // design contract: per-shot and per-kill readouts update with zero animation,
@@ -493,6 +494,7 @@ export class HUD {
       const card = document.createElement('button');
       card.className = `draft-card ${power.rarity}`;
       card.innerHTML = `
+        ${powerSigil(power.tag)}
         <div class="dc-rarity">${power.rarity}</div>
         <div class="dc-name">${power.name}</div>
         <div class="dc-desc">${power.desc}</div>
