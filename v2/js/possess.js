@@ -124,6 +124,10 @@ export class Possession {
     this.onEnter = null;
     this.onExit = null;
     this.goldFound = 0;
+    this.firing = false;
+    this.kick = 0;
+    this.stride = 0;
+    this._savedFov = null;
     this._bind();
   }
 
@@ -137,19 +141,39 @@ export class Possession {
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
       this.keys.add(e.code);
       if (e.code === 'Escape' || e.code === 'Tab') { e.preventDefault(); this.exit(); }
-      if (e.code === 'Space') { e.preventDefault(); this.attack(); }
       if (e.code === 'KeyG') { e.preventDefault(); this.rally(); }
+      if (e.code === 'KeyH') { e.preventDefault(); this.dismiss(); }
     });
     addEventListener('keyup', (e) => this.keys.delete(e.code));
     addEventListener('blur', () => this.keys.clear());
 
+    // Left click strikes. Space is the game's PAUSE key and always was, so
+    // binding the strike to it meant every swing also paused the game.
+    this.canvas.addEventListener('mousedown', (e) => {
+      if (!this.active) return;
+      if (e.button === 0) { e.preventDefault(); this.firing = true; this.attack(0); }
+    });
+    // Held rather than clicked, so a beam channels and a melee keeps its own
+    // cadence without the player having to match it by hand. playerAttack's own
+    // cooldown does the rate limiting.
+    addEventListener('mouseup', (e) => { if (e.button === 0) this.firing = false; });
+    addEventListener('blur', () => { this.firing = false; });
+
     // Mouse look. Pointer lock when the browser grants it, drag-look otherwise,
-    // so the mode is usable even where lock is refused.
+    // so the mode is usable even where lock is refused. The fallback drags on
+    // the RIGHT button now that the left one swings, because sharing a button
+    // between looking and attacking made every turn throw a punch.
     this.canvas.addEventListener('mousemove', (e) => {
       if (!this.active) return;
       const locked = document.pointerLockElement === this.canvas;
       if (locked) this.yawQueue += e.movementX * TURN_PER_PIXEL;
-      else if (e.buttons & 1) this.yawQueue += e.movementX * TURN_PER_PIXEL;
+      else if (e.buttons & 2) this.yawQueue += e.movementX * TURN_PER_PIXEL;
+    });
+
+    // Right-drag is the look fallback, so its menu has to stay out of the way
+    // while a unit is possessed.
+    this.canvas.addEventListener('contextmenu', (e) => {
+      if (this.active) e.preventDefault();
     });
   }
 
@@ -169,6 +193,12 @@ export class Possession {
       const lock = this.canvas.requestPointerLock?.();
       if (lock && typeof lock.catch === 'function') lock.catch(() => {});
     } catch { /* refused synchronously; drag-look covers it */ }
+    // Each archetype sees the world a little differently: a Bulwark is close
+    // and heavy at 74, a Twinfang wide and quick at 84.
+    const cam = this.rig.camera;
+    if (this._savedFov === null) this._savedFov = cam.fov;
+    const want = unit.type.strike?.fov;
+    if (want) { cam.fov = want; cam.updateProjectionMatrix(); }
     if (this.onEnter) this.onEnter(unit);
     return true;
   }
@@ -184,6 +214,13 @@ export class Possession {
       this._prevFog = null;
     }
     if (unit) unit.possessed = false;
+    this.firing = false;
+    this.kick = 0;
+    if (this._savedFov !== null) {
+      this.rig.camera.fov = this._savedFov;
+      this.rig.camera.updateProjectionMatrix();
+      this._savedFov = null;
+    }
     try {
       if (document.pointerLockElement === this.canvas) document.exitPointerLock?.();
     } catch { /* nothing to release */ }
@@ -191,9 +228,16 @@ export class Possession {
     if (this.onExit) this.onExit(unit);
   }
 
-  attack() {
+  attack(dt = 0) {
     if (!this.active) return 0;
-    return this.allies.playerAttack(this.unit);
+    const n = this.allies.playerAttack(this.unit, dt);
+    if (n > 0) {
+      const s = this.unit.type.strike;
+      // A weapon that does not move when it fires does not feel like a weapon.
+      this.kick = Math.min(0.5, this.kick + (s.kick || 0));
+      this.rig.addTrauma(s.trauma || 0.05);
+    }
+    return n;
   }
 
   // Gather every nearby friendly to follow this unit. Only a commander can
@@ -205,7 +249,17 @@ export class Possession {
       return 0;
     }
     const n = this.allies.gatherParty(this.unit);
-    this.ui?.toast?.(n ? `${n} joined the party` : 'Nobody in range', n ? 'info' : 'warn');
+    const size = this.allies.partySize(this.unit);
+    this.ui?.toast?.(n ? `${n} joined - party of ${size}` : 'Nobody in range', n ? 'info' : 'warn');
+    return n;
+  }
+
+  // Send the party home. Paired with rally so a group can be released at the
+  // gate rather than dragged back into the base.
+  dismiss() {
+    if (!this.active) return 0;
+    const n = this.allies.dismissParty(this.unit);
+    this.ui?.toast?.(n ? `${n} returned to post` : 'No party to dismiss', n ? 'info' : 'warn');
     return n;
   }
 
@@ -232,6 +286,10 @@ export class Possession {
     if (this.keys.has('KeyA') || this.keys.has('ArrowLeft')) strafe -= 1;
     if (this.keys.has('KeyD') || this.keys.has('ArrowRight')) strafe += 1;
     if (fwd || strafe) this.allies.driveUnit(u, fwd, strafe, dt);
+    if (this.firing) this.attack(dt);
+    // The kick settles back over a few frames rather than snapping.
+    if (this.kick > 0) this.kick = Math.max(0, this.kick - this.kick * Math.min(1, dt * 14) - dt * 0.05);
+    this.stride += (fwd || strafe) ? dt * (u.type.strike?.strideHz || 2) * Math.PI * 2 : 0;
 
     // Treasure is collected by walking over it.
     if (this.caches) {
@@ -245,6 +303,7 @@ export class Possession {
 
     this.placeCamera();
     this._applyDistanceFog();
+    this.ui?.updatePossession?.(u);
   }
 
   // Thickens with how far past the frontier the unit has walked, so leaving
@@ -272,8 +331,12 @@ export class Possession {
     const u = this.unit;
     const cam = this.rig.camera;
     u.height = terrainHeight(u.dir.x, u.dir.y, u.dir.z);
-    _eye.copy(u.dir).multiplyScalar(R + Math.max(u.height, 0.03) + EYE_HEIGHT * u.type.scale);
-    _look.copy(_eye).addScaledVector(u.fwd, 4);
+    // A small stride bob and the recoil kick. Both are tiny on purpose: enough
+    // that walking and firing have weight, not enough to fight the aim.
+    const bob = Math.sin(this.stride) * 0.035;
+    _eye.copy(u.dir).multiplyScalar(
+      R + Math.max(u.height, 0.03) + EYE_HEIGHT * u.type.scale + bob - this.kick * 0.06);
+    _look.copy(_eye).addScaledVector(u.fwd, 4).addScaledVector(u.dir, this.kick * 0.9);
     cam.up.copy(u.dir);
     cam.position.copy(_eye);
     cam.lookAt(_look);

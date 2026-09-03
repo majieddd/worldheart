@@ -241,7 +241,7 @@ export class Game {
   }
 
   _wireCombat() {
-    this.towerMgr.onKillReward = (enemy) => {
+    this.enemies.onKill = (enemy) => {
       // Economy powers write goldMul; this is the only kill-bounty site.
       const m = MODS.current;
       const bounty = m ? Math.max(1, Math.round(enemy.type.bounty * m.goldMul)) : enemy.type.bounty;

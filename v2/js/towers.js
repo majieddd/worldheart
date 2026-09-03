@@ -645,8 +645,13 @@ export class Tower {
         this.manager.enemies.applySlow(e, st.slow, 0.35);
         if (st.brittle) this.manager.enemies.applyBrittle(e, 0.4);
         // Deep Freeze converts the aura from a slow into a hold. Re-applied
-        // every frame the enemy is inside, so leaving the field releases it.
-        if (MODS.current && MODS.current.hardFreeze) this.manager.enemies.applyStun(e, 0.3);
+        // every frame the enemy is inside, so leaving the field releases it -
+        // and BUDGETED, because a cryo aura deals no damage of its own, so an
+        // unbounded re-application was a wave that never ended: the enemy could
+        // neither advance nor die. Same shape as the ally hold, same reason.
+        if (MODS.current && MODS.current.hardFreeze && this.manager.enemies.mayFreeze(e, dt)) {
+          this.manager.enemies.applyStun(e, 0.3);
+        }
       }
     }
   }
@@ -889,7 +894,10 @@ export class TowerManager {
     }
     if (!wasDead && enemy.dead) {
       tower.kills++;
-      if (this.onKillReward) this.onKillReward(enemy, tower);
+      // The bounty itself is paid from enemies.onKill now, so that a kill made
+      // by a warden or by the player's own strike earns gold and score exactly
+      // like a tower kill. Clearing a wave by hand used to pay nothing at all.
+
     }
     return dealt;
   }

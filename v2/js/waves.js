@@ -5,6 +5,9 @@ import { SIM_RANDOM } from './noise.js';
 // waves 1, 4, 9, 14. Bosses at 10, 20, 30. Early calls pay the remaining
 // countdown as bounty.
 
+const ATK_SCALE_SLOPE = 0.35;
+const ATK_SCALE_CAP = 4;
+
 export function hpScale(wave) {
   let s = 1 + (wave - 1) * 0.08;
   if (wave > 10) s += (wave - 10) * 0.05;
@@ -129,6 +132,10 @@ export class WaveDirector {
     }
     const comp = waveComp(this.wave);
     const scale = hpScale(this.wave);
+    // Enemy melee grows with the wave so a garrison does not stay free forever,
+    // but on a much shallower slope than health does and with a ceiling, so a
+    // late swarm is dangerous rather than a one-shot on every body.
+    this.enemies.atkScale = Math.min(1 + (scale - 1) * ATK_SCALE_SLOPE, ATK_SCALE_CAP);
     const active = this.activePortals();
     this.queues = [];
     this.pendingSpawns = 0;

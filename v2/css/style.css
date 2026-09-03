@@ -221,6 +221,9 @@ html, body {
 .build-card.locked:hover { transform: none; border-color: var(--hairline); background: var(--surface); }
 
 .build-thumb { width: 100%; aspect-ratio: 1; border-radius: var(--r-2); background: rgba(8, 11, 24, 0.55); display: block; }
+/* Stands in until the rendered thumbnail exists, so a card never shows a
+   broken-image icon while the render targets are still being built. */
+.build-thumb-fallback { display: grid; place-items: center; font-weight: 700; font-size: 22px; color: var(--accent); opacity: 0.75; }
 .build-name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-11); letter-spacing: 0.05em; margin-top: 6px; color: var(--text); white-space: nowrap; }
 .build-cost { font-family: var(--font-display); font-size: var(--fs-12); font-weight: 600; color: var(--gold); margin-top: 1px; font-variant-numeric: tabular-nums; }
 /* Top-right corner of its own card, out of the name/cost column entirely.
@@ -400,17 +403,85 @@ input[type="range"].cam-slider::-moz-range-thumb {
 .draft-card {
   flex: 1 1 200px; max-width: 230px; padding: 14px 13px;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--line); border-radius: 10px;
+  border: 1px solid var(--hairline); border-radius: 10px;
   text-align: left; color: var(--text); font: inherit; cursor: pointer;
   transition: border-color 140ms ease, transform 140ms ease, background 140ms ease;
 }
 .draft-card:hover { border-color: var(--accent); transform: translateY(-2px); background: rgba(255, 255, 255, 0.06); }
 .draft-card .dc-rarity { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 7px; }
 .draft-card .dc-name { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
-.draft-card .dc-desc { font-size: 12px; color: var(--dim); line-height: 1.5; }
-.draft-card.common .dc-rarity { color: var(--dim); }
+.draft-card .dc-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.draft-card.common .dc-rarity { color: var(--text-muted); }
 .draft-card.uncommon .dc-rarity { color: var(--accent); }
 .draft-card.rare .dc-rarity { color: var(--gold); }
 .draft-card.rare { border-color: rgba(255, 200, 87, 0.35); }
-.draft-timer { height: 3px; background: var(--line); border-radius: 2px; margin-top: 18px; overflow: hidden; }
+.draft-timer { height: 3px; background: var(--hairline); border-radius: 2px; margin-top: 18px; overflow: hidden; }
 .draft-timer span { display: block; height: 100%; width: 100%; background: var(--accent); border-radius: 2px; transition: width 120ms linear; }
+
+/* ---- first person -------------------------------------------------------
+   Shown only while a unit is possessed. The body is mortal there and a
+   commander's death ends the run, so the health bar is the one element that
+   has to be readable without looking away from the fight. */
+#fp-hud { position: fixed; inset: 0; pointer-events: none; display: none; z-index: 6; }
+#fp-hud.show { display: block; }
+
+#fp-cross { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; transform: translate(-50%, -50%); opacity: 0.9; }
+#fp-cross span { position: absolute; background: var(--accent); box-shadow: 0 0 4px rgba(0, 0, 0, 0.8); }
+#fp-cross span:nth-child(1), #fp-cross span:nth-child(2) { width: 2px; height: 7px; left: 12px; }
+#fp-cross span:nth-child(1) { top: 0; } #fp-cross span:nth-child(2) { bottom: 0; }
+#fp-cross span:nth-child(3), #fp-cross span:nth-child(4) { height: 2px; width: 7px; top: 12px; }
+#fp-cross span:nth-child(3) { left: 0; } #fp-cross span:nth-child(4) { right: 0; }
+#fp-cross i { position: absolute; left: 12px; top: 12px; width: 2px; height: 2px; background: var(--accent); opacity: 0.7; }
+/* A ranged archetype gets a tighter reticle so the read differs at a glance. */
+#fp-cross[data-kind="ranged"] { width: 18px; height: 18px; }
+#fp-cross[data-kind="ranged"] span:nth-child(1), #fp-cross[data-kind="ranged"] span:nth-child(2) { left: 8px; height: 5px; }
+#fp-cross[data-kind="ranged"] span:nth-child(3), #fp-cross[data-kind="ranged"] span:nth-child(4) { top: 8px; width: 5px; }
+#fp-cross[data-kind="ranged"] i { left: 8px; top: 8px; }
+
+#fp-hit { position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border: 2px solid #fff; border-radius: 50%; opacity: 0; transform: scale(0.5); }
+#fp-hit.go { animation: fp-hit-pop 0.26s ease-out; }
+#fp-hit.blocked { border-color: var(--text-muted); }
+@keyframes fp-hit-pop { 0% { opacity: 0.95; transform: scale(0.45); } 100% { opacity: 0; transform: scale(1.15); } }
+
+#fp-panel { position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%); width: 280px;
+  display: flex; flex-direction: column; gap: 5px; align-items: center; text-align: center; }
+#fp-name { font-size: var(--fs-12); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+#fp-hp-track { width: 100%; height: 8px; }
+#fp-hp { background: linear-gradient(90deg, #3ad0a0, #7ef0c8); transition: width 0.12s linear; }
+#fp-hp.low { background: linear-gradient(90deg, #d8574f, #ff8a7a); }
+#fp-swing-track { width: 62%; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+#fp-swing { height: 100%; width: 100%; background: var(--text-faint); transition: width 0.06s linear; }
+#fp-swing.ready { background: var(--accent); }
+#fp-keys { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; font-size: 10px; color: var(--text-faint); }
+#fp-keys b { color: var(--text-muted); font-weight: 600; }
+
+#damage-vignette.fp-hurt { box-shadow: inset 0 0 160px rgba(216, 87, 79, 0.55); opacity: 1; }
+
+/* Power sigils. The draft cards were pure text, which is what "missing images
+   for the skills" meant: nothing was broken, there was simply nothing there. */
+.draft-card .dc-sigil { display: block; margin: 0 auto 8px; color: var(--accent); opacity: 0.92; }
+.draft-card.uncommon .dc-sigil { color: #8fe3ff; }
+.draft-card.rare .dc-sigil { color: var(--gold); }
+
+/* ---- talent tree --------------------------------------------------------
+   Between runs. Tiers read top to bottom; a tier opens once anything in the
+   tier above it is owned, so there is always exactly one row of new choices
+   visible rather than a wall of grey. */
+.talent-panel { max-width: 900px; }
+#talent-tiers { display: flex; flex-direction: column; gap: var(--sp-3); margin: var(--sp-4) 0; }
+.talent-row { display: flex; gap: var(--sp-2); flex-wrap: wrap; justify-content: center; }
+.talent-node { flex: 1 1 190px; max-width: 230px; text-align: left; padding: 10px 12px;
+  border-radius: 10px; border: 1px solid var(--hairline); background: rgba(12, 16, 32, 0.6);
+  color: var(--text); cursor: pointer; transition: border-color 0.12s, transform 0.12s; }
+.talent-node .tn-kind { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
+.talent-node .tn-name { font-size: var(--fs-14); font-weight: 600; margin: 2px 0 4px; }
+.talent-node .tn-desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; min-height: 2.9em; }
+.talent-node .tn-cost { font-size: 11px; margin-top: 6px; color: var(--gold); }
+.talent-node.ready:hover { border-color: var(--accent); transform: translateY(-1px); }
+.talent-node.owned { border-color: rgba(58, 208, 160, 0.5); cursor: default; }
+.talent-node.owned .tn-cost { color: #3ad0a0; }
+.talent-node.poor { cursor: not-allowed; }
+.talent-node.poor .tn-cost { color: var(--text-faint); }
+.talent-node.locked { opacity: 0.4; cursor: not-allowed; }
+.talent-node.locked .tn-cost { color: var(--text-faint); }

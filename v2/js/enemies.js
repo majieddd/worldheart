@@ -8,6 +8,26 @@ export const EVO = { tier: 0 };
 
 // How many hits a tier-3 shield soaks before it breaks.
 const SHIELD_HITS = 3;
+const _mePos = new THREE.Vector3();
+const _alPos = new THREE.Vector3();
+
+// Enemy melee. An enemy NEVER walks toward an ally and never holds a target:
+// it swings at whatever is already standing inside its own reach, and the only
+// thing that stops it is its own wind-up. That is what keeps waves provably
+// alive - the worst case is a mite halted 0.25s out of every 1.00s, so it still
+// makes 75% of nominal progress toward the heart with no budget, no breakoff
+// and no shared clock to get stuck in. Letting enemies chase instead would turn
+// every ally into a flow-field attractor and make the commander the tank for
+// every wave again, which is the exact failure the frontier-capped post radius
+// was added to fix.
+const MELEE_SCAN = 0.2;        // seconds between reach checks, staggered per body
+// Melee grows with the wave so a garrison does not become free forever, but far
+// slower than enemy health does, and it is capped.
+const ATK_SCALE_SLOPE = 0.35;
+const ATK_SCALE_CAP = 4;
+// Deep Freeze holds for this long, then has to let go for this long.
+const FREEZE_BUDGET = 4;
+const FREEZE_LAPSE = 2.5;
 
 // Each tier adds a trait AND a visual tell, so the swarm changing is legible
 // in play rather than only in the numbers.
@@ -32,22 +52,29 @@ export const ENEMY_TYPES = {
   mite: {
     name: 'Mite', hp: 26, speed: 3.1, radius: 0.32, bounty: 6, damage: 1,
     armor: 0, flying: false, altitude: 0, score: 10,
+    atk: 7, swing: 1.00, wind: 0.25, reach: 1.2,
   },
   husk: {
     name: 'Husk', hp: 85, speed: 1.85, radius: 0.42, bounty: 12, damage: 1,
     armor: 0, flying: false, altitude: 0, score: 25,
+    atk: 11, swing: 1.40, wind: 0.40, reach: 1.3,
   },
   aegis: {
     name: 'Aegis', hp: 340, speed: 1.1, radius: 0.55, bounty: 32, damage: 2,
     armor: 6, flying: false, altitude: 0, score: 60,
+    atk: 16, swing: 1.60, wind: 0.45, reach: 1.4,
   },
   wisp: {
     name: 'Wisp', hp: 52, speed: 2.5, radius: 0.4, bounty: 14, damage: 1,
     armor: 0, flying: true, altitude: 2.6, score: 30,
+    // Short reach for its altitude, so a wisp has to come down to bite and
+    // cannot kite a ground unit that has no answer to it.
+    atk: 6, swing: 1.10, wind: 0.30, reach: 1.6,
   },
   colossus: {
     name: 'Colossus', hp: 3600, speed: 0.72, radius: 1.05, bounty: 320, damage: 6,
     armor: 10, flying: false, altitude: 0, boss: true, score: 500,
+    atk: 90, swing: 2.40, wind: 0.60, reach: 1.5,
   },
 };
 
@@ -102,6 +129,21 @@ class Enemy {
     this.shieldT = 0;
     this.shieldHits = 0;
     this.isSplit = false;
+    this.atkCd = 0;
+    this.windT = 0;
+    this.scanT = 0;
+    this.atkVictim = null;
+    // These belong to the ally hold budget in js/allies.js but live on the
+    // enemy, and enemies come from a pool. Without resetting them a recycled
+    // body can spawn already hold-immune, or with a budget so nearly spent
+    // that the first unit to reach it cannot hold it at all.
+    this._holdT = 0;
+    this._holdLapseUntil = -1;
+    this._holdStamp = -1;
+    this._frzT = 0;
+    this._frzLapseUntil = -1;
+    this._frzStamp = -1;
+    this._frzOk = true;
     this.phase = Math.random() * Math.PI * 2;
     this.hopPrev = 0;
     this.plates = 6;
@@ -123,6 +165,12 @@ export class EnemyManager {
     this.active = [];
     this.onLeak = null;
     this.onKill = null;
+    // Set by main.js. Held as a plain reference rather than imported, because
+    // allies.js already imports this module and the pair would not resolve.
+    this.allies = null;
+    this.onMeleeWindUp = null;
+    this.onMeleeHit = null;
+    this.atkScale = 1;
     this.onDeathFx = null;
     this.onSpawnFx = null;
     this.heartPos = new THREE.Vector3();
@@ -237,6 +285,72 @@ export class EnemyManager {
     return e;
   }
 
+  // Returns true while the body is planted mid-wind-up. Never acquires, never
+  // steers: it only asks whether something is already close enough to hit.
+  _melee(e, dt) {
+    const type = e.type;
+    if (!type.atk || !this.allies) return false;
+    if (e.atkCd > 0) e.atkCd -= dt;
+
+    if (e.windT > 0) {
+      e.windT -= dt;
+      if (e.windT > 0) return true;
+      // The blow lands only if the victim is still there and still in reach,
+      // so stepping out of a telegraphed swing beats it.
+      const v = e.atkVictim;
+      e.atkVictim = null;
+      e.atkCd = type.swing;
+      if (v && v.active && !v.dead) {
+        this.enemyPos(e, _mePos);
+        this.allies.worldPos(v, _alPos);
+        if (_alPos.distanceTo(_mePos) <= type.reach + 0.35) {
+          this.allies.damage(v, type.atk * this.atkScale);
+          if (this.onMeleeHit) this.onMeleeHit(e, v);
+        }
+      }
+      return false;
+    }
+
+    if (e.atkCd > 0) return false;
+    e.scanT -= dt;
+    if (e.scanT > 0) return false;
+    e.scanT = MELEE_SCAN;
+
+    this.enemyPos(e, _mePos);
+    let best = null;
+    let bestD = type.reach;
+    for (const a of this.allies.active) {
+      if (!a.active || a.dead) continue;
+      const d = this.allies.worldPos(a, _alPos).distanceTo(_mePos);
+      if (d <= bestD) { bestD = d; best = a; }
+    }
+    if (!best) return false;
+    e.atkVictim = best;
+    e.windT = type.wind;
+    if (this.onMeleeWindUp) this.onMeleeWindUp(e, best);
+    return true;
+  }
+
+  enemyPos(e, out) {
+    const h = Math.max(e.height, 0.03);
+    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
+  }
+
+  // Deep Freeze is a hold with no damage attached, so it needs the same
+  // guarantee the ally hold has: it may pin a body for a while and must then
+  // let it walk, or a cryo field is a wave that never resolves.
+  mayFreeze(e, dt) {
+    if (e._frzStamp === this.time) return e._frzOk;
+    if (this.time - (e._frzStamp ?? -1) > FREEZE_LAPSE) e._frzT = 0;
+    e._frzStamp = this.time;
+    if (!(e._frzLapseUntil > this.time)) {
+      e._frzT = (e._frzT || 0) + dt;
+      if (e._frzT > FREEZE_BUDGET) { e._frzT = 0; e._frzLapseUntil = this.time + FREEZE_LAPSE; }
+    }
+    e._frzOk = !(e._frzLapseUntil > this.time);
+    return e._frzOk;
+  }
+
   damage(e, amount, opts = {}) {
     if (!e.active || e.dead) return 0;
     let dmg = amount;
@@ -246,6 +360,10 @@ export class EnemyManager {
       dmg = Math.max(1, amount - armor);
     }
     if (e.brittle > 0) dmg *= 1.12;
+    // A player strike passes a cap so that no single blow can delete a healthy
+    // body. Applied after armour and brittle, before the shield, so it bounds
+    // what actually lands rather than what was asked for.
+    if (opts.capFrac) dmg = Math.min(dmg, e.hpMax * opts.capFrac);
     // Tier 3 shield: it soaks a few hits and then breaks, and only recharges
     // after three seconds without being touched. So sustained fire beats it and
     // poking at it does not.
@@ -323,12 +441,22 @@ export class EnemyManager {
       e.flashT = Math.max(0, e.flashT - dt);
       e.brittle = Math.max(0, e.brittle - dt);
       if (e.slowT > 0) { e.slowT -= dt; if (e.slowT <= 0) e.slowFrac = 0; }
+      // Melee is resolved BEFORE the stun guard. An ally holds an enemy the
+      // instant it engages, so leaving this below the guard meant a held enemy
+      // could never even register that something was standing in front of it,
+      // and it was stunlocked for the whole hold budget without ever swinging.
+      // Only movement is stopped by a stun; the swing clock keeps running.
+      const swinging = this._melee(e, dt);
       if (e.stunT > 0) { e.stunT -= dt; continue; }
 
       const type = e.type;
       if (e.shieldT > 0) e.shieldT -= dt;
       let stepSpeed = e.speed * (1 - e.slowFrac) * evoTraits().speedMul;
       if (e.spawnT < 0.5) stepSpeed *= e.spawnT * 2;
+      // Planted for the wind-up so the blow reads as a blow. This is the ONLY
+      // thing an ally can do to slow an enemy's march other than the bounded
+      // hold, which is what keeps the wave guaranteed to resolve.
+      if (swinging) stepSpeed = 0;
 
       // Flyers ride the same corridors as walkers (the flow field ignores
       // nothing for them: tower blocks do not enter their steering) but the
