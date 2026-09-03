@@ -53,10 +53,10 @@ test('a spent hand still refills', () => {
 
 test('unlocked towers can appear in later hands', () => {
   const run = newRun(4);
-  for (let w = 1; w <= 8; w++) clearWave(run);
-  assert.equal(run.getUnlockedTowers().length, 5);
+  for (let w = 1; w <= 10; w++) clearWave(run);
+  assert.equal(run.getUnlockedTowers().length, 6);
   const seen = new Set();
-  for (let w = 9; w <= 14; w++) { run.getHand().forEach((c) => seen.add(c)); clearWave(run); }
+  for (let w = 11; w <= 14; w++) { run.getHand().forEach((c) => seen.add(c)); clearWave(run); }
   assert.ok(seen.size > 1, `only ever drew ${[...seen]}`);
   for (const c of seen) assert.ok(run.getUnlockedTowers().includes(c), `drew locked ${c}`);
 });

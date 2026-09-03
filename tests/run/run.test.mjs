@@ -66,33 +66,33 @@ test('the frontier grows every cleared wave', () => {
   }
 });
 
-test('towers unlock on waves 2, 4, 6 and 8', () => {
+test('towers unlock on waves 2, 4, 6, 8 and 10', () => {
   const run = newRun();
   const counts = [];
-  for (let w = 1; w <= 8; w++) {
+  for (let w = 1; w <= 10; w++) {
     clearWaveChoosingFirst(run);
     counts.push(run.getUnlockedTowers().length);
   }
-  assert.deepEqual(counts, [1, 2, 2, 3, 3, 4, 4, 5]);
+  assert.deepEqual(counts, [1, 2, 2, 3, 3, 4, 4, 5, 5, 6]);
 });
 
-test('all five towers are owned once wave 8 clears, with no duplicates', () => {
+test('every tower is owned once wave 10 clears, with no duplicates', () => {
   const run = newRun();
-  for (let w = 1; w <= 8; w++) clearWaveChoosingFirst(run);
+  for (let w = 1; w <= 10; w++) clearWaveChoosingFirst(run);
   const owned = run.getUnlockedTowers();
-  assert.equal(owned.length, 5);
-  assert.equal(new Set(owned).size, 5);
+  assert.equal(owned.length, 6);
+  assert.equal(new Set(owned).size, 6, 'a tower was unlocked twice');
 });
 
-test('the tier cap rises after waves 10 and 12', () => {
+test('the tier cap rises after waves 11 and 13', () => {
   const run = newRun();
-  for (let w = 1; w <= 9; w++) clearWaveChoosingFirst(run);
+  for (let w = 1; w <= 10; w++) clearWaveChoosingFirst(run);
   assert.equal(run.getTierCap(), 1);
-  clearWaveChoosingFirst(run);
+  clearWaveChoosingFirst(run);   // 11
   assert.equal(run.getTierCap(), 2);
-  clearWaveChoosingFirst(run);
+  clearWaveChoosingFirst(run);   // 12
   assert.equal(run.getTierCap(), 2);
-  clearWaveChoosingFirst(run);
+  clearWaveChoosingFirst(run);   // 13
   assert.equal(run.getTierCap(), 3);
 });
 

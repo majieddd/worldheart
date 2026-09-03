@@ -64,6 +64,19 @@ export const TOWER_TYPES = {
       { dps: 64, ramp: 1.4, rampMax: 3.5, range: 12.6 },
     ],
   },
+  warden: {
+    name: 'Warden Barracks', cost: 220, air: false, footprint: 1.5,
+    desc: 'Summons units that hold ground. No attack of its own.',
+    flavor: 'The door stays open. Someone always walks out.',
+    // Flagged so the UI and the tower panel can describe a building that has
+    // no damage numbers to show.
+    summoner: true,
+    tiers: [
+      { garrison: 2, summonTime: 7, leash: 7, range: 7 },
+      { garrison: 3, summonTime: 6, leash: 9, range: 9 },
+      { garrison: 5, summonTime: 5, leash: 11, range: 11 },
+    ],
+  },
 };
 
 // On Space Battlefields there is no ground layer: everything flies, so the
@@ -316,7 +329,44 @@ function buildHelios(tier) {
   return { group: g, head, pitch: null, refs };
 }
 
-const BUILDERS = { bolt: buildBolt, mortar: buildMortar, tesla: buildTesla, cryo: buildCryo, helios: buildHelios };
+function buildWarden(tier) {
+  const g = new THREE.Group();
+  const refs = {};
+  const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.78, 0.34, 6), MAT.rock);
+  ped.position.y = 0.17;
+  g.add(ped);
+
+  // A barracks reads as a doorway, not a gun: an open arch facing outward.
+  const arch = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.09, 6, 12, Math.PI), MAT.body);
+  arch.position.y = 0.34;
+  arch.rotation.y = Math.PI / 2;
+  g.add(arch);
+
+  const banner = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.9 + tier * 0.2, 0.07), MAT.body);
+  banner.position.set(0, 0.8 + tier * 0.1, -0.3);
+  g.add(banner);
+  const flag = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.26, 0.4), MAT.energy);
+  flag.position.set(0, 1.15 + tier * 0.2, -0.12);
+  g.add(flag);
+  refs.flag = flag;
+
+  // One muster stone per garrison slot, so the tier is readable at a glance.
+  const slots = 2 + tier;
+  for (let i = 0; i < slots; i++) {
+    const a = (i / slots) * Math.PI * 2;
+    const stone = new THREE.Mesh(new THREE.OctahedronGeometry(0.13), MAT.trim);
+    stone.position.set(Math.cos(a) * 0.56, 0.36, Math.sin(a) * 0.56);
+    g.add(stone);
+  }
+
+  const core = new THREE.Mesh(new THREE.OctahedronGeometry(0.16), MAT.energy);
+  core.position.y = 0.52;
+  g.add(core);
+  refs.core = core;
+  return { group: g, refs };
+}
+
+const BUILDERS = { bolt: buildBolt, mortar: buildMortar, tesla: buildTesla, cryo: buildCryo, helios: buildHelios, warden: buildWarden };
 
 // Stylized oversize: towers read as landmarks against the small planet.
 export const TOWER_SCALE = 1.45;
@@ -470,6 +520,7 @@ export class Tower {
       case 'tesla': this._updateTesla(dt, enemies, fx, st); break;
       case 'cryo': this._updateCryo(dt, enemies, fx, st); break;
       case 'helios': this._updateHelios(dt, enemies, fx, st); break;
+      case 'warden': this._updateWarden(dt, enemies, fx, st); break;
     }
   }
 
@@ -597,6 +648,36 @@ export class Tower {
         // every frame the enemy is inside, so leaving the field releases it.
         if (MODS.current && MODS.current.hardFreeze) this.manager.enemies.applyStun(e, 0.3);
       }
+    }
+  }
+
+  // A warden does not shoot. It keeps a garrison alive: it summons up to
+  // `garrison` units and replaces losses on a timer, so its value is bodies on
+  // the ground rather than damage per second.
+  _updateWarden(dt, enemies, fx, st) {
+    const allies = this.manager.allies;
+    if (!allies) return;
+    if (this.refs.core) {
+      this.refs.core.rotation.y += dt * 1.4;
+      this.refs.core.position.y = 0.52 + Math.sin(this.manager.time * 2.2) * 0.04;
+    }
+    if (this.refs.flag) this.refs.flag.rotation.z = Math.sin(this.manager.time * 1.7) * 0.16;
+
+    this.summonT = (this.summonT ?? 0) - dt;
+    if (this.summonT > 0) return;
+
+    const mine = allies.active.filter((a) => a.homeTower === this.id && a.active && !a.dead);
+    if (mine.length >= st.garrison) { this.summonT = 1; return; }
+
+    this.summonT = st.summonTime;
+    _v.copy(this.pos).normalize();
+    const a = allies.spawn('warden', _v, _v, st.leash);
+    if (a) {
+      a.homeTower = this.id;
+      // Inherit the tower's standing patrol order, so units summoned later
+      // join the same posting rather than milling at the door.
+      if (this.patrolDir) allies.setPatrol(a, this.patrolDir);
+      fx.burstGlow(this.pos, PALETTE.energy, 8, 2.2, 0.6, 0.7, 1.1);
     }
   }
 

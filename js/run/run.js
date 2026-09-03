@@ -17,7 +17,7 @@ import { openDraft, castVote, tickDraft } from './draft.js';
 import { createRunState, serialise, STARTING_TOWER } from './state.js';
 
 // Everything unlockable, minus the tower the run is granted at the start.
-const UNLOCKABLE_TOWERS = ['cryo', 'mortar', 'tesla', 'helios'];
+const UNLOCKABLE_TOWERS = ['cryo', 'mortar', 'tesla', 'helios', 'warden'];
 
 // Towers arrive as a hand of cards rather than an always-available shop, so
 // what you can build this wave is itself part of the run. Always exactly three.

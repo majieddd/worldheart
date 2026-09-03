@@ -7,6 +7,7 @@ import { NavGraph } from './nav.js';
 import { SIM_RANDOM } from './noise.js';
 import { makeRng } from './run/rng.js';
 import { EnemyManager, EVO as ENEMY_EVO } from './enemies.js';
+import { AllyManager, ALLY_TYPES } from './allies.js';
 import { Effects } from './effects.js';
 import { TowerManager, TOWER_TYPES, MODS as TOWER_MODS } from './towers.js';
 import { Game } from './game.js';
@@ -102,6 +103,7 @@ let game = null;
 let waves = null;
 let ui = null;
 let mode99 = null;   // the 99 Planets shell, null in every other mode
+let allies = null;   // friendly units; only built for modes that summon them
 
 /* ---- environment map and sun shadows ---------------------------------- */
 const _shadowFocus = new THREE.Vector3();
@@ -264,6 +266,10 @@ async function boot() {
 
   enemies = new EnemyManager(scene, nav);
   enemies.setHeart(heartPos);
+  // Friendly units. Only the roguelite summons them today, but the manager is
+  // cheap when empty and keeping it unconditional avoids a null check on every
+  // frame of the sim loop.
+  allies = new AllyManager(scene, enemies);
   fx = new Effects(scene, rig.camera);
   if (CONFIG.map.mode === 'space') fx.blobs.mesh.visible = false;
   enemies.onLandFx = (e) => {
@@ -314,6 +320,9 @@ async function boot() {
   window.WH.towers = towerMgr;
   window.WH.game = game;
   window.WH.waves = waves;
+  towerMgr.allies = allies;
+  window.WH.allies = allies;
+  window.WH.ALLY_TYPES = ALLY_TYPES;
   window.WH.ui = ui;
 
   // The roguelite shell binds the pure run core to the game. Constructed last
@@ -417,6 +426,7 @@ function stepFrame(dt, render) {
   const simActive = game && game.state === 'playing' && !game.paused;
   const simDt = simActive ? dt * game.speed : 0;
   if (simDt > 0) {
+    allies?.update(simDt);
     waves.update(simDt);
     enemies.update(simDt);
     towerMgr.update(simDt);

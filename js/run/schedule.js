@@ -17,8 +17,12 @@ export const THETA_END = 0.52;
 // because the planet itself is that reward.
 const EXPANSIONS = 14;
 
-const TOWER_UNLOCK_WAVES = [2, 4, 6, 8];
-const TIER_CAP_WAVES = [10, 12];
+// Five unlocks for five unlockable towers, so the roster is complete by wave
+// 10 and nothing is left permanently undrawable. Adding the Warden Barracks
+// without adding this wave meant one tower could never appear in a run.
+const TOWER_UNLOCK_WAVES = [2, 4, 6, 8, 10];
+// Pushed past the last unlock so the two beats never land on the same wave.
+const TIER_CAP_WAVES = [11, 13];
 const EVOLUTION_WAVES = [3, 6, 9, 12];
 
 export function isBossWave(wave) {

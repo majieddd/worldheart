@@ -40,18 +40,26 @@ test('expansion eases out: the first step is larger than the last', () => {
   assert.ok(first > last, `first ${first} should exceed last ${last}`);
 });
 
-test('towers unlock on waves 2, 4, 6, 8 only', () => {
+test('towers unlock on waves 2, 4, 6, 8, 10 only', () => {
   const unlockWaves = [];
   for (let w = 1; w <= 15; w++) if (unlocksTowerAt(w)) unlockWaves.push(w);
-  assert.deepEqual(unlockWaves, [2, 4, 6, 8]);
+  assert.deepEqual(unlockWaves, [2, 4, 6, 8, 10]);
 });
 
-test('tier cap starts at 1, becomes 2 after wave 10 and 3 after wave 12', () => {
+test('every unlockable tower gets a wave', () => {
+  // Five unlockable towers behind Bolt, so five unlock waves. If a tower is
+  // added without a wave it can never be drawn, which is silent and nasty.
+  let n = 0;
+  for (let w = 1; w <= 15; w++) if (unlocksTowerAt(w)) n++;
+  assert.equal(n, 5);
+});
+
+test('tier cap starts at 1, becomes 2 after wave 11 and 3 after wave 13', () => {
   assert.equal(tierCapAfter(0), 1);
-  assert.equal(tierCapAfter(9), 1);
-  assert.equal(tierCapAfter(10), 2);
+  assert.equal(tierCapAfter(10), 1);
   assert.equal(tierCapAfter(11), 2);
-  assert.equal(tierCapAfter(12), 3);
+  assert.equal(tierCapAfter(12), 2);
+  assert.equal(tierCapAfter(13), 3);
   assert.equal(tierCapAfter(15), 3);
 });
 
