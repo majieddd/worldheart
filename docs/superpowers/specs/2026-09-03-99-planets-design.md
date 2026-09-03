@@ -100,8 +100,9 @@ that rule, twenty powers need hooks in twenty places.
 Roughly twenty powers: mostly numeric so they compose cleanly, with four specials to give a run
 its identity. Rarity weighting makes strong offers occasional rather than reliable.
 
-Powers are **per-player** in the data model even though phase 1 has one player, because co-op
-must not restructure this.
+Powers belong to the **run, not the player**: a draft yields one power for the whole team. Gold
+is the per-player quantity. Phase 1 has one player, so the distinction is invisible in play, but
+the data model must already separate them or co-op is a restructure.
 
 ## Enemy evolution
 
@@ -166,8 +167,30 @@ Named so they are not half-built: the planet ladder, biome variety, size scaling
 meta-currency, power banishing, co-op. Phase 1 ends at a complete single-planet run with a
 victory screen.
 
+## Co-op rules (phase 2, decided 2026-09-03)
+
+Recorded now so phase 1's data model is shaped correctly and these are not re-litigated later.
+
+- **Gold is per-player.** Each player earns and spends their own. Powers are not.
+- **The power draft is shared and voted.** One power per wave for the whole team:
+  1. The same three options are shown to everyone.
+  2. Each player casts one vote.
+  3. A **10-second timer** runs.
+  4. It resolves **immediately** once every player has voted, without waiting out the clock.
+  5. On resolve, the **plurality** wins.
+  6. **Ties, and the zero-vote case, break on the run's seeded RNG** among the leading options.
+     Seeded rather than wall-clock or host-decided so a run still replays identically, which
+     keeps determinism for tests and for seed sharing.
+
+Timer, vote counting and resolution live in the pure core and are driven by injected `dt`, so
+they are unit-testable headlessly and identical on both engines.
+
+### Follow-on, not yet decided
+
+- With per-player gold, who may upgrade or sell a tower another player paid for? Needs an
+  ownership or permission rule before co-op is built.
+
 ## Open questions for phase 2
 
-- Co-op economy: shared gold or per-player? Shared draft or one each?
 - Whether a true sphere is viable in Roblox at all, or whether the planetary fantasy needs a
   different presentation there. Research is running separately and will land before that spec.
