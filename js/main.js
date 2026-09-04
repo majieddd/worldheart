@@ -405,6 +405,10 @@ async function boot() {
   ui.possession = possession;
   game.possession = possession;
   possession.audio = audio;
+  // Drawn INSIDE the scene pass so the weapon is tone mapped, graded, bloomed
+  // and multisampled with everything else, instead of being composited over a
+  // finished frame and reading as a different renderer.
+  post.overlay = (r) => viewModel?.render(r);
   window.WH.ui = ui;
 
   // The roguelite shell binds the pure run core to the game. Constructed last
@@ -560,12 +564,7 @@ function stepFrame(dt, render) {
     fx.icons.commit(iconAlpha);
     fx.update(simDt, enemies ? enemies.active : null);
   }
-  if (render) {
-    post.render(scene, rig.camera, dt);
-    // After the post chain, so the weapon is not bloomed into a smear and not
-    // fogged by the world's own fog.
-    viewModel?.render(renderer);
-  }
+  if (render) post.render(scene, rig.camera, dt);
 }
 
 // Every tower needs an entry or the strategic layer lies about what is on the

@@ -22,7 +22,6 @@ test('a new run opens at the starting frontier with one tower', () => {
   const run = newRun();
   assert.equal(run.getFrontierTheta(), THETA_START);
   assert.deepEqual(run.getUnlockedTowers(), ['bolt']);
-  assert.equal(run.getTierCap(), 1);
   assert.equal(run.getEvolutionTier(), 0);
   assert.equal(run.getWave(), 1);
 });
@@ -92,16 +91,12 @@ test('every tower is owned once wave 10 clears, with no duplicates', () => {
   assert.equal(new Set(owned).size, 6, 'a tower was unlocked twice');
 });
 
-test('the tier cap rises after waves 11 and 13', () => {
+test('nothing in the run gates tower upgrades', () => {
+  // The wave-gated tier cap is gone: a tower can be upgraded at any point and
+  // the price is the only limit. Asserted here so the gate cannot come back by
+  // accident.
   const run = newRun();
-  for (let w = 1; w <= 10; w++) clearWaveChoosingFirst(run);
-  assert.equal(run.getTierCap(), 1);
-  clearWaveChoosingFirst(run);   // 11
-  assert.equal(run.getTierCap(), 2);
-  clearWaveChoosingFirst(run);   // 12
-  assert.equal(run.getTierCap(), 2);
-  clearWaveChoosingFirst(run);   // 13
-  assert.equal(run.getTierCap(), 3);
+  assert.equal(run.getTierCap, undefined, 'getTierCap should not exist');
 });
 
 test('the evolution tier reaches 4 by wave 12', () => {

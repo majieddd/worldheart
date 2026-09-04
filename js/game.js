@@ -195,7 +195,6 @@ export class Game {
     // makes all three of these inert unless that mode is running.
     this.frontier = null;       // { centre, theta } - the buildable mask
     this.unlockedTowers = null; // null means the whole roster is available
-    this.tierCap = null;        // null means the tower's own tier count is the limit
     this.hand = null;           // card mode: array of tower keys, else null
     this.selectedCard = -1;     // which card in the hand is armed
     this.onCardSpent = null;    // (handIndex) => void, set by the mode shell
@@ -498,13 +497,13 @@ export class Game {
 
   upgradeSelected() {
     const t = this.selectedTower;
-    if (!t || t.tier >= 2) return;
-    // 99 Planets raises this ceiling on waves 10 and 12. Null everywhere else,
-    // which leaves the tower's own tier count as the only limit.
-    if (this.tierCap !== null && t.tier + 1 >= this.tierCap) {
-      if (this.onToast) this.onToast('Upgrade locked until the next tier unlocks', 'warn');
-      return;
-    }
+    if (!t) return;
+    // No ceiling of any kind. A tower can always be upgraded and the PRICE is
+    // the only thing in the way - it climbs exponentially while the tower's
+    // strength climbs polynomially, so each step costs more and buys
+    // proportionally less. The old wave-gated tier cap locked upgrades for the
+    // first two thirds of a run and told the player only that they were
+    // "locked until the next tier unlocks", without saying when that was.
     const cost = tierCost(t.typeKey, t.tier + 1);
     if (this.gold < cost) {
       if (this.onToast) this.onToast('Not enough gold', 'warn');

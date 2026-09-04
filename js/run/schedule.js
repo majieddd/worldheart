@@ -21,8 +21,6 @@ const EXPANSIONS = 14;
 // 10 and nothing is left permanently undrawable. Adding the Warden Barracks
 // without adding this wave meant one tower could never appear in a run.
 const TOWER_UNLOCK_WAVES = [2, 4, 6, 8, 10];
-// Pushed past the last unlock so the two beats never land on the same wave.
-const TIER_CAP_WAVES = [11, 13];
 const EVOLUTION_WAVES = [3, 6, 9, 12];
 
 // The two rewards ALTERNATE rather than both arriving every wave: a tower card
@@ -52,12 +50,6 @@ export function frontierTheta(wavesCleared) {
 
 export function unlocksTowerAt(wave) {
   return TOWER_UNLOCK_WAVES.includes(wave);
-}
-
-export function tierCapAfter(wavesCleared) {
-  let cap = 1;
-  for (const w of TIER_CAP_WAVES) if (wavesCleared >= w) cap++;
-  return cap;
 }
 
 export function evolutionTierAfter(wavesCleared) {

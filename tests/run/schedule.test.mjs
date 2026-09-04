@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   TOTAL_WAVES, BOSS_WAVE, THETA_START, THETA_END,
-  frontierTheta, unlocksTowerAt, tierCapAfter, evolutionTierAfter, isBossWave,
+  frontierTheta, unlocksTowerAt, evolutionTierAfter, isBossWave,
 } from '../../js/run/schedule.js';
 
 test('the run is 15 waves and the boss is the last', () => {
@@ -54,13 +54,13 @@ test('every unlockable tower gets a wave', () => {
   assert.equal(n, 5);
 });
 
-test('tier cap starts at 1, becomes 2 after wave 11 and 3 after wave 13', () => {
-  assert.equal(tierCapAfter(0), 1);
-  assert.equal(tierCapAfter(10), 1);
-  assert.equal(tierCapAfter(11), 2);
-  assert.equal(tierCapAfter(12), 2);
-  assert.equal(tierCapAfter(13), 3);
-  assert.equal(tierCapAfter(15), 3);
+test('the schedule no longer gates tower upgrades at all', async () => {
+  // Upgrades used to be locked behind a wave-gated tier cap, which meant a
+  // player could not improve a tower for the first two thirds of a run. Price
+  // is the only limit now, so the concept is gone rather than widened - and
+  // this asserts it stays gone.
+  const mod = await import('../../js/run/schedule.js');
+  assert.equal(mod.tierCapAfter, undefined, 'tierCapAfter should not exist');
 });
 
 test('evolution tier increments on waves 3, 6, 9, 12', () => {

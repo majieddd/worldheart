@@ -319,9 +319,12 @@ export class ViewModel {
     // weapon onto a black screen. Only the depth buffer may be cleared here,
     // which is what lets the weapon sit in front of terrain it would otherwise
     // intersect.
+    // The depth clear is the post chain's now; this must only ever ADD to the
+    // buffer it is handed. autoClear stays off for the same reason it always
+    // did: a second render() with it on wipes the colour buffer and takes the
+    // whole world with it.
     const prevAutoClear = renderer.autoClear;
     renderer.autoClear = false;
-    renderer.clearDepth();
     renderer.render(this.scene, this.camera);
     renderer.autoClear = prevAutoClear;
   }
