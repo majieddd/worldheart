@@ -191,7 +191,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         ui.toast(`The Worldheart cannot hold more ground. Upgrade it (${e.cost} gold)`, 'warn');
         ui.pulseHeart();
       } else if (e.type === 'heartUpgraded') {
-        ui.toast(`Worldheart raised to level ${e.level}: tier cap MK ${run.getTierCap()}`, 'info');
+        ui.toast(`Worldheart raised to level ${e.level}: towers may reach mark ${run.getTierCap()}`, 'info');
         ui.audio?.play('upgrade');
       } else if (e.type === 'draftOpened') {
         ui.showDraft(e.offers, (i) => { run.vote('solo', i); });

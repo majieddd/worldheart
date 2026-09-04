@@ -27,6 +27,13 @@ function icon(name, size = 15, cls = '') {
 
 function fmt(n) { return n.toLocaleString('en-US'); }
 
+// Roman numerals for the three authored marks, then plain numbers. One
+// function for the tower badge and the Worldheart panel, so the cap the
+// panel promises is spelled the way the badge will show it.
+function markLabel(mark) {
+  return mark <= 3 ? ['MK I', 'MK II', 'MK III'][mark - 1] : `MK ${mark}`;
+}
+
 export class HUD {
   constructor({ game, waves, world, nav, rig, renderer, audio }) {
     this.game = game;
@@ -638,14 +645,14 @@ export class HUD {
     e['heart-panel'].classList.add('show');
     e['heart-level'].textContent = `LV ${info.level} / ${info.max}`;
     if (info.cost === null) {
-      e['heart-buys'].textContent = `tier cap MK ${info.tierCap}, every ring held`;
+      e['heart-buys'].textContent = `tier cap ${markLabel(info.tierCap)}, every ring held`;
       e['heart-action'].textContent = 'At full strength';
       e['heart-cost'].textContent = '';
       e['heart-panel'].disabled = true;
     } else {
       const rings = info.ringsGain === 1 ? '+1 ring' : `+${info.ringsGain} rings`;
       const owed = info.held ? ` (${info.held} held)` : '';
-      e['heart-buys'].textContent = `tier cap MK ${info.nextTierCap}, frontier ${rings}${owed}`;
+      e['heart-buys'].textContent = `tier cap ${markLabel(info.nextTierCap)}, frontier ${rings}${owed}`;
       e['heart-action'].textContent = 'Upgrade';
       e['heart-cost'].textContent = fmt(info.cost);
       e['heart-panel'].disabled = false;
@@ -890,7 +897,7 @@ export class HUD {
       // Roman numerals for the three authored marks, then plain numbers - the
       // array lookup returned undefined past MK III and textContent turned that
       // into an empty badge, so a tier-7 tower looked identical to a tier-3 one.
-      e['tp-tier'].textContent = t.tier < 3 ? ['MK I', 'MK II', 'MK III'][t.tier] : `MK ${t.tier + 1}`;
+      e['tp-tier'].textContent = markLabel(t.tier + 1);
       e['tp-desc'].innerHTML = `${t.def.desc} <em>${t.def.flavor}</em>`;
       const rows = [];
       // Rounded. Every stat above the authored tiers is scaled by a power curve
