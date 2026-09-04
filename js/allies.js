@@ -156,10 +156,11 @@ const _strikeOrigin = new THREE.Vector3();
 const _strikeBearing = new THREE.Vector3();
 const _aimV = new THREE.Vector3();
 
-// Damage per second an enemy deals to a unit it is in contact with, per point
-// of that enemy's leak damage. Tuned so a lone warden holds two mites for a
-// while and folds to a pack.
-const CONTACT_DPS = 5.5;
+// There is deliberately no contact damage here. Enemies used to grind any
+// unit inside their reach by a flat rate every frame on top of their swings,
+// which is "just touching you hurts": nothing to see coming, nothing to step
+// out of. The only way an enemy hurts a unit now is the wind-up and blow in
+// js/enemies.js _melee, which is drawn, telegraphed and dodgeable.
 
 const _tmp = new THREE.Vector3();
 const _tmp2 = new THREE.Vector3();
@@ -536,11 +537,12 @@ export class AllyManager {
         a.hp = Math.min(a.hpMax, a.hp + a.hpMax * type.regen * dt);
       }
 
-      // A possessed unit is driven entirely by the player, but it still bleeds
-      // and still heals. The early return used to sit ABOVE both, which made
-      // possession total invulnerability: the one moment the player is exposed
-      // was the one moment nothing could touch them.
-      if (a.possessed) { this._takeContactDamage(a, dt); this._ground(a); continue; }
+      // A possessed unit is driven entirely by the player, but it still heals
+      // here and still takes enemy blows from js/enemies.js. The early return
+      // used to sit ABOVE the regen, which made possession total
+      // invulnerability: the one moment the player is exposed was the one
+      // moment nothing could touch them.
+      if (a.possessed) { this._ground(a); continue; }
 
       if (a.target && (!a.target.active || a.target.dead)) a.target = null;
       if (!a.target) a.target = this._findEnemy(a, type.aggro);
@@ -657,25 +659,9 @@ export class AllyManager {
         if (advanceToward(a.dir, a.wander, (type.speed * 0.55 * dt) / R, a.fwd)) this._reroll(a);
       }
 
-      this._takeContactDamage(a, dt);
-      if (!a.active || a.dead) continue;
       this._ground(a);
     }
     this._render(dt);
-  }
-
-  // Enemies in contact grind the unit down. Continuous rather than swung, so a
-  // unit surrounded dies fast and one picking off a straggler survives - which
-  // is what makes a party into the fog a real risk.
-  _takeContactDamage(a, dt) {
-    this.worldPos(a, _tmp);
-    const reach = a.type.reach + 0.35;
-    let incoming = 0;
-    for (const e of this.enemies.active) {
-      if (!e.active || e.dead) continue;
-      if (this.enemyPos(e, _tmp2).distanceTo(_tmp) <= reach) incoming += e.type.damage;
-    }
-    if (incoming > 0) this.damage(a, incoming * CONTACT_DPS * dt);
   }
 
   // Breaches are structures, and units are the only thing that can bring one
