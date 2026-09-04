@@ -48,6 +48,14 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     if (rig.confine) rig.confine.maxAng = theta * 1.02;
     // Possession reads this to fog the view once a unit walks out past it.
     if (possession) possession.frontier = game.frontier;
+    // Keep the walk in roughly constant as the circle grows. Halving the
+    // between-wave breather only bought about a fifth off the run, because most
+    // of a late wave is transit: at the final frontier the approach is 125
+    // units and a husk covers under two a second. Referenced against the arc at
+    // the first expansion and capped, so early waves are untouched and the late
+    // ones stop dragging.
+    const arc = CONFIG.planetRadius * theta;
+    enemies.marchMul = Math.max(1, Math.min(2.2, arc / 28));
     // The commander's post grows with the territory but stays well inside it:
     // it is the last line at the core, not the frontline. Handing it the whole
     // frontier made it the tank for every wave and it was ground down by ten.
@@ -125,6 +133,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         if (e.coins) {
           bankCoins(e.coins);
           ui.toast(`+${e.coins} coins`, 'info');
+          ui.audio?.play('coin');
         }
       } else if (e.type === 'runWon') {
         const progress = bankVictory();
@@ -155,6 +164,11 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   };
 
   enemies.spawnNodeOverride = spawnNodeNearFrontier;
+
+  // 99 Planets runs at double speed. Fifteen waves at the classic cadence is a
+  // long sit for a mode whose whole shape is a short, escalating run, and the
+  // breather between waves was longer than most of the fights in it.
+  waves.paceMul = 0.5;
 
   // The RUN decides when the planet is won, not the wave director. Both count
   // to fifteen, so leaving the classic hook armed meant two endings raced for
@@ -317,6 +331,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         for (const a of selection) if (allies.orderMove(a, _od)) n++;
         if (n) {
           ui.toast(n === 1 ? 'Moving out' : `${n} moving out`, 'info');
+          ui.audio?.play('order');
         }
         return;
       }
@@ -349,6 +364,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // board to check on your towers halfway through one.
     possession.onLinkChange = (linked) => {
       ui.setBaseLink(linked);
+      ui.audio?.play(linked ? 'reconnect' : 'disconnect');
       if (!linked) ui.toast('Base control lost - you are outside the frontier', 'danger');
       else ui.toast('Base control restored', 'info');
     };

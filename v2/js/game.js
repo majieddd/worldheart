@@ -232,6 +232,11 @@ export class Game {
     };
     addEventListener('keydown', (e) => {
       if (e.repeat) return;
+      // Every key here is a BOARD verb. While a unit is possessed the player is
+      // on the ground and these would mount a build ghost, upgrade a tower
+      // selected minutes ago, or sell one - none of which the first-person view
+      // can even show.
+      if (this.possession?.active) return;
       const keys = { Digit1: 'bolt', Digit2: 'cryo', Digit3: 'mortar', Digit4: 'tesla', Digit5: 'helios' };
       if (keys[e.code]) this.toggleBuild(keys[e.code]);
       else if (e.code === 'Escape') { this.cancelBuild(); this.select(null); }

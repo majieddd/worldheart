@@ -200,6 +200,79 @@ export class AudioEngine {
         this._noise(0.25, this._env(0.25, 0.2), 1800, 300);
         this._osc('square', 210, 90, 0.2, this._env(0.2, 0.08));
         break;
+      // ---- 99 Planets ----------------------------------------------------
+      // The whole mode layer was silent: possession, every archetype's weapon,
+      // jumping, orders and losing base control made no sound at all, which is
+      // why first person read as weightless however good it looked.
+      case 'possess':
+        this._tone(240, 0.16, 0, 0.09);
+        this._tone(360, 0.22, 0.08, 0.08);
+        this._noise(0.2, this._env(0.2, 0.16), 1400, 300);
+        break;
+      case 'release':
+        this._tone(360, 0.14, 0, 0.07);
+        this._tone(230, 0.2, 0.07, 0.07);
+        break;
+      case 'swing':
+        // A short airy whoosh: the arc, not the impact.
+        if (this._limited('swing', 60)) return;
+        this._noise(0.16, this._env(0.16, 0.08), 2600, 420);
+        break;
+      case 'meleeHit':
+        if (this._limited('meleeHit', 45)) return;
+        this._osc('square', 220, 90, 0.09, this._env(0.09, 0.05));
+        this._noise(0.07, this._env(0.07, 0.05), 1800, 500);
+        break;
+      case 'rifle':
+        if (this._limited('rifle', 60)) return;
+        this._osc('sawtooth', 2200, 260, 0.1, this._env(0.1, 0.05));
+        this._noise(0.14, this._env(0.14, 0.07), 3200, 400);
+        break;
+      case 'lob':
+        this._osc('sine', 420, 130, 0.16, this._env(0.16, 0.1));
+        this._noise(0.1, this._env(0.1, 0.06), 900, 260);
+        break;
+      case 'blocked':
+        if (this._limited('blocked', 90)) return;
+        this._osc('square', 640, 600, 0.07, this._env(0.07, 0.03));
+        break;
+      case 'jump':
+        this._osc('sine', 300, 520, 0.12, this._env(0.12, 0.06));
+        break;
+      case 'land':
+        this._osc('sine', 150, 62, 0.13, this._env(0.13, 0.09));
+        this._noise(0.09, this._env(0.09, 0.06), 700, 200);
+        break;
+      case 'order':
+        this._tone(520, 0.07, 0, 0.06, 'triangle');
+        this._tone(700, 0.11, 0.05, 0.06, 'triangle');
+        break;
+      case 'rally':
+        this._tone(300, 0.12, 0, 0.08);
+        this._tone(400, 0.12, 0.08, 0.08);
+        this._tone(500, 0.18, 0.16, 0.09);
+        break;
+      // Losing the link to the base is the mode's one real alarm, so it is the one
+      // cue allowed to be ugly: a detuned pair that beats against itself.
+      case 'disconnect':
+        this._osc('sawtooth', 240, 90, 0.55, this._env(0.55, 0.5));
+        this._osc('sawtooth', 232, 87, 0.55, this._env(0.55, 0.5));
+        this._noise(0.4, this._env(0.4, 0.4), 600, 120);
+        break;
+      case 'reconnect':
+        this._tone(300, 0.12, 0, 0.07);
+        this._tone(450, 0.18, 0.09, 0.08);
+        break;
+      case 'coin':
+        if (this._limited('coin', 120)) return;
+        this._tone(1050, 0.07, 0, 0.05, 'triangle');
+        this._tone(1400, 0.1, 0.05, 0.05, 'triangle');
+        break;
+      case 'talent':
+        this._tone(392, 0.12, 0, 0.09);
+        this._tone(523, 0.12, 0.09, 0.09);
+        this._tone(784, 0.28, 0.18, 0.1);
+        break;
       case 'begin':
         this._tone(262, 0.5, 0, 0.08);
         this._tone(392, 0.5, 0.12, 0.08);

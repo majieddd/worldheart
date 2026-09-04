@@ -392,8 +392,19 @@ class DamageNumbers {
   }
 
   spawn(pos, text, color = '#e8ecf8', size = 13) {
-    const it = this.items[this.head];
-    this.head = (this.head + 1) % this.max;
+    // Prefer a dead slot over the next one in the ring. A bare ring buffer
+    // overwrites numbers that are still on screen, so a mortar volley or a
+    // cleave erased its own damage readout - the more the player did at once,
+    // the less of it they could read. Falls back to the oldest slot when
+    // everything really is live, which is the correct behaviour at saturation.
+    let idx = -1;
+    for (let k = 0; k < this.max; k++) {
+      const c = (this.head + k) % this.max;
+      if (this.items[c].life <= 0) { idx = c; break; }
+    }
+    if (idx < 0) idx = this.head;
+    const it = this.items[idx];
+    this.head = (idx + 1) % this.max;
     it.pos.copy(pos);
     it.life = 0.8;
     it.vy = 0;

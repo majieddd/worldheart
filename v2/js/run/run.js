@@ -9,7 +9,7 @@
 import { makeRng, pick } from './rng.js';
 import {
   TOTAL_WAVES, frontierTheta, unlocksTowerAt, tierCapAfter,
-  evolutionTierAfter, isBossWave,
+  evolutionTierAfter, isBossWave, drawsCardAfter, draftsPowerAfter,
 } from './schedule.js';
 import { foldModifiers } from './modifiers.js';
 import { POWER_BY_ID, rollOffers } from './powers.js';
@@ -96,10 +96,14 @@ export function createRun({ seed, playerIds, startGold, profile }) {
       events.push({ type: 'enemiesEvolved', tier: evo });
     }
 
-    // Drawn after the unlock above, so a tower won this wave can appear in the
-    // very card the player is handed for it.
-    const drew = drawCard();
-    events.push({ type: 'handDrawn', hand: [...state.hand], drew });
+    // A card only on the ODD waves. The even ones pay a power instead, so each
+    // wave hands over exactly one thing and the next wave has a shape.
+    if (drawsCardAfter(cleared)) {
+      // Drawn after the unlock above, so a tower won this wave can appear in
+      // the very card the player is handed for it.
+      const drew = drawCard();
+      events.push({ type: 'handDrawn', hand: [...state.hand], drew });
+    }
 
     state.phase = 'building';
   }
@@ -156,9 +160,17 @@ export function createRun({ seed, playerIds, startGold, profile }) {
 
       events.push({ type: 'frontierGrew', theta: frontierTheta(state.wavesCleared) });
 
-      draft = openDraft(rollOffers(rng, state.powers), state.players.map((p) => p.id));
-      state.phase = 'drafting';
-      events.push({ type: 'draftOpened', offers: draft.offers });
+      if (draftsPowerAfter(wave)) {
+        draft = openDraft(rollOffers(rng, state.powers), state.players.map((p) => p.id));
+        state.phase = 'drafting';
+        events.push({ type: 'draftOpened', offers: draft.offers });
+        return events;
+      }
+      // No draft this wave, so nothing is going to arrive later to advance the
+      // run. It has to advance right here or the wave beats - the unlocks, the
+      // tier caps, the evolution and the card - would simply never fire on an
+      // odd wave.
+      advanceAfterDraft(events);
       return events;
     },
 

@@ -473,8 +473,13 @@ export class HUD {
     });
 
     addEventListener('keydown', (e) => {
+      // Pause and sound belong to the player wherever they are, but the SPEED
+      // key does not: F is the jump while a body is possessed, and these are
+      // two separate window listeners, so preventDefault in one does not stop
+      // the other. Every hop was also cycling the game speed. Exactly the shape
+      // of the Space-is-pause collision this project already fixed once.
       if (e.code === 'Space') { e.preventDefault(); this.togglePause(); }
-      else if (e.code === 'KeyF') this.cycleSpeed();
+      else if (e.code === 'KeyF') { if (!this.possession?.active) this.cycleSpeed(); }
       else if (e.code === 'KeyM') this.toggleSound();
     });
 
@@ -543,7 +548,7 @@ export class HUD {
             const r = buyTalent(t.id);
             if (r.ok) {
               this.toast(`${t.name} unlocked`, 'info');
-              this.audio?.play('build');
+              this.audio?.play('talent');
               this.renderTalents();
             } else {
               this.toast(r.reason === 'coins' ? 'Not enough coins' : 'Locked', 'warn');

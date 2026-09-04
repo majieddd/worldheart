@@ -171,6 +171,13 @@ export class EnemyManager {
     this.onMeleeWindUp = null;
     this.onMeleeHit = null;
     this.atkScale = 1;
+    // How fast bodies MARCH, as opposed to how hard they hit. 99 Planets spawns
+    // at the frontier edge and the frontier widens every wave, so the walk in
+    // gets longer all run - by the end it is most of the wave's clock. The mode
+    // scales this so the approach stays roughly the same length however wide
+    // the circle has grown, which is a pacing knob rather than a difficulty one:
+    // the same bodies with the same health arrive, they just stop dawdling.
+    this.marchMul = 1;
     this.onDeathFx = null;
     this.onSpawnFx = null;
     this.heartPos = new THREE.Vector3();
@@ -451,7 +458,7 @@ export class EnemyManager {
 
       const type = e.type;
       if (e.shieldT > 0) e.shieldT -= dt;
-      let stepSpeed = e.speed * (1 - e.slowFrac) * evoTraits().speedMul;
+      let stepSpeed = e.speed * (1 - e.slowFrac) * evoTraits().speedMul * this.marchMul;
       if (e.spawnT < 0.5) stepSpeed *= e.spawnT * 2;
       // Planted for the wind-up so the blow reads as a blow. This is the ONLY
       // thing an ally can do to slow an enemy's march other than the bounded
@@ -562,8 +569,14 @@ export class EnemyManager {
       case 'aegis': {
         const hp = (t * 1.05 + φ * 0.3) % 1;
         const rise = Math.pow(Math.max(Math.sin(Math.PI * hp), 0), 0.9) * 0.42;
-        if (hp < e.hopPrev) this.onLandFx?.(e);
-        if (partIdx === 3) e.hopPrev = hp;
+        // Fire the landing ONCE per hop. This block runs once per rendered
+        // part - an aegis has five instances - and hp is identical across all
+        // five in a frame while hopPrev was only written on the last, so every
+        // landing spawned five rings and burned through a twenty-slot pool.
+        if (partIdx === 0) {
+          if (hp < e.hopPrev) this.onLandFx?.(e);
+          e.hopPrev = hp;
+        }
         if (partIdx === 0) {
           _lp.set(0, 0.6 + rise, 0);
           _ls.set(1, 1 - Math.sin(2 * Math.PI * hp) * 0.1, 1);
