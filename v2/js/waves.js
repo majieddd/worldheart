@@ -16,9 +16,15 @@ const ATK_SCALE_CAP = 4;
 // which is what makes ground outside the circle worth taking. The interval
 // tightens a little with the wave and is scaled by paceMul like every other
 // cadence in the director.
-const RAID_INTERVAL = 16;
-const RAID_INTERVAL_FLOOR = 9;
-const RAID_INTERVAL_SLOPE = 0.4;
+// Measured at the brief's 16 s with a one-tower wave-1 base under 99 Planets'
+// half-length cadence: ten raiders in 46 s of sim, the wave never reached
+// zero enemies and so never cleared, and the leaks took five lives. A raid is
+// a tax, not a siege: it starts on wave 2, arrives every 26 s (13 s at the
+// mode's pace) tightening to 12, and raiders never hold a wave open.
+const RAID_INTERVAL = 26;
+const RAID_INTERVAL_FLOOR = 12;
+const RAID_INTERVAL_SLOPE = 0.5;
+const RAID_START_WAVE = 2;
 // A raider spawns a beat after the last so a pack reads as a pack, not a
 // clump on one node.
 const RAID_GAP = 0.55;
@@ -29,9 +35,12 @@ const NEST_MARGIN = 1.12;
 // The pack a nest sends. Small on purpose: a raid is a tax on an unexpanded
 // frontier, not a second wave.
 export function raidComp(wave) {
-  const pack = [{ type: 'mite', count: 2 }];
-  if (wave >= 4) pack.push({ type: 'husk', count: 1 });
-  if (wave >= 8) pack.push({ type: 'aegis', count: 1 });
+  // One mite while the base is a tower and a commander, a pair from wave 4,
+  // a husk from wave 6 and an aegis from wave 9. Measured with two mites from
+  // wave 2 against a one-tower base: fifteen lives gone by wave 3.
+  const pack = [{ type: 'mite', count: wave >= 4 ? 2 : 1 }];
+  if (wave >= 6) pack.push({ type: 'husk', count: 1 });
+  if (wave >= 9) pack.push({ type: 'aegis', count: 1 });
   return pack;
 }
 
@@ -144,6 +153,11 @@ export class WaveDirector {
     this.raidQueue = [];
     this.raidClock = 0;
     this.liveNestCount = 0;
+    // Raiders by enemy id. A wave clears when every enemy the WAVE sent is
+    // gone; raiders still walking are a running cost, not a gate, or a single
+    // nest could hold wave 1 open forever. Ids rather than a flag on the
+    // enemy, because enemies are pooled and this file does not own init().
+    this.raiderIds = new Set();
     this.canRaid = null;      // () => bool, set by the mode; null means always
     this.onNestWake = null;   // (liveCount) => void
     this.onRaid = null;       // (node, wave) => void
@@ -275,10 +289,26 @@ export class WaveDirector {
   _spawnRaw(type, node, scale) {
     this.enemies.spawnRaw = true;
     try {
-      return this.enemies.spawn(type, node, scale);
+      const e = this.enemies.spawn(type, node, scale);
+      if (e) this.raiderIds.add(e.id);
+      return e;
     } finally {
       this.enemies.spawnRaw = false;
     }
+  }
+
+  // Enemies the wave itself still owes the player: everything active that
+  // was not sent by a nest. The set of raider ids is pruned to the living as
+  // a side effect so it cannot grow for the length of a run.
+  _waveEnemiesLeft() {
+    let n = 0;
+    let liveRaiders = 0;
+    for (const e of this.enemies.active) {
+      if (this.raiderIds.has(e.id)) liveRaiders++;
+      else n++;
+    }
+    if (liveRaiders === 0 && this.raiderIds.size) this.raiderIds.clear();
+    return n;
   }
 
   // Runs in every director state but idle. Idle is the mode holding the
@@ -287,7 +317,7 @@ export class WaveDirector {
   // mode say so explicitly as well, and freezes the clocks rather than
   // letting them all fire the instant the overlay closes.
   _updateNests(dt) {
-    if (!this.nestMode || this.state === 'idle') return;
+    if (!this.nestMode || this.state === 'idle' || this.wave < RAID_START_WAVE) return;
     this.refreshNests();
     if (this.canRaid && !this.canRaid()) return;
     for (const [n, t] of this.nestClocks) {
@@ -321,7 +351,7 @@ export class WaveDirector {
         if (this.onSpawnPortal) this.onSpawnPortal(q.portal);
       }
       if (!this.queues.length) this.state = 'combat';
-      if (this.state === 'combat' && this.enemies.active.length === 0) {
+      if (this.state === 'combat' && this._waveEnemiesLeft() === 0) {
         const reward = waveReward(this.wave);
         this.game.gold += reward;
         if (this.onWaveClear) this.onWaveClear(this.wave, reward);

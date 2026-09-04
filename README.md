@@ -162,11 +162,14 @@ Only a fully raised heart reaches the planet's final frontier.
 ### Nests
 
 Every woken breach that still stands **outside** your circle is a nest, and a
-nest trickles a raid from where it actually stands: two mites, joined by a husk
-from wave 4 and an aegis from wave 8, every 16 seconds of sim time at first and
-a little faster each wave. Raids walk the same field to the heart as the waves
-do, but they are not pulled in to your frontier the way the waves are, so they
-arrive from the dark. A nest falls silent when units bring the breach down,
+nest trickles a raid from where it actually stands, from wave 2 on: a mite,
+then a pair from wave 4, joined by a husk from wave 6 and an aegis from wave 9,
+every 13 seconds of the mode's time at first and a little faster each wave.
+Raids walk the same field to the heart as the waves do, but they are not
+pulled in to your frontier the way the waves are, so they arrive from the
+dark, and they never hold a wave open: a wave clears when its own enemies are
+gone, and the raiders still walking are the running cost of an unexpanded
+circle. A nest falls silent when units bring the breach down,
 which pays 180 gold, or when the frontier grows out to swallow it. The wave
 readout counts the nests that are live. That is the pressure that makes
 expanding the circle, or marching out to it, worth the gold.
