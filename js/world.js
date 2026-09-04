@@ -1407,7 +1407,13 @@ export function buildFogVeil(centerDir, theta) {
   // trick the cloud deck already uses.
   const geo = new THREE.SphereGeometry(R + 4.5, 96, 64);
   const mat = new THREE.ShaderMaterial({
-    transparent: true, depthWrite: false, side: THREE.FrontSide,
+    // DOUBLE sided. The shell sits at R + 4.5 and a possessed eye stands at
+    // about R + 1.5, which is INSIDE it - so with front-face culling every face
+    // pointed away from the camera and the veil rendered exactly zero pixels in
+    // first and third person. The mode's signature image, the circle you hold,
+    // did not exist in the mode's headline camera, and standing inside the
+    // frontier was an x-ray of the whole out-of-bounds world, breaches included.
+    transparent: true, depthWrite: false, side: THREE.DoubleSide,
     uniforms: {
       uCenter: { value: centerDir.clone() },
       uTheta: { value: theta },

@@ -251,6 +251,7 @@ class Ally {
     this.swingDur = 0.55;
     this.heat = 0;
     this.heatLock = 0;
+    this.selected = false;
     this.order = null;   // a place this unit was told to walk to
     this.orderUntil = 0;
     this.hidden = false;
@@ -408,6 +409,8 @@ export class AllyManager {
     a.active = false;
     a.possessed = false;
     a.following = null;
+    a.selected = false;
+    a.order = null;
     // Anything that was following this body is now following a pool object that
     // is about to be handed to a different unit.
     this._severFollowers(a);
@@ -1031,6 +1034,11 @@ export class AllyManager {
         _q.setFromRotationMatrix(_basis);
 
         const sc = a.type.scale;
+        // A selected unit brightens. The marquee has been writing `selected`
+        // since it shipped and nothing read it, so box-selecting a commander
+        // gave no on-unit feedback at all - the player could not see who was
+        // about to receive a right-click order.
+        const selGlow = a.selected ? 1 : 0;
         const bob = Math.sin(this.time * 6 + a.phase) * 0.035;
         // Normalised against the duration this particular swing was given. The
       // 0.55 here was hardcoded while a player strike set 0.45, so a strike
@@ -1056,7 +1064,12 @@ export class AllyManager {
               .addScaledVector(_up, oy)
               .addScaledVector(_fwd, oz)
               .addScaledVector(_right, ox);
-            _s.set(sc, sc, sc);
+            // Part 3 is the ground ring, which is exactly the right place to
+            // show selection: it swells and lifts so a boxed unit is obvious
+            // from the board without adding a mesh or a draw call.
+            const ringSel = (p === 3 && selGlow) ? 1.45 + Math.sin(this.time * 5) * 0.12 : 1;
+            if (p === 3 && selGlow) _tmp2.addScaledVector(_up, 0.04);
+            _s.set(sc * ringSel, sc * ringSel, sc * ringSel);
             _m4.compose(_tmp2, _q, _s);
             part.mesh.setMatrixAt(counts[p]++, _m4);
           }

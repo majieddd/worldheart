@@ -364,10 +364,16 @@ async function boot() {
     if (primary) {
       ui?.strikeFeedback?.(landed, landed <= 0);
       rig.addTrauma(landed > 0 ? 0.05 : 0.03);
+      audio?.play(landed > 0 ? 'meleeHit' : 'blocked');
     }
   };
 
   // Being hit in first person should land on the player, not only on a number.
+  // The thump when a hop ends. onLand was declared and fired and had never been
+  // assigned to anything, so a jump landed in silence.
+  allies.onLand = (a) => {
+    if (possession && possession.unit === a) audio?.play('land');
+  };
   allies.onHurt = (a, amount) => {
     if (!possession || possession.unit !== a) return;
     rig.addTrauma(Math.min(0.22, 0.05 + amount / 260));
@@ -393,6 +399,12 @@ async function boot() {
   window.WH.allies = allies;
   window.WH.ALLY_TYPES = ALLY_TYPES;
   possession.ui = ui;
+  // Both keydown owners need to know when the player is on the ground, so the
+  // board's verbs can stand down. Without this the first-person key surface is
+  // just the board's with three keys layered on top and nothing arbitrating.
+  ui.possession = possession;
+  game.possession = possession;
+  possession.audio = audio;
   window.WH.ui = ui;
 
   // The roguelite shell binds the pure run core to the game. Constructed last
@@ -490,7 +502,13 @@ function stepFrame(dt, render) {
   // Gated on `unit` rather than `active` so a body dying UNDER the player still
   // gets one update to release control and the pointer lock. Gating on active
   // left a dead reference held and onExit never fired.
-  if (possession && possession.unit) possession.update(dt);
+  // The camera has to keep being placed while paused or the view freezes
+  // mid-frame, but a possessed unit must NOT keep moving and swinging: this ran
+  // above the simActive gate on raw dt, so a paused player could still walk,
+  // and a beam archetype - which has no swing cooldown to rate-limit it - could
+  // channel a whole wave to death against a frozen board.
+  const simRunning = !!(game && game.state === 'playing' && !game.paused);
+  if (possession && possession.unit) possession.update(dt, simRunning);
   if (!possession || !possession.active) rig.update(dt);
   camFill.position.copy(rig.camera.position);
   // After rig.update so the box tracks this frame's focus, not last frame's.
@@ -550,8 +568,11 @@ function stepFrame(dt, render) {
   }
 }
 
+// Every tower needs an entry or the strategic layer lies about what is on the
+// board: a missing key falls through to the Bolt colour, so a Warden Barracks
+// was drawing a Bolt Sentinel's icon.
 const ICON_COLORS = {
-  bolt: 0x59f2ff, cryo: 0xbff1ff, mortar: 0xffc857, tesla: 0x9db8ff, helios: 0xffd9a0,
+  bolt: 0x59f2ff, cryo: 0xbff1ff, mortar: 0xffc857, tesla: 0x9db8ff, helios: 0xffd9a0, warden: 0x8fe3ff,
 };
 
 // ---------------------------------------------------------------------------

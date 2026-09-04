@@ -290,6 +290,7 @@ export class Possession {
     const want = unit.type.strike?.fov;
     if (want) { cam.fov = want; cam.updateProjectionMatrix(); }
     this.linked = true;
+    this.audio?.play('possess');
     this.viewModel?.show(unit.typeKey);
     if (this.onEnter) this.onEnter(unit);
     return true;
@@ -311,6 +312,7 @@ export class Possession {
     this.firing = false;
     this.kick = 0;
     this.viewModel?.hide();
+    this.audio?.play('release');
     if (this._savedFov !== null || this._savedNear !== null) {
       if (this._savedFov !== null) this.rig.camera.fov = this._savedFov;
       if (this._savedNear !== null) this.rig.camera.near = this._savedNear;
@@ -334,14 +336,23 @@ export class Possession {
     if (!u || u.airT > 0) return false;
     u.vertVel = JUMP_SPEED;
     u.airT = 0.0001;
+    this.audio?.play('jump');
     return true;
   }
 
   attack(dt = 0) {
     if (!this.active) return 0;
+    const kind = this.unit.type.strike?.kind;
     const n = this.allies.playerAttack(this.unit, dt);
+    // The swing sounds whether or not it connects - a whiff you cannot hear
+    // reads as an input that did not register.
+    if (kind === 'melee' && this.unit.swingT >= (this.unit.swingDur || 0) - 1e-6) {
+      this.audio?.play('swing');
+    }
     if (n > 0) {
       const s = this.unit.type.strike;
+      if (kind === 'hitscan') this.audio?.play('rifle');
+      else if (kind === 'lob') this.audio?.play('lob');
       // A weapon that does not move when it fires does not feel like a weapon.
       this.kick = Math.min(0.5, this.kick + (s.kick || 0));
       this.rig.addTrauma(s.trauma || 0.05);
@@ -372,7 +383,7 @@ export class Possession {
     return n;
   }
 
-  update(dt) {
+  update(dt, simRunning = true) {
     if (!this.active) {
       // The body died underneath the player: hand control back rather than
       // leaving the camera stranded on a corpse.
@@ -385,6 +396,16 @@ export class Possession {
       this.allies.turnUnit(u, this.yawQueue);
       this._yawUsed = this.yawQueue;
       this.yawQueue = 0;
+    }
+    if (!simRunning) {
+      // Paused: you may still look around, and the camera must still be placed,
+      // but nothing this body does may touch the frozen world.
+      this._updateLink();
+      dtShake = 0;
+      this.placeCamera();
+      this.viewModel?.update(0, this.rig.camera, u, { moving: false, stride: this.stride, kick: this.kick });
+      this.ui?.updatePossession?.(u);
+      return;
     }
     if (this.keys.has('KeyQ')) this.allies.turnUnit(u, -KEY_TURN * dt);
     if (this.keys.has('KeyE')) this.allies.turnUnit(u, KEY_TURN * dt);
