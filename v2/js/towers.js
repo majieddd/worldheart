@@ -93,7 +93,11 @@ export const AUTHORED_TIERS = 3;
 
 // Cost climbs EXPONENTIALLY. Tiers 1 and 2 keep the numbers the run was
 // balanced around; every tier after them multiplies.
-const TIER_COST_GROWTH = 1.85;
+// 1.85 put tier 7 at 9,238 cumulative against a whole run's income of about
+// 6,932, so everything past tier 4 was unreachable and the "uncapped" ladder
+// was decoration. 1.5 is still emphatically exponential - each step costs half
+// again as much - while landing tier 7-8 inside what a committed run can pay.
+const TIER_COST_GROWTH = 1.5;
 
 // Power climbs faster than linear but NOT exponentially - a polynomial, so a
 // tower that costs eight times as much is nowhere near eight times as strong.
@@ -102,7 +106,11 @@ const TIER_COST_GROWTH = 1.85;
 const TIER_POWER_EXP = 1.5;
 
 export function tierCost(typeKey, tier) {
-  const base = TOWER_TYPES[typeKey].cost;
+  // Discounts apply to upgrades too. costMul was only ever read on the BUILD
+  // price, so Thrift missed the sink that dwarfs every other cost in the run.
+  const m = MODS.current;
+  const mul = m ? m.costMul : 1;
+  const base = TOWER_TYPES[typeKey].cost * mul;
   if (tier === 1) return Math.round(base * 0.8);
   if (tier === 2) return Math.round(base * 1.3);
   return Math.round(base * 1.3 * Math.pow(TIER_COST_GROWTH, tier - 2));
@@ -131,9 +139,14 @@ export function tierStats(typeKey, tier) {
   if (top.dmg !== undefined) out.dmg = top.dmg * k;
   if (top.dps !== undefined) out.dps = top.dps * k;
   if (top.rate !== undefined) out.rate = top.rate * (1 + (k - 1) * 0.35);
-  if (top.slow !== undefined) out.slow = Math.min(0.85, top.slow * (1 + (k - 1) * 0.25));
+  if (top.slow !== undefined) {
+    // The slow saturates, so past the clamp the aura grows instead - otherwise
+    // a cryo upgrade past tier 6 costs thousands and changes nothing at all.
+    out.slow = Math.min(0.85, top.slow * (1 + (k - 1) * 0.25));
+    if (out.slow >= 0.85 && top.range !== undefined) out.rangeBonus = (k - 1) * 0.25;
+  }
   if (top.garrison !== undefined) out.garrison = Math.round(top.garrison * (1 + (k - 1) * 0.5));
-  if (top.range !== undefined) out.range = top.range * Math.cbrt(k);
+  if (top.range !== undefined) out.range = top.range * Math.cbrt(k) * (1 + (out.rangeBonus || 0));
   return out;
 }
 

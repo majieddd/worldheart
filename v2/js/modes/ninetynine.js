@@ -4,7 +4,7 @@
 
 import { createRun } from '../run/run.js';
 import { makeRng } from '../run/rng.js';
-import { MODS } from '../towers.js';
+import { MODS, TOWER_TYPES } from '../towers.js';
 import { EVO } from '../enemies.js';
 import { SIM_RANDOM } from '../noise.js';
 import { CONFIG } from '../config.js';
@@ -116,6 +116,13 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     for (const e of events) {
       if (e.type === 'towerUnlocked') {
         ui.toast(`${e.tower.toUpperCase()} unlocked`, 'info');
+      } else if (e.type === 'handDrawn') {
+        // The odd wave's ONLY reward. It was emitted and handled by nothing, so
+        // half the waves paid out in silence while every even wave announced
+        // its power - and when the hand was already full the card was dropped
+        // with no message at all, which is a wave that paid literally nothing.
+        if (e.drew) ui.toast(`${TOWER_TYPES[e.drew]?.name || e.drew} card drawn`, 'info');
+        else ui.toast('Hand full - the card was lost. Spend one before the next wave.', 'warn');
       } else if (e.type === 'enemiesEvolved') {
         ui.toast('The swarm evolves', 'danger');
       } else if (e.type === 'frontierGrew') {
@@ -131,6 +138,17 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
           bankCoins(e.coins);
           ui.toast(`+${e.coins} coins`, 'info');
           ui.audio?.play('coin');
+        }
+        // Compound Interest wrote interestPct and nothing ever read it, so the
+        // power was a dead draft pick. Paid on the gold held at the moment the
+        // wave clears, which is what the card promises.
+        const ip = MODS.current ? MODS.current.interestPct : 0;
+        if (ip > 0) {
+          const gain = Math.floor(game.gold * ip);
+          if (gain > 0) {
+            game.gold += gain;
+            ui.toast(`Interest +${gain}`, 'info');
+          }
         }
       } else if (e.type === 'runWon') {
         const progress = bankVictory();
@@ -166,6 +184,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // long sit for a mode whose whole shape is a short, escalating run, and the
   // breather between waves was longer than most of the fights in it.
   waves.paceMul = 0.5;
+  // Towers never stop upgrading in this mode; price is the only ceiling.
+  game.uncappedTiers = true;
 
   // The RUN decides when the planet is won, not the wave director. Both count
   // to fifteen, so leaving the classic hook armed meant two endings raced for
@@ -360,6 +380,13 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
 
   if (possession) {
     possession.onEnter = (u) => {
+      // The board's hands come off too. The card bar kept its pointer events,
+      // so clicking a card while possessed mounted a ghost tower through the
+      // player's own legs that could not be placed OR cancelled - the tap chain
+      // returns early during possession, the canvas context menu is suppressed,
+      // and Escape belongs to possession.
+      game.cancelBuild();
+      ui.setBoardEnabled(false);
       ui.showPossession(u);
     };
     // Leaving the circle severs base control: the orbit view is the BASE's
@@ -373,6 +400,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       else ui.toast('Base control restored', 'info');
     };
     possession.onExit = () => {
+      ui.setBoardEnabled(true);
       ui.hidePossession();
       ui.toast('Control released', 'info');
       // Hand the orbit rig back looking at what it was looking at, so the view
