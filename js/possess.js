@@ -251,7 +251,9 @@ export class Possession {
     // Third-person: the smoothed boom direction and the world-space trail.
     this._tpAim = new THREE.Vector3();
     this._tpAimSet = false;
-    this.tpTrail = scene ? new BladeTrail(scene, 18, 1.0) : null;
+    this.world = null;       // set by main.js; decor occlusion for the boom
+    this.boomAllow = 1;      // fraction of the boom the decor lets through
+    this.tpTrail = scene ? new BladeTrail(scene, 18, 1.0, 0.7) : null;
     this._bind();
   }
 
@@ -347,6 +349,7 @@ export class Possession {
     this.fovKick = 0;
     this.roll = 0;
     this._tpAimSet = false;
+    this.boomAllow = 1;
     // requestPointerLock resolves a PROMISE in current browsers, so a refusal
     // escapes try/catch entirely and lands as an unhandled rejection. It is
     // refused outright in some embedded contexts, and drag-look covers that
@@ -721,6 +724,18 @@ export class Possession {
       _gn.copy(_tp).normalize();
       const ground = R + Math.max(terrainHeight(_gn.x, _gn.y, _gn.z), 0) + TP_CLEAR;
       if (_tp.length() < ground) _tp.setLength(ground);
+      // A tree between the eye and the boom pulls the camera in front of it.
+      // Eased asymmetrically: quick to duck inside a trunk that just came
+      // between, slower to let the boom back out, so a run through a wood
+      // does not pump the camera.
+      let allow = 1;
+      if (this.world) {
+        const t = this.world.decorHit(_eye, _tp, 1.1);
+        if (t >= 0) allow = Math.max(0.12, t - 0.12);
+      }
+      const rate = allow < this.boomAllow ? 18 : 5;
+      this.boomAllow += (allow - this.boomAllow) * Math.min(1, dtShake * rate + (dtShake === 0 ? 1 : 0));
+      if (this.boomAllow < 0.999) _tp.lerpVectors(_eye, _tp, this.boomAllow);
       cam.position.copy(_tp);
       // Look past the head rather than at the feet, so the body sits low in
       // frame the way an over-the-shoulder camera should.

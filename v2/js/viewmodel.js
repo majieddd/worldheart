@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { PALETTE } from './config.js';
+import { slab, cone, merge, shift, spin, keyed, hump } from './rig.js';
 
 // The thing in your hands.
 //
@@ -14,13 +15,28 @@ import { PALETTE } from './config.js';
 // ground can always be closer than the weapon. A separate pass sidesteps the
 // question entirely, which is also how most first-person games do it.
 //
+// The second version of this file is the answer to "the sword swing looks
+// terrible". The first swing was Minecraft's nudge: the prop dipped down and
+// right and came back, sized at 15% and parked in the corner, with no arm
+// holding it. Now the weapon is held by a gauntleted arm, sits large and
+// diagonal across the lower right of the frame, and a melee swing has an
+// anticipation over the shoulder, a snap across the whole screen, an
+// overshoot and a slow recovery, alternating direction, with a light trail
+// off the blade. The strike frame of the swing (js/soldier.js STRIKE_AT) is
+// where the blade crosses the centre of the screen, and it is also the frame
+// the damage lands on.
+//
 // The models are built from primitives, like everything else in this project -
 // there are no imported art assets anywhere in the codebase.
 
 const MAT = {
-  steel: new THREE.MeshStandardMaterial({ color: 0x9fb0cf, roughness: 0.42, metalness: 0.72, flatShading: true }),
-  dark: new THREE.MeshStandardMaterial({ color: 0x2b3350, roughness: 0.7, metalness: 0.3, flatShading: true }),
+  steel: new THREE.MeshStandardMaterial({ color: 0xcdd8e6, roughness: 0.4, metalness: 0.5, flatShading: true }),
+  dark: new THREE.MeshStandardMaterial({ color: 0x2a3140, roughness: 0.8, metalness: 0.15, flatShading: true }),
   grip: new THREE.MeshStandardMaterial({ color: 0x4a3a30, roughness: 0.9, metalness: 0.05, flatShading: true }),
+  body: new THREE.MeshStandardMaterial({
+    color: PALETTE.techBody, roughness: 0.55, metalness: 0.25, flatShading: true,
+    emissive: PALETTE.energy, emissiveIntensity: 0.08,
+  }),
   energy: new THREE.MeshStandardMaterial({
     color: PALETTE.energy, emissive: PALETTE.energy, emissiveIntensity: 1.5,
     roughness: 0.3, metalness: 0.2, flatShading: true,
@@ -34,19 +50,97 @@ const MAT = {
 // How far the weapon sits from the eye, per archetype. A Bulwark's slab needs
 // more room than a Twinfang's knives.
 const GRIP = {
-  warden: 0.55, commander: 0.72, duelist: 0.52,
-  marksman: 0.60, bombardier: 0.66, oracle: 0.58,
+  warden: 0.62, commander: 0.70, duelist: 0.56,
+  marksman: 0.62, bombardier: 0.68, oracle: 0.60,
 };
 
-// Rest pose in camera space: right, up, forward. Down and to the right, the
-// way a held item sits in Minecraft.
-const REST = { x: 0.40, y: -0.34, z: 0.78 };
+// Poses in camera space: [x, y, z] in grip units (right, up, forward) and
+// [rx, ry, rz] in radians, YXZ. The prop's blade runs down its -z, so rx > 0
+// tips it up and ry > 0 turns it to the LEFT of the frame. A rest that lays
+// the blade diagonally across the lower right, tip toward the centre, reads
+// as held; pointed at the horizon it foreshortened to a stub.
+const RESTS = {
+  melee: [0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+  twin: [0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+  spear: [0.38, -0.30, 0.80, 0.25, 0.45, 0.10],
+  // Ranged weapons point down the aim, so they sit lower and straighter.
+  ranged: [0.26, -0.27, 0.72, 0.06, -0.06, 0.02],
+};
 
-// Everything is modelled at world scale - a spear really is 1.5 units long -
+// The melee arcs, as ABSOLUTE keyframes: [p, x, y, z, rx, ry, rz]. Authored
+// as absolute poses rather than offsets from the rest, because a mirrored
+// offset from a right-hand rest sends the backhand off the right edge of the
+// frame. Each is a whole gesture: the wind-up leaves the frame on one side,
+// the snap crosses the centre at the strike frame (0.40, matching
+// js/soldier.js STRIKE_AT so the hit lands as the blade passes), the
+// follow-through exits low on the far side, and the recovery brings it home.
+const ARCS = {
+  // Right to left: raised over the right shoulder, swept down and across.
+  cleaveR: [
+    [0.00, 0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+    [0.22, 0.58, 0.08, 0.62, 0.95, 0.15, 0.60],
+    [0.32, 0.34, -0.06, 0.56, 0.55, 0.70, 0.25],
+    [0.40, -0.02, -0.16, 0.50, 0.05, 1.10, -0.20],
+    [0.50, -0.30, -0.28, 0.56, -0.35, 1.35, -0.50],
+    [0.68, -0.08, -0.40, 0.70, -0.15, 1.05, -0.10],
+    [1.00, 0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+  ],
+  // Left to right, the backhand: crosses to the upper left, then sweeps
+  // back across and out low on the right.
+  cleaveL: [
+    [0.00, 0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+    [0.22, -0.34, 0.04, 0.58, 0.75, 1.40, -0.55],
+    [0.32, -0.18, -0.10, 0.52, 0.35, 0.25, -0.25],
+    [0.40, 0.08, -0.16, 0.50, 0.02, -0.85, 0.20],
+    [0.52, 0.48, -0.30, 0.58, -0.30, -1.25, 0.45],
+    [0.70, 0.44, -0.40, 0.72, -0.05, 0.10, 0.60],
+    [1.00, 0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+  ],
+  // Twin cuts: the right blade snaps from the right to the centre, the left
+  // blade from the left. The whole pair moves; the striking blade leads.
+  cutR: [
+    [0.00, 0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+    [0.16, 0.30, -0.18, 0.66, 0.55, -0.30, 0.25],
+    [0.34, -0.10, -0.18, 0.44, -0.05, 0.85, -0.20],
+    [0.50, -0.30, -0.32, 0.52, -0.35, 1.10, -0.40],
+    [1.00, 0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+  ],
+  cutL: [
+    [0.00, 0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+    [0.16, -0.22, -0.18, 0.66, 0.55, 0.30, -0.25],
+    [0.34, 0.18, -0.18, 0.44, -0.05, -0.85, 0.20],
+    [0.50, 0.38, -0.32, 0.52, -0.35, -1.10, 0.40],
+    [1.00, 0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+  ],
+  // The spear thrust: pulled back to the hip, driven down the aim.
+  thrust: [
+    [0.00, 0.38, -0.30, 0.80, 0.25, 0.45, 0.10],
+    [0.22, 0.44, -0.34, 1.00, 0.15, 0.40, 0.12],
+    [0.42, 0.14, -0.20, 0.34, -0.06, 0.08, 0.0],
+    [0.60, 0.20, -0.22, 0.46, 0.0, 0.15, 0.02],
+    [1.00, 0.38, -0.30, 0.80, 0.25, 0.45, 0.10],
+  ],
+};
+
+// Interpolate a six-component pose from an arc at progress p, into `out`.
+// Smoothstep between neighbours, like rig.keyed, but one pass for all six.
+const _pose = [0, 0, 0, 0, 0, 0];
+function arcAt(keys, p, out = _pose) {
+  let i = 1;
+  while (i < keys.length - 1 && keys[i][0] < p) i++;
+  const a = keys[i - 1], b = keys[i];
+  let u = (p - a[0]) / Math.max(1e-6, b[0] - a[0]);
+  u = u < 0 ? 0 : u > 1 ? 1 : u;
+  u = u * u * (3 - 2 * u);
+  for (let k = 0; k < 6; k++) out[k] = a[k + 1] + (b[k + 1] - a[k + 1]) * u;
+  return out;
+}
+
+// Everything is modelled at world scale - a sword really is 1.4 units long -
 // and a world-scale weapon held half a metre from the eye fills the screen. The
 // overlay is drawn at a fraction of that, which is the same trick a real view
 // model uses: it is a prop sized for the frame, not the world.
-const VM_SCALE = 0.15;
+const VM_SCALE = 0.19;
 
 const _x = new THREE.Vector3();
 const _y = new THREE.Vector3();
@@ -55,108 +149,265 @@ const _q = new THREE.Quaternion();
 const _lq = new THREE.Quaternion();
 const _e = new THREE.Euler();
 const _m = new THREE.Matrix4();
+const _base = new THREE.Vector3();
+const _tip = new THREE.Vector3();
 
-function box(w, h, d, mat) { return new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); }
-function cyl(rt, rb, h, seg, mat) { return new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat); }
+function mesh(geo, mat) { return new THREE.Mesh(geo, mat); }
+
+// The right arm that holds the grip: a forearm running back and down toward
+// the viewer's shoulder, a gauntlet cuff, and a fist around the grip. Built
+// once per weapon so the hand sits on the actual grip.
+function arm(g, side = 1, ex = 0, ey = 0, ez = 0) {
+  const a = new THREE.Group();
+  const fist = mesh(slab(0.11, 0.12, 0.10, 0.11, -0.07, 0.07), MAT.dark);
+  const cuff = mesh(slab(0.15, 0.16, 0.13, 0.14, -0.06, 0.06), MAT.steel);
+  cuff.position.set(0.02 * side, -0.05, 0.14);
+  const fore = mesh(slab(0.12, 0.13, 0.16, 0.17, -0.02, 0.62), MAT.steel);
+  const under = mesh(slab(0.11, 0.12, 0.13, 0.14, 0.60, 0.95), MAT.body);
+  // The forearm leans back toward the shoulder: rotate so its +y runs to
+  // camera-right (for the right arm), down and toward the viewer.
+  const forearm = new THREE.Group();
+  forearm.add(fore, under);
+  forearm.rotation.set(-1.15, 0, -0.55 * side);
+  forearm.position.set(0.03 * side, -0.06, 0.10);
+  a.add(fist, cuff, forearm);
+  a.position.set(ex, ey, ez);
+  return a;
+}
 
 // Each builder returns a group whose origin is the grip, oriented so -Z points
 // away from the viewer down the aim.
 const BUILD = {
-  // A spear: shaft with a leaf head.
+  // A spear: shaft with a leaf head, both hands on it.
   warden() {
     const g = new THREE.Group();
-    const shaft = cyl(0.035, 0.035, 1.5, 6, MAT.grip);
+    const shaft = mesh(cone(0.032, 0.034, 1.7, 6), MAT.grip);
     shaft.rotation.x = Math.PI / 2;
-    shaft.position.z = -0.45;
-    const head = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.34, 4), MAT.steel);
+    shaft.position.z = -0.5;
+    const head = mesh(merge([
+      shift(slab(0.09, 0.015, 0.12, 0.04, 0, 0.36), 0, 0, 0),
+      shift(slab(0.06, 0.06, 0.07, 0.07, -0.05, 0), 0, 0, 0),
+    ]), MAT.steel);
     head.rotation.x = -Math.PI / 2;
-    head.position.z = -1.32;
-    g.add(shaft, head);
+    head.position.z = -1.35;
+    const band = mesh(slab(0.045, 0.045, 0.045, 0.045, 0, 0.1), MAT.energy);
+    band.rotation.x = -Math.PI / 2;
+    band.position.z = -1.05;
+    g.add(shaft, head, band, arm(g, 1), arm(g, -1, -0.02, 0.04, -0.55));
+    g.userData.blade = [0, 0, -1.0, 0, 0, -1.7];
     return g;
   },
   // A slab of a sword, wide enough to read as heavy at the edge of the screen.
   commander() {
     const g = new THREE.Group();
-    const grip = cyl(0.05, 0.055, 0.3, 6, MAT.grip);
+    const grip = mesh(cone(0.03, 0.036, 0.28, 6), MAT.grip);
     grip.rotation.x = Math.PI / 2;
-    const guard = box(0.34, 0.07, 0.09, MAT.dark);
-    guard.position.z = -0.18;
-    const blade = box(0.19, 0.045, 1.25, MAT.steel);
-    blade.position.z = -0.82;
-    const fuller = box(0.05, 0.055, 1.0, MAT.energy);
-    fuller.position.z = -0.78;
-    g.add(grip, guard, blade, fuller);
+    const pommel = mesh(slab(0.06, 0.06, 0.04, 0.04, 0, 0.05), MAT.gold);
+    pommel.rotation.x = Math.PI / 2;
+    pommel.position.z = 0.16;
+    const guard = mesh(slab(0.36, 0.06, 0.30, 0.09, -0.03, 0.03), MAT.gold);
+    guard.rotation.x = Math.PI / 2;
+    guard.position.z = -0.17;
+    const blade = mesh(merge([
+      slab(0.15, 0.014, 0.19, 0.045, 0, 1.0),
+      slab(0.01, 0.01, 0.15, 0.014, 1.0, 1.22),
+    ]), MAT.steel);
+    blade.rotation.x = -Math.PI / 2;
+    blade.position.z = -0.2;
+    const fuller = mesh(slab(0.04, 0.05, 0.05, 0.05, 0.05, 0.9), MAT.energy);
+    fuller.rotation.x = -Math.PI / 2;
+    fuller.position.z = -0.2;
+    g.add(grip, pommel, guard, blade, fuller, arm(g, 1));
+    g.userData.blade = [0, 0, -0.25, 0, 0, -1.42];
     return g;
   },
-  // Two short blades, offset so the pair reads as two.
+  // Two short blades, one in each hand, held low and reversed.
   duelist() {
     const g = new THREE.Group();
-    for (const [side, tilt] of [[1, 0.12], [-1, -0.16]]) {
+    for (const [side, tilt] of [[1, 0.10], [-1, -0.14]]) {
       const b = new THREE.Group();
-      const grip = cyl(0.04, 0.045, 0.22, 6, MAT.grip);
+      const grip = mesh(cone(0.024, 0.028, 0.22, 6), MAT.grip);
       grip.rotation.x = Math.PI / 2;
-      const blade = box(0.1, 0.035, 0.72, MAT.steel);
-      blade.position.z = -0.5;
-      const edge = box(0.03, 0.042, 0.66, MAT.energy);
-      edge.position.z = -0.49;
-      b.add(grip, blade, edge);
-      b.position.set(side * 0.13, side * 0.03, side > 0 ? 0 : 0.1);
+      const guard = mesh(slab(0.18, 0.05, 0.14, 0.06, -0.02, 0.02), MAT.gold);
+      guard.rotation.x = Math.PI / 2;
+      guard.position.z = -0.13;
+      const blade = mesh(merge([
+        slab(0.08, 0.012, 0.11, 0.03, 0, 0.62),
+        slab(0.01, 0.01, 0.08, 0.012, 0.62, 0.8),
+      ]), MAT.steel);
+      blade.rotation.x = -Math.PI / 2;
+      blade.position.z = -0.15;
+      const edge = mesh(slab(0.025, 0.035, 0.03, 0.035, 0.03, 0.56), MAT.energy);
+      edge.rotation.x = -Math.PI / 2;
+      edge.position.z = -0.15;
+      b.add(grip, guard, blade, edge, arm(b, side));
+      b.position.set(side * 1.1, side > 0 ? 0 : -0.04, side > 0 ? 0 : 0.10);
       b.rotation.z = tilt;
+      b.rotation.y = -side * 0.35;
+      b.name = side > 0 ? 'right' : 'left';
       g.add(b);
     }
+    g.userData.blade = [1.1, 0, -0.2, 1.1, 0, -0.95];
     return g;
   },
   // A long rifle with a scope and a muzzle the recoil pivots around.
   marksman() {
     const g = new THREE.Group();
-    const stock = box(0.11, 0.14, 0.5, MAT.grip);
-    stock.position.z = 0.12;
-    const body = box(0.1, 0.12, 0.7, MAT.dark);
-    body.position.z = -0.4;
-    const barrel = cyl(0.028, 0.032, 0.95, 8, MAT.steel);
+    const stock = mesh(slab(0.11, 0.15, 0.09, 0.12, -0.5, -0.05), MAT.grip);
+    stock.rotation.x = -Math.PI / 2;
+    stock.position.set(0, -0.02, 0.0);
+    const body = mesh(merge([
+      slab(0.10, 0.12, 0.11, 0.13, 0, 0.75),
+      shift(slab(0.05, 0.05, 0.05, 0.05, 0.3, 0.6), 0, 0.12, 0),
+    ]), MAT.dark);
+    body.rotation.x = -Math.PI / 2;
+    body.position.z = -0.05;
+    const barrel = mesh(cone(0.026, 0.032, 0.95, 6), MAT.steel);
     barrel.rotation.x = Math.PI / 2;
-    barrel.position.z = -1.05;
-    const scope = cyl(0.05, 0.05, 0.34, 8, MAT.dark);
-    scope.rotation.x = Math.PI / 2;
-    scope.position.set(0, 0.12, -0.42);
-    const glow = cyl(0.022, 0.022, 0.1, 6, MAT.energy);
-    glow.rotation.x = Math.PI / 2;
-    glow.position.z = -0.72;
-    g.add(stock, body, barrel, scope, glow);
+    barrel.position.z = -1.2;
+    const glow = mesh(slab(0.035, 0.035, 0.035, 0.035, 0, 0.12), MAT.energy);
+    glow.rotation.x = -Math.PI / 2;
+    glow.position.z = -1.62;
+    g.add(stock, body, barrel, glow, arm(g, 1, 0, -0.06, 0.05), arm(g, -1, -0.04, -0.02, -0.55));
+    g.userData.blade = null;
     return g;
   },
   // A stubby mortar tube, held across the body.
   bombardier() {
     const g = new THREE.Group();
-    const tube = cyl(0.14, 0.16, 0.8, 10, MAT.dark);
+    const tube = mesh(cone(0.15, 0.13, 0.8, 8), MAT.dark);
     tube.rotation.x = Math.PI / 2.4;
     tube.position.z = -0.5;
-    const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.025, 6, 12), MAT.steel);
+    const mouth = mesh(cone(0.17, 0.15, 0.09, 8), MAT.steel);
     mouth.position.set(0, 0.27, -0.82);
     mouth.rotation.x = Math.PI / 2.4;
-    const shell = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), MAT.gold);
-    shell.position.set(-0.2, -0.08, -0.2);
-    const grip = cyl(0.045, 0.05, 0.26, 6, MAT.grip);
-    grip.position.set(0.02, -0.16, -0.28);
-    g.add(tube, mouth, shell, grip);
+    const shell = mesh(cone(0.05, 0.08, 0.18, 6), MAT.gold);
+    shell.position.set(-0.2, -0.06, -0.2);
+    shell.rotation.x = 0.4;
+    g.add(tube, mouth, shell, arm(g, 1, 0.02, -0.14, -0.2), arm(g, -1, -0.28, 0.1, -0.7));
+    g.userData.blade = null;
     return g;
   },
   // A focusing lens on a fork, with a core that brightens as the beam ramps.
   oracle() {
     const g = new THREE.Group();
-    const handle = cyl(0.05, 0.055, 0.34, 6, MAT.grip);
+    const handle = mesh(cone(0.03, 0.034, 0.9, 6), MAT.grip);
     handle.rotation.x = Math.PI / 2;
-    const fork = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.03, 6, 14), MAT.steel);
-    fork.position.z = -0.62;
-    const core = new THREE.Mesh(new THREE.OctahedronGeometry(0.1, 0), MAT.energy);
-    core.position.z = -0.62;
-    const arm = box(0.05, 0.05, 0.5, MAT.dark);
-    arm.position.z = -0.36;
-    g.add(handle, arm, fork, core);
+    handle.position.z = -0.25;
+    const fork = mesh(merge([
+      shift(spin(cone(0.02, 0.02, 0.36, 5), 0, 0, 0.55), -0.13, 0.2, 0),
+      shift(spin(cone(0.02, 0.02, 0.36, 5), 0, 0, -0.55), 0.13, 0.2, 0),
+      shift(slab(0.1, 0.06, 0.08, 0.05, -0.03, 0.03), 0, 0.06, 0),
+    ]), MAT.steel);
+    fork.rotation.x = -Math.PI / 2;
+    fork.position.z = -0.72;
+    const core = mesh(merge([
+      cone(0.001, 0.11, 0.14, 4),
+      spin(cone(0.001, 0.11, 0.14, 4), Math.PI, 0, 0),
+    ]), MAT.energy);
+    core.position.z = -0.98;
+    g.add(handle, fork, core, arm(g, 1), arm(g, -1, -0.04, 0.02, -0.5));
     g.userData.core = core;
+    g.userData.blade = null;
     return g;
   },
 };
+
+// ---------------------------------------------------------------------------
+// The blade trail: a ribbon through the last N positions of the blade, base to
+// tip, fading along its length. Additive and unlit, so it reads as light off
+// the edge. Used in the view-model scene for first person and in the world for
+// third person; the geometry is the same, only the scene differs.
+
+export class BladeTrail {
+  constructor(scene, samples = 16, life = 1.0, alpha = 1) {
+    this.n = samples;
+    this.life = life;
+    this.count = 0;
+    this.head = 0;
+    this.bases = new Float32Array(samples * 3);
+    this.tips = new Float32Array(samples * 3);
+    this.ages = new Float32Array(samples);
+    const geo = new THREE.BufferGeometry();
+    this.pos = new THREE.BufferAttribute(new Float32Array(samples * 2 * 3), 3).setUsage(THREE.DynamicDrawUsage);
+    this.fade = new THREE.BufferAttribute(new Float32Array(samples * 2), 1).setUsage(THREE.DynamicDrawUsage);
+    geo.setAttribute('position', this.pos);
+    geo.setAttribute('aFade', this.fade);
+    const idx = [];
+    for (let i = 0; i < samples - 1; i++) {
+      const a = i * 2, b = a + 1, c = a + 2, d = a + 3;
+      idx.push(a, b, c, b, d, c);
+    }
+    geo.setIndex(idx);
+    this.mat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, depthTest: true, side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+      uniforms: { uColor: { value: new THREE.Color(PALETTE.energy) }, uAlpha: { value: alpha } },
+      vertexShader: /* glsl */ `
+        attribute float aFade;
+        varying float vFade;
+        void main() {
+          vFade = aFade;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform vec3 uColor;
+        uniform float uAlpha;
+        varying float vFade;
+        void main() {
+          float a = vFade * vFade * uAlpha;
+          gl_FragColor = vec4(uColor * (0.6 + 1.6 * vFade), a);
+        }
+      `,
+    });
+    this.mesh = new THREE.Mesh(geo, this.mat);
+    this.mesh.frustumCulled = false;
+    this.mesh.visible = false;
+    this.mesh.renderOrder = 12;
+    scene.add(this.mesh);
+  }
+
+  clear() {
+    this.count = 0;
+    this.head = 0;
+    this.mesh.visible = false;
+  }
+
+  push(base, tip) {
+    const i = this.head;
+    this.bases[i * 3] = base.x; this.bases[i * 3 + 1] = base.y; this.bases[i * 3 + 2] = base.z;
+    this.tips[i * 3] = tip.x; this.tips[i * 3 + 1] = tip.y; this.tips[i * 3 + 2] = tip.z;
+    this.ages[i] = 0;
+    this.head = (i + 1) % this.n;
+    if (this.count < this.n) this.count++;
+  }
+
+  // `live` keeps the newest sample bright; when the sweep ends the whole
+  // ribbon fades out over `life` and hides itself.
+  update(dt, live) {
+    if (this.count === 0) return;
+    let visible = 0;
+    for (let i = 0; i < this.n; i++) this.ages[i] += dt;
+    // Oldest to newest, so the ribbon's fade runs along its length.
+    const oldest = (this.head - this.count + this.n) % this.n;
+    for (let k = 0; k < this.count; k++) {
+      const i = (oldest + k) % this.n;
+      const age = this.ages[i];
+      const f = Math.max(0, 1 - age / (this.life * 0.35)) * (k + 1) / this.count;
+      if (f > 0.01) visible++;
+      this.pos.setXYZ(k * 2, this.bases[i * 3], this.bases[i * 3 + 1], this.bases[i * 3 + 2]);
+      this.pos.setXYZ(k * 2 + 1, this.tips[i * 3], this.tips[i * 3 + 1], this.tips[i * 3 + 2]);
+      this.fade.setX(k * 2, f * 0.35);
+      this.fade.setX(k * 2 + 1, f);
+    }
+    this.mesh.geometry.setDrawRange(0, Math.max(0, (this.count - 1) * 6));
+    this.pos.needsUpdate = true;
+    this.fade.needsUpdate = true;
+    this.mesh.visible = visible > 1;
+    if (!live && visible <= 1) this.clear();
+  }
+}
 
 export class ViewModel {
   constructor() {
@@ -173,6 +424,11 @@ export class ViewModel {
     this.visible = false;
     this.t = 0;
     this._sway = new THREE.Vector2();
+    this._lastSide = 1;
+    // Fewer, fainter samples than the world trail: in first person the blade
+    // sweeps the whole frame, and a full ribbon from the grip read as a cyan
+    // sheet across the sky rather than light off an edge.
+    this.trail = new BladeTrail(this.scene, 9, 0.35, 0.42);
   }
 
   // Built lazily, so a run only pays for the archetypes it actually holds.
@@ -195,21 +451,13 @@ export class ViewModel {
     this.current.visible = true;
     this.grip = GRIP[typeKey] ?? 0.6;
     this.visible = true;
+    this.trail.clear();
   }
 
   hide() {
     if (this.current) this.current.visible = false;
     this.visible = false;
-  }
-
-  // The swing arc, shaped after Minecraft's: the item drops down and to the
-  // right, sweeps across and up, then settles back. `p` runs 0..1 across the
-  // swing. sin(pi*p) gives the single-humped sweep; the squared term biases the
-  // return so the recovery reads slower than the strike, which is what makes a
-  // heavy weapon feel heavy.
-  static swingCurve(p) {
-    const s = Math.sin(Math.PI * p);
-    return { sweep: s, bias: s * s, lead: Math.sin(Math.PI * Math.min(1, p * 1.35)) };
+    this.trail.clear();
   }
 
   // Called every frame while possessed, after the main camera is placed.
@@ -218,27 +466,48 @@ export class ViewModel {
     this.t += dt;
     const g = this.grip;
     const kind = unit.type.strike?.kind || 'melee';
+    const twin = unit.typeKey === 'duelist';
+    const spear = unit.typeKey === 'warden';
+    const rest = kind !== 'melee' ? RESTS.ranged : twin ? RESTS.twin : spear ? RESTS.spear : RESTS.melee;
 
     // Progress through the current swing, if any.
     const dur = unit.swingDur || 0.55;
     const p = unit.swingT > 0 ? 1 - unit.swingT / dur : -1;
-    const sw = p >= 0 ? ViewModel.swingCurve(p) : null;
+    const side = unit.swingSide || 1;
+    let leftHand = false;
 
-    let ox = REST.x * g;
-    let oy = REST.y * g;
-    let oz = REST.z * g;
-    let rx = 0;
-    let ry = 0;
-    let rz = 0;
+    // The base pose: the rest, or the point along the melee arc.
+    let pose = rest;
+    if (p >= 0 && kind === 'melee') {
+      const arc = twin ? (side > 0 ? ARCS.cutR : ARCS.cutL) : spear ? ARCS.thrust : (side > 0 ? ARCS.cleaveR : ARCS.cleaveL);
+      pose = arcAt(arc, p);
+      leftHand = twin && side < 0;
+    }
+    let ox = pose[0] * g;
+    let oy = pose[1] * g;
+    let oz = pose[2] * g;
+    let rx = pose[3];
+    let ry = pose[4];
+    let rz = pose[5];
 
     // Idle sway and walk bob, layered under whatever the swing is doing so the
-    // weapon is never completely still.
-    const moving = opts.moving ? 1 : 0;
-    ox += Math.sin(this.t * 1.2) * 0.010 * g + Math.sin(opts.stride || 0) * 0.045 * g * moving;
-    oy += Math.sin(this.t * 1.7) * 0.008 * g
-      - Math.abs(Math.cos(opts.stride || 0)) * 0.032 * g * moving;
-    rz += Math.sin(opts.stride || 0) * 0.056 * moving;
-    rx += Math.sin(this.t * 1.7) * 0.016;
+    // weapon is never completely still. The bob is the eye's figure-eight,
+    // counter-phased a little so the weapon lags the head.
+    const mv = opts.moveT || 0;
+    const stride = opts.stride || 0;
+    const amp = mv * (1 + 0.5 * (opts.sprint || 0));
+    ox += Math.sin(this.t * 1.2) * 0.010 * g + Math.sin(stride - 0.4) * 0.040 * g * amp;
+    oy += Math.sin(this.t * 1.7) * 0.008 * g + Math.sin(stride * 2 - 0.6) * 0.030 * g * amp
+      + (opts.spring || 0) * 0.03 * g;
+    rz += Math.sin(stride - 0.4) * 0.05 * amp;
+    rx += Math.sin(this.t * 1.7) * 0.016 + Math.sin(stride * 2 - 0.6) * 0.02 * amp;
+    // Sprinting drops the weapon low and forward, the way a runner carries it.
+    const sp = opts.sprint || 0;
+    oy += -0.10 * g * sp;
+    oz += 0.06 * g * sp;
+    rx += 0.25 * sp;
+    // In the air the weapon drifts up with the body's lift.
+    if (opts.airborne) { oy += 0.03 * g; rx += -0.12; }
 
     // Aim lag: the weapon trails the turn for a moment, then catches up.
     this._sway.x += ((opts.yawRate || 0) * -0.9 - this._sway.x) * Math.min(1, dt * 10);
@@ -247,17 +516,8 @@ export class ViewModel {
     oy += Math.max(-0.07, Math.min(0.07, this._sway.y)) * g;
     rz += Math.max(-0.09, Math.min(0.09, this._sway.x)) * 1.4;
 
-    if (sw) {
-      if (kind === 'melee') {
-        // Down-right, across and up. The big number is the pitch: an 80 degree
-        // rotation is what reads as a swing rather than a nudge.
-        ox += -0.40 * g * sw.lead;
-        oy += 0.20 * g * sw.sweep;
-        oz += -0.20 * g * sw.bias;
-        rx += -1.40 * sw.lead;
-        ry += -0.35 * sw.sweep;
-        rz += -0.35 * sw.bias;
-      } else if (kind === 'hitscan') {
+    if (p >= 0) {
+      if (kind === 'hitscan') {
         // A short punch straight back with muzzle climb, decaying fast.
         const rec = Math.exp(-p * 7);
         oz += 0.16 * g * rec;
@@ -309,7 +569,32 @@ export class ViewModel {
     _lq.setFromEuler(_e);
     this.current.quaternion.copy(_lq);
     this.current.scale.setScalar(VM_SCALE);
+    // The twin blades swap which hand leads: the striking blade is brought to
+    // the centre of the frame, the other stays out at its side.
+    if (unit.typeKey === 'duelist') {
+      const r = this.current.getObjectByName('right');
+      const l = this.current.getObjectByName('left');
+      if (r && l) {
+        const lead = p >= 0 ? hump(Math.min(1, p / 0.5)) : 0;
+        r.position.x = 1.1 - (leftHand ? 0 : 0.9) * lead;
+        l.position.x = -1.1 + (leftHand ? 0.9 : 0) * lead;
+      }
+    }
     this.current.updateMatrixWorld(true);
+
+    // The trail samples the blade line in camera space while the sweep is
+    // crossing the frame, and lets go the moment the recovery starts.
+    const bl = this.current.userData.blade;
+    const sweeping = kind === 'melee' && p >= 0.16 && p <= 0.6 && bl;
+    if (sweeping) {
+      const m = this.current.matrixWorld;
+      // From the outer half of the blade only, where the edge moves fastest.
+      const sx = leftHand ? -1 : 1;
+      _base.set(bl[0] * sx + (bl[3] - bl[0]) * sx * 0.5, bl[1] + (bl[4] - bl[1]) * 0.5, bl[2] + (bl[5] - bl[2]) * 0.5).applyMatrix4(m);
+      _tip.set(bl[3] * sx, bl[4], bl[5]).applyMatrix4(m);
+      this.trail.push(_base, _tip);
+    }
+    this.trail.update(dt, !!sweeping);
   }
 
   render(renderer) {

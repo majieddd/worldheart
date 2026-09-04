@@ -320,7 +320,7 @@ const BUILD = {
 // third person; the geometry is the same, only the scene differs.
 
 export class BladeTrail {
-  constructor(scene, samples = 16, life = 1.0) {
+  constructor(scene, samples = 16, life = 1.0, alpha = 1) {
     this.n = samples;
     this.life = life;
     this.count = 0;
@@ -342,7 +342,7 @@ export class BladeTrail {
     this.mat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, depthTest: true, side: THREE.DoubleSide,
       blending: THREE.AdditiveBlending,
-      uniforms: { uColor: { value: new THREE.Color(PALETTE.energy) }, uAlpha: { value: 1 } },
+      uniforms: { uColor: { value: new THREE.Color(PALETTE.energy) }, uAlpha: { value: alpha } },
       vertexShader: /* glsl */ `
         attribute float aFade;
         varying float vFade;
@@ -425,7 +425,10 @@ export class ViewModel {
     this.t = 0;
     this._sway = new THREE.Vector2();
     this._lastSide = 1;
-    this.trail = new BladeTrail(this.scene, 14, 0.5);
+    // Fewer, fainter samples than the world trail: in first person the blade
+    // sweeps the whole frame, and a full ribbon from the grip read as a cyan
+    // sheet across the sky rather than light off an edge.
+    this.trail = new BladeTrail(this.scene, 9, 0.35, 0.42);
   }
 
   // Built lazily, so a run only pays for the archetypes it actually holds.
@@ -585,8 +588,10 @@ export class ViewModel {
     const sweeping = kind === 'melee' && p >= 0.16 && p <= 0.6 && bl;
     if (sweeping) {
       const m = this.current.matrixWorld;
-      _base.set(bl[0] * (leftHand ? -1 : 1), bl[1], bl[2]).applyMatrix4(m);
-      _tip.set(bl[3] * (leftHand ? -1 : 1), bl[4], bl[5]).applyMatrix4(m);
+      // From the outer half of the blade only, where the edge moves fastest.
+      const sx = leftHand ? -1 : 1;
+      _base.set(bl[0] * sx + (bl[3] - bl[0]) * sx * 0.5, bl[1] + (bl[4] - bl[1]) * 0.5, bl[2] + (bl[5] - bl[2]) * 0.5).applyMatrix4(m);
+      _tip.set(bl[3] * sx, bl[4], bl[5]).applyMatrix4(m);
       this.trail.push(_base, _tip);
     }
     this.trail.update(dt, !!sweeping);

@@ -11,6 +11,7 @@ import { AllyManager, ALLY_TYPES } from './allies.js';
 import { Possession, CacheField } from './possess.js';
 import { ViewModel } from './viewmodel.js';
 import { Effects } from './effects.js';
+import { CombatFx } from './combatfx.js';
 import { TowerManager, TOWER_TYPES, MODS as TOWER_MODS } from './towers.js';
 import { Game } from './game.js';
 import { WaveDirector, portalCount } from './waves.js';
@@ -108,6 +109,7 @@ let mode99 = null;   // the 99 Planets shell, null in every other mode
 let allies = null;   // friendly units; only built for modes that summon them
 let possession = null;  // direct control of a unit, first person
 let viewModel = null;   // the first-person weapon overlay
+let combatFx = null;    // tracers, beams, shells and melee tells
 let caches = null;      // gold hidden in the fog
 
 /* ---- environment map and sun shadows ---------------------------------- */
@@ -399,9 +401,18 @@ async function boot() {
   // The weapon in your hands, drawn in its own pass over the world.
   viewModel = new ViewModel();
   possession.viewModel = viewModel;
+  // The third-person boom asks the world what stands between it and the eye.
+  possession.world = world;
   window.WH.viewModel = viewModel;
   window.WH.possession = possession;
   window.WH.caches = caches;
+  // The visible side of every strike the sim reports. Built AFTER onLand and
+  // onStrikeHit above, because it chains whatever is already assigned rather
+  // than replacing it, and after possession, because it asks possession whose
+  // body a blow landed on.
+  combatFx = new CombatFx({ scene, fx, allies, enemies, rig, audio, ui });
+  combatFx.possession = possession;
+  window.WH.combatFx = combatFx;
   // A felled breach stops feeding waves and pays a bounty. Tracked by nav node
   // because that is the identity the wave director filters on.
   waves.destroyedNodes = new Set();
@@ -582,6 +593,9 @@ function stepFrame(dt, render) {
     }
     fx.icons.commit(iconAlpha);
     fx.update(simDt, enemies ? enemies.active : null);
+    // Same dt as the effects so a tracer freezes with the board it was fired
+    // on; the beam is gated on being fed this frame, not on dt.
+    combatFx?.update(simDt);
   }
   if (render) post.render(scene, rig.camera, dt);
 }
