@@ -54,12 +54,87 @@ const GRIP = {
   marksman: 0.62, bombardier: 0.68, oracle: 0.60,
 };
 
-// Rest pose in camera space: right, up, forward, and the tilt that lays a
-// blade diagonally across the frame instead of pointing it at the horizon,
-// where it foreshortened to a stub.
-const REST = { x: 0.34, y: -0.30, z: 0.78, rx: 0.55, ry: -0.42, rz: 0.10 };
-// Ranged weapons point down the aim, so they sit lower and straighter.
-const REST_RANGED = { x: 0.26, y: -0.27, z: 0.72, rx: 0.06, ry: -0.06, rz: 0.02 };
+// Poses in camera space: [x, y, z] in grip units (right, up, forward) and
+// [rx, ry, rz] in radians, YXZ. The prop's blade runs down its -z, so rx > 0
+// tips it up and ry > 0 turns it to the LEFT of the frame. A rest that lays
+// the blade diagonally across the lower right, tip toward the centre, reads
+// as held; pointed at the horizon it foreshortened to a stub.
+const RESTS = {
+  melee: [0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+  twin: [0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+  spear: [0.38, -0.30, 0.80, 0.25, 0.45, 0.10],
+  // Ranged weapons point down the aim, so they sit lower and straighter.
+  ranged: [0.26, -0.27, 0.72, 0.06, -0.06, 0.02],
+};
+
+// The melee arcs, as ABSOLUTE keyframes: [p, x, y, z, rx, ry, rz]. Authored
+// as absolute poses rather than offsets from the rest, because a mirrored
+// offset from a right-hand rest sends the backhand off the right edge of the
+// frame. Each is a whole gesture: the wind-up leaves the frame on one side,
+// the snap crosses the centre at the strike frame (0.40, matching
+// js/soldier.js STRIKE_AT so the hit lands as the blade passes), the
+// follow-through exits low on the far side, and the recovery brings it home.
+const ARCS = {
+  // Right to left: raised over the right shoulder, swept down and across.
+  cleaveR: [
+    [0.00, 0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+    [0.22, 0.58, 0.08, 0.62, 0.95, 0.15, 0.60],
+    [0.32, 0.34, -0.06, 0.56, 0.55, 0.70, 0.25],
+    [0.40, -0.02, -0.16, 0.50, 0.05, 1.10, -0.20],
+    [0.50, -0.30, -0.28, 0.56, -0.35, 1.35, -0.50],
+    [0.68, -0.08, -0.40, 0.70, -0.15, 1.05, -0.10],
+    [1.00, 0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+  ],
+  // Left to right, the backhand: crosses to the upper left, then sweeps
+  // back across and out low on the right.
+  cleaveL: [
+    [0.00, 0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+    [0.22, -0.34, 0.04, 0.58, 0.75, 1.40, -0.55],
+    [0.32, -0.18, -0.10, 0.52, 0.35, 0.25, -0.25],
+    [0.40, 0.08, -0.16, 0.50, 0.02, -0.85, 0.20],
+    [0.52, 0.48, -0.30, 0.58, -0.30, -1.25, 0.45],
+    [0.70, 0.44, -0.40, 0.72, -0.05, 0.10, 0.60],
+    [1.00, 0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
+  ],
+  // Twin cuts: the right blade snaps from the right to the centre, the left
+  // blade from the left. The whole pair moves; the striking blade leads.
+  cutR: [
+    [0.00, 0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+    [0.16, 0.30, -0.18, 0.66, 0.55, -0.30, 0.25],
+    [0.34, -0.10, -0.18, 0.44, -0.05, 0.85, -0.20],
+    [0.50, -0.30, -0.32, 0.52, -0.35, 1.10, -0.40],
+    [1.00, 0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+  ],
+  cutL: [
+    [0.00, 0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+    [0.16, -0.22, -0.18, 0.66, 0.55, 0.30, -0.25],
+    [0.34, 0.18, -0.18, 0.44, -0.05, -0.85, 0.20],
+    [0.50, 0.38, -0.32, 0.52, -0.35, -1.10, 0.40],
+    [1.00, 0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
+  ],
+  // The spear thrust: pulled back to the hip, driven down the aim.
+  thrust: [
+    [0.00, 0.38, -0.30, 0.80, 0.25, 0.45, 0.10],
+    [0.22, 0.44, -0.34, 1.00, 0.15, 0.40, 0.12],
+    [0.42, 0.14, -0.20, 0.34, -0.06, 0.08, 0.0],
+    [0.60, 0.20, -0.22, 0.46, 0.0, 0.15, 0.02],
+    [1.00, 0.38, -0.30, 0.80, 0.25, 0.45, 0.10],
+  ],
+};
+
+// Interpolate a six-component pose from an arc at progress p, into `out`.
+// Smoothstep between neighbours, like rig.keyed, but one pass for all six.
+const _pose = [0, 0, 0, 0, 0, 0];
+function arcAt(keys, p, out = _pose) {
+  let i = 1;
+  while (i < keys.length - 1 && keys[i][0] < p) i++;
+  const a = keys[i - 1], b = keys[i];
+  let u = (p - a[0]) / Math.max(1e-6, b[0] - a[0]);
+  u = u < 0 ? 0 : u > 1 ? 1 : u;
+  u = u * u * (3 - 2 * u);
+  for (let k = 0; k < 6; k++) out[k] = a[k + 1] + (b[k + 1] - a[k + 1]) * u;
+  return out;
+}
 
 // Everything is modelled at world scale - a sword really is 1.4 units long -
 // and a world-scale weapon held half a metre from the eye fills the screen. The
@@ -166,13 +241,13 @@ const BUILD = {
       edge.rotation.x = -Math.PI / 2;
       edge.position.z = -0.15;
       b.add(grip, guard, blade, edge, arm(b, side));
-      b.position.set(side * 0.30, side > 0 ? 0 : -0.02, side > 0 ? 0 : 0.05);
+      b.position.set(side * 1.1, side > 0 ? 0 : -0.04, side > 0 ? 0 : 0.10);
       b.rotation.z = tilt;
       b.rotation.y = -side * 0.35;
       b.name = side > 0 ? 'right' : 'left';
       g.add(b);
     }
-    g.userData.blade = [0.3, 0, -0.2, 0.3, 0, -0.95];
+    g.userData.blade = [1.1, 0, -0.2, 1.1, 0, -0.95];
     return g;
   },
   // A long rifle with a scope and a muzzle the recoil pivots around.
@@ -382,66 +457,35 @@ export class ViewModel {
     this.trail.clear();
   }
 
-  // The melee arc, as keyframes over the swing. Offsets are in grip units,
-  // rotations in radians, all relative to the rest pose. Anticipation to
-  // 0.22, the snap across the frame to 0.44 (the strike frame is 0.40, when
-  // the blade is at the centre), overshoot to 0.58, then a slow recovery.
-  static cleave(p, side) {
-    const s = side;
-    return {
-      dx: keyed([[0, 0], [0.22, 0.18], [0.44, -0.95], [0.58, -1.15], [1, 0]], p) * s,
-      dy: keyed([[0, 0], [0.22, 0.34], [0.44, -0.05], [0.58, -0.30], [1, 0]], p),
-      dz: keyed([[0, 0], [0.22, 0.10], [0.44, -0.28], [0.58, -0.12], [1, 0]], p),
-      rx: keyed([[0, 0], [0.22, 0.55], [0.44, -1.25], [0.58, -1.55], [1, 0]], p),
-      ry: keyed([[0, 0], [0.22, -0.45], [0.44, 1.35], [0.58, 1.55], [1, 0]], p) * s,
-      rz: keyed([[0, 0], [0.22, 0.65], [0.44, -0.70], [0.58, -0.95], [1, 0]], p) * s,
-    };
-  }
-
-  // The twin cut: one hand snaps forward and across while the other holds.
-  static cut(p, side) {
-    const s = side;
-    return {
-      dx: keyed([[0, 0], [0.16, 0.10], [0.34, -0.55], [0.5, -0.45], [1, 0]], p) * s,
-      dy: keyed([[0, 0], [0.16, -0.06], [0.34, 0.12], [0.5, 0.0], [1, 0]], p),
-      dz: keyed([[0, 0], [0.16, 0.14], [0.34, -0.40], [0.5, -0.25], [1, 0]], p),
-      rx: keyed([[0, 0], [0.16, 0.30], [0.34, -0.55], [0.5, -0.45], [1, 0]], p),
-      ry: keyed([[0, 0], [0.16, -0.30], [0.34, 0.95], [0.5, 0.85], [1, 0]], p) * s,
-      rz: keyed([[0, 0], [0.16, 0.25], [0.34, -0.45], [0.5, -0.35], [1, 0]], p) * s,
-    };
-  }
-
-  // A spear thrust: back to the hip, then driven straight down the aim.
-  static thrust(p) {
-    return {
-      dx: keyed([[0, 0], [0.22, 0.12], [0.42, -0.15], [1, 0]], p),
-      dy: keyed([[0, 0], [0.22, -0.06], [0.42, 0.04], [1, 0]], p),
-      dz: keyed([[0, 0], [0.22, 0.40], [0.42, -0.85], [0.6, -0.6], [1, 0]], p),
-      rx: keyed([[0, 0], [0.22, 0.15], [0.42, -0.35], [1, 0]], p),
-      ry: keyed([[0, 0], [0.22, -0.2], [0.42, 0.25], [1, 0]], p),
-      rz: 0,
-    };
-  }
-
   // Called every frame while possessed, after the main camera is placed.
   update(dt, cam, unit, opts = {}) {
     if (!this.visible || !this.current) return;
     this.t += dt;
     const g = this.grip;
     const kind = unit.type.strike?.kind || 'melee';
-    const ranged = kind !== 'melee';
-    const rest = ranged ? REST_RANGED : REST;
+    const twin = unit.typeKey === 'duelist';
+    const spear = unit.typeKey === 'warden';
+    const rest = kind !== 'melee' ? RESTS.ranged : twin ? RESTS.twin : spear ? RESTS.spear : RESTS.melee;
 
     // Progress through the current swing, if any.
     const dur = unit.swingDur || 0.55;
     const p = unit.swingT > 0 ? 1 - unit.swingT / dur : -1;
+    const side = unit.swingSide || 1;
+    let leftHand = false;
 
-    let ox = rest.x * g;
-    let oy = rest.y * g;
-    let oz = rest.z * g;
-    let rx = rest.rx;
-    let ry = rest.ry;
-    let rz = rest.rz;
+    // The base pose: the rest, or the point along the melee arc.
+    let pose = rest;
+    if (p >= 0 && kind === 'melee') {
+      const arc = twin ? (side > 0 ? ARCS.cutR : ARCS.cutL) : spear ? ARCS.thrust : (side > 0 ? ARCS.cleaveR : ARCS.cleaveL);
+      pose = arcAt(arc, p);
+      leftHand = twin && side < 0;
+    }
+    let ox = pose[0] * g;
+    let oy = pose[1] * g;
+    let oz = pose[2] * g;
+    let rx = pose[3];
+    let ry = pose[4];
+    let rz = pose[5];
 
     // Idle sway and walk bob, layered under whatever the swing is doing so the
     // weapon is never completely still. The bob is the eye's figure-eight,
@@ -469,24 +513,8 @@ export class ViewModel {
     oy += Math.max(-0.07, Math.min(0.07, this._sway.y)) * g;
     rz += Math.max(-0.09, Math.min(0.09, this._sway.x)) * 1.4;
 
-    let leftHand = false;
     if (p >= 0) {
-      if (kind === 'melee') {
-        const side = unit.swingSide || 1;
-        const twin = unit.typeKey === 'duelist';
-        const spear = unit.typeKey === 'warden';
-        const arc = twin ? ViewModel.cut(p, side) : spear ? ViewModel.thrust(p) : ViewModel.cleave(p, side);
-        // The cleave is authored right-to-left. A mirrored swing runs from the
-        // left, so the rest offset itself has to cross the frame: the prop
-        // travels from its right-hand rest, over, and back.
-        ox += arc.dx * g;
-        oy += arc.dy * g;
-        oz += arc.dz * g;
-        rx += arc.rx;
-        ry += arc.ry;
-        rz += arc.rz;
-        leftHand = twin && side < 0;
-      } else if (kind === 'hitscan') {
+      if (kind === 'hitscan') {
         // A short punch straight back with muzzle climb, decaying fast.
         const rec = Math.exp(-p * 7);
         oz += 0.16 * g * rec;
@@ -545,8 +573,8 @@ export class ViewModel {
       const l = this.current.getObjectByName('left');
       if (r && l) {
         const lead = p >= 0 ? hump(Math.min(1, p / 0.5)) : 0;
-        r.position.x = 0.30 - (leftHand ? 0 : 0.30) * lead;
-        l.position.x = -0.30 + (leftHand ? 0.30 : 0) * lead;
+        r.position.x = 1.1 - (leftHand ? 0 : 0.9) * lead;
+        l.position.x = -1.1 + (leftHand ? 0.9 : 0) * lead;
       }
     }
     this.current.updateMatrixWorld(true);
