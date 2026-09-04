@@ -332,7 +332,10 @@ export class Game {
     if (this.state !== 'playing') return;
     // The shop card is disabled too, but the 1-5 hotkeys bypass the card
     // entirely, so the roster has to be enforced here as well.
-    if (this.unlockedTowers && !this.unlockedTowers.includes(typeKey)) {
+    // A card in hand IS the permission - the hand is only ever dealt from what
+    // the run has unlocked, so re-checking the roster here would refuse a card
+    // the run itself handed the player.
+    if (!fromCard && this.unlockedTowers && !this.unlockedTowers.includes(typeKey)) {
       if (this.onToast) this.onToast('That tower is not unlocked yet', 'warn');
       return;
     }
