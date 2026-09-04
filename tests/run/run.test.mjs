@@ -62,15 +62,32 @@ test('the drafted power is added to the run and reaches the modifiers', () => {
   assert.notEqual(JSON.stringify(run.getModifiers()), before, 'modifiers unchanged');
 });
 
-test('the frontier grows every cleared wave', () => {
+test('the frontier grows once on an unraised heart, then holds', () => {
+  // The circle used to widen on every cleared wave whether or not the player
+  // did anything, which was the pacing the owner called too fast. Level 0
+  // holds exactly one ring; everything after that is banked until the heart
+  // is raised.
   const run = newRun();
-  let prev = run.getFrontierTheta();
-  for (let i = 0; i < 5; i++) {
+  const start = run.getFrontierTheta();
+  clearWaveChoosingFirst(run);
+  const first = run.getFrontierTheta();
+  assert.ok(first > start, 'the first wave must still widen the foothold');
+  for (let i = 0; i < 4; i++) {
     clearWaveChoosingFirst(run);
-    const now = run.getFrontierTheta();
-    assert.ok(now > prev, 'frontier did not grow on wave ' + (i + 1));
-    prev = now;
+    assert.equal(run.getFrontierTheta(), first, 'frontier moved on wave ' + (i + 2) + ' without a heart upgrade');
   }
+  assert.equal(run.getHeldRings(), 4);
+});
+
+test('raising the heart pays out the rings the waves had banked', () => {
+  const run = newRun();
+  for (let w = 1; w <= 5; w++) clearWaveChoosingFirst(run);
+  const events = run.upgradeHeart();
+  assert.ok(events.some((e) => e.type === 'heartUpgraded'));
+  // Level 1 permits three rings, so two of the four held are paid now.
+  assert.equal(events.filter((e) => e.type === 'frontierGrew').length, 2);
+  assert.equal(run.getFrontierSteps(), 3);
+  assert.equal(run.getHeldRings(), 2);
 });
 
 test('towers unlock on waves 2, 4, 6, 8 and 10', () => {
@@ -91,12 +108,15 @@ test('every tower is owned once wave 10 clears, with no duplicates', () => {
   assert.equal(new Set(owned).size, 6, 'a tower was unlocked twice');
 });
 
-test('nothing in the run gates tower upgrades', () => {
-  // The wave-gated tier cap is gone: a tower can be upgraded at any point and
-  // the price is the only limit. Asserted here so the gate cannot come back by
-  // accident.
+test('the tier cap follows the heart, never the wave', () => {
+  // The wave-gated cap is gone for good: a run can clear ten waves and the
+  // cap will not move. Only the heart raises it, one mark per level.
   const run = newRun();
-  assert.equal(run.getTierCap, undefined, 'getTierCap should not exist');
+  assert.equal(run.getTierCap(), 2);
+  for (let w = 1; w <= 10; w++) clearWaveChoosingFirst(run);
+  assert.equal(run.getTierCap(), 2, 'waves must not raise the cap');
+  run.upgradeHeart();
+  assert.equal(run.getTierCap(), 3);
 });
 
 test('the evolution tier reaches 4 by wave 12', () => {
@@ -107,6 +127,9 @@ test('the evolution tier reaches 4 by wave 12', () => {
 
 test('a full run reaches the boss and then victory', () => {
   const run = newRun();
+  // A heart raised to its ceiling holds every ring, so the planet is fully
+  // held by the time the boss arrives. Unraised, the circle stays a foothold.
+  while (run.getHeartCost() !== null) run.upgradeHeart();
   for (let w = 1; w <= 14; w++) clearWaveChoosingFirst(run);
   assert.equal(run.getWave(), 15);
   assert.ok(run.isBossWave());

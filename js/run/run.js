@@ -8,8 +8,9 @@
 
 import { makeRng, pick } from './rng.js';
 import {
-  TOTAL_WAVES, frontierTheta, unlocksTowerAt,
+  TOTAL_WAVES, EXPANSIONS, frontierTheta, unlocksTowerAt,
   evolutionTierAfter, isBossWave, drawsCardAfter, draftsPowerAfter,
+  heartCost, ringsPermitted, tierCapForHeart, MAX_HEART_LEVEL,
 } from './schedule.js';
 import { foldModifiers } from './modifiers.js';
 import { POWER_BY_ID, rollOffers } from './powers.js';
@@ -80,6 +81,24 @@ export function createRun({ seed, playerIds, startGold, profile }) {
     events.push({ type: 'towerUnlocked', tower });
   }
 
+  // How many rings the run has EARNED: one per cleared wave, never more than
+  // there are expansions, because the boss wave is not one.
+  function ringsEarned() {
+    return Math.min(state.wavesCleared, EXPANSIONS);
+  }
+
+  // Applies every expansion that is both earned and permitted by the heart,
+  // one frontierGrew per ring so the shell can seed each new band of ground.
+  // Called on a cleared wave, where it can add at most one ring, and on a
+  // heart upgrade, where it pays out everything the wave count had banked.
+  function growFrontier(events) {
+    const allowed = Math.min(ringsEarned(), ringsPermitted(state.heartLevel));
+    while (state.frontierSteps < allowed) {
+      state.frontierSteps += 1;
+      events.push({ type: 'frontierGrew', theta: frontierTheta(state.frontierSteps) });
+    }
+  }
+
   // Applied once the draft settles, which is also when the wave number moves.
   function advanceAfterDraft(events) {
     const cleared = state.wavesCleared;
@@ -115,7 +134,16 @@ export function createRun({ seed, playerIds, startGold, profile }) {
       ? state.wavesCleared
       : Math.min(state.wavesCleared + 1, TOTAL_WAVES)),
     getPhase: () => state.phase,
-    getFrontierTheta: () => frontierTheta(state.wavesCleared),
+    // The frontier is what has been APPLIED, not what has been cleared: the
+    // two differ by however many rings the heart is holding back.
+    getFrontierTheta: () => frontierTheta(state.frontierSteps),
+    getFrontierSteps: () => state.frontierSteps,
+    // Rings earned by waves that the heart cannot yet hold. The HUD shows this
+    // so a held frontier reads as a debt the next upgrade pays, not a stall.
+    getHeldRings: () => Math.max(0, ringsEarned() - state.frontierSteps),
+    getHeartLevel: () => state.heartLevel,
+    getHeartCost: () => heartCost(state.heartLevel),
+    getTierCap: () => tierCapForHeart(state.heartLevel),
     getUnlockedTowers: () => [...state.unlockedTowers],
     getEvolutionTier: () => evolutionTierAfter(state.wavesCleared),
     getCoins: () => state.coins,
@@ -152,7 +180,18 @@ export function createRun({ seed, playerIds, startGold, profile }) {
         return events;
       }
 
-      events.push({ type: 'frontierGrew', theta: frontierTheta(state.wavesCleared) });
+      // The circle only widens if the heart can hold the new ring. When it
+      // cannot, the shell is told so, with the price, because a wave that
+      // silently paid nothing was the complaint that made the hand draw loud.
+      growFrontier(events);
+      if (state.frontierSteps < ringsEarned()) {
+        events.push({
+          type: 'frontierHeld',
+          level: state.heartLevel,
+          cost: heartCost(state.heartLevel),
+          held: ringsEarned() - state.frontierSteps,
+        });
+      }
 
       if (draftsPowerAfter(wave)) {
         draft = openDraft(rollOffers(rng, state.powers), state.players.map((p) => p.id));
@@ -165,6 +204,21 @@ export function createRun({ seed, playerIds, startGold, profile }) {
       // tier caps, the evolution and the card - would simply never fire on an
       // odd wave.
       advanceAfterDraft(events);
+      return events;
+    },
+
+    // Raises the Worldheart one level. Gold lives in the shell, so the shell
+    // checks the price and deducts it BEFORE calling this; the core only
+    // records the level and pays out whatever rings the waves had banked. An
+    // ended run or a heart already at its ceiling changes nothing and says so
+    // by returning no events, which is what lets the shell refund safely.
+    upgradeHeart() {
+      if (state.phase === 'defeat' || state.phase === 'victory') return [];
+      if (state.heartLevel >= MAX_HEART_LEVEL) return [];
+      const cost = heartCost(state.heartLevel);
+      state.heartLevel += 1;
+      const events = [{ type: 'heartUpgraded', level: state.heartLevel, cost }];
+      growFrontier(events);
       return events;
     },
 

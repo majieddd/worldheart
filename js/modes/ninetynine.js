@@ -4,6 +4,7 @@
 
 import { createRun } from '../run/run.js';
 import { makeRng } from '../run/rng.js';
+import { MAX_HEART_LEVEL, HEART_RINGS } from '../run/schedule.js';
 import { MODS, TOWER_TYPES } from '../towers.js';
 import { EVO } from '../enemies.js';
 import { SIM_RANDOM } from '../noise.js';
@@ -76,6 +77,11 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // breach attacks from is preserved, the distance is not.
   function spawnNodeNearFrontier(portalNode) {
     if (!centre || portalNode < 0) return -1;
+    // A raid from a nest is the one spawn that must NOT be pulled in: the
+    // whole point of a nest is that it sits outside the circle and the
+    // player has to go out to it. The director raises this flag around the
+    // spawn call; nothing else sets it.
+    if (enemies.spawnRaw) return portalNode;
     nav.nodeDir(portalNode, _sdir);
     const ang = Math.acos(Math.max(-1, Math.min(1, _sdir.dot(centre))));
     const want = frontierTheta * 1.12;
@@ -109,10 +115,58 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     ui.unlockedTowers = game.unlockedTowers;
     game.hand = run.getHand();
     ui.renderHand(game.hand);
+    // The tier cap is the heart's, read here so the two cannot disagree. The
+    // HUD's upgrade button reads game.tierCap on refresh, which is why the
+    // refresh below is unconditional: a raised cap has to reach a tower panel
+    // that is already open.
+    game.tierCap = run.getTierCap();
+    const level = run.getHeartLevel();
+    const cost = run.getHeartCost();
+    ui.renderHeart({
+      level,
+      max: MAX_HEART_LEVEL,
+      cost,
+      tierCap: run.getTierCap(),
+      nextTierCap: run.getTierCap() + 1,
+      ringsGain: cost === null ? 0 : HEART_RINGS[level + 1] - HEART_RINGS[level],
+      held: run.getHeldRings(),
+      afford: cost !== null && game.gold >= cost,
+    });
+    ui.refresh();
     applyFrontier(run.getFrontierTheta());
   }
 
+  // The shell owns the gold, the core owns the level: check and deduct here,
+  // then let the core say what the level bought. A maxed or ended run returns
+  // no events, and the gold goes back, so a stray B can never charge for
+  // nothing.
+  function tryUpgradeHeart() {
+    const cost = run.getHeartCost();
+    if (cost === null) {
+      ui.toast('The Worldheart is at full strength', 'info');
+      return false;
+    }
+    if (game.gold < cost) {
+      ui.toast(`Not enough gold: the Worldheart needs ${cost}`, 'warn');
+      ui.audio?.play('deny');
+      return false;
+    }
+    game.gold -= cost;
+    const events = run.upgradeHeart();
+    if (!events.length) {
+      game.gold += cost;
+      return false;
+    }
+    handle(events);
+    return true;
+  }
+  ui.onHeartUpgrade = tryUpgradeHeart;
+
   function handle(events) {
+    // Several rings can arrive in one batch when an upgrade pays out what the
+    // waves had banked. One toast for the lot: three "the frontier widens" in
+    // a row is a stutter, and the anchor only holds three anyway.
+    let grew = 0;
     for (const e of events) {
       if (e.type === 'towerUnlocked') {
         ui.toast(`${e.tower.toUpperCase()} unlocked`, 'info');
@@ -126,8 +180,19 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       } else if (e.type === 'enemiesEvolved') {
         ui.toast('The swarm evolves', 'danger');
       } else if (e.type === 'frontierGrew') {
-        ui.toast('The frontier widens', 'info');
+        grew++;
+        // Each ring seeds its own band, so a paid-out debt of three rings
+        // still scatters caches across all three.
         seedCaches(e.theta);
+      } else if (e.type === 'frontierHeld') {
+        // The wave paid a ring the heart cannot hold. Say so, with the price,
+        // and pulse the panel that sells it: the owner's whole premise is
+        // that expanding has to be something the player chooses to afford.
+        ui.toast(`The Worldheart cannot hold more ground. Upgrade it (${e.cost} gold)`, 'warn');
+        ui.pulseHeart();
+      } else if (e.type === 'heartUpgraded') {
+        ui.toast(`Worldheart raised to level ${e.level}: towers may reach mark ${run.getTierCap()}`, 'info');
+        ui.audio?.play('upgrade');
       } else if (e.type === 'draftOpened') {
         ui.showDraft(e.offers, (i) => { run.vote('solo', i); });
       } else if (e.type === 'powerTaken') {
@@ -155,7 +220,15 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         ui.showEnd(true, `the planet is yours - ${progress.planetsBeaten} held`);
       }
     }
+    if (grew === 1) ui.toast('The frontier widens', 'info');
+    else if (grew > 1) ui.toast(`The frontier widens: ${grew} rings held`, 'info');
     syncFromRun();
+    if (grew) {
+      // A ring the circle has just swallowed stops being a nest. Told to the
+      // director straight away rather than on its next tick so the HUD count
+      // and the raid clocks agree with the wall the player is looking at.
+      waves.refreshNests?.();
+    }
   }
 
   // A cleared wave advances the run, and the draft holds the next one until it
@@ -179,6 +252,19 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   };
 
   enemies.spawnNodeOverride = spawnNodeNearFrontier;
+
+  // Nests. Every woken breach outside the circle trickles raids from where it
+  // actually stands, so a frontier that does not grow toward the breaches is
+  // a frontier under steady pressure from them: the reason to expand, or to
+  // send units out, that the owner asked for. The director reads the frontier
+  // off game.frontier and asks the core, through this predicate, whether a
+  // raid may spawn at all - never while a draft is open.
+  waves.nestMode = true;
+  waves.canRaid = () => run.getPhase() === 'building';
+  waves.onNestWake = (count) => {
+    ui.toast(count === 1 ? 'A nest stirs beyond the frontier' : `Nests stir beyond the frontier: ${count}`, 'danger');
+    ui.audio?.play('portal');
+  };
 
   // 99 Planets runs at double speed. Fifteen waves at the classic cadence is a
   // long sit for a mode whose whole shape is a short, escalating run, and the
@@ -421,6 +507,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
 
   return {
     run,
+    // The same path the panel and the B key use, exposed so a scripted run
+    // can buy a level without synthesising a click.
+    upgradeHeart: tryUpgradeHeart,
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
       const draft = run.getDraft();
@@ -440,9 +529,12 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       // Release the director. Checked every frame rather than only when a
       // draft produced events, because a wave that resolves without opening
       // one would otherwise leave the manager parked on 'idle' forever.
+      // Scaled by paceMul like the director's own breather: this path was
+      // dead until the director stopped unparking itself (see waves.js), so
+      // the unscaled value here had never actually been played.
       if (waves.state === 'idle') {
         waves.state = 'countdown';
-        waves.countdown = CONFIG.waves.prepTime;
+        waves.countdown = CONFIG.waves.prepTime * waves.paceMul;
       }
     },
   };

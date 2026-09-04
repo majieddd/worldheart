@@ -13,7 +13,7 @@ Layouts are designed against four named modes:
 - **Planetary Battlefield**: the entire globe is in play.
 - **Battlefield**: one walled zone on a planet's surface, scaled so play inside feels identical to a planetary map. Towers cannot leave the bounds, the camera is confined to the zone, and the world beyond grays out under fog.
 - **Space Battlefield**: floating rock platforms over open void, in predetermined balanced positions of varying size and altitude, tall spire rocks included. Placement stays freeform on every rock, sides included (towers align to the local surface). The swarm flies lanes that bend around the rocks in three altitude bands, so matching coverage height replaces mazing.
-- **Roguelite campaign**: a walled front that GROWS. You start on a circle twelve units across and widen it every wave you survive, fighting fifteen waves to a planetary boss. See [99 Planets](#99-planets).
+- **Roguelite campaign**: a walled front that GROWS. You start on a circle twelve units across, earn a ring of ground for every wave you survive, and widen the circle as far as your Worldheart can hold, fighting fifteen waves to a planetary boss. See [99 Planets](#99-planets).
 
 ## Worlds
 
@@ -61,7 +61,7 @@ number reproduces the world.
 Run the tests, and refresh the published copies before committing:
 
 ```bash
-node tools/test.mjs      # 115 headless tests, no browser needed
+node tools/test.mjs      # 128 headless tests, no browser needed
 node tools/deploy.mjs    # mirrors v2/ and rebuilds dist/
 ```
 
@@ -84,6 +84,7 @@ directly.
 | Esc | Cancel, deselect |
 | U | Upgrade selected tower |
 | X | Sell selected tower |
+| B | Upgrade the Worldheart (99 Planets) |
 | Space | Pause |
 | F | Cycle game speed 1x, 2x, 3x |
 | M | Mute |
@@ -122,19 +123,53 @@ Placement is freeform: any open walkable ground on the planet. The single restri
 Three marks are authored, and upgrades change the machine, not just the numbers.
 In 99 Planets the ladder does not stop there: a tower can be upgraded for ever,
 with the price climbing exponentially against power that climbs polynomially, so
-each step costs more and buys proportionally less. Selling refunds 70%, or up to
-90% with the Salvage power.
+each step costs more and buys proportionally less. The mark a tower may reach at
+any moment is capped by the Worldheart's level, two marks on an unraised heart
+and one more per level (see [99 Planets](#99-planets)). Selling refunds 70%, or
+up to 90% with the Salvage power.
 
 ## 99 Planets
 
 `?map=ninetynine`, or the fifth card on the title screen.
 
 Fifteen waves on one planet. You begin holding a circle twelve units across with
-a single tower from your loadout, and every wave you survive widens it. The two
-rewards alternate: an **odd** wave hands you a tower card, an **even** one opens
-a draft of three powers. Enemies evolve on waves 3, 6, 9 and 12 - gaining armour,
-then speed, then a shield that only sustained fire breaks, then the ability to
-split - and wave 15 is a planetary boss.
+a single tower from your loadout. Every wave you survive **earns** a ring of
+ground, but the circle only widens as far as your **Worldheart** can hold. The
+two rewards alternate: an **odd** wave hands you a tower card, an **even** one
+opens a draft of three powers. Enemies evolve on waves 3, 6, 9 and 12 - gaining
+armour, then speed, then a shield that only sustained fire breaks, then the
+ability to split - and wave 15 is a planetary boss.
+
+### The Worldheart
+
+The heart is the run's one upgradable base, bought with run gold from the panel
+under the gold readout or with **B**. Its level sets two things: the highest
+mark any tower may reach, and how many of the fourteen frontier rings the run
+can hold. A wave cleared past what the heart permits is banked, not lost: the
+panel counts the rings held and the next upgrade pays them all out at once.
+
+| Level | Cost | Tier cap | Rings held |
+|---|---|---|---|
+| 0 | - | MK II | 1 |
+| 1 | 250 | MK III | 3 |
+| 2 | 450 | MK IV | 5 |
+| 3 | 700 | MK 5 | 8 |
+| 4 | 1,000 | MK 6 | 11 |
+| 5 | 1,400 | MK 7 | 14 |
+
+Only a fully raised heart reaches the planet's final frontier.
+
+### Nests
+
+Every woken breach that still stands **outside** your circle is a nest, and a
+nest trickles a raid from where it actually stands: two mites, joined by a husk
+from wave 4 and an aegis from wave 8, every 16 seconds of sim time at first and
+a little faster each wave. Raids walk the same field to the heart as the waves
+do, but they are not pulled in to your frontier the way the waves are, so they
+arrive from the dark. A nest falls silent when units bring the breach down,
+which pays 180 gold, or when the frontier grows out to swallow it. The wave
+readout counts the nests that are live. That is the pressure that makes
+expanding the circle, or marching out to it, worth the gold.
 
 You are not only the camera. A **commander** is granted each run, permanent and
 strong, and losing it ends the run. Click any friendly unit to take control of it

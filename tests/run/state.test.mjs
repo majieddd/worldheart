@@ -9,6 +9,8 @@ test('a new run starts before wave 1 with only the starting tower', () => {
   assert.deepEqual(s.unlockedTowers, [STARTING_TOWER]);
   assert.equal(STARTING_TOWER, 'bolt');
   assert.deepEqual(s.powers, []);
+  assert.equal(s.heartLevel, 0);
+  assert.equal(s.frontierSteps, 0);
 });
 
 test('players are always a list, even solo', () => {
