@@ -142,8 +142,8 @@ export class HUD {
           <div id="fp-swing-track"><div id="fp-swing"></div></div>
           <div id="fp-link">BASE CONTROL DISCONNECTED<span>outside the frontier - walk back to reconnect</span></div>
         <div id="fp-keys">
-            <span><b>WASD</b> move</span><span><b>LMB</b> strike</span>
-            <span><b>F</b> jump</span><span><b>Scroll</b> view</span>
+            <span><b>WASD</b> move</span><span><b>Shift</b> sprint</span><span><b>LMB</b> strike</span>
+            <span><b>Space</b> jump</span><span><b>Scroll</b> view</span><span><b>P</b> pause</span>
             <span id="fp-rally"><b>G</b> rally</span><span><b>H</b> dismiss</span><span><b>Esc</b> release</span>
           </div>
         </div>
@@ -478,11 +478,16 @@ export class HUD {
 
     addEventListener('keydown', (e) => {
       // Pause and sound belong to the player wherever they are, but the SPEED
-      // key does not: F is the jump while a body is possessed, and these are
-      // two separate window listeners, so preventDefault in one does not stop
-      // the other. Every hop was also cycling the game speed. Exactly the shape
-      // of the Space-is-pause collision this project already fixed once.
-      if (e.code === 'Space') { e.preventDefault(); this.togglePause(); }
+      // key does not: F is a jump alias while a body is possessed, and these
+      // are two separate window listeners, so preventDefault in one does not
+      // stop the other. Every hop was also cycling the game speed. Exactly the
+      // shape of the Space-is-pause collision this project already fixed once,
+      // and then hit AGAIN from the other side: Space paused the game while a
+      // body was possessed, which is the key every player presses to jump, so
+      // the owner reported "you cannot jump". On the ground Space is the jump
+      // (js/possess.js) and P pauses; on the board both pause.
+      if (e.code === 'Space') { e.preventDefault(); if (!this.possession?.active) this.togglePause(); }
+      else if (e.code === 'KeyP') { e.preventDefault(); this.togglePause(); }
       else if (e.code === 'KeyF') { if (!this.possession?.active) this.cycleSpeed(); }
       else if (e.code === 'KeyM') this.toggleSound();
     });

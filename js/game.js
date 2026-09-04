@@ -177,6 +177,9 @@ export class Game {
     this.kills = 0;
     this.state = 'title';
     this.speed = 1;
+    // Seconds of simulation freeze left after a landed strike; main.js
+    // consumes it on raw dt. See allies.onStrikeResolved there.
+    this.hitStop = 0;
     this.paused = false;
 
     // 99 Planets lets a tower be upgraded for ever; the classic maps do not.

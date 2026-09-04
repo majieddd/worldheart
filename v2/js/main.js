@@ -11,6 +11,7 @@ import { AllyManager, ALLY_TYPES } from './allies.js';
 import { Possession, CacheField } from './possess.js';
 import { ViewModel } from './viewmodel.js';
 import { Effects } from './effects.js';
+import { CombatFx } from './combatfx.js';
 import { TowerManager, TOWER_TYPES, MODS as TOWER_MODS } from './towers.js';
 import { Game } from './game.js';
 import { WaveDirector, portalCount } from './waves.js';
@@ -108,6 +109,7 @@ let mode99 = null;   // the 99 Planets shell, null in every other mode
 let allies = null;   // friendly units; only built for modes that summon them
 let possession = null;  // direct control of a unit, first person
 let viewModel = null;   // the first-person weapon overlay
+let combatFx = null;    // tracers, beams, shells and melee tells
 let caches = null;      // gold hidden in the fog
 
 /* ---- environment map and sun shadows ---------------------------------- */
@@ -366,13 +368,28 @@ async function boot() {
       rig.addTrauma(landed > 0 ? 0.05 : 0.03);
       audio?.play(landed > 0 ? 'meleeHit' : 'blocked');
     }
+    // A spark at the point of contact and a shard or two off the body, so the
+    // blade is seen to bite rather than a number appearing beside a target.
+    if (landed > 0) {
+      fx.impactSpark(_fpHit, primary ? PALETTE.energyHot : PALETTE.energy);
+      if (primary) fx.shards.burst(_fpHit, _fxTmp2.copy(_fpHit).normalize(), 3, PALETTE.voidPlate, 3.5, 0.7);
+    }
   };
 
+  // A landed blow stops the world for a few frames. Hit stop is the cheapest
+  // weight there is: the eye reads the pause as impact, and everything that
+  // follows (the shake, the number, the knockback) lands on a still frame.
+  // Only the possessed body earns it, and only on a hit that did damage.
+  allies.onSwingStart = (a) => possession?.swingStarted?.(a);
+  allies.onStrikeResolved = (a, hits, spec) => {
+    possession?.strikeResolved?.(a, hits, spec);
+    if (spec && hits > 0 && possession && possession.unit === a) game.hitStop = Math.max(game.hitStop || 0, 0.07);
+  };
   // Being hit in first person should land on the player, not only on a number.
   // The thump when a hop ends. onLand was declared and fired and had never been
   // assigned to anything, so a jump landed in silence.
   allies.onLand = (a) => {
-    if (possession && possession.unit === a) audio?.play('land');
+    if (possession && possession.unit === a) { audio?.play('land'); possession.landed(a); }
   };
   allies.onHurt = (a, amount) => {
     if (!possession || possession.unit !== a) return;
@@ -384,9 +401,18 @@ async function boot() {
   // The weapon in your hands, drawn in its own pass over the world.
   viewModel = new ViewModel();
   possession.viewModel = viewModel;
+  // The third-person boom asks the world what stands between it and the eye.
+  possession.world = world;
   window.WH.viewModel = viewModel;
   window.WH.possession = possession;
   window.WH.caches = caches;
+  // The visible side of every strike the sim reports. Built AFTER onLand and
+  // onStrikeHit above, because it chains whatever is already assigned rather
+  // than replacing it, and after possession, because it asks possession whose
+  // body a blow landed on.
+  combatFx = new CombatFx({ scene, fx, allies, enemies, rig, audio, ui });
+  combatFx.possession = possession;
+  window.WH.combatFx = combatFx;
   // A felled breach stops feeding waves and pays a bounty. Tracked by nav node
   // because that is the identity the wave director filters on.
   waves.destroyedNodes = new Set();
@@ -524,7 +550,11 @@ function stepFrame(dt, render) {
   // keep counting while the director is held idle between waves.
   if (mode99 && game && game.state === 'playing' && !game.paused) mode99.update(dt);
   const simActive = game && game.state === 'playing' && !game.paused;
-  const simDt = simActive ? dt * game.speed : 0;
+  let simDt = simActive ? dt * game.speed : 0;
+  // Hit stop: the simulation freezes for a few frames after a landed strike
+  // while the camera, the view model and the HUD keep running. Consumed on
+  // raw dt so game speed cannot stretch it.
+  if (game && game.hitStop > 0) { game.hitStop -= dt; simDt = 0; }
   if (simDt > 0) {
     allies?.update(simDt);
     caches?.update(simDt);
@@ -563,6 +593,9 @@ function stepFrame(dt, render) {
     }
     fx.icons.commit(iconAlpha);
     fx.update(simDt, enemies ? enemies.active : null);
+    // Same dt as the effects so a tracer freezes with the board it was fired
+    // on; the beam is gated on being fed this frame, not on dt.
+    combatFx?.update(simDt);
   }
   if (render) post.render(scene, rig.camera, dt);
 }

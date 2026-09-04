@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
 import { R, terrainHeight } from './world.js';
+import { Skeleton, slab, box, wedge, cone, merge, shift, spin, easeOut, hump, keyed } from './rig.js';
 
 // Evolution tier, set by the 99 Planets shell and 0 in every other mode.
 export const EVO = { tier: 0 };
@@ -88,7 +89,6 @@ const _m4 = new THREE.Matrix4();
 const _q = new THREE.Quaternion();
 const _s = new THREE.Vector3();
 const _mBasis = new THREE.Matrix4();
-const _col = new THREE.Color();
 const _look = new THREE.Vector3();
 const _frame = new THREE.Matrix4();
 const _lp = new THREE.Vector3();
@@ -102,6 +102,9 @@ class Enemy {
   constructor() {
     this.dir = new THREE.Vector3();
     this.fwd = new THREE.Vector3();
+    // Last frame's heading, kept by the renderer to read the turn rate off.
+    // Allocated once per pooled body, never per frame.
+    this.prevFwd = new THREE.Vector3();
     this.active = false;
   }
   init(typeKey, type, dirVec, node, hpScale) {
@@ -147,12 +150,650 @@ class Enemy {
     this.phase = Math.random() * Math.PI * 2;
     this.hopPrev = 0;
     this.plates = 6;
+    // How far the body actually marched this frame, in world units per
+    // second. Written by the sim so the renderer can plant feet against real
+    // progress instead of a clock: a slowed or held body strides slower
+    // because it IS slower, not because someone remembered to scale a sine.
+    this.moveV = 0;
+    // Renderer-owned integrators. Nothing in the sim reads them, but they
+    // live on a pooled body, so they reset here like everything else
+    // (invariant 4): a recycled mite would otherwise inherit its predecessor's
+    // stride phase and smoothed motion, and start life mid-step.
+    this.gaitT = this.phase * 0.159;
+    this.moveS = 0;
+    this.stunS = 0;
+    this.turnS = 0;
     // starting forward: any tangent
     _tmp.set(0, 1, 0);
     if (Math.abs(this.dir.y) > 0.9) _tmp.set(1, 0, 0);
     this.fwd.crossVectors(this.dir, _tmp).normalize();
+    this.prevFwd.copy(this.fwd);
     this.height = terrainHeight(this.dir.x, this.dir.y, this.dir.z);
   }
+}
+
+// ---------------------------------------------------------------------------
+// Bodies.
+//
+// Every species is a Skeleton from js/rig.js plus a list of parts, and every
+// part is one InstancedMesh shared by every enemy of that species: a field of
+// two hundred mites is still eight draw calls. A part is attached to a joint
+// with a fixed offset matrix, so once the pose has written the joint rotations
+// and the skeleton has composed its world matrices, placing an instance is one
+// matrix multiply. The pose runs ONCE per enemy per frame. The previous
+// renderer placed each part by index in a flat switch, which recomputed shared
+// state per part and could not bend anything, because nothing had a parent.
+//
+// Geometry rules, from DESIGN.md: hand-carved facets, so every mesh here comes
+// from the non-indexed helpers in rig.js (slab, wedge, cone, hull) and low
+// segment counts. Nothing is smooth on purpose.
+//
+// Body space: +X is the enemy's right, +Y up, -Z forward. The root of every
+// skeleton sits on the ground under the body; the frame matrix carries the
+// terrain height, the heading and the body scale, so joint rests are in
+// unscaled local units. Limb geometry hangs along -Y from its joint and is
+// rotated into place by the pose rather than by a rest rotation, which keeps
+// one mesh serving both sides of a symmetric body.
+//
+// Joint Euler order is XYZ, so a vector is rotated by Z first, then Y, then X.
+// For a limb hanging along -Y that reads as: rot.z splays it out to the side,
+// rot.y then swings it fore and aft, rot.x pitches it. Positive rot.x on a
+// torso tips it BACK; positive rot.x on a forward-pointing plate lifts it.
+
+const TAU = Math.PI * 2;
+// How long the strike lunge plays after the blow lands, in seconds of atkCd.
+const STRIKE_T = 0.25;
+// The lunge curve: an instant snap to full extension, then a slower recovery.
+const LUNGE = [[0, 0], [0.32, 1], [1, 0]];
+// World units of forward progress per gait cycle. A stride matched to the
+// body's real speed is what stops feet skating: the foot moves back under the
+// body at the rate the body moves forward. Flyers have no stride.
+const STRIDE = { mite: 0.4, husk: 1.0, aegis: 1.0, wisp: 0, colossus: 1.25 };
+// A shared identity offset for parts that sit exactly on their joint.
+const ID = new THREE.Matrix4();
+
+// Per-enemy animation context, filled once per enemy and read by its pose.
+// wind runs 0 to 1 across the wind-up, strike runs 0 to 1 across the lunge
+// window and is 1 when no strike is playing, lunge is the shaped snap of
+// that window, flinch is 1 on the frame a hit lands and decays with flashT.
+const _c = {
+  t: 0, phase: 0, gait: 0, move: 0, wind: 0, strike: 1, lunge: 0,
+  flinch: 0, stun: 0, shield: 0, turn: 0,
+};
+const _colBody = new THREE.Color();
+const _colPlate = new THREE.Color();
+const _colGlow = new THREE.Color();
+const _plateTint = new THREE.Color();
+const _shieldCol = new THREE.Color();
+const _tintCol = new THREE.Color();
+
+// An attachment offset, built once at boot. Position, XYZ rotation, scale.
+function att(x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx) {
+  _eul.set(rx, ry, rz);
+  _lq.setFromEuler(_eul);
+  _lp.set(x, y, z);
+  _ls.set(sx, sy, sz);
+  return new THREE.Matrix4().compose(_lp, _lq, _ls);
+}
+
+// A faceted lozenge: two frusta meeting at their widest ring, centred on the
+// origin. The ring sits at y = 0 and the shape spans -h*mid to h*(1-mid).
+// This is the carved-gem read every void body is built on.
+function hull(w, d, h, topK = 0.55, botK = 0.5, mid = 0.5) {
+  const y0 = -h * mid;
+  const y1 = h * (1 - mid);
+  return merge([slab(w, d, w * botK, d * botK, y0, 0), slab(w * topK, d * topK, w, d, 0, y1)]);
+}
+
+function octa(r) {
+  return new THREE.OctahedronGeometry(r);
+}
+
+// Slide z with height, so a wing panel built along Y sweeps back.
+function shear(g, zPerY) {
+  const m = new THREE.Matrix4().set(
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, zPerY, 1, 0,
+    0, 0, 0, 1,
+  );
+  g.applyMatrix4(m);
+  g.computeVertexNormals();
+  return g;
+}
+
+// MITE. An insect: head with mandibles and an eye cluster, thorax, a bobbing
+// abdomen, six two-segment legs on a tripod gait, two antennae. Legs are
+// indexed with the sides interleaved (even left, odd right, rows front to
+// back) so the tripods are {0, 3, 4} and {1, 2, 5}: front-left, mid-right and
+// hind-left move together, which is how a real insect keeps three feet down.
+function makeMite(m) {
+  const sk = new Skeleton();
+  sk.add('root', null, 0, 0.23, 0);
+  sk.add('head', 'root', 0, 0.03, -0.14);
+  sk.add('mandR', 'head', 0.05, -0.03, -0.1);
+  sk.add('mandL', 'head', -0.05, -0.03, -0.1);
+  sk.add('antR', 'head', 0.04, 0.06, -0.07);
+  sk.add('antL', 'head', -0.04, 0.06, -0.07);
+  sk.add('eyes', 'head', 0, 0, 0);
+  sk.add('abd', 'root', 0, 0, 0.1);
+  const cox = [];
+  const tib = [];
+  for (let k = 0; k < 6; k++) {
+    const side = k % 2 ? 1 : -1;
+    const row = k >> 1;
+    cox.push(sk.add('cx' + k, 'root', side * 0.09, -0.04, (row - 1) * 0.09));
+    tib.push(sk.add('tb' + k, 'cx' + k, 0, -0.16, 0));
+  }
+
+  const thorax = merge([
+    hull(0.22, 0.28, 0.16, 0.55, 0.5),
+    shift(spin(wedge(0.2, 0.08, 0, 0.05), 0, Math.PI / 2, 0), 0, 0.07, 0),
+  ]);
+  const head = merge([
+    shift(hull(0.16, 0.18, 0.13, 0.5, 0.6), 0, 0, -0.05),
+    shift(wedge(0.15, 0.06, 0, 0.04), 0, 0.06, -0.07),
+  ]);
+  const eyes = merge([
+    shift(octa(0.03), 0.045, 0.02, -0.12), shift(octa(0.03), -0.045, 0.02, -0.12),
+    shift(octa(0.024), 0, 0.05, -0.12),
+    shift(octa(0.018), 0.022, -0.02, -0.13), shift(octa(0.018), -0.022, -0.02, -0.13),
+  ]);
+  // A mandible is a cone laid forward from its hinge; the pose closes the pair.
+  const mand = shift(spin(cone(0.004, 0.028, 0.15, 4), -Math.PI / 2, 0, 0), 0, 0, -0.075);
+  // An antenna leans forward and up from the brow.
+  const ant = shift(spin(cone(0.003, 0.012, 0.22, 4), -0.95, 0, 0), 0, 0.064, -0.089);
+  const abd = merge([
+    spin(slab(0.07, 0.05, 0.24, 0.17, 0, 0.34), Math.PI / 2, 0, 0),
+    shift(wedge(0.17, 0.05, 0, 0.035), 0, 0.06, 0.08),
+    shift(wedge(0.12, 0.04, 0, 0.03), 0, 0.045, 0.18),
+  ]);
+  const coxa = shift(cone(0.032, 0.02, 0.16, 5), 0, -0.08, 0);
+  const tibia = shift(cone(0.016, 0.004, 0.22, 4), 0, -0.11, 0);
+
+  const parts = [
+    { geo: thorax, mat: m.plate, on: [['root', ID]] },
+    { geo: head, mat: m.plate, on: [['head', ID]] },
+    { geo: abd, mat: m.plate, on: [['abd', ID]] },
+    { geo: eyes, mat: m.glow, on: [['eyes', ID]] },
+    { geo: mand, mat: m.body, on: [['mandR', ID], ['mandL', ID]] },
+    { geo: ant, mat: m.body, on: [['antR', ID], ['antL', ID]] },
+    { geo: coxa, mat: m.body, on: cox.map((j) => [j.name, ID]) },
+    { geo: tibia, mat: m.body, on: tib.map((j) => [j.name, ID]) },
+  ];
+
+  const J = sk.byName;
+  function pose(e, c) {
+    const g = c.gait * TAU;
+    const breath = Math.sin(c.t * 5 + c.phase);
+    const root = J.root;
+    root.pos.y += Math.abs(Math.sin(g * 2)) * 0.012 * c.move + 0.004 * breath - 0.05 * c.stun;
+    root.pos.z += 0.04 * c.wind - 0.16 * c.lunge + 0.05 * c.flinch;
+    root.rot.x = 0.45 * easeOut(c.wind) - 0.25 * c.lunge + 0.3 * c.flinch - 0.12 * c.stun;
+    root.rot.y = Math.sin(g) * 0.07 * c.move;
+    root.rot.z = Math.sin(g * 2 + 1) * 0.04 * c.move + c.turn * 0.04;
+    J.head.rot.x = -0.1 + Math.sin(c.t * 7 + c.phase) * 0.05 + 0.25 * c.wind
+      - 0.5 * c.lunge + 0.3 * c.flinch - 0.4 * c.stun;
+    // Mandibles spread through the wind-up and snap shut as the lunge lands.
+    const open = c.wind > 0 ? 0.15 + 0.85 * easeOut(c.wind)
+      : c.strike < 1 ? 0.9 * (1 - c.lunge) : 0.12 + 0.06 * breath;
+    J.mandR.rot.y = 0.5 - open * 0.85;
+    J.mandL.rot.y = -(0.5 - open * 0.85);
+    const wave = Math.sin(c.t * 6 + c.phase) * 0.15;
+    J.antR.rot.x = wave + 0.55 * c.wind - 0.7 * c.stun;
+    J.antL.rot.x = -wave * 0.7 + 0.55 * c.wind - 0.7 * c.stun;
+    J.antR.rot.z = 0.35 + 0.1 * breath;
+    J.antL.rot.z = -(0.35 - 0.1 * breath);
+    // The abdomen tip points +Z, so positive pitch drops it: it lifts like a
+    // wasp's through the wind-up and whips down with the bite.
+    J.abd.rot.x = -Math.sin(c.t * 9 + c.phase) * 0.08 * (0.4 + 0.6 * c.move)
+      - 0.55 * easeOut(c.wind) + 0.3 * c.lunge + 0.3 * c.stun;
+    const gs = 1 + 0.5 * c.shield + 0.4 * c.wind;
+    J.eyes.scale.set(gs, gs, gs);
+    for (let k = 0; k < 6; k++) {
+      const side = k % 2 ? 1 : -1;
+      const ph = g + ((k === 0 || k === 3 || k === 4) ? 0 : Math.PI);
+      // Forward swing is the rising half of the sine, and that is the half
+      // that lifts; the falling half is the stance, foot down, moving back.
+      const sw = Math.sin(ph) * 0.5 * c.move;
+      const lift = Math.max(0, Math.cos(ph)) * 0.45 * c.move;
+      const cx = cox[k];
+      cx.rot.z = side * (1.6 + lift + 0.3 * c.stun + 0.2 * c.wind);
+      cx.rot.y = side * sw;
+      tib[k].rot.z = -side * (1.25 + lift * 0.9 + 0.35 * c.stun);
+    }
+  }
+  return { skel: sk, parts, pose };
+}
+
+// HUSK. A segmented worm: a head with a hinged jaw, five body segments that
+// trail on a chain of relative yaws so the undulation is a real S-curve, a
+// dorsal fin per segment, and a glowing core in every gap between plates.
+function makeHusk(m) {
+  const sk = new Skeleton();
+  sk.add('root', null, 0, 0.27, 0);
+  sk.add('head', 'root', 0, 0.02, -0.14);
+  sk.add('jawT', 'head', 0, -0.01, -0.16);
+  sk.add('jawB', 'head', 0, -0.06, -0.15);
+  sk.add('eye', 'head', 0, 0.04, -0.2);
+  const segs = [];
+  const cores = [];
+  let parent = 'root';
+  for (let i = 1; i <= 5; i++) {
+    const k = Math.pow(0.9, i - 1);
+    segs.push(sk.add('s' + i, parent, 0, 0, (i === 1 ? 0.2 : 0.3) * k));
+    cores.push(sk.add('c' + i, 's' + i, 0, 0.03 * k, -0.14 * k));
+    parent = 's' + i;
+  }
+
+  const head = merge([
+    shift(hull(0.32, 0.34, 0.26, 0.5, 0.55), 0, 0, -0.06),
+    shift(wedge(0.26, 0.1, 0, 0.06), 0, 0.12, -0.1),
+  ]);
+  // Jaw plates lie forward from their hinge, thickness up; fangs hang from
+  // the upper one so an open jaw shows teeth.
+  const jawT = merge([
+    spin(slab(0.14, 0.03, 0.24, 0.03, 0, 0.2), -Math.PI / 2, 0, 0),
+    shift(spin(cone(0.002, 0.014, 0.06, 4), Math.PI, 0, 0), 0.07, -0.035, -0.16),
+    shift(spin(cone(0.002, 0.014, 0.06, 4), Math.PI, 0, 0), -0.07, -0.035, -0.16),
+    shift(spin(cone(0.002, 0.012, 0.05, 4), Math.PI, 0, 0), 0, -0.03, -0.19),
+  ]);
+  const jawB = merge([
+    spin(slab(0.12, 0.03, 0.2, 0.03, 0, 0.19), -Math.PI / 2, 0, 0),
+    shift(wedge(0.16, 0.05, 0, 0.04), 0, 0.015, -0.1),
+  ]);
+  const seg = hull(0.3, 0.34, 0.26, 0.55, 0.5);
+  // A dorsal fin runs fore-aft and leans back: rotate into line first, then
+  // tilt, or the sweep ends up sideways.
+  const fin = shift(spin(spin(wedge(0.18, 0.05, 0, 0.15), 0, Math.PI / 2, 0), 0.35, 0, 0), 0, 0.1, 0);
+  const core = octa(0.085);
+
+  const parts = [
+    { geo: head, mat: m.plate, on: [['head', ID]] },
+    { geo: jawT, mat: m.plate, on: [['jawT', ID]] },
+    { geo: jawB, mat: m.plate, on: [['jawB', ID]] },
+    { geo: seg, mat: m.body, on: segs.map((j, i) => [j.name, att(0, 0, 0, 0, 0, 0, Math.pow(0.9, i + 1))]) },
+    { geo: fin, mat: m.plate, on: [
+      ['head', att(0, 0.04, 0.02, 0, 0, 0, 0.8)],
+      ...segs.map((j, i) => [j.name, att(0, 0, 0, 0, 0, 0, Math.pow(0.9, i + 1))]),
+    ] },
+    { geo: core, mat: m.glow, on: [
+      ['eye', att(0, 0, 0, 0, 0, 0, 1.5, 0.45, 0.5)],
+      ...cores.map((j, i) => [j.name, att(0, 0, 0, 0, 0, 0, Math.pow(0.9, i + 1))]),
+    ] },
+  ];
+
+  const J = sk.byName;
+  function pose(e, c) {
+    const g = c.gait * TAU;
+    // Undulation follows real progress; a little sway survives standing still
+    // so a planted husk still reads as alive, and a stunned one goes slack.
+    const amp = (0.15 + 0.85 * c.move) * (1 - 0.7 * c.stun);
+    const breath = Math.sin(c.t * 4.2 + c.phase);
+    const root = J.root;
+    root.pos.y += breath * 0.015 - 0.06 * c.stun;
+    root.pos.z += 0.08 * c.wind - 0.3 * c.lunge + 0.06 * c.flinch;
+    root.rot.x = 0.12 * easeOut(c.wind) - 0.1 * c.lunge + 0.2 * c.flinch;
+    root.rot.y = Math.sin(g) * 0.1 * c.move;
+    root.rot.z = c.turn * 0.04;
+    J.head.rot.x = breath * 0.04 + 0.6 * easeOut(c.wind) - 0.7 * c.lunge + 0.35 * c.flinch - 0.5 * c.stun;
+    J.head.rot.y = Math.sin(g + 0.6) * 0.14 * c.move + c.turn * 0.08;
+    const open = c.wind > 0 ? 0.1 + 0.9 * easeOut(c.wind)
+      : c.strike < 1 ? 0.95 * (1 - c.lunge) : 0.08 + 0.05 * Math.sin(c.t * 3 + c.phase);
+    J.jawT.rot.x = open * 0.5;
+    J.jawB.rot.x = -open * 0.75;
+    const gs = 1 + 0.5 * c.shield + 0.45 * c.wind;
+    J.eye.scale.set(gs, gs, gs);
+    for (let i = 0; i < 5; i++) {
+      const n = i + 1;
+      const s = segs[i];
+      let yaw = 0.36 * amp * Math.sin(g - n * 1.05);
+      // The last two segments are the tail, and a tail whips: fastest while
+      // the body is planted or winding up, when the rest of it is still.
+      if (n >= 4) yaw += Math.sin(c.t * 7 + c.phase - n) * 0.28 * (0.35 + 0.65 * (1 - c.move) + c.wind);
+      s.rot.y = yaw;
+      s.rot.x = 0.07 * amp * Math.sin(2 * g - n * 1.05) + 0.1 * c.lunge - 0.05 * c.stun;
+      cores[i].scale.set(gs, gs, gs);
+    }
+  }
+  return { skel: sk, parts, pose };
+}
+
+// AEGIS. A hunched bipedal brute: two shield-arms held forward, a squat torso
+// with a hump, a head sunk between the shoulders with a glowing slit, and two
+// thick legs that crouch and extend through the hop. The shields go overhead
+// on the wind-up and come down together on the strike.
+const SLAM_SH = [[0, 2.5], [0.3, 0.35], [1, 1.2]];
+const SLAM_EL = [[0, 0.6], [0.3, -0.2], [1, -1.1]];
+function makeAegis(m, mgr) {
+  const sk = new Skeleton();
+  sk.add('root', null, 0, 0.7, 0);
+  sk.add('chest', 'root', 0, 0.14, 0);
+  sk.add('head', 'chest', 0, 0.38, -0.12);
+  sk.add('slit', 'head', 0, 0, 0);
+  sk.add('shR', 'chest', 0.33, 0.36, -0.02);
+  sk.add('shL', 'chest', -0.33, 0.36, -0.02);
+  sk.add('elR', 'shR', 0, -0.28, 0);
+  sk.add('elL', 'shL', 0, -0.28, 0);
+  sk.add('hipR', 'root', 0.16, -0.08, 0);
+  sk.add('hipL', 'root', -0.16, -0.08, 0);
+  sk.add('knR', 'hipR', 0, -0.28, 0);
+  sk.add('knL', 'hipL', 0, -0.28, 0);
+
+  const pelvis = hull(0.38, 0.3, 0.22, 0.65, 0.5);
+  const torso = merge([
+    slab(0.56, 0.4, 0.36, 0.28, 0, 0.44),
+    shift(hull(0.4, 0.26, 0.26, 0.5, 0.6), 0, 0.36, 0.14),
+  ]);
+  const head = merge([
+    hull(0.26, 0.28, 0.22, 0.5, 0.7),
+    shift(wedge(0.24, 0.1, 0, 0.06), 0, 0.08, -0.08),
+  ]);
+  const slit = box(0.16, 0.024, 0.05);
+  const pad = merge([
+    hull(0.22, 0.24, 0.16, 0.45, 0.7),
+    shift(spin(wedge(0.2, 0.06, 0, 0.06), 0, Math.PI / 2, 0), 0, 0.07, 0),
+  ]);
+  const uarm = shift(cone(0.075, 0.06, 0.28, 6), 0, -0.14, 0);
+  // The forearm IS the shield: a tall slab with a boss on its face.
+  const shield = merge([
+    slab(0.36, 0.09, 0.3, 0.09, -0.52, 0.04),
+    shift(hull(0.18, 0.06, 0.34, 0.5, 0.5), 0, -0.24, -0.07),
+  ]);
+  const thigh = shift(cone(0.1, 0.08, 0.28, 6), 0, -0.14, 0);
+  const shin = merge([
+    shift(cone(0.075, 0.065, 0.3, 6), 0, -0.15, 0),
+    shift(slab(0.15, 0.24, 0.13, 0.2, -0.38, -0.29), 0, 0, -0.05),
+  ]);
+
+  const parts = [
+    { geo: pelvis, mat: m.body, on: [['root', ID]] },
+    { geo: torso, mat: m.body, on: [['chest', ID]] },
+    { geo: head, mat: m.body, on: [['head', ID]] },
+    { geo: slit, mat: m.glow, on: [['slit', att(0, 0, -0.135)], ['chest', att(0, 0.3, 0.2, 0, 0, 0, 1.3, 1, 1)]] },
+    { geo: pad, mat: m.plate, on: [['shR', att(0.02, 0.06, 0)], ['shL', att(-0.02, 0.06, 0)]] },
+    { geo: uarm, mat: m.body, on: [['shR', ID], ['shL', ID]] },
+    { geo: shield, mat: m.plate, on: [['elR', ID], ['elL', ID]] },
+    { geo: thigh, mat: m.body, on: [['hipR', ID], ['hipL', ID]] },
+    { geo: shin, mat: m.body, on: [['knR', ID], ['knL', ID]] },
+  ];
+
+  const J = sk.byName;
+  function pose(e, c) {
+    // The hop rides the gait phase, so a held or stunned aegis stays down and
+    // a slowed one hops slower. Fire the landing ONCE per hop: the pose runs
+    // once per enemy per frame now, which is the guarantee the old per-part
+    // placer lacked (five parts, five rings, a twenty-slot pool gone).
+    const hp = c.gait - Math.floor(c.gait);
+    if (hp < e.hopPrev) mgr.onLandFx?.(e);
+    e.hopPrev = hp;
+    const air = hump(hp);
+    const rise = Math.pow(air, 0.9) * 0.42 * c.move;
+    const land = Math.pow(Math.max(0, Math.cos(Math.PI * hp)), 2) * c.move;
+    const tuck = air * air * air * c.move;
+    const bend = 0.3 + 0.7 * land + 0.45 * tuck + 0.35 * c.stun;
+    const root = J.root;
+    root.pos.y += rise - 0.14 * land - 0.12 * c.stun - 0.06 * c.lunge;
+    root.pos.z += 0.06 * c.wind - 0.22 * c.lunge + 0.06 * c.flinch;
+    root.rot.x = 0.2 * easeOut(c.wind) - 0.15 * c.lunge + 0.2 * c.flinch;
+    root.rot.z = c.turn * 0.05;
+    J.hipR.rot.x = bend * 0.85 + 0.03;
+    J.hipL.rot.x = bend * 0.85 - 0.03;
+    J.knR.rot.x = -bend * 1.6;
+    J.knL.rot.x = -bend * 1.6;
+    const chest = J.chest;
+    chest.rot.x = -0.3 - 0.12 * land + 0.4 * easeOut(c.wind) - 0.45 * c.lunge + 0.25 * c.flinch - 0.3 * c.stun;
+    chest.scale.y = 1 - 0.08 * land;
+    J.head.rot.x = 0.15 + 0.2 * land - 0.35 * c.lunge + 0.3 * c.flinch - 0.5 * c.stun;
+    J.head.rot.y = c.turn * 0.08;
+    let shX;
+    let elX;
+    if (c.wind > 0) {
+      const w = easeOut(c.wind);
+      shX = 1.2 + 1.3 * w;
+      elX = -1.1 + 1.7 * w;
+    } else if (c.strike < 1) {
+      shX = keyed(SLAM_SH, c.strike);
+      elX = keyed(SLAM_EL, c.strike);
+    } else {
+      shX = 1.2 - 0.15 * land;
+      elX = -1.1;
+    }
+    J.shR.rot.x = shX;
+    J.shL.rot.x = shX;
+    J.shR.rot.z = 0.15 + 0.3 * c.wind - 0.25 * c.stun;
+    J.shL.rot.z = -(0.15 + 0.3 * c.wind - 0.25 * c.stun);
+    J.elR.rot.x = elX;
+    J.elL.rot.x = elX;
+    const gs = 1 + 0.5 * c.shield + 0.5 * c.wind;
+    J.slit.scale.set(gs, gs, gs);
+  }
+  return { skel: sk, parts, pose };
+}
+
+// WISP. A manta: a head with twin eyes, two membrane wings that bend at the
+// wrist so the flap curls at the tip, a tail that forks into two feelers, and
+// a body that banks into its turns.
+function makeWisp(m) {
+  const sk = new Skeleton();
+  sk.add('root', null, 0, 0, 0);
+  sk.add('head', 'root', 0, 0.02, -0.24);
+  sk.add('eyes', 'head', 0, 0, 0);
+  sk.add('shR', 'root', 0.1, 0, -0.04);
+  sk.add('shL', 'root', -0.1, 0, -0.04);
+  sk.add('wrR', 'shR', 0.3, 0, 0.084);
+  sk.add('wrL', 'shL', -0.3, 0, 0.084);
+  sk.add('tail', 'root', 0, 0, 0.24);
+  sk.add('tip', 'tail', 0, 0, 0.3);
+
+  const body = merge([
+    spin(slab(0.08, 0.05, 0.26, 0.13, 0, 0.32), Math.PI / 2, 0, 0),
+    spin(slab(0.16, 0.08, 0.26, 0.13, 0, 0.14), -Math.PI / 2, 0, 0),
+    shift(spin(wedge(0.2, 0.05, 0, 0.06), 0, Math.PI / 2, 0), 0, 0.06, 0.06),
+  ]);
+  const head = merge([
+    shift(hull(0.17, 0.2, 0.12, 0.45, 0.6), 0, 0, -0.04),
+    shift(wedge(0.16, 0.05, 0, 0.035), 0, 0.055, -0.06),
+  ]);
+  const eye = octa(0.035);
+  // Wing panels are built along Y, sheared back, then laid along +X. The
+  // left copy is the same mesh spun half a turn about Z in its offset, which
+  // mirrors x and keeps the sweep, so one draw call serves both wings.
+  const wingIn = spin(shear(slab(0.03, 0.32, 0.03, 0.44, 0, 0.3), 0.28), 0, 0, -Math.PI / 2);
+  const wingOut = spin(shear(slab(0.03, 0.06, 0.03, 0.32, 0, 0.3), 0.4), 0, 0, -Math.PI / 2);
+  const tail = shift(spin(cone(0.02, 0.05, 0.3, 5), Math.PI / 2, 0, 0), 0, 0, 0.15);
+  const tip = merge([
+    shift(spin(cone(0.003, 0.014, 0.28, 4), Math.PI / 2, 0.35, 0), -0.048, 0, 0.13),
+    shift(spin(cone(0.003, 0.014, 0.28, 4), Math.PI / 2, -0.35, 0), 0.048, 0, 0.13),
+  ]);
+
+  const parts = [
+    { geo: body, mat: m.plate, on: [['root', ID]] },
+    { geo: head, mat: m.plate, on: [['head', ID]] },
+    { geo: eye, mat: m.glow, on: [['eyes', att(0.05, 0.01, -0.1)], ['eyes', att(-0.05, 0.01, -0.1)]] },
+    { geo: wingIn, mat: m.body, on: [['shR', ID], ['shL', att(0, 0, 0, 0, 0, Math.PI)]] },
+    { geo: wingOut, mat: m.body, on: [['wrR', ID], ['wrL', att(0, 0, 0, 0, 0, Math.PI)]] },
+    { geo: tail, mat: m.body, on: [['tail', ID]] },
+    { geo: tip, mat: m.body, on: [['tip', ID]] },
+  ];
+
+  const J = sk.byName;
+  function pose(e, c) {
+    const f = Math.sin(c.t * 7.5 + c.phase);
+    const fl = Math.sin(c.t * 7.5 + c.phase - 1.1);
+    const w = easeOut(c.wind);
+    const root = J.root;
+    // Bank into the turn: a positive yaw rate is a left turn, and a positive
+    // roll raises the right wing, which is the left bank a flier makes.
+    root.rot.z = clamp(c.turn * 0.45, -0.7, 0.7) + f * 0.05;
+    root.rot.x = -0.08 + 0.55 * w - 0.7 * c.lunge + 0.3 * c.flinch - 0.3 * c.stun;
+    root.pos.z += -0.3 * c.lunge + 0.05 * c.flinch;
+    root.pos.y += 0.12 * w - 0.15 * c.lunge - 0.1 * c.stun;
+    // Wings rise through the wind-up and beat down hard on the strike; a
+    // stunned wisp lets them droop.
+    const up = -0.1 + 0.5 * f + 0.5 * w - 0.6 * c.lunge - 0.5 * c.stun;
+    J.shR.rot.z = up;
+    J.shL.rot.z = -up;
+    const curl = 0.55 * fl - 0.3 * c.stun;
+    J.wrR.rot.z = curl;
+    J.wrL.rot.z = -curl;
+    J.head.rot.x = -0.1 + Math.sin(c.t * 3 + c.phase) * 0.06 - 0.3 * c.lunge + 0.2 * w - 0.3 * c.stun;
+    J.head.rot.y = c.turn * 0.15;
+    J.tail.rot.y = Math.sin(c.t * 4 + c.phase) * 0.18 + c.turn * 0.35;
+    J.tail.rot.x = -f * 0.12 + 0.2 * c.lunge;
+    J.tip.rot.y = Math.sin(c.t * 4 + c.phase - 0.9) * 0.3 + c.turn * 0.3;
+    const gs = 1 + 0.5 * c.shield + 0.4 * c.wind;
+    J.eyes.scale.set(gs, gs, gs);
+  }
+  return { skel: sk, parts, pose };
+}
+
+// COLOSSUS. A titan on two legs: pelvis, belly, chest with a glowing heart
+// cavity, a horned head, two arms ending in club fists, a slow stomping gait
+// that sinks the body on every footfall. Its six armour plates sit ON the
+// body - shoulders, belly, back, thighs - and are shed from the highest index
+// down as its health drops, so the legs bare first and the shoulders last.
+// Three shards still orbit the chest as a small halo.
+const TITAN_SH = [[0, 2.65], [0.28, -0.9], [1, -0.25]];
+function makeColossus(m) {
+  const sk = new Skeleton();
+  sk.add('root', null, 0, 1.05, 0);
+  sk.add('spine', 'root', 0, 0.22, 0);
+  sk.add('chest', 'spine', 0, 0.3, 0);
+  sk.add('neck', 'chest', 0, 0.44, -0.04);
+  sk.add('eyes', 'neck', 0, 0, 0);
+  sk.add('heart', 'chest', 0, 0.22, -0.27);
+  sk.add('halo', 'chest', 0, 0.5, 0);
+  sk.add('shR', 'chest', 0.6, 0.36, 0);
+  sk.add('shL', 'chest', -0.6, 0.36, 0);
+  sk.add('elR', 'shR', 0, -0.54, 0);
+  sk.add('elL', 'shL', 0, -0.54, 0);
+  sk.add('fistR', 'elR', 0, -0.48, 0);
+  sk.add('fistL', 'elL', 0, -0.48, 0);
+  sk.add('hipR', 'root', 0.27, -0.1, 0);
+  sk.add('hipL', 'root', -0.27, -0.1, 0);
+  sk.add('knR', 'hipR', 0, -0.44, 0);
+  sk.add('knL', 'hipL', 0, -0.44, 0);
+
+  const pelvis = hull(0.62, 0.46, 0.34, 0.65, 0.6);
+  const belly = slab(0.64, 0.46, 0.56, 0.4, 0, 0.32);
+  const torso = merge([
+    slab(0.92, 0.52, 0.64, 0.44, 0, 0.46),
+    shift(hull(0.52, 0.32, 0.32, 0.5, 0.6), 0, 0.34, 0.2),
+    // A rim around the heart cavity, so the glow reads as set INTO the chest.
+    shift(box(0.4, 0.05, 0.06), 0, 0.42, -0.26),
+    shift(box(0.4, 0.05, 0.06), 0, 0.03, -0.25),
+    shift(box(0.05, 0.36, 0.06), 0.19, 0.22, -0.26),
+    shift(box(0.05, 0.36, 0.06), -0.19, 0.22, -0.26),
+  ]);
+  const head = merge([
+    hull(0.34, 0.36, 0.3, 0.55, 0.65),
+    shift(wedge(0.3, 0.12, 0, 0.07), 0, 0.09, -0.12),
+    shift(slab(0.24, 0.2, 0.18, 0.16, -0.12, 0), 0, -0.1, -0.06),
+    shift(spin(cone(0.012, 0.055, 0.4, 5), 0.35, 0, -0.6), 0.2, 0.26, 0.05),
+    shift(spin(cone(0.012, 0.055, 0.4, 5), 0.35, 0, 0.6), -0.2, 0.26, 0.05),
+  ]);
+  const glow = octa(0.15);
+  const uarm = shift(cone(0.13, 0.11, 0.54, 6), 0, -0.27, 0);
+  const farm = shift(cone(0.11, 0.13, 0.48, 6), 0, -0.24, 0);
+  const fist = shift(hull(0.34, 0.32, 0.34, 0.55, 0.55), 0, -0.14, 0);
+  const thigh = shift(cone(0.17, 0.13, 0.44, 6), 0, -0.22, 0);
+  const shin = merge([
+    shift(cone(0.12, 0.11, 0.4, 6), 0, -0.2, 0),
+    shift(slab(0.26, 0.4, 0.24, 0.34, -0.5, -0.4), 0, 0, -0.06),
+  ]);
+  const plate = merge([
+    slab(0.36, 0.1, 0.44, 0.14, -0.3, 0.06),
+    shift(spin(wedge(0.3, 0.06, 0, 0.06), 0, Math.PI / 2, 0), 0, 0.05, -0.06),
+  ]);
+  const shard = octa(0.12);
+  shard.scale(1, 1.8, 1);
+
+  const parts = [
+    { geo: pelvis, mat: m.body, on: [['root', ID]] },
+    { geo: belly, mat: m.body, on: [['spine', ID]] },
+    { geo: torso, mat: m.body, on: [['chest', ID]] },
+    { geo: head, mat: m.body, on: [['neck', ID]] },
+    { geo: glow, mat: m.glow, on: [
+      ['heart', att(0, 0, 0, 0, 0, 0, 1, 1.25, 0.6)],
+      ['eyes', att(0.09, 0.03, -0.17, 0, 0, 0, 0.3)],
+      ['eyes', att(-0.09, 0.03, -0.17, 0, 0, 0, 0.3)],
+    ] },
+    { geo: uarm, mat: m.body, on: [['shR', ID], ['shL', ID]] },
+    { geo: farm, mat: m.body, on: [['elR', ID], ['elL', ID]] },
+    { geo: fist, mat: m.plate, on: [['fistR', ID], ['fistL', ID]] },
+    { geo: thigh, mat: m.body, on: [['hipR', ID], ['hipL', ID]] },
+    { geo: shin, mat: m.body, on: [['knR', ID], ['knL', ID]] },
+    { geo: plate, mat: m.plate, hide: (e, k) => k >= e.plates, on: [
+      ['shR', att(0.08, 0.14, 0, 0, 0, -0.55, 1.1)],
+      ['shL', att(-0.08, 0.14, 0, 0, 0, 0.55, 1.1)],
+      ['spine', att(0, 0.28, -0.25, -0.15, 0, 0)],
+      ['chest', att(0, 0.3, 0.32, 0, Math.PI, 0)],
+      ['hipR', att(0.06, -0.06, -0.12, -0.2, 0, 0, 0.9)],
+      ['hipL', att(-0.06, -0.06, -0.12, -0.2, 0, 0, 0.9)],
+    ] },
+    { geo: shard, mat: m.body, on: [
+      ['halo', att(0.9, 0, 0, 0.3, 0, 0.4)],
+      ['halo', att(-0.45, 0.1, 0.78, 0, 2.1, 0.5)],
+      ['halo', att(-0.45, -0.05, -0.78, 0.5, 4.2, 0.3)],
+    ] },
+  ];
+
+  const J = sk.byName;
+  function pose(e, c) {
+    const s = c.gait * TAU;
+    const mv = c.move;
+    const w = easeOut(c.wind);
+    // Each footfall lands where the leading leg reaches full reach, and the
+    // whole body sinks onto it.
+    const sink = Math.max(0, -Math.cos(2 * s)) * 0.08 * mv;
+    const root = J.root;
+    root.pos.y += -sink - 0.12 * c.lunge - 0.1 * c.stun;
+    root.pos.z += 0.06 * c.wind - 0.22 * c.lunge + 0.04 * c.flinch;
+    root.rot.z = Math.sin(s) * 0.04 * mv + c.turn * 0.03;
+    root.rot.y = -Math.sin(s) * 0.06 * mv;
+    const swing = Math.sin(s) * mv;
+    J.hipR.rot.x = 0.42 * swing + 0.15;
+    J.hipL.rot.x = -0.42 * swing + 0.15;
+    // A leg bends its knee on the forward swing and locks for the stance.
+    J.knR.rot.x = -(0.35 + 0.6 * Math.max(0, Math.cos(s)) * mv + 0.3 * c.stun);
+    J.knL.rot.x = -(0.35 + 0.6 * Math.max(0, -Math.cos(s)) * mv + 0.3 * c.stun);
+    J.spine.rot.x = -0.1 + 0.3 * w - 0.45 * c.lunge + 0.15 * c.flinch - 0.35 * c.stun;
+    J.spine.rot.y = Math.sin(s) * 0.08 * mv;
+    J.chest.rot.x = -0.05 + 0.15 * w - 0.2 * c.lunge;
+    J.neck.rot.x = 0.05 + 0.25 * w - 0.35 * c.lunge + 0.3 * c.flinch - 0.45 * c.stun;
+    J.neck.rot.y = c.turn * 0.1;
+    // Both fists go overhead through the wind-up and come down as one blow.
+    let armR;
+    let armL;
+    let el;
+    if (c.wind > 0) {
+      armR = -0.25 + 2.9 * w;
+      armL = armR;
+      el = 0.5 + 0.5 * w;
+    } else if (c.strike < 1) {
+      armR = keyed(TITAN_SH, c.strike);
+      armL = armR;
+      el = 0.5 + 0.3 * c.lunge;
+    } else {
+      armR = -0.25 - 0.3 * swing;
+      armL = -0.25 + 0.3 * swing;
+      el = 0.5;
+    }
+    J.shR.rot.x = armR;
+    J.shL.rot.x = armL;
+    J.shR.rot.z = 0.25 + 0.2 * w - 0.2 * c.stun;
+    J.shL.rot.z = -(0.25 + 0.2 * w - 0.2 * c.stun);
+    J.elR.rot.x = el;
+    J.elL.rot.x = el;
+    const beat = 1 + Math.sin(c.t * 3.4) * 0.07 + 0.5 * c.shield + 0.5 * c.wind;
+    J.heart.scale.set(beat, beat, beat);
+    const gs = 1 + 0.4 * c.shield + 0.4 * c.wind;
+    J.eyes.scale.set(gs, gs, gs);
+    J.halo.rot.y = c.t * 0.85;
+    J.halo.rot.x = Math.sin(c.t * 0.9) * 0.15;
+  }
+  return { skel: sk, parts, pose };
 }
 
 export class EnemyManager {
@@ -182,6 +823,9 @@ export class EnemyManager {
     this.onSpawnFx = null;
     this.heartPos = new THREE.Vector3();
     this.time = 0;
+    // The evolution tint last baked into the plate colours; undefined so the
+    // first frame bakes tier 0.
+    this._tintKey = undefined;
     this._buildRenderers(scene);
   }
 
@@ -191,16 +835,21 @@ export class EnemyManager {
   }
 
   _buildRenderers(scene) {
-    // Articulated species: each species is a set of instanced parts; every
-    // enemy contributes one instance per part with a per-frame local
-    // transform driven by time, phase, and motion state. All animation here
-    // is cosmetic and reads sim state only.
+    // Articulated species: each species is a skeleton and a set of instanced
+    // parts; every enemy contributes one instance per part placement with a
+    // per-frame transform composed from its pose. All animation here is
+    // cosmetic and reads sim state only.
     const bodyMat = new THREE.MeshStandardMaterial({
       color: PALETTE.voidBody, roughness: 0.5, metalness: 0.2, flatShading: true,
       emissive: PALETTE.voidEmissive, emissiveIntensity: 0.12,
     });
+    // The plate colour lives in the INSTANCE colour, not the material, so the
+    // material base is white. An instance colour can only multiply, and a
+    // multiplier cannot push a near-black purple toward the gold or teal of
+    // an evolution tier; carrying the whole colour per instance can. Tier 0
+    // writes exactly PALETTE.voidPlate, so nothing changes until it evolves.
     const plateMat = new THREE.MeshStandardMaterial({
-      color: PALETTE.voidPlate, roughness: 0.62, metalness: 0.15, flatShading: true,
+      color: 0xffffff, roughness: 0.62, metalness: 0.15, flatShading: true,
       emissive: PALETTE.voidEmissive, emissiveIntensity: 0.06,
     });
     const glowMat = new THREE.MeshStandardMaterial({
@@ -208,48 +857,27 @@ export class EnemyManager {
       emissive: PALETTE.voidEmissive, emissiveIntensity: 2.1,
     });
     this.materials = { bodyMat, plateMat, glowMat };
-
-    const legGeo = new THREE.ConeGeometry(0.05, 0.3, 4);
-    legGeo.translate(0, -0.15, 0);
-    const wingGeo = new THREE.TetrahedronGeometry(0.4);
-    wingGeo.scale(1.35, 0.09, 0.8);
-    const tailGeo = new THREE.ConeGeometry(0.08, 0.62, 4);
-    tailGeo.rotateX(Math.PI / 2);
+    const mats = { body: bodyMat, plate: plateMat, glow: glowMat };
 
     const defs = {
-      mite: [
-        { geo: new THREE.OctahedronGeometry(0.26).scale(0.85, 0.62, 1.35), mat: plateMat, per: 1 },
-        { geo: new THREE.OctahedronGeometry(0.1).scale(0.8, 0.5, 1), mat: glowMat, per: 1 },
-        { geo: legGeo, mat: bodyMat, per: 6 },
-      ],
-      husk: [
-        { geo: new THREE.OctahedronGeometry(0.34).scale(1, 0.78, 1.25), mat: plateMat, per: 1 },
-        { geo: new THREE.OctahedronGeometry(0.12).scale(1.4, 0.5, 0.8), mat: glowMat, per: 1 },
-        { geo: new THREE.OctahedronGeometry(0.26).scale(1, 0.82, 0.9), mat: bodyMat, per: 4 },
-      ],
-      aegis: [
-        { geo: new THREE.CylinderGeometry(0.3, 0.46, 1.15, 5), mat: bodyMat, per: 1 },
-        { geo: new THREE.CylinderGeometry(0.34, 0.34, 0.1, 5), mat: glowMat, per: 1 },
-        { geo: new THREE.BoxGeometry(0.16, 0.72, 0.5), mat: plateMat, per: 2 },
-        { geo: new THREE.OctahedronGeometry(0.14), mat: glowMat, per: 1 },
-      ],
-      wisp: [
-        { geo: new THREE.OctahedronGeometry(0.26).scale(0.9, 0.62, 1.5), mat: plateMat, per: 1 },
-        { geo: new THREE.OctahedronGeometry(0.09), mat: glowMat, per: 2 },
-        { geo: wingGeo, mat: bodyMat, per: 2 },
-        { geo: tailGeo, mat: bodyMat, per: 1 },
-      ],
-      colossus: [
-        { geo: new THREE.IcosahedronGeometry(0.62, 1), mat: glowMat, per: 1 },
-        { geo: new THREE.BoxGeometry(0.6, 0.95, 0.16), mat: plateMat, per: 6 },
-        { geo: new THREE.OctahedronGeometry(0.2), mat: bodyMat, per: 3 },
-      ],
+      mite: makeMite(mats),
+      husk: makeHusk(mats),
+      aegis: makeAegis(mats, this),
+      wisp: makeWisp(mats),
+      colossus: makeColossus(mats),
     };
 
+    // `species[key]` stays the flat parts list it has always been; the
+    // skeleton and pose sit beside it in `_rigs`, and `_speciesList` is the
+    // same thing as an array so the frame loop never calls Object.keys.
     this.species = {};
+    this._rigs = {};
+    this._speciesList = [];
     for (const key of Object.keys(defs)) {
-      const parts = defs[key].map((p) => {
-        const mesh = new THREE.InstancedMesh(p.geo, p.mat, CONFIG.limits.maxEnemies * p.per);
+      const def = defs[key];
+      const parts = def.parts.map((p) => {
+        const per = p.on.length;
+        const mesh = new THREE.InstancedMesh(p.geo, p.mat, CONFIG.limits.maxEnemies * per);
         mesh.count = 0;
         mesh.frustumCulled = false;
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -259,9 +887,16 @@ export class EnemyManager {
         mesh.castShadow = p.mat !== glowMat;
         mesh.receiveShadow = true;
         scene.add(mesh);
-        return { mesh, per: p.per, glow: p.mat === glowMat };
+        const kind = p.mat === glowMat ? 2 : p.mat === plateMat ? 1 : 0;
+        const inst = p.on.map(([joint, off]) => ({ j: def.skel.get(joint), off }));
+        return { mesh, per, glow: kind === 2, kind, inst, hide: p.hide || null, _n: 0 };
       });
       this.species[key] = parts;
+      this._rigs[key] = {
+        skel: def.skel, pose: def.pose, parts,
+        strideInv: STRIDE[key] > 0 ? 1 / STRIDE[key] : 0,
+      };
+      this._speciesList.push(this._rigs[key]);
     }
   }
 
@@ -448,6 +1083,9 @@ export class EnemyManager {
       e.flashT = Math.max(0, e.flashT - dt);
       e.brittle = Math.max(0, e.brittle - dt);
       if (e.slowT > 0) { e.slowT -= dt; if (e.slowT <= 0) e.slowFrac = 0; }
+      // Cleared before any early exit below, so a held or stunned body reports
+      // no progress and its gait freezes with it.
+      e.moveV = 0;
       // Melee is resolved BEFORE the stun guard. An ally holds an enemy the
       // instant it engages, so leaving this below the guard meant a held enemy
       // could never even register that something was standing in front of it,
@@ -464,6 +1102,7 @@ export class EnemyManager {
       // thing an ally can do to slow an enemy's march other than the bounded
       // hold, which is what keeps the wave guaranteed to resolve.
       if (swinging) stepSpeed = 0;
+      e.moveV = stepSpeed;
 
       // Flyers ride the same corridors as walkers (the flow field ignores
       // nothing for them: tower blocks do not enter their steering) but the
@@ -528,121 +1167,43 @@ export class EnemyManager {
     this._render(dt);
   }
 
-  // Local-space placers per species part. Enemy local frame: -Z forward,
-  // +Y up. Each returns false to hide the instance (shed plates).
-  _placePart(e, key, partIdx, k, t) {
-    const φ = e.phase;
-    _lp.set(0, 0, 0); _lq.identity(); _ls.set(1, 1, 1);
-    switch (key) {
-      case 'mite': {
-        const skitter = Math.sin(t * 15 + φ);
-        if (partIdx === 0) {
-          _lp.set(0, 0.24 + Math.abs(skitter) * 0.05, 0);
-          _lq.setFromEuler(_eul.set(0.08, Math.sin(t * 11 + φ) * 0.16, skitter * 0.08));
-        } else if (partIdx === 1) {
-          _lp.set(0, 0.3, -0.28);
-        } else {
-          const side = k < 3 ? -1 : 1;
-          const idx = k % 3;
-          const swing = Math.sin(t * 24 + φ + idx * 2.1 + (side > 0 ? Math.PI : 0));
-          _lp.set(side * 0.2, 0.26, (idx - 1) * 0.15);
-          _lq.setFromEuler(_eul.set(swing * 0.35, 0, side * (0.85 + swing * 0.25)));
-        }
-        break;
-      }
-      case 'husk': {
-        if (partIdx === 0) {
-          _lp.set(0, 0.32 + Math.sin(t * 4.2 + φ) * 0.03, 0);
-          _lq.setFromEuler(_eul.set(Math.sin(t * 4.2 + φ) * 0.06, 0, 0));
-        } else if (partIdx === 1) {
-          _lp.set(0, 0.4, -0.3);
-        } else {
-          const i = k + 1;
-          const sway = Math.sin(t * 3.4 + φ - i * 1.15);
-          _lp.set(sway * 0.09 * i, 0.26 + Math.sin(t * 4.2 + φ - i * 0.9) * 0.045, i * 0.4);
-          _lq.setFromEuler(_eul.set(0, sway * 0.22, 0));
-          const s = Math.pow(0.88, i) * (1 + (e.flashT > 0 ? 0.12 : 0));
-          _ls.setScalar(s);
-        }
-        break;
-      }
-      case 'aegis': {
-        const hp = (t * 1.05 + φ * 0.3) % 1;
-        const rise = Math.pow(Math.max(Math.sin(Math.PI * hp), 0), 0.9) * 0.42;
-        // Fire the landing ONCE per hop. This block runs once per rendered
-        // part - an aegis has five instances - and hp is identical across all
-        // five in a frame while hopPrev was only written on the last, so every
-        // landing spawned five rings and burned through a twenty-slot pool.
-        if (partIdx === 0) {
-          if (hp < e.hopPrev) this.onLandFx?.(e);
-          e.hopPrev = hp;
-        }
-        if (partIdx === 0) {
-          _lp.set(0, 0.6 + rise, 0);
-          _ls.set(1, 1 - Math.sin(2 * Math.PI * hp) * 0.1, 1);
-        } else if (partIdx === 1) {
-          _lp.set(0, 0.1 + rise * 0.4, 0);
-        } else if (partIdx === 2) {
-          const side = k === 0 ? -1 : 1;
-          _lp.set(side * 0.44, 0.62 + rise, 0);
-          _lq.setFromEuler(_eul.set(0, 0, side * (0.12 + rise * 0.2)));
-        } else {
-          _lp.set(0, 1.34 + rise, 0);
-          _lq.setFromEuler(_eul.set(0, t * 2.2 + φ, 0));
-        }
-        break;
-      }
-      case 'wisp': {
-        if (partIdx === 0) {
-          _lp.set(0, 0, 0);
-          _lq.setFromEuler(_eul.set(Math.sin(t * 3.1 + φ) * 0.1, 0, Math.sin(t * 1.7 + φ) * 0.16));
-        } else if (partIdx === 1) {
-          const side = k === 0 ? -1 : 1;
-          _lp.set(side * 0.14, 0.06, -0.3);
-        } else if (partIdx === 2) {
-          const side = k === 0 ? -1 : 1;
-          const flap = Math.sin(t * 9.5 + φ) * 0.75;
-          _lp.set(side * 0.34, 0.02, 0.06);
-          _lq.setFromEuler(_eul.set(0, side * -0.18, side * (0.25 + flap)));
-        } else {
-          _lp.set(0, 0, 0.5);
-          _lq.setFromEuler(_eul.set(Math.sin(t * 6 + φ + 1.5) * 0.3, 0, 0));
-        }
-        break;
-      }
-      case 'colossus': {
-        const stomp = Math.sin(t * 2.2 + φ);
-        if (partIdx === 0) {
-          _lp.set(0, 1.05 + stomp * 0.08, 0);
-          const pulse = 1 + Math.sin(t * 3.4) * 0.05;
-          _ls.setScalar(pulse);
-        } else if (partIdx === 1) {
-          if (k >= e.plates) return false;
-          const a = t * 0.55 + (k / 6) * Math.PI * 2;
-          _lp.set(Math.cos(a) * 1.05, 1.0 + Math.sin(t * 1.3 + k * 1.9) * 0.12, Math.sin(a) * 1.05);
-          _lq.setFromEuler(_eul.set(0, -a + Math.PI / 2, Math.sin(t * 0.9 + k) * 0.1));
-        } else {
-          const a = -t * 0.85 + (k / 3) * Math.PI * 2;
-          _lp.set(Math.cos(a) * 0.65, 1.8 + Math.sin(t * 1.6 + k * 2.3) * 0.1, Math.sin(a) * 0.65);
-          _lq.setFromEuler(_eul.set(t * 1.3 + k, t * 1.7, 0));
-        }
-        break;
-      }
+  // Bake the plate colours for the current evolution tier. Runs once per
+  // frame and only rebuilds when the tier changes. The tint is pulled toward
+  // the base plate rather than used raw so the plate still reads as obsidian
+  // with a coloured sheen, not as a repaint; the shield colour is the same
+  // tint pushed bright, or the void magenta when there is no tint.
+  _syncTint() {
+    const tint = evoTraits().tint;
+    if (tint === this._tintKey) return;
+    this._tintKey = tint;
+    _plateTint.setHex(PALETTE.voidPlate);
+    if (tint) {
+      _tintCol.setHex(tint).multiplyScalar(0.5);
+      _plateTint.lerp(_tintCol, 0.72);
+      _shieldCol.setHex(tint).multiplyScalar(1.6);
+    } else {
+      _shieldCol.setHex(PALETTE.voidEmissive).multiplyScalar(0.9);
     }
-    return true;
   }
 
-  _render() {
+  _render(dt) {
     const t = this.time;
-    const counters = this._counters || (this._counters = {});
-    for (const key of Object.keys(this.species)) {
-      const parts = this.species[key];
-      for (const p of parts) p._n = 0;
+    const list = this._speciesList;
+    for (let i = 0; i < list.length; i++) {
+      const parts = list[i].parts;
+      for (let p = 0; p < parts.length; p++) parts[p]._n = 0;
     }
+    this._syncTint();
+    const evo = evoTraits();
+    const inv = dt > 1e-6 ? 1 / dt : 0;
+    const kMove = Math.min(1, dt * 10);
+    const kStun = Math.min(1, dt * 14);
+    const kTurn = Math.min(1, dt * 6);
 
-    for (const e of this.active) {
+    for (let i = 0; i < this.active.length; i++) {
+      const e = this.active[i];
       const type = e.type;
-      const parts = this.species[e.typeKey];
+      const rig = this._rigs[e.typeKey];
       const hRaw = Math.max(e.height, 0.03);
       const bob = (type.flying || this.spaceMode) ? Math.sin(t * 3.1 + e.phase) * 0.2 : 0;
       _tmp.copy(e.dir).multiplyScalar(R + hRaw + e.alt + bob);
@@ -655,29 +1216,78 @@ export class EnemyManager {
       _s.set(bodyScale, bodyScale, bodyScale);
       _frame.compose(_tmp, _q, _s);
 
-      const flash = e.flashT > 0 ? 1 : 0;
-      const slowT = e.slowFrac > 0 ? 1 : 0;
+      // Cosmetic integrators. The gait advances by real progress over the
+      // species' stride so feet plant; the motion fraction and stun ease so
+      // a body settles into a stop or a sag instead of snapping; the turn
+      // rate is read off how far the heading swung since last frame.
+      e.gaitT += dt * e.moveV * rig.strideInv;
+      const nominal = type.speed * evo.speedMul * this.marchMul * 0.55 + 1e-6;
+      e.moveS += (Math.min(1, e.moveV / nominal) - e.moveS) * kMove;
+      e.stunS += ((e.stunT > 0 ? 1 : 0) - e.stunS) * kStun;
+      _tmp.crossVectors(e.prevFwd, e.fwd);
+      e.turnS += (clamp(_tmp.dot(e.dir) * inv, -3, 3) - e.turnS) * kTurn;
+      e.prevFwd.copy(e.fwd);
 
-      for (let pi = 0; pi < parts.length; pi++) {
-        const part = parts[pi];
-        for (let k = 0; k < part.per; k++) {
-          if (!this._placePart(e, e.typeKey, pi, k, t)) continue;
-          _m4.compose(_lp, _lq, _ls);
-          _m4.premultiply(_frame);
-          part.mesh.setMatrixAt(part._n, _m4);
-          if (part.glow) {
-            _col.setRGB(1 + flash * 2, 1 + flash * 2 + slowT * 0.5, 1 + flash * 2 + slowT * 1);
-          } else {
-            _col.setRGB(1 + flash * 5 + slowT * 0.1, 1 + flash * 5 + slowT * 0.9, 1 + flash * 5 + slowT * 2.2);
-          }
-          part.mesh.setColorAt(part._n, _col);
+      _c.t = t;
+      _c.phase = e.phase;
+      _c.gait = e.gaitT;
+      _c.move = e.moveS;
+      _c.stun = e.stunS;
+      _c.turn = e.turnS;
+      _c.wind = e.windT > 0 ? 1 - e.windT / type.wind : 0;
+      // The blow lands the frame windT runs out and atkCd is set to the
+      // swing, so the lunge window is the first STRIKE_T seconds of atkCd.
+      _c.strike = (e.windT <= 0 && e.atkCd > 0) ? clamp((type.swing - e.atkCd) / STRIKE_T, 0, 1) : 1;
+      _c.lunge = _c.strike < 1 ? keyed(LUNGE, _c.strike) : 0;
+      _c.flinch = e.flashT > 0 ? Math.min(1, e.flashT / 0.09) : 0;
+      _c.shield = (e.shieldT > 0 && e.shieldHits > 0) ? 1 : 0;
+
+      const skel = rig.skel;
+      skel.reset();
+      rig.pose(e, _c);
+      skel.compute(_frame);
+
+      // Colours, once per enemy. Hit flash and slow tint are the ones that
+      // shipped; the wind-up brightens the glow so the tell reads from the
+      // board, and an armed shield pulses the plates toward the tier colour
+      // so a blocked hit reads as a shield rather than as a miss.
+      const flash = e.flashT > 0 ? 1 : 0;
+      const slow = e.slowFrac > 0 ? 1 : 0;
+      const wg = _c.wind;
+      const sh = _c.shield ? 0.55 + 0.45 * Math.sin(t * 16) : 0;
+      _colGlow.setRGB(
+        1 + flash * 2 + wg * 1.6 + sh * 0.5,
+        1 + flash * 2 + slow * 0.5 + wg * 0.5 + sh * 0.5,
+        1 + flash * 2 + slow + wg * 1.2 + sh * 0.5,
+      );
+      _colBody.setRGB(1 + flash * 5 + slow * 0.1, 1 + flash * 5 + slow * 0.9, 1 + flash * 5 + slow * 2.2);
+      _colPlate.copy(_plateTint);
+      if (sh > 0) _colPlate.lerp(_shieldCol, sh * 0.7);
+      _colPlate.r *= 1 + flash * 5 + slow * 0.1;
+      _colPlate.g *= 1 + flash * 5 + slow * 0.9;
+      _colPlate.b *= 1 + flash * 5 + slow * 2.2;
+
+      const parts = rig.parts;
+      for (let p = 0; p < parts.length; p++) {
+        const part = parts[p];
+        const inst = part.inst;
+        const mesh = part.mesh;
+        const col = part.kind === 2 ? _colGlow : part.kind === 1 ? _colPlate : _colBody;
+        for (let k = 0; k < inst.length; k++) {
+          if (part.hide !== null && part.hide(e, k)) continue;
+          const ins = inst[k];
+          _m4.multiplyMatrices(ins.j.world, ins.off);
+          mesh.setMatrixAt(part._n, _m4);
+          mesh.setColorAt(part._n, col);
           part._n++;
         }
       }
     }
 
-    for (const key of Object.keys(this.species)) {
-      for (const part of this.species[key]) {
+    for (let i = 0; i < list.length; i++) {
+      const parts = list[i].parts;
+      for (let p = 0; p < parts.length; p++) {
+        const part = parts[p];
         part.mesh.count = part._n;
         part.mesh.instanceMatrix.needsUpdate = true;
         if (part.mesh.instanceColor) part.mesh.instanceColor.needsUpdate = true;

@@ -92,15 +92,17 @@ directly.
 
 | Input | Action |
 |---|---|
-| WASD / arrows | Move and strafe |
+| WASD / arrows | Move and strafe. Speed ramps up and settles rather than snapping |
+| Shift | Sprint (forward only); the lens widens and the stride lengthens |
 | Mouse, or Q / E | Look. Right-drag looks when pointer lock is refused |
-| Left click | Strike. Hold to keep swinging or channel |
-| F | Jump |
+| Left click | Strike. Hold to keep swinging or channel. A melee blow lands at the strike frame of the swing, not on the click |
+| Space, or F | Jump. A press just before landing is buffered and fires on touchdown |
+| P | Pause (Space is the jump while you are in a body) |
 | Scroll | Pull back to third person and return |
 | G / H | Rally nearby units into a party / dismiss them |
 | Esc or Tab | Release control. Refused while you are outside the frontier |
 
-Space still pauses while you are in a body, and the board's keys stand down.
+P pauses while you are in a body (Space jumps), and the board's keys stand down.
 
 ## The one rule
 

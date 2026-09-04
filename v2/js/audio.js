@@ -243,6 +243,21 @@ export class AudioEngine {
         this._osc('sine', 150, 62, 0.13, this._env(0.13, 0.09));
         this._noise(0.09, this._env(0.09, 0.06), 700, 200);
         break;
+      // Footsteps for the possessed body, one per half stride. Movement with
+      // no sound underneath it reads as gliding however good the bob is, so
+      // these fire from the stride phase in js/possess.js. Pitch and cutoff
+      // vary per step so a run does not read as a metronome; a sprint step
+      // is heavier and duller.
+      case 'step':
+        if (this._limited('step', 90)) return;
+        this._noise(0.07, this._env(0.07, 0.045), 900 + Math.random() * 300, 180);
+        this._osc('sine', 120 + Math.random() * 30, 70, 0.06, this._env(0.06, 0.035));
+        break;
+      case 'stepHard':
+        if (this._limited('stepHard', 90)) return;
+        this._noise(0.09, this._env(0.09, 0.06), 700 + Math.random() * 200, 140);
+        this._osc('sine', 105 + Math.random() * 25, 55, 0.08, this._env(0.08, 0.05));
+        break;
       case 'order':
         this._tone(520, 0.07, 0, 0.06, 'triangle');
         this._tone(700, 0.11, 0.05, 0.06, 'triangle');

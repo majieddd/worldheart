@@ -1533,6 +1533,9 @@ export function buildFieldWall(centerDir, theta) {
 }
 
 const _orientQ = new THREE.Quaternion();
+const _seg = new THREE.Vector3();
+const _d = new THREE.Vector3();
+
 export function orientOnSurface(obj, pos, yaw = 0) {
   _up.copy(pos).normalize();
   // Ground maps keep structures mostly upright; space rocks let them cling
@@ -1703,6 +1706,41 @@ export class World {
   // pyramid smears it across the whole frame as flat white.
   setHeartHealth(frac) {
     if (this.heart) this.heart.healthFrac = clamp(frac, 0, 1);
+  }
+
+  // Where along the segment a->b the first piece of decor sits within
+  // `radius`, as a fraction in 0..1, or -1 for a clear line. The third-person
+  // boom asks this every frame so the camera stops short of a tree instead of
+  // looking out from inside its canopy. Brute force over the crushable sets:
+  // a few thousand distance tests, well under a tenth of a millisecond, and
+  // no per-frame allocation.
+  decorHit(a, b, radius) {
+    if (!this.decor) return -1;
+    const r2 = radius * radius;
+    _seg.subVectors(b, a);
+    const len2 = _seg.lengthSq();
+    if (len2 < 1e-8) return -1;
+    let best = -1;
+    for (const set of this.decor.sets) {
+      if (!set.crushable) continue;
+      for (let i = 0; i < set.list.length; i++) {
+        const it = set.list[i];
+        if (!it.alive) continue;
+        // Decor stands up from its base, and a pine's canopy is wider than
+        // its trunk, so the test is three points stacked up the trunk rather
+        // than one: a single point at trunk height let the camera sit inside
+        // the canopy of a tree whose base was a step to the side.
+        for (let k = 0; k < 3; k++) {
+          _pos.copy(it.dir).multiplyScalar(R + it.h + 0.5 + k * 1.0);
+          _d.subVectors(_pos, a);
+          const t = _d.dot(_seg) / len2;
+          if (t < 0.05 || t > 1) continue;
+          _d.addScaledVector(_seg, -t);
+          if (_d.lengthSq() < r2 && (best < 0 || t < best)) best = t;
+        }
+      }
+    }
+    return best;
   }
 
   crushDecorNear(point, radius) {

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { PALETTE } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
 import { R, terrainHeight } from './world.js';
+import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState, STRIKE_AT } from './soldier.js';
 
 // Friendly units. Summoned by warden towers, and the thing the player can take
 // direct control of.
@@ -171,6 +172,12 @@ const _m4 = new THREE.Matrix4();
 const _q = new THREE.Quaternion();
 const _s = new THREE.Vector3();
 const _basis = new THREE.Matrix4();
+const _frame = new THREE.Matrix4();
+const _back = new THREE.Vector3();
+const _col = new THREE.Color();
+// Blade length from the grip, per weapon, in grip space. Matches the
+// geometry in js/soldier.js.
+const WEAPON_TIP = { sword: 1.45, twin: 0.9, spear: 1.55, rifle: 1.42, mortar: 0.98, staff: 1.38 };
 
 let nextAllyId = 1;
 
@@ -237,6 +244,10 @@ class Ally {
     this.wander = new THREE.Vector3();
     this.patrol = null;
     this.active = false;
+    // Cosmetic and strike bookkeeping, allocated once per pooled body.
+    this._renderDir = new THREE.Vector3();
+    this.weaponM = new THREE.Matrix4();
+    this.cos = freshSoldierState();
   }
 
   init(typeKey, type, dirVec, anchorDir, leash) {
@@ -272,6 +283,21 @@ class Ally {
     this.possessed = false;
     this.following = null;
     this.phase = SIM_RANDOM.next() * Math.PI * 2;
+    // A strike no longer lands on the click. It lands at the frame of the
+    // swing where the blade is actually across the target, so these carry
+    // the swing from its start to its resolution. Every one is reset here
+    // because bodies are pooled (CLAUDE.md invariant 4).
+    this.swingSide = 1;
+    this.strikePending = false;
+    this.strikeAt = 0;
+    this.strikeSpec = null;
+    this.strikeTarget = null;
+    this.aimPitch = 0;
+    this.strafeIn = 0;
+    this.sprint = false;
+    Object.assign(this.cos, freshSoldierState());
+    this._renderDir.copy(this.dir);
+    this.weaponM.identity();
     this.height = terrainHeight(this.dir.x, this.dir.y, this.dir.z);
     _tmp.set(0, 1, 0);
     if (Math.abs(this.dir.y) > 0.9) _tmp.set(1, 0, 0);
@@ -302,133 +328,52 @@ export class AllyManager {
   }
 
   _build(scene) {
-    const bodyMat = new THREE.MeshStandardMaterial({
-      color: PALETTE.techBody, roughness: 0.55, metalness: 0.25, flatShading: true,
-      emissive: PALETTE.energy, emissiveIntensity: 0.1,
-    });
-    const trimMat = new THREE.MeshStandardMaterial({
-      color: PALETTE.techTrim, roughness: 0.4, metalness: 0.35, flatShading: true,
-    });
-    const goldMat = new THREE.MeshStandardMaterial({
-      color: PALETTE.gold, roughness: 0.35, metalness: 0.5, flatShading: true,
-      emissive: PALETTE.gold, emissiveIntensity: 0.5,
-    });
-
-    const legGeo = new THREE.BoxGeometry(0.09, 0.34, 0.09);
-    legGeo.translate(0, -0.17, 0);
-
-    // A commander is a SOLDIER, not a box with a cone on top. Each part carries
-    // its own offsets and its own animation role, so the renderer no longer
-    // hardcodes an anatomy by array index and an archetype can be shaped
-    // however it likes.
-    //
-    // `off` is one offset per instance, in body space: x is right, y is up from
-    // the feet, z is forward. `anim` says how the part moves - 'bob' rides the
-    // idle breath, 'swing' also drives with the weapon arc, 'stride' alternates
-    // like a walking leg, and 'ring' is the ground marker that shows selection.
-    // A torus is built in the XY plane, which the render basis maps to
-    // right/up - so an unrotated one stands on EDGE. Every "ground ring" in
-    // this file was a vertical hoop running from the boots to mid-hip.
-    function flatRing(r, tube) {
-      const g = new THREE.TorusGeometry(r, tube, 6, 16);
-      g.rotateX(Math.PI / 2);
-      return g;
-    }
-
-    function soldier(body, trim, gold, legGeo, extra = {}) {
-      // Build is per archetype so the five do not read as one man in five hats:
-      // a Bulwark is broad and slab-chested, a Twinfang narrow, a Kettle
-      // barrel-bodied. The file's own header promises this difference.
-      const w = extra.width ?? 1;
-      const parts = [
-        // hips and a tapered chest, so the silhouette has a waist
-        { geo: new THREE.BoxGeometry(0.34 * w, 0.2, 0.26), mat: trim, per: 1,
-          off: [[0, 0.42, 0]], anim: 'bob' },
-        { geo: new THREE.BoxGeometry(0.44 * w, 0.42, 0.3 * w), mat: body, per: 1,
-          off: [[0, 0.74, 0]], anim: 'bob' },
-        // pauldrons: the single strongest read of "officer" at this scale
-        { geo: new THREE.BoxGeometry(0.16 * w, 0.14, 0.28), mat: gold, per: 2,
-          off: [[-0.29 * w, 0.9, 0], [0.29 * w, 0.9, 0]], anim: 'bob' },
-        // arms, the right one carrying the weapon and driving the swing
-        { geo: new THREE.BoxGeometry(0.11, 0.36, 0.12), mat: body, per: 2,
-          off: [[-0.28 * w, 0.66, 0.02], [0.28 * w, 0.66, 0.02]], anim: 'arms' },
-        // a helmet with a brow band rather than a bare cone
-        { geo: extra.head ?? new THREE.BoxGeometry(0.24, 0.2, 0.24), mat: body, per: 1,
-          off: [[0, 1.06, 0]], anim: 'bob' },
-        { geo: new THREE.BoxGeometry(0.26, 0.05, 0.26), mat: gold, per: 1,
-          off: [[0, 1.0, 0.01]], anim: 'bob' },
-        { geo: legGeo, mat: trim, per: 2,
-          off: [[-0.11, 0.32, 0], [0.11, 0.32, 0]], anim: 'stride' },
-        { geo: flatRing(0.34, 0.03), mat: gold, per: 1,
-          off: [[0, 0.05, 0]], anim: 'ring' },
-      ];
-      if (extra.crest) {
-        parts.push({ geo: extra.crest, mat: gold, per: 1,
-          off: [[0, extra.crestY ?? 1.22, 0]], anim: 'bob' });
-      }
-      if (extra.cape) {
-        parts.push({ geo: extra.cape, mat: trim, per: 1,
-          off: [[0, 0.76, -0.19]], anim: 'cape' });
-      }
-      return parts;
-    }
-
-    // Part order matters for the simple bodies: index 0 torso, 1 head, 2 legs,
-    // 3 an optional ring.
-    const defs = {
-      warden: [
-        { geo: new THREE.BoxGeometry(0.38, 0.46, 0.28), mat: bodyMat, per: 1 },
-        { geo: new THREE.OctahedronGeometry(0.15), mat: trimMat, per: 1 },
-        { geo: legGeo, mat: bodyMat, per: 2 },
-      ],
-      commander: soldier(bodyMat, trimMat, goldMat, legGeo, {
-        width: 1.18,
-        crest: new THREE.ConeGeometry(0.055, 0.34, 4), crestY: 1.24,
-        cape: new THREE.BoxGeometry(0.46, 0.5, 0.045),
+    // Five materials, shared by every body: gunmetal plate that carries a
+    // trace of the energy tint, bright trim, emissive gold rank, dark leather
+    // and boots, and the energy that lights visors and blade fullers.
+    const mats = {
+      body: new THREE.MeshStandardMaterial({
+        color: PALETTE.techBody, roughness: 0.55, metalness: 0.25, flatShading: true,
+        emissive: PALETTE.energy, emissiveIntensity: 0.08,
       }),
-      // One silhouette per archetype. Without these four the renderer had no
-      // mesh set for them at all - it iterates the keys of `species`, so a
-      // Twinfang, a Longsight, a Kettle and an Emberline were simulated,
-      // damaged, killed and possessed while never being drawn once. Nothing
-      // reported it because an absent key is not an error, it is just a body
-      // that never appears.
-      duelist: soldier(bodyMat, trimMat, goldMat, legGeo, {
-        width: 0.82, head: new THREE.ConeGeometry(0.15, 0.26, 5),
-        crest: new THREE.ConeGeometry(0.04, 0.24, 4), crestY: 1.2,
+      trim: new THREE.MeshStandardMaterial({
+        color: PALETTE.techTrim, roughness: 0.4, metalness: 0.35, flatShading: true,
       }),
-      marksman: soldier(bodyMat, trimMat, goldMat, legGeo, {
-        width: 0.9, head: new THREE.CylinderGeometry(0.13, 0.13, 0.22, 6),
-        crest: new THREE.CylinderGeometry(0.03, 0.05, 0.2, 5), crestY: 1.18,
+      gold: new THREE.MeshStandardMaterial({
+        color: PALETTE.gold, roughness: 0.35, metalness: 0.5, flatShading: true,
+        emissive: PALETTE.gold, emissiveIntensity: 0.45,
       }),
-      bombardier: soldier(bodyMat, trimMat, goldMat, legGeo, {
-        width: 1.3, head: new THREE.DodecahedronGeometry(0.15),
-        crest: new THREE.BoxGeometry(0.1, 0.12, 0.1), crestY: 1.14,
-        cape: new THREE.BoxGeometry(0.46, 0.4, 0.045),
+      dark: new THREE.MeshStandardMaterial({
+        color: PALETTE.techDark, roughness: 0.85, metalness: 0.1, flatShading: true,
       }),
-      oracle: soldier(bodyMat, trimMat, goldMat, legGeo, {
-        width: 0.88, head: new THREE.OctahedronGeometry(0.15),
-        crest: new THREE.OctahedronGeometry(0.09), crestY: 1.15,
-        cape: new THREE.BoxGeometry(0.4, 0.5, 0.04),
+      energy: new THREE.MeshStandardMaterial({
+        color: PALETTE.energy, emissive: PALETTE.energy, emissiveIntensity: 1.6,
+        roughness: 0.3, metalness: 0.2, flatShading: true,
       }),
     };
+    this.mats = mats;
 
+    // Every archetype is a soldier build on the shared rig (js/soldier.js).
+    // The species table used to be a flat list of boxes with per-part offsets
+    // and the renderer hardcoded an anatomy by array index; a body could not
+    // bend, hold anything, or plant a foot. Each build carries its skeleton,
+    // its parts (geometry, material, joint attachments) and its spec.
     this.species = {};
-    for (const key of Object.keys(defs)) {
-      this.species[key] = defs[key].map((p) => {
-        const mesh = new THREE.InstancedMesh(p.geo, p.mat, MAX_ALLIES * p.per);
+    for (const key of Object.keys(ALLY_TYPES)) {
+      const build = buildSoldier(key, mats);
+      const parts = build.parts.map((p) => {
+        const mesh = new THREE.InstancedMesh(p.geo, p.mat, MAX_ALLIES * p.at.length);
         mesh.count = 0;
         mesh.frustumCulled = false;
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-        // Gold trim is emissive; a glowing part casting a hard shadow reads as
-        // solid geometry, the same rule the towers follow.
-        mesh.castShadow = p.mat !== goldMat;
+        // Emissive parts cast no shadow: a glowing visor throwing a hard
+        // shadow reads as solid geometry, the same rule the towers follow.
+        mesh.castShadow = p.mat !== mats.gold && p.mat !== mats.energy;
         mesh.receiveShadow = true;
         scene.add(mesh);
-        // Carry the anatomy through. Dropping `off` and `anim` here meant the
-        // renderer fell back to the old torso/head/legs indexing and the new
-        // soldier bodies were placed as though they were still three boxes.
-        return { mesh, per: p.per, off: p.off, anim: p.anim };
+        return { mesh, at: p.at, glow: p.mat === mats.energy || p.mat === mats.gold };
       });
+      this.species[key] = { skeleton: build.skeleton, parts, spec: build.spec };
     }
   }
 
@@ -578,6 +523,7 @@ export class AllyManager {
       if (!a.active || a.dead) continue;
       if (a.flashT > 0) a.flashT -= dt;
       if (a.swingT > 0) a.swingT -= dt;
+      if (a.strikePending && a.swingT <= a.strikeAt) this._resolveStrike(a);
       if (a.airT > 0) this._fall(a, dt);
       if (a.heatLock > 0) { a.heatLock -= dt; if (a.heatLock <= 0) a.heat = 0; }
       else if (a.heat > 0 && a.type.strike?.heatDown) {
@@ -642,11 +588,7 @@ export class AllyManager {
           // stunlocks it out of ever swinging back.
           const enemyReach = a.target.type.reach || 0;
           if (d > enemyReach && this._mayHold(a.target, dt)) this.enemies.applyStun(a.target, 0.22);
-          if (a.swingT <= 0) {
-            a.swingT = 0.55;
-            a.swingDur = 0.55;
-            this.enemies.damage(a.target, type.dps * 0.55, { armorPierce: 2 });
-          }
+          if (a.swingT <= 0) this._beginStrike(a, 0.55, null, a.target);
         } else {
           a.state = 'chase';
           // A guard closes the last few metres itself, but never steps past its
@@ -719,7 +661,7 @@ export class AllyManager {
       if (!a.active || a.dead) continue;
       this._ground(a);
     }
-    this._render();
+    this._render(dt);
   }
 
   // Enemies in contact grind the unit down. Continuous rather than swung, so a
@@ -778,19 +720,25 @@ export class AllyManager {
   }
 
   // Player-driven movement in the unit's own tangent frame.
-  driveUnit(a, forward, strafe, dt) {
+  // `forward` and `strafe` are a VELOCITY in the body's tangent frame, each
+  // in -1..1, so a body that is still accelerating moves at a fraction of its
+  // speed. They used to be normalised, which is why the first frame of a key
+  // press was already full speed. `mul` is the sprint multiplier.
+  driveUnit(a, forward, strafe, dt, mul = 1) {
     if (!a.active || a.dead) return;
+    a.strafeIn = strafe;
     _up.copy(a.dir);
     _right.crossVectors(a.fwd, _up).normalize();
     _tmp2.copy(a.fwd).multiplyScalar(forward).addScaledVector(_right, strafe);
     if (_tmp2.lengthSq() < 1e-8) return;
     _tmp2.addScaledVector(_up, -_tmp2.dot(_up));
     if (_tmp2.lengthSq() < 1e-8) return;
+    const mag = Math.min(1, _tmp2.length());
     _tmp2.normalize();
     _axis.crossVectors(a.dir, _tmp2);
     if (_axis.lengthSq() < 1e-12) return;
     _axis.normalize();
-    const step = (a.type.speed * 1.25 * dt) / R;
+    const step = (a.type.speed * 1.25 * mul * mag * dt) / R;
     a.dir.applyAxisAngle(_axis, step).normalize();
     reflatten(a.fwd.applyAxisAngle(_axis, step), a.dir);
     this._ground(a);
@@ -818,6 +766,58 @@ export class AllyManager {
     a.swingDur = s.cd;
     if (s.kind === 'hitscan') return this._hitscanStrike(a, s);
     if (s.kind === 'lob') return this._lobStrike(a, s);
+    // Melee resolves later, at the strike frame of the swing, through
+    // _resolveStrike. Reporting zero here is correct: nothing has landed yet.
+    this._beginStrike(a, s.cd, s, null);
+    return 0;
+  }
+
+  // Start a swing. The hit is scheduled for the fraction of the swing where
+  // the blade crosses the target (STRIKE_AT, shared with the pose so the
+  // gesture and the damage cannot drift apart). Consecutive swings alternate
+  // side, which the pose mirrors and the view model mirrors.
+  _beginStrike(a, dur, spec, target) {
+    a.swingT = dur;
+    a.swingDur = dur;
+    a.swingSide = -(a.swingSide || 1);
+    const kind = spec ? spec.kind : 'melee';
+    const twin = a.typeKey === 'duelist';
+    const at = twin ? STRIKE_AT.twin : (STRIKE_AT[kind] ?? 0.4);
+    a.strikeAt = dur * (1 - at);
+    a.strikePending = true;
+    a.strikeSpec = spec;
+    a.strikeTarget = target;
+    if (this.onSwingStart) this.onSwingStart(a);
+  }
+
+  _resolveStrike(a) {
+    a.strikePending = false;
+    const spec = a.strikeSpec;
+    const target = a.strikeTarget;
+    a.strikeSpec = null;
+    a.strikeTarget = null;
+    if (!a.active || a.dead) return 0;
+    let hits = 0;
+    if (spec) {
+      hits = this._meleeSweep(a, spec);
+    } else if (target && target.active && !target.dead) {
+      // The AI blow lands only if the target is still in reach, so an enemy
+      // that stepped away during the wind-up is missed, the same rule the
+      // enemies' own melee follows.
+      const d = this.enemyPos(target, _tmp2).distanceTo(this.worldPos(a, _tmp));
+      if (d <= a.type.reach + 0.4) {
+        this.enemies.damage(target, a.type.dps * 0.55, { armorPierce: 2 });
+        hits = 1;
+      }
+    }
+    if (this.onStrikeResolved) this.onStrikeResolved(a, hits, spec);
+    return hits;
+  }
+
+  // The player's melee sweep: everything inside the radius and the facing arc
+  // takes the blow, nearest first at full damage, the rest at the cleave
+  // fraction. Breaches inside the radius take a structure-scaled hit.
+  _meleeSweep(a, s) {
     let hits = 0;
     _strikeOrigin.copy(this.worldPos(a, _tmp));
 
@@ -1098,106 +1098,95 @@ export class AllyManager {
     return best;
   }
 
-  _render() {
+  _render(dt = 0) {
     for (const key of Object.keys(this.species)) {
-      const parts = this.species[key];
-      const counts = parts.map(() => 0);
+      const sp = this.species[key];
+      const parts = sp.parts;
+      for (let p = 0; p < parts.length; p++) parts[p]._n = 0;
+      const sk = sp.skeleton;
       for (const a of this.active) {
         if (!a.active || a.dead || a.typeKey !== key) continue;
+        // Cosmetic state advances from what the body actually did since the
+        // last frame drawn, whatever moved it: the AI, an order, a party
+        // leash, or the player. Measured here rather than in each mover so
+        // no mover can forget to report.
+        const moved = Math.acos(clamp(a._renderDir.dot(a.dir), -1, 1)) * R;
+        a._renderDir.copy(a.dir);
+        advanceSoldierState(a.cos, a, dt, moved, a.strafeIn, a.sprint);
         // The body you are looking out of is not drawn. From the inside the
         // eye sits inside its own head; from behind, on a third-person boom,
         // it is exactly what you want to see.
         if (a.hidden) continue;
+
+        // The frame: feet on the ground, facing along fwd, at the archetype's
+        // scale. worldPos places the body ORIGIN radius*0.9 above the terrain,
+        // so the soles are dropped by that much or the whole soldier hovers.
         this.worldPos(a, _tmp);
         _up.copy(a.dir);
         _fwd.copy(a.fwd).addScaledVector(_up, -a.fwd.dot(_up));
         if (_fwd.lengthSq() < 1e-8) _fwd.set(1, 0, 0);
         _fwd.normalize();
-        _right.crossVectors(_up, _fwd).normalize();
-        _basis.makeBasis(_right, _up, _fwd);
+        // Body space is right, up, BACK (forward is -z, as for a camera).
+        // Right is fwd x up, which is screen-right for a viewer behind the
+        // body; up x fwd, the old choice, is that viewer's left, and it put
+        // every soldier's sword in its left hand.
+        _right.crossVectors(_fwd, _up).normalize();
+        _back.copy(_fwd).negate();
+        _basis.makeBasis(_right, _up, _back);
         _q.setFromRotationMatrix(_basis);
-
+        _tmp.addScaledVector(_up, -a.type.radius * 0.9);
         const sc = a.type.scale;
-        // A selected unit brightens. The marquee has been writing `selected`
-        // since it shipped and nothing read it, so box-selecting a commander
-        // gave no on-unit feedback at all - the player could not see who was
-        // about to receive a right-click order.
-        const selGlow = a.selected ? 1 : 0;
-        const bob = Math.sin(this.time * 6 + a.phase) * 0.035;
-        // Normalised against the duration this particular swing was given. The
-      // 0.55 here was hardcoded while a player strike set 0.45, so a strike
-      // rendered starting a fifth of the way into its own arc and snapped.
-      const dur = a.swingDur || 0.55;
-      const swing = a.swingT > 0 ? Math.sin((1 - a.swingT / dur) * Math.PI) * 0.28 : 0;
+        _s.set(sc, sc, sc);
+        _frame.compose(_tmp, _q, _s);
 
+        poseSoldier(sk, sp.spec, a, a.cos, this.time);
+        // A selected unit's ground ring swells and lifts, which is how a
+        // boxed unit is obvious from the board without another draw call.
+        const ground = sk.byName.ground;
+        if (a.selected) {
+          const ringSel = 1.45 + Math.sin(this.time * 5) * 0.12;
+          ground.scale.set(ringSel, 1, ringSel);
+          ground.pos.y += 0.04;
+        }
+        sk.compute(_frame);
+        // The weapon's world transform is kept on the body so the blade trail
+        // and the strike origin can read it without re-posing.
+        a.weaponM.copy(sk.byName.weaponR.world);
+
+        // Hit flash brightens every part; the instance colour multiplies the
+        // material, so values above one push it toward white.
+        const flash = a.flashT > 0 ? 1 + a.flashT * 22 : 1;
         for (let p = 0; p < parts.length; p++) {
           const part = parts[p];
-          for (let k = 0; k < part.per; k++) {
-            let ox = 0;
-            let oy = 0;
-            let oz = 0;
-            if (part.off) {
-              // Data-driven anatomy. The offsets live with the part so a body
-              // can be shaped like a soldier instead of like whatever index 0,
-              // 1 and 2 happened to mean.
-              const o = part.off[Math.min(k, part.off.length - 1)];
-              // worldPos places the body ORIGIN radius*0.9 above the terrain,
-              // so a part table measured from the feet has to have that put
-              // back or the whole soldier hovers - measured at 0.56 units, more
-              // than the length of its own leg.
-              ox = o[0] * sc; oy = o[1] * sc - a.type.radius * 0.9; oz = o[2] * sc;
-              const anim = part.anim;
-              if (anim === 'bob') { oy += bob; }
-              else if (anim === 'arms') {
-                // The right arm carries the weapon and drives the whole swing;
-                // the left counter-swings a little so the body reads as one
-                // thing moving rather than a limb flapping on a statue.
-                oy += bob;
-                // Swept on an ARC about the shoulder rather than slid forward.
-                // Translating it by 1.5x the swing moved the arm 0.63 units off
-                // a body 0.18 deep, so at the peak of a swing it detached from
-                // the pauldron and floated in front of the chest.
-                const lead = k === 1 ? 1 : -0.3;
-                const ang = swing * 3.2 * lead;
-                const armR = 0.3;
-                oz += Math.sin(ang) * armR;
-                oy += (Math.cos(ang) - 1) * armR * 0.55;
-              } else if (anim === 'stride') {
-                oz += Math.sin(this.time * 7 + a.phase + k * Math.PI) * 0.07;
-              } else if (anim === 'cape') {
-                // Trails with the stride and lifts when the body swings.
-                oz -= 0.06 + Math.abs(Math.sin(this.time * 3.5 + a.phase)) * 0.05 + swing * 0.4;
-                oy += bob * 0.6;
-              }
-            } else if (p === 0) { oy = 0.28 * sc + bob; oz = swing * 0.3; }
-            else if (p === 1) { oy = 0.62 * sc + bob; oz = 0.1 + swing; }
-            else if (p === 2) {
-              ox = (k === 0 ? -0.11 : 0.11) * sc;
-              oy = 0.12 * sc;
-              oz = Math.sin(this.time * 7 + a.phase + k * Math.PI) * 0.07;
-            } else { oy = 0.05 * sc; }
-
-            _tmp2.copy(_tmp)
-              .addScaledVector(_up, oy)
-              .addScaledVector(_fwd, oz)
-              .addScaledVector(_right, ox);
-            // Part 3 is the ground ring, which is exactly the right place to
-            // show selection: it swells and lifts so a boxed unit is obvious
-            // from the board without adding a mesh or a draw call.
-            const isRing = part.anim === 'ring' || (!part.off && p === 3);
-            const ringSel = (isRing && selGlow) ? 1.45 + Math.sin(this.time * 5) * 0.12 : 1;
-            if (isRing && selGlow) _tmp2.addScaledVector(_up, 0.04);
-            _s.set(sc * ringSel, sc * ringSel, sc * ringSel);
-            _m4.compose(_tmp2, _q, _s);
-            part.mesh.setMatrixAt(counts[p]++, _m4);
+          const at = part.at;
+          for (let k = 0; k < at.length; k++) {
+            _m4.multiplyMatrices(at[k].joint.world, at[k].off);
+            part.mesh.setMatrixAt(part._n, _m4);
+            _col.setScalar(flash);
+            part.mesh.setColorAt(part._n, _col);
+            part._n++;
           }
         }
       }
       for (let p = 0; p < parts.length; p++) {
-        parts[p].mesh.count = counts[p];
+        parts[p].mesh.count = parts[p]._n;
         parts[p].mesh.instanceMatrix.needsUpdate = true;
+        if (parts[p].mesh.instanceColor) parts[p].mesh.instanceColor.needsUpdate = true;
       }
     }
+  }
+
+  // The blade in world space, from the last frame drawn: `base` at the grip,
+  // `tip` at the point. Used by the third-person trail. Returns false when
+  // the body has not been drawn yet.
+  weaponLine(a, base, tip) {
+    const sp = this.species[a.typeKey];
+    if (!sp || !a.weaponM) return false;
+    const len = WEAPON_TIP[sp.spec.weapon] || 1;
+    // Weapons run along the hand's -z (see buildSoldier).
+    base.set(0, 0, -0.1).applyMatrix4(a.weaponM);
+    tip.set(0, 0, -len).applyMatrix4(a.weaponM);
+    return true;
   }
 
   clearAll() {
