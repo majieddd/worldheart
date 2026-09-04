@@ -138,8 +138,14 @@ const STRUCTURE_MUL = 2.5;
 // How far from its LEADER a party member will chase. Wide enough that a party
 // clears a path in front of itself, tight enough that it stays a party.
 const PARTY_LEASH = 13;
+// Jump. Apex is v^2/2g = 1.269 units, deliberately just under the 1.41 needed
+// to break the nearest enemy's contact grind: a hop dodges a telegraphed swing
+// without making a body untouchable in a crowd.
+const JUMP_GRAVITY = 19.3;
+const JUMP_FALL_MUL = 1.15;
 const _strikeOrigin = new THREE.Vector3();
 const _strikeBearing = new THREE.Vector3();
+const _aimV = new THREE.Vector3();
 
 // Damage per second an enemy deals to a unit it is in contact with, per point
 // of that enemy's leak damage. Tuned so a lone warden holds two mites for a
@@ -241,6 +247,9 @@ class Ally {
     this.swingDur = 0.55;
     this.heat = 0;
     this.heatLock = 0;
+    this.hop = 0;        // metres above the ground while airborne
+    this.vertVel = 0;
+    this.airT = 0;
     this.beamRamp = 0;
     this.beamOn = null;
     this.flashT = 0;
@@ -345,7 +354,12 @@ export class AllyManager {
   }
 
   worldPos(a, out) {
-    return out.copy(a.dir).multiplyScalar(R + Math.max(a.height, 0.03) + a.type.radius * 0.9);
+    // The hop is added HERE rather than in each caller, which is what makes a
+    // jump mean something to every system at once: enemy melee acquisition, the
+    // landing re-check that lets you dodge a telegraphed swing, the contact
+    // grind, the instanced renderer and the strike origin all read this.
+    return out.copy(a.dir).multiplyScalar(
+      R + Math.max(a.height, 0.03) + (a.hop || 0) + a.type.radius * 0.9);
   }
 
   enemyPos(e, out) {
@@ -468,6 +482,7 @@ export class AllyManager {
       if (!a.active || a.dead) continue;
       if (a.flashT > 0) a.flashT -= dt;
       if (a.swingT > 0) a.swingT -= dt;
+      if (a.airT > 0) this._fall(a, dt);
       if (a.heatLock > 0) { a.heatLock -= dt; if (a.heatLock <= 0) a.heat = 0; }
       else if (a.heat > 0 && a.type.strike?.heatDown) {
         a.heat = Math.max(0, a.heat - a.type.strike.heatDown * dt);
@@ -603,6 +618,23 @@ export class AllyManager {
     a.height = terrainHeight(a.dir.x, a.dir.y, a.dir.z);
   }
 
+  // Ballistic hop along the surface normal. The angular walk underneath it is
+  // untouched, so running off a slope mid-jump behaves the way it should: the
+  // ground moves under you and you land on whatever is there.
+  _fall(a, dt) {
+    const g = JUMP_GRAVITY * (a.vertVel < 0 ? JUMP_FALL_MUL : 1);
+    a.vertVel -= g * dt;
+    a.hop += a.vertVel * dt;
+    if (a.hop <= 0) {
+      a.hop = 0;
+      a.vertVel = 0;
+      a.airT = 0;
+      if (this.onLand) this.onLand(a);
+    } else {
+      a.airT += dt;
+    }
+  }
+
   // Player-driven movement in the unit's own tangent frame.
   driveUnit(a, forward, strafe, dt) {
     if (!a.active || a.dead) return;
@@ -696,6 +728,14 @@ export class AllyManager {
   // with the degenerate directly-on-top case counted as in front, because the
   // tangent projection of something standing on your head is near zero length
   // and would otherwise silently drop out of every swing.
+  // Where this body is AIMING. A possessed unit is looking down a pitched view
+  // that its tangent facing knows nothing about, and a marksman that fires
+  // along its facing can never hit a flyer overhead - a.aim is written by
+  // js/possess.js each frame. Anything unpossessed just aims where it faces.
+  _aimOf(a, out) {
+    return a.aim ? out.copy(a.aim) : out.copy(a.fwd);
+  }
+
   _inArc(a, worldPoint, arcDeg) {
     if (!arcDeg || arcDeg >= 359) return true;
     _strikeBearing.copy(worldPoint).sub(_strikeOrigin);
@@ -711,12 +751,13 @@ export class AllyManager {
   // arm's length.
   _hitscanStrike(a, s) {
     _strikeOrigin.copy(this.worldPos(a, _tmp));
+    this._aimOf(a, _aimV);
     let best = null;
     let bestAlong = Infinity;
     for (const e of this.enemies.active) {
       if (!e.active || e.dead) continue;
       this.enemyPos(e, _tmp2).sub(_strikeOrigin);
-      const along = _tmp2.dot(a.fwd);
+      const along = _tmp2.dot(_aimV);
       if (along <= 0 || along > s.range) continue;
       const off = Math.sqrt(Math.max(0, _tmp2.lengthSq() - along * along));
       if (off > s.corridor + (e.type.radius || 0.3)) continue;
@@ -737,7 +778,7 @@ export class AllyManager {
       for (const p of this.world.portals) {
         if (p.destroyed) continue;
         _tmp2.copy(p.group.position).sub(_strikeOrigin);
-        const along = _tmp2.dot(a.fwd);
+        const along = _tmp2.dot(_aimV);
         if (along <= 0 || along > s.range) continue;
         if (Math.sqrt(Math.max(0, _tmp2.lengthSq() - along * along)) > 2.6) continue;
         const felled = this.world.damagePortal(p, s.dmg * STRUCTURE_MUL);
@@ -759,7 +800,8 @@ export class AllyManager {
     sh.spec = s;
     this.worldPos(a, sh.pos);
     sh.pos.addScaledVector(a.dir, 0.6);
-    sh.vel.copy(a.fwd).multiplyScalar(s.speed).addScaledVector(a.dir, s.speed * s.lift);
+    this._aimOf(a, _aimV);
+    sh.vel.copy(_aimV).multiplyScalar(s.speed).addScaledVector(a.dir, s.speed * s.lift);
     return 1;
   }
 
@@ -809,12 +851,13 @@ export class AllyManager {
   _beamStrike(a, s, dt) {
     if (a.heatLock > 0) return 0;
     _strikeOrigin.copy(this.worldPos(a, _tmp));
+    this._aimOf(a, _aimV);
     let best = null;
     let bestAlong = Infinity;
     for (const e of this.enemies.active) {
       if (!e.active || e.dead) continue;
       this.enemyPos(e, _tmp2).sub(_strikeOrigin);
-      const along = _tmp2.dot(a.fwd);
+      const along = _tmp2.dot(_aimV);
       if (along <= 0 || along > s.range) continue;
       const off = Math.sqrt(Math.max(0, _tmp2.lengthSq() - along * along));
       if (off > s.corridor + (e.type.radius || 0.3)) continue;

@@ -18,11 +18,45 @@ const TURN_PER_PIXEL = 0.0032;
 const KEY_TURN = 1.9;          // rad/s for Q and E
 const CACHE_REACH = 2.6;
 
+// Looking up and down. The unit's FACING must stay tangent to the sphere - the
+// render basis and every ground move depend on it - so pitch lives on the view
+// rather than on a.fwd, and the two stop being the same thing. Because fwd and
+// dir are kept orthonormal, the pitched look direction has an exact closed
+// form: fwd*cos(p) + dir*sin(p). No quaternion, no drift.
+const PITCH_MAX = 1.4835;       // 85 degrees, short of the pole where roll flips
+const VIEW_PITCH_MAX = 1.5184;  // 87, the clamp after recoil is folded in
+const KICK_PITCH = 0.22;        // radians of muzzle rise per unit of kick
+
+// Jumping. Apex 1.269 units, which is deliberately just UNDER the 1.41 needed
+// to break the closest enemy's contact grind: a jump dodges a telegraphed swing
+// but never makes you untouchable while standing in a crowd.
+const JUMP_SPEED = 7.0;
+const JUMP_GRAVITY = 19.3;
+const JUMP_FALL_MUL = 1.15;     // falls a little faster than it rises
+
+// The orbit view's near plane is sized for orbit - about 5 world units at this
+// mode's default zoom - and possession inherited it, so everything within five
+// metres of the eye was clipped away, including a Bulwark's entire three unit
+// strike radius.
+// Small enough that a Bulwark's three unit strike radius is fully visible,
+// large enough that the depth buffer survives. Dropping it to 0.10 against a
+// far plane of 7200 is a 72,000:1 range, and the terrain z-fought itself into a
+// black screen. The weapon does not need this to be tiny - the view model is
+// drawn by its own camera in its own pass, which is the whole reason it has
+// one.
+const FP_NEAR = 0.4;
+const FP_SHAKE = 0.035;         // radians at full trauma
+
+const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+
 const _eye = new THREE.Vector3();
 const _look = new THREE.Vector3();
 const _tmp = new THREE.Vector3();
 const _tmp2 = new THREE.Vector3();
 const _axis = new THREE.Vector3();
+const _aim = new THREE.Vector3();
+// The frame delta placeCamera needs to decay trauma, set by update().
+let dtShake = 0;
 
 // Gold caches hidden in the fog. They exist to give the trip a reward, so they
 // are only ever placed OUTSIDE the current frontier.
@@ -127,6 +161,12 @@ export class Possession {
     this.firing = false;
     this.kick = 0;
     this.stride = 0;
+    this.pitch = 0;
+    this._savedNear = null;
+    this.shake = 0;
+    this._prevPitch = 0;
+    this._yawUsed = 0;
+    this.viewModel = null;
     this._savedFov = null;
     this._bind();
   }
@@ -142,6 +182,9 @@ export class Possession {
       this.keys.add(e.code);
       if (e.code === 'Escape' || e.code === 'Tab') { e.preventDefault(); this.exit(); }
       if (e.code === 'KeyG') { e.preventDefault(); this.rally(); }
+      // NOT Space: that is the global pause key and binding a second action to
+      // it is exactly the defect that made every swing pause the game.
+      if (e.code === 'KeyF' && !e.repeat) { e.preventDefault(); this.jump(); }
       if (e.code === 'KeyH') { e.preventDefault(); this.dismiss(); }
     });
     addEventListener('keyup', (e) => this.keys.delete(e.code));
@@ -166,8 +209,11 @@ export class Possession {
     this.canvas.addEventListener('mousemove', (e) => {
       if (!this.active) return;
       const locked = document.pointerLockElement === this.canvas;
-      if (locked) this.yawQueue += e.movementX * TURN_PER_PIXEL;
-      else if (e.buttons & 2) this.yawQueue += e.movementX * TURN_PER_PIXEL;
+      if (locked || (e.buttons & 2)) {
+        this.yawQueue += e.movementX * TURN_PER_PIXEL;
+        // Screen-down should look down, and movementY is positive downward.
+        this.pitch = clamp(this.pitch - e.movementY * TURN_PER_PIXEL, -PITCH_MAX, PITCH_MAX);
+      }
     });
 
     // Right-drag is the look fallback, so its menu has to stay out of the way
@@ -199,6 +245,7 @@ export class Possession {
     if (this._savedFov === null) this._savedFov = cam.fov;
     const want = unit.type.strike?.fov;
     if (want) { cam.fov = want; cam.updateProjectionMatrix(); }
+    this.viewModel?.show(unit.typeKey);
     if (this.onEnter) this.onEnter(unit);
     return true;
   }
@@ -213,19 +260,34 @@ export class Possession {
       this.scene.fog = this._prevFog || null;
       this._prevFog = null;
     }
-    if (unit) unit.possessed = false;
+    if (unit) { unit.possessed = false; unit.aim = null; }
     this.firing = false;
     this.kick = 0;
-    if (this._savedFov !== null) {
-      this.rig.camera.fov = this._savedFov;
+    this.viewModel?.hide();
+    if (this._savedFov !== null || this._savedNear !== null) {
+      if (this._savedFov !== null) this.rig.camera.fov = this._savedFov;
+      if (this._savedNear !== null) this.rig.camera.near = this._savedNear;
       this.rig.camera.updateProjectionMatrix();
       this._savedFov = null;
+      this._savedNear = null;
     }
+    this.pitch = 0;
     try {
       if (document.pointerLockElement === this.canvas) document.exitPointerLock?.();
     } catch { /* nothing to release */ }
     
     if (this.onExit) this.onExit(unit);
+  }
+
+  // A hop. Purely radial: on a sphere "up" is the surface normal, so a jump is
+  // a change of altitude and the angular walk underneath it is untouched, which
+  // is why air control needs no special case.
+  jump() {
+    const u = this.unit;
+    if (!u || u.airT > 0) return false;
+    u.vertVel = JUMP_SPEED;
+    u.airT = 0.0001;
+    return true;
   }
 
   attack(dt = 0) {
@@ -274,6 +336,7 @@ export class Possession {
 
     if (this.yawQueue !== 0) {
       this.allies.turnUnit(u, this.yawQueue);
+      this._yawUsed = this.yawQueue;
       this.yawQueue = 0;
     }
     if (this.keys.has('KeyQ')) this.allies.turnUnit(u, -KEY_TURN * dt);
@@ -301,8 +364,19 @@ export class Possession {
       }
     }
 
+    dtShake = dt;
     this.placeCamera();
     this._applyDistanceFog();
+    this.viewModel?.update(dt, this.rig.camera, u, {
+      moving: !!(fwd || strafe),
+      stride: this.stride,
+      kick: this.kick,
+      firing: this.firing,
+      yawRate: dt > 0 ? this._yawUsed / dt : 0,
+      pitchRate: dt > 0 ? (this.pitch - this._prevPitch) / dt : 0,
+    });
+    this._prevPitch = this.pitch;
+    this._yawUsed = 0;
     this.ui?.updatePossession?.(u);
   }
 
@@ -327,6 +401,15 @@ export class Possession {
 
   // First person: the eye sits on the unit, looking along its facing. camera.up
   // is the surface normal, so "up" stays up wherever you are on the sphere.
+  // Where the player is LOOKING, as opposed to where the body is facing. Exact
+  // on a sphere because fwd and dir are orthonormal: rotating fwd by p about
+  // the right vector is fwd*cos(p) + dir*sin(p) with no residual term.
+  aimDir(out) {
+    const u = this.unit;
+    const p = clamp(this.pitch + this.kick * KICK_PITCH, -VIEW_PITCH_MAX, VIEW_PITCH_MAX);
+    return out.copy(u.fwd).multiplyScalar(Math.cos(p)).addScaledVector(u.dir, Math.sin(p)).normalize();
+  }
+
   placeCamera() {
     const u = this.unit;
     const cam = this.rig.camera;
@@ -334,12 +417,37 @@ export class Possession {
     // A small stride bob and the recoil kick. Both are tiny on purpose: enough
     // that walking and firing have weight, not enough to fight the aim.
     const bob = Math.sin(this.stride) * 0.035;
+    const alt = Math.max(u.height, 0.03) + (u.hop || 0);
     _eye.copy(u.dir).multiplyScalar(
-      R + Math.max(u.height, 0.03) + EYE_HEIGHT * u.type.scale + bob - this.kick * 0.06);
-    _look.copy(_eye).addScaledVector(u.fwd, 4).addScaledVector(u.dir, this.kick * 0.9);
+      R + alt + EYE_HEIGHT * u.type.scale + bob - this.kick * 0.06);
+    this.aimDir(_aim);
+    // Published on the body so the strike paths aim where the player is
+    // looking rather than where the feet are pointed.
+    if (!u.aim) u.aim = new THREE.Vector3();
+    u.aim.copy(_aim);
+    _look.copy(_eye).addScaledVector(_aim, 4);
     cam.up.copy(u.dir);
     cam.position.copy(_eye);
     cam.lookAt(_look);
+
+    // Trauma is added from strikes and from being hit, but it is only ever
+    // DECAYED and applied inside rig.update, which possession skips - so every
+    // shake this mode asked for went nowhere and then discharged into the orbit
+    // camera the moment control was released. First person consumes it here.
+    if (this.rig.trauma > 0) {
+      this.rig.trauma = Math.max(0, this.rig.trauma - dtShake * 1.7);
+      const t = this.rig.trauma * this.rig.trauma * FP_SHAKE;
+      if (t > 1e-5) {
+        cam.rotateX((SIM_RANDOM.next() * 2 - 1) * t);
+        cam.rotateY((SIM_RANDOM.next() * 2 - 1) * t * 1.3);
+        cam.rotateZ((SIM_RANDOM.next() * 2 - 1) * t * 1.6);
+      }
+    }
+
+    // The orbit near plane is metres deep and swallowed everything close to the
+    // eye, weapon included. Saved and restored so orbit keeps its own.
+    if (this._savedNear === null) this._savedNear = cam.near;
+    if (cam.near !== FP_NEAR) { cam.near = FP_NEAR; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();
   }
 }
