@@ -76,6 +76,8 @@ export class OrbitRig {
     this.shakeEnabled = !REDUCED_MOTION;
     this.frontierTheta = null;   // live cap angle when a mode drives one
     this.confine = null;         // {center: Vector3, maxAng} battlefield bounds
+    this.onWheelOverride = null; // (e) => true to consume the wheel elsewhere
+    this.dragClaim = null;       // (e) => true to take this drag for a mode
     this.confineHits = 0;        // times the boundary clamped the view
     this.viewYaw = 0;            // ctrl+middle drag / Q,E: spin the view
     this.tiltOffset = 0;         // ctrl+middle drag: manual pitch offset
@@ -115,6 +117,10 @@ export class OrbitRig {
       this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (e.button === 1) e.preventDefault();
       if (this.pointers.size === 1) {
+        // A mode can claim a left drag for itself - the marquee needs the same
+        // gesture the pan uses. Asked before any drag state is set up, so a
+        // claimed gesture never half-starts a pan.
+        if (this.dragClaim && this.dragClaim(e)) { this.dragging = false; return; }
         this.dragging = true;
         this.rotating = e.button === 1 && e.ctrlKey;
         this.dragButton = e.button;
@@ -184,6 +190,11 @@ export class OrbitRig {
 
     el.addEventListener('wheel', (e) => {
       e.preventDefault();
+      // While a unit is possessed the wheel belongs to that camera, not to the
+      // orbit zoom, which is not driving anyway. Routed through a hook rather
+      // than importing possession here, because the rig must not know the mode
+      // exists.
+      if (this.onWheelOverride && this.onWheelOverride(e)) return;
       this.zoomBy(e.deltaY * (e.deltaMode === 1 ? 0.03 : 0.0011));
     }, { passive: false });
 

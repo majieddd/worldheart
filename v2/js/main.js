@@ -9,6 +9,7 @@ import { makeRng } from './run/rng.js';
 import { EnemyManager, EVO as ENEMY_EVO } from './enemies.js';
 import { AllyManager, ALLY_TYPES } from './allies.js';
 import { Possession, CacheField } from './possess.js';
+import { ViewModel } from './viewmodel.js';
 import { Effects } from './effects.js';
 import { TowerManager, TOWER_TYPES, MODS as TOWER_MODS } from './towers.js';
 import { Game } from './game.js';
@@ -106,6 +107,7 @@ let ui = null;
 let mode99 = null;   // the 99 Planets shell, null in every other mode
 let allies = null;   // friendly units; only built for modes that summon them
 let possession = null;  // direct control of a unit, first person
+let viewModel = null;   // the first-person weapon overlay
 let caches = null;      // gold hidden in the fog
 
 /* ---- environment map and sun shadows ---------------------------------- */
@@ -373,6 +375,10 @@ async function boot() {
 
   caches = new CacheField(scene);
   possession = new Possession({ canvas, rig, allies, game, ui: null, caches, scene });
+  // The weapon in your hands, drawn in its own pass over the world.
+  viewModel = new ViewModel();
+  possession.viewModel = viewModel;
+  window.WH.viewModel = viewModel;
   window.WH.possession = possession;
   window.WH.caches = caches;
   // A felled breach stops feeding waves and pays a bounty. Tracked by nav node
@@ -510,7 +516,12 @@ function stepFrame(dt, render) {
     // Strategic scale: swell models with zoom, then hand over to icons.
     // Bigger worlds get a stronger swell so a tower stays a landmark even
     // when the board is a continent.
-    const z = rig.zoomT;
+    // While possessed the orbit rig is not driving, so rig.zoomT is frozen at
+    // whatever the survey view was left at - and the strategic layer kept
+    // reading it. Standing on the ground with every enemy swollen to 3x and
+    // strategic icons floating over them is most of what first person looked
+    // wrong. On foot the scale is life size and the icons are off.
+    const z = (possession && possession.active) ? 0 : rig.zoomT;
     const swell = SWELL_MAX - 1;
     if (towerMgr) towerMgr.zoomScale = 1 + z * swell;
     if (enemies) enemies.zoomScale = 1 + z * swell * 0.8;
@@ -531,7 +542,12 @@ function stepFrame(dt, render) {
     fx.icons.commit(iconAlpha);
     fx.update(simDt, enemies ? enemies.active : null);
   }
-  if (render) post.render(scene, rig.camera, dt);
+  if (render) {
+    post.render(scene, rig.camera, dt);
+    // After the post chain, so the weapon is not bloomed into a smear and not
+    // fogged by the world's own fog.
+    viewModel?.render(renderer);
+  }
 }
 
 const ICON_COLORS = {
