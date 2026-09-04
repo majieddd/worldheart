@@ -27,6 +27,13 @@ function icon(name, size = 15, cls = '') {
 
 function fmt(n) { return n.toLocaleString('en-US'); }
 
+// Roman numerals for the three authored marks, then plain numbers. One
+// function for the tower badge and the Worldheart panel, so the cap the
+// panel promises is spelled the way the badge will show it.
+function markLabel(mark) {
+  return mark <= 3 ? ['MK I', 'MK II', 'MK III'][mark - 1] : `MK ${mark}`;
+}
+
 export class HUD {
   constructor({ game, waves, world, nav, rig, renderer, audio }) {
     this.game = game;
@@ -71,6 +78,15 @@ export class HUD {
           </div>
           <div class="stat-sub" id="score-line">score 0</div>
         </div>
+        <!-- 99 Planets only. The Worldheart is the run's one upgradable base:
+             its level is the tier cap and the number of frontier rings the
+             run can hold. A <button> so the #hud pointer-events cascade lets
+             it through, and so B and a click are the same path. -->
+        <button class="panel" id="heart-panel" title="Upgrade the Worldheart (B)">
+          <div class="hp-top"><span class="marker">worldheart</span><span class="hp-level" id="heart-level">LV 0</span></div>
+          <div class="hp-buys" id="heart-buys"></div>
+          <div class="hp-cost"><span class="kbd">B</span><span id="heart-action">Upgrade</span><span class="gold-text" id="heart-cost"></span></div>
+        </button>
       </div>
 
       <div class="hud-top-center">
@@ -78,6 +94,8 @@ export class HUD {
           <span id="wave-label" class="marker" style="color:var(--text)">STANDBY</span>
           <span class="sep">|</span>
           <span id="wave-sub" style="color:var(--text-muted);font-size:var(--fs-12)">the breach stirs</span>
+          <span class="sep" id="nest-sep" style="display:none">|</span>
+          <span id="nest-count" style="display:none;color:var(--danger-text);font-size:var(--fs-12)"></span>
         </div>
         <button class="btn primary" id="btn-call" style="display:none">Call wave (+<span id="call-bonus">0</span>)</button>
         <div id="boss-bar">
@@ -222,6 +240,7 @@ export class HUD {
     this.el = {};
     for (const id of [
       'lives-fill', 'lives-num', 'gold-num', 'score-line', 'wave-label', 'wave-sub',
+      'nest-sep', 'nest-count', 'heart-panel', 'heart-level', 'heart-buys', 'heart-action', 'heart-cost',
       'btn-call', 'call-bonus', 'boss-bar', 'boss-fill', 'boss-name',
       'btn-speed', 'speed-label', 'btn-pause', 'btn-sound', 'btn-settings', 'settings-pop',
       'set-quality', 'set-shake', 'set-seed', 'toast-anchor', 'wave-banner', 'banner-big', 'banner-small',
@@ -452,6 +471,10 @@ export class HUD {
     this.el['tp-upgrade'].addEventListener('click', () => this.game.upgradeSelected());
     this.el['tp-sell'].addEventListener('click', () => this.game.sellSelected());
     this.el['tp-close'].addEventListener('click', () => this.game.select(null));
+    // The mode shell owns the purchase (gold is the shell's, the level is the
+    // core's); the HUD only asks. Nothing is assigned on the classic maps, so
+    // the click is inert there, and the panel is never shown anyway.
+    this.el['heart-panel'].addEventListener('click', () => this.requestHeartUpgrade());
 
     this.el['btn-begin'].addEventListener('click', () => this.beginGame());
     this.el['btn-talents'].addEventListener('click', () => this.showTalents());
@@ -490,6 +513,10 @@ export class HUD {
       else if (e.code === 'KeyP') { e.preventDefault(); this.togglePause(); }
       else if (e.code === 'KeyF') { if (!this.possession?.active) this.cycleSpeed(); }
       else if (e.code === 'KeyM') this.toggleSound();
+      // B raises the Worldheart. A board verb like F: on the ground the panel
+      // is not even visible, and spending 450 gold from inside a body with no
+      // readout of what it bought would be a surprise, not a purchase.
+      else if (e.code === 'KeyB') { if (!this.possession?.active) this.requestHeartUpgrade(); }
     });
 
     this.waves.onWaveStart = (n) => {
@@ -610,6 +637,48 @@ export class HUD {
   hideDraft() {
     document.getElementById('draft-overlay').classList.remove('show');
     this.possession?.suspend?.(false);
+  }
+
+  // -- the Worldheart -------------------------------------------------------
+
+  // The panel is a readout of the run core, redrawn by the mode shell whenever
+  // the run syncs. Everything it says is derived: the level, the price of the
+  // next one, and what that buys in the two currencies the heart deals in.
+  //   info = { level, max, cost, tierCap, nextTierCap, ringsGain, held, afford }
+  renderHeart(info) {
+    const e = this.el;
+    e['heart-panel'].classList.add('show');
+    e['heart-level'].textContent = `LV ${info.level} / ${info.max}`;
+    if (info.cost === null) {
+      e['heart-buys'].textContent = `tier cap ${markLabel(info.tierCap)}, every ring held`;
+      e['heart-action'].textContent = 'At full strength';
+      e['heart-cost'].textContent = '';
+      e['heart-panel'].disabled = true;
+    } else {
+      const rings = info.ringsGain === 1 ? '+1 ring' : `+${info.ringsGain} rings`;
+      const owed = info.held ? ` (${info.held} held)` : '';
+      e['heart-buys'].textContent = `tier cap ${markLabel(info.nextTierCap)}, frontier ${rings}${owed}`;
+      e['heart-action'].textContent = 'Upgrade';
+      e['heart-cost'].textContent = fmt(info.cost);
+      e['heart-panel'].disabled = false;
+    }
+    e['heart-panel'].classList.toggle('poor', info.cost !== null && !info.afford);
+    e['heart-panel'].classList.toggle('held', !!info.held);
+  }
+
+  // One pulse when a cleared wave's ring cannot be held. A transform only:
+  // the panel must not change colour, since the held state is already in the
+  // copy and the toast, and a second colour would say something new.
+  pulseHeart() {
+    const p = this.el['heart-panel'];
+    p.classList.remove('pulse');
+    void p.offsetWidth;
+    p.classList.add('pulse');
+  }
+
+  requestHeartUpgrade() {
+    if (this.game.state !== 'playing' || !this.onHeartUpgrade) return;
+    this.onHeartUpgrade();
   }
 
   // -- first person ---------------------------------------------------------
@@ -833,7 +902,7 @@ export class HUD {
       // Roman numerals for the three authored marks, then plain numbers - the
       // array lookup returned undefined past MK III and textContent turned that
       // into an empty badge, so a tier-7 tower looked identical to a tier-3 one.
-      e['tp-tier'].textContent = t.tier < 3 ? ['MK I', 'MK II', 'MK III'][t.tier] : `MK ${t.tier + 1}`;
+      e['tp-tier'].textContent = markLabel(t.tier + 1);
       e['tp-desc'].innerHTML = `${t.def.desc} <em>${t.def.flavor}</em>`;
       const rows = [];
       // Rounded. Every stat above the authored tiers is scaled by a power curve
@@ -855,14 +924,17 @@ export class HUD {
       rows.push(['Dealt', fmt(Math.round(t.damageDealt))]);
       rows.push(['Kills', fmt(t.kills)]);
       e['tp-stats'].innerHTML = rows.map(([k, v]) => `<span>${k}</span><b>${v}</b>`).join('');
-      // There is no tier ceiling any more, so the button is ALWAYS offered and
-      // the price is what stops you. Hiding it at MK III left the whole
-      // uncapped ladder reachable only through a hotkey taught once in small
-      // print on the title screen.
+      // The button is ALWAYS offered on the uncapped ladder and the price is
+      // what stops you. Hiding it at MK III left the whole ladder reachable
+      // only through a hotkey taught once in small print on the title screen.
+      // Under the Worldheart's cap it stays visible too, but says what lifts
+      // it: a button that merely vanished is invariant 7 all over again.
       if (g.uncappedTiers || t.tier < 2) {
+        const capped = Number.isFinite(g.tierCap) && t.tier + 1 >= g.tierCap;
         const cost = tierCost(t.typeKey, t.tier + 1);
-        e['tp-upgrade'].textContent = `Upgrade ${fmt(cost)}`;
-        e['tp-upgrade'].disabled = g.gold < cost;
+        e['tp-upgrade'].textContent = capped ? 'Capped: raise the Worldheart' : `Upgrade ${fmt(cost)}`;
+        e['tp-upgrade'].disabled = capped || g.gold < cost;
+        e['tp-upgrade'].title = capped ? 'Upgrade the Worldheart (B) to raise the tier cap' : '';
         e['tp-upgrade'].style.display = '';
       } else {
         e['tp-upgrade'].style.display = 'none';
@@ -891,6 +963,16 @@ export class HUD {
     }
     if (e['wave-label'].textContent !== label) e['wave-label'].textContent = label;
     if (e['wave-sub'].textContent !== sub) e['wave-sub'].textContent = sub;
+    // Live nests: woken breaches outside the frontier, each trickling raids.
+    // Beside the wave readout because they are the wave's other half, and
+    // hidden entirely at zero so the classic maps never grow a stray divider.
+    const nests = w.liveNestCount || 0;
+    const nestText = nests ? `${nests} ${nests === 1 ? 'nest' : 'nests'}` : '';
+    if (e['nest-count'].textContent !== nestText) {
+      e['nest-count'].textContent = nestText;
+      e['nest-count'].style.display = nests ? '' : 'none';
+      e['nest-sep'].style.display = nests ? '' : 'none';
+    }
     const callVisible = e['btn-call'].style.display !== 'none';
     if (showCall !== callVisible) e['btn-call'].style.display = showCall ? '' : 'none';
 

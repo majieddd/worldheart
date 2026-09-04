@@ -8,7 +8,7 @@ something broke without it.
 
 ```bash
 node tools/serve.mjs 8137      # then open http://127.0.0.1:8137
-node tools/test.mjs            # 115 headless tests, no browser
+node tools/test.mjs            # 128 headless tests, no browser
 node tools/deploy.mjs          # refresh v2/ and dist/ before you commit
 ```
 

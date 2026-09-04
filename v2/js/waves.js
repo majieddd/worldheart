@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import { CONFIG } from './config.js';
 import { SIM_RANDOM } from './noise.js';
 
@@ -7,6 +8,38 @@ import { SIM_RANDOM } from './noise.js';
 
 const ATK_SCALE_SLOPE = 0.35;
 const ATK_SCALE_CAP = 4;
+
+// Nests: 99 Planets only. A woken breach that stands OUTSIDE the frontier is
+// a nest, and a nest trickles a small raid from where it actually stands
+// every RAID_INTERVAL seconds of sim time, on top of the wave. The wave's own
+// spawns are pulled in to the edge of the circle by the mode; a raid is not,
+// which is what makes ground outside the circle worth taking. The interval
+// tightens a little with the wave and is scaled by paceMul like every other
+// cadence in the director.
+const RAID_INTERVAL = 16;
+const RAID_INTERVAL_FLOOR = 9;
+const RAID_INTERVAL_SLOPE = 0.4;
+// A raider spawns a beat after the last so a pack reads as a pack, not a
+// clump on one node.
+const RAID_GAP = 0.55;
+// A breach counts as swallowed at the same margin the mode uses to stop
+// remapping its spawns, so the two readings of "inside" cannot disagree.
+const NEST_MARGIN = 1.12;
+
+// The pack a nest sends. Small on purpose: a raid is a tax on an unexpanded
+// frontier, not a second wave.
+export function raidComp(wave) {
+  const pack = [{ type: 'mite', count: 2 }];
+  if (wave >= 4) pack.push({ type: 'husk', count: 1 });
+  if (wave >= 8) pack.push({ type: 'aegis', count: 1 });
+  return pack;
+}
+
+export function raidInterval(wave, paceMul = 1) {
+  return Math.max(RAID_INTERVAL_FLOOR, RAID_INTERVAL - (wave - 1) * RAID_INTERVAL_SLOPE) * paceMul;
+}
+
+const _nd = new THREE.Vector3();
 
 export function hpScale(wave) {
   let s = 1 + (wave - 1) * 0.08;
@@ -102,6 +135,18 @@ export class WaveDirector {
     this.onPortalWake = null;
     this.onVictory = null;
     this.onCountdown = null;
+    // Nests. Off unless the mode turns it on; the classic maps never see a
+    // raid. nestClocks maps a breach node to the seconds until its next raid,
+    // raidQueue holds the raiders of a pack still waiting on their beat, and
+    // liveNestCount is what the HUD reads.
+    this.nestMode = false;
+    this.nestClocks = new Map();
+    this.raidQueue = [];
+    this.raidClock = 0;
+    this.liveNestCount = 0;
+    this.canRaid = null;      // () => bool, set by the mode; null means always
+    this.onNestWake = null;   // (liveCount) => void
+    this.onRaid = null;       // (node, wave) => void
   }
 
   begin() {
@@ -165,7 +210,102 @@ export class WaveDirector {
     if (this.onWaveStart) this.onWaveStart(this.wave, waveComp(this.wave));
   }
 
+  // ---- nests -------------------------------------------------------------
+
+  // Is this woken breach still outside the circle? Its direction against the
+  // frontier centre, by angle, which is the only measure a spherical cap has.
+  _isNest(node) {
+    const f = this.game.frontier;
+    if (!f || node < 0) return false;
+    if (this.destroyedNodes && this.destroyedNodes.has(node)) return false;
+    this.nav.nodeDir(node, _nd);
+    const ang = Math.acos(Math.max(-1, Math.min(1, _nd.dot(f.centre))));
+    return ang > f.theta * NEST_MARGIN;
+  }
+
+  // The nests alive right now: woken, standing, and beyond the frontier. None
+  // before the first wave has been called, so the opening breather is a
+  // breather.
+  liveNests() {
+    if (!this.nestMode || this.wave < 1 || !this.game.frontier) return [];
+    const woken = this.nav.portalNodes.slice(0, portalCount(this.wave));
+    return woken.filter((n) => this._isNest(n));
+  }
+
+  // Reconcile the clocks with the live list. A nest that has just woken gets
+  // a full interval before its first raid, so a new breach is a warning
+  // before it is a fight; one the circle has swallowed or units have felled
+  // is dropped on the spot, along with any raiders it had queued.
+  refreshNests() {
+    const nests = this.liveNests();
+    let woke = false;
+    for (const n of nests) {
+      if (!this.nestClocks.has(n)) {
+        this.nestClocks.set(n, raidInterval(this.wave, this.paceMul));
+        woke = true;
+      }
+    }
+    for (const n of [...this.nestClocks.keys()]) {
+      if (!nests.includes(n)) {
+        this.nestClocks.delete(n);
+        this.raidQueue = this.raidQueue.filter((q) => q.node !== n);
+      }
+    }
+    this.liveNestCount = nests.length;
+    if (woke && this.onNestWake) this.onNestWake(nests.length);
+    return nests;
+  }
+
+  // Queue one pack at a nest. The raiders go through enemies.spawn like any
+  // other, but with spawnRaw raised so the mode's frontier remap leaves them
+  // where the breach stands.
+  _queueRaid(node) {
+    const scale = hpScale(this.wave);
+    let i = 0;
+    for (const g of raidComp(this.wave)) {
+      for (let k = 0; k < g.count; k++) {
+        this.raidQueue.push({ t: this.raidClock + i * RAID_GAP, type: g.type, node, scale });
+        i++;
+      }
+    }
+    this.raidQueue.sort((a, b) => a.t - b.t);
+    if (this.onRaid) this.onRaid(node, this.wave);
+  }
+
+  _spawnRaw(type, node, scale) {
+    this.enemies.spawnRaw = true;
+    try {
+      return this.enemies.spawn(type, node, scale);
+    } finally {
+      this.enemies.spawnRaw = false;
+    }
+  }
+
+  // Runs in every director state but idle. Idle is the mode holding the
+  // director while the core drafts or advances, and a raid landing under a
+  // draft overlay would be a fight the player cannot see; canRaid lets the
+  // mode say so explicitly as well, and freezes the clocks rather than
+  // letting them all fire the instant the overlay closes.
+  _updateNests(dt) {
+    if (!this.nestMode || this.state === 'idle') return;
+    this.refreshNests();
+    if (this.canRaid && !this.canRaid()) return;
+    for (const [n, t] of this.nestClocks) {
+      const left = t - dt;
+      if (left > 0) { this.nestClocks.set(n, left); continue; }
+      this.nestClocks.set(n, raidInterval(this.wave, this.paceMul));
+      this._queueRaid(n);
+    }
+    this.raidClock += dt;
+    while (this.raidQueue.length && this.raidQueue[0].t <= this.raidClock) {
+      const q = this.raidQueue.shift();
+      this._spawnRaw(q.type, q.node, q.scale);
+      if (this.onSpawnPortal) this.onSpawnPortal(q.node);
+    }
+  }
+
   update(dt) {
+    this._updateNests(dt);
     if (this.state === 'countdown') {
       this.countdown -= dt;
       if (this.onCountdown) this.onCountdown(this.countdown);
@@ -189,8 +329,18 @@ export class WaveDirector {
           this.victoryFired = true;
           if (this.onVictory) this.onVictory();
         }
-        this.state = 'countdown';
-        this.countdown = CONFIG.waves.prepTime * this.paceMul;
+        // A listener may PARK the director on 'idle' from inside onWaveClear:
+        // the 99 Planets shell does, to hold the next wave until its draft
+        // resolves. This line used to set 'countdown' unconditionally right
+        // after, so the hold lasted exactly one statement and the breather
+        // ran down underneath the draft overlay - measured as the director in
+        // 'countdown' with the draft open, and the next wave arriving about a
+        // second after the pick. Only an unparked director starts its own
+        // countdown now; a parked one waits to be released.
+        if (this.state === 'combat') {
+          this.state = 'countdown';
+          this.countdown = CONFIG.waves.prepTime * this.paceMul;
+        }
       }
     }
   }

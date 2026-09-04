@@ -68,7 +68,7 @@ export const MAPS = {
   ninetynine: {
     name: '99 Planets',
     mode: 'ninetynine', modeLabel: 'roguelite campaign',
-    tag: 'One tower. Fifteen waves. The frontier widens with every one you survive.',
+    tag: 'One tower. Fifteen waves. Raise the Worldheart to hold more ground, and clear the nests beyond it.',
     chip: 'roguelite · 15 waves · boss',
     // Same planet class as Titan's Brow. fieldTheta is the FINAL frontier: the
     // nav graph, terrain, decor and breach sites are all authored at this angle
