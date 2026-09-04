@@ -326,32 +326,45 @@ export class AllyManager {
     // the feet, z is forward. `anim` says how the part moves - 'bob' rides the
     // idle breath, 'swing' also drives with the weapon arc, 'stride' alternates
     // like a walking leg, and 'ring' is the ground marker that shows selection.
+    // A torus is built in the XY plane, which the render basis maps to
+    // right/up - so an unrotated one stands on EDGE. Every "ground ring" in
+    // this file was a vertical hoop running from the boots to mid-hip.
+    function flatRing(r, tube) {
+      const g = new THREE.TorusGeometry(r, tube, 6, 16);
+      g.rotateX(Math.PI / 2);
+      return g;
+    }
+
     function soldier(body, trim, gold, legGeo, extra = {}) {
+      // Build is per archetype so the five do not read as one man in five hats:
+      // a Bulwark is broad and slab-chested, a Twinfang narrow, a Kettle
+      // barrel-bodied. The file's own header promises this difference.
+      const w = extra.width ?? 1;
       const parts = [
         // hips and a tapered chest, so the silhouette has a waist
-        { geo: new THREE.BoxGeometry(0.34, 0.2, 0.26), mat: trim, per: 1,
+        { geo: new THREE.BoxGeometry(0.34 * w, 0.2, 0.26), mat: trim, per: 1,
           off: [[0, 0.42, 0]], anim: 'bob' },
-        { geo: new THREE.BoxGeometry(0.44, 0.42, 0.3), mat: body, per: 1,
+        { geo: new THREE.BoxGeometry(0.44 * w, 0.42, 0.3 * w), mat: body, per: 1,
           off: [[0, 0.74, 0]], anim: 'bob' },
         // pauldrons: the single strongest read of "officer" at this scale
-        { geo: new THREE.BoxGeometry(0.16, 0.14, 0.28), mat: gold, per: 2,
-          off: [[-0.29, 0.9, 0], [0.29, 0.9, 0]], anim: 'bob' },
+        { geo: new THREE.BoxGeometry(0.16 * w, 0.14, 0.28), mat: gold, per: 2,
+          off: [[-0.29 * w, 0.9, 0], [0.29 * w, 0.9, 0]], anim: 'bob' },
         // arms, the right one carrying the weapon and driving the swing
         { geo: new THREE.BoxGeometry(0.11, 0.36, 0.12), mat: body, per: 2,
-          off: [[-0.28, 0.66, 0.02], [0.28, 0.66, 0.02]], anim: 'arms' },
+          off: [[-0.28 * w, 0.66, 0.02], [0.28 * w, 0.66, 0.02]], anim: 'arms' },
         // a helmet with a brow band rather than a bare cone
-        { geo: new THREE.BoxGeometry(0.24, 0.2, 0.24), mat: body, per: 1,
+        { geo: extra.head ?? new THREE.BoxGeometry(0.24, 0.2, 0.24), mat: body, per: 1,
           off: [[0, 1.06, 0]], anim: 'bob' },
         { geo: new THREE.BoxGeometry(0.26, 0.05, 0.26), mat: gold, per: 1,
           off: [[0, 1.0, 0.01]], anim: 'bob' },
         { geo: legGeo, mat: trim, per: 2,
           off: [[-0.11, 0.32, 0], [0.11, 0.32, 0]], anim: 'stride' },
-        { geo: new THREE.TorusGeometry(0.34, 0.03, 6, 16), mat: gold, per: 1,
+        { geo: flatRing(0.34, 0.03), mat: gold, per: 1,
           off: [[0, 0.05, 0]], anim: 'ring' },
       ];
       if (extra.crest) {
         parts.push({ geo: extra.crest, mat: gold, per: 1,
-          off: [[0, 1.28, 0]], anim: 'bob' });
+          off: [[0, extra.crestY ?? 1.22, 0]], anim: 'bob' });
       }
       if (extra.cape) {
         parts.push({ geo: extra.cape, mat: trim, per: 1,
@@ -369,8 +382,9 @@ export class AllyManager {
         { geo: legGeo, mat: bodyMat, per: 2 },
       ],
       commander: soldier(bodyMat, trimMat, goldMat, legGeo, {
-        crest: new THREE.ConeGeometry(0.055, 0.34, 4),
-        cape: new THREE.BoxGeometry(0.42, 0.52, 0.045),
+        width: 1.18,
+        crest: new THREE.ConeGeometry(0.055, 0.34, 4), crestY: 1.24,
+        cape: new THREE.BoxGeometry(0.46, 0.5, 0.045),
       }),
       // One silhouette per archetype. Without these four the renderer had no
       // mesh set for them at all - it iterates the keys of `species`, so a
@@ -378,10 +392,24 @@ export class AllyManager {
       // damaged, killed and possessed while never being drawn once. Nothing
       // reported it because an absent key is not an error, it is just a body
       // that never appears.
-      duelist: soldier(bodyMat, trimMat, goldMat, legGeo, { crest: new THREE.ConeGeometry(0.04, 0.24, 4) }),
-      marksman: soldier(bodyMat, trimMat, goldMat, legGeo, { crest: new THREE.CylinderGeometry(0.03, 0.05, 0.2, 5) }),
-      bombardier: soldier(bodyMat, trimMat, goldMat, legGeo, { crest: new THREE.BoxGeometry(0.1, 0.12, 0.1), cape: new THREE.BoxGeometry(0.4, 0.4, 0.045) }),
-      oracle: soldier(bodyMat, trimMat, goldMat, legGeo, { crest: new THREE.OctahedronGeometry(0.09), cape: new THREE.BoxGeometry(0.36, 0.5, 0.04) }),
+      duelist: soldier(bodyMat, trimMat, goldMat, legGeo, {
+        width: 0.82, head: new THREE.ConeGeometry(0.15, 0.26, 5),
+        crest: new THREE.ConeGeometry(0.04, 0.24, 4), crestY: 1.2,
+      }),
+      marksman: soldier(bodyMat, trimMat, goldMat, legGeo, {
+        width: 0.9, head: new THREE.CylinderGeometry(0.13, 0.13, 0.22, 6),
+        crest: new THREE.CylinderGeometry(0.03, 0.05, 0.2, 5), crestY: 1.18,
+      }),
+      bombardier: soldier(bodyMat, trimMat, goldMat, legGeo, {
+        width: 1.3, head: new THREE.DodecahedronGeometry(0.15),
+        crest: new THREE.BoxGeometry(0.1, 0.12, 0.1), crestY: 1.14,
+        cape: new THREE.BoxGeometry(0.46, 0.4, 0.045),
+      }),
+      oracle: soldier(bodyMat, trimMat, goldMat, legGeo, {
+        width: 0.88, head: new THREE.OctahedronGeometry(0.15),
+        crest: new THREE.OctahedronGeometry(0.09), crestY: 1.15,
+        cape: new THREE.BoxGeometry(0.4, 0.5, 0.04),
+      }),
     };
 
     this.species = {};
@@ -586,9 +614,18 @@ export class AllyManager {
       // body, so it can close on something without ever being walked off the
       // ground it is guarding.
       if (a.target && (type.holdsGround || a.order)) {
-        const post = a.patrol || a.anchor;
+        // Measured from whatever this unit is actually anchored to. A FOLLOWER
+        // is anchored to its leader - _beyondPost already says so - and using
+        // the barracks anchor instead silently stopped every hold-ground party
+        // member from fighting anywhere near its leader.
+        const post = (a.following && a.following.active && !a.following.dead)
+          ? a.following.dir : (a.patrol || a.anchor);
+        // The radius is the unit's OWN leash, not a constant. A flat 9 was
+        // smaller than the commander's post radius, which reaches 30, so it was
+        // refusing to fight over two thirds of the ground it was guarding.
+        const guard = Math.max(GUARD_STEP, a.leash || 0);
         const fromPost = Math.acos(Math.max(-1, Math.min(1, a.target.dir.dot(post)))) * R;
-        if (fromPost > GUARD_STEP) a.target = null;
+        if (fromPost > guard) a.target = null;
       }
 
       if (a.target) {
@@ -617,11 +654,20 @@ export class AllyManager {
           // can bait it away from it.
           let mayStep = true;
           if (type.holdsGround) {
-            const post = a.patrol || a.anchor;
-            mayStep = Math.acos(Math.max(-1, Math.min(1, a.dir.dot(post)))) * R < GUARD_STEP;
+            const post = (a.following && a.following.active && !a.following.dead)
+              ? a.following.dir : (a.patrol || a.anchor);
+            const guard = Math.max(GUARD_STEP, a.leash || 0);
+            mayStep = Math.acos(Math.max(-1, Math.min(1, a.dir.dot(post)))) * R < guard;
+            // Standing outside the guard radius with a target inside it used to
+            // be a permanent statue: it could not close, could not reach, and
+            // the target stayed valid so it never fell through to walking home.
+            // Dropping the target lets the roam branch bring it back.
+            if (!mayStep) { a.target = null; a.state = 'roam'; }
           }
-          if (mayStep) advanceToward(a.dir, a.target.dir, (type.speed * dt) / R, a.fwd);
-          faceToward(a.fwd, a.dir, a.target.dir, dt * 6);
+          if (a.target) {
+            if (mayStep) advanceToward(a.dir, a.target.dir, (type.speed * dt) / R, a.fwd);
+            faceToward(a.fwd, a.dir, a.target.dir, dt * 6);
+          }
         }
       } else if (this._attackPortal(a, dt)) {
         a.state = 'siege';
@@ -1095,7 +1141,11 @@ export class AllyManager {
               // can be shaped like a soldier instead of like whatever index 0,
               // 1 and 2 happened to mean.
               const o = part.off[Math.min(k, part.off.length - 1)];
-              ox = o[0] * sc; oy = o[1] * sc; oz = o[2] * sc;
+              // worldPos places the body ORIGIN radius*0.9 above the terrain,
+              // so a part table measured from the feet has to have that put
+              // back or the whole soldier hovers - measured at 0.56 units, more
+              // than the length of its own leg.
+              ox = o[0] * sc; oy = o[1] * sc - a.type.radius * 0.9; oz = o[2] * sc;
               const anim = part.anim;
               if (anim === 'bob') { oy += bob; }
               else if (anim === 'arms') {
@@ -1103,9 +1153,15 @@ export class AllyManager {
                 // the left counter-swings a little so the body reads as one
                 // thing moving rather than a limb flapping on a statue.
                 oy += bob;
-                const lead = k === 1 ? 1 : -0.35;
-                oz += swing * 1.5 * lead;
-                oy -= Math.abs(swing) * 0.35 * (k === 1 ? 1 : 0);
+                // Swept on an ARC about the shoulder rather than slid forward.
+                // Translating it by 1.5x the swing moved the arm 0.63 units off
+                // a body 0.18 deep, so at the peak of a swing it detached from
+                // the pauldron and floated in front of the chest.
+                const lead = k === 1 ? 1 : -0.3;
+                const ang = swing * 3.2 * lead;
+                const armR = 0.3;
+                oz += Math.sin(ang) * armR;
+                oy += (Math.cos(ang) - 1) * armR * 0.55;
               } else if (anim === 'stride') {
                 oz += Math.sin(this.time * 7 + a.phase + k * Math.PI) * 0.07;
               } else if (anim === 'cape') {

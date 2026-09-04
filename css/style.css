@@ -516,3 +516,9 @@ input[type="range"].cam-slider::-moz-range-thumb {
 #sel-readout.show { display: block; }
 #sel-readout b { color: var(--accent); }
 #sel-readout span { display: block; font-size: 10px; color: var(--text-faint); margin-top: 1px; }
+
+/* The board's chrome is inert and invisible while a unit is possessed. Without
+   this the card bar kept its pointer events and its pixels: a click mounted a
+   ghost tower through the player's own body, and the bar sat on top of the
+   first-person panel, which is the only place the ground controls are taught. */
+.board-off { display: none !important; pointer-events: none !important; }

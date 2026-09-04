@@ -143,6 +143,7 @@ export class HUD {
           <div id="fp-link">BASE CONTROL DISCONNECTED<span>outside the frontier - walk back to reconnect</span></div>
         <div id="fp-keys">
             <span><b>WASD</b> move</span><span><b>LMB</b> strike</span>
+            <span><b>F</b> jump</span><span><b>Scroll</b> view</span>
             <span id="fp-rally"><b>G</b> rally</span><span><b>H</b> dismiss</span><span><b>Esc</b> release</span>
           </div>
         </div>
@@ -356,7 +357,10 @@ export class HUD {
     if (!hand.length) {
       const note = document.createElement('div');
       note.className = 'hint-line';
-      note.textContent = 'Hand spent. Survive the wave for three more.';
+      // Parity-aware: a cleared wave pays ONE card, and only on the odd ones.
+      note.textContent = this.nextPaysCard
+        ? 'Hand spent. Clear this wave for another tower.'
+        : 'Hand spent. This wave pays a power; the next pays a tower.';
       bar.appendChild(note);
     }
   }
@@ -646,6 +650,16 @@ export class HUD {
     }
   }
 
+  // Board chrome off while the player is on the ground. Also lifts the
+  // first-person panel out from under the build bar: the two plus the selection
+  // readout were all landing on the same pixels at the bottom centre, which
+  // made the mode's only first-person tutorial unreadable.
+  setBoardEnabled(on) {
+    document.getElementById('build-bar')?.classList.toggle('board-off', !on);
+    this.el['tower-panel']?.classList.toggle('board-off', !on);
+    this.el['sel-readout']?.classList.toggle('board-off', !on);
+  }
+
   hidePossession() {
     this.el['fp-hud'].classList.remove('show');
     this.el['fp-link'].classList.remove('show');
@@ -806,11 +820,24 @@ export class HUD {
     if (t) {
       const st = t.stats;
       e['tp-name'].textContent = t.def.name;
-      e['tp-tier'].textContent = ['MK I', 'MK II', 'MK III'][t.tier];
+      // Roman numerals for the three authored marks, then plain numbers - the
+      // array lookup returned undefined past MK III and textContent turned that
+      // into an empty badge, so a tier-7 tower looked identical to a tier-3 one.
+      e['tp-tier'].textContent = t.tier < 3 ? ['MK I', 'MK II', 'MK III'][t.tier] : `MK ${t.tier + 1}`;
       e['tp-desc'].innerHTML = `${t.def.desc} <em>${t.def.flavor}</em>`;
       const rows = [];
-      if (st.dmg) rows.push(['Damage', st.dmg], ['Rate', `${st.rate ? st.rate + '/s' : 'charge'}`]);
-      if (st.dps) rows.push(['Damage', `${st.dps}/s`], ['Ramp', `${st.rampMax}x`]);
+      // Rounded. Every stat above the authored tiers is scaled by a power curve
+      // and printed raw it read "143.41380686670303", overflowing the column.
+      const num = (v) => (Math.abs(v) >= 100 ? Math.round(v) : Math.round(v * 10) / 10);
+      if (st.dmg) rows.push(['Damage', num(st.dmg)], ['Rate', `${st.rate ? num(st.rate) + '/s' : 'charge'}`]);
+      if (st.dps) rows.push(['Damage', `${num(st.dps)}/s`], ['Ramp', `${st.rampMax}x`]);
+      // A barracks has no damage numbers at all, so without these its panel
+      // showed only Range/Dealt/Kills and a garrison upgrade changed nothing
+      // visible. The `summoner` flag existed for exactly this and was read by
+      // nothing.
+      if (t.def.summoner) {
+        rows.push(['Garrison', st.garrison], ['Respawn', `${st.summonTime}s`], ['Leash', st.leash]);
+      }
       if (st.slow) rows.push(['Slow', `${Math.round(st.slow * 100)}%`]);
       if (st.aoe) rows.push(['Blast', st.aoe.toFixed(1)]);
       if (st.chains) rows.push(['Chains', st.chains]);
@@ -818,15 +845,19 @@ export class HUD {
       rows.push(['Dealt', fmt(Math.round(t.damageDealt))]);
       rows.push(['Kills', fmt(t.kills)]);
       e['tp-stats'].innerHTML = rows.map(([k, v]) => `<span>${k}</span><b>${v}</b>`).join('');
-      if (t.tier < 2) {
+      // There is no tier ceiling any more, so the button is ALWAYS offered and
+      // the price is what stops you. Hiding it at MK III left the whole
+      // uncapped ladder reachable only through a hotkey taught once in small
+      // print on the title screen.
+      if (g.uncappedTiers || t.tier < 2) {
         const cost = tierCost(t.typeKey, t.tier + 1);
-        e['tp-upgrade'].textContent = `Upgrade ${cost}`;
+        e['tp-upgrade'].textContent = `Upgrade ${fmt(cost)}`;
         e['tp-upgrade'].disabled = g.gold < cost;
         e['tp-upgrade'].style.display = '';
       } else {
         e['tp-upgrade'].style.display = 'none';
       }
-      e['tp-sell'].textContent = `Sell +${t.sellValue(CONFIG.economy.sellRefund)}`;
+      e['tp-sell'].textContent = `Sell +${fmt(t.sellValue(g.refundFrac()))}`;
     }
   }
 

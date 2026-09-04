@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
 import { clamp } from './noise.js';
 import { R, isBuildableDir, surfacePoint, groundNormal, orientOnSurface, raycastTerrain } from './world.js';
-import { TOWER_TYPES, TOWER_SCALE, tierCost, buildTowerVisual, GHOST_MAT_OK, GHOST_MAT_BAD, MODS } from './towers.js';
+import { TOWER_TYPES, TOWER_SCALE, tierCost, AUTHORED_TIERS, buildTowerVisual, GHOST_MAT_OK, GHOST_MAT_BAD, MODS } from './towers.js';
 import { insideFrontier } from './run/frontier.js';
 
 // Player-facing game logic: build mode with a live ghost, the placement rule
@@ -179,6 +179,8 @@ export class Game {
     this.speed = 1;
     this.paused = false;
 
+    // 99 Planets lets a tower be upgraded for ever; the classic maps do not.
+    this.uncappedTiers = false;
     this.buildType = null;
     this.selectedTower = null;
     this.cursorDir = new THREE.Vector3();
@@ -310,12 +312,18 @@ export class Game {
       // A hotkey in card mode arms the first matching card, so 1-3 still work.
       const idx = this.hand.indexOf(typeKey);
       if (idx >= 0 && this.selectedCard !== idx) { this.toggleBuildCard(idx); return; }
+      // No matching card means no build. This used to fall straight through and
+      // build the tower for gold alone - so a Mortar the run had not unlocked
+      // could be placed on wave 2 with no card spent, which made both the card
+      // economy and the unlock schedule optional.
+      if (this.onToast) this.onToast('No card for that tower in hand', 'warn');
+      return;
     }
     if (this.buildType === typeKey) { this.cancelBuild(); return; }
     if (this.state !== 'playing') return;
     // The shop card is disabled too, but the 1-5 hotkeys bypass the card
     // entirely, so the roster has to be enforced here as well.
-    if (!this.hand && this.unlockedTowers && !this.unlockedTowers.includes(typeKey)) {
+    if (this.unlockedTowers && !this.unlockedTowers.includes(typeKey)) {
       if (this.onToast) this.onToast('That tower is not unlocked yet', 'warn');
       return;
     }
@@ -495,9 +503,28 @@ export class Game {
     if (this.onHudChange) this.onHudChange();
   }
 
+  // What a sale returns. Salvage writes refundPct and nothing read it, so the
+  // power did nothing at all. Capped below 1 so a build-and-sell loop can never
+  // be free money, which matters more now that Thrift also discounts upgrades.
+  refundFrac() {
+    const m = MODS.current;
+    // refundPct IS the fraction, not a multiplier - it is seeded at 0.7 in
+    // js/run/modifiers.js and Salvage adds 0.20 to it. Multiplying the config
+    // value by it would have halved every refund instead of raising it.
+    const frac = m ? m.refundPct : CONFIG.economy.sellRefund;
+    return Math.min(0.92, frac);
+  }
+
   upgradeSelected() {
     const t = this.selectedTower;
     if (!t) return;
+    // Uncapped is a 99 Planets rule. The classic maps are balanced around three
+    // marks over thirty waves and inherited the removal for free, which handed
+    // them an unbounded gold-to-power sink they were never designed for.
+    if (!this.uncappedTiers && t.tier >= AUTHORED_TIERS - 1) {
+      if (this.onToast) this.onToast('Already at maximum tier', 'warn');
+      return;
+    }
     // No ceiling of any kind. A tower can always be upgraded and the PRICE is
     // the only thing in the way - it climbs exponentially while the tower's
     // strength climbs polynomially, so each step costs more and buys
@@ -521,7 +548,7 @@ export class Game {
   sellSelected() {
     const t = this.selectedTower;
     if (!t) return;
-    const value = t.sellValue(CONFIG.economy.sellRefund);
+    const value = t.sellValue(this.refundFrac());
     this.gold += value;
     this.nav.unblockNodes(t.id);
     this.towerMgr.remove(t);
