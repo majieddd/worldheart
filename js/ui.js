@@ -957,7 +957,12 @@ export class HUD {
         e['call-bonus'].textContent = String(Math.floor(w.countdown) * CONFIG.waves.earlyBonusPerSec);
       } else {
         label = w.wave > CONFIG.waves.count ? `ENDLESS ${w.wave}` : `WAVE ${w.wave}/${CONFIG.waves.count}`;
-        const left = this.game.enemies.active.length + w.pendingSpawns;
+        // A body in its death collapse is still in the active list for
+        // under half a second so it can be drawn falling; it is not a body
+        // the player still has to deal with.
+        let live = 0;
+        for (const e of this.game.enemies.active) if (!e.dead) live++;
+        const left = live + w.pendingSpawns;
         sub = `${left} remaining`;
       }
     }

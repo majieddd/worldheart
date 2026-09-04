@@ -430,7 +430,7 @@ export class Game {
       }
     }
     for (const e of this.enemies.active) {
-      if (e.type.flying) continue;
+      if (e.type.flying || e.dead) continue;
       this.towerMgr.enemyWorldPos(e, _v2);
       if (_v2.distanceTo(this.cursorPos) < fp + 0.75) return { ok: false, reason: 'enemies' };
     }

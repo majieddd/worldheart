@@ -40,6 +40,18 @@ const VICINITY = 10;
 const CHASE_LEASH = 11;
 const CHASE_MAX = 9;
 const CHASE_REST = 6;
+
+// Flyers dive to bite. A wisp cruises at 2.6 with a reach of 1.6, so from
+// cruising height it could never touch a standing unit: measured 2.37 of
+// vertical gap, and a chasing wisp hovered over the player until its leash
+// ran out. It drops toward DIVE_ALT while it chases, while an ally stands
+// within DIVE_REACH of it along the ground, and through its own wind-up and
+// blow, then climbs back once the fight is behind it. The dive is faster
+// than the climb so a bite pass reads as a strike, not a drift.
+const DIVE_ALT = 0.7;
+const DIVE_REACH = 3.2;
+const DIVE_RATE = 3.5;
+const CLIMB_RATE = 1.4;
 // How long a killed body stays on the board collapsing before it is released
 // and the shard burst fires. Everything that targets enemies skips e.dead, so
 // a dying body is inert; the only cost is that a wave clears this much later.
@@ -1241,6 +1253,19 @@ export class EnemyManager {
     return dmg;
   }
 
+  // Is any living ally within `r` world units of this enemy along the ground?
+  // Measured by angle rather than in 3D so a flyer's altitude does not hide
+  // the unit it is about to pass over.
+  _allyUnder(e, r) {
+    if (!this.allies) return false;
+    const cosR = Math.cos(r / R);
+    for (const a of this.allies.active) {
+      if (!a.active || a.dead) continue;
+      if (a.dir.dot(e.dir) >= cosR) return true;
+    }
+    return false;
+  }
+
   // Steer toward the possessed body when the rules above SPOT allow it. On a
   // chase frame the bearing to the body is written into _des in place of the
   // field's direction and true is returned; otherwise _des is left alone. The
@@ -1406,6 +1431,13 @@ export class EnemyManager {
       const ang = (stepSpeed * dt) / R;
       e.dir.addScaledVector(e.fwd, ang).normalize();
       e.height = terrainHeight(e.dir.x, e.dir.y, e.dir.z);
+
+      // The dive (see DIVE_ALT). Space bands keep their own altitudes.
+      if (type.flying && !this.spaceMode) {
+        const fighting = e.chaseT > 0 || e.windT > 0 || e.atkCd > 0 || this._allyUnder(e, DIVE_REACH);
+        const want = fighting ? DIVE_ALT : type.altitude;
+        e.alt += (want - e.alt) * Math.min(1, dt * (want < e.alt ? DIVE_RATE : CLIMB_RATE));
+      }
 
       // Heart contact. In space the bands dive on arrival, so contact is
       // measured along the surface rather than in 3D (a low-band drifter
