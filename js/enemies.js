@@ -11,17 +11,39 @@ export const EVO = { tier: 0 };
 const SHIELD_HITS = 3;
 const _mePos = new THREE.Vector3();
 const _alPos = new THREE.Vector3();
+const _plPos = new THREE.Vector3();
 
-// Enemy melee. An enemy NEVER walks toward an ally and never holds a target:
-// it swings at whatever is already standing inside its own reach, and the only
-// thing that stops it is its own wind-up. That is what keeps waves provably
-// alive - the worst case is a mite halted 0.25s out of every 1.00s, so it still
-// makes 75% of nominal progress toward the heart with no budget, no breakoff
-// and no shared clock to get stuck in. Letting enemies chase instead would turn
-// every ally into a flow-field attractor and make the commander the tank for
-// every wave again, which is the exact failure the frontier-capped post radius
-// was added to fix.
+// Enemy melee. An enemy never holds a target and never walks toward an AI
+// ally: it swings at whatever is already standing inside its own reach, and
+// the only thing that stops it is its own wind-up. That is what keeps waves
+// provably alive - the worst case is a mite halted 0.25s out of every 1.00s,
+// so it still makes 75% of nominal progress toward the heart with no budget,
+// no breakoff and no shared clock to get stuck in. Chasing every ally would
+// turn each one into a flow-field attractor and make the commander the tank
+// for every wave again, which is the exact failure the frontier-capped post
+// radius was added to fix.
+//
+// The one exception is the body the PLAYER is inside. The owner asked for mobs
+// that come after you when they spot you close by, and that still go for the
+// base when the base is right there, so a chase is allowed under bounds that
+// keep the guarantee above: only the possessed body is chased, only when it is
+// within SPOT of the enemy while the heart is further than VICINITY from it,
+// and only on a leash - the chase ends past CHASE_LEASH, after CHASE_MAX
+// seconds, or the moment the heart comes inside VICINITY, and the enemy then
+// ignores the player for CHASE_REST seconds and walks the field. Bosses never
+// chase. A wave therefore still resolves: the worst case is a body diverted
+// for nine seconds out of every fifteen, and a body that is never diverted
+// once it is near the heart.
 const MELEE_SCAN = 0.2;        // seconds between reach checks, staggered per body
+const SPOT = 7;
+const VICINITY = 10;
+const CHASE_LEASH = 11;
+const CHASE_MAX = 9;
+const CHASE_REST = 6;
+// How long a killed body stays on the board collapsing before it is released
+// and the shard burst fires. Everything that targets enemies skips e.dead, so
+// a dying body is inert; the only cost is that a wave clears this much later.
+const DYING_T = 0.42;
 // Melee grows with the wave so a garrison does not become free forever, but far
 // slower than enemy health does, and it is capped.
 const ATK_SCALE_SLOPE = 0.35;
@@ -136,6 +158,14 @@ class Enemy {
     this.windT = 0;
     this.scanT = 0;
     this.atkVictim = null;
+    // Player chase (see the note above SPOT): chaseT is how long the current
+    // chase has run, chaseCd how long the player is ignored after one ends.
+    this.chaseT = 0;
+    this.chaseCd = 0;
+    // Seconds left in the death collapse; 0 for a body that is alive. A
+    // recycled body that inherited a live countdown would be released a few
+    // frames after it spawned.
+    this.dying = 0;
     // These belong to the ally hold budget in js/allies.js but live on the
     // enemy, and enemies come from a pool. Without resetting them a recycled
     // body can spawn already hold-immune, or with a budget so nearly spent
@@ -216,9 +246,12 @@ const ID = new THREE.Matrix4();
 // wind runs 0 to 1 across the wind-up, strike runs 0 to 1 across the lunge
 // window and is 1 when no strike is playing, lunge is the shaped snap of
 // that window, flinch is 1 on the frame a hit lands and decays with flashT.
+// dying runs 0 to 1 across the death collapse and is 0 for a living body;
+// scale is the frame's body scale, for a pose that has to move the root by a
+// WORLD distance (the wisp falls its own altitude).
 const _c = {
   t: 0, phase: 0, gait: 0, move: 0, wind: 0, strike: 1, lunge: 0,
-  flinch: 0, stun: 0, shield: 0, turn: 0,
+  flinch: 0, stun: 0, shield: 0, turn: 0, dying: 0, scale: 1,
 };
 const _colBody = new THREE.Color();
 const _colPlate = new THREE.Color();
@@ -362,6 +395,28 @@ function makeMite(m) {
       cx.rot.y = side * sw;
       tib[k].rot.z = -side * (1.25 + lift * 0.9 + 0.35 * c.stun);
     }
+    if (c.dying > 0) {
+      // Collapse: the legs give way and splay flat, the body drops onto its
+      // belly and rolls, the head and abdomen droop, the mandibles fall open
+      // and the antennae go flat. Ease-out, so it drops fast and settles.
+      const d = easeOut(c.dying);
+      root.pos.y -= 0.17 * d;
+      root.rot.z += 0.55 * d;
+      root.rot.x -= 0.2 * d;
+      J.head.rot.x -= 0.6 * d;
+      J.mandR.rot.y += (-0.35 - J.mandR.rot.y) * d;
+      J.mandL.rot.y = -J.mandR.rot.y;
+      J.antR.rot.x -= 1.1 * d;
+      J.antL.rot.x -= 1.1 * d;
+      J.abd.rot.x += 0.5 * d;
+      for (let k = 0; k < 6; k++) {
+        const side = k % 2 ? 1 : -1;
+        cox[k].rot.z += side * 0.4 * d;
+        cox[k].rot.y *= 1 - d;
+        tib[k].rot.z += side * 0.95 * d;
+      }
+      J.eyes.scale.multiplyScalar(1 - 0.85 * d);
+    }
   }
   return { skel: sk, parts, pose };
 }
@@ -431,12 +486,16 @@ function makeHusk(m) {
     const amp = (0.15 + 0.85 * c.move) * (1 - 0.7 * c.stun);
     const breath = Math.sin(c.t * 4.2 + c.phase);
     const root = J.root;
-    root.pos.y += breath * 0.015 - 0.06 * c.stun;
+    // The strike is a rear and a bite: the whole front of the body lifts and
+    // tips back through the wind-up, the jaw gapes, and the lunge throws it
+    // forward and down onto the victim with the jaw snapping shut.
+    const rear = easeOut(c.wind);
+    root.pos.y += breath * 0.015 - 0.06 * c.stun + 0.08 * rear;
     root.pos.z += 0.08 * c.wind - 0.3 * c.lunge + 0.06 * c.flinch;
-    root.rot.x = 0.12 * easeOut(c.wind) - 0.1 * c.lunge + 0.2 * c.flinch;
+    root.rot.x = 0.3 * rear - 0.1 * c.lunge + 0.2 * c.flinch;
     root.rot.y = Math.sin(g) * 0.1 * c.move;
     root.rot.z = c.turn * 0.04;
-    J.head.rot.x = breath * 0.04 + 0.6 * easeOut(c.wind) - 0.7 * c.lunge + 0.35 * c.flinch - 0.5 * c.stun;
+    J.head.rot.x = breath * 0.04 + 0.6 * rear - 0.7 * c.lunge + 0.35 * c.flinch - 0.5 * c.stun;
     J.head.rot.y = Math.sin(g + 0.6) * 0.14 * c.move + c.turn * 0.08;
     const open = c.wind > 0 ? 0.1 + 0.9 * easeOut(c.wind)
       : c.strike < 1 ? 0.95 * (1 - c.lunge) : 0.08 + 0.05 * Math.sin(c.t * 3 + c.phase);
@@ -455,16 +514,39 @@ function makeHusk(m) {
       s.rot.x = 0.07 * amp * Math.sin(2 * g - n * 1.05) + 0.1 * c.lunge - 0.05 * c.stun;
       cores[i].scale.set(gs, gs, gs);
     }
+    if (c.dying > 0) {
+      // Collapse: the head drops and the jaw falls slack, the body sinks and
+      // rolls, and each segment sags a little further than the one before it
+      // so the chain flattens from the head back.
+      const d = easeOut(c.dying);
+      root.pos.y -= 0.2 * d;
+      root.rot.z += 0.5 * d;
+      root.rot.x -= 0.15 * d;
+      J.head.rot.x -= 0.7 * d;
+      J.head.rot.y *= 1 - d;
+      J.jawT.rot.x += (0.3 - J.jawT.rot.x) * d;
+      J.jawB.rot.x += (-0.55 - J.jawB.rot.x) * d;
+      const gd = 1 - 0.85 * d;
+      J.eye.scale.multiplyScalar(gd);
+      for (let i = 0; i < 5; i++) {
+        const s = segs[i];
+        s.rot.x += 0.09 * d;
+        s.rot.y += Math.sin(c.phase + i * 1.9) * 0.18 * d;
+        cores[i].scale.multiplyScalar(gd);
+      }
+    }
   }
   return { skel: sk, parts, pose };
 }
 
 // AEGIS. A hunched bipedal brute: two shield-arms held forward, a squat torso
 // with a hump, a head sunk between the shoulders with a glowing slit, and two
-// thick legs that crouch and extend through the hop. The shields go overhead
-// on the wind-up and come down together on the strike.
-const SLAM_SH = [[0, 2.5], [0.3, 0.35], [1, 1.2]];
-const SLAM_EL = [[0, 0.6], [0.3, -0.2], [1, -1.1]];
+// thick legs that crouch and extend through the hop. The strike is a shield
+// bash: one shield goes up and back over the shoulder while the other holds
+// the guard, and it slams down on the blow. The colossus raises a fist, so
+// the two brutes' telegraphs read differently at a glance.
+const SLAM_SH = [[0, 2.7], [0.3, 0.35], [1, 1.2]];
+const SLAM_EL = [[0, 0.5], [0.3, -0.2], [1, -1.1]];
 function makeAegis(m, mgr) {
   const sk = new Skeleton();
   sk.add('root', null, 0, 0.7, 0);
@@ -533,40 +615,75 @@ function makeAegis(m, mgr) {
     const tuck = air * air * air * c.move;
     const bend = 0.3 + 0.7 * land + 0.45 * tuck + 0.35 * c.stun;
     const root = J.root;
-    root.pos.y += rise - 0.14 * land - 0.12 * c.stun - 0.06 * c.lunge;
+    const w = easeOut(c.wind);
+    // The wind-up coils the body down and twists it toward the raised arm,
+    // and the blow unwinds it, so the bash reads from the torso as well as
+    // from the shield.
+    root.pos.y += rise - 0.14 * land - 0.12 * c.stun - 0.1 * w - 0.06 * c.lunge;
     root.pos.z += 0.06 * c.wind - 0.22 * c.lunge + 0.06 * c.flinch;
-    root.rot.x = 0.2 * easeOut(c.wind) - 0.15 * c.lunge + 0.2 * c.flinch;
+    root.rot.x = 0.2 * w - 0.15 * c.lunge + 0.2 * c.flinch;
     root.rot.z = c.turn * 0.05;
     J.hipR.rot.x = bend * 0.85 + 0.03;
     J.hipL.rot.x = bend * 0.85 - 0.03;
     J.knR.rot.x = -bend * 1.6;
     J.knL.rot.x = -bend * 1.6;
     const chest = J.chest;
-    chest.rot.x = -0.3 - 0.12 * land + 0.4 * easeOut(c.wind) - 0.45 * c.lunge + 0.25 * c.flinch - 0.3 * c.stun;
+    chest.rot.x = -0.3 - 0.12 * land + 0.4 * w - 0.45 * c.lunge + 0.25 * c.flinch - 0.3 * c.stun;
+    chest.rot.y = 0.35 * w - 0.3 * c.lunge;
     chest.scale.y = 1 - 0.08 * land;
     J.head.rot.x = 0.15 + 0.2 * land - 0.35 * c.lunge + 0.3 * c.flinch - 0.5 * c.stun;
     J.head.rot.y = c.turn * 0.08;
-    let shX;
-    let elX;
+    let shR;
+    let shL;
+    let elR;
+    let elL;
     if (c.wind > 0) {
-      const w = easeOut(c.wind);
-      shX = 1.2 + 1.3 * w;
-      elX = -1.1 + 1.7 * w;
+      // The right shield goes up and back over the shoulder; the left stays
+      // forward as the guard and tucks in a little.
+      shR = 1.2 + 1.5 * w;
+      elR = -1.1 + 1.6 * w;
+      shL = 1.2 - 0.3 * w;
+      elL = -1.1 - 0.15 * w;
     } else if (c.strike < 1) {
-      shX = keyed(SLAM_SH, c.strike);
-      elX = keyed(SLAM_EL, c.strike);
+      shR = keyed(SLAM_SH, c.strike);
+      elR = keyed(SLAM_EL, c.strike);
+      shL = 0.9 + 0.3 * c.strike;
+      elL = -1.25 + 0.15 * c.strike;
     } else {
-      shX = 1.2 - 0.15 * land;
-      elX = -1.1;
+      shR = 1.2 - 0.15 * land;
+      shL = shR;
+      elR = -1.1;
+      elL = -1.1;
     }
-    J.shR.rot.x = shX;
-    J.shL.rot.x = shX;
+    J.shR.rot.x = shR;
+    J.shL.rot.x = shL;
     J.shR.rot.z = 0.15 + 0.3 * c.wind - 0.25 * c.stun;
-    J.shL.rot.z = -(0.15 + 0.3 * c.wind - 0.25 * c.stun);
-    J.elR.rot.x = elX;
-    J.elL.rot.x = elX;
+    J.shL.rot.z = -(0.15 + 0.1 * c.wind - 0.25 * c.stun);
+    J.elR.rot.x = elR;
+    J.elL.rot.x = elL;
     const gs = 1 + 0.5 * c.shield + 0.5 * c.wind;
     J.slit.scale.set(gs, gs, gs);
+    if (c.dying > 0) {
+      // Collapse: the knees give, the body drops onto them and folds forward,
+      // the shields fall open to the sides and the head hangs.
+      const d = easeOut(c.dying);
+      root.pos.y -= 0.42 * d;
+      root.rot.x -= 0.2 * d;
+      J.hipR.rot.x += (0.2 - J.hipR.rot.x) * d;
+      J.hipL.rot.x += (0.2 - J.hipL.rot.x) * d;
+      J.knR.rot.x += (-2.3 - J.knR.rot.x) * d;
+      J.knL.rot.x += (-2.3 - J.knL.rot.x) * d;
+      chest.rot.x -= 0.6 * d;
+      chest.rot.y *= 1 - d;
+      J.head.rot.x -= 0.5 * d;
+      J.shR.rot.x += (0.3 - J.shR.rot.x) * d;
+      J.shL.rot.x += (0.3 - J.shL.rot.x) * d;
+      J.shR.rot.z += 0.9 * d;
+      J.shL.rot.z -= 0.9 * d;
+      J.elR.rot.x *= 1 - d;
+      J.elL.rot.x *= 1 - d;
+      J.slit.scale.multiplyScalar(1 - 0.85 * d);
+    }
   }
   return { skel: sk, parts, pose };
 }
@@ -626,9 +743,11 @@ function makeWisp(m) {
     // Bank into the turn: a positive yaw rate is a left turn, and a positive
     // roll raises the right wing, which is the left bank a flier makes.
     root.rot.z = clamp(c.turn * 0.45, -0.7, 0.7) + f * 0.05;
+    // The strike is a dive: the body rises and rears through the wind-up,
+    // then pitches over and drops onto the victim.
     root.rot.x = -0.08 + 0.55 * w - 0.7 * c.lunge + 0.3 * c.flinch - 0.3 * c.stun;
     root.pos.z += -0.3 * c.lunge + 0.05 * c.flinch;
-    root.pos.y += 0.12 * w - 0.15 * c.lunge - 0.1 * c.stun;
+    root.pos.y += 0.2 * w - 0.35 * c.lunge - 0.1 * c.stun;
     // Wings rise through the wind-up and beat down hard on the strike; a
     // stunned wisp lets them droop.
     const up = -0.1 + 0.5 * f + 0.5 * w - 0.6 * c.lunge - 0.5 * c.stun;
@@ -639,11 +758,31 @@ function makeWisp(m) {
     J.wrL.rot.z = -curl;
     J.head.rot.x = -0.1 + Math.sin(c.t * 3 + c.phase) * 0.06 - 0.3 * c.lunge + 0.2 * w - 0.3 * c.stun;
     J.head.rot.y = c.turn * 0.15;
+    // The tail curls up through the wind-up and whips down through the dive:
+    // the wisp comes down onto its victim tail-first, which is the part of
+    // the strike that reads from below.
     J.tail.rot.y = Math.sin(c.t * 4 + c.phase) * 0.18 + c.turn * 0.35;
-    J.tail.rot.x = -f * 0.12 + 0.2 * c.lunge;
+    J.tail.rot.x = -f * 0.12 - 0.5 * w + 0.8 * c.lunge;
     J.tip.rot.y = Math.sin(c.t * 4 + c.phase - 0.9) * 0.3 + c.turn * 0.3;
+    J.tip.rot.x = -0.4 * w + 0.9 * c.lunge;
     const gs = 1 + 0.5 * c.shield + 0.4 * c.wind;
     J.eyes.scale.set(gs, gs, gs);
+    if (c.dying > 0) {
+      // Collapse: a flyer falls. The wings fold up over the back, the body
+      // rolls and noses down, and the root drops the body's whole altitude
+      // over the collapse - a world distance, hence the frame scale - so the
+      // burst fires on the ground where it lands.
+      const d = easeOut(c.dying);
+      root.pos.y -= (e.alt / c.scale) * c.dying * c.dying;
+      root.rot.z += 1.1 * d;
+      root.rot.x -= 0.6 * d;
+      J.shR.rot.z += 1.3 * d;
+      J.shL.rot.z -= 1.3 * d;
+      J.wrR.rot.z += 0.8 * d;
+      J.wrL.rot.z -= 0.8 * d;
+      J.tail.rot.x += 0.5 * d;
+      J.eyes.scale.multiplyScalar(1 - 0.85 * d);
+    }
   }
   return { skel: sk, parts, pose };
 }
@@ -653,8 +792,10 @@ function makeWisp(m) {
 // that sinks the body on every footfall. Its six armour plates sit ON the
 // body - shoulders, belly, back, thighs - and are shed from the highest index
 // down as its health drops, so the legs bare first and the shoulders last.
-// Three shards still orbit the chest as a small halo.
-const TITAN_SH = [[0, 2.65], [0.28, -0.9], [1, -0.25]];
+// Three shards still orbit the chest as a small halo. The strike is a hammer
+// stroke: the right fist goes overhead while the spine winds and the left arm
+// swings back as the counterweight, and the blow unwinds the whole body.
+const TITAN_SH = [[0, 2.85], [0.28, -0.9], [1, -0.25]];
 function makeColossus(m) {
   const sk = new Skeleton();
   sk.add('root', null, 0, 1.05, 0);
@@ -759,21 +900,23 @@ function makeColossus(m) {
     J.knR.rot.x = -(0.35 + 0.6 * Math.max(0, Math.cos(s)) * mv + 0.3 * c.stun);
     J.knL.rot.x = -(0.35 + 0.6 * Math.max(0, -Math.cos(s)) * mv + 0.3 * c.stun);
     J.spine.rot.x = -0.1 + 0.3 * w - 0.45 * c.lunge + 0.15 * c.flinch - 0.35 * c.stun;
-    J.spine.rot.y = Math.sin(s) * 0.08 * mv;
+    J.spine.rot.y = Math.sin(s) * 0.08 * mv + 0.4 * w - 0.35 * c.lunge;
     J.chest.rot.x = -0.05 + 0.15 * w - 0.2 * c.lunge;
+    J.chest.rot.y = 0.2 * w - 0.2 * c.lunge;
     J.neck.rot.x = 0.05 + 0.25 * w - 0.35 * c.lunge + 0.3 * c.flinch - 0.45 * c.stun;
     J.neck.rot.y = c.turn * 0.1;
-    // Both fists go overhead through the wind-up and come down as one blow.
+    // The right fist goes overhead through the wind-up; the left swings back
+    // as the counterweight and comes forward again as the blow lands.
     let armR;
     let armL;
     let el;
     if (c.wind > 0) {
-      armR = -0.25 + 2.9 * w;
-      armL = armR;
-      el = 0.5 + 0.5 * w;
+      armR = -0.25 + 3.1 * w;
+      armL = -0.25 - 0.7 * w;
+      el = 0.5 + 0.6 * w;
     } else if (c.strike < 1) {
       armR = keyed(TITAN_SH, c.strike);
-      armL = armR;
+      armL = -0.95 + 0.7 * c.strike;
       el = 0.5 + 0.3 * c.lunge;
     } else {
       armR = -0.25 - 0.3 * swing;
@@ -782,16 +925,44 @@ function makeColossus(m) {
     }
     J.shR.rot.x = armR;
     J.shL.rot.x = armL;
-    J.shR.rot.z = 0.25 + 0.2 * w - 0.2 * c.stun;
-    J.shL.rot.z = -(0.25 + 0.2 * w - 0.2 * c.stun);
+    J.shR.rot.z = 0.25 + 0.35 * w - 0.2 * c.stun;
+    J.shL.rot.z = -(0.25 + 0.1 * w - 0.2 * c.stun);
     J.elR.rot.x = el;
-    J.elL.rot.x = el;
+    J.elL.rot.x = 0.5;
     const beat = 1 + Math.sin(c.t * 3.4) * 0.07 + 0.5 * c.shield + 0.5 * c.wind;
     J.heart.scale.set(beat, beat, beat);
     const gs = 1 + 0.4 * c.shield + 0.4 * c.wind;
     J.eyes.scale.set(gs, gs, gs);
     J.halo.rot.y = c.t * 0.85;
     J.halo.rot.x = Math.sin(c.t * 0.9) * 0.15;
+    if (c.dying > 0) {
+      // Collapse: the knees buckle, the titan drops to them and folds at the
+      // spine, the arms hang, the horns come down, and the heart gutters
+      // while the halo falls in on it.
+      const d = easeOut(c.dying);
+      root.pos.y -= 0.55 * d;
+      root.rot.x -= 0.15 * d;
+      J.hipR.rot.x += (0.1 - J.hipR.rot.x) * d;
+      J.hipL.rot.x += (0.1 - J.hipL.rot.x) * d;
+      J.knR.rot.x += (-2.2 - J.knR.rot.x) * d;
+      J.knL.rot.x += (-2.2 - J.knL.rot.x) * d;
+      J.spine.rot.x -= 0.55 * d;
+      J.spine.rot.y *= 1 - d;
+      J.chest.rot.x -= 0.3 * d;
+      J.chest.rot.y *= 1 - d;
+      J.neck.rot.x -= 0.5 * d;
+      J.shR.rot.x += (0.15 - J.shR.rot.x) * d;
+      J.shL.rot.x += (0.15 - J.shL.rot.x) * d;
+      J.shR.rot.z += 0.35 * d;
+      J.shL.rot.z -= 0.35 * d;
+      J.elR.rot.x *= 1 - d;
+      J.elL.rot.x *= 1 - d;
+      const gd = 1 - 0.85 * d;
+      J.heart.scale.multiplyScalar(gd);
+      J.eyes.scale.multiplyScalar(gd);
+      J.halo.scale.setScalar(1 - 0.9 * d);
+      J.halo.pos.y -= 0.6 * d;
+    }
   }
   return { skel: sk, parts, pose };
 }
@@ -1044,10 +1215,49 @@ export class EnemyManager {
         }
       }
       if (this.onKill) this.onKill(e);
-      if (this.onDeathFx) this.onDeathFx(e);
-      this._release(e);
+      // The body is NOT released here. It stays on the board, inert to every
+      // targeting pass (all of them skip e.dead), and collapses for DYING_T;
+      // update() releases it and fires the shard burst when the collapse
+      // completes, so the burst caps the fall instead of replacing it. The
+      // bounty above is still paid at the moment of death. A swing or a chase
+      // in progress dies with the body: a corpse's blow must never land.
+      e.dying = DYING_T;
+      e.windT = 0;
+      e.atkVictim = null;
+      e.chaseT = 0;
     }
     return dmg;
+  }
+
+  // Steer toward the possessed body when the rules above SPOT allow it. On a
+  // chase frame the bearing to the body is written into _des in place of the
+  // field's direction and true is returned; otherwise _des is left alone. The
+  // separation and turn-rate limits downstream apply to both, which is what
+  // keeps a chasing pack from stacking into one body.
+  _chase(e, dt, player) {
+    if (e.chaseCd > 0) { e.chaseCd -= dt; return false; }
+    if (!player || e.type.boss) { e.chaseT = 0; return false; }
+    this.enemyPos(e, _mePos);
+    const dPlayer = _mePos.distanceTo(_plPos);
+    const dHeart = _mePos.distanceTo(this.heartPos);
+    if (e.chaseT > 0) {
+      // Mid-chase: the leash, the clock, and the base pulling rank. Every
+      // ending starts the rest, so an enemy the player dances around the
+      // VICINITY line cannot be re-hooked frame after frame.
+      if (dPlayer > CHASE_LEASH || dHeart <= VICINITY || e.chaseT >= CHASE_MAX) {
+        e.chaseT = 0;
+        e.chaseCd = CHASE_REST;
+        return false;
+      }
+    } else if (dPlayer > SPOT || dHeart <= VICINITY) {
+      return false;
+    }
+    _tmp.copy(player.dir).addScaledVector(e.dir, -player.dir.dot(e.dir));
+    // Standing on top of the body leaves no bearing; the field decides.
+    if (_tmp.lengthSq() < 1e-10) return false;
+    e.chaseT += dt;
+    _des.copy(_tmp).normalize();
+    return true;
   }
 
   applySlow(e, frac, dur) {
@@ -1077,6 +1287,17 @@ export class EnemyManager {
     this.time += dt;
     const heartR2 = 2.1 * 2.1;
 
+    // The possessed body, found once per frame rather than once per enemy.
+    // Only this body is ever chased; the AI units are not, so a wave cannot
+    // be held up by a garrison.
+    let player = null;
+    if (this.allies) {
+      for (const a of this.allies.active) {
+        if (a.possessed && a.active && !a.dead) { player = a; break; }
+      }
+      if (player) this.allies.worldPos(player, _plPos);
+    }
+
     for (let i = this.active.length - 1; i >= 0; i--) {
       const e = this.active[i];
       e.spawnT += dt;
@@ -1086,6 +1307,18 @@ export class EnemyManager {
       // Cleared before any early exit below, so a held or stunned body reports
       // no progress and its gait freezes with it.
       e.moveV = 0;
+      // A dying body only counts down. No melee, no steering and, below, no
+      // separation pull on its neighbours: it is scenery until it is released,
+      // and the release is what fires the shard burst.
+      if (e.dying > 0) {
+        e.dying -= dt;
+        if (e.dying <= 0) {
+          e.dying = 0;
+          if (this.onDeathFx) this.onDeathFx(e);
+          this._release(e);
+        }
+        continue;
+      }
       // Melee is resolved BEFORE the stun guard. An ally holds an enemy the
       // instant it engages, so leaving this below the guard meant a held enemy
       // could never even register that something was standing in front of it,
@@ -1111,12 +1344,17 @@ export class EnemyManager {
       // circle wherever the field is undefined.
       e.node = this.nav.descendNode(e.node, e.dir);
       e.progress = this.nav.sampleFlow(e.node, e.dir, _des);
+      // The chase overrides the field's direction, never the node tracking
+      // above it, so a body that gives up the chase resumes the field from
+      // wherever it actually stands.
+      this._chase(e, dt, player);
 
       // Separation from nearby enemies of the same plane (walkers vs flyers).
       _sep.set(0, 0, 0);
       for (let k = 0; k < this.active.length; k++) {
         if (k === i) continue;
         const o = this.active[k];
+        if (o.dying > 0) continue;
         if (!this.spaceMode && o.type.flying !== type.flying) continue;
         _tmp.copy(e.dir).sub(o.dir);
         const d2 = _tmp.lengthSq();
@@ -1228,16 +1466,23 @@ export class EnemyManager {
       e.turnS += (clamp(_tmp.dot(e.dir) * inv, -3, 3) - e.turnS) * kTurn;
       e.prevFwd.copy(e.fwd);
 
+      // A dying body plays nothing but its collapse: the swing it was in the
+      // middle of was cancelled by damage(), and the lunge window that atkCd
+      // would otherwise report is suppressed here so a body killed on the
+      // frame its blow landed does not lunge while it falls.
+      const dying = e.dying > 0 ? 1 - e.dying / DYING_T : 0;
       _c.t = t;
       _c.phase = e.phase;
       _c.gait = e.gaitT;
       _c.move = e.moveS;
       _c.stun = e.stunS;
       _c.turn = e.turnS;
+      _c.dying = dying;
+      _c.scale = bodyScale;
       _c.wind = e.windT > 0 ? 1 - e.windT / type.wind : 0;
       // The blow lands the frame windT runs out and atkCd is set to the
       // swing, so the lunge window is the first STRIKE_T seconds of atkCd.
-      _c.strike = (e.windT <= 0 && e.atkCd > 0) ? clamp((type.swing - e.atkCd) / STRIKE_T, 0, 1) : 1;
+      _c.strike = (dying === 0 && e.windT <= 0 && e.atkCd > 0) ? clamp((type.swing - e.atkCd) / STRIKE_T, 0, 1) : 1;
       _c.lunge = _c.strike < 1 ? keyed(LUNGE, _c.strike) : 0;
       _c.flinch = e.flashT > 0 ? Math.min(1, e.flashT / 0.09) : 0;
       _c.shield = (e.shieldT > 0 && e.shieldHits > 0) ? 1 : 0;
@@ -1266,6 +1511,16 @@ export class EnemyManager {
       _colPlate.r *= 1 + flash * 5 + slow * 0.1;
       _colPlate.g *= 1 + flash * 5 + slow * 0.9;
       _colPlate.b *= 1 + flash * 5 + slow * 2.2;
+      if (dying > 0) {
+        // The glow gutters out and the body darkens through the collapse, so
+        // it reads as a light going out rather than as a pose change. The
+        // instance colour only scales the lit diffuse, not the emissive, so
+        // each pose also shrinks its glow joints toward nothing.
+        const k = 1 - dying;
+        _colGlow.multiplyScalar(k * k);
+        _colBody.multiplyScalar(0.3 + 0.7 * k);
+        _colPlate.multiplyScalar(0.3 + 0.7 * k);
+      }
 
       const parts = rig.parts;
       for (let p = 0; p < parts.length; p++) {
