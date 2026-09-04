@@ -714,7 +714,21 @@ export class Possession {
       // The boom direction trails the aim, so a turn swings the camera round
       // behind the body rather than snapping it there.
       if (!this._tpAimSet) { this._tpAim.copy(_aim); this._tpAimSet = true; }
-      this._tpAim.lerp(_aim, Math.min(1, dtShake * TP_LAG)).normalize();
+      // Rotated toward the aim by ANGLE, never lerped. A lerp between two
+      // near-opposite unit vectors shrinks through zero and normalises back
+      // to where it started, so after a 180 degree flick the boom stayed
+      // behind the OLD facing for good and the tree it had ducked never
+      // released it. The rate has a floor so a big turn completes in about
+      // half a second rather than asymptotically.
+      const dotA = clamp(this._tpAim.dot(_aim), -1, 1);
+      const angA = Math.acos(dotA);
+      if (angA > 1e-4) {
+        _axis.crossVectors(this._tpAim, _aim);
+        if (_axis.lengthSq() < 1e-8) _axis.copy(u.dir);
+        _axis.normalize();
+        const step = Math.min(angA, Math.max(angA * Math.min(1, dtShake * TP_LAG), Math.min(angA, dtShake * 6)));
+        this._tpAim.applyAxisAngle(_axis, step).normalize();
+      }
       // Swing back along the reverse of the aim and out to the shoulder, then
       // pull in if the ground is in the way - a boom that clips through a hill
       // is worse than a short one.
