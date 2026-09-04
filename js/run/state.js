@@ -24,6 +24,12 @@ export function createRunState({ seed, playerIds, startGold = DEFAULT_START_GOLD
     // top of a wave; placing a tower spends its card.
     hand: [],
     lives: 20,
+    // The Worldheart's level, and how many frontier expansions have actually
+    // been applied. These are two numbers rather than one because a cleared
+    // wave earns a ring the heart may not yet be able to hold, and the run
+    // has to remember what is owed.
+    heartLevel: 0,
+    frontierSteps: 0,
   };
 }
 

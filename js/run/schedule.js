@@ -13,9 +13,40 @@ export const BOSS_WAVE = 15;
 export const THETA_START = 0.05;
 export const THETA_END = 0.52;
 
-// Fourteen expansions: after waves 1..14. Clearing the boss grants none,
-// because the planet itself is that reward.
-const EXPANSIONS = 14;
+// Fourteen expansions: one earned per wave 1..14. Clearing the boss grants
+// none, because the planet itself is that reward.
+export const EXPANSIONS = 14;
+
+// The Worldheart's own ladder. Clearing a wave EARNS an expansion, but the
+// heart decides how many of them can be HELD: the circle used to widen
+// fourteen times whether or not the player did anything, and the owner called
+// that pacing too fast. Now each heart level permits a number of rings, and a
+// wave cleared past that number is banked until the heart is raised.
+//
+// Costs are paid in run gold by the shell (the core does not hold gold), one
+// entry per level 1..5. Rings are indexed by heart level 0..5: level 0 holds
+// only the first foothold expansion, level 5 holds all fourteen.
+export const HEART_COSTS = [250, 450, 700, 1000, 1400];
+export const HEART_RINGS = [1, 3, 5, 8, 11, 14];
+export const MAX_HEART_LEVEL = HEART_COSTS.length;
+
+// Towers may climb two marks on an unraised heart, and one more per level. The
+// wave-gated cap this replaces locked upgrades for the first two thirds of a
+// run and said nothing about when they would open; this one is bought, so the
+// player always knows exactly what raises it.
+const BASE_TIER_CAP = 2;
+
+export function heartCost(level) {
+  return level < MAX_HEART_LEVEL ? HEART_COSTS[level] : null;
+}
+
+export function ringsPermitted(level) {
+  return HEART_RINGS[Math.max(0, Math.min(level, MAX_HEART_LEVEL))];
+}
+
+export function tierCapForHeart(level) {
+  return BASE_TIER_CAP + Math.max(0, Math.min(level, MAX_HEART_LEVEL));
+}
 
 // Five unlocks for five unlockable towers, so the roster is complete by wave
 // 10 and nothing is left permanently undrawable. Adding the Warden Barracks
@@ -40,9 +71,11 @@ export function isBossWave(wave) {
 }
 
 // Ease-out so the early expansions read as dramatic and the late ones as
-// incremental. A linear ramp made every wave feel the same.
-export function frontierTheta(wavesCleared) {
-  const steps = Math.max(0, Math.min(wavesCleared, EXPANSIONS));
+// incremental. A linear ramp made every wave feel the same. The argument is
+// the number of expansions actually APPLIED, which the run tracks separately
+// from waves cleared now that the heart can hold some back.
+export function frontierTheta(steps) {
+  steps = Math.max(0, Math.min(steps, EXPANSIONS));
   const t = steps / EXPANSIONS;
   const eased = 1 - (1 - t) * (1 - t);
   return THETA_START + eased * (THETA_END - THETA_START);
