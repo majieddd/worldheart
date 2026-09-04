@@ -195,6 +195,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
 
   // ---- click to possess, and posting a patrol ---------------------------
   const _pd = new THREE.Vector3();
+  const _od = new THREE.Vector3();
 
   // A warden's garrison can be posted anywhere inside its leash. Right-click a
   // spot with a barracks selected and everything it summoned musters there,
@@ -217,6 +218,86 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     return true;
   }
 
+  // ---- selecting and commanding from the board --------------------------
+  // A drag over the globe boxes friendly units; a right click sends them. The
+  // rig pans on EVERY button, so left-drag is claimed here and panning stays on
+  // the right and middle buttons, which already worked.
+  const selection = [];
+  let marquee = null;
+  const _sp = new THREE.Vector3();
+
+  const box = document.createElement('div');
+  box.id = 'sel-box';
+  document.body.appendChild(box);
+  const canvasEl = document.querySelector('canvas');
+
+  function projectToScreen(v, out) {
+    _sp.copy(v).project(rig.camera);
+    out.x = (_sp.x * 0.5 + 0.5) * canvasEl.clientWidth;
+    out.y = (-_sp.y * 0.5 + 0.5) * canvasEl.clientHeight;
+    // Behind the camera projects to a mirrored point in front of it.
+    out.ok = _sp.z < 1;
+    return out;
+  }
+
+  const _scr = { x: 0, y: 0, ok: false };
+  const _wp = new THREE.Vector3();
+
+  function selectIn(x0, y0, x1, y1) {
+    const lo = { x: Math.min(x0, x1), y: Math.min(y0, y1) };
+    const hi = { x: Math.max(x0, x1), y: Math.max(y0, y1) };
+    selection.length = 0;
+    if (!allies) return;
+    // A unit on the far side of the planet projects into the box too, so the
+    // horizon has to be tested rather than the screen alone.
+    for (const a of allies.active) {
+      if (!a.active || a.dead || a.possessed) continue;
+      allies.worldPos(a, _wp);
+      if (_wp.dot(rig.camera.position) < CONFIG.planetRadius * CONFIG.planetRadius * 0.999) continue;
+      projectToScreen(_wp, _scr);
+      if (!_scr.ok) continue;
+      if (_scr.x >= lo.x && _scr.x <= hi.x && _scr.y >= lo.y && _scr.y <= hi.y) selection.push(a);
+    }
+    for (const a of allies.active) a.selected = selection.includes(a);
+    ui.showSelection(selection.length, selection[0] ? selection[0].type.name : '');
+  }
+
+  function clearSelection() {
+    selection.length = 0;
+    if (allies) for (const a of allies.active) a.selected = false;
+    ui.showSelection(0, '');
+  }
+
+  rig.dragClaim = (e) => {
+    if (e.button !== 0 || e.pointerType !== 'mouse') return false;
+    if (game.buildType || (possession && possession.active)) return false;
+    marquee = { x0: e.clientX, y0: e.clientY, x1: e.clientX, y1: e.clientY, moved: 0 };
+    return true;
+  };
+
+  addEventListener('pointermove', (e) => {
+    if (!marquee) return;
+    marquee.moved += Math.abs(e.clientX - marquee.x1) + Math.abs(e.clientY - marquee.y1);
+    marquee.x1 = e.clientX; marquee.y1 = e.clientY;
+    if (marquee.moved > 4) {
+      box.style.display = 'block';
+      box.style.left = `${Math.min(marquee.x0, marquee.x1)}px`;
+      box.style.top = `${Math.min(marquee.y0, marquee.y1)}px`;
+      box.style.width = `${Math.abs(marquee.x1 - marquee.x0)}px`;
+      box.style.height = `${Math.abs(marquee.y1 - marquee.y0)}px`;
+    }
+  });
+
+  addEventListener('pointerup', () => {
+    if (!marquee) return;
+    const m = marquee;
+    marquee = null;
+    box.style.display = 'none';
+    // A drag boxes; a plain click clears, so there is always a way to let go.
+    if (m.moved > 4) selectIn(m.x0, m.y0, m.x1, m.y1);
+    else clearSelection();
+  });
+
   const prevTap = rig.onTap;
   rig.onTap = (x, y, button) => {
     // A possessed unit owns the mouse: left click swings and right drag looks,
@@ -224,6 +305,24 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // meant every swing also selected whatever tower happened to be under the
     // crosshair, and a right click posted a patrol mid-fight.
     if (possession && possession.active) return;
+    // Right-click with units selected sends them. Checked before the barracks
+    // patrol so an explicit selection always wins the gesture.
+    if (button === 2 && selection.length && game.cursorValid && !game.buildType) {
+      // Snap to ground a unit can actually stand on: an unwalkable destination
+      // becomes the unit's post on arrival and would strand it there for good.
+      const node = nav.nearestWalkableNode(game.cursorDir);
+      if (node >= 0) {
+        nav.nodeDir(node, _od);
+        let n = 0;
+        for (const a of selection) if (allies.orderMove(a, _od)) n++;
+        if (n) {
+          ui.toast(n === 1 ? 'Moving out' : `${n} moving out`, 'info');
+        }
+        return;
+      }
+      ui.toast('They cannot stand there', 'warn');
+      return;
+    }
     // Right-click with a barracks selected posts its patrol.
     if (button === 2 && game.selectedTower && game.selectedTower.typeKey === 'warden' && game.cursorValid) {
       if (setPatrolFrom(game.selectedTower, game.cursorDir)) return;
@@ -243,6 +342,15 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   if (possession) {
     possession.onEnter = (u) => {
       ui.showPossession(u);
+    };
+    // Leaving the circle severs base control: the orbit view is the BASE's
+    // view, and out here there is nobody at the heart to hand it to you. That
+    // is the whole cost of a trip into the fog - you cannot pull back to the
+    // board to check on your towers halfway through one.
+    possession.onLinkChange = (linked) => {
+      ui.setBaseLink(linked);
+      if (!linked) ui.toast('Base control lost - you are outside the frontier', 'danger');
+      else ui.toast('Base control restored', 'info');
     };
     possession.onExit = () => {
       ui.hidePossession();

@@ -47,6 +47,25 @@ const JUMP_FALL_MUL = 1.15;     // falls a little faster than it rises
 const FP_NEAR = 0.4;
 const FP_SHAKE = 0.035;         // radians at full trauma
 
+// Third person. The cap is deliberately small: the orbit view in this mode
+// reaches 113 units back and frames a frontier up to 125 units across, so a
+// 7 unit boom is a different tool entirely rather than a timid orbit. You can
+// see your own body and a little more around you - which is what an
+// over-the-shoulder view is for - and you still cannot read the battlefield
+// from it, so holding ground and reading the board stay separate decisions.
+const TP_MAX = 7.0;
+const TP_STEP = 0.9;            // units of boom per wheel notch
+const TP_EASE = 12;             // how fast the boom follows the target
+const TP_SHOULDER = 0.55;       // lateral offset so the body is not centred
+const TP_CLEAR = 0.45;          // keep the camera this far off the ground
+
+// Base control. Walking out past the frontier severs the link to the base: the
+// orbit view is the BASE's view, and once you are outside it there is nothing
+// standing at the heart to give it to you. The band is hysteretic so standing
+// on the line does not strobe the warning on and off.
+const LINK_OUT = 1.0;           // fraction of the frontier at which the link drops
+const LINK_IN = 0.94;           // and the closer line at which it comes back
+
 const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
 
 const _eye = new THREE.Vector3();
@@ -55,6 +74,9 @@ const _tmp = new THREE.Vector3();
 const _tmp2 = new THREE.Vector3();
 const _axis = new THREE.Vector3();
 const _aim = new THREE.Vector3();
+const _tp = new THREE.Vector3();
+const _gn = new THREE.Vector3();
+const _right = new THREE.Vector3();
 // The frame delta placeCamera needs to decay trauma, set by update().
 let dtShake = 0;
 
@@ -167,6 +189,10 @@ export class Possession {
     this._prevPitch = 0;
     this._yawUsed = 0;
     this.viewModel = null;
+    this.boom = 0;        // 0 is first person; rises to TP_MAX
+    this.boomWant = 0;
+    this.linked = true;   // is base control still reachable?
+    this.onLinkChange = null;
     this._savedFov = null;
     this._bind();
   }
@@ -180,7 +206,16 @@ export class Possession {
       const t = e.target;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
       this.keys.add(e.code);
-      if (e.code === 'Escape' || e.code === 'Tab') { e.preventDefault(); this.exit(); }
+      if (e.code === 'Escape' || e.code === 'Tab') {
+        e.preventDefault();
+        // You cannot hand the view back to a base you are not connected to.
+        // Walking home is the way back, which is what makes leaving a decision.
+        if (!this.linked) {
+          this.ui?.toast?.('No link to base. Walk back inside the frontier.', 'warn');
+        } else {
+          this.exit();
+        }
+      }
       if (e.code === 'KeyG') { e.preventDefault(); this.rally(); }
       // NOT Space: that is the global pause key and binding a second action to
       // it is exactly the defect that made every swing pause the game.
@@ -216,6 +251,15 @@ export class Possession {
       }
     });
 
+    // The wheel pulls the camera back off the shoulder instead of zooming the
+    // orbit view, which is not driving while a body is possessed.
+    this.rig.onWheelOverride = (e) => {
+      if (!this.active) return false;
+      const notches = e.deltaY * (e.deltaMode === 1 ? 16 : 1) / 100;
+      this.boomWant = clamp(this.boomWant + notches * TP_STEP, 0, TP_MAX);
+      return true;
+    };
+
     // Right-drag is the look fallback, so its menu has to stay out of the way
     // while a unit is possessed.
     this.canvas.addEventListener('contextmenu', (e) => {
@@ -245,6 +289,7 @@ export class Possession {
     if (this._savedFov === null) this._savedFov = cam.fov;
     const want = unit.type.strike?.fov;
     if (want) { cam.fov = want; cam.updateProjectionMatrix(); }
+    this.linked = true;
     this.viewModel?.show(unit.typeKey);
     if (this.onEnter) this.onEnter(unit);
     return true;
@@ -260,7 +305,9 @@ export class Possession {
       this.scene.fog = this._prevFog || null;
       this._prevFog = null;
     }
-    if (unit) { unit.possessed = false; unit.aim = null; }
+    if (unit) { unit.possessed = false; unit.aim = null; unit.hidden = false; }
+    this.boom = 0;
+    this.boomWant = 0;
     this.firing = false;
     this.kick = 0;
     this.viewModel?.hide();
@@ -350,6 +397,13 @@ export class Possession {
     if (this.keys.has('KeyD') || this.keys.has('ArrowRight')) strafe += 1;
     if (fwd || strafe) this.allies.driveUnit(u, fwd, strafe, dt);
     if (this.firing) this.attack(dt);
+    // Eased rather than snapped, so a scroll reads as the camera pulling out.
+    this.boom += (this.boomWant - this.boom) * Math.min(1, dt * TP_EASE);
+    // Your own body is hidden from the inside and shown from behind. Without
+    // this the first-person eye sits inside the commander's own head, and
+    // pulling back would reveal nothing to look at.
+    u.hidden = this.boom <= 0.35;
+    if (this.viewModel) this.viewModel.visible = this.boom <= 0.35 && !!this.viewModel.current;
     // The kick settles back over a few frames rather than snapping.
     if (this.kick > 0) this.kick = Math.max(0, this.kick - this.kick * Math.min(1, dt * 14) - dt * 0.05);
     this.stride += (fwd || strafe) ? dt * (u.type.strike?.strideHz || 2) * Math.PI * 2 : 0;
@@ -364,6 +418,7 @@ export class Possession {
       }
     }
 
+    this._updateLink();
     dtShake = dt;
     this.placeCamera();
     this._applyDistanceFog();
@@ -382,6 +437,22 @@ export class Possession {
 
   // Thickens with how far past the frontier the unit has walked, so leaving
   // safety visibly costs you sight. Restored on exit.
+  // Outside the circle you are on your own. Reported through a hook so the
+  // shell owns the wording and the shell owns what it disables.
+  _updateLink() {
+    if (!this.frontier || !this.frontier.centre || !this.unit) return;
+    const ang = Math.acos(Math.max(-1, Math.min(1, this.unit.dir.dot(this.frontier.centre))));
+    const out = ang > this.frontier.theta * LINK_OUT;
+    const back = ang < this.frontier.theta * LINK_IN;
+    if (this.linked && out) {
+      this.linked = false;
+      if (this.onLinkChange) this.onLinkChange(false);
+    } else if (!this.linked && back) {
+      this.linked = true;
+      if (this.onLinkChange) this.onLinkChange(true);
+    }
+  }
+
   _applyDistanceFog() {
     if (!this.scene || !this.frontier || !this.frontier.centre) return;
     const u = this.unit;
@@ -427,7 +498,25 @@ export class Possession {
     u.aim.copy(_aim);
     _look.copy(_eye).addScaledVector(_aim, 4);
     cam.up.copy(u.dir);
-    cam.position.copy(_eye);
+
+    if (this.boom > 0.01) {
+      // Swing back along the reverse of the aim and out to the shoulder, then
+      // pull in if the ground is in the way - a boom that clips through a hill
+      // is worse than a short one.
+      _right.crossVectors(u.fwd, u.dir).normalize();
+      _tp.copy(_eye)
+        .addScaledVector(_aim, -this.boom)
+        .addScaledVector(_right, TP_SHOULDER * Math.min(1, this.boom / 2));
+      _gn.copy(_tp).normalize();
+      const ground = R + Math.max(terrainHeight(_gn.x, _gn.y, _gn.z), 0) + TP_CLEAR;
+      if (_tp.length() < ground) _tp.setLength(ground);
+      cam.position.copy(_tp);
+      // Look past the head rather than at the feet, so the body sits low in
+      // frame the way an over-the-shoulder camera should.
+      _look.copy(_eye).addScaledVector(_aim, 6);
+    } else {
+      cam.position.copy(_eye);
+    }
     cam.lookAt(_look);
 
     // Trauma is added from strikes and from being hit, but it is only ever

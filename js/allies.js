@@ -143,6 +143,10 @@ const PARTY_LEASH = 13;
 // without making a body untouchable in a crowd.
 const JUMP_GRAVITY = 19.3;
 const JUMP_FALL_MUL = 1.15;
+// How long an order may take before it is abandoned. Long enough to cross the
+// widest frontier at the slowest commander's pace, short enough that a body
+// stuck against geometry does not stay stuck for the rest of the run.
+const ORDER_MAX = 45;
 const _strikeOrigin = new THREE.Vector3();
 const _strikeBearing = new THREE.Vector3();
 const _aimV = new THREE.Vector3();
@@ -247,6 +251,9 @@ class Ally {
     this.swingDur = 0.55;
     this.heat = 0;
     this.heatLock = 0;
+    this.order = null;   // a place this unit was told to walk to
+    this.orderUntil = 0;
+    this.hidden = false;
     this.hop = 0;        // metres above the ground while airborne
     this.vertVel = 0;
     this.airT = 0;
@@ -318,6 +325,36 @@ export class AllyManager {
         { geo: new THREE.ConeGeometry(0.2, 0.4, 5), mat: goldMat, per: 1 },
         { geo: legGeo, mat: trimMat, per: 2 },
         { geo: new THREE.TorusGeometry(0.34, 0.03, 6, 16), mat: goldMat, per: 1 },
+      ],
+      // One silhouette per archetype. Without these four the renderer had no
+      // mesh set for them at all - it iterates the keys of `species`, so a
+      // Twinfang, a Longsight, a Kettle and an Emberline were simulated,
+      // damaged, killed and possessed while never being drawn once. Nothing
+      // reported it because an absent key is not an error, it is just a body
+      // that never appears.
+      duelist: [
+        { geo: new THREE.BoxGeometry(0.34, 0.54, 0.26), mat: bodyMat, per: 1 },
+        { geo: new THREE.ConeGeometry(0.16, 0.34, 4), mat: trimMat, per: 1 },
+        { geo: legGeo, mat: trimMat, per: 2 },
+        { geo: new THREE.TorusGeometry(0.26, 0.022, 6, 14), mat: goldMat, per: 1 },
+      ],
+      marksman: [
+        { geo: new THREE.BoxGeometry(0.36, 0.56, 0.3), mat: bodyMat, per: 1 },
+        { geo: new THREE.CylinderGeometry(0.15, 0.17, 0.3, 6), mat: trimMat, per: 1 },
+        { geo: legGeo, mat: trimMat, per: 2 },
+        { geo: new THREE.TorusGeometry(0.3, 0.022, 6, 14), mat: goldMat, per: 1 },
+      ],
+      bombardier: [
+        { geo: new THREE.BoxGeometry(0.5, 0.54, 0.4), mat: bodyMat, per: 1 },
+        { geo: new THREE.DodecahedronGeometry(0.18), mat: trimMat, per: 1 },
+        { geo: legGeo, mat: bodyMat, per: 2 },
+        { geo: new THREE.TorusGeometry(0.32, 0.03, 6, 14), mat: goldMat, per: 1 },
+      ],
+      oracle: [
+        { geo: new THREE.BoxGeometry(0.36, 0.58, 0.28), mat: bodyMat, per: 1 },
+        { geo: new THREE.OctahedronGeometry(0.19), mat: goldMat, per: 1 },
+        { geo: legGeo, mat: trimMat, per: 2 },
+        { geo: new THREE.TorusGeometry(0.29, 0.025, 6, 16), mat: goldMat, per: 1 },
       ],
     };
 
@@ -515,7 +552,7 @@ export class AllyManager {
       // Measured against the LONGER of the two reaches. An enemy that outreaches
       // the unit could otherwise stand off, swing freely and never be answered,
       // which against a commander is an unanswerable kill and the end of a run.
-      if (a.target && type.holdsGround
+      if (a.target && (type.holdsGround || a.order)
           && this.enemyPos(a.target, _tmp2).distanceTo(this.worldPos(a, _tmp))
              > Math.max(type.reach, a.target.type.reach || 0) + 0.1) {
         a.target = null;
@@ -565,6 +602,24 @@ export class AllyManager {
             const catchup = Math.min(type.speed * 2, Math.max(type.speed * 1.15, leadSpeed * 1.15));
             advanceToward(a.dir, lead.dir, (catchup * dt) / R, a.fwd);
           }
+        }
+      } else if (a.order) {
+        // Ordered to a place. Sits BELOW targeting on purpose: the owner asked
+        // that an ordered commander still fight, so anything in reach is dealt
+        // with first and the walk resumes when the fight is over.
+        a.state = 'order';
+        if (this.time > a.orderUntil) {
+          // An absolute deadline rather than a spend-down budget, because a
+          // budget that only ticks while walking can be left half-spent for
+          // ever - the same shape as the hold bug. Cancelling is also the right
+          // failure: a body that walks away from a fight it is losing, while
+          // being hit, is a gamble the player did not choose to take.
+          this.clearOrder(a);
+          if (this.onOrderFailed) this.onOrderFailed(a);
+        } else if (advanceToward(a.dir, a.order, (type.speed * dt) / R, a.fwd)) {
+          this._finishOrder(a);
+        } else {
+          faceToward(a.fwd, a.dir, a.order, dt * 6);
         }
       } else {
         a.state = 'roam';
@@ -876,6 +931,32 @@ export class AllyManager {
     return 1;
   }
 
+  // Send a unit to a place. The destination becomes its new post on arrival,
+  // so an ordered garrison holds the ground it was sent to rather than walking
+  // straight back to the barracks door.
+  orderMove(a, dir) {
+    if (!a || !a.active || a.dead || a.possessed) return false;
+    if (!a.order) a.order = new THREE.Vector3();
+    a.order.copy(dir).normalize();
+    a.orderUntil = this.time + ORDER_MAX;
+    a.following = null;
+    a.target = null;
+    return true;
+  }
+
+  clearOrder(a) {
+    a.order = null;
+    a.orderUntil = 0;
+  }
+
+  _finishOrder(a) {
+    // Arriving transfers the post, which is what stops the leash dragging the
+    // unit home the moment it gets there.
+    this.setPatrol(a, a.order);
+    this.clearOrder(a);
+    if (this.onOrderDone) this.onOrderDone(a);
+  }
+
   // Rally. Loose bodies nearby join, and so does the whole garrison of any
   // barracks within the wider radius - which is the point of the order: a
   // commander should be able to collect troops from their post without having
@@ -936,6 +1017,10 @@ export class AllyManager {
       const counts = parts.map(() => 0);
       for (const a of this.active) {
         if (!a.active || a.dead || a.typeKey !== key) continue;
+        // The body you are looking out of is not drawn. From the inside the
+        // eye sits inside its own head; from behind, on a third-person boom,
+        // it is exactly what you want to see.
+        if (a.hidden) continue;
         this.worldPos(a, _tmp);
         _up.copy(a.dir);
         _fwd.copy(a.fwd).addScaledVector(_up, -a.fwd.dot(_up));

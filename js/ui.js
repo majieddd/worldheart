@@ -124,6 +124,11 @@ export class HUD {
       </div>
 
       <div id="damage-vignette"></div>
+      <div id="sel-readout"></div>
+      <!-- The moment the link drops. Loud, brief, and then it hands over to the
+           persistent chip in the possession HUD, because a one-shot toast is
+           not a state and being cut off from the base IS a state. -->
+      <div id="link-warn"><b>BASE CONTROL DISCONNECTING</b><span>you are leaving the frontier</span></div>
 
       <!-- First person. Hidden until a unit is possessed. A possessed body is
            mortal and a commander's death ends the run, so a health readout is
@@ -135,7 +140,8 @@ export class HUD {
           <div id="fp-name">Commander</div>
           <div class="bar" id="fp-hp-track"><div class="bar-fill" id="fp-hp"></div></div>
           <div id="fp-swing-track"><div id="fp-swing"></div></div>
-          <div id="fp-keys">
+          <div id="fp-link">BASE CONTROL DISCONNECTED<span>outside the frontier - walk back to reconnect</span></div>
+        <div id="fp-keys">
             <span><b>WASD</b> move</span><span><b>LMB</b> strike</span>
             <span id="fp-rally"><b>G</b> rally</span><span><b>H</b> dismiss</span><span><b>Esc</b> release</span>
           </div>
@@ -221,6 +227,7 @@ export class HUD {
       'hint-line', 'build-bar', 'tower-panel', 'tp-name', 'tp-tier', 'tp-desc', 'tp-stats',
       'tp-upgrade', 'tp-sell', 'tp-close', 'damage-vignette',
       'fp-hud', 'fp-cross', 'fp-hit', 'fp-name', 'fp-hp', 'fp-swing', 'fp-keys', 'fp-rally',
+      'fp-link', 'link-warn', 'sel-readout',
       'title-overlay', 'end-overlay', 'end-card', 'end-mark', 'end-sub', 'end-waves', 'end-kills',
       'end-score', 'end-body', 'btn-continue', 'btn-retry', 'btn-new', 'btn-begin',
       'btn-talents', 'btn-talents-close', 'talent-overlay', 'talent-coins', 'talent-tiers',
@@ -611,8 +618,32 @@ export class HUD {
     this.el['damage-vignette'].classList.toggle('fp-hurt', frac < 0.35);
   }
 
+  // What is currently selected on the board, and what it can be told to do.
+  showSelection(count, name) {
+    const el = this.el['sel-readout'];
+    el.classList.toggle('show', count > 0);
+    if (count > 0) {
+      el.innerHTML = count === 1
+        ? `<b>${name}</b> selected<span>Right-click the ground to send them</span>`
+        : `<b>${count} units</b> selected<span>Right-click the ground to send them</span>`;
+    }
+  }
+
+  // Called when the link to the base drops or comes back.
+  setBaseLink(linked) {
+    this.el['fp-link'].classList.toggle('show', !linked);
+    if (!linked) {
+      const w = this.el['link-warn'];
+      w.classList.remove('go');
+      void w.offsetWidth;
+      w.classList.add('go');
+      this.audio?.play('deny');
+    }
+  }
+
   hidePossession() {
     this.el['fp-hud'].classList.remove('show');
+    this.el['fp-link'].classList.remove('show');
     this.el['damage-vignette'].classList.remove('fp-hurt');
   }
 
