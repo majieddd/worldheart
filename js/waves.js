@@ -90,6 +90,11 @@ export class WaveDirector {
     this.wave = 0;
     this.state = 'idle'; // idle | countdown | spawning | combat
     this.countdown = 0;
+    // Scales BOTH the breather between waves and the spawn cadence inside one,
+    // because halving only the gap between waves would leave each wave taking
+    // just as long to trickle out and the run would not actually feel faster.
+    // Set by the mode; the classic maps leave it at 1.
+    this.paceMul = 1;
     this.queues = [];
     this.pendingSpawns = 0;
     this.onWaveStart = null;
@@ -102,7 +107,7 @@ export class WaveDirector {
   begin() {
     this.wave = 0;
     this.state = 'countdown';
-    this.countdown = CONFIG.waves.firstPrep;
+    this.countdown = CONFIG.waves.firstPrep * this.paceMul;
   }
 
   callEarly() {
@@ -148,7 +153,7 @@ export class WaveDirector {
       for (let i = 0; i < g.count; i++) {
         const portal = portals[i % portals.length];
         this.queues.push({
-          t: 1.2 + i * g.gap + SIM_RANDOM.next() * 0.3,
+          t: (1.2 + i * g.gap + SIM_RANDOM.next() * 0.3) * this.paceMul,
           type: g.type, portal, scale,
         });
         this.pendingSpawns++;
@@ -185,7 +190,7 @@ export class WaveDirector {
           if (this.onVictory) this.onVictory();
         }
         this.state = 'countdown';
-        this.countdown = CONFIG.waves.prepTime;
+        this.countdown = CONFIG.waves.prepTime * this.paceMul;
       }
     }
   }

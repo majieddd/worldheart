@@ -64,13 +64,23 @@ test('an out-of-range or stale index plays nothing', () => {
   assert.equal(run.playCard(0), null, 'an empty hand must play nothing');
 });
 
-test('exactly one card arrives per wave', () => {
+test('a card arrives on the odd waves only', () => {
   const run = newRun();
-  assert.equal(run.getHand().length, 1);
-  clearWave(run);
-  assert.equal(run.getHand().length, 2);
-  clearWave(run);
+  assert.equal(run.getHand().length, 1, 'the loadout card');
+  clearWave(run);                                   // wave 1, odd
+  assert.equal(run.getHand().length, 2, 'odd wave pays a card');
+  clearWave(run);                                   // wave 2, even
+  assert.equal(run.getHand().length, 2, 'even wave pays a power, not a card');
+  clearWave(run);                                   // wave 3, odd
   assert.equal(run.getHand().length, 3);
+});
+
+test('a power arrives on the even waves only', () => {
+  const run = newRun();
+  clearWave(run);
+  assert.equal(run.getPowers().length, 0, 'odd wave pays no power');
+  clearWave(run);
+  assert.equal(run.getPowers().length, 1, 'even wave pays a power');
 });
 
 test('unplayed cards are kept but never past the cap', () => {
@@ -146,9 +156,9 @@ test('the same seed draws the same hands', () => {
 
 test('a wave clear emits handDrawn', () => {
   const run = newRun();
-  run.completeWave();
-  run.vote('solo', 0);
-  const events = run.tick(0);
+  // Wave 1 is odd, so the card arrives in completeWave's own events rather
+  // than after a draft resolves.
+  const events = run.completeWave();
   const drawn = events.find((e) => e.type === 'handDrawn');
   assert.ok(drawn, 'no handDrawn event');
   assert.equal(drawn.hand.length, 2, 'the loadout card plus the one just drawn');

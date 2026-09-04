@@ -156,6 +156,11 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
 
   enemies.spawnNodeOverride = spawnNodeNearFrontier;
 
+  // 99 Planets runs at double speed. Fifteen waves at the classic cadence is a
+  // long sit for a mode whose whole shape is a short, escalating run, and the
+  // breather between waves was longer than most of the fights in it.
+  waves.paceMul = 0.5;
+
   // The RUN decides when the planet is won, not the wave director. Both count
   // to fifteen, so leaving the classic hook armed meant two endings raced for
   // the same overlay.
