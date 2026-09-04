@@ -139,9 +139,9 @@ const STRUCTURE_MUL = 2.5;
 // How far from its LEADER a party member will chase. Wide enough that a party
 // clears a path in front of itself, tight enough that it stays a party.
 const PARTY_LEASH = 13;
-// Jump. Apex is v^2/2g = 1.269 units, deliberately just under the 1.41 needed
-// to break the nearest enemy's contact grind: a hop dodges a telegraphed swing
-// without making a body untouchable in a crowd.
+// Jump. Apex is v^2/2g = 1.269 units, deliberately just under the 1.41 that
+// would lift a body clear of the nearest enemy's reach: a hop dodges a
+// telegraphed swing without making a body untouchable in a crowd.
 const JUMP_GRAVITY = 19.3;
 const JUMP_FALL_MUL = 1.15;
 // How long an order may take before it is abandoned. Long enough to cross the
@@ -396,8 +396,7 @@ export class AllyManager {
   worldPos(a, out) {
     // The hop is added HERE rather than in each caller, which is what makes a
     // jump mean something to every system at once: enemy melee acquisition, the
-    // landing re-check that lets you dodge a telegraphed swing, the contact
-    // grind, the instanced renderer and the strike origin all read this.
+    // landing re-check that lets you dodge a telegraphed swing, the enemy's blow, the instanced renderer and the strike origin all read this.
     return out.copy(a.dir).multiplyScalar(
       R + Math.max(a.height, 0.03) + (a.hop || 0) + a.type.radius * 0.9);
   }

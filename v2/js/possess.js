@@ -36,9 +36,9 @@ const PITCH_MAX = 1.4835;       // 85 degrees, short of the pole where roll flip
 const VIEW_PITCH_MAX = 1.5184;  // 87, the clamp after recoil is folded in
 const KICK_PITCH = 0.22;        // radians of muzzle rise per unit of kick
 
-// Jumping. Apex 1.269 units, which is deliberately just UNDER the 1.41 needed
-// to break the closest enemy's contact grind: a jump dodges a telegraphed swing
-// but never makes you untouchable while standing in a crowd.
+// Jumping. Apex 1.269 units, which is deliberately just UNDER the 1.41 that
+// would lift you clear of the closest enemy's reach: a jump dodges a
+// telegraphed swing but never makes you untouchable while standing in a crowd.
 const JUMP_SPEED = 7.0;
 // A jump pressed a moment before landing still fires on touchdown. Without
 // this a bunny-hop rhythm drops every other press, which reads as "jump does
