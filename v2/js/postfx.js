@@ -143,7 +143,14 @@ export class PostPipeline {
     this.enabled = true;
     this.bloomStrength = 0.62;
     this.renderScale = 1;
+    // The kernel spans 2^levels pixels, so a fixed level count is a fixed PIXEL
+    // radius - 0.883% of frame width at 720p but only 0.447% at 4K. The glow is
+    // the most brand-identifying thing in the frame and it was a wide halo on
+    // one machine and a tight rim on another. setSize derives `levels` from the
+    // buffer width so the radius is a constant FRACTION of the image.
+    this.baseLevels = 4;
     this.levels = 4;
+    this.overlay = null;   // (renderer) => void, drawn inside the scene pass
     this.time = 0;
 
     const geo = new THREE.BufferGeometry();
@@ -179,11 +186,19 @@ export class PostPipeline {
     this._w = 2; this._h = 2;
   }
 
+  // 4 levels at 1280 wide, one more per doubling, so the halo keeps its
+  // proportion from a laptop to a 4K panel.
+  _levelsFor(w) {
+    const extra = Math.round(Math.log2(Math.max(1, w / 1280)));
+    return Math.max(3, Math.min(7, this.baseLevels + extra));
+  }
+
   setSize(w, h, pixelRatio) {
     const pw = Math.round(w * pixelRatio * this.renderScale);
     const ph = Math.round(h * pixelRatio * this.renderScale);
     if (pw === this._w && ph === this._h && this.rtScene) return;
     this._w = pw; this._h = ph;
+    this.levels = this._levelsFor(pw);
 
     this.dispose(false);
     this.rtScene = makeTarget(pw, ph, { depth: true, samples: 4 });
@@ -205,11 +220,22 @@ export class PostPipeline {
     if (!this.enabled) {
       r.setRenderTarget(null);
       r.render(scene, camera);
+      if (this.overlay) { r.clearDepth(); this.overlay(r); }
       return;
     }
 
     r.setRenderTarget(this.rtScene);
     r.render(scene, camera);
+    // The first-person weapon draws HERE, INSIDE the scene target, rather than
+    // over the finished frame. Composited afterwards it sat outside the whole
+    // image pipeline - no ACES, no exposure, no grade, no bloom on its emissive
+    // strip and no multisampling - so it read as pasted in from a different
+    // renderer while everything thirty units away was fully graded. Only the
+    // depth buffer is cleared, which is what keeps it out of the terrain.
+    if (this.overlay) {
+      r.clearDepth();
+      this.overlay(r);
+    }
 
     // Bright pass into the first half-res buffer.
     this._mesh.material = this.brightMat;
@@ -253,11 +279,11 @@ export class PostPipeline {
   setQuality(q) {
     if (q === 'low') {
       this.renderScale = 0.78;
-      this.levels = 3;
+      this.baseLevels = 3;
       this.compositeMat.uniforms.uGrain.value = 0;
     } else {
       this.renderScale = 1;
-      this.levels = 4;
+      this.baseLevels = 4;
       this.compositeMat.uniforms.uGrain.value = 0.028;
     }
     this._w = -1; // force realloc on next setSize

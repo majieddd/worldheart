@@ -8,7 +8,7 @@
 
 import { makeRng, pick } from './rng.js';
 import {
-  TOTAL_WAVES, frontierTheta, unlocksTowerAt, tierCapAfter,
+  TOTAL_WAVES, frontierTheta, unlocksTowerAt,
   evolutionTierAfter, isBossWave, drawsCardAfter, draftsPowerAfter,
 } from './schedule.js';
 import { foldModifiers } from './modifiers.js';
@@ -86,11 +86,6 @@ export function createRun({ seed, playerIds, startGold, profile }) {
 
     if (unlocksTowerAt(cleared)) unlockRandomTower(events);
 
-    const cap = tierCapAfter(cleared);
-    if (cap !== tierCapAfter(cleared - 1)) {
-      events.push({ type: 'tierCapRaised', cap });
-    }
-
     const evo = evolutionTierAfter(cleared);
     if (evo !== evolutionTierAfter(cleared - 1)) {
       events.push({ type: 'enemiesEvolved', tier: evo });
@@ -122,7 +117,6 @@ export function createRun({ seed, playerIds, startGold, profile }) {
     getPhase: () => state.phase,
     getFrontierTheta: () => frontierTheta(state.wavesCleared),
     getUnlockedTowers: () => [...state.unlockedTowers],
-    getTierCap: () => tierCapAfter(state.wavesCleared),
     getEvolutionTier: () => evolutionTierAfter(state.wavesCleared),
     getCoins: () => state.coins,
     getPowers: () => [...state.powers],

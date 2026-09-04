@@ -107,7 +107,6 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     EVO.tier = run.getEvolutionTier();
     game.unlockedTowers = run.getUnlockedTowers();
     ui.unlockedTowers = game.unlockedTowers;
-    game.tierCap = run.getTierCap();
     game.hand = run.getHand();
     ui.renderHand(game.hand);
     applyFrontier(run.getFrontierTheta());
@@ -117,8 +116,6 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     for (const e of events) {
       if (e.type === 'towerUnlocked') {
         ui.toast(`${e.tower.toUpperCase()} unlocked`, 'info');
-      } else if (e.type === 'tierCapRaised') {
-        ui.toast(`Tower upgrades unlocked: tier ${e.cap}`, 'info');
       } else if (e.type === 'enemiesEvolved') {
         ui.toast('The swarm evolves', 'danger');
       } else if (e.type === 'frontierGrew') {
@@ -302,14 +299,21 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     }
   });
 
-  addEventListener('pointerup', () => {
+  addEventListener('pointerup', (e) => {
     if (!marquee) return;
     const m = marquee;
     marquee = null;
     box.style.display = 'none';
-    // A drag boxes; a plain click clears, so there is always a way to let go.
-    if (m.moved > 4) selectIn(m.x0, m.y0, m.x1, m.y1);
-    else clearSelection();
+    if (m.moved > 4) {
+      selectIn(m.x0, m.y0, m.x1, m.y1);
+      return;
+    }
+    // A CLICK, not a drag. Claiming the gesture took it away from the rig, so
+    // the rig never fired onTap and everything a click used to do stopped
+    // working - taking a body, selecting a tower, placing one. The claim only
+    // exists to reserve the DRAG, so a click has to be handed straight back.
+    clearSelection();
+    rig.onTap?.(e.clientX, e.clientY, 0);
   });
 
   const prevTap = rig.onTap;

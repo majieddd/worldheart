@@ -86,9 +86,55 @@ if (CONFIG.map.mode === 'space') {
   TOWER_TYPES.mortar.desc = 'Lobbed shells, area damage at the flight layer. Minimum range.';
 }
 
+// The three AUTHORED tiers are where a tower changes shape. Past them it keeps
+// its tier-3 silhouette and keeps getting stronger, for ever - there is no
+// ceiling, and price is the only thing standing in the way.
+export const AUTHORED_TIERS = 3;
+
+// Cost climbs EXPONENTIALLY. Tiers 1 and 2 keep the numbers the run was
+// balanced around; every tier after them multiplies.
+const TIER_COST_GROWTH = 1.85;
+
+// Power climbs faster than linear but NOT exponentially - a polynomial, so a
+// tower that costs eight times as much is nowhere near eight times as strong.
+// That gap between an exponential price and a polynomial payoff is the whole
+// reason an uncapped upgrade is a real decision rather than an obvious one.
+const TIER_POWER_EXP = 1.5;
+
 export function tierCost(typeKey, tier) {
   const base = TOWER_TYPES[typeKey].cost;
-  return tier === 1 ? Math.round(base * 0.8) : Math.round(base * 1.3);
+  if (tier === 1) return Math.round(base * 0.8);
+  if (tier === 2) return Math.round(base * 1.3);
+  return Math.round(base * 1.3 * Math.pow(TIER_COST_GROWTH, tier - 2));
+}
+
+// How much stronger tier `tier` is than the last authored one. 1 at tier 2 and
+// above 1 after it: (tier+1 over 3) raised to 1.5, so tier 3 is 1.54x, tier 5
+// is 2.83x and tier 10 is 7.0x - while the price at tier 10 is 55x.
+export function tierPowerMul(tier) {
+  if (tier < AUTHORED_TIERS) return 1;
+  return Math.pow((tier + 1) / AUTHORED_TIERS, TIER_POWER_EXP);
+}
+
+// The stat block for any tier, authored or beyond. Everything past the authored
+// table scales the last one, so a tower never runs out of upgrades and no type
+// needs a hand-written tier four.
+export function tierStats(typeKey, tier) {
+  const tiers = TOWER_TYPES[typeKey].tiers;
+  if (tier < tiers.length) return tiers[tier];
+  const top = tiers[tiers.length - 1];
+  const k = tierPowerMul(tier);
+  const out = { ...top };
+  // Only the magnitudes scale. Range is deliberately damped to a cube root of
+  // the same curve: a tower that could out-range the whole cap would stop the
+  // frontier from meaning anything.
+  if (top.dmg !== undefined) out.dmg = top.dmg * k;
+  if (top.dps !== undefined) out.dps = top.dps * k;
+  if (top.rate !== undefined) out.rate = top.rate * (1 + (k - 1) * 0.35);
+  if (top.slow !== undefined) out.slow = Math.min(0.85, top.slow * (1 + (k - 1) * 0.25));
+  if (top.garrison !== undefined) out.garrison = Math.round(top.garrison * (1 + (k - 1) * 0.5));
+  if (top.range !== undefined) out.range = top.range * Math.cbrt(k);
+  return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -372,7 +418,10 @@ const BUILDERS = { bolt: buildBolt, mortar: buildMortar, tesla: buildTesla, cryo
 export const TOWER_SCALE = 1.45;
 
 export function buildTowerVisual(typeKey, tier) {
-  return BUILDERS[typeKey](tier);
+  // Only three forms are authored. Past them a tower keeps its final
+  // silhouette, so an uncapped upgrade never asks for a model that does not
+  // exist - the growth after tier three is in the numbers, not the shape.
+  return BUILDERS[typeKey](Math.min(tier, AUTHORED_TIERS - 1));
 }
 
 // ---------------------------------------------------------------------------
@@ -427,7 +476,7 @@ export class Tower {
   // The single seam every tower's numbers pass through, so a damage, rate,
   // range or crit power lands everywhere at once.
   get stats() {
-    const base = this.def.tiers[this.tier];
+    const base = tierStats(this.typeKey, this.tier);
     const m = MODS.current;
     if (!m) return base;
     return {
@@ -450,7 +499,7 @@ export class Tower {
   }
 
   upgrade() {
-    if (this.tier >= 2) return false;
+    // No ceiling. A tower can always be improved; affording it is the question.
     this.tier++;
     this.invested += tierCost(this.typeKey, this.tier);
     this._buildVisual();

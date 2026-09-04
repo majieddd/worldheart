@@ -147,6 +147,10 @@ const JUMP_FALL_MUL = 1.15;
 // widest frontier at the slowest commander's pace, short enough that a body
 // stuck against geometry does not stay stuck for the rest of the run.
 const ORDER_MAX = 45;
+// How far a hold-ground unit will step from its post to meet something. Wide
+// enough that a commander actually fights what walks past, tight enough that it
+// cannot be baited away from the ground it guards.
+const GUARD_STEP = 9;
 const _strikeOrigin = new THREE.Vector3();
 const _strikeBearing = new THREE.Vector3();
 const _aimV = new THREE.Vector3();
@@ -313,50 +317,71 @@ export class AllyManager {
     const legGeo = new THREE.BoxGeometry(0.09, 0.34, 0.09);
     legGeo.translate(0, -0.17, 0);
 
-    // Part order matters: the renderer places index 0 as the torso, 1 as the
-    // head, 2 as the paired legs, 3 as an optional ring.
+    // A commander is a SOLDIER, not a box with a cone on top. Each part carries
+    // its own offsets and its own animation role, so the renderer no longer
+    // hardcodes an anatomy by array index and an archetype can be shaped
+    // however it likes.
+    //
+    // `off` is one offset per instance, in body space: x is right, y is up from
+    // the feet, z is forward. `anim` says how the part moves - 'bob' rides the
+    // idle breath, 'swing' also drives with the weapon arc, 'stride' alternates
+    // like a walking leg, and 'ring' is the ground marker that shows selection.
+    function soldier(body, trim, gold, legGeo, extra = {}) {
+      const parts = [
+        // hips and a tapered chest, so the silhouette has a waist
+        { geo: new THREE.BoxGeometry(0.34, 0.2, 0.26), mat: trim, per: 1,
+          off: [[0, 0.42, 0]], anim: 'bob' },
+        { geo: new THREE.BoxGeometry(0.44, 0.42, 0.3), mat: body, per: 1,
+          off: [[0, 0.74, 0]], anim: 'bob' },
+        // pauldrons: the single strongest read of "officer" at this scale
+        { geo: new THREE.BoxGeometry(0.16, 0.14, 0.28), mat: gold, per: 2,
+          off: [[-0.29, 0.9, 0], [0.29, 0.9, 0]], anim: 'bob' },
+        // arms, the right one carrying the weapon and driving the swing
+        { geo: new THREE.BoxGeometry(0.11, 0.36, 0.12), mat: body, per: 2,
+          off: [[-0.28, 0.66, 0.02], [0.28, 0.66, 0.02]], anim: 'arms' },
+        // a helmet with a brow band rather than a bare cone
+        { geo: new THREE.BoxGeometry(0.24, 0.2, 0.24), mat: body, per: 1,
+          off: [[0, 1.06, 0]], anim: 'bob' },
+        { geo: new THREE.BoxGeometry(0.26, 0.05, 0.26), mat: gold, per: 1,
+          off: [[0, 1.0, 0.01]], anim: 'bob' },
+        { geo: legGeo, mat: trim, per: 2,
+          off: [[-0.11, 0.32, 0], [0.11, 0.32, 0]], anim: 'stride' },
+        { geo: new THREE.TorusGeometry(0.34, 0.03, 6, 16), mat: gold, per: 1,
+          off: [[0, 0.05, 0]], anim: 'ring' },
+      ];
+      if (extra.crest) {
+        parts.push({ geo: extra.crest, mat: gold, per: 1,
+          off: [[0, 1.28, 0]], anim: 'bob' });
+      }
+      if (extra.cape) {
+        parts.push({ geo: extra.cape, mat: trim, per: 1,
+          off: [[0, 0.76, -0.19]], anim: 'cape' });
+      }
+      return parts;
+    }
+
+    // Part order matters for the simple bodies: index 0 torso, 1 head, 2 legs,
+    // 3 an optional ring.
     const defs = {
       warden: [
         { geo: new THREE.BoxGeometry(0.38, 0.46, 0.28), mat: bodyMat, per: 1 },
         { geo: new THREE.OctahedronGeometry(0.15), mat: trimMat, per: 1 },
         { geo: legGeo, mat: bodyMat, per: 2 },
       ],
-      commander: [
-        { geo: new THREE.BoxGeometry(0.46, 0.58, 0.34), mat: bodyMat, per: 1 },
-        { geo: new THREE.ConeGeometry(0.2, 0.4, 5), mat: goldMat, per: 1 },
-        { geo: legGeo, mat: trimMat, per: 2 },
-        { geo: new THREE.TorusGeometry(0.34, 0.03, 6, 16), mat: goldMat, per: 1 },
-      ],
+      commander: soldier(bodyMat, trimMat, goldMat, legGeo, {
+        crest: new THREE.ConeGeometry(0.055, 0.34, 4),
+        cape: new THREE.BoxGeometry(0.42, 0.52, 0.045),
+      }),
       // One silhouette per archetype. Without these four the renderer had no
       // mesh set for them at all - it iterates the keys of `species`, so a
       // Twinfang, a Longsight, a Kettle and an Emberline were simulated,
       // damaged, killed and possessed while never being drawn once. Nothing
       // reported it because an absent key is not an error, it is just a body
       // that never appears.
-      duelist: [
-        { geo: new THREE.BoxGeometry(0.34, 0.54, 0.26), mat: bodyMat, per: 1 },
-        { geo: new THREE.ConeGeometry(0.16, 0.34, 4), mat: trimMat, per: 1 },
-        { geo: legGeo, mat: trimMat, per: 2 },
-        { geo: new THREE.TorusGeometry(0.26, 0.022, 6, 14), mat: goldMat, per: 1 },
-      ],
-      marksman: [
-        { geo: new THREE.BoxGeometry(0.36, 0.56, 0.3), mat: bodyMat, per: 1 },
-        { geo: new THREE.CylinderGeometry(0.15, 0.17, 0.3, 6), mat: trimMat, per: 1 },
-        { geo: legGeo, mat: trimMat, per: 2 },
-        { geo: new THREE.TorusGeometry(0.3, 0.022, 6, 14), mat: goldMat, per: 1 },
-      ],
-      bombardier: [
-        { geo: new THREE.BoxGeometry(0.5, 0.54, 0.4), mat: bodyMat, per: 1 },
-        { geo: new THREE.DodecahedronGeometry(0.18), mat: trimMat, per: 1 },
-        { geo: legGeo, mat: bodyMat, per: 2 },
-        { geo: new THREE.TorusGeometry(0.32, 0.03, 6, 14), mat: goldMat, per: 1 },
-      ],
-      oracle: [
-        { geo: new THREE.BoxGeometry(0.36, 0.58, 0.28), mat: bodyMat, per: 1 },
-        { geo: new THREE.OctahedronGeometry(0.19), mat: goldMat, per: 1 },
-        { geo: legGeo, mat: trimMat, per: 2 },
-        { geo: new THREE.TorusGeometry(0.29, 0.025, 6, 16), mat: goldMat, per: 1 },
-      ],
+      duelist: soldier(bodyMat, trimMat, goldMat, legGeo, { crest: new THREE.ConeGeometry(0.04, 0.24, 4) }),
+      marksman: soldier(bodyMat, trimMat, goldMat, legGeo, { crest: new THREE.CylinderGeometry(0.03, 0.05, 0.2, 5) }),
+      bombardier: soldier(bodyMat, trimMat, goldMat, legGeo, { crest: new THREE.BoxGeometry(0.1, 0.12, 0.1), cape: new THREE.BoxGeometry(0.4, 0.4, 0.045) }),
+      oracle: soldier(bodyMat, trimMat, goldMat, legGeo, { crest: new THREE.OctahedronGeometry(0.09), cape: new THREE.BoxGeometry(0.36, 0.5, 0.04) }),
     };
 
     this.species = {};
@@ -371,7 +396,10 @@ export class AllyManager {
         mesh.castShadow = p.mat !== goldMat;
         mesh.receiveShadow = true;
         scene.add(mesh);
-        return { mesh, per: p.per };
+        // Carry the anatomy through. Dropping `off` and `anim` here meant the
+        // renderer fell back to the old torso/head/legs indexing and the new
+        // soldier bodies were placed as though they were still three boxes.
+        return { mesh, per: p.per, off: p.off, anim: p.anim };
       });
     }
   }
@@ -550,15 +578,17 @@ export class AllyManager {
       // so the first enemy it saw took it across the planet and the party
       // dissolved the moment it met anything.
       if (a.target && this._beyondPost(a, a.target)) a.target = null;
-      // Hold-ground units accept only what is already on top of them, so they
-      // defend without ever walking into a swarm.
-      // Measured against the LONGER of the two reaches. An enemy that outreaches
-      // the unit could otherwise stand off, swing freely and never be answered,
-      // which against a commander is an unanswerable kill and the end of a run.
-      if (a.target && (type.holdsGround || a.order)
-          && this.enemyPos(a.target, _tmp2).distanceTo(this.worldPos(a, _tmp))
-             > Math.max(type.reach, a.target.type.reach || 0) + 0.1) {
-        a.target = null;
+      // A hold-ground unit does not CHASE, but it does step out to meet what
+      // comes near its post. Refusing anything past arm's length meant a
+      // commander stood still while enemies walked by a couple of metres away
+      // and only ever swung at what blundered into it, which is why it read as
+      // barely fighting. The engagement is bounded from the POST, not from the
+      // body, so it can close on something without ever being walked off the
+      // ground it is guarding.
+      if (a.target && (type.holdsGround || a.order)) {
+        const post = a.patrol || a.anchor;
+        const fromPost = Math.acos(Math.max(-1, Math.min(1, a.target.dir.dot(post)))) * R;
+        if (fromPost > GUARD_STEP) a.target = null;
       }
 
       if (a.target) {
@@ -582,7 +612,15 @@ export class AllyManager {
           }
         } else {
           a.state = 'chase';
-          advanceToward(a.dir, a.target.dir, (type.speed * dt) / R, a.fwd);
+          // A guard closes the last few metres itself, but never steps past its
+          // guard radius - so it fights what comes to its ground and nothing
+          // can bait it away from it.
+          let mayStep = true;
+          if (type.holdsGround) {
+            const post = a.patrol || a.anchor;
+            mayStep = Math.acos(Math.max(-1, Math.min(1, a.dir.dot(post)))) * R < GUARD_STEP;
+          }
+          if (mayStep) advanceToward(a.dir, a.target.dir, (type.speed * dt) / R, a.fwd);
           faceToward(a.fwd, a.dir, a.target.dir, dt * 6);
         }
       } else if (this._attackPortal(a, dt)) {
@@ -1052,7 +1090,30 @@ export class AllyManager {
             let ox = 0;
             let oy = 0;
             let oz = 0;
-            if (p === 0) { oy = 0.28 * sc + bob; oz = swing * 0.3; }
+            if (part.off) {
+              // Data-driven anatomy. The offsets live with the part so a body
+              // can be shaped like a soldier instead of like whatever index 0,
+              // 1 and 2 happened to mean.
+              const o = part.off[Math.min(k, part.off.length - 1)];
+              ox = o[0] * sc; oy = o[1] * sc; oz = o[2] * sc;
+              const anim = part.anim;
+              if (anim === 'bob') { oy += bob; }
+              else if (anim === 'arms') {
+                // The right arm carries the weapon and drives the whole swing;
+                // the left counter-swings a little so the body reads as one
+                // thing moving rather than a limb flapping on a statue.
+                oy += bob;
+                const lead = k === 1 ? 1 : -0.35;
+                oz += swing * 1.5 * lead;
+                oy -= Math.abs(swing) * 0.35 * (k === 1 ? 1 : 0);
+              } else if (anim === 'stride') {
+                oz += Math.sin(this.time * 7 + a.phase + k * Math.PI) * 0.07;
+              } else if (anim === 'cape') {
+                // Trails with the stride and lifts when the body swings.
+                oz -= 0.06 + Math.abs(Math.sin(this.time * 3.5 + a.phase)) * 0.05 + swing * 0.4;
+                oy += bob * 0.6;
+              }
+            } else if (p === 0) { oy = 0.28 * sc + bob; oz = swing * 0.3; }
             else if (p === 1) { oy = 0.62 * sc + bob; oz = 0.1 + swing; }
             else if (p === 2) {
               ox = (k === 0 ? -0.11 : 0.11) * sc;
@@ -1067,8 +1128,9 @@ export class AllyManager {
             // Part 3 is the ground ring, which is exactly the right place to
             // show selection: it swells and lifts so a boxed unit is obvious
             // from the board without adding a mesh or a draw call.
-            const ringSel = (p === 3 && selGlow) ? 1.45 + Math.sin(this.time * 5) * 0.12 : 1;
-            if (p === 3 && selGlow) _tmp2.addScaledVector(_up, 0.04);
+            const isRing = part.anim === 'ring' || (!part.off && p === 3);
+            const ringSel = (isRing && selGlow) ? 1.45 + Math.sin(this.time * 5) * 0.12 : 1;
+            if (isRing && selGlow) _tmp2.addScaledVector(_up, 0.04);
             _s.set(sc * ringSel, sc * ringSel, sc * ringSel);
             _m4.compose(_tmp2, _q, _s);
             part.mesh.setMatrixAt(counts[p]++, _m4);

@@ -193,7 +193,7 @@ export class NavGraph {
     const e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
     const probe = new THREE.Vector3();
     const SAMPLES = 56;
-    let best = null, bestLand = -1;
+    let best = null, bestLand = -1, bestFrac = -1;
 
     for (let t = 0; t < 700; t++) {
       v.set(rng() * 2 - 1, (rng() * 2 - 1) * 0.58, rng() * 2 - 1);
@@ -207,6 +207,29 @@ export class NavGraph {
       e2.crossVectors(v, e1).normalize();
       e1.crossVectors(e2, v).normalize();
 
+      // The cap is 0.52 rad across, so gating only the CENTRE on sun leaves the
+      // rim free to sit anywhere: measured on one seed the sun ran from 2 to 59
+      // degrees of elevation around a single playfield, and since the frontier
+      // widens every wave the run deliberately opens the badly lit half. Score
+      // the dimmest point on the rim too, and reject a cap whose far edge is in
+      // effective dusk.
+      let minRim = 1;
+      for (let s = 0; s < 6; s++) {
+        const az = (s / 6) * Math.PI * 2;
+        probe.copy(v).multiplyScalar(Math.cos(theta))
+          .addScaledVector(e1, Math.sin(theta) * Math.cos(az))
+          .addScaledVector(e2, Math.sin(theta) * Math.sin(az))
+          .normalize();
+        const d = probe.dot(SUN_DIR);
+        if (d < minRim) minRim = d;
+      }
+      // A hard floor here rejected every candidate and the relax loop then
+      // climbed until the gate stopped mattering, landing on the same dim field
+      // it started with. Rim light is a PREFERENCE instead: only genuine night
+      // is refused, and the rest is scored, so the scout always finds a field
+      // and picks the best lit one available.
+      if (minRim < -0.12) continue;
+
       let land = 0;
       for (let s = 0; s < SAMPLES; s++) {
         // sunflower spiral: even coverage of the cap with few samples
@@ -219,10 +242,16 @@ export class NavGraph {
         if (terrainHeight(probe.x, probe.y, probe.z, false) >= 0.05) land++;
       }
       const frac = land / SAMPLES;
-      if (frac > bestLand) { bestLand = frac; best = v.clone(); }
-      if (bestLand >= 0.86) break;
+      // Land is still what matters most - a field in the sea is unplayable
+      // where a dim one is merely moody - so rim light is a modest bonus that
+      // breaks ties between otherwise equal caps.
+      const score = frac + 0.35 * Math.max(0, Math.min(0.6, minRim));
+      if (score > bestLand) { bestLand = score; bestFrac = frac; best = v.clone(); }
+      if (bestFrac >= 0.86 && minRim > 0.25) break;
     }
-    this.capLandFrac = bestLand;
+    // The blended score chose the field; the land fraction is what the caller
+    // gates on, so report that rather than the score.
+    this.capLandFrac = bestFrac;
     return best || SUN_DIR.clone();
   }
 
