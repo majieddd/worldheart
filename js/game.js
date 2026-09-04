@@ -184,6 +184,10 @@ export class Game {
 
     // 99 Planets lets a tower be upgraded for ever; the classic maps do not.
     this.uncappedTiers = false;
+    // 99 Planets ALSO caps the mark a tower may reach at any moment, by the
+    // Worldheart's level. null everywhere else, which is what keeps the rule
+    // inert on the classic maps. The shell writes it from the run core.
+    this.tierCap = null;
     this.buildType = null;
     this.selectedTower = null;
     this.cursorDir = new THREE.Vector3();
@@ -540,12 +544,20 @@ export class Game {
       if (this.onToast) this.onToast('Already at maximum tier', 'warn');
       return;
     }
-    // No ceiling of any kind. A tower can always be upgraded and the PRICE is
-    // the only thing in the way - it climbs exponentially while the tower's
-    // strength climbs polynomially, so each step costs more and buys
-    // proportionally less. The old wave-gated tier cap locked upgrades for the
-    // first two thirds of a run and told the player only that they were
-    // "locked until the next tier unlocks", without saying when that was.
+    // The Worldheart's ceiling. The ladder is still endless in 99 Planets, but
+    // each mark past the cap has to be bought at the heart first, so raising
+    // the base is what lets the towers grow. The old wave-gated cap locked
+    // upgrades for the first two thirds of a run and told the player only
+    // that they were "locked until the next tier unlocks", without saying
+    // when that was; this one names exactly what lifts it.
+    if (Number.isFinite(this.tierCap) && t.tier + 1 >= this.tierCap) {
+      if (this.onToast) this.onToast('Upgrade the Worldheart to raise the tier cap', 'warn');
+      this.audio?.play('deny');
+      return;
+    }
+    // Past that, the PRICE is the only thing in the way - it climbs
+    // exponentially while the tower's strength climbs polynomially, so each
+    // step costs more and buys proportionally less.
     const cost = tierCost(t.typeKey, t.tier + 1);
     if (this.gold < cost) {
       if (this.onToast) this.onToast('Not enough gold', 'warn');

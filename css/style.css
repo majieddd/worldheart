@@ -396,6 +396,40 @@ input[type="range"].cam-slider::-moz-range-thumb {
   }
 }
 
+/* ---------- 99 Planets: the Worldheart ----------
+   The run's one upgradable base, under the gold readout because it is what
+   the gold is for. A button in panel clothing: the accent carries the level,
+   gold carries only the price, and a held frontier pulses the panel once
+   rather than recolouring it, so the copy stays the only thing that says why. */
+#heart-panel {
+  display: none; flex-direction: column; gap: 3px; align-items: stretch;
+  min-width: 196px; text-align: left; font: inherit; color: var(--text); cursor: pointer;
+  transition: border-color 140ms var(--ease-out), background-color 140ms var(--ease-out);
+}
+#heart-panel.show { display: flex; }
+#heart-panel:hover { border-color: var(--accent); background: var(--surface-raised); }
+#heart-panel:active { transform: translateY(1px); }
+#heart-panel:disabled { cursor: default; }
+#heart-panel:disabled:hover { border-color: var(--hairline); background: var(--surface); }
+#heart-panel .hp-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); }
+#heart-panel .hp-level {
+  font-family: var(--font-display); font-weight: 600; font-size: var(--fs-14);
+  letter-spacing: 0.08em; color: var(--accent); font-variant-numeric: tabular-nums;
+}
+#heart-panel .hp-buys { font-size: var(--fs-11); color: var(--text-muted); line-height: 1.4; }
+#heart-panel .hp-cost {
+  display: flex; align-items: center; gap: var(--sp-2); margin-top: 2px;
+  font-family: var(--font-display); font-weight: 600; font-size: var(--fs-12);
+}
+#heart-panel .hp-cost .gold-text { color: var(--gold); font-variant-numeric: tabular-nums; }
+#heart-panel.poor .hp-cost .gold-text { color: var(--text-faint); }
+#heart-panel.pulse { animation: heart-pulse 220ms var(--ease-out); }
+@keyframes heart-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.045); }
+  100% { transform: scale(1); }
+}
+
 /* ---------- 99 Planets: power draft ---------- */
 /* Cards are <button> so the #hud pointer-events cascade lets them through. */
 .draft-panel { max-width: 760px; }
