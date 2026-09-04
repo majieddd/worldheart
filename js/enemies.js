@@ -233,6 +233,16 @@ class Enemy {
 const TAU = Math.PI * 2;
 // How long the strike lunge plays after the blow lands, in seconds of atkCd.
 const STRIKE_T = 0.25;
+// The cooldown set when a blow lands, chosen so that `swing` in ENEMY_TYPES
+// is the blow-to-blow period the roster authors: the next wind-up starts
+// `swing - wind` after the blow and the next blow lands exactly `swing`
+// after the last. The cooldown used to be the whole swing, with the wind-up
+// and a scan throttle added on top, so a mite's "7 per 1.00 s" was measured
+// landing every 1.47 s, 4.8 dps. Never shorter than the lunge window, or the
+// next wind-up would start with the last lunge still playing.
+function blowCd(type) {
+  return Math.max(STRIKE_T + 0.05, type.swing - type.wind);
+}
 // The lunge curve: an instant snap to full extension, then a slower recovery.
 const LUNGE = [[0, 0], [0.32, 1], [1, 0]];
 // World units of forward progress per gait cycle. A stride matched to the
@@ -1112,7 +1122,7 @@ export class EnemyManager {
       // so stepping out of a telegraphed swing beats it.
       const v = e.atkVictim;
       e.atkVictim = null;
-      e.atkCd = type.swing;
+      e.atkCd = blowCd(type);
       if (v && v.active && !v.dead) {
         this.enemyPos(e, _mePos);
         this.allies.worldPos(v, _alPos);
@@ -1127,7 +1137,6 @@ export class EnemyManager {
     if (e.atkCd > 0) return false;
     e.scanT -= dt;
     if (e.scanT > 0) return false;
-    e.scanT = MELEE_SCAN;
 
     this.enemyPos(e, _mePos);
     let best = null;
@@ -1137,7 +1146,10 @@ export class EnemyManager {
       const d = this.allies.worldPos(a, _alPos).distanceTo(_mePos);
       if (d <= bestD) { bestD = d; best = a; }
     }
-    if (!best) return false;
+    // The scan throttle is for IDLE bodies. It used to be re-armed on a
+    // successful scan as well, which put its 0.2 s dead time into every
+    // swing cycle on top of the wind-up (see blowCd).
+    if (!best) { e.scanT = MELEE_SCAN; return false; }
     e.atkVictim = best;
     e.windT = type.wind;
     if (this.onMeleeWindUp) this.onMeleeWindUp(e, best);
@@ -1370,9 +1382,23 @@ export class EnemyManager {
         _des.addScaledVector(_sep, 34).normalize();
       }
 
-      // Turn-rate limited steering
+      // Turn-rate limited steering: the heading closes a fixed fraction of
+      // the remaining angle every frame. This used to lerp the two unit
+      // vectors, which is the same thing for small angles and nothing at all
+      // for a reversal: a lerp between opposite vectors shrinks through zero
+      // and normalises back to where it started, so an enemy that spotted
+      // the player behind it walked AWAY at full speed with chaseT climbing.
+      // Measured: fwd dot bearing pinned at -1.00 for 90 frames. Rotating by
+      // angle has no such hole, and when the headings are exactly opposite
+      // the body's up is the axis, so a reversal is a turn rather than a
+      // stall.
       const turn = type.flying ? 2.6 : 3.4;
-      e.fwd.lerp(_des, Math.min(1, turn * dt)).normalize();
+      const off = Math.acos(clamp(e.fwd.dot(_des), -1, 1));
+      if (off > 1e-4) {
+        _tmp.crossVectors(e.fwd, _des);
+        if (_tmp.lengthSq() < 1e-10) _tmp.copy(e.dir); else _tmp.normalize();
+        e.fwd.applyAxisAngle(_tmp, off * Math.min(1, turn * dt));
+      }
       const fd = e.fwd.dot(e.dir);
       e.fwd.addScaledVector(e.dir, -fd).normalize();
 
@@ -1480,9 +1506,9 @@ export class EnemyManager {
       _c.dying = dying;
       _c.scale = bodyScale;
       _c.wind = e.windT > 0 ? 1 - e.windT / type.wind : 0;
-      // The blow lands the frame windT runs out and atkCd is set to the
-      // swing, so the lunge window is the first STRIKE_T seconds of atkCd.
-      _c.strike = (dying === 0 && e.windT <= 0 && e.atkCd > 0) ? clamp((type.swing - e.atkCd) / STRIKE_T, 0, 1) : 1;
+      // The blow lands the frame windT runs out and atkCd is set to blowCd,
+      // so the lunge window is the first STRIKE_T seconds of that cooldown.
+      _c.strike = (dying === 0 && e.windT <= 0 && e.atkCd > 0) ? clamp((blowCd(type) - e.atkCd) / STRIKE_T, 0, 1) : 1;
       _c.lunge = _c.strike < 1 ? keyed(LUNGE, _c.strike) : 0;
       _c.flinch = e.flashT > 0 ? Math.min(1, e.flashT / 0.09) : 0;
       _c.shield = (e.shieldT > 0 && e.shieldHits > 0) ? 1 : 0;
