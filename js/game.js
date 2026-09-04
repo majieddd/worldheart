@@ -238,8 +238,17 @@ export class Game {
       // selected minutes ago, or sell one - none of which the first-person view
       // can even show.
       if (this.possession?.active) return;
-      const keys = { Digit1: 'bolt', Digit2: 'cryo', Digit3: 'mortar', Digit4: 'tesla', Digit5: 'helios' };
-      if (keys[e.code]) this.toggleBuild(keys[e.code]);
+      // In CARD mode the digits address the hand by SLOT, which is what the
+      // number printed on each card means. Addressing by tower type instead
+      // made every keycap a lie whenever the hand was not in canonical order,
+      // and left the sixth tower with no key at all because the map stopped at
+      // five. On the classic maps, where there is a fixed shop rather than a
+      // hand, the digits still pick a tower type.
+      const slot = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4, Digit6: 5 }[e.code];
+      const shop = { Digit1: 'bolt', Digit2: 'cryo', Digit3: 'mortar', Digit4: 'tesla', Digit5: 'helios' };
+      if (this.hand && slot !== undefined) {
+        if (slot < this.hand.length) this.toggleBuildCard(slot);
+      } else if (shop[e.code]) this.toggleBuild(shop[e.code]);
       else if (e.code === 'Escape') { this.cancelBuild(); this.select(null); }
       else if (e.code === 'KeyU' && this.selectedTower) this.upgradeSelected();
       else if (e.code === 'KeyX' && this.selectedTower) this.sellSelected();

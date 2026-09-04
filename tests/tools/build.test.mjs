@@ -63,3 +63,28 @@ test('the real core rewrites to keys that exist in the bundle', () => {
   assert.ok(out.includes("'run/modifiers'"));
   assert.ok(!out.includes('./'), 'no relative specifier should survive');
 });
+
+test('a DYNAMIC import is rewritten too', () => {
+  // main.js loads the 99 Planets shell with `await import('./modes/...')`. The
+  // rewrite once required whitespace after the keyword, so this form was left
+  // as a relative path inside a bundle where every module is a data URI - the
+  // single file booted the classic maps and could not load the mode at all.
+  assert.equal(
+    rewriteSpecifiers("await import('./modes/ninetynine.js');", 'main'),
+    "await import('modes/ninetynine');",
+  );
+  assert.equal(
+    rewriteSpecifiers('const m = await import("./run/rng.js");', 'main'),
+    'const m = await import("run/rng");',
+  );
+});
+
+test('the real main.js has no unrewritten relative specifier left', async () => {
+  // A whole-file guard: whatever form an import takes, nothing relative may
+  // survive into the bundle, because there is no file tree to resolve against.
+  const { readFileSync } = await import('node:fs');
+  const src = readFileSync(new URL('../../js/main.js', import.meta.url), 'utf8');
+  const out = rewriteSpecifiers(src, 'main');
+  const leftover = out.match(/(?:from|import)\s*\(?\s*['"]\.\.?\/[^'"]+['"]/g);
+  assert.equal(leftover, null, `unrewritten specifier(s): ${leftover}`);
+});

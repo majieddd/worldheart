@@ -1,3 +1,10 @@
+> **HISTORICAL RECORD.** This file records what was intended when it was
+> written. It was not maintained afterwards and several details have since
+> changed in the code. Treat it as background on the reasoning, not as a
+> description of the current game. For that see [README](../../../README.md),
+> [CLAUDE.md](../../../CLAUDE.md) and
+> [docs/ARCHITECTURE.md](../../ARCHITECTURE.md).
+
 # 99 Planets — integration map (WORLDHEART)
 
 <!-- Six parallel readers over game.js, towers.js, enemies.js, waves.js+main.js,

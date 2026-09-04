@@ -1,3 +1,10 @@
+> **HISTORICAL RECORD.** This file records what was intended when it was
+> written. It was not maintained afterwards and several details have since
+> changed in the code. Treat it as background on the reasoning, not as a
+> description of the current game. For that see [README](../../../README.md),
+> [CLAUDE.md](../../../CLAUDE.md) and
+> [docs/ARCHITECTURE.md](../../ARCHITECTURE.md).
+
 <!-- Adversarially-checked research workflow, 17 agents, 2026-09-03. Each angle was
      researched then attacked by a skeptic told to refute; 8-16 claims fell per angle.
      Tags: [ROBLOX] verified primary, [EXPERT] single named expert, [FOLKLORE] no

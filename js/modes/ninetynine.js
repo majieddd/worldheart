@@ -152,7 +152,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         }
       } else if (e.type === 'runWon') {
         const progress = bankVictory();
-        ui.showEnd(true, `the planet is yours — ${progress.planetsBeaten} held`);
+        ui.showEnd(true, `the planet is yours - ${progress.planetsBeaten} held`);
       }
     }
     syncFromRun();

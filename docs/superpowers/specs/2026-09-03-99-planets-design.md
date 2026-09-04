@@ -1,3 +1,10 @@
+> **HISTORICAL RECORD.** This file records what was intended when it was
+> written. It was not maintained afterwards and several details have since
+> changed in the code. Treat it as background on the reasoning, not as a
+> description of the current game. For that see [README](../../../README.md),
+> [CLAUDE.md](../../../CLAUDE.md) and
+> [docs/ARCHITECTURE.md](../../ARCHITECTURE.md).
+
 # 99 Planets — design
 
 Status: approved in principle 2026-09-03. Phase 1 is specced to build. Phase 2 is a stated

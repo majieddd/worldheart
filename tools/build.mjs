@@ -35,8 +35,14 @@ export function resolveSpecifier(fromKey, spec) {
 
 // Rewrite every relative import in a module to its bare import-map key.
 export function rewriteSpecifiers(src, key) {
+  // The third alternative is the DYNAMIC form, import('./x.js'). It has no
+  // whitespace after the keyword, so the `import\s+` branch never matched it,
+  // and the one dynamic import in the codebase - main.js loading the 99 Planets
+  // shell - was left as a relative path inside a bundle where every module is a
+  // data URI. The single file booted the classic maps and could not load the
+  // mode at all, and the broken artifact was committed.
   return src.replace(
-    /(from\s+|import\s+)(['"])(\.\.?\/[^'"]+\.js)\2/g,
+    /(from\s+|import\s+|import\s*\()(['"])(\.\.?\/[^'"]+\.js)\2/g,
     (_m, lead, quote, spec) => lead + quote + resolveSpecifier(key, spec) + quote,
   );
 }

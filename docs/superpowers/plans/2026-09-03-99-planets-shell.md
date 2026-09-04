@@ -1,3 +1,10 @@
+> **HISTORICAL RECORD.** This file records what was intended when it was
+> written. It was not maintained afterwards and several details have since
+> changed in the code. Treat it as background on the reasoning, not as a
+> description of the current game. For that see [README](../../../README.md),
+> [CLAUDE.md](../../../CLAUDE.md) and
+> [docs/ARCHITECTURE.md](../../ARCHITECTURE.md).
+
 # 99 Planets — Shell Implementation Plan (Phase 1b)
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

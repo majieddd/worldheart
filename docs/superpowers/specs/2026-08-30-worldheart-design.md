@@ -1,3 +1,10 @@
+> **HISTORICAL RECORD.** This file records what was intended when it was
+> written. It was not maintained afterwards and several details have since
+> changed in the code. Treat it as background on the reasoning, not as a
+> description of the current game. For that see [README](../../../README.md),
+> [CLAUDE.md](../../../CLAUDE.md) and
+> [docs/ARCHITECTURE.md](../../ARCHITECTURE.md).
+
 # WORLDHEART: design spec
 2026-08-30. Autonomous session: the brief explicitly delegated style and design decisions to Claude ("assess your capability to know what style will work best for you"), so the brainstorming gates were executed in self-approval mode and the reasoning is recorded here.
 
