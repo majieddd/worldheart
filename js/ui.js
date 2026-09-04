@@ -596,6 +596,10 @@ export class HUD {
     });
     this.setDraftTimer(1);
     document.getElementById('draft-overlay').classList.add('show');
+    // A possessed body holds the pointer, so the cards could not be clicked:
+    // the swing fired instead. The draft lends itself the mouse for as long
+    // as it is open.
+    this.possession?.suspend?.(true);
   }
 
   setDraftTimer(fraction) {
@@ -605,6 +609,7 @@ export class HUD {
 
   hideDraft() {
     document.getElementById('draft-overlay').classList.remove('show');
+    this.possession?.suspend?.(false);
   }
 
   // -- first person ---------------------------------------------------------

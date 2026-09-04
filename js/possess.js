@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { R, terrainHeight, surfacePoint } from './world.js';
-import { PALETTE } from './config.js';
+import { PALETTE, CAM_TUNE } from './config.js';
 import { SIM_RANDOM } from './noise.js';
 import { BladeTrail } from './viewmodel.js';
 
@@ -95,8 +95,17 @@ const TP_SHOULDER = 0.55;       // lateral offset so the body is not centred
 const TP_CLEAR = 0.45;          // keep the camera this far off the ground
 // The boom direction trails the aim a little, so a turn swings the camera
 // round behind the body rather than snapping it, and the body reads as the
-// thing that turned.
-const TP_LAG = 9;
+// thing that turned. Tight: at 9 with a 6 rad/s floor a fast mouse swing left
+// the camera visibly catching up, which the owner called wonky; the lag is
+// now a few frames of smoothing rather than a follow.
+const TP_LAG = 22;
+const TP_LAG_FLOOR = 14;        // rad/s minimum, so a flick completes in a few frames
+
+// Mouse look is applied through a two-frame filter rather than raw per
+// event: pointer-lock deltas arrive in bursts, and a fast swing dumped a
+// whole burst into one frame and nothing into the next, which reads as a
+// stutter. The filter carries a fraction of each burst into the next frame.
+const LOOK_SMOOTH = 0.55;       // fraction of the queued turn applied per frame at 60 Hz
 
 // Base control. Walking out past the frontier severs the link to the base: the
 // orbit view is the BASE's view, and once you are outside it there is nothing
@@ -253,6 +262,11 @@ export class Possession {
     this._tpAimSet = false;
     this.world = null;       // set by main.js; decor occlusion for the boom
     this.boomAllow = 1;      // fraction of the boom the decor lets through
+    // The draft overlay needs the mouse. While suspended, look and strike
+    // input are ignored and the pointer is released; the camera still
+    // follows the body so the world does not freeze behind the cards.
+    this.suspended = false;
+    this.pitchQueue = 0;
     this.tpTrail = scene ? new BladeTrail(scene, 18, 1.0, 0.7) : null;
     this._bind();
   }
@@ -293,7 +307,7 @@ export class Possession {
 
     // Left click strikes.
     this.canvas.addEventListener('mousedown', (e) => {
-      if (!this.active) return;
+      if (!this.active || this.suspended) return;
       if (e.button === 0) { e.preventDefault(); this.firing = true; this.attack(0); }
     });
     // Held rather than clicked, so a beam channels and a melee keeps its own
@@ -307,12 +321,14 @@ export class Possession {
     // the RIGHT button now that the left one swings, because sharing a button
     // between looking and attacking made every turn throw a punch.
     this.canvas.addEventListener('mousemove', (e) => {
-      if (!this.active) return;
+      if (!this.active || this.suspended) return;
       const locked = document.pointerLockElement === this.canvas;
       if (locked || (e.buttons & 2)) {
-        this.yawQueue += e.movementX * TURN_PER_PIXEL;
+        const sens = TURN_PER_PIXEL * (CAM_TUNE.lookSens || 100) / 100;
+        this.yawQueue += e.movementX * sens;
         // Screen-down should look down, and movementY is positive downward.
-        this.pitch = clamp(this.pitch - e.movementY * TURN_PER_PIXEL, -PITCH_MAX, PITCH_MAX);
+        // Queued like yaw and drained through the same filter in update().
+        this.pitchQueue -= e.movementY * sens;
       }
     });
 
@@ -350,14 +366,9 @@ export class Possession {
     this.roll = 0;
     this._tpAimSet = false;
     this.boomAllow = 1;
-    // requestPointerLock resolves a PROMISE in current browsers, so a refusal
-    // escapes try/catch entirely and lands as an unhandled rejection. It is
-    // refused outright in some embedded contexts, and drag-look covers that
-    // case, so the rejection is swallowed deliberately.
-    try {
-      const lock = this.canvas.requestPointerLock?.();
-      if (lock && typeof lock.catch === 'function') lock.catch(() => {});
-    } catch { /* refused synchronously; drag-look covers it */ }
+    this.suspended = false;
+    this.pitchQueue = 0;
+    this._lock();
     // Each archetype sees the world a little differently: a Bulwark is close
     // and heavy at 74, a Twinfang wide and quick at 84.
     const cam = this.rig.camera;
@@ -412,6 +423,48 @@ export class Possession {
     if (this.onExit) this.onExit(unit);
   }
 
+  // Take the pointer. requestPointerLock resolves a PROMISE in current
+  // browsers, so a refusal escapes try/catch entirely and lands as an
+  // unhandled rejection. It is refused outright in some embedded contexts, and
+  // drag-look covers that case, so the rejection is swallowed deliberately.
+  // unadjustedMovement asks for raw deltas with no OS acceleration, which is
+  // most of what made a fast mouse swing land somewhere unpredictable; a
+  // browser that rejects the option gets the plain request.
+  _lock() {
+    const el = this.canvas;
+    const plain = () => {
+      try {
+        const p = el.requestPointerLock?.();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      } catch { /* refused synchronously; drag-look covers it */ }
+    };
+    try {
+      const p = el.requestPointerLock?.({ unadjustedMovement: true });
+      if (p && typeof p.catch === 'function') p.catch(() => plain());
+    } catch { plain(); }
+  }
+
+  // The draft overlay (and anything else that needs the mouse) suspends the
+  // body's input: the pointer is released, look and strike stop, held keys
+  // drop. Resuming asks for the pointer back, which the browser grants only
+  // inside the activation window of the click that dismissed the overlay,
+  // and that is exactly when the shell calls this.
+  suspend(on) {
+    if (this.suspended === on) return;
+    this.suspended = on;
+    this.keys.clear();
+    this.firing = false;
+    this.yawQueue = 0;
+    this.pitchQueue = 0;
+    if (on) {
+      try {
+        if (document.pointerLockElement === this.canvas) document.exitPointerLock?.();
+      } catch { /* nothing to release */ }
+    } else if (this.active) {
+      this._lock();
+    }
+  }
+
   // A hop. Purely radial: on a sphere "up" is the surface normal, so a jump is
   // a change of altitude and the angular walk underneath it is untouched, which
   // is why air control needs no special case.
@@ -462,7 +515,7 @@ export class Possession {
   swingStarted(u) {
     if (u !== this.unit) return;
     this.audio?.play('swing');
-    this.fovKick = Math.max(this.fovKick, 1.5);
+    this.fovKick = Math.max(this.fovKick, 0.8);
   }
 
   // The blade has crossed the target. Weight lands here: the kick, the shake
@@ -471,7 +524,7 @@ export class Possession {
     if (u !== this.unit || !spec) return;
     this.kick = Math.min(0.5, this.kick + (spec.kick || 0) * (hits > 0 ? 1 : 0.5));
     this.rig.addTrauma((spec.trauma || 0.05) * (hits > 0 ? 1 : 0.4));
-    if (hits > 0) this.fovKick = Math.max(this.fovKick, 3);
+    if (hits > 0) this.fovKick = Math.max(this.fovKick, 2);
   }
 
   // Gather every nearby friendly to follow this unit. Only a commander can
@@ -506,14 +559,24 @@ export class Possession {
     }
     const u = this.unit;
 
-    if (this.yawQueue !== 0) {
-      this.allies.turnUnit(u, this.yawQueue);
-      this._yawUsed = this.yawQueue;
-      this.yawQueue = 0;
+    // Drain the look queues through the filter: most of a burst this frame,
+    // the rest next frame, so a fast swing lands smoothly and stops where the
+    // hand stopped rather than a frame late or a frame early.
+    if (this.yawQueue !== 0 || this.pitchQueue !== 0) {
+      const k = Math.min(1, LOOK_SMOOTH * Math.max(0.5, Math.min(2, dt * 60)) + (dt <= 0 ? 1 : 0));
+      const yaw = this.yawQueue * k;
+      const pit = this.pitchQueue * k;
+      this.yawQueue -= yaw;
+      this.pitchQueue -= pit;
+      if (Math.abs(this.yawQueue) < 1e-5) this.yawQueue = 0;
+      if (Math.abs(this.pitchQueue) < 1e-5) this.pitchQueue = 0;
+      if (yaw !== 0) this.allies.turnUnit(u, yaw);
+      this._yawUsed = yaw;
+      this.pitch = clamp(this.pitch + pit, -PITCH_MAX, PITCH_MAX);
     }
-    if (!simRunning) {
-      // Paused: you may still look around, and the camera must still be placed,
-      // but nothing this body does may touch the frozen world.
+    if (!simRunning || this.suspended) {
+      // Paused, or the mouse is lent to an overlay: the camera must still be
+      // placed, but nothing this body does may touch the world.
       this._updateLink();
       dtShake = 0;
       this.placeCamera();
@@ -726,7 +789,7 @@ export class Possession {
         _axis.crossVectors(this._tpAim, _aim);
         if (_axis.lengthSq() < 1e-8) _axis.copy(u.dir);
         _axis.normalize();
-        const step = Math.min(angA, Math.max(angA * Math.min(1, dtShake * TP_LAG), Math.min(angA, dtShake * 6)));
+        const step = Math.min(angA, Math.max(angA * Math.min(1, dtShake * TP_LAG), Math.min(angA, dtShake * TP_LAG_FLOOR)));
         this._tpAim.applyAxisAngle(_axis, step).normalize();
       }
       // Swing back along the reverse of the aim and out to the shoulder, then

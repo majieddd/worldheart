@@ -358,21 +358,33 @@ async function boot() {
   const _fpHit = new THREE.Vector3();
   allies.onStrikeHit = (enemy, landed, primary) => {
     towerMgr.enemyWorldPos(enemy, _fpHit);
+    // Big, popping numbers for the player's own blows. A 14px number beside
+    // a body three units away was legible and weightless; the primary hit is
+    // now the largest type in the game and overshoots on its first frames.
     if (landed > 0) {
-      fx.floaters.spawn(_fpHit, String(Math.round(landed)), primary ? '#ffffff' : '#c8d4f0', primary ? 14 : 11);
+      fx.floaters.spawn(_fpHit, String(Math.round(landed)),
+        primary ? '#eafcff' : '#c8d4f0', primary ? 30 : 15, primary ? 0.8 : 0.3, primary ? 1.0 : 0.8);
     } else {
-      fx.floaters.spawn(_fpHit, 'BLOCKED', '#8b97b8', 11);
+      fx.floaters.spawn(_fpHit, 'BLOCKED', '#8b97b8', 13, 0.3);
     }
     if (primary) {
       ui?.strikeFeedback?.(landed, landed <= 0);
-      rig.addTrauma(landed > 0 ? 0.05 : 0.03);
+      rig.addTrauma(landed > 0 ? 0.09 : 0.03);
       audio?.play(landed > 0 ? 'meleeHit' : 'blocked');
     }
-    // A spark at the point of contact and a shard or two off the body, so the
-    // blade is seen to bite rather than a number appearing beside a target.
+    // Contact: a burst of hot sparks, a shower of obsidian shards off the
+    // body and a ring pulse at the wound, so the blade is seen to bite rather
+    // than a number appearing beside a target.
     if (landed > 0) {
-      fx.impactSpark(_fpHit, primary ? PALETTE.energyHot : PALETTE.energy);
-      if (primary) fx.shards.burst(_fpHit, _fxTmp2.copy(_fpHit).normalize(), 3, PALETTE.voidPlate, 3.5, 0.7);
+      _fxTmp2.copy(_fpHit).normalize();
+      if (primary) {
+        fx.burstGlow(_fpHit, PALETTE.energyHot, 12, 5.5, 0.32, 0.5, 2.8);
+        fx.shards.burst(_fpHit, _fxTmp2, 8, PALETTE.voidPlate, 5.5, 1.0);
+        fx.rings.spawn(_fpHit, PALETTE.energy, 1.4, 0.28);
+      } else {
+        fx.impactSpark(_fpHit, PALETTE.energy);
+        fx.shards.burst(_fpHit, _fxTmp2, 3, PALETTE.voidPlate, 3.5, 0.7);
+      }
     }
   };
 
@@ -419,8 +431,14 @@ async function boot() {
   allies.onPortalDestroyed = (p) => {
     if (p.node >= 0) waves.destroyedNodes.add(p.node);
     game.gold += 180;
-    ui?.toast?.('Breach collapsed', 'info');
+    // A felled breach used to be a toast in the corner. It is one of the
+    // mode's two big moments and the reason to leave the circle, so it gets
+    // the wave banner, a fanfare, a real explosion and a camera jolt.
+    ui?.banner?.('BREACH DESTROYED', '+180 gold and one spawn fewer', false);
+    audio?.play('breach');
     fx?.explosion?.(p.group.position, 4.5);
+    fx?.burstGlow?.(p.group.position, PALETTE.voidHot, 30, 9, 0.7, 1.0, 2.6);
+    rig.addTrauma(0.35);
   };
   window.WH.allies = allies;
   window.WH.ALLY_TYPES = ALLY_TYPES;

@@ -300,6 +300,11 @@ export const CAM_RANGES = {
   maxAlt: { min: 0.02, max: 14, step: 0.05, def: 0.47, label: 'Max height', unit: '×R' },
   panMul: { min: 10, max: 400, step: 5, def: 100, label: 'Pan speed', unit: '%' },
   zoomSpeed: { min: 5, max: 400, step: 5, def: 10, label: 'Zoom speed', unit: '%' },
+  // Mouse look while a body is possessed, as a percentage of the base rate
+  // (0.0032 rad per pixel). The owner found fast swings of the mouse wonky;
+  // part of that was OS pointer acceleration, which possession now asks the
+  // browser to bypass, and the rest is taste, which is what a slider is for.
+  lookSens: { min: 20, max: 300, step: 5, def: 100, label: 'Look sensitivity', unit: '%' },
 };
 
 export const CAM_TUNE = (() => {

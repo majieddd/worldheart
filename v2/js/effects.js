@@ -383,15 +383,19 @@ class DamageNumbers {
     for (let i = 0; i < this.max; i++) {
       const el = document.createElement('div');
       el.style.cssText = 'position:absolute;left:0;top:0;font-family:"Chakra Petch","Segoe UI",sans-serif;' +
-        'font-weight:600;font-size:13px;color:#e8ecf8;text-shadow:0 1px 6px rgba(9,12,28,0.9);' +
+        'font-weight:700;font-size:13px;color:#e8ecf8;' +
+        'text-shadow:0 0 2px rgba(9,12,28,1),0 1px 8px rgba(9,12,28,0.95),0 0 14px rgba(9,12,28,0.6);' +
         'will-change:transform,opacity;opacity:0;';
       this.root.appendChild(el);
-      this.items.push({ el, life: 0, pos: new THREE.Vector3(), vy: 0 });
+      this.items.push({ el, life: 0, pos: new THREE.Vector3(), vy: 0, pop: 0, dur: 0.8 });
     }
     this.head = 0;
   }
 
-  spawn(pos, text, color = '#e8ecf8', size = 13) {
+  // `pop` scales the number up on its first frames and settles it, which is
+  // what makes a big hit read as a big hit rather than as larger type. `dur`
+  // lets a player's strike hang a little longer than a tower's tick.
+  spawn(pos, text, color = '#e8ecf8', size = 13, pop = 0, dur = 0.8) {
     // Prefer a dead slot over the next one in the ring. A bare ring buffer
     // overwrites numbers that are still on screen, so a mortar volley or a
     // cleave erased its own damage readout - the more the player did at once,
@@ -406,8 +410,10 @@ class DamageNumbers {
     const it = this.items[idx];
     this.head = (idx + 1) % this.max;
     it.pos.copy(pos);
-    it.life = 0.8;
+    it.life = dur;
+    it.dur = dur;
     it.vy = 0;
+    it.pop = pop;
     it.el.textContent = text;
     it.el.style.color = color;
     it.el.style.fontSize = size + 'px';
@@ -423,7 +429,10 @@ class DamageNumbers {
       if (_v.z > 1) { it.life = 0; it.el.style.opacity = '0'; continue; }
       const x = (_v.x * 0.5 + 0.5) * w;
       const y = (-_v.y * 0.5 + 0.5) * h - it.vy;
-      it.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -100%)`;
+      // The pop: overshoot in the first tenth of a second, then settle.
+      const age = it.dur - it.life;
+      const sc = it.pop > 0 ? 1 + it.pop * Math.max(0, 1 - age / 0.12) : 1;
+      it.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -100%) scale(${sc.toFixed(3)})`;
       it.el.style.opacity = String(clamp(it.life * 2.4, 0, 1));
     }
   }

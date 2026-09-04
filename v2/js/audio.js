@@ -223,6 +223,25 @@ export class AudioEngine {
         this._osc('square', 220, 90, 0.09, this._env(0.09, 0.05));
         this._noise(0.07, this._env(0.07, 0.05), 1800, 500);
         break;
+      // An enemy's blow landing on a friendly body. Lower and duller than the
+      // player's own meleeHit so the two are told apart by ear in a melee: the
+      // bright one is yours connecting, the thud is something connecting with
+      // you.
+      case 'enemyHit':
+        if (this._limited('enemyHit', 60)) return;
+        this._osc('square', 150, 62, 0.11, this._env(0.11, 0.07));
+        this._osc('sawtooth', 96, 58, 0.14, this._env(0.14, 0.05));
+        this._noise(0.09, this._env(0.09, 0.06), 1200, 260);
+        break;
+      // A breach coming down is a run-changing event and the mode's second
+      // fanfare: a hard two-tone strike, then a long rumble as it collapses.
+      case 'breach':
+        this._tone(196, 0.5, 0, 0.12, 'square');
+        this._tone(262, 0.6, 0.12, 0.12, 'square');
+        this._tone(392, 0.9, 0.24, 0.10);
+        this._osc('sawtooth', 70, 30, 1.6, this._env(1.6, 0.16, 0.4, 2));
+        this._noise(1.2, this._env(1.2, 0.2, 0.05, 2), 700, 80);
+        break;
       case 'rifle':
         if (this._limited('rifle', 60)) return;
         this._osc('sawtooth', 2200, 260, 0.1, this._env(0.1, 0.05));

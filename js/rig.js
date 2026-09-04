@@ -104,8 +104,14 @@ export function slab(wt, dt, wb, db, y0, y1) {
     [-hx1, y1, -hz1], [hx1, y1, -hz1], [hx1, y1, hz1], [-hx1, y1, hz1],
   ];
   const tri = [];
-  const quad = (a, bb, c, d) => { tri.push(a, bb, c, a, c, d); };
-  // Sides, outward-facing winding.
+  // Counter-clockwise seen from OUTSIDE each face, which is what Three culls
+  // against. The first cut of this wound every face the other way: the near
+  // faces of every limb and blade were culled and the far walls drew in their
+  // place, so a soldier read as hollow, "seeing through the solid block", and
+  // the first-person gauntlet showed as a stray rectangle. Verified by
+  // crossing each triangle's edges and checking the normal points away from
+  // the centroid: 12 of 12 outward.
+  const quad = (a, bb, c, d) => { tri.push(a, c, bb, a, d, c); };
   quad(b[0], b[1], t[1], t[0]);   // -z
   quad(b[1], b[2], t[2], t[1]);   // +x
   quad(b[2], b[3], t[3], t[2]);   // +z
