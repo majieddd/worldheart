@@ -1,0 +1,49 @@
+name: checks
+
+# These checks never deploy. GitHub Pages serves main from repository settings,
+# so merging is what publishes; this workflow only reports whether a branch is
+# safe to merge.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 24 auto-detects ES modules in .js files, which is why this repo
+      # needs no package.json. There is nothing to install.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # node --check passes broken modules here, because without a manifest it
+      # parses them as scripts. This parses every module as ESM instead, and it
+      # has caught two statements welded onto one line.
+      - name: Parse every module as ESM
+        run: node tools/syntax.mjs
+
+      - name: Headless tests
+        run: node tools/test.mjs
+
+      # deploy.mjs is deterministic, so running it on a clean tree must produce
+      # no diff. If it does, the published copies under v2/ and dist/ were left
+      # stale by the commit, which is the most common process mistake in this
+      # repository.
+      - name: Published copies are not stale
+        run: |
+          node tools/deploy.mjs
+          if ! git diff --quiet -- v2 dist; then
+            echo "::error::v2/ or dist/ is stale. Run 'node tools/deploy.mjs' and commit the result."
+            git diff --stat -- v2 dist
+            exit 1
+          fi
+
+      # The house style rule that is easiest to break and hardest to spot in a
+      # diff. This was a git grep one-liner first, which needed a UTF-8 locale,
+      # errored out where it was written, and still looked like it had passed.
+      - name: House style
+        run: node tools/style.mjs

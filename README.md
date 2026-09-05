@@ -203,13 +203,22 @@ file that knows both that core and the renderer.
 
 ## Working on it
 
-- **[CLAUDE.md](CLAUDE.md)** - how to run, test and deploy, and the invariants
-  that break silently. Read this first.
-- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** - what each module owns, and
-  step-by-step recipes for adding a tower, an enemy or a commander.
-- **[DESIGN.md](DESIGN.md)** - the visual and interaction contract.
-- `docs/superpowers/` is a historical record of specs and plans, not current
-  documentation. Each file says so at the top.
+New here? Start with **[CONTRIBUTING.md](CONTRIBUTING.md)**. It is the front door:
+ten minutes to a running game, how work is verified, and what will surprise you.
+
+| Document | Answers |
+|---|---|
+| **[CONTRIBUTING.md](CONTRIBUTING.md)** | How do I get started, branch, verify and open a pull request |
+| **[CLAUDE.md](CLAUDE.md)** | What breaks silently if I touch it, and how do I run and check things |
+| **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** | Which module owns what, and the exact steps to add a tower, an enemy or a commander |
+| **[docs/GAMEPLAY.md](docs/GAMEPLAY.md)** | What are the real numbers, and which file and line holds each one |
+| **[docs/CREATIVE.md](docs/CREATIVE.md)** | What is this world, how should a new thing feel, and what is it called |
+| **[DESIGN.md](DESIGN.md)** | Which colour, type, spacing and motion am I allowed |
+| **[docs/ROADMAP.md](docs/ROADMAP.md)** | Where does the project stand and what is worth doing next |
+| **[docs/POLISH-2026-09-04.md](docs/POLISH-2026-09-04.md)** | What does a finished batch of work look like here |
+
+`docs/superpowers/` is a historical record of specs and plans, not current
+documentation. Each file says so at the top. Trust the code.
 
 Written by Claude as a capability showcase - Fable 5 through the classic maps,
 Opus 5 for 99 Planets and everything after it.

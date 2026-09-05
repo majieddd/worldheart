@@ -1,0 +1,63 @@
+name: Bug report
+description: Something in the game behaves wrongly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A bug here is almost always reproducible from a map and a seed, so those
+        two fields matter more than anything else you can write.
+
+  - type: input
+    id: map
+    attributes:
+      label: Map
+      description: The map key from the URL. One of pocket, giant, titan, reach, ninetynine. A bare URL loads whatever you played last, so check the address bar.
+      placeholder: ninetynine
+    validations:
+      required: true
+
+  - type: input
+    id: seed
+    attributes:
+      label: Seed
+      description: The seed reported in the settings popover, not the one you typed. Worldgen advances the seed while it searches for a habitable world.
+      placeholder: 51940
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Console errors, a screenshot, or state read off the WH handles. `WH.step(seconds)` advances the simulation deterministically if you need to catch it in the act.
+      render: text
+
+  - type: input
+    id: wave
+    attributes:
+      label: Wave and mode state
+      description: Which wave, and whether you were on the board or possessing a unit.
+      placeholder: wave 7, possessing the commander
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and machine
+      placeholder: Chrome 141, Windows 11, RTX 4070
+
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Before filing
+      options:
+        - label: I reloaded and it happened again
+        - label: The console shows the errors I pasted, or shows none

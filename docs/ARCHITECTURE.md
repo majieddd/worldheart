@@ -48,7 +48,12 @@ reason the mode can be ported to Luau later, and it is enforced by
 
 5 maps · 4 map modes · 6 towers · 5 enemies · 1 warden + 5 commander archetypes
 across 4 attack kinds · 20 powers · 13 talents in 4 tiers · 15 waves in
-99 Planets, 30 on the classic maps · 5 Worldheart levels · 128 tests · 29 ES modules.
+99 Planets, 30 on the classic maps · 5 Worldheart levels · 128 tests · 31 ES modules.
+
+The exact stats behind those counts, and the file and line each one lives on, are
+in `docs/GAMEPLAY.md`. Any count written into a document is a small liability, so
+check it against `node tools/syntax.mjs` and `node tools/test.mjs` before you
+quote it.
 
 ## Adding a tower
 

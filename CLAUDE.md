@@ -8,9 +8,17 @@ something broke without it.
 
 ```bash
 node tools/serve.mjs 8137      # then open http://127.0.0.1:8137
+node tools/syntax.mjs          # parse all 31 modules as ESM
 node tools/test.mjs            # 128 headless tests, no browser
+node tools/style.mjs           # the house style rules a machine can check
 node tools/deploy.mjs          # refresh v2/ and dist/ before you commit
 ```
+
+`syntax.mjs` is not optional politeness. `node --check` parses these files as
+scripts, because there is no manifest telling it otherwise, so it passes modules
+that are genuinely broken - a regex edit once welded two statements onto one line
+across five sites and `--check` was happy with all of them. `syntax.mjs` imports
+each file as ESM instead, which is what the browser will do.
 
 There is **no `package.json`**, no install step and no lint. Node 24 auto-detects
 ESM in `.js`, which is why none is needed. `npm test` and `npm install` will both
@@ -102,6 +110,7 @@ why so many defects here were found by playing rather than by CI.
 
 So "done" means:
 
+0. `node tools/syntax.mjs` and `node tools/style.mjs` green. Both are seconds.
 1. `node tools/test.mjs` green.
 2. The thing you changed observed **in the browser**, not reasoned about. Drive
    it with `WH.step(seconds)` for deterministic advance, and read state off the

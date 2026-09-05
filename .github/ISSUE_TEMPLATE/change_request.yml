@@ -1,0 +1,55 @@
+name: Change or addition
+description: A new tower, enemy, commander, power, system or balance change
+labels: ["design"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read `docs/CREATIVE.md` first. It carries the test a new tower, enemy,
+        commander or power has to pass, and the naming grammars. A proposal that
+        fails one of those tests is usually a different idea in disguise.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of change
+      options:
+        - Tower
+        - Enemy
+        - Commander archetype
+        - Power or talent
+        - Balance change to something that exists
+        - System or mode change
+        - Interface or presentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: The proposal
+      description: Mechanics first, in the fewest words that are still precise. Flavour underneath if you have it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: What problem it solves
+      description: What does the player currently do that this changes? A change that only adds a bigger number rarely survives review here.
+    validations:
+      required: true
+
+  - type: textarea
+    id: test
+    attributes:
+      label: How we would know it worked
+      description: The measurement. What would you record before and after to show the change did what you claim?
+    validations:
+      required: true
+
+  - type: textarea
+    id: cost
+    attributes:
+      label: Where it touches
+      description: If you know, list the registries. `docs/ARCHITECTURE.md` has the exact list per kind, and most of them fail silently when missed.
