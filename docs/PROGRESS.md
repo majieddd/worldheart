@@ -3,7 +3,7 @@
 Updated 2026-09-05. This is the collaborator entry point for the owner's new direction.
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
-Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [Review branch](https://github.com/majieddd/worldheart/tree/docs/99-planets-qa-plan-2026-09-05).
+Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
 
 ## Completed in this batch
 
@@ -34,7 +34,7 @@ Issue closure requires evidence, not just a merged diff. Proposed future impleme
 
 Baseline at 1374122: 31 modules parsed; 128 tests passed, zero failed/skipped; style passed; deployment mirror regeneration produced no content diff. Six sampled live assets matched that head. The read-only tower diagnostic confirmed inconsistent power application. See the QA report for exact scope and links to the previously successful main checks and Pages runs.
 
-Final documentation validation: house style and whitespace checks passed; [43 local links, 14 sections, seven complete mechanic blocks and 21 request IDs checked](qa/2026-09-05/document-validation.json); [52 original archive files verified by size and SHA-256](qa/2026-09-05/archive-validation.json). No runtime implementation was changed, so the existing source/core test baseline remains applicable. The PR's normal CI additionally reruns the repository checks against the submitted branch. The blueprint skill's named checker was unavailable; no checker pass is claimed.
+Final documentation validation: house style and whitespace checks passed; [local links, 14 sections, seven complete mechanic blocks and 21 request IDs checked](qa/2026-09-05/document-validation.json); [52 original archive files verified by size and SHA-256](qa/2026-09-05/archive-validation.json). No runtime implementation was changed, so the existing source/core test baseline remains applicable. The PR's normal CI additionally reruns the repository checks against the submitted branch. The blueprint skill's named checker was unavailable; no checker pass is claimed.
 
 ## How collaborators update this cleanly
 
