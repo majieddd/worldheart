@@ -3,6 +3,10 @@
 This is the front door. If you are new to the repo, read this page first, then
 `CLAUDE.md`, then whichever document below matches what you are about to touch.
 
+The current owner-directed work is tracked in **[docs/PROGRESS.md](docs/PROGRESS.md)**:
+the blind QA baseline, the **[99 Planets To Defend blueprint](docs/99-PLANETS-TO-DEFEND.md)**,
+linked issues, dependencies and evidence. Start there when joining campaign development.
+
 ## What this is
 
 A 3D tower defence fought on the surface of procedurally generated planets, with
