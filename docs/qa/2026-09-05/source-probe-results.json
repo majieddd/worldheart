@@ -1,0 +1,138 @@
+{
+  "time": "2026-09-05T21:46:10.354Z",
+  "head": "1374122d1109919a5fab10b69fefdfb80308eb6e",
+  "node": "v24.14.0",
+  "scope": "Actual Tower.stats getter plus source reference search and six deployed asset comparisons. No browser combat simulation.",
+  "samples": [
+    {
+      "type": "bolt",
+      "field": "dmg",
+      "power": "keen-rails",
+      "before": 9,
+      "after": 10.080000000000002,
+      "changed": true
+    },
+    {
+      "type": "helios",
+      "field": "dps",
+      "power": "keen-rails",
+      "before": 26,
+      "after": 26,
+      "changed": false
+    },
+    {
+      "type": "bolt",
+      "field": "rate",
+      "power": "overclock",
+      "before": 4.6,
+      "after": 5.06,
+      "changed": true
+    },
+    {
+      "type": "tesla",
+      "field": "charge",
+      "power": "overclock",
+      "before": 1.5,
+      "after": 1.5,
+      "changed": false
+    },
+    {
+      "type": "warden",
+      "field": "summonTime",
+      "power": "overclock",
+      "before": 7,
+      "after": 7,
+      "changed": false
+    },
+    {
+      "type": "tesla",
+      "field": "chains",
+      "power": "chain-coil",
+      "before": 3,
+      "after": 3,
+      "changed": false
+    }
+  ],
+  "references": {
+    "livesAdd": [
+      {
+        "file": "js/run/modifiers.js",
+        "line": 26,
+        "text": "livesAdd: 0,"
+      },
+      {
+        "file": "js/run/powers.js",
+        "line": 21,
+        "text": "{ id: 'hardened-heart', tag: 'heart', name: 'Hardened Heart', rarity: 'common', desc: 'The worldheart holds 2 more lives.', apply: (m) => { m.livesAdd += 2; } },"
+      }
+    ],
+    "heartRegen": [
+      {
+        "file": "js/run/modifiers.js",
+        "line": 27,
+        "text": "heartRegen: 0,"
+      },
+      {
+        "file": "js/run/powers.js",
+        "line": 30,
+        "text": "{ id: 'mending', tag: 'heart', name: 'Mending', rarity: 'uncommon', desc: 'The worldheart recovers 1 life per wave.', apply: (m) => { m.heartRegen += 1; } },"
+      }
+    ],
+    "slowAura": [
+      {
+        "file": "js/run/modifiers.js",
+        "line": 28,
+        "text": "slowAura: 0,"
+      },
+      {
+        "file": "js/run/powers.js",
+        "line": 31,
+        "text": "{ id: 'cryo-field', tag: 'slow', name: 'Cryo Field', rarity: 'uncommon', desc: 'Enemies near the heart are slowed 10%.', apply: (m) => { m.slowAura += 0.10; } },"
+      }
+    ],
+    "chainAdd": [
+      {
+        "file": "js/run/modifiers.js",
+        "line": 19,
+        "text": "chainAdd: 0,"
+      },
+      {
+        "file": "js/run/powers.js",
+        "line": 33,
+        "text": "{ id: 'chain-coil', tag: 'chain', name: 'Chain Coil', rarity: 'uncommon', desc: 'Shots arc to 1 extra target.', apply: (m) => { m.chainAdd += 1; } },"
+      }
+    ]
+  },
+  "live": [
+    {
+      "file": "index.html",
+      "matchesHead": true,
+      "sha256": "710df6ae4620a8a9f7acd949e9a68e7abbafce4dd918931717650c7052256989"
+    },
+    {
+      "file": "js/main.js",
+      "matchesHead": true,
+      "sha256": "4b2906a2149e944156d8f0f52efaf4869e1ee04be3b4b94d3d2e3fcb44eb364a"
+    },
+    {
+      "file": "js/towers.js",
+      "matchesHead": true,
+      "sha256": "cd926b0a93aa763cd772db068cc01256c588e927646708c69ab27c6ad4e91c93"
+    },
+    {
+      "file": "js/ui.js",
+      "matchesHead": true,
+      "sha256": "ffee80551b560d004ce90c904f2efc4d029a6d690d25bf4937aab96df9208a75"
+    },
+    {
+      "file": "js/run/run.js",
+      "matchesHead": true,
+      "sha256": "258fddb92cda8aa29793e74b0bd67fc99e90f8f22168bdaebdb6a73014ac448d"
+    },
+    {
+      "file": "js/modes/ninetynine.js",
+      "matchesHead": true,
+      "sha256": "7630c2b4c67aa8f9af63f8981e8046aad1d2b0300d06f806cd3fefc5a0863357"
+    }
+  ]
+}

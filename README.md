@@ -206,6 +206,12 @@ file that knows both that core and the renderer.
 New here? Start with **[CONTRIBUTING.md](CONTRIBUTING.md)**. It is the front door:
 ten minutes to a running game, how work is verified, and what will surprise you.
 
+The next development direction is **[99 Planets To Defend](docs/99-PLANETS-TO-DEFEND.md)**.
+Follow the **[progress ledger and GitHub issues](docs/PROGRESS.md)** and the
+**[2026-09-05 blind playtest report](docs/qa/2026-09-05/README.md)** for evidence,
+priorities and acceptance criteria. These are plans for the existing game;
+the features described there have not all shipped.
+
 | Document | Answers |
 |---|---|
 | **[CONTRIBUTING.md](CONTRIBUTING.md)** | How do I get started, branch, verify and open a pull request |

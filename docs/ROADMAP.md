@@ -1,5 +1,16 @@
 # Where this stands, and what is worth doing next
 
+## Owner direction update, 2026-09-05
+
+The owner now wants development centered on 99 Planets, eventually titled
+**99 Planets To Defend**. The current priority order and acceptance gates are in
+[the running blueprint](99-PLANETS-TO-DEFEND.md), with [GitHub work tracking](PROGRESS.md)
+and [blind QA plus source retrospective](qa/2026-09-05/README.md).
+That pass ended at wave 11/15 and does not certify victory or a 99-world campaign.
+Several earlier polish fixes exist, but the owner's current camera/model/terrain
+reports remain acceptance work. The new plan supersedes the suggested order below;
+the original dated audit remains useful historical context.
+
 Written 2026-09-05, at commit `d5e68a4`. The "state" section is fact. The "next"
 section is a considered suggestion, not a commitment the owner has made. Check
 with them before starting anything large.
