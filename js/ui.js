@@ -161,7 +161,7 @@ export class HUD {
           <div id="fp-link">BASE CONTROL DISCONNECTED<span>outside the frontier - walk back to reconnect</span></div>
         <div id="fp-keys">
             <span><b>WASD</b> move</span><span><b>Shift</b> sprint</span><span><b>LMB</b> strike</span>
-            <span><b>Space</b> jump</span><span><b>Scroll</b> view</span><span><b>P</b> pause</span>
+            <span><b>Space</b> jump</span><span><b>1-6</b> build</span><span><b>Scroll</b> view</span><span><b>P</b> pause</span>
             <span id="fp-rally"><b>G</b> rally</span><span><b>H</b> dismiss</span><span><b>Esc</b> release</span>
           </div>
         </div>
@@ -733,8 +733,12 @@ export class HUD {
   // first-person panel out from under the build bar: the two plus the selection
   // readout were all landing on the same pixels at the bottom centre, which
   // made the mode's only first-person tutorial unreadable.
+  // The card bar STAYS on the ground, smaller and lower, because a card can
+  // be armed from a body with the digits and its ghost then rides the
+  // crosshair. The tower panel and the selection readout are board verbs
+  // and stand down.
   setBoardEnabled(on) {
-    document.getElementById('build-bar')?.classList.toggle('board-off', !on);
+    document.body.classList.toggle('fp-mode', !on);
     this.el['tower-panel']?.classList.toggle('board-off', !on);
     this.el['sel-readout']?.classList.toggle('board-off', !on);
   }

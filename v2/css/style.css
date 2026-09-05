@@ -555,4 +555,8 @@ input[type="range"].cam-slider::-moz-range-thumb {
    this the card bar kept its pointer events and its pixels: a click mounted a
    ghost tower through the player's own body, and the bar sat on top of the
    first-person panel, which is the only place the ground controls are taught. */
+/* On the ground the card bar shrinks toward the bottom edge and the
+   possession panel lifts above it, so the two never share pixels. */
+body.fp-mode #build-bar { transform: scale(0.78); transform-origin: bottom center; opacity: 0.88; pointer-events: none; }
+body.fp-mode #fp-panel { bottom: 156px; }
 .board-off { display: none !important; pointer-events: none !important; }

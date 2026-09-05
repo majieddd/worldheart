@@ -24,6 +24,48 @@ const F_WARP = 1.2 * FQ;
 const F_ROLL = 4.3 * FA;
 const F_MOIST = 4.6 * (1 + (FA - 1) * 0.8);
 const F_RIDGE = 2.35 * FQ;
+// The landscape features that shape the war: mountain RANGES that wall a
+// region off except at their passes, and CANYONS, dry corridors between two
+// rim walls that a march is funnelled into. Both are low-frequency so a
+// battlefield holds one or two of each rather than a texture of them, and
+// both carry a separate "gap" noise that opens passes in a range and ramps
+// into a canyon, so the walkable graph stays connected through them rather
+// than around them. Sized against the cap: on an R240 world a range every
+// 120 or so units and a canyon every 90.
+const F_RANGE = 1.1 * FQ;
+const F_CANYON = 1.55 * FQ;
+const F_GAP = 3.2 * FQ;
+// Range peaks stand 7 to 11 units over the land, far above the walk limit,
+// so a range is a wall; a pass drops the crest to under a unit AND levels
+// the ground beneath it to PASS_FLOOR, because the ridges and rolling
+// detail under a crest add two or three units on their own: a pass that
+// only lowered the crest measured as a wall (seed 12345: every pass floor
+// sat at 3 to 4 units, none walkable).
+// Both scale down with the planet: a 10.5 unit range on the radius 30
+// Pocket World measured 13.7 units tall, nearly half the planet, a spike
+// rather than a mountain. Never below 0.45, so a range stays a wall (4.7
+// units against a 2.05 walk limit) on the smallest world.
+const RANGE_SCALE = Math.min(1, Math.max(0.45, R / 240));
+const RANGE_HEIGHT = 10.5 * RANGE_SCALE;
+const PASS_DROP = 9.6 * RANGE_SCALE;
+const PASS_FLOOR = 0.9;
+// A canyon is sized in WORLD units from the noise gradient (see below):
+// a floor CANYON_HALF either side of the zero line, cut to a dry
+// CANYON_FLOOR; a wall CANYON_WALL units of run high enough to be a cliff;
+// a rim crest RIM_LIFT high and RIM_CREST wide that fades back to the land
+// over RIM_FADE. Thresholds in noise units gave a 20 unit floor inside a
+// 40 unit shelf on seed 12345, because the noise runs flat near zero.
+const CANYON_HALF = 2.75;
+const CANYON_WALL = 1.2;
+const RAMP_RUN = 5.0;
+const RIM_LIFT = 2.6;
+// Crest and fade were 4 and 6: on seed 51940 that put a third of the land
+// above the walk limit (0.6% before the landforms) and read as mesas, not
+// rims. 2.5 and 4 keep the wall and halve the shelf.
+const RIM_CREST = 2.5;
+const RIM_FADE = 4.0;
+const CANYON_FLOOR = 0.55;
+const CANYON_REACH = CANYON_HALF + CANYON_WALL + RAMP_RUN + RIM_CREST + RIM_FADE;
 const F_FINE = Math.pow(2, CONFIG.terrainDetail) / 3.048;
 const F_FINE2 = F_FINE * 2.476;
 
@@ -41,7 +83,7 @@ export function inBattlefield(dx, dy, dz, margin = 0) {
   return Math.acos(Math.min(Math.max(dot, -1), 1)) <= BATTLEFIELD.theta + margin;
 }
 
-let nWarp, nBase, nDetail, nRidge, nMoist;
+let nWarp, nBase, nDetail, nRidge, nMoist, nRange, nCanyon, nGap;
 
 // Space Battlefield layout: predetermined, balanced platform positions of
 // varying size, regenerated deterministically per seed. Null on ground maps.
@@ -126,6 +168,9 @@ export function initTerrainField(seed) {
   nDetail = makeNoise3D(seed ^ 0x51ab3c);
   nRidge = makeNoise3D(seed ^ 0x7f4a7c15);
   nMoist = makeNoise3D(seed ^ 0x2545f4);
+  nRange = makeNoise3D(seed ^ 0x3c6ef372);
+  nCanyon = makeNoise3D(seed ^ 0x1b873593);
+  nGap = makeNoise3D(seed ^ 0x85ebca6b);
   if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
@@ -174,6 +219,61 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
   if (mMask > 0.001) {
     const ridg = ridged3(nRidge, dx * F_RIDGE + 11, dy * F_RIDGE, dz * F_RIDGE, 4);
     h += mMask * Math.pow(Math.max(ridg, 0), 1.5) * 3.4;
+  }
+  // Mountain ranges: a ridged band. The crest is pierced by passes where
+  // the gap noise runs high; a pass is the only walkable way through, which
+  // is what makes a range a decision rather than a picture. Sampled on the
+  // UNWARPED direction: the continent warp jitters at a much higher
+  // frequency than these features, and through it a range broke into
+  // spikes (a 9.5 unit needle two units from a canyon floor on seed 12345).
+  const rr = ridged3(nRange, dx * F_RANGE + 23, dy * F_RANGE, dz * F_RANGE, 3);
+  const range = smoothstep(0.64, 0.9, rr);
+  if (range > 0.001 && cont > 0.05) {
+    const gap = fbm3(nGap, dx * F_GAP + 41, dy * F_GAP, dz * F_GAP, 2);
+    const pass = smoothstep(0.14, 0.38, gap);
+    // A pass is a saddle: the land under it is levelled as the crest drops.
+    h = lerp(h, Math.min(h, PASS_FLOOR), pass * range);
+    h += cont * range * range * (RANGE_HEIGHT - PASS_DROP * pass);
+  }
+  // Canyons: the zero line of a warped noise field is a sinuous track. The
+  // land either side of it rises into a rim, the track itself is cut to a
+  // dry floor, and where the gap noise runs high the rim drops and the wall
+  // widens into a ramp, so the corridor can be entered and left. Rims stand
+  // at the walk limit and the walls are steeper than the slope limit, so a
+  // canyon funnels everything that walks it.
+  if (cont > 0.05) {
+    // Unwarped for the same reason as the ranges: warped, the zero line
+    // wriggled with the warp and a 24 unit transect crossed three floors.
+    const px = dx * F_CANYON + 5.5, py = dy * F_CANYON, pz = dz * F_CANYON;
+    const cn = nCanyon(px, py, pz);
+    const acn = Math.abs(cn);
+    if (acn < 0.34) {
+      // Distance to the zero line in world units, from the noise gradient
+      // (three forward differences, only inside the candidate band). This
+      // is what keeps a canyon the same width wherever the noise runs, and
+      // makes a stretch where the noise hovers near zero without crossing
+      // into nothing at all rather than a shelf.
+      const e = 0.01;
+      const gx = nCanyon(px + e, py, pz) - cn;
+      const gy = nCanyon(px, py + e, pz) - cn;
+      const gz = nCanyon(px, py, pz + e) - cn;
+      const g = Math.sqrt(gx * gx + gy * gy + gz * gz) / e * F_CANYON / R + 1e-6;
+      const dist = acn / g;
+      if (dist < CANYON_REACH) {
+        const ramp = smoothstep(0.24, 0.5, fbm3(nGap, dx * F_GAP * 1.7 + 9, dy * F_GAP * 1.7, dz * F_GAP * 1.7, 2));
+        const run = CANYON_WALL + ramp * RAMP_RUN;
+        const rimTop = CANYON_HALF + run;
+        const rim = smoothstep(CANYON_HALF, rimTop, dist)
+          * (1 - smoothstep(rimTop + RIM_CREST, rimTop + RIM_CREST + RIM_FADE, dist))
+          * (1 - ramp * 0.85);
+        h += cont * rim * RIM_LIFT;
+        const band = 1 - smoothstep(CANYON_HALF, rimTop, dist);
+        if (band > 0.001) {
+          const floor = CANYON_FLOOR + 0.12 * rolling;
+          h = lerp(h, floor, band * cont);
+        }
+      }
+    }
   }
   return h;
 }
@@ -368,6 +468,14 @@ function faceColor(dir, h, slope, jrand, out) {
     const cliff = smoothstep(0.62, 1.0, slope) * smoothstep(0.24, 0.5, h) + smoothstep(1.75, 2.45, h) * 0.75;
     if (cliff > 0) {
       _cliffCol.copy(C.cliffLow).lerp(C.cliffHigh, smoothstep(1.2, 3.2, h));
+      // Steep faces below the snow line are canyon walls and range flanks:
+      // banded stone, warmer than the grey of a high crag, with strata
+      // every half unit of height so a wall reads as carved rather than as
+      // a green slope that happens to be steep.
+      if (h < 3.4 && slope > 0.7) {
+        const strata = 0.5 + 0.5 * Math.sin(h * 12.6 + jrand * 1.5);
+        _cliffCol.lerp(C.soil, 0.22 + 0.28 * strata);
+      }
       out.lerp(_cliffCol, clamp(cliff, 0, 1));
     }
     const snow = smoothstep(2.45, 2.95, h + jrand * 0.25) +

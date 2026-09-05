@@ -67,10 +67,27 @@ addEventListener('resize', resize);
 
 const bootFill = document.getElementById('boot-fill');
 const bootStatus = document.getElementById('boot-status');
-// rAF with a timeout fallback: rAF stops in hidden tabs and boot must not.
+// rAF with a fallback: rAF stops in hidden tabs and boot must not. The
+// fallback used to be a 90 ms setTimeout, and a tab that has been hidden for
+// five minutes has its timers held to one a minute, which stretched the
+// boot past ten minutes (measured in the desktop Browser pane while it was
+// hidden: the world sat at "waking the worldheart" for 90 s with the coarse
+// graph still in place). A message port is never throttled, so a hidden
+// boot yields through it; a visible one keeps the frame race so the
+// progress bar paints between steps.
+const _yield = new MessageChannel();
+let _yieldRes = null;
+_yield.port1.onmessage = () => { const r = _yieldRes; _yieldRes = null; r?.(); };
 const nextFrame = () => new Promise((res) => {
-  requestAnimationFrame(() => res());
-  setTimeout(res, 90);
+  let done = false;
+  const fire = () => { if (!done) { done = true; res(); } };
+  if (document.visibilityState === 'hidden') {
+    _yieldRes = fire;
+    _yield.port2.postMessage(0);
+    return;
+  }
+  requestAnimationFrame(fire);
+  setTimeout(fire, 90);
 });
 
 const BOOT_LABELS = [

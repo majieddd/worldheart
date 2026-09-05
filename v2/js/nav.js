@@ -108,6 +108,10 @@ const _v = new THREE.Vector3();
 const _v2 = new THREE.Vector3();
 const CELLS = 40;
 
+// Walkable nodes wanted within six hops of the heart: three-fifths of the
+// 127 a full six-hop neighbourhood holds on this graph.
+const FOOTHOLD_MIN = 76;
+
 export class NavGraph {
   constructor() {
     this.n = 0;
@@ -525,6 +529,14 @@ export class NavGraph {
       const sunDot = this.dirs[i * 3] * SUN_DIR.x + this.dirs[i * 3 + 1] * SUN_DIR.y + this.dirs[i * 3 + 2] * SUN_DIR.z;
       if (!capCenter && sunDot < 0.12 - relax * 0.3) continue;
       let open = this._openness(i) + sunDot * 6;
+      // The first ring is where the opening towers go. With ranges and
+      // canyons in the world a doorstep can be open while the ring around
+      // it is mostly cliff, which crams the first moves against a wall; so
+      // the six-hop neighbourhood (about the first ring's radius) must be
+      // mostly walkable too, and a more open one scores higher.
+      const wide = this._openness(i, 6);
+      if (wide < FOOTHOLD_MIN - relax * 30) continue;
+      open += (wide - FOOTHOLD_MIN) * 0.2;
       if (capCenter) {
         const cd = this.dirs[i * 3] * capCenter.x + this.dirs[i * 3 + 1] * capCenter.y + this.dirs[i * 3 + 2] * capCenter.z;
         const ang = Math.acos(Math.min(Math.max(cd, -1), 1));

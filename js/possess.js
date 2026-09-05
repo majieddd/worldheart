@@ -282,6 +282,10 @@ export class Possession {
       this.keys.add(e.code);
       if (e.code === 'Escape' || e.code === 'Tab') {
         e.preventDefault();
+        // An armed build ghost is the first thing Escape lets go of. Only
+        // the second press releases the body, so cancelling a placement
+        // from the ground never throws the player back to the board.
+        if (this.game.buildType) { this.game.cancelBuild(); return; }
         // You cannot hand the view back to a base you are not connected to.
         // Walking home is the way back, which is what makes leaving a decision.
         if (!this.linked) {
@@ -308,7 +312,15 @@ export class Possession {
     // Left click strikes.
     this.canvas.addEventListener('mousedown', (e) => {
       if (!this.active || this.suspended) return;
-      if (e.button === 0) { e.preventDefault(); this.firing = true; this.attack(0); }
+      if (e.button === 0) {
+        e.preventDefault();
+        // With a card armed the click raises the tower under the crosshair
+        // instead of swinging; the strike comes back the moment the ghost
+        // is gone, which a spent card does on its own.
+        if (this.game.buildType) { this.game.hoverCenter(); this.game._tryPlace(); return; }
+        this.firing = true;
+        this.attack(0);
+      }
     });
     // Held rather than clicked, so a beam channels and a melee keeps its own
     // cadence without the player having to match it by hand. playerAttack's own
@@ -580,6 +592,7 @@ export class Possession {
       this._updateLink();
       dtShake = 0;
       this.placeCamera();
+      if (this.game.buildType) this.game.hoverCenter();
       this.viewModel?.update(0, this.rig.camera, u, this._vmOpts(0, false));
       this.ui?.updatePossession?.(u);
       return;
@@ -658,6 +671,8 @@ export class Possession {
     this._updateLink();
     dtShake = dt;
     this.placeCamera();
+    // The build ghost follows the crosshair from the ground.
+    if (this.game.buildType) this.game.hoverCenter();
     this._applyDistanceFog();
     this._updateTrail(dt);
     this.viewModel?.update(dt, this.rig.camera, u, this._vmOpts(dt, true));

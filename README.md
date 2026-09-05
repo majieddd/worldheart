@@ -27,6 +27,8 @@ Five worlds, selectable on the title screen. Every one is procedurally generated
 | Shattered Reach | Space Battlefield | Asteroid field, radius 70 shell | Rock platforms adrift over void at varying altitude; everything flies. 5 breaches |
 | 99 Planets | Roguelite campaign | Planet, radius 240 | A circle you widen wave by wave, 15 waves to a boss, 5 breaches |
 
+Every land world carries landforms that shape the war rather than decorate it: mountain ranges up to ten units tall that a march cannot cross except at their passes, and dry canyons, a floor about five units wide between two rim walls, that funnel whatever walks them. Both are cut into the same height field the navigation graph reads, so routes bend around a range and pour along a canyon, and the Worldheart is placed where the first ring around it is mostly open ground.
+
 Titan's Brow and Giant World are the same class of world, deliberately: a Battlefield is a section of a real planet, so a campaign can fight several fronts on one world and later play the whole globe with those regions still in place. A walled front prunes its navigation graph to the cap, which buys it a far finer grid than a whole planet could afford.
 
 ## Camera
@@ -98,12 +100,13 @@ directly.
 | Mouse, or Q / E | Look. Right-drag looks when pointer lock is refused |
 | Left click | Strike. Hold to keep swinging or channel. A melee blow lands at the strike frame of the swing, not on the click |
 | Space, or F | Jump. A press just before landing is buffered and fires on touchdown |
+| 1 to 6 | Arm a card from your hand; the ghost rides the crosshair and left click raises it, within 14 units of where you stand. Esc drops the ghost first |
 | P | Pause (Space is the jump while you are in a body) |
 | Scroll | Pull back to third person and return |
 | G / H | Rally nearby units into a party / dismiss them |
 | Esc or Tab | Release control. Refused while you are outside the frontier |
 
-P pauses while you are in a body (Space jumps), and the board's keys stand down.
+P pauses while you are in a body (Space jumps), and the board's keys stand down except the hand: you can fortify the fight you are standing in.
 
 ## The one rule
 
@@ -191,7 +194,7 @@ tower roster, the commander archetypes, and standing bonuses.
 
 ## Technical notes
 
-Three.js (vendored, r180) on WebGL2 with a custom pipeline: MSAA half-float scene target, soft-knee bright pass, dual-Kawase bloom pyramid, ACES tone map, grade, vignette, grain. Terrain, water, sky, clouds, and every tower and creature are procedural geometry; audio is synthesized WebAudio with no assets. One analytic height field drives the visual mesh, the navigation graph, and unit grounding. Ground pathing is a single-source Dijkstra flow field over a geodesic icosphere, recomputed on every build and sell; placement legality is a reachability sweep with the candidate footprint blocked.
+Three.js (vendored, r180) on WebGL2 with a custom pipeline: MSAA half-float scene target, soft-knee bright pass, dual-Kawase bloom pyramid, ACES tone map, grade, vignette, grain. Terrain, water, sky, clouds, and every tower and creature are procedural geometry; audio is synthesized WebAudio with no assets. One analytic height field drives the visual mesh, the navigation graph, and unit grounding; ranges and canyons are part of it, the canyon sized in world units from the noise gradient so it is the same width wherever the noise runs. Ground pathing is a single-source Dijkstra flow field over a geodesic icosphere, recomputed on every build and sell; placement legality is a reachability sweep with the candidate footprint blocked.
 
 The 99 Planets run logic lives in `js/run/`, which imports nothing at all - no
 Three.js, no DOM, no storage, no `Math.random` - so it can be unit tested

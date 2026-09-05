@@ -168,6 +168,12 @@ class SurfaceBand {
   }
 }
 
+// How far from the possessed body a tower may be raised, in world units.
+// Just past a heavy commander's strike radius plus a few steps, so a fight
+// can be fortified from inside it without turning the ground into a
+// long-range build tool.
+const FP_BUILD_REACH = 14;
+
 export class Game {
   constructor(ctx) {
     Object.assign(this, ctx); // scene, rig, world, nav, enemies, towerMgr, fx
@@ -240,11 +246,18 @@ export class Game {
     };
     addEventListener('keydown', (e) => {
       if (e.repeat) return;
-      // Every key here is a BOARD verb. While a unit is possessed the player is
-      // on the ground and these would mount a build ghost, upgrade a tower
-      // selected minutes ago, or sell one - none of which the first-person view
-      // can even show.
-      if (this.possession?.active) return;
+      // Most keys here are BOARD verbs. While a unit is possessed the player
+      // is on the ground and upgrading or selling a tower selected minutes
+      // ago is not something the first-person view can show. Building IS:
+      // the digits arm a card from the ground too, and the ghost then rides
+      // the crosshair (see hoverCenter). Escape is left to js/possess.js,
+      // which cancels an armed build before it releases the body, because
+      // both listeners hear the key and only one may act on it.
+      if (this.possession?.active) {
+        const fpSlot = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4, Digit6: 5 }[e.code];
+        if (this.hand && fpSlot !== undefined && fpSlot < this.hand.length) this.toggleBuildCard(fpSlot);
+        return;
+      }
       // In CARD mode the digits address the hand by SLOT, which is what the
       // number printed on each card means. Addressing by tower type instead
       // made every keycap a lie whenever the hand was not in canonical order,
@@ -297,7 +310,17 @@ export class Game {
     };
   }
 
-  _hover(x, y) {
+  // From the ground the ghost rides the crosshair, not the pointer: the
+  // pointer is locked and reports nothing useful, so the rig's own hover
+  // is ignored while a body is possessed and possession asks for this once
+  // a frame instead, after it has placed the camera.
+  hoverCenter() {
+    const r = this.rig.canvas.getBoundingClientRect();
+    this._hover(r.left + r.width / 2, r.top + r.height / 2, true);
+  }
+
+  _hover(x, y, fromCenter = false) {
+    if (this.possession?.active && !fromCenter) return;
     this.rig.raycaster(x, y, this.raycaster);
     const ray = this.raycaster.ray;
     if (!raycastTerrain(ray.origin, ray.direction, _hit)) {
@@ -413,6 +436,14 @@ export class Game {
 
   _validate(def) {
     if (!this.cursorValid) return { ok: false, reason: 'terrain' };
+    // From the ground you build what you can walk to. Without a reach the
+    // crosshair could raise a tower on the far side of the circle from a
+    // vantage the board view never had. Checked first, because far ground
+    // usually fails several rules and "walk closer" is the one that helps.
+    if (this.possession?.active && this.possession.unit) {
+      this.possession.allies.worldPos(this.possession.unit, _v2);
+      if (_v2.distanceTo(this.cursorPos) > FP_BUILD_REACH) return { ok: false, reason: 'reach' };
+    }
     if (!isBuildableDir(this.cursorDir)) return { ok: false, reason: 'terrain' };
     // 99 Planets: the frontier masks a world that was built at its FINAL size,
     // so ground can be perfectly walkable and still be out of bounds.
@@ -470,6 +501,7 @@ export class Game {
         landmark: 'Cannot build on a landmark',
         gold: 'Not enough gold',
         frontier: 'Beyond the frontier. Survive a wave to push it out.',
+        reach: 'Too far to build from here. Walk closer.',
       };
       if (this.onToast) this.onToast(msgs[this.validity.reason] || 'Cannot build here', this.validity.reason === 'path' ? 'danger' : 'warn');
       this.rig.addTrauma(0.06);
