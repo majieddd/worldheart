@@ -62,13 +62,25 @@ function toDataUri(source) {
   return 'data:text/javascript;base64,' + Buffer.from(source, 'utf8').toString('base64');
 }
 
+// Every source this bundler reads goes through here, and the reason is line
+// endings. The repository stores LF, but a Windows checkout has CRLF in the
+// working tree, and these sources are base64 encoded into data: URIs, so a CR
+// survives inside the encoding where git's own normalisation cannot see it.
+// The result was a dist/ that differed by platform: the same commit built to
+// 1.83 MB on Windows and 1.82 MB on Linux, and the staleness check in CI failed
+// against a dist/ that was perfectly up to date. Normalising on read makes the
+// build depend on the content and nothing else.
+async function readText(...parts) {
+  return (await readFile(join(...parts), 'utf8')).replace(/\r\n/g, '\n');
+}
+
 async function build() {
   const imports = {};
 
-  let core = await readFile(join(root, 'lib', 'three.core.min.js'), 'utf8');
+  let core = await readText(root, 'lib', 'three.core.min.js');
   imports['three-core'] = toDataUri(core);
 
-  let three = await readFile(join(root, 'lib', 'three.module.min.js'), 'utf8');
+  let three = await readText(root, 'lib', 'three.module.min.js');
   three = three
     .replaceAll('"./three.core.min.js"', '"three-core"')
     .replaceAll("'./three.core.min.js'", "'three-core'");
@@ -76,12 +88,12 @@ async function build() {
 
   for (const rel of await collectModules(join(root, 'js'))) {
     const key = moduleKey(rel);
-    const src = await readFile(join(root, 'js', rel), 'utf8');
+    const src = await readText(root, 'js', rel);
     imports[key] = toDataUri(rewriteSpecifiers(src, key));
   }
 
-  const css = await readFile(join(root, 'css', 'style.css'), 'utf8');
-  let html = await readFile(join(root, 'index.html'), 'utf8');
+  const css = await readText(root, 'css', 'style.css');
+  let html = await readText(root, 'index.html');
 
   html = html.replace(
     /<link rel="stylesheet" href="css\/style.css">/,
