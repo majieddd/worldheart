@@ -142,5 +142,7 @@ test('all 13 talents buy, persist, reject duplicate charging, and reach the next
   const current=p.loadProfile();assert.equal(current.coins,10000-spent);assert.equal(p.TALENTS.length,13);
   const run=createRun({seed:3,playerIds:['solo'],profile:current});assert.equal(run.getFrontierSteps(),1);
   for(const t of current.towers)assert.ok(run.getUnlockedTowers().includes(t),t);
-  saved.set('wh99Progress','broken');assert.deepEqual(p.loadProfile().towers,['bolt']);delete globalThis.localStorage;
+  // Once migrated, changes to the preserved legacy backup cannot erase the
+  // new account. Corrupt primary/recovery paths have dedicated store tests.
+  saved.set('wh99Progress','broken');assert.deepEqual(p.loadProfile().towers,current.towers);delete globalThis.localStorage;
 });

@@ -28,7 +28,7 @@ Issue closure requires evidence, not just a merged diff. Proposed future impleme
 | M2 | [M2 implementation issue](https://github.com/majieddd/worldheart/issues/4) | implemented; review open | Codex, feature/99-planets-crystals | M0-M1 | [Resource fixtures and unforced expedition/boss victory](qa/implementation/M2.md) |
 | M3 | [M3 implementation issue](https://github.com/majieddd/worldheart/issues/5) | implemented; review open | Codex, feature/99-planets-terrain | M2 | [Terrain, ground/air routes, range agreement and unforced boss victory](qa/implementation/M3.md); cliff framing/startup/feel review open |
 | M4 | [M4 implementation issue](https://github.com/majieddd/worldheart/issues/6) | implemented; extraction/visual review open | Codex, feature/99-planets-weapons | M1/M3 | [187 tests, 27 browser checks and unforced loot/equip/boss victory](qa/implementation/M4.md); M5 supplies extraction |
-| M5 | [M5 implementation issue](https://github.com/majieddd/worldheart/issues/7) | planned | unassigned | M4 | Two-world continuation, campaign boundary tests, then full 99-world completion and rename |
+| M5 | [M5 implementation issue](https://github.com/majieddd/worldheart/issues/7) | active; two-world continuation verified | Codex, feature/99-planets-campaign | M4 | [M5A two natural wins, saved inventory arrival, 16 recovery fixtures](qa/implementation/M5A.md); third pilot/99 content/rename next |
 | M6 | [M6 implementation issue](https://github.com/majieddd/worldheart/issues/8) | future | unassigned | M5 | Authoritative co-op/PvPvE prototype, then independent native platform feasibility evidence |
 
 ## Verification record

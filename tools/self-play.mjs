@@ -6,16 +6,20 @@ import { resolve } from 'node:path';
 import { mkdirSync, writeFileSync } from 'node:fs';
 const require=createRequire(process.env.WH_NODE_MODULES?resolve(process.env.WH_NODE_MODULES,'package.json'):import.meta.url);
 const {chromium}=require('playwright');
-const seed=process.argv[2]||'12345',out=resolve(process.argv[3]||`artifacts/self-play-${seed}`);mkdirSync(out,{recursive:true});
+const seed=process.argv[2]||'12345',rootOut=resolve(process.argv[3]||`artifacts/self-play-${seed}`);let out=rootOut;mkdirSync(out,{recursive:true});
 const expeditionOnly=process.argv.includes('--expedition');
 const useWeapons=process.argv.includes('--weapons');
+const campaign=process.argv.includes('--campaign');
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:720}});const faults=[];
 page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
 await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(window.__qaFramesEnabled)fn(t);});});
 await page.addInitScript(value=>{window.__qaUseWeapons=value;},useWeapons);
 try{
-  await page.goto(`http://127.0.0.1:8139/?map=ninetynine&seed=${seed}`);
+  await page.goto(`http://127.0.0.1:8139/?map=ninetynine&seed=${seed}${campaign?'&campaign=1':''}`,{waitUntil:'domcontentloaded',timeout:120000});
+  const campaignResults=[];
+  for(let planet=1;planet<=(campaign?2:1);planet++){
+  if(campaign){out=resolve(rootOut,`planet-${planet}`);mkdirSync(out,{recursive:true});}
   await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:120000});
   await page.evaluate(async()=>{
     window.__qaFramesEnabled=false;
@@ -187,5 +191,24 @@ try{
   if(useWeapons){result.inventory=await page.evaluate(()=>WH.mode99.inventory.snapshot());result.weaponLoop=result.trace.some(a=>a.action==='weapon-picked-up')&&result.trace.some(a=>a.action==='weapon-equipped');}
   if(expeditionOnly)result.scope='Unforced instrumented crystal out-and-back; not a full planet';
   writeFileSync(resolve(out,'run.json'),JSON.stringify(result,null,2)+'\n');console.log('TERMINAL '+JSON.stringify({...result,trace:result.trace.length}));
-  if((expeditionOnly?lastTrip!=='done':result.phase!=='victory')||faults.length||(useWeapons&&!result.weaponLoop))process.exitCode=1;
+  if((expeditionOnly?lastTrip!=='done':result.phase!=='victory')||faults.length||(useWeapons&&!result.weaponLoop)){process.exitCode=1;break;}
+  if(campaign){
+    const checkpoint=await page.evaluate(()=>WH.mode99.campaign.state());
+    campaignResults.push({planet,result:{...result,trace:result.trace.length},checkpoint});
+    if(planet<2){
+      await Promise.all([page.waitForEvent('load',{timeout:180000}),page.locator('#btn-extract').click()]);
+      await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:180000});
+      const arrived=await page.evaluate(()=>({planet:WH.mode99.campaign.state().planet,inventory:WH.mode99.inventory.snapshot(),terrain:WH.CONFIG.terrainKey}));
+      if(arrived.planet!==planet+1||JSON.stringify(arrived.inventory)!==JSON.stringify(checkpoint.assault.victory.inventory))throw Error('Natural extraction did not preserve its inventory');
+      writeFileSync(resolve(out,'arrival.json'),JSON.stringify(arrived,null,2)+'\n');
+      console.log('ARRIVAL '+JSON.stringify(arrived));
+    }else{
+      await page.locator('#btn-extract').click();
+      const final=await page.evaluate(()=>WH.mode99.campaign.state());
+      if(final.status!=='complete')throw Error('Pilot did not reach its real final receipt');
+      writeFileSync(resolve(rootOut,'campaign.json'),JSON.stringify({scope:'Two unforced planets linked by normal saved extraction; no wave/resource/enemy injection',planets:campaignResults,final,faults},null,2)+'\n');
+      await page.screenshot({path:resolve(rootOut,'campaign-complete.png')});
+    }
+  }
+  }
 }catch(e){console.error(e);await page.screenshot({path:resolve(out,'error.png')});process.exitCode=1;}finally{await browser.close();}

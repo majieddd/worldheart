@@ -159,6 +159,13 @@ test('losing the run ends it', () => {
   assert.deepEqual(run.completeWave(), []);
 });
 
+test('a restored victory permits no repeated reward or late defeat',()=>{
+  const run=createRun({seed:42,playerIds:['solo'],restoredVictory:true});
+  assert.equal(run.getPhase(),'victory');assert.equal(run.getWave(),15);
+  assert.equal(run.getCoins(),0);assert.deepEqual(run.completeWave(),[]);
+  assert.equal(run.loseRun(),false);assert.equal(run.getPhase(),'victory');
+});
+
 test('the same seed replays identically', () => {
   const ids = (seed) => {
     const run = newRun(seed);

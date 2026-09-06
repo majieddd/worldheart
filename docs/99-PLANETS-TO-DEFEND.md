@@ -215,7 +215,7 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 | Crystal-driven explicit upgrades are the only frontier expansion trigger | implemented, review open | [M2 ledger, expedition and boss victory](qa/implementation/M2.md); terrain profile sampling continues in M3 |
 | Massive terrain variation, swimming, slope cost, climate placement, flight ceilings, spherical ranges | implemented, review open | [M3 four profiles, route and range fixtures, unforced victory](qa/implementation/M3.md); extreme-cliff framing and startup review open |
 | Weapon inventory, loot, modular customization and era arc | implemented prototype; retention next | [M4 gameplay and pose evidence](qa/implementation/M4.md); M5 extraction/retention and wider visual review remain |
-| Actual 99-planet continuation and final ending | not yet | Current victory only banks a counter |
+| Actual 99-planet continuation and final ending | two-world continuation implemented | [M5A natural linked wins and checkpoint recovery](qa/implementation/M5A.md); third pilot and 99 content expansion remain |
 | PvPvE galaxies and platform ports | not yet | M6 after single-player evidence |
 
 ## Task list
@@ -235,7 +235,11 @@ M4 weapon/inventory and choreography work is implemented on feature/99-planets-w
 187 tests, 27 browser checks and an unforced victory with five recovered weapons.
 The red strike volume shares its damage predicate. Extraction follows in M5;
 broader visual and combat-feel review remains open.
-M5-M6 remain queued. The stacked feature PRs are not merged to production.
+M5A on feature/99-planets-campaign has two unforced linked victories, eight
+extracted weapons at the pilot ending, 200 headless tests and 16 browser recovery
+fixtures. The representative third pilot and 99-node route remain M5 work.
+M6 remains future. The stacked feature PRs are not merged
+to production.
 
 M0 rewards and deliberate drafts, and M1 camera ownership/motion preferences/
 Bulwark arm attachment, have implemented slices with automated evidence. Owner

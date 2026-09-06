@@ -608,3 +608,14 @@ body.fp-mode #heart-panel, body.fp-mode #crystal-panel { display: none; }
 #weapon-dialog select { display:block; box-sizing:border-box; width:100%; margin-top:4px; padding:8px; background:#101c2e; color:#e0edf4; border:1px solid #41687b; border-radius:4px; font:12px system-ui,sans-serif; }
 .weapon-notice { min-height:22px; color:#8fded9; }.weapon-item summary { cursor:pointer; color:#b9d9e3; }.weapon-footnote { margin-top:24px!important; }
 @media(max-width:640px) { .weapon-equipment { grid-template-columns:1fr; } #weapon-dialog { padding:16px; }.weapon-open { left:10px; bottom:12px; } }
+.campaign-badge { position:absolute; top:94px; left:50%; transform:translateX(-50%); border:1px solid var(--hairline-strong); border-radius:6px; background:var(--surface); color:var(--text); padding:6px 12px; pointer-events:auto; font:12px var(--font-body); }
+.campaign-badge:disabled { opacity:.85; }
+.campaign-intro,.campaign-receipt { color:var(--text-muted); font-size:12px; line-height:1.55; max-width:64ch; margin:12px auto; }
+.campaign-save { position:absolute; right:18px; bottom:18px; max-width:340px; pointer-events:auto; background:var(--surface); border:1px solid var(--hairline-strong); border-radius:8px; padding:9px; font-size:11px; }
+.campaign-save p { margin:0 0 6px; }
+.campaign-save.save-failed { border-color:var(--danger); }
+.save-import { display:inline-flex; padding:5px 8px; border:1px solid var(--hairline-strong); border-radius:4px; cursor:pointer; }
+.campaign-save button,.save-import { font-size:11px; padding:5px 8px; }
+.campaign-worlds { color:var(--text-muted); font-size:12px; margin:12px 0; }
+.campaign-worlds summary { color:var(--accent); cursor:pointer; }
+@media(max-width:600px) { .campaign-save { right:8px; bottom:55px; max-width:240px; } .campaign-badge { top:88px; max-width:48%; font-size:10px; } }

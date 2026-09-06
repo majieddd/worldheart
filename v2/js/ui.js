@@ -290,7 +290,8 @@ export class HUD {
   }
 
   _buildMapCards() {
-    if (CONFIG.terrain) {
+    if(CONFIG.campaign)document.getElementById('terrain-profile').disabled=true;
+    if (CONFIG.terrain && !CONFIG.campaign) {
       storeLocal('whTerrain', CONFIG.terrainKey);
       document.getElementById('terrain-profile').addEventListener('change', event => {
         storeLocal('whTerrain', event.target.value);
@@ -317,6 +318,11 @@ export class HUD {
         this._reboot();
       });
       row.appendChild(card);
+    }
+    if(CONFIG.mapKey==='ninetynine'&&!CONFIG.campaign){
+      const campaignButton=document.createElement('button');campaignButton.className='btn';campaignButton.id='btn-campaign';campaignButton.textContent='Saved expedition pilot';
+      document.getElementById('btn-begin').parentElement.append(campaignButton);
+      campaignButton.onclick=()=>{const url=new URL(location.href);url.searchParams.set('map','ninetynine');url.searchParams.set('campaign','1');location.href=url.href;};
     }
   }
 
@@ -516,6 +522,7 @@ export class HUD {
       this.audio?.play('click');
     });
     this.el['btn-retry'].addEventListener('click', () => {
+      if(this.onCampaignRetry){this.onCampaignRetry();return;}
       storeLocal('whMap', CONFIG.mapKey);
       storeLocal('whSeed', String(CONFIG.seed));
       this._reboot();
@@ -530,9 +537,11 @@ export class HUD {
       this._ended = false;
       this.game.paused = false;
       this.audio?.play('click');
+      this.onContinue?.();
     });
 
     addEventListener('keydown', (e) => {
+      if(document.querySelector('dialog[open]')||e.target?.matches?.('input,textarea,select,button,[contenteditable="true"]'))return;
       // Pause and sound belong to the player wherever they are, but the SPEED
       // key does not: F is a jump alias while a body is possessed, and these
       // are two separate window listeners, so preventDefault in one does not
@@ -583,6 +592,7 @@ export class HUD {
   }
 
   beginGame() {
+    if(this.onBegin?.()===false)return;
     this.el['title-overlay'].classList.remove('show');
     this.game.state = 'playing';
     this.waves.begin();

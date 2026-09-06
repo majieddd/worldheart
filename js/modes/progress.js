@@ -5,22 +5,7 @@
 // this becomes a DataStore instead. The core is handed a plain object at
 // construction and never learns where it came from.
 
-const KEY = 'wh99Progress';
-
-// What a brand new player owns. One tower, one commander, no bonuses - so the
-// first run is the narrow one the owner asked for and everything after it is
-// something that was earned.
-function freshProfile() {
-  return {
-    version: 2,
-    planetsBeaten: 0,
-    coins: 0,
-    towers: ['bolt'],
-    commanders: ['commander'],
-    bonuses: {},
-    loadout: 'bolt',
-  };
-}
+import { campaignStore } from './campaign-store.js';
 
 // The tree. Tiers gate on the tier below rather than on individual nodes, so a
 // player can always see one row ahead and choose within it, and nothing can be
@@ -63,41 +48,12 @@ export const TALENTS = [
 ];
 
 export function loadProfile() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return freshProfile();
-    const p = JSON.parse(raw);
-    const base = freshProfile();
-    // Never trust the stored shape. A hand-edited or half-written value must
-    // not take the game down on boot, and a profile written by an older build
-    // must still load - which is why every field is rebuilt rather than spread.
-    return {
-      version: 2,
-      planetsBeaten: Number.isFinite(p?.planetsBeaten) ? p.planetsBeaten : 0,
-      coins: Number.isFinite(p?.coins) ? Math.max(0, p.coins) : 0,
-      towers: dedupe(Array.isArray(p?.towers) ? p.towers : base.towers, base.towers),
-      commanders: dedupe(Array.isArray(p?.commanders) ? p.commanders : base.commanders, base.commanders),
-      bonuses: (p && typeof p.bonuses === 'object' && p.bonuses) ? { ...p.bonuses } : {},
-      loadout: typeof p?.loadout === 'string' ? p.loadout : base.loadout,
-    };
-  } catch {
-    return freshProfile();
-  }
-}
-
-// Keeps the starting grants no matter what was stored, so a corrupted list can
-// never leave a profile with nothing to play.
-function dedupe(list, required) {
-  const out = [];
-  for (const v of [...required, ...list]) {
-    if (typeof v === 'string' && !out.includes(v)) out.push(v);
-  }
-  return out;
+  return campaignStore.snapshot().account;
 }
 
 export function saveProfile(profile) {
-  try { localStorage.setItem(KEY, JSON.stringify(profile)); } catch { /* private mode */ }
-  return profile;
+  campaignStore.updateAccount(profile);
+  return loadProfile();
 }
 
 export function bankVictory(coins = 0) {

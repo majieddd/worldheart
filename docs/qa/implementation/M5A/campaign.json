@@ -1,0 +1,2571 @@
+{
+  "scope": "Two unforced planets linked by normal saved extraction; no wave/resource/enemy injection",
+  "planets": [
+    {
+      "planet": 1,
+      "result": {
+        "state": "playing",
+        "phase": "victory",
+        "wave": 15,
+        "lives": 22,
+        "gold": 473,
+        "kills": 1357,
+        "score": 26060,
+        "towers": 8,
+        "commander": [
+          {
+            "hp": 1400,
+            "hpMax": 1400,
+            "state": "roam",
+            "dir": [
+              0.8712528540469777,
+              0.429722482716424,
+              0.23718569131174128
+            ]
+          }
+        ],
+        "seed": 28183,
+        "trace": 66,
+        "faults": [],
+        "scope": "Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile",
+        "inventory": {
+          "version": 1,
+          "items": [
+            {
+              "id": "starter-28183",
+              "seed": 28183,
+              "tier": 1,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "balanced",
+                "core": "tempered"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-1",
+              "seed": 2013013496,
+              "tier": 1,
+              "family": "carbine",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "quick",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-2",
+              "seed": 2108306693,
+              "tier": 1,
+              "family": "spear",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "steady",
+                "core": "ember"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-3",
+              "seed": 883936432,
+              "tier": 1,
+              "family": "spear",
+              "era": "ancient",
+              "rarity": "uncommon",
+              "parts": {
+                "head": "long",
+                "grip": "quick",
+                "core": "ember"
+              },
+              "affixes": [
+                "forceful"
+              ],
+              "infusions": 0
+            }
+          ],
+          "slots": [
+            "weapon-expedition-1-1-1-3",
+            null
+          ],
+          "active": 0,
+          "scrap": 0
+        },
+        "weaponLoop": true
+      },
+      "checkpoint": {
+        "id": "expedition-1",
+        "seed": 12345,
+        "limit": 2,
+        "planet": 1,
+        "completed": 0,
+        "status": "victory",
+        "attempt": 1,
+        "commander": "commander",
+        "banked": {
+          "version": 1,
+          "items": [
+            {
+              "id": "starter-28183",
+              "seed": 28183,
+              "tier": 1,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "balanced",
+                "core": "tempered"
+              },
+              "affixes": [],
+              "infusions": 0
+            }
+          ],
+          "slots": [
+            "starter-28183",
+            null
+          ],
+          "active": "native",
+          "scrap": 0
+        },
+        "assault": {
+          "id": "expedition-1-1-1",
+          "paid": 32767,
+          "coins": 490,
+          "effectiveSeed": 28183,
+          "start": {
+            "version": 1,
+            "items": [
+              {
+                "id": "starter-28183",
+                "seed": 28183,
+                "tier": 1,
+                "family": "sword",
+                "era": "ancient",
+                "rarity": "common",
+                "parts": {
+                  "head": "balanced",
+                  "grip": "balanced",
+                  "core": "tempered"
+                },
+                "affixes": [],
+                "infusions": 0
+              }
+            ],
+            "slots": [
+              "starter-28183",
+              null
+            ],
+            "active": "native",
+            "scrap": 0
+          },
+          "victory": {
+            "inventory": {
+              "version": 1,
+              "items": [
+                {
+                  "id": "starter-28183",
+                  "seed": 28183,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-1",
+                  "seed": 2013013496,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "quick",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-2",
+                  "seed": 2108306693,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "steady",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-3",
+                  "seed": 883936432,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "long",
+                    "grip": "quick",
+                    "core": "ember"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                }
+              ],
+              "slots": [
+                "weapon-expedition-1-1-1-3",
+                null
+              ],
+              "active": 0,
+              "scrap": 0
+            },
+            "drops": [
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-4",
+                  "seed": 3179120657,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9421542085643901,
+                  0.2918335435048359,
+                  0.1648594254806764
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-5",
+                  "seed": 1928167246,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "balanced",
+                    "core": "pulse"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9383430918224311,
+                  0.3018723079145636,
+                  0.1684795291525223
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-6",
+                  "seed": 3301711112,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "weighted",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9405887268976425,
+                  0.29336235370232305,
+                  0.1709718581033301
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-7",
+                  "seed": 1579203532,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "steady",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9409618934314301,
+                  0.2935820805648985,
+                  0.16852381754851023
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-8",
+                  "seed": 1570292386,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9396616754683462,
+                  0.29772922200730284,
+                  0.16850295551991568
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-9",
+                  "seed": 921275864,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "steady",
+                    "core": "ember"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9392889703134284,
+                  0.2975096095459644,
+                  0.1709510528641092
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-10",
+                  "seed": 1613066097,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "long",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9401285747735382,
+                  0.29554593875527985,
+                  0.1697376239362869
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-11",
+                  "seed": 2898045230,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9409618934314301,
+                  0.2935820805648985,
+                  0.16852381754851023
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-12",
+                  "seed": 703122917,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "quick",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9368191352035335,
+                  0.3009834882579754,
+                  0.17826622706661208
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-13",
+                  "seed": 2274116720,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9389104283755038,
+                  0.2972881805584105,
+                  0.17339822717662923
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-14",
+                  "seed": 339729390,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9397527444318187,
+                  0.29532533471820843,
+                  0.17218515036565543
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-15",
+                  "seed": 1683310545,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "balanced",
+                    "core": "pulse"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9376754420868458,
+                  0.2990251265203424,
+                  0.17705575115406894
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-16",
+                  "seed": 2618796384,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "steady",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9372826332322612,
+                  0.2987991905701987,
+                  0.1795001647792903
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-17",
+                  "seed": 3055995230,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "long",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9389104283755038,
+                  0.2972881805584105,
+                  0.17339822717662923
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-18",
+                  "seed": 2914782916,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9405887268976425,
+                  0.29336235370232305,
+                  0.1709718581033301
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-19",
+                  "seed": 3669136121,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "weighted",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9392889703134284,
+                  0.2975096095459644,
+                  0.1709510528641092
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-20",
+                  "seed": 267780420,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9442386405699436,
+                  0.28570889756424867,
+                  0.16365761671015053
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-21",
+                  "seed": 1073538027,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9422437113675599,
+                  0.2894310404667185,
+                  0.16854216446527354
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-22",
+                  "seed": 1469020567,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "steady",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9376754420868458,
+                  0.2990251265203424,
+                  0.17705575115406894
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-23",
+                  "seed": 3254885319,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "quick",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9596015317101674,
+                  0.2586414543513158,
+                  0.11076776801279818
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-24",
+                  "seed": 644736135,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "steady",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9359858705607578,
+                  0.29652047390198666,
+                  0.1897526249293051
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-25",
+                  "seed": 1518091027,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "steady",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9385261083331764,
+                  0.297064904947753,
+                  0.17584421009906823
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-26",
+                  "seed": 1547188643,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "weighted",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9356174287788681,
+                  0.30029302253872764,
+                  0.18559129176708444
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-27",
+                  "seed": 66714927,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.942046572595713,
+                  0.2942303685581239,
+                  0.1611730290055397
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-28",
+                  "seed": 3603756848,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "weighted",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9443181705701548,
+                  0.28330343819340625,
+                  0.1673390409881413
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-29",
+                  "seed": 390734867,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9392889703134284,
+                  0.2975096095459644,
+                  0.1709510528641092
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-30",
+                  "seed": 2371306327,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9372088216795114,
+                  0.30120843339388637,
+                  0.1758212280087436
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-31",
+                  "seed": 431551290,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "quick",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9364243481990889,
+                  0.3007551942972462,
+                  0.1807090291134812
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-32",
+                  "seed": 972343222,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "quick",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9368191352035335,
+                  0.3009834882579754,
+                  0.17826622706661208
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-33",
+                  "seed": 2741574226,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9422437113675599,
+                  0.2894310404667185,
+                  0.16854216446527354
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-34",
+                  "seed": 1418888484,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "steady",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9529729902884352,
+                  0.26120000587925435,
+                  0.15367835471983468
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-35",
+                  "seed": 3695188996,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9494782884066292,
+                  0.26924712026837383,
+                  0.16123575308102636
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-36",
+                  "seed": 2048473139,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9462822268212777,
+                  0.2795717175877484,
+                  0.1624487670842721
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-37",
+                  "seed": 3316277269,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9498309233104137,
+                  0.2694605217140659,
+                  0.1587836400920151
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-38",
+                  "seed": 1948364539,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "ember"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9372826332322612,
+                  0.2987991905701987,
+                  0.1795001647792903
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-39",
+                  "seed": 2651807665,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.936325109811395,
+                  0.29273741717171115,
+                  0.19390743493820586
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-40",
+                  "seed": 2938651149,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9374916646034364,
+                  0.28698596641574675,
+                  0.19684621886004916
+                ]
+              }
+            ],
+            "kills": 1357,
+            "score": 26060,
+            "lives": 22
+          }
+        },
+        "receipts": []
+      }
+    },
+    {
+      "planet": 2,
+      "result": {
+        "state": "playing",
+        "phase": "victory",
+        "wave": 15,
+        "lives": 24,
+        "gold": 504,
+        "kills": 1206,
+        "score": 23810,
+        "towers": 8,
+        "commander": [
+          {
+            "hp": 1400,
+            "hpMax": 1400,
+            "state": "roam",
+            "dir": [
+              0.9611694298310822,
+              0.27454233612073836,
+              -0.027925487203633394
+            ]
+          }
+        ],
+        "seed": 36102,
+        "trace": 70,
+        "faults": [],
+        "scope": "Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile",
+        "inventory": {
+          "version": 1,
+          "items": [
+            {
+              "id": "starter-28183",
+              "seed": 28183,
+              "tier": 1,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "balanced",
+                "core": "tempered"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-1",
+              "seed": 2013013496,
+              "tier": 1,
+              "family": "carbine",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "quick",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-2",
+              "seed": 2108306693,
+              "tier": 1,
+              "family": "spear",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "steady",
+                "core": "ember"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-3",
+              "seed": 883936432,
+              "tier": 1,
+              "family": "spear",
+              "era": "ancient",
+              "rarity": "uncommon",
+              "parts": {
+                "head": "long",
+                "grip": "quick",
+                "core": "ember"
+              },
+              "affixes": [
+                "forceful"
+              ],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-2-2-1",
+              "seed": 2690661315,
+              "tier": 2,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "uncommon",
+              "parts": {
+                "head": "long",
+                "grip": "balanced",
+                "core": "ember"
+              },
+              "affixes": [
+                "forceful"
+              ],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-2-2-2",
+              "seed": 945372618,
+              "tier": 2,
+              "family": "spear",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "weighted",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-2-2-3",
+              "seed": 1287322961,
+              "tier": 2,
+              "family": "spear",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "steady",
+                "core": "tempered"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-2-2-4",
+              "seed": 192736594,
+              "tier": 2,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "uncommon",
+              "parts": {
+                "head": "long",
+                "grip": "quick",
+                "core": "frost"
+              },
+              "affixes": [
+                "farseeing"
+              ],
+              "infusions": 0
+            }
+          ],
+          "slots": [
+            "weapon-expedition-1-2-2-4",
+            null
+          ],
+          "active": 0,
+          "scrap": 0
+        },
+        "weaponLoop": true
+      },
+      "checkpoint": {
+        "id": "expedition-1",
+        "seed": 12345,
+        "limit": 2,
+        "planet": 2,
+        "completed": 1,
+        "status": "victory",
+        "attempt": 2,
+        "commander": "commander",
+        "banked": {
+          "version": 1,
+          "items": [
+            {
+              "id": "starter-28183",
+              "seed": 28183,
+              "tier": 1,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "balanced",
+                "core": "tempered"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-1",
+              "seed": 2013013496,
+              "tier": 1,
+              "family": "carbine",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "quick",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-2",
+              "seed": 2108306693,
+              "tier": 1,
+              "family": "spear",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "steady",
+                "core": "ember"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-3",
+              "seed": 883936432,
+              "tier": 1,
+              "family": "spear",
+              "era": "ancient",
+              "rarity": "uncommon",
+              "parts": {
+                "head": "long",
+                "grip": "quick",
+                "core": "ember"
+              },
+              "affixes": [
+                "forceful"
+              ],
+              "infusions": 0
+            }
+          ],
+          "slots": [
+            "weapon-expedition-1-1-1-3",
+            null
+          ],
+          "active": 0,
+          "scrap": 0
+        },
+        "assault": {
+          "id": "expedition-1-2-2",
+          "paid": 32767,
+          "coins": 490,
+          "effectiveSeed": 36102,
+          "start": {
+            "version": 1,
+            "items": [
+              {
+                "id": "starter-28183",
+                "seed": 28183,
+                "tier": 1,
+                "family": "sword",
+                "era": "ancient",
+                "rarity": "common",
+                "parts": {
+                  "head": "balanced",
+                  "grip": "balanced",
+                  "core": "tempered"
+                },
+                "affixes": [],
+                "infusions": 0
+              },
+              {
+                "id": "weapon-expedition-1-1-1-1",
+                "seed": 2013013496,
+                "tier": 1,
+                "family": "carbine",
+                "era": "ancient",
+                "rarity": "common",
+                "parts": {
+                  "head": "long",
+                  "grip": "quick",
+                  "core": "frost"
+                },
+                "affixes": [],
+                "infusions": 0
+              },
+              {
+                "id": "weapon-expedition-1-1-1-2",
+                "seed": 2108306693,
+                "tier": 1,
+                "family": "spear",
+                "era": "ancient",
+                "rarity": "common",
+                "parts": {
+                  "head": "balanced",
+                  "grip": "steady",
+                  "core": "ember"
+                },
+                "affixes": [],
+                "infusions": 0
+              },
+              {
+                "id": "weapon-expedition-1-1-1-3",
+                "seed": 883936432,
+                "tier": 1,
+                "family": "spear",
+                "era": "ancient",
+                "rarity": "uncommon",
+                "parts": {
+                  "head": "long",
+                  "grip": "quick",
+                  "core": "ember"
+                },
+                "affixes": [
+                  "forceful"
+                ],
+                "infusions": 0
+              }
+            ],
+            "slots": [
+              "weapon-expedition-1-1-1-3",
+              null
+            ],
+            "active": 0,
+            "scrap": 0
+          },
+          "victory": {
+            "inventory": {
+              "version": 1,
+              "items": [
+                {
+                  "id": "starter-28183",
+                  "seed": 28183,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-1",
+                  "seed": 2013013496,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "quick",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-2",
+                  "seed": 2108306693,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "steady",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-3",
+                  "seed": 883936432,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "long",
+                    "grip": "quick",
+                    "core": "ember"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-2-2-1",
+                  "seed": 2690661315,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "long",
+                    "grip": "balanced",
+                    "core": "ember"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-2-2-2",
+                  "seed": 945372618,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "weighted",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-2-2-3",
+                  "seed": 1287322961,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "steady",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-2-2-4",
+                  "seed": 192736594,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "long",
+                    "grip": "quick",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                }
+              ],
+              "slots": [
+                "weapon-expedition-1-2-2-4",
+                null
+              ],
+              "active": 0,
+              "scrap": 0
+            },
+            "drops": [
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-5",
+                  "seed": 3143988995,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "balanced",
+                    "core": "pulse"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9056832374083983,
+                  0.4204860711107278,
+                  0.05412335428728626
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-6",
+                  "seed": 2647749002,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.90348593900067,
+                  0.42674949065808965,
+                  0.039975370556613966
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-7",
+                  "seed": 1216006275,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "pulse"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9031755569378215,
+                  0.4266129250015692,
+                  0.04770037286711117
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-8",
+                  "seed": 923114429,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9296482964007178,
+                  0.36786798286007283,
+                  0.02066862805568635
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-9",
+                  "seed": 3727809071,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "long",
+                    "grip": "weighted",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9051234644867616,
+                  0.42024156092467635,
+                  0.06440919582694318
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-10",
+                  "seed": 996977216,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "relic",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "quick",
+                    "core": "ember"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9061254684758386,
+                  0.41827344090234014,
+                  0.06311865029576182
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-11",
+                  "seed": 3180350193,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "weighted",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.899134815671212,
+                  0.4344677929613273,
+                  0.0528613292228739
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-12",
+                  "seed": 2288983054,
+                  "tier": 2,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "balanced",
+                    "core": "pulse"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.899134815671212,
+                  0.4344677929613273,
+                  0.0528613292228739
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-13",
+                  "seed": 2978803306,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9377747647811422,
+                  0.3446227265669366,
+                  0.04258716794110454
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-14",
+                  "seed": 799838686,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "weighted",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8968318721327665,
+                  0.44067469340148496,
+                  0.038709271787833545
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-15",
+                  "seed": 385668251,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9308828709208785,
+                  0.36352667203500755,
+                  0.03613086416424322
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-16",
+                  "seed": 523619921,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8994811925241247,
+                  0.4346217288477835,
+                  0.045139086263925446
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-17",
+                  "seed": 3617936512,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8960678544868091,
+                  0.4427424951203712,
+                  0.032272018374974495
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-18",
+                  "seed": 3473347539,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "quick",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8968318721327665,
+                  0.44067469340148496,
+                  0.038709271787833545
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-19",
+                  "seed": 2200672019,
+                  "tier": 2,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "long",
+                    "grip": "weighted",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9001532693745944,
+                  0.4325095665426915,
+                  0.051570984897344005
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-20",
+                  "seed": 2031532978,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9421080571602987,
+                  0.33431396671595,
+                  0.025818216287999338
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-21",
+                  "seed": 2413145999,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9051234644867616,
+                  0.42024156092467635,
+                  0.06440919582694318
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-22",
+                  "seed": 3550897812,
+                  "tier": 2,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "weighted",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.899134815671212,
+                  0.4344677929613273,
+                  0.0528613292228739
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-23",
+                  "seed": 3254948014,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9420420995392448,
+                  0.334290529711734,
+                  0.028399373949789457
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-24",
+                  "seed": 1347818109,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9414948635542061,
+                  0.3364704781032811,
+                  0.01936593054816573
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-25",
+                  "seed": 752392876,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "weighted",
+                    "core": "pulse"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9062714166864373,
+                  0.41833732391553197,
+                  0.060547524444435216
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-26",
+                  "seed": 2765323979,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8970803103499796,
+                  0.4383756558002442,
+                  0.055440970266490676
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-27",
+                  "seed": 60474840,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9413251970846519,
+                  0.3364102874022779,
+                  0.02711073336260141
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-28",
+                  "seed": 1053815509,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9049684810788311,
+                  0.4201735169614516,
+                  0.0669795782169342
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-29",
+                  "seed": 159569875,
+                  "tier": 2,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9363221509120407,
+                  0.34885540541157567,
+                  0.040009196774926876
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-30",
+                  "seed": 1800913890,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9353911741813519,
+                  0.3508827635719444,
+                  0.04387069057750272
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-31",
+                  "seed": 3354096611,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "weighted",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8957133084676834,
+                  0.44258903426977425,
+                  0.04257482563705138
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-32",
+                  "seed": 3090208458,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9370618202748924,
+                  0.34914197549753895,
+                  0.0038763292921686187
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-33",
+                  "seed": 3155628141,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.895988261390279,
+                  0.44270833133429116,
+                  0.03484779502396925
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-34",
+                  "seed": 1182059023,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9393883178975359,
+                  0.3428453145506013,
+                  0.002584277140178158
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-35",
+                  "seed": 2193642743,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.893079703835913,
+                  0.4486446111478166,
+                  0.03356568909441178
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-36",
+                  "seed": 1966782077,
+                  "tier": 2,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "quick",
+                    "core": "ember"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.9401554307356873,
+                  0.34074344658640204,
+                  0.0012921558010320384
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-37",
+                  "seed": 3747561940,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "quick",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "farseeing"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8946834932955473,
+                  0.44454172901169486,
+                  0.04386454139472041
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-38",
+                  "seed": 4054810890,
+                  "tier": 2,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "quick",
+                    "core": "ember"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.893079703835913,
+                  0.4486446111478166,
+                  0.03356568909441178
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-39",
+                  "seed": 3923738067,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8951268124980138,
+                  0.44473346714452483,
+                  0.03098600891943313
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-2-2-40",
+                  "seed": 2570081320,
+                  "tier": 2,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "weighted",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8948787074812431,
+                  0.4446272065309623,
+                  0.038713642416755706
+                ]
+              }
+            ],
+            "kills": 1206,
+            "score": 23810,
+            "lives": 24
+          }
+        },
+        "receipts": [
+          {
+            "id": "expedition-1-1",
+            "planet": 1,
+            "items": 4,
+            "coins": 490,
+            "kills": 1357,
+            "score": 26060
+          }
+        ]
+      }
+    }
+  ],
+  "final": {
+    "id": "expedition-1",
+    "seed": 12345,
+    "limit": 2,
+    "planet": 2,
+    "completed": 2,
+    "status": "complete",
+    "attempt": 2,
+    "commander": "commander",
+    "banked": {
+      "version": 1,
+      "items": [
+        {
+          "id": "starter-28183",
+          "seed": 28183,
+          "tier": 1,
+          "family": "sword",
+          "era": "ancient",
+          "rarity": "common",
+          "parts": {
+            "head": "balanced",
+            "grip": "balanced",
+            "core": "tempered"
+          },
+          "affixes": [],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-1-1-1",
+          "seed": 2013013496,
+          "tier": 1,
+          "family": "carbine",
+          "era": "ancient",
+          "rarity": "common",
+          "parts": {
+            "head": "long",
+            "grip": "quick",
+            "core": "frost"
+          },
+          "affixes": [],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-1-1-2",
+          "seed": 2108306693,
+          "tier": 1,
+          "family": "spear",
+          "era": "ancient",
+          "rarity": "common",
+          "parts": {
+            "head": "balanced",
+            "grip": "steady",
+            "core": "ember"
+          },
+          "affixes": [],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-1-1-3",
+          "seed": 883936432,
+          "tier": 1,
+          "family": "spear",
+          "era": "ancient",
+          "rarity": "uncommon",
+          "parts": {
+            "head": "long",
+            "grip": "quick",
+            "core": "ember"
+          },
+          "affixes": [
+            "forceful"
+          ],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-2-2-1",
+          "seed": 2690661315,
+          "tier": 2,
+          "family": "sword",
+          "era": "ancient",
+          "rarity": "uncommon",
+          "parts": {
+            "head": "long",
+            "grip": "balanced",
+            "core": "ember"
+          },
+          "affixes": [
+            "forceful"
+          ],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-2-2-2",
+          "seed": 945372618,
+          "tier": 2,
+          "family": "spear",
+          "era": "ancient",
+          "rarity": "common",
+          "parts": {
+            "head": "long",
+            "grip": "weighted",
+            "core": "frost"
+          },
+          "affixes": [],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-2-2-3",
+          "seed": 1287322961,
+          "tier": 2,
+          "family": "spear",
+          "era": "ancient",
+          "rarity": "common",
+          "parts": {
+            "head": "balanced",
+            "grip": "steady",
+            "core": "tempered"
+          },
+          "affixes": [],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-2-2-4",
+          "seed": 192736594,
+          "tier": 2,
+          "family": "sword",
+          "era": "ancient",
+          "rarity": "uncommon",
+          "parts": {
+            "head": "long",
+            "grip": "quick",
+            "core": "frost"
+          },
+          "affixes": [
+            "farseeing"
+          ],
+          "infusions": 0
+        }
+      ],
+      "slots": [
+        "weapon-expedition-1-2-2-4",
+        null
+      ],
+      "active": 0,
+      "scrap": 0
+    },
+    "assault": null,
+    "receipts": [
+      {
+        "id": "expedition-1-1",
+        "planet": 1,
+        "items": 4,
+        "coins": 490,
+        "kills": 1357,
+        "score": 26060
+      },
+      {
+        "id": "expedition-1-2",
+        "planet": 2,
+        "items": 8,
+        "coins": 490,
+        "kills": 1206,
+        "score": 23810
+      }
+    ]
+  },
+  "faults": []
+}

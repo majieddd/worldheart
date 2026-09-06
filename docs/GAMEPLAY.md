@@ -361,13 +361,30 @@ settle after recovery; launched projectiles retain their release stats.
 Drop chances are 2% ordinary, 10% Aegis and one guaranteed Colossus weapon.
 Rarities are 68% common, 22% uncommon, 8.5% rare and 1.5% relic. Tiers 1-33 use
 ancient presentation, 34-66 technological and 67-99 empowered. These numbers
-remain balance prototypes. Inventory persistence is part of M5, not M4.
+remain balance prototypes. The saved expedition pilot below supports persistence;
+the single-planet sandbox does not retain weapon loot.
 
 Enemy red volumes and damage share a locked origin, facing, radius and arc.
 Damage resolves after anticipation; moving outside avoids the hit. Generated
 carbines travel through swept collision instead of dealing immediate damage.
 Ember burns for three seconds and frost slows for two, respecting the global
 70% slow cap. See [M4 evidence and limitations](qa/implementation/M4.md).
+
+## Saved expedition pilot
+
+`?map=ninetynine&campaign=1` opens the two-planet saved pilot. The plain mode URL
+remains the single-planet sandbox. Victory enables salvage followed by explicit
+extraction and a real next-world load. Collected inventory and remaining ground
+drops survive a victory reload. Previously extracted weapons survive defeat;
+current assault loot and modifications do not. Mid-assault refresh restarts wave
+one from the last checkpoint without repaying previously cleared wave coins.
+Three infusions per weapon can raise it to the current planet tier.
+
+The version-1 `wh99Campaign` envelope stores account unlocks, expedition receipts
+and temporary assault state atomically. Legacy `wh99Progress` remains preserved;
+its victory count does not skip campaign nodes. Failed saves expose export/retry,
+and travel waits for successful persistence. The second planet ends this pilot;
+the 99-node route is the remaining M5 slice. [Evidence](qa/implementation/M5A.md).
 
 ## Audit follow-up
 
