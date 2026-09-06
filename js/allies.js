@@ -1,8 +1,10 @@
 import * as THREE from 'three';
-import { PALETTE } from './config.js';
+import { CONFIG, PALETTE } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { R, terrainHeight } from './world.js';
+import { R, terrainHeight, surfaceTravel } from './world.js';
+import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState, STRIKE_AT } from './soldier.js';
+const _routePoint = new THREE.Vector3(), _routeBearing = new THREE.Vector3(), _routeStep = new THREE.Vector3();
 
 // Friendly units. Summoned by warden towers, and the thing the player can take
 // direct control of.
@@ -273,6 +275,12 @@ class Ally {
     this.orderUntil = 0;
     this.hidden = false;
     this.carryMul = 1;
+    this.swimming = false;
+    this.route = null;
+    this.routeGoal = null;
+    this.routeAt = 0;
+    this.routeUntil = 0;
+    this.routeRevision = -1;
     this.hop = 0;        // metres above the ground while airborne
     this.vertVel = 0;
     this.airT = 0;
@@ -402,11 +410,11 @@ export class AllyManager {
     // jump mean something to every system at once: enemy melee acquisition, the
     // landing re-check that lets you dodge a telegraphed swing, the enemy's blow, the instanced renderer and the strike origin all read this.
     return out.copy(a.dir).multiplyScalar(
-      R + Math.max(a.height, 0.03) + (a.hop || 0) + a.type.radius * 0.9);
+      R + Math.max(a.height, 0.03) + (a.hop || 0) + a.type.radius * 0.9 - swimOffset(a));
   }
 
   enemyPos(e, out) {
-    const h = Math.max(e.height, 0.03);
+    const h = Math.max(e.height, 0.03) - swimOffset(e);
     return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
   }
 
@@ -612,7 +620,7 @@ export class AllyManager {
             if (!mayStep) { a.target = null; a.state = 'roam'; }
           }
           if (a.target) {
-            if (mayStep) advanceToward(a.dir, a.target.dir, (type.speed * a.carryMul * dt) / R, a.fwd);
+            if (mayStep) this._moveToward(a, a.target.dir, type.speed * dt);
             faceToward(a.fwd, a.dir, a.target.dir, dt * 6);
           }
         }
@@ -634,7 +642,7 @@ export class AllyManager {
           if (d > 2.6) {
             const leadSpeed = lead.type.speed * (lead.possessed ? 1.25 : 1);
             const catchup = Math.min(type.speed * 2, Math.max(type.speed * 1.15, leadSpeed * 1.15));
-            advanceToward(a.dir, lead.dir, (catchup * a.carryMul * dt) / R, a.fwd);
+            this._moveToward(a, lead.dir, catchup * dt);
           }
         }
       } else if (a.order) {
@@ -650,7 +658,7 @@ export class AllyManager {
           // being hit, is a gamble the player did not choose to take.
           this.clearOrder(a);
           if (this.onOrderFailed) this.onOrderFailed(a);
-        } else if (advanceToward(a.dir, a.order, (type.speed * a.carryMul * dt) / R, a.fwd)) {
+        } else if (this._moveToward(a, a.order, type.speed * dt)) {
           this._finishOrder(a);
         } else {
           faceToward(a.fwd, a.dir, a.order, dt * 6);
@@ -659,7 +667,7 @@ export class AllyManager {
         a.state = 'roam';
         a.wanderT -= dt;
         if (a.wanderT <= 0) this._reroll(a);
-        if (advanceToward(a.dir, a.wander, (type.speed * a.carryMul * 0.55 * dt) / R, a.fwd)) this._reroll(a);
+        if (this._moveToward(a, a.wander, type.speed * 0.55 * dt)) this._reroll(a);
       }
 
       this._ground(a);
@@ -689,6 +697,35 @@ export class AllyManager {
 
   _ground(a) {
     a.height = terrainHeight(a.dir.x, a.dir.y, a.dir.z);
+    if (CONFIG.terrain) a.swimming = isSwimming(a.swimming, -terrainHeight(a.dir.x, a.dir.y, a.dir.z, false));
+  }
+
+  _moveToward(a, target, distance) {
+    if (!CONFIG.terrain) return advanceToward(a.dir, target, distance * a.carryMul / R, a.fwd);
+    const nav = this.enemies.nav;
+    const changed = !a.routeGoal || a.routeGoal.angleTo(target) * R > 2;
+    if (changed || !a.route || a.routeRevision !== nav.revision || (this.time > a.routeUntil && !a.route.length)) {
+      a.route = nav.findPath(a.dir, target);
+      a.routeGoal = target.clone();
+      a.routeAt = 0;
+      a.routeUntil = this.time + 1.5;
+      a.routeRevision = nav.revision;
+    }
+    if (!a.route.length) return false;
+    while (a.routeAt < a.route.length) {
+      nav.nodeDir(a.route[a.routeAt], _routePoint);
+      if (a.dir.angleTo(_routePoint) * R > 0.025) break;
+      a.routeAt++;
+    }
+    const goal = a.routeAt < a.route.length ? _routePoint : target;
+    _routeBearing.copy(goal).addScaledVector(a.dir, -goal.dot(a.dir)).normalize();
+    const factor = surfaceTravel(a, _routeBearing, Math.min(distance, a.dir.angleTo(goal) * R));
+    _routeStep.copy(a.dir);
+    advanceToward(_routeStep, goal, distance * a.carryMul * factor / R);
+    if (!nav.canStep(a.dir, _routeStep)) { a.route = []; a.routeUntil = this.time + 0.5; return false; }
+    const arrived = advanceToward(a.dir, goal, distance * a.carryMul * factor / R, a.fwd);
+    if (!factor) { a.route = []; a.routeUntil = this.time + 0.5; }
+    return arrived && a.routeAt >= a.route.length;
   }
 
   // Ballistic hop along the surface normal. The angular walk underneath it is
@@ -727,7 +764,11 @@ export class AllyManager {
     _axis.crossVectors(a.dir, _tmp2);
     if (_axis.lengthSq() < 1e-12) return;
     _axis.normalize();
-    const step = (a.type.speed * 1.25 * mul * mag * a.carryMul * dt) / R;
+    const factor = surfaceTravel(a, _tmp2, a.type.speed * 1.25 * mul * mag * a.carryMul * dt);
+    if (a.swimming) { mul = Math.min(1, mul); a.sprint = false; }
+    const step = (a.type.speed * 1.25 * mul * mag * a.carryMul * factor * dt) / R;
+    _routeStep.copy(a.dir).applyAxisAngle(_axis, step).normalize();
+    if (!this.enemies.nav.canStep(a.dir, _routeStep)) return;
     a.dir.applyAxisAngle(_axis, step).normalize();
     reflatten(a.fwd.applyAxisAngle(_axis, step), a.dir);
     this._ground(a);
@@ -1027,9 +1068,15 @@ export class AllyManager {
   // straight back to the barracks door.
   orderMove(a, dir) {
     if (!a || !a.active || a.dead || a.possessed) return false;
+    if (CONFIG.terrain) {
+      const path = this.enemies.nav.findPath(a.dir, dir);
+      if (!path.length) return false;
+      a.route = path; a.routeAt = 0; a.routeGoal = dir.clone();
+      a.routeRevision = this.enemies.nav.revision; a.routeUntil = this.time + 1.5;
+    }
     if (!a.order) a.order = new THREE.Vector3();
     a.order.copy(dir).normalize();
-    a.orderUntil = this.time + ORDER_MAX;
+    a.orderUntil = this.time + Math.max(ORDER_MAX, Math.min(240, (a.route?.cost || 0) / (a.type.speed * a.carryMul) + 20));
     a.following = null;
     a.target = null;
     return true;
@@ -1037,6 +1084,7 @@ export class AllyManager {
 
   clearOrder(a) {
     a.order = null;
+    a.route = null;
     a.orderUntil = 0;
   }
 

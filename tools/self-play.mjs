@@ -51,11 +51,34 @@ try{
     window.__qaPolicy=()=>{
       if(g.state!=='playing'||run.getPhase()==='victory')return;
       const commander=W.allies.active.find(a=>a.type.commander);
-      if(run.getWave()>=12&&commander&&!retreating){
+      if(commander&&!retreating&&(run.getWave()>=8||commander.hp<commander.hpMax*.8)&&window.__qaTripState==='done'){
         W.possession.enter(commander);retreating=true;
-        dispatchEvent(new KeyboardEvent('keydown',{code:'KeyS'}));trace('possess-and-retreat');
+        if(W.CONFIG.terrain){
+          const options=[];
+          for(let i=0;i<24;i++){
+            const angle=i*Math.PI/12,d=centre.clone().addScaledVector(side,Math.cos(angle)*44/240).addScaledVector(forward,Math.sin(angle)*44/240).normalize();
+            const node=W.nav.nearestWalkableNode(d,true);if(node<0||!Number.isFinite(W.nav.dist[node]))continue;
+            W.nav.nodeDir(node,d);const path=W.nav.findPath(commander.dir,d);if(!path.length||path.cost>110)continue;
+            const nearest=W.enemies.active.reduce((v,e)=>Math.min(v,e.dir.angleTo(d)*240),80);
+            options.push({dir:d,path,score:nearest-path.cost*.15});
+          }
+          options.sort((a,b)=>b.score-a.score);const safe=options[0];
+          if(safe){
+            let waypoint=0;trace('possess-and-retreat',{nodes:safe.path.length,cost:safe.path.cost});
+            window.__qaRetreat=()=>{
+              if(!commander.active)return;
+              if(commander.dir.angleTo(safe.dir)*240<1){dispatchEvent(new KeyboardEvent('keyup',{code:'KeyW'}));window.__qaRetreat=null;W.possession.exit();W.allies.orderMove(commander,safe.dir);trace('retreat-arrived-and-posted');return;}
+              let aim=safe.dir;
+              while(waypoint<safe.path.length){const p=W.nav.nodeDir(safe.path[waypoint],new THREE.Vector3());if(commander.dir.angleTo(p)*240>.32){aim=p;break;}waypoint++;}
+              const tangent=aim.clone().addScaledVector(commander.dir,-aim.dot(commander.dir)).normalize(),right=new THREE.Vector3().crossVectors(commander.fwd,commander.dir).normalize();
+              const turn=Math.atan2(tangent.dot(right),tangent.dot(commander.fwd));
+              W.possession.canvas.dispatchEvent(new MouseEvent('mousemove',{buttons:2,movementX:turn/.0032}));
+              dispatchEvent(new KeyboardEvent(Math.abs(turn)<.6?'keydown':'keyup',{code:'KeyW'}));
+            };
+          }
+        }else{dispatchEvent(new KeyboardEvent('keydown',{code:'KeyS'}));trace('possess-and-retreat');}
       }
-      if(retreating&&commander&&Math.acos(Math.min(1,commander.dir.dot(centre)))*240>38){
+      if(retreating&&commander&&!W.CONFIG.terrain&&Math.acos(Math.min(1,commander.dir.dot(centre)))*240>38){
         dispatchEvent(new KeyboardEvent('keyup',{code:'KeyS'}));
       }
       const draft=run.getDraft();
@@ -92,10 +115,12 @@ try{
       if(!cache)throw Error('No reachable opening crystal');
       W.possession.enter(a);
       let stage='outbound';window.__qaTripState=stage;const startTheta=run.getFrontierTheta();
+      let routeStage='',route=[],waypoint=0;
       window.__qaTrip=()=>{
         if(stage==='done'||!a.active)return;
         if(stage==='outbound'&&W.mode99.crystals.carried.length){stage='return';window.__qaTripState=stage;trace('crystal-picked-up',{id:cache.id,theta:run.getFrontierTheta()});}
         const destination=stage==='outbound'?cache.dir:centre;
+        if(W.CONFIG.terrain&&routeStage!==stage){route=W.nav.findPath(a.dir,destination);waypoint=0;routeStage=stage;trace('expedition-route',{stage,nodes:route.length});}
         const distance=Math.acos(Math.min(1,a.dir.dot(destination)))*240;
         if(stage==='return'&&distance<3.5){
           dispatchEvent(new KeyboardEvent('keyup',{code:'KeyW'}));
@@ -108,7 +133,11 @@ try{
           if(credit===0||W.mode99.crystals.credit>=credit)throw Error('Delivery credit was not spent on expansion');
           stage='done';window.__qaTripState=stage;return;
         }
-        const tangent=destination.clone().addScaledVector(a.dir,-destination.dot(a.dir)).normalize();
+        let aim=destination;
+        if(route.length){
+          while(waypoint<route.length){const p=W.nav.nodeDir(route[waypoint],new THREE.Vector3());if(a.dir.angleTo(p)*240>.32){aim=p;break;}waypoint++;}
+        }
+        const tangent=aim.clone().addScaledVector(a.dir,-aim.dot(a.dir)).normalize();
         const right=new THREE.Vector3().crossVectors(a.fwd,a.dir).normalize();
         const turn=Math.atan2(tangent.dot(right),tangent.dot(a.fwd));
         // Normal right-drag look and W input; no body position assignment.
@@ -118,10 +147,11 @@ try{
     }
   });
   let lastWave=0,lastTrip='',result;
-  for(let i=0;i<600;i++){
-    result=await page.evaluate(()=>{__qaPolicy();for(let n=0;n<20;n++){window.__qaTrip?.();WH.step(.1);}return {state:WH.game.state,phase:WH.mode99.run.getPhase(),wave:WH.mode99.run.getWave(),lives:WH.game.lives,gold:WH.game.gold,kills:WH.game.kills,score:WH.game.score,towers:WH.towers.towers.length,commander:WH.allies.active.filter(a=>a.type.commander).map(a=>({hp:a.hp,hpMax:a.hpMax,state:a.state,dir:a.dir.toArray()})),seed:WH.CONFIG.seed};});
+  for(let i=0;i<900;i++){
+    result=await page.evaluate(()=>{__qaPolicy();for(let n=0;n<20;n++){window.__qaTrip?.();window.__qaRetreat?.();WH.step(.1);}return {state:WH.game.state,phase:WH.mode99.run.getPhase(),wave:WH.mode99.run.getWave(),lives:WH.game.lives,gold:WH.game.gold,kills:WH.game.kills,score:WH.game.score,towers:WH.towers.towers.length,commander:WH.allies.active.filter(a=>a.type.commander).map(a=>({hp:a.hp,hpMax:a.hpMax,state:a.state,dir:a.dir.toArray()})),seed:WH.CONFIG.seed};});
     if(result.wave!==lastWave){lastWave=result.wave;console.log(JSON.stringify(result));await page.screenshot({path:resolve(out,`wave-${String(lastWave).padStart(2,'0')}.png`)});}
     const trip=await page.evaluate(()=>window.__qaTripState||'');
+    if(i>0&&i%50===0)console.log('PROGRESS '+JSON.stringify(await page.evaluate(()=>({time:WH.enemies.time,trip:window.__qaTripState,live:WH.enemies.active.length,stopped:WH.enemies.active.filter(e=>e.moveV===0).map(e=>({type:e.typeKey,node:e.node,next:WH.nav.next[e.node],height:e.height}))}))));
     if(trip&&trip!==lastTrip){lastTrip=trip;await page.screenshot({path:resolve(out,`expedition-${trip}.jpg`),type:'jpeg',quality:85});}
     if(expeditionOnly&&trip==='done')break;
     if(result.state==='defeat'||result.phase==='victory')break;

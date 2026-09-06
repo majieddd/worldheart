@@ -108,6 +108,14 @@ const mapKey = (() => {
 const MAP = MAPS[mapKey];
 const R0 = MAP.radius;
 
+export const TERRAIN_PROFILES = {
+  varied: { name: 'Highlands', range: 28, canyon: 10, snow: 16, ocean: 0, flightCeiling: 22 },
+  alpine: { name: 'Giant peaks', range: 96, canyon: 24, snow: 42, ocean: 0, flightCeiling: 38 },
+  canyon: { name: 'Deep canyons', range: 18, canyon: 38, snow: 32, ocean: 0, flightCeiling: 26 },
+  ocean: { name: 'Ocean islands', range: 16, canyon: 5, snow: 10, ocean: 0.12, flightCeiling: 20 },
+};
+const terrainKey = url.get('terrain') || stored('whTerrain') || 'varied';
+
 export const CONFIG = {
   seed: Number(url.get('seed')) || Number(stored('whSeed')) || 20260830,
   mapKey,
@@ -115,6 +123,8 @@ export const CONFIG = {
   planetRadius: R0,
   terrainDetail: MAP.terrainDetail,
   navDetail: MAP.navDetail,
+  terrainKey: TERRAIN_PROFILES[terrainKey] ? terrainKey : 'varied',
+  terrain: MAP.mode === 'ninetynine' ? (TERRAIN_PROFILES[terrainKey] || TERRAIN_PROFILES.varied) : null,
   seaLevel: 0,           // terrain height at the waterline
   walkMaxHeight: 2.05,   // above this the ground is cliff and unwalkable
   walkMaxSlope: 0.95,    // height units per surface unit; above this is cliff

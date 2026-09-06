@@ -3,6 +3,7 @@ import { R, terrainHeight, surfacePoint } from './world.js';
 import { PALETTE, CAM_TUNE, PRESENTATION } from './config.js';
 import { SIM_RANDOM } from './noise.js';
 import { BladeTrail } from './viewmodel.js';
+import { swimOffset } from './traversal.js';
 
 // Direct control of a friendly unit, in first or third person.
 //
@@ -640,7 +641,7 @@ export class Possession {
     const wantLen = Math.hypot(fwd, strafe);
     if (wantLen > 1) { fwd /= wantLen; strafe /= wantLen; }
     // Sprint only carries forward: a sideways sprint reads as a glitch.
-    this.sprint = (this.keys.has('ShiftLeft') || this.keys.has('ShiftRight')) && fwd > 0.5;
+    this.sprint = !u.swimming && (this.keys.has('ShiftLeft') || this.keys.has('ShiftRight')) && fwd > 0.5;
     const airborne = u.airT > 0;
     const rate = airborne ? AIR_CONTROL : (wantLen > 0 ? ACCEL : DECEL);
     const k = Math.min(1, dt * rate);
@@ -792,7 +793,7 @@ export class Possession {
     // The bob. Vertical at twice the stride, lateral and roll at the stride,
     // all scaled by the smoothed speed and lifted by sprint.
     const motion = PRESENTATION.bob ? 1 : 0;
-    const amp = this.moveT * (1 + (SPRINT_BOB - 1) * this.sprintT) * motion;
+    const amp = this.moveT * (1 + (SPRINT_BOB - 1) * this.sprintT) * motion * (u.swimming ? 0.3 : 1);
     const s1 = Math.sin(this.stride);
     const s2 = Math.sin(this.stride * 2);
     const bobY = s2 * BOB_Y * amp;
@@ -800,7 +801,7 @@ export class Possession {
     const wantRoll = s1 * BOB_ROLL * amp + this.vel.y * STRAFE_ROLL * motion;
     this.roll += (wantRoll - this.roll) * Math.min(1, dtShake * 12 + (dtShake === 0 ? 1 : 0) * 0);
 
-    const alt = Math.max(u.height, 0.03) + (u.hop || 0);
+    const alt = Math.max(u.height, 0.03) + (u.hop || 0) - swimOffset(u);
     _right.crossVectors(u.fwd, u.dir).normalize();
     _eye.copy(u.dir).multiplyScalar(
       R + alt + EYE_HEIGHT * u.type.scale + bobY + this.springY * 0.11 * motion - this.kick * 0.06 * motion);

@@ -11,11 +11,12 @@ Tracker: https://github.com/majieddd/worldheart/issues/1.
 | M0 control/draft clarity | implemented, automated verification passed | mode, UI | Current/next labels, immediate deliberate solo pick, contextual help, retry | unmeasured |
 | M1 camera and arm | implemented, automated verification passed | camera, possession, viewmodel, UI | [M1 evidence](qa/implementation/M1.md); owner feel/all-model review remains open | unmeasured |
 | M2 crystals and explicit expansion | implemented, automated verification passed | run, mode, cache field, UI | [M2 resource contracts, expedition and boss victory](qa/implementation/M2.md) | unmeasured |
-| M3 terrain strategy | active | terrain, nav, traversal, placement, ranges | Shared terrain classification before height/flight/placement extensions | unmeasured |
+| M3 terrain strategy | implemented, automated verification passed | terrain, nav, traversal, placement, ranges | [178 tests, four profiles, 60 route arrivals, five camera harnesses and unforced boss victory](qa/implementation/M3.md); visual/feel and startup review open | unmeasured |
 | M4-M6 | planned | See blueprint | Dependencies and exit gates remain open | unmeasured |
 
 Audit correction: Quartermaster already works through
 `prof.bonuses?.quartermaster` in `js/run/run.js`, with the profile passed by the
 mode. The prior S3 text-search conclusion missed optional chaining. Preserve
 the dated report and raw archive; test the existing behavior as a healthy
-control. Counting House, Veterancy and Forward Scout still require live fixes.
+control. Counting House, Veterancy and Forward Scout were repaired in M0 and
+are covered by its live fixtures.

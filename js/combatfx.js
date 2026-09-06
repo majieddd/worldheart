@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { PALETTE, REDUCED_MOTION } from './config.js';
 import { clamp } from './noise.js';
 import { R } from './world.js';
+import { swimOffset } from './traversal.js';
 
 // Combat feedback for the things the simulation reports and nothing drew.
 //
@@ -259,7 +260,7 @@ export class CombatFx {
     _fwd.normalize();
     _aim.copy(a.aim || _fwd);
     if (a.hidden) {
-      const alt = Math.max(a.height, 0.03) + (a.hop || 0);
+      const alt = Math.max(a.height, 0.03) + (a.hop || 0) - swimOffset(a);
       out.copy(_up).multiplyScalar(R + alt + EYE_HEIGHT * sc);
       _side.crossVectors(_fwd, _up).normalize();
       return out.addScaledVector(_side, 0.34).addScaledVector(_up, -0.22).addScaledVector(_aim, 0.95);

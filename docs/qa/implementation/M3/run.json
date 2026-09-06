@@ -1,0 +1,545 @@
+{
+  "state": "playing",
+  "phase": "victory",
+  "wave": 15,
+  "lives": 19,
+  "gold": 449,
+  "kills": 1354,
+  "score": 26000,
+  "towers": 8,
+  "commander": [
+    {
+      "hp": 1400,
+      "hpMax": 1400,
+      "state": "roam",
+      "dir": [
+        0.8877059259512272,
+        0.4059072966466866,
+        0.21729577897431276
+      ]
+    }
+  ],
+  "seed": 28183,
+  "trace": [
+    {
+      "action": "build",
+      "wave": 1,
+      "lives": 20,
+      "gold": 300,
+      "type": "bolt",
+      "pos": [
+        228.92343808670196,
+        64.48895613227677,
+        36.63856154627714
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "start",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "stage": "outbound",
+      "nodes": 360
+    },
+    {
+      "action": "crystal-picked-up",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "id": "crystal-28183-3",
+      "theta": 0.05
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "stage": "return",
+      "nodes": 36
+    },
+    {
+      "action": "crystal-deposited",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "ledger": {
+        "version": 1,
+        "carried": [],
+        "claimed": [
+          "crystal-28183-0"
+        ],
+        "deposited": [
+          "crystal-28183-0"
+        ],
+        "credit": 100
+      },
+      "theta": 0.05
+    },
+    {
+      "action": "crystal-funded-upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 30,
+      "creditBefore": 100,
+      "creditAfter": 0,
+      "level": 1,
+      "theta": 0.2298469387755102
+    },
+    {
+      "action": "build",
+      "wave": 2,
+      "lives": 20,
+      "gold": 43,
+      "type": "bolt",
+      "pos": [
+        228.7756177616931,
+        66.0876385437925,
+        34.21644963328861
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 2,
+      "lives": 20,
+      "gold": 1,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "draft",
+      "wave": 2,
+      "lives": 20,
+      "gold": 95,
+      "power": "keen-rails"
+    },
+    {
+      "action": "upgrade",
+      "wave": 3,
+      "lives": 19,
+      "gold": 0,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 4,
+      "lives": 19,
+      "gold": 4,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "build",
+      "wave": 4,
+      "lives": 19,
+      "gold": 2,
+      "type": "warden",
+      "pos": [
+        228.54017945128007,
+        67.14773562787808,
+        37.32650948111817
+      ]
+    },
+    {
+      "action": "draft",
+      "wave": 4,
+      "lives": 19,
+      "gold": 170,
+      "power": "hardened-heart"
+    },
+    {
+      "action": "upgrade",
+      "wave": 5,
+      "lives": 21,
+      "gold": 0,
+      "type": "warden",
+      "tier": 1
+    },
+    {
+      "action": "build",
+      "wave": 6,
+      "lives": 20,
+      "gold": 111,
+      "type": "warden",
+      "pos": [
+        229.9015435153973,
+        61.54559606197688,
+        34.78307171668879
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 6,
+      "lives": 20,
+      "gold": 1,
+      "type": "warden",
+      "tier": 1
+    },
+    {
+      "action": "possess-and-retreat",
+      "wave": 6,
+      "lives": 20,
+      "gold": 259,
+      "nodes": 68,
+      "cost": 65.42556762695312
+    },
+    {
+      "action": "draft",
+      "wave": 6,
+      "lives": 20,
+      "gold": 395,
+      "power": "twin-rails"
+    },
+    {
+      "action": "upgrade",
+      "wave": 7,
+      "lives": 20,
+      "gold": 109,
+      "type": "warden",
+      "tier": 2
+    },
+    {
+      "action": "retreat-arrived-and-posted",
+      "wave": 7,
+      "lives": 20,
+      "gold": 211
+    },
+    {
+      "action": "upgrade",
+      "wave": 7,
+      "lives": 20,
+      "gold": 21,
+      "type": "warden",
+      "tier": 2
+    },
+    {
+      "action": "build",
+      "wave": 8,
+      "lives": 20,
+      "gold": 172,
+      "type": "bolt",
+      "pos": [
+        230.66586612421557,
+        59.803867165962096,
+        32.714251009810475
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 20,
+      "gold": 52,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 18,
+      "gold": 51,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "draft",
+      "wave": 8,
+      "lives": 18,
+      "gold": 631,
+      "power": "chain-coil"
+    },
+    {
+      "action": "base",
+      "wave": 9,
+      "lives": 18,
+      "gold": 181,
+      "level": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 18,
+      "gold": 14,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 18,
+      "gold": 9,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 18,
+      "gold": 0,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "build",
+      "wave": 10,
+      "lives": 18,
+      "gold": 89,
+      "type": "mortar",
+      "pos": [
+        231.03737902099937,
+        59.80223052298269,
+        29.928627959462734
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 18,
+      "gold": 1,
+      "type": "mortar",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 14,
+      "gold": 14,
+      "type": "mortar",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 14,
+      "gold": 31,
+      "type": "warden",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 14,
+      "gold": 44,
+      "type": "warden",
+      "tier": 3
+    },
+    {
+      "action": "draft",
+      "wave": 10,
+      "lives": 14,
+      "gold": 204,
+      "power": "mending"
+    },
+    {
+      "action": "upgrade",
+      "wave": 11,
+      "lives": 14,
+      "gold": 16,
+      "type": "mortar",
+      "tier": 3
+    },
+    {
+      "action": "base",
+      "wave": 11,
+      "lives": 14,
+      "gold": 16,
+      "level": 3
+    },
+    {
+      "action": "build",
+      "wave": 12,
+      "lives": 15,
+      "gold": 291,
+      "type": "bolt",
+      "pos": [
+        230.8133110327224,
+        61.53361584677483,
+        27.72636479324034
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 15,
+      "gold": 171,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 15,
+      "gold": 38,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 15,
+      "gold": 33,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 15,
+      "gold": 16,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "draft",
+      "wave": 12,
+      "lives": 16,
+      "gold": 600,
+      "power": "keen-rails"
+    },
+    {
+      "action": "upgrade",
+      "wave": 13,
+      "lives": 16,
+      "gold": 161,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "upgrade",
+      "wave": 13,
+      "lives": 16,
+      "gold": 12,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "upgrade",
+      "wave": 13,
+      "lives": 16,
+      "gold": 13,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "upgrade",
+      "wave": 13,
+      "lives": 16,
+      "gold": 5,
+      "type": "warden",
+      "tier": 4
+    },
+    {
+      "action": "build",
+      "wave": 14,
+      "lives": 17,
+      "gold": 304,
+      "type": "cryo",
+      "pos": [
+        231.8657622737781,
+        58.18464743604929,
+        26.779941926451414
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 17,
+      "gold": 144,
+      "type": "cryo",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 17,
+      "gold": 0,
+      "type": "cryo",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 17,
+      "gold": 6,
+      "type": "cryo",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 17,
+      "gold": 33,
+      "type": "cryo",
+      "tier": 4
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 17,
+      "gold": 17,
+      "type": "warden",
+      "tier": 4
+    },
+    {
+      "action": "draft",
+      "wave": 14,
+      "lives": 18,
+      "gold": 847,
+      "power": "flywheel"
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 18,
+      "gold": 116,
+      "type": "mortar",
+      "tier": 4
+    },
+    {
+      "action": "base",
+      "wave": 15,
+      "lives": 18,
+      "gold": 42,
+      "level": 4
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 18,
+      "gold": 32,
+      "type": "bolt",
+      "tier": 5
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 18,
+      "gold": 58,
+      "type": "bolt",
+      "tier": 5
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 18,
+      "gold": 148,
+      "type": "bolt",
+      "tier": 5
+    }
+  ],
+  "faults": [],
+  "scope": "Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile"
+}

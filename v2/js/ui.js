@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CONFIG, MAPS, PALETTE, storeLocal, CAM_RANGES, CAM_TUNE, saveCamTune, resetCamTune, PRESENTATION, savePresentation } from './config.js';
+import { CONFIG, MAPS, TERRAIN_PROFILES, PALETTE, storeLocal, CAM_RANGES, CAM_TUNE, saveCamTune, resetCamTune, PRESENTATION, savePresentation } from './config.js';
 import { TOWER_TYPES, tierCost, buildTowerVisual, TOWER_SCALE, MAT } from './towers.js';
 import { powerSigil } from './ui-icons.js';
 import { TALENTS, loadProfile, buyTalent, isOwned, isReachable } from './modes/progress.js';
@@ -192,6 +192,7 @@ export class HUD {
             <span class="kbd">U</span> upgrade, <span class="kbd">X</span> sell,
             <span class="kbd">Space</span> pause, <span class="kbd">F</span> speed. Camera feel sliders live in settings.</div></details>
           <div class="map-row" id="map-row"></div>
+          ${CONFIG.terrain ? `<label class="terrain-choice">Planet terrain <select id="terrain-profile">${Object.entries(TERRAIN_PROFILES).map(([key, p]) => `<option value="${key}" ${key === CONFIG.terrainKey ? 'selected' : ''}>${p.name}</option>`).join('')}</select><span>Swim at 60% speed. Climb more slowly. Only Mortars build on hot stone; only Cryo builds on ice.</span></label>` : ''}
           <div class="o-actions">
             <button class="btn primary" id="btn-begin" style="font-family:var(--font-display)">Begin the defense</button>
             <button class="btn" id="btn-talents">Talents</button>
@@ -289,6 +290,15 @@ export class HUD {
   }
 
   _buildMapCards() {
+    if (CONFIG.terrain) {
+      storeLocal('whTerrain', CONFIG.terrainKey);
+      document.getElementById('terrain-profile').addEventListener('change', event => {
+        storeLocal('whTerrain', event.target.value);
+        storeLocal('whMap', CONFIG.mapKey);
+        storeLocal('whSeed', String(CONFIG.seed));
+        this._reboot();
+      });
+    }
     const row = document.getElementById('map-row');
     for (const key of Object.keys(MAPS)) {
       const m = MAPS[key];
@@ -708,7 +718,7 @@ export class HUD {
     const count = `Crystals ${info.carried}/${info.capacity} · Base credit ${info.credit}`;
     if (this.el['crystal-readout'].textContent !== count) this.el['crystal-readout'].textContent = count;
     this.el['btn-deposit'].disabled = !info.canDeposit;
-    const text = `${count}\nHeart ${Math.round(info.distance)}m ${info.direction}. ${info.distance <= 4.5 ? 'C: deposit' : 'Return to deposit'}`;
+    const text = `${count}\nHeart ${Math.round(info.distance)}m ${info.direction}. ${info.distance <= 4.5 ? 'C: deposit' : 'Return to deposit'}${info.swimming ? '\nSwimming: 60% speed, sprint unavailable' : ''}`;
     if (this.el['fp-crystals'].textContent !== text) this.el['fp-crystals'].textContent = text;
   }
 
@@ -939,7 +949,7 @@ export class HUD {
         : 'Click open ground to build. Every breach must keep a path to the heart.', 'info');
     }
     e['hint-line'].textContent = g.buildType
-      ? `Placing ${TOWER_TYPES[g.buildType].name}. Right-click to cancel.`
+      ? `Placing ${TOWER_TYPES[g.buildType].name}. ${g.validity.reason === 'hot' ? 'Too hot: Mortars only.' : g.validity.reason === 'cold' ? 'Too cold: Cryo only.' : g.validity.reason === 'mixed' ? 'Hot/cold boundary: move the footprint.' : g.validity.reason === 'water' ? 'Needs dry ground.' : g.validity.reason === 'unstable' ? 'Footprint too steep or uneven.' : 'Right-click to cancel.'}`
       : (g.selectedTower ? '' : '');
 
     // tower panel
@@ -970,7 +980,11 @@ export class HUD {
       if (st.slow) rows.push(['Slow', `${Math.round(st.slow * 100)}%`]);
       if (st.aoe) rows.push(['Blast', st.aoe.toFixed(1)]);
       if (st.chains) rows.push(['Chains', st.chains]);
-      rows.push(['Range', st.range.toFixed(1)]);
+      if (!t.def.summoner) rows.push([st.slow ? 'Aura sphere' : 'Acquisition sphere', st.range.toFixed(1)]);
+      if (st.minRange) rows.push(['Inner exclusion', st.minRange.toFixed(1)]);
+      if (!t.def.summoner && !st.slow) rows.push(['Tracked target', '+4.9% retention']);
+      if (t.terrain === 'hot') rows.push(['Hot stone', '+15% damage']);
+      if (t.terrain === 'cold') rows.push(['Ice', '+10% slow, 70% cap']);
       rows.push(['Dealt', fmt(Math.round(t.damageDealt))]);
       rows.push(['Kills', fmt(t.kills)]);
       e['tp-stats'].innerHTML = rows.map(([k, v]) => `<span>${k}</span><b>${v}</b>`).join('');
