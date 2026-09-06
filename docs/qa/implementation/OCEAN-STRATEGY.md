@@ -203,3 +203,15 @@ publication must retain these runtime hashes or receive new relevant checks.
 The public smoke and fixtures do not establish a fresh victory, owner motion
 approval, full campaign balance or sustained performance. Those gates remain
 open in [PROGRESS.md](../../PROGRESS.md) and issue #7.
+
+## Subsequent adversarial continuation
+
+The preceding outcomes describe the #21 integration batch. The subsequent
+[PR #22 audit](ADVERSARIAL-ACCEPTANCE.md) repaired a natural victory's pointer-lock
+trap, won a fresh planet and recorded a canyon defeat. A varied cautious
+strategy from the same earned planet-4 checkpoint then won the ocean at wave
+15 with two heart health, 940 kills and seven towers, and really extracted to
+planet 5 with all 13 weapons preserved. Ordinary legal input and purchases
+were used; no combat state was injected. Sparse rendering makes this a
+campaign outcome, not frame-rate evidence. The prior failed strategies remain
+valid observations, and one new win does not establish overall balance.

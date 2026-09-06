@@ -48,7 +48,7 @@ request identity. Functional verification does not substitute for owner feel.
 - GPU context restoration emitted stale-resource warnings. Real loss/restore
   now preserves the paused assault and resumes with clean GPU operations.
 - Settings comfort controls and narrow-screen layering needed completion.
-  Current local evidence covers all four controls and unobstructed interaction.
+  Current public evidence covers all four controls and unobstructed interaction.
 - Profiling found wasteful reserved-capacity uploads and repeated static cache
   terrain queries. Exact GPU/readback and position checks support the savings;
   the slower-CPU frame budget is still failing and is not marked complete.

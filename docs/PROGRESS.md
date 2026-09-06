@@ -43,8 +43,12 @@ the reduced-CPU frame budget still fails, with a similarly slow frozen control.
 No FPS gain is claimed. The final reference rerun passed at 129.87 fps median
 and 62.5 fps inverse p99. The cautious ocean continuation won wave 15 with two
 heart health and extracted to planet 5, retaining all 13 weapons. This extends
-the earned pilot; it does not complete the full campaign. Publication of these
-settings and exact rendering efficiencies is the next checkpoint.
+the earned pilot; it does not complete the full campaign. Settings and exact
+rendering efficiencies are live from source `d932459` through
+[deployment 34058300671](https://github.com/majieddd/worldheart/actions/runs/34058300671).
+All 50 final public feedback/GPU/deployment checks pass; production remains
+`1374122`. Later documentation-only preview commits must retain these verified
+runtime hashes. No milestone was closed without its remaining acceptance.
 
 Latest batch, 2026-09-06: the owner-requested extra-high agent implemented
 [U22-U27](qa/2026-09-06-COMMANDER-REQUEST.md) on `feature/commander-feedback`,
@@ -93,8 +97,8 @@ Issue closure requires evidence, not just a merged diff. Proposed future impleme
 | M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | implemented; feel review open | Codex, feature/99-planets-camera | M0 | [Input harness and Bulwark comparison](qa/implementation/M1.md); full visual acceptance remains open |
 | M2 | [M2 implementation issue](https://github.com/majieddd/worldheart/issues/4) | implemented; review open | Codex, feature/99-planets-crystals | M0-M1 | [Resource fixtures and unforced expedition/boss victory](qa/implementation/M2.md) |
 | M3 | [M3 implementation issue](https://github.com/majieddd/worldheart/issues/5) | implemented; review open | Codex, feature/99-planets-terrain | M2 | [Terrain, routes, range and unforced victory](qa/implementation/M3.md); [M5C center-focus cliff occlusion fix](qa/implementation/M5C.md). Broad framing/startup/feel review open |
-| M4 | [M4 implementation issue](https://github.com/majieddd/worldheart/issues/6) | implemented; visual review open | Codex, feature/99-planets-weapons | M1/M3 | [M4 combat/loot evidence](qa/implementation/M4.md); M5A/B now verify extraction and retention |
-| M5 | [M5 implementation issue](https://github.com/majieddd/worldheart/issues/7) | 99-route PR #16 and camera visibility verified; release acceptance open | Codex, feature/99-planets-visibility | M4 | [M5B three unforced planets, 99 routes and preserved ocean defeats](qa/implementation/M5B.md); [M5C camera visibility and fresh victory/extraction](qa/implementation/M5C.md). Full campaign balance, broader performance and public default/rename release open |
+| M4 | [M4 implementation issue](https://github.com/majieddd/worldheart/issues/6) | four-family prototype and comfort controls verified; authored era content/visual review open | Codex, feature/adversarial-acceptance | M1/M3 | [M4 combat/loot evidence](qa/implementation/M4.md); [PR #22 keyboard, 300 terrain probes and feedback controls](qa/implementation/ADVERSARIAL-ACCEPTANCE.md); three authored era silhouettes still missing |
+| M5 | [M5 implementation issue](https://github.com/majieddd/worldheart/issues/7) | 99 destinations and continuation verified; release acceptance open | Codex, feature/adversarial-acceptance | M4 | [M5B three-planet pilot and 99 routes](qa/implementation/M5B.md); [current fresh victory, retained canyon loss and earned ocean win/extraction to planet 5](qa/implementation/ADVERSARIAL-ACCEPTANCE.md). Full campaign, reduced-CPU budget and public rename release open |
 | M6 | [M6 implementation issue](https://github.com/majieddd/worldheart/issues/8) | future | unassigned | M5 | Authoritative co-op/PvPvE prototype, then independent native platform feasibility evidence |
 
 ## Verification record

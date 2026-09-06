@@ -17,8 +17,8 @@ verification and campaign completion are separate claims.
 | A3 Foliage and geometry | expanded geometry audit passed, visual acceptance open | Fixed-seed close orbit, normals/winding, moving color/shadow deformation and all map families; preserve an unreproduced complaint as open | Eight map/profile cases and rendered close views; original artifact not reproduced identically | unmeasured |
 | A4 Ocean and campaign pacing | ocean victory and extraction verified; broader balance open | Varied legal strategy from earned checkpoint, clear win/loss and no indefinite stalls; preserve losses and distinguish controller defects from game balance | Fresh planet 1 won and extracted; planet 2 lost at wave 12. Cautious ocean won wave 15 and arrived at planet 5 with 13 weapons. Prior failures retained | unmeasured |
 | A5 Sustained performance and recovery | reference desktop and GPU recovery passed; reduced CPU budget failed | Reproducible load, frame-time distribution and resource growth over a prolonged session; pause/background recovery and reduced capability configuration | Valid 180-second reference and final 60-second rerun passed; exact upload savings verified. Reduced CPU and actual background visibility remain | unmeasured |
-| A6 Final alignment and release gates | U01-U27 review recorded; second publication pending | Original U01-U27 and M0-M5 mapped to current evidence and actionable remaining work; all new changes tested on public V2 | OWNER-ALIGNMENT.md separates implemented contracts from remaining art, feel, device and campaign gates | unmeasured |
-| A7 Independent feedback preferences | implemented, 23 local browser checks passed | Flashes, blade trails, floating numbers and grain can be reduced separately; saved preferences preserve damage, red tells and essential hit/block information | Four missing old-build controls, narrow overlay repair, keyboard and real combat checks. Publication pending | unmeasured |
+| A6 Final alignment and release gates | U01-U27 review recorded; second batch live verified | Original U01-U27 and M0-M5 mapped to current evidence and actionable remaining work; all new changes tested on public V2 | OWNER-ALIGNMENT.md separates implemented contracts from remaining art, feel, device and campaign gates; 50 final public checks pass | unmeasured |
+| A7 Independent feedback preferences | published and live verified, 23/23 checks | Flashes, blade trails, floating numbers and grain can be reduced separately; saved preferences preserve damage, red tells and essential hit/block information | Four missing old-build controls, narrow overlay repair, keyboard and real combat checks; public-preferences.json | unmeasured |
 
 Start with baseline failures before source fixes. Browser fixtures may inject
 explicit setup resources/positions to isolate a rule; only unforced legal play
@@ -272,6 +272,20 @@ Final source regressions pass [all five maps](ADVERSARIAL-ACCEPTANCE/final-regre
 [four covered GPU recovery checks](ADVERSARIAL-ACCEPTANCE/final-recovery.json)
 and [228 headless tests](ADVERSARIAL-ACCEPTANCE/final-headless.txt). Actual
 background visibility remains untested because both headless tabs stayed visible.
+
+## Final public checkpoint
+
+Source `d9324592b38cdbd5d9c612ff93ab744d95567c57` was published by
+[deployment 34058300671](https://github.com/majieddd/worldheart/actions/runs/34058300671).
+Public V2 passed [23 feedback checks](ADVERSARIAL-ACCEPTANCE/public-preferences.json),
+[10 real GPU upload/readback checks](ADVERSARIAL-ACCEPTANCE/public-uploads.json)
+and [17 deployment/root/save-isolation checks](ADVERSARIAL-ACCEPTANCE/public-final.json).
+All 50 passed without runtime faults. Production remains
+`1374122d1109919a5fab10b69fefdfb80308eb6e`, with no gameplay merge to main.
+This evidence follow-up changes documentation only. A later documentation-only
+preview may retain the tested runtime only if every preview and production
+asset hash still matches this public manifest; a runtime change needs its own
+relevant verification. PR #22 remains a stacked draft on #21.
 
 ## Reproduce
 
