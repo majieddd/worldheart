@@ -61,36 +61,38 @@ welded-together statement has shipped that way before.
 `docs/superpowers/` is a historical record of early plans. Several details there
 are now wrong and every file says so at the top. Trust the code.
 
-## Branch, because main is production
+## Branch and publish V2 previews
 
-GitHub Pages serves `main` from the repository root. There is no deploy
-workflow and no staging copy. **Anything merged to main is live at
-majieddd.github.io/worldheart within about a minute.**
+The owner authorized a live development preview without merging gameplay into
+main. Follow **[docs/PREVIEW.md](docs/PREVIEW.md)**: the Pages workflow combines
+main at `/worldheart/` with preview/v2 at `/worldheart/v2/`.
 
 So: work on a branch, open a pull request, and let the checks run. If you have
 push rights and are tempted to commit straight to main, that is the owner's call
 to make, not a default.
 
-Three copies of the game are published and all three must agree:
+The public routes have distinct sources:
 
 | URL | Source | What it is |
 |---|---|---|
-| `/worldheart/` | repo root | the live game |
-| `/worldheart/v2/` | `v2/` | a mirror of the same files, kept because the URL was shared. Not a newer version |
-| `/worldheart/dist/worldheart.html` | `dist/` | the committed single-file build |
+| `/worldheart/` | main | the stable live game |
+| `/worldheart/v2/` | preview/v2 source | current integrated development, with separate saves |
+| `/worldheart/dist/worldheart.html` | main dist/ | the stable single-file build |
 
-`node tools/deploy.mjs` rewrites both and fails loudly if the mirror drifts. Run
+`node tools/deploy.mjs` rewrites the checkout's local v2/dist copies and verifies the mirror. Run
 it before committing anything under `js/`, `css/` or `index.html`. It is
 deterministic, so running it twice changes nothing.
 
 ## The loop
 
-1. Branch from main.
+1. Fetch and branch campaign work from origin/preview/v2. Preserve the active integration stack.
 2. Make the change.
 3. Verify it. See below, because this is the part with teeth.
 4. `node tools/deploy.mjs`.
 5. Commit with a message that says what was wrong, why, and how you measured it.
 6. Open a pull request.
+7. Run `node tools/publish-preview.mjs` to publish that tested checkpoint to V2.
+8. Verify the Pages action, live build identity and browser behavior; update the tracker.
 
 ## What "done" means here
 

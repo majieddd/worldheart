@@ -8,6 +8,15 @@ Latest review slices: [99 destinations, PR #16](https://github.com/majieddd/worl
 and [terrain camera visibility, PR #17](https://github.com/majieddd/worldheart/pull/17).
 Both are stacked drafts. The production site has not been changed by these PRs.
 
+**Live development:** [Play V2](https://majieddd.github.io/worldheart/v2/).
+The full implementation stack is now published there from `preview/v2`, while
+the original root game remains from main. [PR #18](https://github.com/majieddd/worldheart/pull/18)
+adds the owner-authorized [preview workflow](PREVIEW.md), separate saves and
+root preservation. Codex on `feature/v2-preview-workflow` verified the
+[first deployment](https://github.com/majieddd/worldheart/actions/runs/34044866229)
+and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
+Preview availability does not close the remaining milestone acceptance gates.
+
 ## Completed in this batch
 
 | Work | Status | Owner | Evidence | Usage |
@@ -18,6 +27,7 @@ Both are stacked drafts. The production site has not been changed by these PRs.
 | Proposed development sequence and acceptance criteria | documented | Codex | Blueprint, all U01-U21 mapped to milestones | unmeasured |
 | GitHub collaboration record | published for review | Codex | Linked tracker, work items and PR | unmeasured |
 | Reusable implementation tracking skill | verified | Codex | Personal implementation-tracker skill validated; root AGENTS.md carries the workflow for every collaborator | unmeasured |
+| Live V2 publication workflow | published and live-verified | Codex, PR #18 | [213 tests, all five maps, 17 public browser/hash/save checks](qa/implementation/V2-PREVIEW.md); [standing workflow](PREVIEW.md) | unmeasured |
 | M0 reward/control implementation | verified by automated fixtures and unforced instrumented play | Codex | [Implementation evidence](qa/implementation/M0.md); 168 tests, 14 browser assertions, all five camera harnesses, victory and defeat/retry | unmeasured |
 
 ## Development queue
@@ -43,9 +53,9 @@ Final documentation validation: house style and whitespace checks passed; [local
 ## How collaborators update this cleanly
 
 1. Claim a linked issue and state the bounded behavior being changed. Keep one issue for a coherent player outcome; split a milestone into child issues as implementation becomes concrete.
-2. Branch from current main, preserve unrelated work, and include Problem, Changed behavior, Validation and Remaining gaps in the PR.
+2. Branch campaign work from current origin/preview/v2, preserve unrelated work, and include Problem, Changed behavior, Validation and Remaining gaps in the PR.
 3. Attach seed/build/profile/input and before/after evidence. Separate natural play, instrumented fixtures, source inference and user reports.
 4. Update this table and the blueprint's Decided/Where we are sections in the same session that changes gameplay. Record usage only when measured.
-5. Link a fixing PR to the affected issue. Main publishes to Pages, so this planning branch stays reviewable without claiming that future gameplay has shipped.
+5. Link a fixing PR to the affected issue. Publish tested working checkpoints through docs/PREVIEW.md, verify the live V2 build and update the issue. Preview publication leaves main's gameplay separate and does not close release acceptance.
 
 Historical polish records remain unchanged. This ledger supersedes the old suggested priority order for the new owner brief; existing architecture and verification invariants still apply. License, repository permissions and branch settings are outside this batch.

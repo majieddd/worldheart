@@ -54,16 +54,17 @@ will hit all of them in the first week.
 - **The checks workflow is new and is not yet required.** `.github/workflows/checks.yml`
   runs the syntax pass, the tests, the style rule and a staleness check on the
   published copies, on every pull request and every push to main. It does not
-  touch deployment; Pages continues to serve `main` from repository settings.
+  touch deployment; `preview-pages.yml` now composes main and preview/v2 for
+  Pages under the owner-authorized [preview workflow](PREVIEW.md).
   Whether it becomes a required status check before merging is a repository
   setting only the owner can change.
 - **98 em dashes live in `docs/superpowers/`.** The house rule forbids them, but
   that directory is a frozen record of what was planned in early September 2026,
   so `tools/style.mjs` skips it rather than quietly rewriting history. Sweeping
   it is a one-line decision and nobody has made it.
-- **The `v2/` mirror doubles the tree.** It exists because the URL was shared. A
-  redirect would remove 36 duplicated files, but it would change what that URL
-  serves, so it is the owner's call.
+- **The generated `v2/` mirror doubles the local tree.** Keep it verified with
+  deploy.mjs. The public /v2/ URL now serves preview/v2 source independently of
+  main; it must not be redirected to the stable game.
 - **Nobody but the owner has pushed to this repository.** Whether a collaborator
   gets push rights to main or works entirely through pull requests should be
   settled before the first change, not during it.

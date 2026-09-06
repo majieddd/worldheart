@@ -2,13 +2,15 @@
 // css/style.css :root is canonical for the DOM HUD. Keep the two in sync with DESIGN.md.
 
 import { campaignLaunch } from './modes/campaign-launch.js';
+import { browserStorage, isPreviewPath } from './storage.js';
 const url = new URLSearchParams(location.search);
+const preview = isPreviewPath(location.pathname);
 
 function stored(key) {
-  try { return localStorage.getItem(key); } catch { return null; }
+  try { return browserStorage.getItem(key); } catch { return null; }
 }
 export function storeLocal(key, value) {
-  try { localStorage.setItem(key, value); } catch { /* private mode */ }
+  try { browserStorage.setItem(key, value); } catch { /* private mode */ }
 }
 
 // The worlds, each tagged with its map type. The taxonomy the layouts are
@@ -104,7 +106,7 @@ const mapKey = (() => {
   const q = url.get('map');
   if (q && MAPS[q]) return q;
   const s = stored('whMap');
-  return s && MAPS[s] ? s : 'pocket';
+  return s && MAPS[s] ? s : preview ? 'ninetynine' : 'pocket';
 })();
 const MAP = MAPS[mapKey];
 const R0 = MAP.radius;
@@ -116,7 +118,7 @@ export const TERRAIN_PROFILES = {
   ocean: { name: 'Ocean islands', range: 16, canyon: 5, snow: 10, ocean: 0.12, flightCeiling: 20 },
 };
 const requestedSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
-const campaign=campaignLaunch(mapKey==='ninetynine'&&url.get('campaign')==='1',requestedSeed);
+const campaign=campaignLaunch(mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':preview),requestedSeed);
 const terrainKey = campaign?.terrain || url.get('terrain') || stored('whTerrain') || 'varied';
 
 export const CONFIG = {

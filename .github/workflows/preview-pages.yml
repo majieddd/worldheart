@@ -1,0 +1,62 @@
+name: Publish V2 preview
+
+on:
+  push:
+    branches: [preview/v2, main]
+  workflow_dispatch:
+
+# Serialize the whole artifact build, so an older preview cannot finish after
+# a newer one and replace it. Every artifact contains both public routes.
+concurrency:
+  group: worldheart-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out preview integration
+        uses: actions/checkout@v4
+        with:
+          ref: preview/v2
+          path: preview
+          persist-credentials: false
+      - name: Check out production source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: production
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify the preview
+        working-directory: preview
+        run: |
+          node tools/syntax.mjs
+          node tools/test.mjs
+          node tools/style.mjs
+          node tools/deploy.mjs
+          git diff --exit-code -- v2 dist
+      - name: Compose main at root and preview under v2
+        run: node preview/tools/pages-site.mjs production preview site
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}v2/
+    steps:
+      - name: Publish both routes
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,8 +1,7 @@
 name: checks
 
-# These checks never deploy. GitHub Pages serves main from repository settings,
-# so merging is what publishes; this workflow only reports whether a branch is
-# safe to merge.
+# These checks never deploy. preview-pages.yml owns the combined Pages artifact:
+# main at the root, preview/v2 under /v2/. See docs/PREVIEW.md.
 on:
   push:
     branches: [main]

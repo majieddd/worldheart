@@ -205,6 +205,12 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 
 ## Decided
 
+2026-09-06 workflow decision: the owner authorized ongoing publication to
+`/worldheart/v2/` from a dedicated preview integration branch, without merging
+gameplay into main. [PREVIEW.md](PREVIEW.md) defines publishing, root-file
+preservation, isolated saves and live verification. This changes preview access,
+not the campaign's release acceptance criteria.
+
 | Decision | Status | Evidence |
 |---|---|---|
 | Existing campaign has an enjoyable playable defense loop | in game | Blind natural defeat wave 11, [terminal capture](qa/2026-09-05/images/23-defeat.png) |
@@ -225,6 +231,13 @@ The [GitHub-linked progress ledger](PROGRESS.md) is the live task index. It carr
 Continue in dependency order and keep each behavior reviewable. A task closes only when its stated player behavior is evidenced, with remaining gaps named. M0-M2 implementation records distinguish automated evidence from remaining owner review.
 
 ## Where we are
+
+The implementation stack is now [live at V2](https://majieddd.github.io/worldheart/v2/)
+through [PR #18's preview workflow](https://github.com/majieddd/worldheart/pull/18).
+The first deployment passed 17 public browser/hash/save-isolation checks;
+[publication evidence](qa/implementation/V2-PREVIEW.md) records both source IDs.
+The root game remains from main. Publish future verified checkpoints under
+[PREVIEW.md](PREVIEW.md); full campaign and art/feel acceptance remain open.
 
 M3 update: four terrain profiles, directed ground routes, separate flight
 clearance, swimming, raised elemental placement and spherical/terrain range
