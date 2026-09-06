@@ -17,18 +17,26 @@ import { createInventory, generateWeapon, weaponStats, weaponName, shouldDrop, c
 import { LootField } from '../loot-field.js';
 import { WeaponPanel } from '../ui-weapons.js';
 import { ThreatGuides } from '../threat-guides.js';
+import { campaignStore } from './campaign-store.js';
+import { beginAssault, awardWave, resolveAssault, updateSalvage, extractPlanet } from '../run/campaign.js';
+import { CampaignPanel } from '../ui-campaign.js';
 
 export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, allies, possession, caches }) {
   // What this player has permanently unlocked. Read here in the shell and
   // handed to the core as a plain object, because js/run may not know that
   // storage exists.
   const profile = loadProfile();
+  const campaign=CONFIG.campaign ? campaignStore : null;
+  const expedition=campaign?.snapshot().expedition;
+  const restoredVictory=expedition && ['victory','complete'].includes(expedition.status);
+  let assaultId=expedition?.assault?.id || null,campaignPanel=null;
   const run = createRun({
     seed: CONFIG.seed,
     playerIds: ['solo'],
     startGold: CONFIG.economy.startGold + (profile.bonuses.interest ? 150 : 0),
     profile,
     draftSeconds: null,
+    restoredVictory:!!restoredVictory,
   });
   // A seeded stream for shell-side choices, kept separate from the core's so
   // that adding a roll here cannot shift the run's own sequence.
@@ -241,7 +249,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         ui.toast(`${e.power.name} taken`, 'info');
       } else if (e.type === 'waveCleared') {
         if (e.coins) {
-          bankCoins(e.coins);
+          if(campaign)campaign.commit(s=>awardWave(s,assaultId,e.wave,e.coins));else bankCoins(e.coins);
           ui.toast(`+${e.coins} coins`, 'info');
           ui.audio?.play('coin');
         }
@@ -252,13 +260,23 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         if (paid.interest > 0) ui.toast(`Interest +${paid.interest}`, 'info');
         if (paid.healed > 0) ui.toast(`Worldheart recovered ${paid.healed} life`, 'info');
       } else if (e.type === 'runWon') {
-        const progress = bankVictory();
-        ui.showEnd(true, `the planet is yours - ${progress.planetsBeaten} held`);
+        if(campaign){
+          commander.swingT=0;commander.strikePending=false;inventory.settle(false);syncWeapon();
+          campaign.commit(s=>resolveAssault(s,assaultId,'victory',salvageSnapshot()));
+          // Surviving raiders disperse when the planet falls silent. Salvage
+          // cannot race a late leak or an enemy still swinging at the player.
+          for(const enemy of [...enemies.active])enemies._release(enemy);
+          waves.raidQueue=[];waves.queues=[];showCampaignReceipt();
+        }else{
+          const progress = bankVictory();
+          ui.showEnd(true, `the planet is yours - ${progress.planetsBeaten} held`);
+        }
       }
     }
     if (grew === 1) ui.toast('The frontier widens', 'info');
     else if (grew > 1) ui.toast(`The frontier widens: ${grew} rings held`, 'info');
     syncFromRun();
+    campaignPanel?.update();
     if (grew) {
       // A ring the circle has just swallowed stops being a nest. Told to the
       // director straight away rather than on its next tick so the HUD count
@@ -323,6 +341,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // seed still replays identically.
   const COMMANDERS = ['commander', 'duelist', 'marksman', 'bombardier', 'oracle'];
   function pickCommander() {
+    if(expedition?.commander)return expedition.commander;
     const owned = COMMANDERS.filter((k) => profile.commanders.includes(k));
     const pool = owned.length ? owned : ['commander'];
     return pool[Math.floor(rng() * pool.length) % pool.length];
@@ -337,10 +356,12 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // tree hangs its commander unlocks on.
     commander = allies.spawn(pickCommander(), centre, centre, 8);
     allies.onCommanderLost = () => {
+      if(!run.loseRun())return;
       crystals.loseCarried();
-      run.loseRun();
+      if(campaign)campaign.commit(s=>resolveAssault(s,assaultId,'defeat'));
       game.state = 'defeat';
       ui.showEnd(false, 'the commander fell');
+      campaignPanel?.update();
     };
     // A commander buff appearing or vanishing has to reach the towers, and it
     // only changes on death, so re-syncing here is enough.
@@ -348,7 +369,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   }
 
   // ---- weapons ----------------------------------------------------------
-  const inventory = createInventory(commander.typeKey);
+  const initialInventory=expedition?.assault?.victory?.inventory || expedition?.assault?.start || expedition?.banked;
+  const inventory = createInventory(commander.typeKey,initialInventory);
   const lootRng = makeRng((CONFIG.seed ^ 0x19427cb5) >>> 0);
   const loot = new LootField(game.scene, allies);
   const threats = new ThreatGuides(game.scene,enemies);
@@ -356,7 +378,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const starterFamily = { commander:'sword', duelist:'sword', marksman:'carbine', bombardier:'lobber', oracle:'spear' }[commander.typeKey];
   const starter = generateWeapon({id:`starter-${CONFIG.seed}`,seed:CONFIG.seed,family:starterFamily,rng:makeRng(CONFIG.seed ^ 0xa42)});
   starter.rarity = 'common'; starter.affixes = []; starter.parts = {head:'balanced',grip:'balanced',core:'tempered'};
-  inventory.register(starter); inventory.pickup(starter.id); inventory.request({kind:'equip',id:starter.id,slot:0}); inventory.request({kind:'select',slot:'native'});
+  if(!initialInventory){inventory.register(starter); inventory.pickup(starter.id); inventory.request({kind:'equip',id:starter.id,slot:0}); inventory.request({kind:'select',slot:'native'});}
+  for(const drop of expedition?.assault?.victory?.drops || [])if(inventory.register(drop.item))loot.add(drop.item,new THREE.Vector3(...drop.dir));
   const basic = { ...starter, id:`basic-${CONFIG.seed}`, family:'sword', rarity:'common', tier:1, affixes:[], parts:{head:'balanced',grip:'balanced',core:'tempered'} };
   const busyWeapon = () => commander.swingT > 0 || commander.strikePending;
   const nearbyLoot = () => commander.active && !commander.dead ? loot.nearby(allies.worldPos(commander, _up)) : [];
@@ -374,23 +397,27 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   }
   const weaponApi = {
     inventory,
-    canInteract: () => game.state === 'playing' && ['building','victory'].includes(run.getPhase()) && commander.active && !commander.dead,
+    canInteract: () => game.state === 'playing' && ['building','victory'].includes(run.getPhase()) && (!campaign||['assault','victory'].includes(campaign.expeditionStatus())) && commander.active && !commander.dead,
     nearby: nearbyLoot,
     request(op) {
       if (!this.canInteract()) return false;
       const ok = inventory.request(op,busyWeapon());
-      if (ok) { if (possession.unit===commander) possession.firing=false; syncWeapon(); }
+      if (ok) { if (possession.unit===commander) possession.firing=false; syncWeapon(); persistSalvage(); }
       return ok;
     },
     pickup(id,replace=null) {
       if (!this.canInteract() || !nearbyLoot().some(x=>x.id===id) || !inventory.pickup(id,replace)) return false;
-      loot.remove(id); ui.audio?.play('coin'); ui.toast('Weapon recovered. I to compare and equip.','info'); return true;
+      loot.remove(id); persistSalvage(); ui.audio?.play('coin'); ui.toast('Weapon recovered. I to compare and equip.','info'); return true;
     },
     salvage(id) {
       if (!this.canInteract() || (inventory.drops.some(x=>x.id===id) && !nearbyLoot().some(x=>x.id===id))) return false;
       if (!inventory.salvage(id)) return false;
-      loot.remove(id); ui.audio?.play('coin'); return true;
+      loot.remove(id); persistSalvage(); ui.audio?.play('coin'); return true;
     },
+    bankedIds:()=>campaign?.snapshot().expedition.banked?.items.map(x=>x.id)||[],
+    infuse(id){if(!this.canInteract()||busyWeapon()||!inventory.infuse(id,CONFIG.planetIndex))return false;syncWeapon();persistSalvage();return true;},
+    planet:CONFIG.planetIndex,
+    campaign:!!campaign,
   };
   const weaponPanel = new WeaponPanel({game,possession,ui,api:weaponApi,rules:{
     name:weaponName,stats:item=>weaponStats(item,commander.typeKey),parts:PARTS,
@@ -400,7 +427,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   enemies.onKill = e => {
     previousKill?.(e);
     if (!shouldDrop({boss:!!e.type.boss,elite:e.typeKey === 'aegis'},lootRng)) return;
-    const item = generateWeapon({id:`weapon-${CONFIG.seed}-${++lootSequence}`,seed:(lootRng()*0x100000000)>>>0,tier:CONFIG.planetIndex || 1,rng:lootRng});
+    const item = generateWeapon({id:`weapon-${assaultId || CONFIG.seed}-${++lootSequence}`,seed:(lootRng()*0x100000000)>>>0,tier:CONFIG.planetIndex || 1,rng:lootRng});
     if (inventory.register(item)) {
       let node = nav.nearestWalkableNode(e.dir,true);
       if (node < 0 || !Number.isFinite(nav.dist[node])) node = nav.heartNode;
@@ -412,7 +439,52 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const previousProjectile = allies.onProjectileFired;
   allies.onProjectileFired = (a,bolt) => { previousProjectile?.(a,bolt); ui.audio?.play('rifle'); if (possession.unit===a) possession.kick = Math.min(.5,possession.kick+bolt.spec.kick); };
   const previousReady = allies.onAttackReady;
-  allies.onAttackReady = a => { previousReady?.(a); if (a===commander && inventory.settle(false)) syncWeapon(); };
+  allies.onAttackReady = a => { previousReady?.(a); if (a===commander && inventory.settle(false)){syncWeapon();persistSalvage();} };
+
+  function salvageSnapshot() {
+    return {inventory:inventory.snapshot(),drops:[...loot.entries.values()].map(x=>({item:x.item,dir:x.position.clone().normalize().toArray()})),kills:game.kills,score:game.score,lives:Math.max(1,game.lives)};
+  }
+  function persistSalvage() {
+    if(campaign?.snapshot().expedition.status==='victory')campaign.commit(s=>updateSalvage(s,assaultId,salvageSnapshot()));
+    campaignPanel?.update();
+  }
+  function showCampaignReceipt() {
+    if(!campaign)return;
+    const e=campaign.snapshot().expedition;if(!['victory','complete'].includes(e.status))return;
+    ui._ended=false;ui.showEnd(true,`${CONFIG.campaign.name} defended`);campaignPanel?.update();
+  }
+  const campaignApi=campaign ? {
+    state:()=>campaign.snapshot().expedition,name:CONFIG.campaign.name,brief:CONFIG.campaign.brief,
+    showReceipt:showCampaignReceipt,
+    reload(){const url=new URL(location.href);url.searchParams.set('map','ninetynine');url.searchParams.set('campaign','1');url.searchParams.delete('seed');url.searchParams.delete('terrain');location.href=url.href;},
+    extract(){
+      if(busyWeapon()||inventory.pending){ui.toast('Finish the current attack before extracting.','info');return false;}
+      persistSalvage();if(!campaign.status().saved)return false;
+      const e=campaign.snapshot().expedition;
+      if(e.status==='ready'){this.reload();return true;}
+      const result=campaign.commit(s=>extractPlanet(s,assaultId,inventory.snapshot()));
+      if(!result.ok||!result.saved)return false;
+      if(campaign.snapshot().expedition.status==='complete')showCampaignReceipt();else this.reload();return true;
+    },
+  } : null;
+  if(campaign){
+    campaignPanel=new CampaignPanel({store:campaign,api:campaignApi,ui,game});
+    ui.onCampaignRetry=()=>campaignApi.reload();
+    ui.onBegin=()=>{
+      if(restoredVictory){
+        ui.el['title-overlay'].classList.remove('show');game.state='playing';waves.state='idle';waves.wave=15;
+        const v=expedition.assault?.victory;if(v){game.kills=v.kills;game.score=v.score;game.lives=v.lives;}
+        showCampaignReceipt();return false;
+      }
+      const result=campaign.commit(s=>beginAssault(s,{commander:commander.typeKey,inventory:inventory.snapshot(),effectiveSeed:CONFIG.seed}));
+      if(!result.ok)return false;assaultId=result.value;campaignPanel.update();return true;
+    };
+    game.onGameEnd=won=>{
+      if(won||!run.loseRun())return;
+      crystals.loseCarried();campaign.commit(s=>resolveAssault(s,assaultId,'defeat'));ui.showEnd(false);campaignPanel.update();
+    };
+    ui.onContinue=()=>{campaignPanel.update();};
+  }
 
   // ---- click to possess, and posting a patrol ---------------------------
   const _pd = new THREE.Vector3();
@@ -687,13 +759,14 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     threats,
     weapons: weaponApi,
     weaponPanel,
-    renderEffects(dt) { loot.update(dt); threats.update(); weaponPanel.update(); },
+    campaign:campaignApi,
+    renderEffects(dt) { loot.update(dt); threats.update(); weaponPanel.update(); if(campaignPanel){campaignPanel.badge.hidden=game.state==='title';} },
     // The same path the panel and the B key use, exposed so a scripted run
     // can buy a level without synthesising a click.
     upgradeHeart: tryUpgradeHeart,
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
-      inventory.settle(busyWeapon()); syncWeapon();
+      if(inventory.settle(busyWeapon()))persistSalvage(); syncWeapon();
       updateCrystals();
       const draft = run.getDraft();
       if (draft) {

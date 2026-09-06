@@ -40,7 +40,7 @@ export function coinsForWave(wave, isBoss) {
   return 10 + wave * 2 + (isBoss ? 100 : 0);
 }
 
-export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 10 }) {
+export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 10, restoredVictory = false }) {
   const state = createRunState({ seed, playerIds, startGold });
   const rng = makeRng(seed);
   // The profile is injected, never read from storage: this module may not know
@@ -118,6 +118,9 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
   // A run opens with the loadout tower and nothing else.
   state.hand = [prof.loadout && state.unlockedTowers.includes(prof.loadout)
     ? prof.loadout : state.unlockedTowers[0]];
+  // A validated campaign receipt restores a cleared field for salvage. This
+  // does not emit rewards or replay the fifteen wave-clear transactions.
+  if(restoredVictory){state.phase='victory';state.wavesCleared=TOTAL_WAVES;state.hand=[];}
 
   return {
     // ---- queries ----
@@ -226,8 +229,10 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
     },
 
     loseRun() {
+      if(state.phase==='victory'||state.phase==='defeat')return false;
       state.phase = 'defeat';
       draft = null;
+      return true;
     },
   };
 }

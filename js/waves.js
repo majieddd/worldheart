@@ -194,8 +194,9 @@ export class WaveDirector {
     if (nowPortals > prevPortals && this.wave > 1 && this.onPortalWake) {
       this.onPortalWake(nowPortals - 1);
     }
-    const comp = waveComp(this.wave);
-    const scale = hpScale(this.wave);
+    const comp = waveComp(this.wave).map(g=>({...g}));
+    if(CONFIG.campaign?.pressure==='wings')for(const g of comp)if(g.type==='wisp')g.count=Math.ceil(g.count*1.25);
+    const scale = hpScale(this.wave)*(CONFIG.campaign?.enemyHealth||1);
     // Enemy melee grows with the wave so a garrison does not stay free forever,
     // but on a much shallower slope than health does and with a ceiling, so a
     // late swarm is dangerous rather than a one-shot on every body.

@@ -1,0 +1,65 @@
+// DOM-only campaign receipt and recovery controls. The mode supplies all
+// transactions; this view never changes inventory or campaign state directly.
+export class CampaignPanel {
+  constructor({store,api,ui,game}) {
+    Object.assign(this,{store,api,ui,game});
+    this.badge=document.createElement('button');this.badge.className='campaign-badge';this.badge.id='campaign-status';ui.root.append(this.badge);
+    this.badge.onclick=()=>api.showReceipt();
+    this.receipt=document.createElement('section');this.receipt.className='campaign-receipt';this.receipt.id='campaign-receipt';
+    ui.el['end-card'].insertBefore(this.receipt,ui.el['end-card'].querySelector('.o-actions'));
+    this.extract=document.createElement('button');this.extract.id='btn-extract';this.extract.className='btn primary';
+    ui.el['end-card'].querySelector('.o-actions').prepend(this.extract);this.extract.onclick=()=>{api.extract();this.update();};
+    this.save=document.createElement('section');this.save.className='campaign-save';this.save.id='campaign-save';this.save.setAttribute('aria-label','Save status');ui.root.append(this.save);
+    this.save.innerHTML='<p role="status"></p><div class="weapon-actions"><button data-save="retry">Retry save</button><button data-save="export">Export checkpoint</button><button data-save="import">Import checkpoint</button><input type="file" accept="application/json,.json" hidden></div>';
+    this.save.querySelector('[data-save="import"]').onclick=()=>this.save.querySelector('input').click();
+    this.save.querySelector('[data-save="retry"]').onclick=()=>{store.retry(['corrupt','legacy-corrupt'].includes(store.status().error));this.update();};
+    this.save.querySelector('[data-save="export"]').onclick=()=>{
+      const url=URL.createObjectURL(new Blob([store.export()],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='99-planets-checkpoint.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    };
+    this.save.querySelector('input').onchange=async e=>{const file=e.target.files[0];if(!file)return;if(store.import(await file.text()))api.reload();else{ui.toast('Checkpoint was invalid or could not be saved. Current progress is still available for export.','warn');this.update();}};
+    for(const button of this.save.querySelectorAll('button'))button.className='btn';
+    const title=ui.el['title-overlay'];
+    title.querySelector('.o-sub').textContent='Saved expedition pilot';
+    title.querySelector('.o-body').textContent='Defend the heart, recover weapons, and carry your loadout to the next planet. Only a purchased base upgrade expands your territory.';
+    const alternatives=document.createElement('details');alternatives.className='campaign-worlds';alternatives.innerHTML='<summary>Other modes and sandboxes</summary>';
+    const maps=title.querySelector('#map-row');maps.before(alternatives);alternatives.append(maps);
+    title.querySelector('.terrain-choice').remove();
+    this.intro=document.createElement('p');this.intro.className='campaign-intro';ui.el['title-overlay'].querySelector('.o-actions').before(this.intro);
+    this.update();
+  }
+  update() {
+    const e=this.api.state(),status=this.store.status();if(!e)return;
+    const won=e.status==='victory',complete=e.status==='complete',departing=e.status==='ready'&&e.completed>0&&this.game.state==='playing';
+    this.badge.textContent=departing?`Planet ${e.completed} banked · Departure pending`:`Planet ${e.planet} / ${e.limit} · ${this.api.name}${won?' · Extract':complete?' · Complete':''}`;
+    this.badge.hidden=this.game.state==='title';this.badge.disabled=!won&&!complete;
+    this.intro.textContent=`${this.api.name} · Planet ${e.planet} of ${e.limit}. ${this.api.brief} Previously extracted weapons are safe. Current assault loot is lost on defeat or refresh; cleared-planet salvage is saved.`;
+    if(e.status==='assault')this.intro.textContent+=' This assault restarts at wave 1 on reload; already paid wave coins cannot be claimed twice.';
+    this.ui.el['btn-begin'].textContent=won?'Return to cleared planet':complete?'View expedition receipt':`Defend ${this.api.name}`;
+    this.extract.hidden=!won&&!departing;
+    this.extract.textContent=departing?'Continue to saved planet':e.planet===e.limit?'Bank weapons and finish':'Bank weapons and travel';
+    this.receipt.textContent=won
+      ? `${e.assault.victory.inventory.items.length} carried weapons ready to bank. ${e.assault.victory.drops.length} drops remain on this planet. ${e.assault.coins} wave coins already banked. ${e.planet===e.limit?'The expedition ends after extraction.':`Next: planet ${e.planet+1}.`} Uncollected drops are left behind.`
+      : departing ? `Planet ${e.completed} is banked. Continue once this checkpoint has saved.`
+      : complete ? `${e.completed} planets defended. ${e.banked?.items.length||0} weapons banked. Expedition complete.`
+      : 'Current assault loot was lost. Previously extracted weapons and earned talent coins remain available for your retry.';
+    this.save.classList.toggle('save-failed',!status.saved);
+    const messages={unavailable:'Save failed. Keep this page open; export your checkpoint or retry before traveling.',conflict:'Another tab changed the checkpoint. Export this pending progress, then reload the newer save. Travel is paused.',corrupt:'The stored checkpoint is unreadable. Export preserves its original text. Recover saves this new session in its place.', 'legacy-corrupt':'The old profile is unreadable. Export preserves its original text. Recover saves this new session in its place.'};
+    this.save.querySelector('p').textContent=status.saved?'Checkpoint saved':messages[status.error]||'Progress is waiting to be saved.';
+    const retry=this.save.querySelector('[data-save="retry"]');retry.hidden=status.saved;retry.textContent=['corrupt','legacy-corrupt'].includes(status.error)?'Recover with this session':'Retry save';
+    this.extract.disabled=!status.saved;
+    uiEnd(this.ui,e);
+  }
+}
+function uiEnd(ui,e) {
+  const departing=e.status==='ready'&&e.completed>0&&ui.game.state==='playing';
+  ui.el['btn-retry'].hidden=e.status==='victory'||e.status==='complete'||departing;
+  if(departing)ui.el['btn-continue'].style.display='none';
+  ui.el['btn-new'].hidden=true;
+  if(e.status==='complete'){
+    ui.el['end-mark'].textContent='EXPEDITION COMPLETE';ui.el['btn-continue'].style.display='none';
+    ui.el['end-waves'].textContent=String(e.completed*15);
+    ui.el['end-kills'].textContent=String(e.receipts.reduce((sum,r)=>sum+r.kills,0));
+    ui.el['end-score'].textContent=String(e.receipts.reduce((sum,r)=>sum+r.score,0));
+    ui.el['end-body'].textContent='Your defended planets and extracted arsenal are recorded in this checkpoint.';
+  }
+}

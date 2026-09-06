@@ -1,6 +1,7 @@
 // WORLDHEART: single source of tuning. Scene palette here is canonical for WebGL;
 // css/style.css :root is canonical for the DOM HUD. Keep the two in sync with DESIGN.md.
 
+import { campaignLaunch } from './modes/campaign-launch.js';
 const url = new URLSearchParams(location.search);
 
 function stored(key) {
@@ -114,10 +115,14 @@ export const TERRAIN_PROFILES = {
   canyon: { name: 'Deep canyons', range: 18, canyon: 38, snow: 32, ocean: 0, flightCeiling: 26 },
   ocean: { name: 'Ocean islands', range: 16, canyon: 5, snow: 10, ocean: 0.12, flightCeiling: 20 },
 };
-const terrainKey = url.get('terrain') || stored('whTerrain') || 'varied';
+const requestedSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
+const campaign=campaignLaunch(mapKey==='ninetynine'&&url.get('campaign')==='1',requestedSeed);
+const terrainKey = campaign?.terrain || url.get('terrain') || stored('whTerrain') || 'varied';
 
 export const CONFIG = {
-  seed: Number(url.get('seed')) || Number(stored('whSeed')) || 20260830,
+  seed: campaign?.seed || requestedSeed,
+  campaign,
+  planetIndex:campaign?.index || 1,
   mapKey,
   map: MAP,
   planetRadius: R0,
