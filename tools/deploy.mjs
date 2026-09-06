@@ -1,10 +1,12 @@
-// Refresh the published copy at v2/ from the source tree.
+// Refresh this checkout's generated v2/ copy from the source tree.
 //
 // v2/ is a full duplicate of index.html, css/, js/ and lib/ that GitHub Pages
 // serves at /worldheart/v2/. It was kept in sync BY HAND, which meant every
 // source change needed a follow-up commit that was easy to forget - and
 // forgetting it silently shipped a stale game while the repo looked correct.
-// The name is also misleading: v2 is not a newer version, it is a mirror.
+// The committed copy remains a local mirror. The Pages workflow independently
+// composes main at the public root and preview/v2 source at the public /v2/ URL.
+// See docs/PREVIEW.md; this script itself does not publish a live preview.
 //
 // Run this before committing anything under js/, css/ or index.html:
 //   node tools/deploy.mjs

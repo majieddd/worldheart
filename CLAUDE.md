@@ -33,6 +33,11 @@ picks up the runner itself and double-counts.
 `?map=<key>&seed=<n>`. Map keys: `pocket`, `giant`, `titan`, `reach`, `ninetynine`.
 The roguelite mode is `?map=ninetynine`.
 
+The owner-authorized live preview is `/worldheart/v2/`, published from preview/v2
+without merging gameplay into main. Read `docs/PREVIEW.md` and publish verified
+working checkpoints with `node tools/publish-preview.mjs`. The root game is
+composed from main; V2 has separate browser saves and defaults to the campaign.
+
 Two things will confuse you if nobody says them:
 
 - **Map and seed persist to `localStorage`** (`whMap`, `whSeed`). A bare URL boots
@@ -48,7 +53,7 @@ js/run/       THE PURE CORE - the 99 Planets run state machine. Imports nothing.
 js/modes/     ninetynine.js is the ONLY file that knows both the core and Three.
 js/*.js       the engine: world, nav, towers, enemies, allies, possess, ui, main
 tests/run/    tests for the core. tests/tools/ tests the bundler.
-v2/           a MIRROR of the app that Pages serves. Not "version 2".
+v2/           generated local mirror; live /v2/ comes from preview/v2 source.
 dist/         the committed single-file build.
 ```
 

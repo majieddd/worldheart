@@ -205,6 +205,12 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 
 ## Decided
 
+2026-09-06 workflow decision: the owner authorized ongoing publication to
+`/worldheart/v2/` from a dedicated preview integration branch, without merging
+gameplay into main. [PREVIEW.md](PREVIEW.md) defines publishing, root-file
+preservation, isolated saves and live verification. This changes preview access,
+not the campaign's release acceptance criteria.
+
 | Decision | Status | Evidence |
 |---|---|---|
 | Existing campaign has an enjoyable playable defense loop | in game | Blind natural defeat wave 11, [terminal capture](qa/2026-09-05/images/23-defeat.png) |

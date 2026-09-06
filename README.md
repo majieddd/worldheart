@@ -1,5 +1,10 @@
 # WORLDHEART
 
+Play the [stable game](https://majieddd.github.io/worldheart/) or test current
+development in the [live V2 preview](https://majieddd.github.io/worldheart/v2/).
+V2 uses separate saves and starts the 99-planet campaign. Collaborators should
+follow [the preview publication workflow](docs/PREVIEW.md) at each tested checkpoint.
+
 A 3D tower defense fought across the surface of living procedural planets. Raise defenses anywhere on the globe, bend the void swarm through your maze, and keep the Worldheart alight.
 
 Five worlds across four map types, plus **99 Planets**, a roguelite campaign mode where you hold a shrinking circle of ground, draft powers between waves, and can drop into first person to fight alongside your towers.

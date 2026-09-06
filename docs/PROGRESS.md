@@ -8,6 +8,13 @@ Latest review slices: [99 destinations, PR #16](https://github.com/majieddd/worl
 and [terrain camera visibility, PR #17](https://github.com/majieddd/worldheart/pull/17).
 Both are stacked drafts. The production site has not been changed by these PRs.
 
+Current workflow slice: Codex on `feature/v2-preview-workflow`, live V2
+publication from `preview/v2` without merging the gameplay stack into main.
+[Preview workflow](PREVIEW.md) defines standing publication authorization,
+separate saves, root preservation and the required live build/browser checks.
+Implementation and deployment verification are active; no preview-live claim
+is made until the Pages action and public asset identity are verified.
+
 ## Completed in this batch
 
 | Work | Status | Owner | Evidence | Usage |
@@ -43,9 +50,9 @@ Final documentation validation: house style and whitespace checks passed; [local
 ## How collaborators update this cleanly
 
 1. Claim a linked issue and state the bounded behavior being changed. Keep one issue for a coherent player outcome; split a milestone into child issues as implementation becomes concrete.
-2. Branch from current main, preserve unrelated work, and include Problem, Changed behavior, Validation and Remaining gaps in the PR.
+2. Branch campaign work from current origin/preview/v2, preserve unrelated work, and include Problem, Changed behavior, Validation and Remaining gaps in the PR.
 3. Attach seed/build/profile/input and before/after evidence. Separate natural play, instrumented fixtures, source inference and user reports.
 4. Update this table and the blueprint's Decided/Where we are sections in the same session that changes gameplay. Record usage only when measured.
-5. Link a fixing PR to the affected issue. Main publishes to Pages, so this planning branch stays reviewable without claiming that future gameplay has shipped.
+5. Link a fixing PR to the affected issue. Publish tested working checkpoints through docs/PREVIEW.md, verify the live V2 build and update the issue. Preview publication leaves main's gameplay separate and does not close release acceptance.
 
 Historical polish records remain unchanged. This ledger supersedes the old suggested priority order for the new owner brief; existing architecture and verification invariants still apply. License, repository permissions and branch settings are outside this batch.

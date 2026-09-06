@@ -133,18 +133,19 @@ parked it.
 
 ## Deployment
 
-Three copies of the game are published:
+Pages composes the stable and development routes from separate checkouts:
 
 | URL | Source | Notes |
 |---|---|---|
-| `/worldheart/` | repo root | the original build |
-| `/worldheart/v2/` | `v2/` | a **mirror** of the source tree, not a newer version |
-| `/worldheart/dist/worldheart.html` | `dist/` | the committed single-file build |
+| `/worldheart/` | main | the stable build |
+| `/worldheart/v2/` | preview/v2 source | integrated development preview with isolated saves |
+| `/worldheart/dist/worldheart.html` | main dist/ | the stable single-file build |
 
 `node tools/deploy.mjs` refreshes `v2/` and rebuilds `dist/`, and verifies the
 mirror file by file. Run it before committing anything under `js/`, `css/` or
-`index.html`. Pages serves from repo settings, so there is no workflow file in
-the tree to tell you this.
+`index.html`. This maintains the local generated copies. The live artifact is
+built by `.github/workflows/preview-pages.yml` and `tools/pages-site.mjs`.
+Follow [PREVIEW.md](PREVIEW.md) to publish without merging gameplay into main.
 
 ## Debug handles
 

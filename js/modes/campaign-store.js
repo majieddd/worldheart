@@ -1,4 +1,5 @@
 import { freshSave, validSave, accountProfile } from '../run/campaign.js';
+import { browserStorage } from '../storage.js';
 
 export const CAMPAIGN_KEY='wh99Campaign';
 const LEGACY_KEY='wh99Progress';
@@ -47,5 +48,4 @@ export function createCampaignStore(storage) {
     updateAccount(profile){return this.commit(s=>{s.account=accountProfile(profile);return true;});},
   };
 }
-const browserStorage={getItem:key=>globalThis.localStorage.getItem(key),setItem:(key,value)=>globalThis.localStorage.setItem(key,value)};
 export const campaignStore=createCampaignStore(browserStorage);

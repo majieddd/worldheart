@@ -17,3 +17,15 @@ Correct disproven audit conclusions openly; do not rewrite frozen observations.
 The optional personal `implementation-tracker` skill provides this general
 workflow. These repository instructions remain sufficient for collaborators
 who do not have that skill installed. No additional approval gate is implied.
+
+## Publish working changes to V2
+
+The owner authorized ongoing live previews at /worldheart/v2/ without merging
+gameplay into main. Follow docs/PREVIEW.md at the start of each work session.
+Base new campaign work on origin/preview/v2, preserve other collaborators'
+changes, and publish each coherent verified checkpoint with
+node tools/publish-preview.mjs. Keep ordinary review PRs alongside the preview.
+Verify the Pages action, live build SHA and browser behavior before reporting
+an update live. Update tracker #1 with the preview link and remaining QA gaps.
+Preview publication is standing authorization; it does not authorize merging
+gameplay into main. Never force-push the shared preview branch.
