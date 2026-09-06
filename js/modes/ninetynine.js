@@ -11,6 +11,7 @@ import { SIM_RANDOM } from '../noise.js';
 import { CONFIG } from '../config.js';
 import * as THREE from 'three';
 import { bankVictory, bankCoins, loadProfile } from './progress.js';
+import { createRewardConsumer } from '../rewards.js';
 
 export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, allies, possession, caches }) {
   // What this player has permanently unlocked. Read here in the shell and
@@ -22,6 +23,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     playerIds: ['solo'],
     startGold: CONFIG.economy.startGold + (profile.bonuses.interest ? 150 : 0),
     profile,
+    draftSeconds: null,
   });
   // A seeded stream for shell-side choices, kept separate from the core's so
   // that adding a roll here cannot shift the run's own sequence.
@@ -32,6 +34,12 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   SIM_RANDOM.next = makeRng((CONFIG.seed ^ 0x9e3779b9) >>> 0);
 
   const centre = nav.fieldCenter ? nav.fieldCenter.clone() : null;
+  const rewards = createRewardConsumer({ game, profile, centre, world, enemies, allies,
+    startGold: CONFIG.economy.startGold, startLives: CONFIG.economy.startLives });
+  if (allies) allies.onDamage = (a, dealt, killed) => {
+    const tower = game.towerMgr.towers.find((t) => t.id === a.homeTower);
+    if (tower) { tower.damageDealt += dealt; if (killed) tower.kills++; }
+  };
   const _sdir = new THREE.Vector3();
   const _axis = new THREE.Vector3();
   const _up = new THREE.Vector3();
@@ -107,7 +115,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   }
 
   function syncFromRun() {
-    const mods = run.getModifiers();
+    // Commander presence is a shell-only bonus. Mutating the core's cached
+    // object added another 15% every time a card or base panel refreshed.
+    const mods = { ...run.getModifiers() };
     if (commanderAlive()) mods.dmgMul += COMMANDER_DMG_BONUS;
     MODS.current = mods;
     EVO.tier = run.getEvolutionTier();
@@ -119,6 +129,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // HUD's upgrade button reads game.tierCap on refresh, which is why the
     // refresh below is unconditional: a raised cap has to reach a tower panel
     // that is already open.
+    rewards.sync(MODS.current);
     game.tierCap = run.getTierCap();
     const level = run.getHeartLevel();
     const cost = run.getHeartCost();
@@ -169,7 +180,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     let grew = 0;
     for (const e of events) {
       if (e.type === 'towerUnlocked') {
-        ui.toast(`${e.tower.toUpperCase()} unlocked`, 'info');
+        ui.toast(`${TOWER_TYPES[e.tower]?.name || e.tower} unlocked`, 'info');
       } else if (e.type === 'handDrawn') {
         // The odd wave's ONLY reward. It was emitted and handled by nothing, so
         // half the waves paid out in silence while every even wave announced
@@ -194,7 +205,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         ui.toast(`Worldheart raised to level ${e.level}: towers may reach mark ${run.getTierCap()}`, 'info');
         ui.audio?.play('upgrade');
       } else if (e.type === 'draftOpened') {
-        ui.showDraft(e.offers, (i) => { run.vote('solo', i); });
+        ui.showDraft(e.offers, (i) => {
+          if (run.vote('solo', i)) handle(run.tick(0));
+        });
       } else if (e.type === 'powerTaken') {
         ui.hideDraft();
         ui.toast(`${e.power.name} taken`, 'info');
@@ -207,14 +220,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         // Compound Interest wrote interestPct and nothing ever read it, so the
         // power was a dead draft pick. Paid on the gold held at the moment the
         // wave clears, which is what the card promises.
-        const ip = MODS.current ? MODS.current.interestPct : 0;
-        if (ip > 0) {
-          const gain = Math.floor(game.gold * ip);
-          if (gain > 0) {
-            game.gold += gain;
-            ui.toast(`Interest +${gain}`, 'info');
-          }
-        }
+        const paid = rewards.waveCleared();
+        if (paid.interest > 0) ui.toast(`Interest +${paid.interest}`, 'info');
+        if (paid.healed > 0) ui.toast(`Worldheart recovered ${paid.healed} life`, 'info');
       } else if (e.type === 'runWon') {
         const progress = bankVictory();
         ui.showEnd(true, `the planet is yours - ${progress.planetsBeaten} held`);
@@ -455,6 +463,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // Only an idle left click takes a body; building and the tower panel keep
     // their own use of the tap.
     if (button === 0 && !game.buildType && possession && !possession.active && game.cursorValid) {
+      // A visible tower hit takes priority over a nearby garrison body. The
+      // old proximity-first order possessed a soldier when aiming at its door.
+      if (game._trySelect(x, y)) return;
       const unit = allies.nearestTo(game.cursorPos, 3.2);
       if (unit) {
         possession.enter(unit);
@@ -514,7 +525,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     update(dt) {
       const draft = run.getDraft();
       if (draft) {
-        ui.setDraftTimer(draft.remaining / 10);
+        ui.setDraftTimer(draft.remaining === null ? null : draft.remaining / 10);
         const events = run.tick(dt);
         if (events.length) handle(events);
       }

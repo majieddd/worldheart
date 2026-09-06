@@ -260,6 +260,7 @@ class Ally {
     this.leash = leash;
     this.patrol = null;
     this.hpMax = type.hp;
+    this.homeTower = null;
     this.hp = type.hp;
     this.state = 'roam';
     this.target = null;
@@ -389,6 +390,8 @@ export class AllyManager {
     if (!type || this.active.length >= MAX_ALLIES) return null;
     const a = this.pool.pop() || new Ally();
     a.init(typeKey, type, dirVec, anchorDir || dirVec, leash);
+    a.hpMax *= this.healthMultiplier || 1;
+    a.hp = a.hpMax;
     this.active.push(a);
     return a;
   }
@@ -791,12 +794,27 @@ export class AllyManager {
       // enemies' own melee follows.
       const d = this.enemyPos(target, _tmp2).distanceTo(this.worldPos(a, _tmp));
       if (d <= a.type.reach + 0.4) {
-        this.enemies.damage(target, a.type.dps * 0.55, { armorPierce: 2 });
+        this._dealDamage(a, target, a.type.dps * 0.55, { armorPierce: 2 });
         hits = 1;
       }
     }
     if (this.onStrikeResolved) this.onStrikeResolved(a, hits, spec);
     return hits;
+  }
+
+  // Garrison output belongs to the barracks even under direct control. Both
+  // AI and player melee use this attribution path; pooled bodies clear their
+  // previous homeTower before becoming a new soldier or commander.
+  _dealDamage(a, enemy, amount, opts = {}) {
+    const wasDead = enemy.dead;
+    const mods = a.homeTower !== null ? this.modifiers : null;
+    if (mods) {
+      amount *= mods.dmgMul;
+      if (SIM_RANDOM.next() < Math.min(1, mods.critAdd)) amount *= 2.2;
+    }
+    const dealt = this.enemies.damage(enemy, amount, opts);
+    if (dealt > 0) this.onDamage?.(a, dealt, !wasDead && enemy.dead);
+    return dealt;
   }
 
   // The player's melee sweep: everything inside the radius and the facing arc
@@ -820,7 +838,7 @@ export class AllyManager {
       if (this.enemyPos(e, _tmp2).distanceTo(_strikeOrigin) > s.radius) continue;
       if (!this._inArc(a, _tmp2, s.arcDeg)) continue;
       const amount = e === primary ? s.dmg : s.dmg * s.cleave;
-      const landed = this.enemies.damage(e, amount, {
+      const landed = this._dealDamage(a, e, amount, {
         armorPierce: s.pierce,
         capFrac: STRIKE_CAP_FRAC,
       });

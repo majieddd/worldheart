@@ -1,0 +1,79 @@
+{
+  "scope": "Instrumented shell/UI fixtures, not natural play",
+  "seed": 51940,
+  "checks": [
+    {
+      "name": "Counting House pays live gold",
+      "ok": true,
+      "actual": 600
+    },
+    {
+      "name": "Veterancy pays commander health",
+      "ok": true,
+      "actual": 1680
+    },
+    {
+      "name": "Scout starts wider",
+      "ok": true,
+      "actual": 1
+    },
+    {
+      "name": "Commander bonus does not accumulate on refresh",
+      "ok": true,
+      "actual": 1.15
+    },
+    {
+      "name": "Core modifiers stay independent of commander presence",
+      "ok": true,
+      "actual": 1
+    },
+    {
+      "name": "Current and next caps are labelled",
+      "ok": true,
+      "actual": "Current MK II. Next: MK III, +2 rings"
+    },
+    {
+      "name": "Paused pick resolves immediately",
+      "ok": true,
+      "actual": "building"
+    },
+    {
+      "name": "Hardened Heart reaches live health and capacity",
+      "ok": true,
+      "actual": {
+        "lives": 22,
+        "max": 22
+      }
+    },
+    {
+      "name": "Draft overlay dismisses",
+      "ok": true
+    },
+    {
+      "name": "Health reward cannot be collected repeatedly by refreshing",
+      "ok": true,
+      "actual": 22
+    },
+    {
+      "name": "Mending pays on real shell wave callback",
+      "ok": true,
+      "actual": 11
+    },
+    {
+      "name": "Solo reward remains untimed",
+      "ok": true,
+      "actual": null
+    },
+    {
+      "name": "Solo reward survives arbitrarily long waiting",
+      "ok": true
+    },
+    {
+      "name": "Live Helios receives the commander damage bonus",
+      "ok": true,
+      "actual": 29.9
+    }
+  ],
+  "faults": [],
+  "pass": true
+}

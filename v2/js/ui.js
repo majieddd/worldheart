@@ -174,13 +174,14 @@ export class HUD {
           <div class="o-body">The void found this world. Raise your defenses anywhere on the globe,
             bend the swarm through your maze, and keep the heart alight.
             <em>Every breach must always have a path: seal nothing, shape everything.</em></div>
-          <div class="o-body" style="margin-top:var(--sp-3);font-size:var(--fs-12)">
-            Drag or <span class="kbd">WASD</span> to move, scroll or <span class="kbd">+</span>
+          <details class="o-controls"><summary>Controls and commander</summary><div class="o-body">
+            ${CONFIG.map.mode === 'ninetynine' ? 'Right-drag or middle-drag to pan; left-drag selects units. Click a unit to possess it. In a body: Space jumps, P pauses, Esc releases. ' : 'Drag to pan. '}
+            <span class="kbd">WASD</span> to move, scroll or <span class="kbd">+</span>
             <span class="kbd">-</span> to zoom, <span class="kbd">Q</span> <span class="kbd">E</span> or
-            <span class="kbd">Ctrl</span> + middle-drag to rotate (<span class="kbd">R</span> resets).
-            Keys <span class="kbd">1</span> to <span class="kbd">5</span> choose a tower, click to build.
+            <span class="kbd">Ctrl</span> + middle-drag to rotate (<span class="kbd">R</span> resets rotation).
+            Keys <span class="kbd">1</span> to <span class="kbd">${CONFIG.map.mode === 'ninetynine' ? '6' : '5'}</span> choose ${CONFIG.map.mode === 'ninetynine' ? 'a hand slot' : 'a tower'}, click to build.
             <span class="kbd">U</span> upgrade, <span class="kbd">X</span> sell,
-            <span class="kbd">Space</span> pause, <span class="kbd">F</span> speed. Camera feel sliders live in settings.</div>
+            <span class="kbd">Space</span> pause, <span class="kbd">F</span> speed. Camera feel sliders live in settings.</div></details>
           <div class="map-row" id="map-row"></div>
           <div class="o-actions">
             <button class="btn primary" id="btn-begin" style="font-family:var(--font-display)">Begin the defense</button>
@@ -227,7 +228,7 @@ export class HUD {
       <div class="overlay" id="draft-overlay">
         <div class="overlay-card draft-panel">
           <div class="o-mark">CHOOSE A POWER</div>
-          <div class="o-sub" id="draft-sub">The frontier widens</div>
+          <div class="o-sub" id="draft-sub">Choose when ready. Your reward waits for you.</div>
           <div class="draft-cards" id="draft-cards"></div>
           <div class="draft-timer"><span id="draft-timer-fill"></span></div>
         </div>
@@ -621,7 +622,7 @@ export class HUD {
       card.addEventListener('click', () => onPick(i));
       host.appendChild(card);
     });
-    this.setDraftTimer(1);
+    this.setDraftTimer(null);
     document.getElementById('draft-overlay').classList.add('show');
     // A possessed body holds the pointer, so the cards could not be clicked:
     // the swing fired instead. The draft lends itself the mouse for as long
@@ -631,7 +632,10 @@ export class HUD {
 
   setDraftTimer(fraction) {
     const fill = document.getElementById('draft-timer-fill');
-    if (fill) fill.style.width = `${Math.max(0, Math.min(1, fraction)) * 100}%`;
+    if (fill) {
+      fill.parentElement.hidden = fraction === null;
+      fill.style.transform = `scaleX(${fraction === null ? 1 : Math.max(0, Math.min(1, fraction))})`;
+    }
   }
 
   hideDraft() {
@@ -650,14 +654,14 @@ export class HUD {
     e['heart-panel'].classList.add('show');
     e['heart-level'].textContent = `LV ${info.level} / ${info.max}`;
     if (info.cost === null) {
-      e['heart-buys'].textContent = `tier cap ${markLabel(info.tierCap)}, every ring held`;
+      e['heart-buys'].textContent = `Current cap ${markLabel(info.tierCap)}, every ring held`;
       e['heart-action'].textContent = 'At full strength';
       e['heart-cost'].textContent = '';
       e['heart-panel'].disabled = true;
     } else {
       const rings = info.ringsGain === 1 ? '+1 ring' : `+${info.ringsGain} rings`;
       const owed = info.held ? ` (${info.held} held)` : '';
-      e['heart-buys'].textContent = `tier cap ${markLabel(info.nextTierCap)}, frontier ${rings}${owed}`;
+      e['heart-buys'].textContent = `Current ${markLabel(info.tierCap)}. Next: ${markLabel(info.nextTierCap)}, ${rings}${owed}`;
       e['heart-action'].textContent = 'Upgrade';
       e['heart-cost'].textContent = fmt(info.cost);
       e['heart-panel'].disabled = false;
@@ -855,7 +859,7 @@ export class HUD {
     e['gold-num'].textContent = fmt(g.gold);
     e['lives-num'].textContent = String(g.lives);
     e['score-line'].textContent = `score ${fmt(g.score)}`;
-    const frac = g.lives / CONFIG.economy.startLives;
+    const frac = g.lives / g.maxLives;
     const fill = e['lives-fill'];
     fill.style.transform = `scaleX(${frac})`;
     fill.classList.toggle('hurt', frac <= 0.6 && frac > 0.3);

@@ -179,6 +179,7 @@ export class Game {
     Object.assign(this, ctx); // scene, rig, world, nav, enemies, towerMgr, fx
     this.gold = CONFIG.economy.startGold;
     this.lives = CONFIG.economy.startLives;
+    this.maxLives = CONFIG.economy.startLives;
     this.score = 0;
     this.kills = 0;
     this.state = 'title';
@@ -299,7 +300,7 @@ export class Game {
     };
     this.enemies.onLeak = (e) => {
       this.lives = Math.max(0, this.lives - e.type.damage);
-      this.world.setHeartHealth(this.lives / CONFIG.economy.startLives);
+      this.world.setHeartHealth(this.lives / this.maxLives);
       this.rig.addTrauma(e.type.boss ? 0.65 : 0.34);
       if (this.onLeakFx) this.onLeakFx();
       this._hud();
@@ -540,6 +541,7 @@ export class Game {
       if (d < 2.4 && d < bestD) { bestD = d; best = t; }
     }
     this.select(best);
+    return best;
   }
 
   select(tower) {

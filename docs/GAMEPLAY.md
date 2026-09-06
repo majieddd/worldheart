@@ -43,7 +43,8 @@ Selected authored values, from the `tiers` arrays at `js/towers.js:21` onward:
 | Helios Lance | 26 dps, 2.0 s ramp to 3x | 42, 1.7, 3x | 64, 1.4, 3.5x |
 | Warden Barracks | 2 units, 7 s to summon | 3, 6 | 5, 5 |
 
-Crits multiply by 2.2 and only the bolt reads the field (`js/towers.js:612`).
+Crits multiply by 2.2 on Bolt, Mortar, Arc and Warden hits. Helios applies the
+equivalent expected DPS multiplier to its continuous beam (`js/rewards.js`).
 The beam applies its damage as `trueDamage`, so it ignores armour entirely
 (`js/towers.js:778`). Mortar shells always carry `armorPierce: 99` and fall off
 with distance from the burst (`js/towers.js:1089`).
@@ -269,9 +270,9 @@ tower, and earns one per odd wave drawn at random from unlocked towers. **A draw
 into a full hand is lost** (`js/run/run.js:66`). The five unlockable towers open
 at waves 2, 4, 6, 8 and 10, so the roster is complete by wave 10.
 
-The draft offers three powers for 10 seconds, resolves early once everyone has
-voted, and breaks ties on the run's seeded RNG so a run replays identically
-(`js/run/draft.js:54`).
+The solo shell offers three powers and waits for a deliberate choice. A click
+resolves immediately, including while paused. The pure core also supports a
+10-second timed draft for future multi-player callers, with seeded tie breaks.
 
 ### Powers
 
@@ -314,7 +315,15 @@ wriggled at the warp's frequency and ranges broke into spikes. Range height also
 scales with planet radius, or a 10.5 unit range on the radius 30 planetoid is
 half the world.
 
-## Where the code disagrees with itself
+## Audit follow-up
+
+The 2026-09-05 implementation repairs the missing reward/talent consumers and
+the Helios/Arc/Warden stat paths described in the original inventory below.
+See [M0 evidence](qa/implementation/M0.md). Quartermaster was already functional.
+The cached living-commander bonus is now copied before composition so UI
+refreshes cannot stack it. Unlock toasts now use the displayed tower names.
+The remaining constant-duplication and historical-comment observations below
+still apply; the following defect descriptions record the pre-fix baseline.
 
 Found by inventory on 2026-09-05 and each one verified by grep. These are real,
 they are not documentation problems, and they are the most concrete work

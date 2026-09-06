@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { clamp, lerp, SIM_RANDOM } from './noise.js';
 import { R, orientOnSurface } from './world.js';
+import { modifiedTowerStats } from './rewards.js';
 
 // The run's modifier object, installed by the 99 Planets shell and null in
 // every other mode. Powers ONLY ever write to this; towers ONLY ever read it.
@@ -489,16 +490,7 @@ export class Tower {
   // The single seam every tower's numbers pass through, so a damage, rate,
   // range or crit power lands everywhere at once.
   get stats() {
-    const base = tierStats(this.typeKey, this.tier);
-    const m = MODS.current;
-    if (!m) return base;
-    return {
-      ...base,
-      dmg: base.dmg * m.dmgMul,
-      rate: base.rate * m.rateMul,
-      range: base.range * m.rangeMul,
-      crit: (base.crit || 0) + m.critAdd,
-    };
+    return modifiedTowerStats(tierStats(this.typeKey, this.tier), MODS.current);
   }
   get range() { return this.stats.range; }
 
@@ -628,7 +620,7 @@ export class Tower {
       this.cooldown = 1 / st.rate;
       this.recoil = 1;
       const shells = st.shells || 1;
-      const volley = this._volleyMul();
+      const volley = this._volleyMul() * (SIM_RANDOM.next() < (st.crit || 0) ? 2.2 : 1);
       for (let s = 0; s < shells; s++) {
         this.manager.fireShell(this, _v2, st, s * 0.16, volley);
       }
@@ -657,14 +649,14 @@ export class Tower {
     this.refs.tip.scale.setScalar(1 + cf * 0.9);
 
     if (t && cf >= 1 && this.cooldown <= 0) {
-      this.cooldown = 0.25;
+      this.cooldown = 0.25 / (MODS.current?.rateMul || 1);
       this.charge = 0;
       this.manager.audio?.play('zap');
       // chain
       let current = t;
       let from = _v.copy(this.pos).addScaledVector(_v3.copy(this.pos).normalize(), (this.refs.topY + 0.15) * TOWER_SCALE);
       const hit = new Set();
-      let dmg = st.dmg;
+      let dmg = st.dmg * this._volleyMul() * (SIM_RANDOM.next() < (st.crit || 0) ? 2.2 : 1);
       for (let c = 0; c < st.chains && current; c++) {
         this.manager.enemyWorldPos(current, _v2);
         fx.zaps.fire(from, _v2, PALETTE.energy, 0.16, 0.1);

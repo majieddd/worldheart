@@ -1,0 +1,619 @@
+[
+  {
+    "map": "pocket",
+    "seed": 44021,
+    "beginVisible": true,
+    "camera": {
+      "map": "pocket",
+      "pass": true,
+      "checks": [
+        {
+          "name": "grabbed point stays under cursor under rotation",
+          "ok": true,
+          "worstErrorPx": 0.34,
+          "meanErrorPx": 0.01,
+          "dragLengthPx": 130,
+          "worstCase": {
+            "yaw": 0,
+            "drag": [
+              130,
+              0
+            ]
+          },
+          "samples": 64,
+          "skippedAtBoundary": 0
+        },
+        {
+          "name": "cursor tracking holds across zoom",
+          "ok": true,
+          "errorPxByZoom": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "dragging past the horizon stays bounded",
+          "ok": true,
+          "largestSingleStepRad": 0.1137
+        },
+        {
+          "name": "view stays centred through a full zoom",
+          "ok": true,
+          "worstDriftPx": 0
+        },
+        {
+          "name": "view angle opens steadily through the zoom",
+          "ok": true,
+          "worstSagDeg": 0,
+          "flattestDeg": 48
+        },
+        {
+          "name": "zoom clamps to tuned height limits",
+          "ok": true,
+          "reachedMin": 6.5,
+          "reachedMax": 13.9,
+          "limits": [
+            6,
+            14.1
+          ]
+        },
+        {
+          "name": "lens and view angle match the tuned endpoints",
+          "ok": true,
+          "fov": [
+            82.8,
+            37.2
+          ],
+          "viewDeg": [
+            48,
+            66
+          ],
+          "tuned": {
+            "fov": [
+              83,
+              37
+            ],
+            "view": [
+              48,
+              66
+            ]
+          }
+        },
+        {
+          "name": "keyboard pan moves and releases without drift",
+          "ok": true,
+          "movedRad": 0.16144,
+          "residualVelocity": 0
+        },
+        {
+          "name": "view rotation applies and click-resets",
+          "ok": true,
+          "yawAfterDrag": -0.78,
+          "tiltAfterDrag": 0.252
+        },
+        {
+          "name": "flick inertia settles",
+          "ok": true,
+          "launchVelocity": 0.9834,
+          "after2s": 0
+        },
+        {
+          "name": "camera state finite",
+          "ok": true
+        },
+        {
+          "name": "sim + camera step under 6ms",
+          "ok": true,
+          "msNear": 0.024,
+          "msFar": 0.025
+        }
+      ],
+      "failed": []
+    },
+    "faults": [],
+    "pass": true
+  },
+  {
+    "map": "giant",
+    "seed": 44021,
+    "beginVisible": true,
+    "camera": {
+      "map": "giant",
+      "pass": true,
+      "checks": [
+        {
+          "name": "grabbed point stays under cursor under rotation",
+          "ok": true,
+          "worstErrorPx": 0.34,
+          "meanErrorPx": 0.01,
+          "dragLengthPx": 130,
+          "worstCase": {
+            "yaw": 0,
+            "drag": [
+              130,
+              0
+            ]
+          },
+          "samples": 64,
+          "skippedAtBoundary": 0
+        },
+        {
+          "name": "cursor tracking holds across zoom",
+          "ok": true,
+          "errorPxByZoom": [
+            0.04,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "dragging past the horizon stays bounded",
+          "ok": true,
+          "largestSingleStepRad": 0.0687
+        },
+        {
+          "name": "view stays centred through a full zoom",
+          "ok": true,
+          "worstDriftPx": 0
+        },
+        {
+          "name": "view angle opens steadily through the zoom",
+          "ok": true,
+          "worstSagDeg": 0,
+          "flattestDeg": 48
+        },
+        {
+          "name": "zoom clamps to tuned height limits",
+          "ok": true,
+          "reachedMin": 16.2,
+          "reachedMax": 110.3,
+          "limits": [
+            9.6,
+            112.8
+          ]
+        },
+        {
+          "name": "lens and view angle match the tuned endpoints",
+          "ok": true,
+          "fov": [
+            82.8,
+            37.2
+          ],
+          "viewDeg": [
+            48,
+            66
+          ],
+          "tuned": {
+            "fov": [
+              83,
+              37
+            ],
+            "view": [
+              48,
+              66
+            ]
+          }
+        },
+        {
+          "name": "keyboard pan moves and releases without drift",
+          "ok": true,
+          "movedRad": 0.09906,
+          "residualVelocity": 0
+        },
+        {
+          "name": "view rotation applies and click-resets",
+          "ok": true,
+          "yawAfterDrag": -0.78,
+          "tiltAfterDrag": 0.252
+        },
+        {
+          "name": "flick inertia settles",
+          "ok": true,
+          "launchVelocity": 0.5177,
+          "after2s": 0
+        },
+        {
+          "name": "camera state finite",
+          "ok": true
+        },
+        {
+          "name": "sim + camera step under 6ms",
+          "ok": true,
+          "msNear": 0.032,
+          "msFar": 0.031
+        }
+      ],
+      "failed": []
+    },
+    "faults": [],
+    "pass": true
+  },
+  {
+    "map": "titan",
+    "seed": 20264,
+    "beginVisible": true,
+    "camera": {
+      "map": "titan",
+      "pass": true,
+      "checks": [
+        {
+          "name": "grabbed point stays under cursor under rotation",
+          "ok": true,
+          "worstErrorPx": 0.26,
+          "meanErrorPx": 0.01,
+          "dragLengthPx": 102,
+          "worstCase": {
+            "yaw": 0,
+            "drag": [
+              102,
+              0
+            ]
+          },
+          "samples": 64,
+          "skippedAtBoundary": 0
+        },
+        {
+          "name": "cursor tracking holds across zoom",
+          "ok": true,
+          "errorPxByZoom": [
+            0.01,
+            0.03,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "dragging past the horizon stays bounded",
+          "ok": true,
+          "largestSingleStepRad": 0.0872
+        },
+        {
+          "name": "view stays centred through a full zoom",
+          "ok": true,
+          "worstDriftPx": 0
+        },
+        {
+          "name": "view angle opens steadily through the zoom",
+          "ok": true,
+          "worstSagDeg": 0,
+          "flattestDeg": 48
+        },
+        {
+          "name": "zoom clamps to tuned height limits",
+          "ok": true,
+          "reachedMin": 12.8,
+          "reachedMax": 110.2,
+          "limits": [
+            6,
+            112.8
+          ]
+        },
+        {
+          "name": "lens and view angle match the tuned endpoints",
+          "ok": true,
+          "fov": [
+            82.8,
+            37.2
+          ],
+          "viewDeg": [
+            48,
+            66
+          ],
+          "tuned": {
+            "fov": [
+              83,
+              37
+            ],
+            "view": [
+              48,
+              66
+            ]
+          }
+        },
+        {
+          "name": "keyboard pan moves and releases without drift",
+          "ok": true,
+          "movedRad": 0.09297,
+          "residualVelocity": 0
+        },
+        {
+          "name": "view rotation applies and click-resets",
+          "ok": true,
+          "yawAfterDrag": -0.78,
+          "tiltAfterDrag": 0.252
+        },
+        {
+          "name": "flick inertia settles",
+          "ok": true,
+          "launchVelocity": 0.5297,
+          "after2s": 0
+        },
+        {
+          "name": "camera stays inside the battlefield",
+          "ok": true,
+          "aimAngle": 0.286,
+          "limit": 0.286
+        },
+        {
+          "name": "camera state finite",
+          "ok": true
+        },
+        {
+          "name": "sim + camera step under 6ms",
+          "ok": true,
+          "msNear": 0.029,
+          "msFar": 0.028
+        }
+      ],
+      "failed": []
+    },
+    "faults": [],
+    "pass": true
+  },
+  {
+    "map": "ninetynine",
+    "seed": 51940,
+    "beginVisible": true,
+    "camera": {
+      "map": "ninetynine",
+      "pass": true,
+      "checks": [
+        {
+          "name": "grabbed point stays under cursor under rotation",
+          "ok": true,
+          "worstErrorPx": 0.31,
+          "meanErrorPx": 0.02,
+          "dragLengthPx": 121,
+          "worstCase": {
+            "yaw": 0,
+            "drag": [
+              121,
+              0
+            ]
+          },
+          "samples": 64,
+          "skippedAtBoundary": 0
+        },
+        {
+          "name": "cursor tracking holds across zoom",
+          "ok": true,
+          "errorPxByZoom": [
+            0.01,
+            0.03,
+            0.04,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "dragging past the horizon stays bounded",
+          "ok": true,
+          "largestSingleStepRad": 0.0687
+        },
+        {
+          "name": "view stays centred through a full zoom",
+          "ok": true,
+          "worstDriftPx": 0
+        },
+        {
+          "name": "view angle opens steadily through the zoom",
+          "ok": true,
+          "worstSagDeg": 0,
+          "flattestDeg": 48
+        },
+        {
+          "name": "zoom clamps to tuned height limits",
+          "ok": true,
+          "reachedMin": 8.6,
+          "reachedMax": 45.8,
+          "limits": [
+            6,
+            46.8
+          ]
+        },
+        {
+          "name": "lens and view angle match the tuned endpoints",
+          "ok": true,
+          "fov": [
+            82.8,
+            37.2
+          ],
+          "viewDeg": [
+            48,
+            66
+          ],
+          "tuned": {
+            "fov": [
+              83,
+              37
+            ],
+            "view": [
+              48,
+              66
+            ]
+          }
+        },
+        {
+          "name": "keyboard pan moves and releases without drift",
+          "ok": true,
+          "movedRad": 0.04604,
+          "residualVelocity": 0
+        },
+        {
+          "name": "view rotation applies and click-resets",
+          "ok": true,
+          "yawAfterDrag": -0.78,
+          "tiltAfterDrag": 0.252
+        },
+        {
+          "name": "flick inertia settles",
+          "ok": true,
+          "launchVelocity": 0.245,
+          "after2s": 0
+        },
+        {
+          "name": "camera stays inside the battlefield",
+          "ok": true,
+          "aimAngle": 0.051,
+          "limit": 0.051
+        },
+        {
+          "name": "camera state finite",
+          "ok": true
+        },
+        {
+          "name": "sim + camera step under 6ms",
+          "ok": true,
+          "msNear": 0.033,
+          "msFar": 0.033
+        }
+      ],
+      "failed": []
+    },
+    "defeat": {
+      "phase": "defeat",
+      "state": "defeat",
+      "overlay": true
+    },
+    "retry": {
+      "phase": "building",
+      "wave": 1,
+      "gold": 450,
+      "lives": 20,
+      "towers": 0,
+      "commander": 1400,
+      "seed": 99454
+    },
+    "faults": [],
+    "pass": true
+  },
+  {
+    "map": "reach",
+    "seed": 12345,
+    "beginVisible": true,
+    "camera": {
+      "map": "reach",
+      "pass": true,
+      "checks": [
+        {
+          "name": "grabbed point stays under cursor under rotation",
+          "ok": true,
+          "worstErrorPx": 0.26,
+          "meanErrorPx": 0.01,
+          "dragLengthPx": 101,
+          "worstCase": {
+            "yaw": 0,
+            "drag": [
+              101,
+              0
+            ]
+          },
+          "samples": 64,
+          "skippedAtBoundary": 0
+        },
+        {
+          "name": "cursor tracking holds across zoom",
+          "ok": true,
+          "errorPxByZoom": [
+            0,
+            0,
+            0,
+            0,
+            0.01
+          ]
+        },
+        {
+          "name": "dragging past the horizon stays bounded",
+          "ok": true,
+          "largestSingleStepRad": 0.1146
+        },
+        {
+          "name": "view stays centred through a full zoom",
+          "ok": true,
+          "worstDriftPx": 0
+        },
+        {
+          "name": "view angle opens steadily through the zoom",
+          "ok": true,
+          "worstSagDeg": 0,
+          "flattestDeg": 48
+        },
+        {
+          "name": "zoom clamps to tuned height limits",
+          "ok": true,
+          "reachedMin": 7.7,
+          "reachedMax": 32.3,
+          "limits": [
+            6,
+            32.9
+          ]
+        },
+        {
+          "name": "lens and view angle match the tuned endpoints",
+          "ok": true,
+          "fov": [
+            82.8,
+            37.2
+          ],
+          "viewDeg": [
+            48,
+            66
+          ],
+          "tuned": {
+            "fov": [
+              83,
+              37
+            ],
+            "view": [
+              48,
+              66
+            ]
+          }
+        },
+        {
+          "name": "keyboard pan moves and releases without drift",
+          "ok": true,
+          "movedRad": 0.13252,
+          "residualVelocity": 0
+        },
+        {
+          "name": "view rotation applies and click-resets",
+          "ok": true,
+          "yawAfterDrag": -0.78,
+          "tiltAfterDrag": 0.252
+        },
+        {
+          "name": "flick inertia settles",
+          "ok": true,
+          "launchVelocity": 0.7035,
+          "after2s": 0
+        },
+        {
+          "name": "camera stays inside the battlefield",
+          "ok": true,
+          "aimAngle": 0.51,
+          "limit": 0.51
+        },
+        {
+          "name": "camera state finite",
+          "ok": true
+        },
+        {
+          "name": "sim + camera step under 6ms",
+          "ok": true,
+          "msNear": 0.023,
+          "msFar": 0.026
+        }
+      ],
+      "failed": []
+    },
+    "faults": [],
+    "pass": true
+  }
+]

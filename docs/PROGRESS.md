@@ -14,7 +14,8 @@ Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldhear
 | Retrospective and targeted checks | completed with explicit gaps | Astra/Codex | Separate frozen/source records; actual tower getter results; current Bulwark POV screenshot | unmeasured |
 | Proposed development sequence and acceptance criteria | documented | Codex | Blueprint, all U01-U21 mapped to milestones | unmeasured |
 | GitHub collaboration record | published for review | Codex | Linked tracker, work items and PR | unmeasured |
-| Gameplay changes | not started | unassigned | This batch changes documentation/evidence only | unmeasured |
+| Reusable implementation tracking skill | verified | Codex | Personal implementation-tracker skill validated; root AGENTS.md carries the workflow for every collaborator | unmeasured |
+| M0 reward/control implementation | verified by automated fixtures and unforced instrumented play | Codex | [Implementation evidence](qa/implementation/M0.md); 168 tests, 14 browser assertions, all five camera harnesses, victory and defeat/retry | unmeasured |
 
 ## Development queue
 
@@ -22,8 +23,8 @@ Issue closure requires evidence, not just a merged diff. Proposed future impleme
 
 | Milestone | Work item | Status | Owner | Depends on | Exit evidence |
 |---|---|---|---|---|---|
-| M0 | [M0 implementation issue](https://github.com/majieddd/worldheart/issues/2) | ready | unassigned | QA baseline | All rewards/talents work; natural 15-wave victory and defeat/reset; integration assertions |
-| M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | planned | unassigned | M0 | Natural camera/control input, Bulwark/animation before-after, all-map camera harness |
+| M0 | [M0 implementation issue](https://github.com/majieddd/worldheart/issues/2) | implemented; review open | Codex, feature/99-planets-integration | QA baseline | [Automated and unforced instrumented evidence](qa/implementation/M0.md); manual continuous-input acceptance remains open |
+| M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | active | Codex, feature/99-planets-integration | M0 | Natural camera/control input, Bulwark/animation before-after, all-map camera harness |
 | M2 | [M2 implementation issue](https://github.com/majieddd/worldheart/issues/4) | planned | unassigned | M0-M1 | Crystal expedition, deposit, explicit base expansion and natural defended planet |
 | M3 | [M3 implementation issue](https://github.com/majieddd/worldheart/issues/5) | planned | unassigned | M2 | Ground/air terrain routes, swim/climb, climate placement and spherical-range agreement |
 | M4 | [M4 implementation issue](https://github.com/majieddd/worldheart/issues/6) | planned | unassigned | M1/M3 | Loot to inventory to equipped combat to extraction; telegraph/hit agreement; graphics sweep |

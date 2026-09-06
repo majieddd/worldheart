@@ -1366,7 +1366,10 @@ export class EnemyManager {
 
       const type = e.type;
       if (e.shieldT > 0) e.shieldT -= dt;
-      let stepSpeed = e.speed * (1 - e.slowFrac) * evoTraits().speedMul * this.marchMul;
+      const aura = this.heartAura;
+      const heartSlow = aura && Math.acos(clamp(e.dir.dot(aura.centre), -1, 1)) * R <= aura.radius
+        ? aura.fraction : 0;
+      let stepSpeed = e.speed * (1 - Math.max(e.slowFrac, heartSlow)) * evoTraits().speedMul * this.marchMul;
       if (e.spawnT < 0.5) stepSpeed *= e.spawnT * 2;
       // Planted for the wind-up so the blow reads as a blow. This is the ONLY
       // thing an ally can do to slow an enemy's march other than the bounded
