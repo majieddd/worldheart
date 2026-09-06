@@ -2,7 +2,7 @@
 
 Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
-It does not announce implemented features. Start with the [QA evidence](qa/2026-09-05/README.md) and [progress ledger](PROGRESS.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
+Implementation is underway on feature/99-planets-integration. Start with the [QA evidence](qa/2026-09-05/README.md) and [progress ledger](PROGRESS.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
 ## Reference
 
@@ -210,7 +210,7 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 | Existing campaign has an enjoyable playable defense loop | in game | Blind natural defeat wave 11, [terminal capture](qa/2026-09-05/images/23-defeat.png) |
 | Center future development on this mode and rename after campaign readiness | not yet | Owner direction; M5 |
 | Keep simple faceted aesthetic and extend existing rig/world systems | partial | [Live baseline](qa/2026-09-05/README.md); new model/feel acceptance still open |
-| Trust every offered/purchased reward | partial | Existing catalogs; source probe reveals missing effects |
+| Trust every offered/purchased reward | implemented, review open | [M0 live consumers and verification](qa/implementation/M0.md); wider balance/manual sampling remains open |
 | Camera/POV/animation polish and readable strike zones | partial | Current possession/strike systems exist; current arm screenshot and missing telegraph-area acceptance |
 | Crystal-driven explicit upgrades are the only frontier expansion trigger | not yet | M2; existing code still earns wave rings |
 | Massive terrain variation, swimming, slope cost, climate placement, flight ceilings, spherical ranges | partial | Existing ranges/canyons and 3D targeting; requested extension not built |
@@ -225,5 +225,13 @@ The [GitHub-linked progress ledger](PROGRESS.md) is the live task index. It carr
 Start M0 with one reward contract and an actual before/after shell test; then complete the catalog. Do not simultaneously rewrite terrain, combat, loot and campaign state. A task closes only when its stated player behavior is evidenced, with remaining gaps named. No gameplay task is marked implemented by this planning PR.
 
 ## Where we are
+
+Implementation update, 2026-09-05: M0 reward and deliberate-draft changes are
+implemented on the feature branch. 168 headless tests and 14 browser assertions
+pass; all five maps pass their camera harnesses. Unforced instrumented play
+defeated the wave-15 boss after a direct-control retreat, with commander defeat
+and retry recorded separately. This is not a blind human victory or complete
+campaign acceptance. M1 camera/POV work is active; M2-M6 remain queued. See the
+[live implementation record](IMPLEMENTATION.md). No gameplay has shipped yet.
 
 2026-09-05: Astra's blind attempt ended naturally at wave 11/15. Repository study, a source retrospective, a targeted commander POV retry, 128 existing tests and a read-only reward diagnostic now establish a documented baseline. The current repository still ships Worldheart with a one-planet 99 Planets mode. This batch supplies QA evidence, direction, acceptance gates and collaboration tracking; M0 is the next development milestone. The external blueprint checker was absent, so these fourteen sections were reviewed manually without claiming its gate passed.

@@ -13,12 +13,12 @@
 
 export const DRAFT_SECONDS = 10;
 
-export function openDraft(offers, playerIds) {
+export function openDraft(offers, playerIds, seconds = DRAFT_SECONDS) {
   return {
     offers,
     playerIds: [...playerIds],
     votes: {},
-    remaining: DRAFT_SECONDS,
+    remaining: seconds,
     resolved: false,
     winnerIndex: -1,
   };
@@ -68,6 +68,10 @@ export function tickDraft(draft, dt, rng) {
 
   const everyoneVoted = draft.playerIds.every((id) => Number.isInteger(draft.votes[id]));
   if (everyoneVoted) return resolve(draft, rng, 'unanimous');
+
+  // Solo can wait for a deliberate choice; null survives JSON round trips,
+  // unlike Infinity. Timed team drafts retain the injected countdown.
+  if (draft.remaining === null) return null;
 
   draft.remaining -= dt;
   if (draft.remaining <= 0) {

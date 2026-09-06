@@ -40,7 +40,7 @@ export function coinsForWave(wave, isBoss) {
   return 10 + wave * 2 + (isBoss ? 100 : 0);
 }
 
-export function createRun({ seed, playerIds, startGold, profile }) {
+export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 10 }) {
   const state = createRunState({ seed, playerIds, startGold });
   const rng = makeRng(seed);
   // The profile is injected, never read from storage: this module may not know
@@ -56,6 +56,7 @@ export function createRun({ seed, playerIds, startGold, profile }) {
     state.unlockedTowers = [...new Set(prof.towers)];
   }
   state.coins = 0;
+  state.frontierSteps = prof.bonuses?.scout ? 1 : 0;
   let draft = null;
   let modifiers = foldModifiers([]);
 
@@ -194,7 +195,7 @@ export function createRun({ seed, playerIds, startGold, profile }) {
       }
 
       if (draftsPowerAfter(wave)) {
-        draft = openDraft(rollOffers(rng, state.powers), state.players.map((p) => p.id));
+        draft = openDraft(rollOffers(rng, state.powers), state.players.map((p) => p.id), draftSeconds);
         state.phase = 'drafting';
         events.push({ type: 'draftOpened', offers: draft.offers });
         return events;

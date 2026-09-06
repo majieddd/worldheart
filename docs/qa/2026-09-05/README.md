@@ -1,5 +1,11 @@
 # Blind 99 Planets playtest and source retrospective
 
+Implementation addendum, 2026-09-05: the S3 Quartermaster inference was false.
+The core already consumed `prof.bonuses?.quartermaster`; the original search
+missed optional chaining. It is now a tested healthy control. M0 repairs and
+additional findings are recorded separately in [implementation evidence](../implementation/M0.md).
+The blind observations and raw archive below remain the original baseline.
+
 Date: 2026-09-05. Tested public URL: <https://majieddd.github.io/worldheart/>.
 Audited commit: [`1374122d1109919a5fab10b69fefdfb80308eb6e`](https://github.com/majieddd/worldheart/tree/1374122d1109919a5fab10b69fefdfb80308eb6e).
 Direction and next work: [99 Planets To Defend blueprint](../../99-PLANETS-TO-DEFEND.md) and [progress ledger](../../PROGRESS.md).
