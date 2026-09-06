@@ -36,6 +36,21 @@ This is a deployment smoke test, not an additional full campaign victory.
 
 ## Public verification
 
-Pending first Pages deployment, exact public build identity and live browser
-checks. Main has not been merged or edited. Remaining M0-M6 acceptance gates
-are unchanged by making the preview accessible.
+The [first Pages deployment](https://github.com/majieddd/worldheart/actions/runs/34044866229)
+succeeded for implementation commit fe2f4a28944295997b17d63e23ac26de3097e37a.
+The [17 live checks](V2-PREVIEW/live.json) passed against
+https://majieddd.github.io/worldheart/ in installed Chrome at 1280x720, with
+zero runtime faults. The public build identity named that exact preview commit
+and unchanged main commit 1374122d1109919a5fab10b69fefdfb80308eb6e.
+Six original and four preview HTTP assets matched their respective hashes.
+
+[V2 title](V2-PREVIEW/live-title.png), [V2 playing](V2-PREVIEW/live-playing.png)
+and [original title](V2-PREVIEW/original-title.png) document both public routes.
+V2 began a real assault, saved only the prefixed checkpoint, retained it through
+reload, and left the seeded original profile unchanged. The stable Pocket map
+and explicit V2 Pocket map both booted. All images were inspected.
+
+[PR #18](https://github.com/majieddd/worldheart/pull/18) remains a stacked draft.
+Main has not been merged or edited. This evidence follow-up changes docs only;
+the next preview deployment retains the tested game asset hashes. Remaining
+M0-M6 acceptance gates are unchanged by making the preview accessible.

@@ -8,12 +8,14 @@ Latest review slices: [99 destinations, PR #16](https://github.com/majieddd/worl
 and [terrain camera visibility, PR #17](https://github.com/majieddd/worldheart/pull/17).
 Both are stacked drafts. The production site has not been changed by these PRs.
 
-Current workflow slice: Codex on `feature/v2-preview-workflow`, live V2
-publication from `preview/v2` without merging the gameplay stack into main.
-[Preview workflow](PREVIEW.md) defines standing publication authorization,
-separate saves, root preservation and the required live build/browser checks.
-Implementation and deployment verification are active; no preview-live claim
-is made until the Pages action and public asset identity are verified.
+**Live development:** [Play V2](https://majieddd.github.io/worldheart/v2/).
+The full implementation stack is now published there from `preview/v2`, while
+the original root game remains from main. [PR #18](https://github.com/majieddd/worldheart/pull/18)
+adds the owner-authorized [preview workflow](PREVIEW.md), separate saves and
+root preservation. Codex on `feature/v2-preview-workflow` verified the
+[first deployment](https://github.com/majieddd/worldheart/actions/runs/34044866229)
+and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
+Preview availability does not close the remaining milestone acceptance gates.
 
 ## Completed in this batch
 
@@ -25,6 +27,7 @@ is made until the Pages action and public asset identity are verified.
 | Proposed development sequence and acceptance criteria | documented | Codex | Blueprint, all U01-U21 mapped to milestones | unmeasured |
 | GitHub collaboration record | published for review | Codex | Linked tracker, work items and PR | unmeasured |
 | Reusable implementation tracking skill | verified | Codex | Personal implementation-tracker skill validated; root AGENTS.md carries the workflow for every collaborator | unmeasured |
+| Live V2 publication workflow | published and live-verified | Codex, PR #18 | [213 tests, all five maps, 17 public browser/hash/save checks](qa/implementation/V2-PREVIEW.md); [standing workflow](PREVIEW.md) | unmeasured |
 | M0 reward/control implementation | verified by automated fixtures and unforced instrumented play | Codex | [Implementation evidence](qa/implementation/M0.md); 168 tests, 14 browser assertions, all five camera harnesses, victory and defeat/retry | unmeasured |
 
 ## Development queue

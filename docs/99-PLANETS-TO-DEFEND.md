@@ -232,6 +232,13 @@ Continue in dependency order and keep each behavior reviewable. A task closes on
 
 ## Where we are
 
+The implementation stack is now [live at V2](https://majieddd.github.io/worldheart/v2/)
+through [PR #18's preview workflow](https://github.com/majieddd/worldheart/pull/18).
+The first deployment passed 17 public browser/hash/save-isolation checks;
+[publication evidence](qa/implementation/V2-PREVIEW.md) records both source IDs.
+The root game remains from main. Publish future verified checkpoints under
+[PREVIEW.md](PREVIEW.md); full campaign and art/feel acceptance remain open.
+
 M3 update: four terrain profiles, directed ground routes, separate flight
 clearance, swimming, raised elemental placement and spherical/terrain range
 guides are implemented. The current suite has 178 tests; all five camera
