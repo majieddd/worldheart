@@ -3,9 +3,10 @@
 import{createRequire}from'node:module';import{resolve}from'node:path';import{mkdirSync,writeFileSync}from'node:fs';import{cpus,totalmem,platform,release}from'node:os';
 const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright');
 const out=resolve(process.argv[2]||'artifacts/performance');mkdirSync(out,{recursive:true});
+const orbit=process.argv.includes('--orbit');
 const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1}),faults=[];
 page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
-const report={scope:'60-second real-time stress fixture, not natural campaign play',hardware:{cpu:cpus()[0].model,logicalCpus:cpus().length,memoryGiB:totalmem()/2**30,os:platform(),release:release()},browser:browser.version(),viewport:{width:1920,height:1080,dpr:1},faults};
+const report={scope:'60-second real-time stress fixture, not natural campaign play',cameraMotion:orbit?'Continuous orbit at 0.15 radians per second':'Stationary',hardware:{cpu:cpus()[0].model,logicalCpus:cpus().length,memoryGiB:totalmem()/2**30,os:platform(),release:release()},browser:browser.version(),viewport:{width:1920,height:1080,dpr:1},faults};
 try{
  const start=Date.now();await page.goto('http://127.0.0.1:8139/?map=ninetynine&seed=12345&terrain=varied',{waitUntil:'domcontentloaded',timeout:180000});await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:180000});report.bootMs=Date.now()-start;
  report.setup=await page.evaluate(async()=>{
@@ -22,7 +23,7 @@ try{
    return{seed:W.CONFIG.seed,terrain:W.CONFIG.terrainKey,towers:W.towers.towers.length,enemies:W.enemies.active.length,failures,gpu:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER)};
  });
  await page.waitForTimeout(10000);
- await page.evaluate(()=>{window.__qaFrameDeltas=[];window.__qaLoads=[];window.__qaMeasure=true;let last=performance.now();function sample(now){if(!__qaMeasure)return;__qaFrameDeltas.push(now-last);last=now;if(__qaFrameDeltas.length%30===0)__qaLoads.push({ms:now,enemies:WH.enemies.active.filter(e=>!e.dead).length,towers:WH.towers.towers.length,drawCalls:WH.drawCalls(),triangles:WH.tris(),workMs:WH.workMs(),memory:WH.renderer.info.memory,heap:performance.memory?.usedJSHeapSize});requestAnimationFrame(sample);}requestAnimationFrame(sample);});
+ await page.evaluate(orbit=>{window.__qaFrameDeltas=[];window.__qaLoads=[];window.__qaMeasure=true;let last=performance.now();function sample(now){if(!__qaMeasure)return;__qaFrameDeltas.push(now-last);if(orbit)WH.rig.viewYaw+=(now-last)/1000*.15;last=now;if(__qaFrameDeltas.length%30===0)__qaLoads.push({ms:now,enemies:WH.enemies.active.filter(e=>!e.dead).length,towers:WH.towers.towers.length,drawCalls:WH.drawCalls(),triangles:WH.tris(),workMs:WH.workMs(),memory:{...WH.renderer.info.memory},heap:performance.memory?.usedJSHeapSize});requestAnimationFrame(sample);}requestAnimationFrame(sample);},orbit);
  await page.waitForTimeout(30000);await page.screenshot({path:resolve(out,'stress-30s.png')});await page.waitForTimeout(30000);
  report.measurement=await page.evaluate(()=>{__qaMeasure=false;clearInterval(__qaReplenishTimer);const frames=__qaFrameDeltas.filter(x=>x>0).sort((a,b)=>a-b),percentile=p=>frames[Math.min(frames.length-1,Math.floor(frames.length*p))];return{frames:frames.length,frameMs:{p50:percentile(.5),p95:percentile(.95),p99:percentile(.99),max:frames.at(-1)},medianFps:1000/percentile(.5),onePercentLowFps:1000/percentile(.99),loads:__qaLoads,quality:{bloomLevels:WH.post.levels,pixelRatio:WH.renderer.getPixelRatio(),shadowSize:WH.renderer.shadowMap.enabled},heap:performance.memory?.usedJSHeapSize};});
  await page.screenshot({path:resolve(out,'stress-60s.png')});

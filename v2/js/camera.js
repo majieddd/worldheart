@@ -15,6 +15,7 @@ const _grabNow = new THREE.Vector3();
 const _camDir = new THREE.Vector3();
 const _camStart = new THREE.Vector3();
 const _probeHit = new THREE.Vector3();
+const _visibilityEye = new THREE.Vector3(), _visibilityRay = new THREE.Vector3(), _visibilityHit = new THREE.Vector3();
 const _q = new THREE.Quaternion();
 const _focusDir = new THREE.Vector3();
 const _focusPt = new THREE.Vector3();
@@ -108,6 +109,10 @@ export class OrbitRig {
     this.heightProbe = null;     // campaign terrain height at a unit direction
     this.dragFocusRadius = null;
     this.terrainSettle = null;
+    this.visibilityLift = 0;
+    this.visibilityTarget = 0;
+    this.visibilityVelocity = 0;
+    this._visibilityKey = '';
 
     this.onTap = null;           // (clientX, clientY, button)
     this.onHover = null;         // (clientX, clientY)
@@ -133,6 +138,7 @@ export class OrbitRig {
         // claimed gesture never half-starts a pan.
         if (this.dragClaim && this.dragClaim(e)) { this.dragging = false; return; }
         this.dragFocusRadius = this.focusRadius;
+        this.visibilityVelocity = 0;
         this.terrainSettle = null;
         this.dragging = true;
         this.rotating = e.button === 1 && e.ctrlKey;
@@ -446,10 +452,9 @@ export class OrbitRig {
   // where sin(a + t) = (Rc / R) sin t. Solving that for a is what keeps the
   // crosshair welded to the ground through any pitch or zoom change. Beyond
   // the horizon angle there is no solution, so the pitch is capped there.
-  _placeCamera(shakeX = 0, shakeY = 0, shakeZ = 0) {
+  _placeCamera(shakeX = 0, shakeY = 0, shakeZ = 0, dt = 0) {
     const R0 = this.focusRadius;
     const h = Math.max(this.dist, 0.2);
-    let Rc = R0 + h;
 
     // The near plane has to follow the camera down. A fixed near derived from
     // the planet radius cannot work once the minimum height is a slider: at
@@ -480,7 +485,43 @@ export class OrbitRig {
     // the framing, and its margin stays small enough not to bend a low view.
     _axis.crossVectors(_focusDir, _head).normalize();
     const z = this.zoomT;
-    const view = clamp(lerp(CAM_TUNE.viewNear, CAM_TUNE.viewFar, z * z * (3 - 2 * z)) * Math.PI / 180 - this.tiltOffset, 0.06, 1.5);
+    const requestedView = clamp(lerp(CAM_TUNE.viewNear, CAM_TUNE.viewFar, z * z * (3 - 2 * z)) * Math.PI / 180 - this.tiltOffset, 0.06, 1.5);
+    if(this.heightProbe&&this.surfaceProbe&&!this.dragging){
+      const key=[this.lon,this.lat,this.viewYaw,R0,h,requestedView].join('/');
+      if(key!==this._visibilityKey){
+        this._visibilityKey=key;
+        this.visibilityTarget=this._visibleView(requestedView,R0,h)-requestedView;
+      }
+      // A pointer drag keeps its current framing. Changing pitch mid-gesture
+      // would move the ground anchor out from under the player's hand.
+      // Hold the release briefly too. An immediate correction moved a grabbed
+      // point 42 pixels on the first frame after pointer-up. A critically damped
+      // approach starts with zero angular speed instead of an exponential kick.
+      if(dt>0&&!(this.terrainSettle?.t<.12)){
+        if(REDUCED_MOTION){this.visibilityLift=this.visibilityTarget;this.visibilityVelocity=0;}
+        else{
+          const rate=14,delta=this.visibilityLift-this.visibilityTarget,decay=Math.exp(-rate*dt);
+          const momentum=(this.visibilityVelocity+rate*delta)*dt;
+          this.visibilityVelocity=(this.visibilityVelocity-rate*momentum)*decay;
+          this.visibilityLift=this.visibilityTarget+(delta+momentum)*decay;
+          if(Math.abs(this.visibilityLift-this.visibilityTarget)<1e-5&&Math.abs(this.visibilityVelocity)<1e-4){this.visibilityLift=this.visibilityTarget;this.visibilityVelocity=0;}
+        }
+      }
+    }
+    const view=Math.min(Math.PI/2,requestedView+(this.heightProbe?this.visibilityLift:0));
+    this._orbitAt(view,R0,h,this.camera.position);
+
+    this.camera.position.x += shakeX;
+    this.camera.position.y += shakeY;
+    this.camera.position.z += shakeZ;
+    this.camera.up.copy(_camDir);
+    this.camera.lookAt(_focusPt);
+    this.camera.updateMatrixWorld();
+    this.focusDist = this.camera.position.distanceTo(_focusPt);
+  }
+
+  _orbitAt(view,R0,h,out) {
+    let Rc=R0+h;
     for (let attempt = 0; attempt < (this.heightProbe ? 9 : 1); attempt++) {
       const horizon = Math.asin(clamp(R0 / Rc, -1, 1));
       if (this.heightProbe) this.appliedTilt = Math.asin(clamp(R0 / Rc * Math.cos(view), -1, 1));
@@ -495,14 +536,25 @@ export class OrbitRig {
       Rc = attempt < 7 ? floor + 0.05 : CONFIG.planetRadius + CONFIG.terrain.range + CONFIG.terrain.canyon + 22;
     }
 
-    this.camera.position.copy(_camDir).multiplyScalar(Rc);
-    this.camera.position.x += shakeX;
-    this.camera.position.y += shakeY;
-    this.camera.position.z += shakeZ;
-    this.camera.up.copy(_camDir);
-    this.camera.lookAt(_focusPt);
-    this.camera.updateMatrixWorld();
-    this.focusDist = this.camera.position.distanceTo(_focusPt);
+    out.copy(_camDir).multiplyScalar(Rc);return Rc;
+  }
+
+  _visibleView(requested,R0,h) {
+    const clear=view=>{
+      this._orbitAt(view,R0,h,_visibilityEye);
+      _visibilityRay.copy(_focusPt).sub(_visibilityEye);
+      const distance=_visibilityRay.length();_visibilityRay.normalize();
+      return !this.surfaceProbe(_visibilityEye,_visibilityRay,_visibilityHit)
+        || _visibilityHit.distanceTo(_visibilityEye)>=distance-.25;
+    };
+    if(clear(requested))return requested;
+    // Eye clearance alone cannot see past a ridge between eye and focus.
+    // Find a clear overhead angle, then ease toward it without changing zoom.
+    // The bounded search is cached per requested pose, not repeated at rest.
+    let blocked=requested,visible=Math.PI/2;
+    for(let view=requested+.14;view<Math.PI/2;view+=.14){if(clear(view)){visible=view;break;}blocked=view;}
+    for(let i=0;i<5;i++){const mid=(blocked+visible)*.5;if(clear(mid))visible=mid;else blocked=mid;}
+    return Math.min(Math.PI/2,visible+.025);
   }
 
   // Cheap camera resync so several pointer events inside one frame each see
@@ -865,7 +917,7 @@ export class OrbitRig {
       sz = Math.sin(this._noiseT * 1.23 + 1.3) * Math.sin(this._noiseT * 0.77 + 3.7) * amp * 0.6;
     }
 
-    this._placeCamera(sx, sy, sz);
+    this._placeCamera(sx, sy, sz, dt);
 
     // Wide immersive lens on the ground, telephoto from orbit. Player-tunable.
     this.fovKickV = Math.max(0, this.fovKickV - dt * 26);

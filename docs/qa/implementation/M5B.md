@@ -1,6 +1,7 @@
 # M5B: 99 destinations, milestone guardians and campaign QA
 
 Owner: Codex, `feature/99-planets-content`, stacked on M5A PR #15.
+Published for review as [draft PR #16](https://github.com/majieddd/worldheart/pull/16).
 Status: implemented, route and integration checks passed; release balance and
 visual/performance acceptance remain open. Not merged or deployed.
 

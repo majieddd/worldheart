@@ -243,6 +243,10 @@ seven live boundary fixtures and the campaign preview identity/briefing. Ocean
 combat defeats are preserved, and earned-coin retries continue. The title talent
 apply flow was repaired after testing found the prepared run kept its old profile.
 The [M5B evidence record](qa/implementation/M5B.md) separates fixtures from play.
+M5C on feature/99-planets-visibility repairs terrain blocking the camera's
+focus: visible fixed poses improved from 89/96 to 96/96, with consistent
+30/60/120 FPS convergence and drag framing held steady. See
+[M5C](qa/implementation/M5C.md) for scope, comparisons and performance evidence.
 Full-route unforced completion, performance, broader feel/visual acceptance and
 the production default/rename release remain open.
 M6 remains future. The stacked feature PRs are not merged
