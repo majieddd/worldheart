@@ -55,10 +55,46 @@ locations and pressure, so this checkpoint requires a new test after integration
 Keep the old and new results separate. Full campaign balance and unforced
 99-planet completion remain open.
 
+## Physical-nest integration failure
+
+The same earned checkpoint and corrected assault policy were then tested
+against the agent's initial physical-nest worktree on port 8141. The
+[preserved run](OCEAN-STRATEGY/physical-nests-softlock/run.json) remained on
+wave 4 for the 1,800-second simulation bound, with 20 heart health, 27 kills,
+three towers and two destroyed nests. A surviving Aegis on node 157860 had
+`nav.next = -1` at repeated observations from simulation second 197 through
+1,697. The [capture](OCEAN-STRATEGY/physical-nests-softlock/terminal.png) is a
+stalled live wave, not a terminal victory or defeat. There were no runtime
+exceptions. The run records the actual loaded asset hashes and exact policy
+source hash; it tested an intermediate uncommitted feature build.
+
+Source review confirmed that tower placement protected only the original
+portal nodes. A placement could preserve those routes while cutting off a
+new physical nest or an enemy that had already moved through a junction.
+This is a game softlock, unlike the limited-controller defeats above. The
+agent is adding active sources and occupied ground-enemy nodes to placement
+connectivity validation, plus an explicit nest footprint exclusion. A passing
+regression and a new ordinary defended run are required before publication.
+
+The parent also ran [real-worldgen nest route fixtures](OCEAN-STRATEGY/nest-nav/results.json)
+for planets 1/2/3/4/33/34/66/67/99, covering the four terrain profiles and
+era boundaries. Each tested frontier rings 0/3/14, six distinct sites and
+Husk/Mite/Wisp movement: 486/486 isolated arrivals, no stranded enemies or
+flight-ceiling violations. The tested nest-site helper hash is
+`dcf11530b9bf0d331d8dc00251da1782f720c9f44739866f8189cd922d6a8ef0`.
+These fixtures had no tower placements and did not cover the later softlock.
+They do not establish all-99 coverage or combat balance.
+
+The self-play harness now records terminal tower/nest/enemy navigation data
+and loaded runtime hashes. It stops for a diagnostic failure if the same
+non-heart enemy remains without a path at two consecutive 100-second samples,
+rather than waiting out the whole simulation bound.
+
 Reproduce the current corrected policy against a local source checkout:
 
 ```powershell
 node tools/self-play.mjs 12345 artifacts/ocean-assault --campaign --weapons --planets=1 --checkpoint=docs/qa/implementation/M5B/planet-4-talent-checkpoint.json --strategy=assault --tower-priority=mortar,bolt,tesla,helios,cryo,warden --tower-limit=10
+node tools/nest-nav-check.mjs artifacts/nest-nav
 ```
 
 `--base-url=http://127.0.0.1:8141/` selects a collaborator's local server.
