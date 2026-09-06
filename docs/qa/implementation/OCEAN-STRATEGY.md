@@ -116,8 +116,8 @@ Follow-up review found that commander melee knockback directly rotated the
 enemy direction without validating terrain or navigation. An exact-world
 reproduction established the failure. This is an older interaction exposed by
 more active exploration, rather than evidence that every stalled enemy came
-from the new placement code. The new physical-nest build remains unpublished
-until this failure is repaired and retested.
+from the new placement code. At this point publication of the new physical-nest
+build was held until this failure was repaired and retested.
 
 Follow-up `6389987`, integrated as `af212051308f739cf0b82bd9b3206be0c5ad498c`,
 adds legal swept knockback. On the exact ocean graph, an actual melee strike
@@ -153,8 +153,8 @@ The gameplay blockers found in this batch have reproduction and repair
 evidence. The remaining losses are not a balance pass or proof of an
 unwinnable game. Broader strategy, ocean/late-wave tuning, owner motion feel,
 long-session/lower-end performance and full unforced 99-planet completion
-remain open. This verified implementation checkpoint is ready for V2
-publication and public interaction checks.
+remain open. This verified implementation checkpoint proceeded to V2
+publication and public interaction checks below.
 
 Parent [14 contextual checks](OCEAN-STRATEGY/context-integrated/results.json)
 include actual board and first-person Upgrade clicks, exact Sell refund,
@@ -173,3 +173,33 @@ node tools/nest-nav-check.mjs artifacts/nest-nav
 The policy is loaded from the invoking checkout and imports game code from
 the tested server. Record both revisions. Omit `--strategy=assault` to retain
 the established defensive controller. Usage is unmeasured.
+
+## Public V2 verification
+
+[Deployment 34050434063](https://github.com/majieddd/worldheart/actions/runs/34050434063)
+succeeded for `0be12efe24f6c2a694643bb556317de2b5b295be`. The public
+`/v2/build.json` confirmed that exact preview SHA and unchanged production
+`1374122d1109919a5fab10b69fefdfb80308eb6e`. This publishes all six owner
+requests U22-U27 through [PR #20](https://github.com/majieddd/worldheart/pull/20)
+and the parent [QA/integration PR #21](https://github.com/majieddd/worldheart/pull/21).
+Both remain drafts; main has not been merged.
+
+- [17 public deployment checks](OCEAN-STRATEGY/preview-live/result.json) passed:
+  original and preview HTTP asset hashes, campaign startup, real assault/save
+  and reload, original profile isolation and explicit classic maps. No faults.
+- [14 public contextual checks](OCEAN-STRATEGY/context-live/results.json) passed:
+  actual checkpoint overlap at three widths, hover selection, board and
+  first-person Upgrade, exact Sell refund, reach enforcement and loot model,
+  compatibility, full-bag and queued-equip cases. No faults. This second suite
+  uses isolated setup resources and positions; it is not unforced play.
+- Inspected public [first-person tower controls](OCEAN-STRATEGY/context-live/checkpoint-first-person.png),
+  [weapon preview](OCEAN-STRATEGY/context-live/incompatible-preview.png) and
+  [ordinary V2 assault](OCEAN-STRATEGY/preview-live/v2-playing.png) captures.
+  The tower/loot panel clears the checkpoint controls. In commander mode,
+  aim at the object and press F for the pointer; F or Escape resumes control.
+
+This evidence follow-up changes documentation only. Any subsequent preview
+publication must retain these runtime hashes or receive new relevant checks.
+The public smoke and fixtures do not establish a fresh victory, owner motion
+approval, full campaign balance or sustained performance. Those gates remain
+open in [PROGRESS.md](../../PROGRESS.md) and issue #7.

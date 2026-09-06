@@ -306,7 +306,10 @@ testing exposed and reproduced unsafe knockback; after repair the ocean run
 passed its former stalls and ended in wave-12 defeat, while fresh active
 commander play reached the final encounter before wave-15 defeat. The
 [retained integration record](qa/implementation/OCEAN-STRATEGY.md) separates
-these outcomes from a balance pass. V2 publication is pending.
+these outcomes from a balance pass. All six changes are now live at V2 from
+`0be12ef`, with 17 public deployment/save checks and 14 public contextual
+interaction checks passing. The same record links the deployment and captures;
+owner feel and broader campaign acceptance remain open.
 
 M3 update: four terrain profiles, directed ground routes, separate flight
 clearance, swimming, raised elemental placement and spherical/terrain range
