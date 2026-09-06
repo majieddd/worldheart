@@ -244,6 +244,13 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 
 ## Decided
 
+2026-09-06 adversarial acceptance: inventory rebuilds must preserve keyboard
+focus by item/action. Victory receipts own pause, pointer lock and hotkeys;
+inventory above a receipt returns to that same context. Weapon length and era
+materials belong to the held prop, never the commander's arm. Preserve failing
+controls and natural losses, and validate sustained simulation rather than
+counting frames after a stress fixture has ended the assault.
+
 2026-09-06 workflow decision: the owner authorized ongoing publication to
 `/worldheart/v2/` from a dedicated preview integration branch, without merging
 gameplay into main. [PREVIEW.md](PREVIEW.md) defines publishing, root-file
@@ -291,6 +298,14 @@ existing milestones rather than replacing their remaining acceptance gates.
 Continue in dependency order and keep each behavior reviewable. A task closes only when its stated player behavior is evidenced, with remaining gaps named. M0-M2 implementation records distinguish automated evidence from remaining owner review.
 
 ## Where we are
+
+Current continuation: Codex on `feature/adversarial-acceptance` has repaired
+three reproduced interaction/model defects. [The acceptance audit](qa/implementation/ADVERSARIAL-ACCEPTANCE.md)
+retains the before/after browser controls, a natural victory with repaired
+extraction, a subsequent canyon defeat and eight foliage geometry cases.
+Terrain-edge combat tells, richer authored weapon silhouettes, longer valid
+performance runs, varied ocean strategy and final owner feel remain active
+acceptance work. This record does not close M0-M5 or the production release.
 
 The implementation stack is now [live at V2](https://majieddd.github.io/worldheart/v2/)
 through [PR #18's preview workflow](https://github.com/majieddd/worldheart/pull/18).

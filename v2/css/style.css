@@ -593,6 +593,7 @@ body.fp-mode #build-bar { transform: scale(0.78); transform-origin: bottom cente
 body.fp-mode #fp-panel { left: var(--sp-4); bottom: 96px; transform: none; }
 body.fp-mode #heart-panel, body.fp-mode #crystal-panel { display: none; }
 .board-off { display: none !important; pointer-events: none !important; }
+body.end-open #fp-hud, body.end-open .weapon-cue, body.end-open .nest-marker { visibility:hidden; }
 :root { --weapon-border: rgba(138,198,213,.25); }
 .weapon-open { position:absolute; left:18px; bottom:22px; padding:10px 14px; border:1px solid var(--weapon-border); border-radius:7px; color:#c3ecf5; background:#101c31ee; pointer-events:auto; font:600 12px inherit; cursor:pointer; }
 .weapon-cue { position:absolute; bottom:112px; left:50%; transform:translateX(-50%); max-width:75vw; padding:8px 14px; background:#101c31ee; border:1px solid var(--weapon-border); border-radius:6px; color:#d5edf4; font-size:12px; text-align:center; }

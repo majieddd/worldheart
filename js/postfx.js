@@ -215,6 +215,7 @@ export class PostPipeline {
 
   render(scene, camera, dt) {
     const r = this.renderer;
+    if (r.getContext().isContextLost()) return;
     this.time += dt;
 
     if (!this.enabled) {
@@ -293,6 +294,7 @@ export class PostPipeline {
     this.rtScene?.dispose();
     for (const t of this.down) t.dispose();
     for (const t of this.up) t.dispose();
+    this.rtScene = null; this.down = []; this.up = [];
     if (full) this._quadGeo.dispose();
   }
 }

@@ -22,13 +22,13 @@ export class WorldContext {
     addEventListener('keydown',e=>{
       if(e.repeat||e.target?.matches?.('input,textarea,select,[contenteditable="true"]'))return;
       if(e.code==='Escape'&&this.editing){e.preventDefault();e.stopImmediatePropagation();this.close();return;}
-      if(e.code==='KeyF'&&possession.active&&this.target&&!document.querySelector('dialog[open]')) {
+      if(e.code==='KeyF'&&possession.active&&this.target&&!document.querySelector('dialog[open],#end-overlay.show')) {
         e.preventDefault();e.stopImmediatePropagation();this.editing?this.close():this.open();
       }
     },true);
   }
   validTower(t) {
-    if(!t||!this.game.towerMgr.towers.includes(t)||this.game.state!=='playing'||document.querySelector('dialog[open]'))return false;
+    if(!t||!this.game.towerMgr.towers.includes(t)||this.game.state!=='playing'||document.querySelector('dialog[open],#end-overlay.show'))return false;
     const p=this.possession;
     return !p.active||(p.unit?.active&&!p.unit.dead&&p.allies.worldPos(p.unit,_pos).distanceTo(t.pos)<=14);
   }
@@ -74,7 +74,7 @@ export class WorldContext {
   }
   update() {
     const {game,possession:p,ui}=this;
-    const blocked=game.state!=='playing'||game.buildType||document.querySelector('dialog[open]');
+    const blocked=game.state!=='playing'||game.buildType||document.querySelector('dialog[open],#end-overlay.show');
     if(blocked){if(this.editing)this.close();this.target=null;}
     else if(!this.editing&&(!this.target||p.active||!this.panel().matches(':hover'))) {
       const r=this.rig.canvas.getBoundingClientRect();

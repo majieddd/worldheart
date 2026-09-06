@@ -435,7 +435,7 @@ async function boot() {
 
   caches = new CacheField(scene);
   possession = new Possession({ canvas, rig, allies, game, ui: null, caches, scene });
-  rig.inputBlocked = () => possession.active || !!document.querySelector('dialog[open]');
+  rig.inputBlocked = () => possession.active || !!document.querySelector('dialog[open],#end-overlay.show');
   // The weapon in your hands, drawn in its own pass over the world.
   viewModel = new ViewModel();
   possession.viewModel = viewModel;
@@ -560,10 +560,13 @@ document.addEventListener('visibilitychange', () => {
 canvas.addEventListener('webglcontextlost', (e) => {
   e.preventDefault();
   if (game && game.state === 'playing') game.paused = true;
+  // Release target listeners while their original context is lost. Waiting
+  // until restore tried to delete stale framebuffer/renderbuffer handles
+  // through Three's previous texture manager on the replacement context.
+  post?.dispose(false);
   console.warn('WebGL context lost, awaiting restore');
 });
 canvas.addEventListener('webglcontextrestored', () => {
-  post.setQuality(post.levels >= 4 ? 'high' : 'low');
   resize();
   ui?.reflectPause?.();
   ui?.toast?.('Graphics recovered. Press Space to resume.', 'warn');
@@ -1022,10 +1025,10 @@ window.WH = {
   give(n = 1000) { game.gold += n; },
   camTest: () => camTest(),
   // Deterministic sim advance for scripted verification; rAF-independent.
-  step(seconds = 1, fps60 = 60) {
+  step(seconds = 1, fps60 = 60, draw = true) {
     const n = Math.round(seconds * fps60);
     for (let i = 0; i < n; i++) stepFrame(1 / fps60, false);
-    post.render(scene, rig.camera, 1 / fps60);
+    if (draw) post.render(scene, rig.camera, 1 / fps60);
   },
   // Scripted placement for testing: drop a tower N hops down a portal's path,
   // offset sideways so it shapes the route instead of blocking it.

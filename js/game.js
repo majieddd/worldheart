@@ -251,7 +251,7 @@ export class Game {
     addEventListener('keydown', (e) => {
       if (e.repeat) return;
       if (this.context?.editing) return;
-      if(document.querySelector('dialog[open]')||e.target?.matches?.('input,textarea,select,button,[contenteditable="true"]'))return;
+      if(document.querySelector('dialog[open],#end-overlay.show')||e.target?.matches?.('input,textarea,select,button,[contenteditable="true"]'))return;
       // Most keys here are BOARD verbs. While a unit is possessed the player
       // is on the ground and upgrading or selling a tower selected minutes
       // ago is not something the first-person view can show. Building IS:

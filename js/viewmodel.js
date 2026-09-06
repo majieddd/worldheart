@@ -441,6 +441,12 @@ export class ViewModel {
     if (!this.models.has(typeKey)) {
       const build = BUILD[typeKey] || BUILD.warden;
       const g = build();
+      // Equipment length belongs to the prop. Scaling the complete view
+      // model also stretched the gauntlet and forearm on every long weapon.
+      const weaponGroup = new THREE.Group();
+      weaponGroup.name = 'held-weapon';
+      for (const child of [...g.children]) if (child.name !== 'holding-arm') weaponGroup.add(child);
+      g.add(weaponGroup); g.userData.weaponGroup = weaponGroup;
       g.traverse((o) => { o.castShadow = false; o.receiveShadow = false; });
       g.scale.setScalar(VM_SCALE);
       g.visible = false;
@@ -476,6 +482,7 @@ export class ViewModel {
       this.current.userData.appearance = appearance;
       this.current.traverse(o => {
         if (!o.isMesh) return;
+        for (let parent=o.parent;parent&&parent!==this.current;parent=parent.parent) if(parent.name==='holding-arm')return;
         if (!o.userData.weaponMaterial) {
           o.userData.energyPart=o.material===MAT.energy;o.userData.metalPart=o.material===MAT.steel||o.material===MAT.gold;
           o.material = o.material.clone(); o.userData.weaponMaterial = true; o.userData.baseColor = o.material.color.clone();
@@ -490,7 +497,7 @@ export class ViewModel {
         }
         if(unit.weaponEra&&o.userData.metalPart)o.material.color.setHex(unit.weaponEra==='technological'?0xcbe4ef:0xcaa56f);
       });
-      this.current.scale.set(VM_SCALE, VM_SCALE, VM_SCALE * (unit.weaponLength || 1));
+      this.current.userData.weaponGroup.scale.z = unit.weaponLength || 1;
     }
     this.t += dt;
     const g = this.grip;
@@ -599,7 +606,7 @@ export class ViewModel {
     _e.set(rx, ry, rz, 'YXZ');
     _lq.setFromEuler(_e);
     this.current.quaternion.copy(_lq);
-    this.current.scale.set(VM_SCALE, VM_SCALE, VM_SCALE * (unit.weaponLength || 1));
+    this.current.scale.setScalar(VM_SCALE);
     // The twin blades swap which hand leads: the striking blade is brought to
     // the centre of the frame, the other stays out at its side.
     if (unit.typeKey === 'duelist') {
@@ -618,7 +625,7 @@ export class ViewModel {
     const bl = this.current.userData.blade;
     const sweeping = kind === 'melee' && p >= 0.16 && p <= 0.6 && bl;
     if (sweeping) {
-      const m = this.current.matrixWorld;
+      const m = this.current.userData.weaponGroup.matrixWorld;
       // From the outer half of the blade only, where the edge moves fastest.
       const sx = leftHand ? -1 : 1;
       _base.set(bl[0] * sx + (bl[3] - bl[0]) * sx * 0.5, bl[1] + (bl[4] - bl[1]) * 0.5, bl[2] + (bl[5] - bl[2]) * 0.5).applyMatrix4(m);

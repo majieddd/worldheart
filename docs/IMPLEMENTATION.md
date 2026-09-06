@@ -20,6 +20,7 @@ Tracker: https://github.com/majieddd/worldheart/issues/1.
 | M5 ocean strategy | continued balance work open | optional instrumented commander/nest tactics | [Old-rule losses, reproduced softlocks, repairs and normal wave-12/wave-15 retest defeats](qa/implementation/OCEAN-STRATEGY.md); no full balance pass | unmeasured |
 | U22-U27 commander feedback | published and live-verified | tower context, arm/swing, collision, loot preview, physical nests, route lines | [Issue #19 / PR #20](https://github.com/majieddd/worldheart/pull/20), [228 tests and feature evidence](qa/implementation/COMMANDER-FEEDBACK.md), [31 public checks and unforced retests](qa/implementation/OCEAN-STRATEGY.md), [parent QA PR #21](https://github.com/majieddd/worldheart/pull/21); owner feel review open | unmeasured |
 | M6 | future | See blueprint | Stable campaign dependency remains open | unmeasured |
+| Remaining acceptance A1-A6 | active; first repairs browser verified | input ownership, arm proportions, foliage audit, campaign and performance | [Adversarial failures, repairs and earned victory/extraction](qa/implementation/ADVERSARIAL-ACCEPTANCE.md); full campaign, authored era silhouettes and owner feel remain open | unmeasured |
 
 Audit correction: Quartermaster already works through
 `prof.bonuses?.quartermaster` in `js/run/run.js`, with the profile passed by the

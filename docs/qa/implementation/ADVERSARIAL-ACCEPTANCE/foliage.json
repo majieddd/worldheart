@@ -1,0 +1,423 @@
+{
+  "scope": "Eight-map geometry and near/orbit render fixtures; primitive pole degeneracies reported, not falsely called reversed faces",
+  "base": "http://127.0.0.1:8139/",
+  "records": [
+    {
+      "mode": "pocket",
+      "seed": 44021,
+      "terrain": "varied",
+      "sets": [
+        {
+          "kind": "pine",
+          "instances": 731,
+          "triangles": 56,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.002876945960578886,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "broadleaf",
+          "instances": 3,
+          "triangles": 180,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.003423803297643288,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "rock",
+          "instances": 210,
+          "triangles": 20,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.08532891800629229,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "crystal",
+          "instances": 21,
+          "triangles": 16,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.03406948667792251,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "mode": "giant",
+      "seed": 44021,
+      "terrain": "varied",
+      "sets": [
+        {
+          "kind": "pine",
+          "instances": 6782,
+          "triangles": 56,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.002876945960578886,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "broadleaf",
+          "instances": 31,
+          "triangles": 180,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.003423803297643288,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "rock",
+          "instances": 1890,
+          "triangles": 20,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.08532891800629229,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "crystal",
+          "instances": 508,
+          "triangles": 16,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.03406948667792251,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "mode": "titan",
+      "seed": 20264,
+      "terrain": "varied",
+      "sets": [
+        {
+          "kind": "pine",
+          "instances": 943,
+          "triangles": 56,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.002876945960578886,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "broadleaf",
+          "instances": 1,
+          "triangles": 180,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.003423803297643288,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "rock",
+          "instances": 241,
+          "triangles": 20,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.08532891800629229,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "crystal",
+          "instances": 74,
+          "triangles": 16,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.03406948667792251,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "mode": "reach",
+      "seed": 12345,
+      "terrain": "varied",
+      "sets": [
+        {
+          "kind": "pine",
+          "instances": 0,
+          "triangles": 56,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.002876945960578886,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "broadleaf",
+          "instances": 0,
+          "triangles": 180,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.003423803297643288,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "rock",
+          "instances": 76,
+          "triangles": 20,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.08532891800629229,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "crystal",
+          "instances": 23,
+          "triangles": 16,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.03406948667792251,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "mode": "varied",
+      "seed": 28183,
+      "terrain": "varied",
+      "sets": [
+        {
+          "kind": "pine",
+          "instances": 943,
+          "triangles": 56,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.002876945960578886,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "broadleaf",
+          "instances": 5,
+          "triangles": 180,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.003423803297643288,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "rock",
+          "instances": 241,
+          "triangles": 20,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.08532891800629229,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "crystal",
+          "instances": 74,
+          "triangles": 16,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.03406948667792251,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "mode": "alpine",
+      "seed": 51940,
+      "terrain": "alpine",
+      "sets": [
+        {
+          "kind": "pine",
+          "instances": 943,
+          "triangles": 56,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.002876945960578886,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "broadleaf",
+          "instances": 4,
+          "triangles": 180,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.003423803297643288,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "rock",
+          "instances": 241,
+          "triangles": 20,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.08532891800629229,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "crystal",
+          "instances": 74,
+          "triangles": 16,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.03406948667792251,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "mode": "canyon",
+      "seed": 36102,
+      "terrain": "canyon",
+      "sets": [
+        {
+          "kind": "pine",
+          "instances": 943,
+          "triangles": 56,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.002876945960578886,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "broadleaf",
+          "instances": 4,
+          "triangles": 180,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.003423803297643288,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "rock",
+          "instances": 241,
+          "triangles": 20,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.08532891800629229,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "crystal",
+          "instances": 67,
+          "triangles": 16,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.03406948667792251,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "mode": "ocean",
+      "seed": 59859,
+      "terrain": "ocean",
+      "sets": [
+        {
+          "kind": "pine",
+          "instances": 943,
+          "triangles": 56,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.002876945960578886,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "broadleaf",
+          "instances": 9,
+          "triangles": 180,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.003423803297643288,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "rock",
+          "instances": 241,
+          "triangles": 20,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.08532891800629229,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        },
+        {
+          "kind": "crystal",
+          "instances": 74,
+          "triangles": 16,
+          "reversed": 0,
+          "invalid": 0,
+          "degenerate": 0,
+          "minArea": 0.03406948667792251,
+          "badInstances": 0,
+          "windShadowUniformsShared": true
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "faults": []
+}

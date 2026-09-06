@@ -1,0 +1,91 @@
+{
+  "scope": "Real browser tab switch and WEBGL_lose_context fixture. A headless visibility limitation is reported separately from a pass.",
+  "checks": [
+    {
+      "name": "Actual tab background preserves a paused simulation",
+      "covered": false,
+      "ok": null,
+      "actual": {
+        "hidden": {
+          "state": "visible",
+          "events": [],
+          "paused": false,
+          "time": 0.3910666666666664
+        },
+        "returned": {
+          "state": "visible",
+          "events": [],
+          "paused": false,
+          "time": 0.9322999999999989
+        }
+      },
+      "limitation": "This headless browser kept both tabs visible. Physical background-tab acceptance remains open; no visibility getter was mocked."
+    },
+    {
+      "name": "Real context loss pauses the assault without corrupting state",
+      "covered": true,
+      "ok": true,
+      "actual": {
+        "before": {
+          "time": 0.9322999999999989,
+          "gold": 450,
+          "wave": 1,
+          "commander": 1400
+        },
+        "during": {
+          "time": 0.9396999999999985,
+          "paused": true,
+          "lost": true
+        }
+      }
+    },
+    {
+      "name": "Restored GPU draws the same paused assault",
+      "covered": true,
+      "ok": true,
+      "actual": {
+        "time": 0.9396999999999985,
+        "paused": true,
+        "gold": 450,
+        "wave": 1,
+        "commander": 1400,
+        "calls": 91
+      }
+    },
+    {
+      "name": "A real Resume click continues simulation and rendering",
+      "covered": true,
+      "ok": true,
+      "actual": {
+        "time": 2.1628000000000003,
+        "paused": false,
+        "state": "playing",
+        "calls": 91
+      }
+    }
+  ],
+  "faults": [],
+  "warnings": [
+    "WebGL context lost, awaiting restore",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context",
+    "WebGL: INVALID_OPERATION: delete: object does not belong to this context"
+  ]
+}

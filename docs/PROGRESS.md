@@ -22,6 +22,16 @@ remaining owner brief and acceptance gaps. [Current audit and work order](qa/imp
 cover keyboard/input ownership, combat/model readability, foliage, ocean
 strategy and sustained performance. Claims and repairs require browser evidence;
 owner feel and whole-campaign completion remain separate gates.
+The first adversarial batch repairs inventory keyboard focus, pointer lock on
+the victory receipt and weapon parts stretching/recoloring the holding arm.
+Targeted browser checks pass, including a natural planet-1 victory and real
+extraction. The continued canyon planet ends in a retained wave-12 defeat.
+Eight foliage geometry cases pass; the exact owner-reported artifact remains
+unreproduced. The corrected 180-second reference stress run passes at 125 fps
+median / 42.55 fps 1% low with active simulation, 100 enemies and 30 towers.
+All five enemy species pass 300 terrain strike probes; GPU restoration now
+preserves play without stale render-target warnings. Lower-capability and
+actual background-tab checks remain open. These repairs are ready to publish.
 
 Latest batch, 2026-09-06: the owner-requested extra-high agent implemented
 [U22-U27](qa/2026-09-06-COMMANDER-REQUEST.md) on `feature/commander-feedback`,

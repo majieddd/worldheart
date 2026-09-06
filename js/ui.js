@@ -541,14 +541,16 @@ export class HUD {
     });
     this.el['btn-continue'].addEventListener('click', () => {
       this.el['end-overlay'].classList.remove('show');
+      document.body.classList.remove('end-open');
       this._ended = false;
       this.game.paused = false;
+      this.possession?.suspend?.(!!this.endWasSuspended);
       this.audio?.play('click');
       this.onContinue?.();
     });
 
     addEventListener('keydown', (e) => {
-      if(document.querySelector('dialog[open]')||e.target?.matches?.('input,textarea,select,button,[contenteditable="true"]'))return;
+      if(document.querySelector('dialog[open],#end-overlay.show')||e.target?.matches?.('input,textarea,select,button,[contenteditable="true"]'))return;
       // Pause and sound belong to the player wherever they are, but the SPEED
       // key does not: F is a jump alias while a body is possessed, and these
       // are two separate window listeners, so preventDefault in one does not
@@ -844,6 +846,13 @@ export class HUD {
     // had just taken.
     if (this._ended) return;
     this._ended = true;
+    // Pausing simulation does not release a possessed mouse. The visible
+    // victory buttons used to receive clicks at the locked crosshair instead
+    // of the pointer, trapping a natural commander win on its receipt.
+    this.game.context?.close();
+    this.endWasSuspended = this.possession?.suspended;
+    this.possession?.suspend?.(true);
+    this.rig.keys.clear(); this.rig.velLon=0; this.rig.velLat=0; this.rig.cancelFlight();
     const e = this.el;
     e['end-mark'].textContent = won ? 'THE DAWN HOLDS' : 'THE HEART FADES';
     e['end-sub'].textContent = subtitle
@@ -859,7 +868,13 @@ export class HUD {
     e['btn-continue'].style.display = won ? '' : 'none';
     e['btn-continue'].textContent = CONFIG.mapKey==='ninetynine' ? 'Collect remaining loot' : 'Hold the line (endless)';
     e['end-overlay'].classList.add('show');
+    document.body.classList.add('end-open');
     this.game.paused = true;
+    queueMicrotask(() => {
+      if (!e['end-overlay'].classList.contains('show')) return;
+      [...e['end-card'].querySelectorAll('.o-actions button:not([hidden]):not(:disabled)')]
+        .find(button => getComputedStyle(button).display !== 'none')?.focus({preventScroll:true});
+    });
     this.audio?.play(won ? 'victory' : 'defeat');
   }
 

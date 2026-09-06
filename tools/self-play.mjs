@@ -13,6 +13,8 @@ const expeditionOnly=process.argv.includes('--expedition');
 const useWeapons=process.argv.includes('--weapons');
 const campaign=process.argv.includes('--campaign');
 const useTalents=process.argv.includes('--talents');
+const sparseRender=process.argv.includes('--sparse-render');
+const cautious=process.argv.includes('--cautious');
 const strategy=process.argv.find(x=>x.startsWith('--strategy='))?.split('=')[1]||'defense';
 if(!['defense','assault'].includes(strategy))throw Error('Unknown strategy');
 const baseUrl=process.argv.find(x=>x.startsWith('--base-url='))?.slice('--base-url='.length)||'http://127.0.0.1:8139/';
@@ -34,7 +36,7 @@ page.on('response',response=>{
 page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
 await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(window.__qaFramesEnabled)fn(t);});});
 await page.addInitScript(value=>{window.__qaUseWeapons=value;},useWeapons);
-await page.addInitScript(value=>{window.__qaStrategy=value.strategy;window.__qaTowerPriority=value.towerPriority;window.__qaTowerLimit=value.towerLimit;},{strategy,towerPriority,towerLimit});
+await page.addInitScript(value=>{window.__qaStrategy=value.strategy;window.__qaTowerPriority=value.towerPriority;window.__qaTowerLimit=value.towerLimit;window.__qaSparseRender=value.sparseRender;window.__qaCautious=value.cautious;},{strategy,towerPriority,towerLimit,sparseRender,cautious});
 if(assaultSource)await page.addInitScript(value=>{window.__qaAssaultSource=value;},assaultSource);
 if(sourceCheckpoint)await page.addInitScript(value=>{if(!localStorage.getItem('wh99Campaign'))localStorage.setItem('wh99Campaign',JSON.stringify(value));},sourceCheckpoint);
 try{
@@ -238,7 +240,7 @@ try{
   });
   let lastWave=0,lastTrip='',result,previousStranded='';
   for(let i=0;i<900;i++){
-    result=await page.evaluate(()=>{__qaPolicy();for(let n=0;n<20;n++){window.__qaTrip?.();window.__qaWeaponTrip?.();window.__qaRetreat?.();window.__qaAssault?.update(.1);WH.step(.1);}return {state:WH.game.state,phase:WH.mode99.run.getPhase(),wave:WH.mode99.run.getWave(),lives:WH.game.lives,gold:WH.game.gold,kills:WH.game.kills,score:WH.game.score,towers:WH.towers.towers.length,commander:WH.allies.active.filter(a=>a.type.commander).map(a=>({hp:a.hp,hpMax:a.hpMax,state:a.state,dir:a.dir.toArray()})),seed:WH.CONFIG.seed};});
+    result=await page.evaluate(()=>{__qaPolicy();for(let n=0;n<20;n++){window.__qaTrip?.();window.__qaWeaponTrip?.();window.__qaRetreat?.();window.__qaAssault?.update(.1);WH.step(.1,60,!__qaSparseRender);}if(__qaSparseRender)WH.step(0);return {state:WH.game.state,phase:WH.mode99.run.getPhase(),wave:WH.mode99.run.getWave(),lives:WH.game.lives,gold:WH.game.gold,kills:WH.game.kills,score:WH.game.score,towers:WH.towers.towers.length,commander:WH.allies.active.filter(a=>a.type.commander).map(a=>({hp:a.hp,hpMax:a.hpMax,state:a.state,dir:a.dir.toArray()})),seed:WH.CONFIG.seed};});
     if(result.wave!==lastWave){lastWave=result.wave;console.log(JSON.stringify(result));await page.screenshot({path:resolve(out,`wave-${String(lastWave).padStart(2,'0')}.png`)});}
     const trip=await page.evaluate(()=>window.__qaTripState||'');
     if(i>0&&i%50===0){
@@ -255,10 +257,11 @@ try{
   if(result.state==='defeat'||result.phase==='victory')await page.waitForFunction(()=>getComputedStyle(document.getElementById('end-overlay')).opacity==='1',{},{polling:50});
   await page.screenshot({path:resolve(out,'terminal.png')});
   result.talentPurchases=purchases;
-  result.trace=await page.evaluate(()=>__qaTrace);result.faults=[...faults];result.policy={strategy,towerPriority,towerLimit};result.assault=await page.evaluate(()=>window.__qaAssault?.metrics||null);result.towerStats=await page.evaluate(()=>WH.towers.towers.map(t=>({type:t.typeKey,tier:t.tier,damage:t.damageDealt,kills:t.kills})));result.scope=`Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; ${sourceCheckpoint?'resumed exported checkpoint':planet===1?'fresh profile':'continued earned campaign profile'}`;
+  result.rendering=sparseRender?'60Hz simulation; one rendered frame per two simulation seconds, plus captures':'60Hz simulation; rendered every 0.1 simulation seconds';
+  result.trace=await page.evaluate(()=>__qaTrace);result.faults=[...faults];result.policy={strategy,towerPriority,towerLimit,cautious};result.assault=await page.evaluate(()=>window.__qaAssault?.metrics||null);result.towerStats=await page.evaluate(()=>WH.towers.towers.map(t=>({type:t.typeKey,tier:t.tier,damage:t.damageDealt,kills:t.kills})));result.scope=`Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; ${sourceCheckpoint?'resumed exported checkpoint':planet===1?'fresh profile':'continued earned campaign profile'}`;
   await Promise.all(responseReads);result.runtimeHashes={...runtimeHashes};result.policySourceHash=assaultSource?createHash('sha256').update(assaultSource).digest('hex'):null;
   result.navigation=await page.evaluate(()=>({heartNode:WH.nav.heartNode,towers:WH.towers.towers.map(t=>({type:t.typeKey,pos:t.pos.toArray()})),nests:WH.world.portals.filter(p=>p.established).map(p=>({node:p.node,destroyed:p.destroyed,next:WH.nav.next[p.node],airNext:WH.nav.airNext[p.node],blocked:!!WH.nav.block[p.node],pos:p.group.position.toArray()})),enemies:WH.enemies.active.filter(e=>e.active&&!e.dead).map(e=>({id:e.id,type:e.typeKey,node:e.node,nearest:WH.nav.nearestNode(e.dir),next:e.type.flying?WH.nav.airNext[e.node]:WH.nav.next[e.node],blocked:!!WH.nav.block[e.node],source:e.sourceNest,dir:e.dir.toArray()}))}));
-  if(useWeapons){result.inventory=await page.evaluate(()=>WH.mode99.inventory.snapshot());result.weaponLoop=result.trace.some(a=>a.action==='weapon-picked-up')&&result.trace.some(a=>a.action==='weapon-equipped');}
+  if(useWeapons){result.inventory=await page.evaluate(()=>WH.mode99.inventory.snapshot());result.weaponLoop=result.trace.some(a=>a.action==='weapon-picked-up')&&result.trace.some(a=>['weapon-equipped','assault-weapon'].includes(a.action));}
   if(expeditionOnly)result.scope='Unforced instrumented crystal out-and-back; not a full planet';
   writeFileSync(resolve(out,'run.json'),JSON.stringify(result,null,2)+'\n');
   console.log('TERMINAL '+JSON.stringify({...result,trace:result.trace.length,runtimeHashes:Object.keys(result.runtimeHashes).length,inventory:result.inventory?.items.length,navigation:undefined}));
@@ -268,6 +271,9 @@ try{
   }
   if(campaign){
     const checkpoint=await page.evaluate(()=>WH.mode99.campaign.state());
+    const exported=await page.evaluate(async()=>(await import('/js/modes/campaign-store.js')).campaignStore.export());
+    writeFileSync(resolve(out,'victory-checkpoint.json'),exported);
+    writeFileSync(resolve(rootOut,'checkpoint.json'),exported);
     campaignResults.push({planet,result:{...result,trace:result.trace.length},checkpoint});
     if(planet<checkpoint.limit){
       await Promise.all([page.waitForEvent('load',{timeout:180000}),page.locator('#btn-extract').click()]);
@@ -287,4 +293,10 @@ try{
     writeFileSync(resolve(rootOut,'checkpoint.json'),await page.evaluate(async()=>(await import('/js/modes/campaign-store.js')).campaignStore.export()));
   }
   }
-}catch(e){console.error(e);await page.screenshot({path:resolve(out,'error.png')});process.exitCode=1;}finally{await browser.close();}
+}catch(e){
+  console.error(e);await page.screenshot({path:resolve(out,'error.png')});
+  const context=await page.evaluate(()=>({pointerLock:document.pointerLockElement?.tagName||null,focused:document.activeElement?.id,paused:WH.game.paused,possession:{active:WH.possession.active,suspended:WH.possession.suspended},phase:WH.mode99.run.getPhase()})).catch(()=>null);
+  writeFileSync(resolve(out,'error.json'),JSON.stringify({error:String(e),context,faults},null,2)+'\n');
+  if(campaign)writeFileSync(resolve(rootOut,'checkpoint.json'),await page.evaluate(async()=>(await import('/js/modes/campaign-store.js')).campaignStore.export()));
+  process.exitCode=1;
+}finally{await browser.close();}
