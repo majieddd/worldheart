@@ -250,6 +250,7 @@ export class Game {
     };
     addEventListener('keydown', (e) => {
       if (e.repeat) return;
+      if (this.context?.editing) return;
       if(document.querySelector('dialog[open]')||e.target?.matches?.('input,textarea,select,button,[contenteditable="true"]'))return;
       // Most keys here are BOARD verbs. While a unit is possessed the player
       // is on the ground and upgrading or selling a tower selected minutes
@@ -481,7 +482,15 @@ export class Game {
       this.enemies.allies.worldPos(a, _v2);
       if (_v2.distanceTo(this.cursorPos) < fp + a.type.radius) return { ok: false, reason: 'allies' };
     }
-    const nv = this.nav.validatePlacement(this.cursorPos, fp);
+    const required=[];
+    if (CONFIG.map.mode==='ninetynine') {
+      for(const p of this.world.portals)if(p.established&&!p.destroyed) {
+        if(p.group.position.distanceTo(this.cursorPos)<fp+2.6)return {ok:false,reason:'portal'};
+        required.push(p.node);
+      }
+      for(const e of this.enemies.active)if(e.active&&!e.dead&&!e.type.flying)required.push(this.nav.descendNode(e.node,e.dir));
+    }
+    const nv = this.nav.validatePlacement(this.cursorPos, fp, required);
     if (!nv.ok) return { ok: false, reason: nv.reason === 'path' ? 'path' : 'landmark' };
     if (this.gold < this._cost(def)) return { ok: false, reason: 'gold' };
     return { ok: true, climate: ground.climate };
@@ -515,11 +524,11 @@ export class Game {
         cold: 'Too cold. Only Cryo towers can stand on ice (+10% slow strength).',
         mixed: 'The footprint crosses hot and cold ground. Move it onto one surface.',
         heart: 'Too close to the Worldheart',
-        portal: 'Too close to a breach',
+        portal: 'Too close to a visible nest',
         overlap: 'Overlaps another tower',
         enemies: 'Enemies are in the way',
         allies: 'A friendly unit is in the footprint. Move it clear first.',
-        path: 'PATH BLOCKED: every breach must reach the heart',
+        path: 'PATH BLOCKED: nests and living enemies need an exit to the heart',
         landmark: 'Cannot build on a landmark',
         gold: 'Not enough gold',
         frontier: 'Beyond the frontier. Upgrade the Worldheart to expand it.',
@@ -568,6 +577,12 @@ export class Game {
 
   select(tower) {
     this.selectedTower = tower;
+    // An explicit board selection owns the next action immediately, even
+    // before the next rendered hover pass. Otherwise a fast Upgrade click
+    // could spend gold on the previously hovered tower.
+    if(this.context && tower && !this.possession?.active) {
+      this.contextTower=tower;this.context.target={kind:'tower',object:tower};this.context.dismissed=null;
+    }
     if (tower) {
       this.selRing.show(true);
       this.selRing.setColor(PALETTE.energy);
@@ -595,7 +610,8 @@ export class Game {
   }
 
   upgradeSelected() {
-    const t = this.selectedTower;
+    const t = this.context ? this.contextTower : this.selectedTower;
+    if (this.context && !this.context.validTower(t)) return;
     if (!t) return;
     // Uncapped is a 99 Planets rule. The classic maps are balanced around three
     // marks over thirty waves and inherited the removal for free, which handed
@@ -634,7 +650,8 @@ export class Game {
   }
 
   sellSelected() {
-    const t = this.selectedTower;
+    const t = this.context ? this.contextTower : this.selectedTower;
+    if (this.context && !this.context.validTower(t)) return;
     if (!t) return;
     const value = t.sellValue(this.refundFrac());
     this.gold += value;

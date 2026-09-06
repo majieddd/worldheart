@@ -578,27 +578,20 @@ function hold(J, spec, kind, pitch, a) {
 // and across the body with the chest turning into it, overshoots, and
 // recovers slowly. `side` mirrors the sweep so consecutive swings alternate.
 function cleave(J, p, side) {
-  const s = side;
-  // Anticipation ends at 0.24, the snap runs to 0.46, the follow-through to
-  // 0.60, and the rest is recovery. The strike frame is 0.40.
-  const raise = keyed([[0, 0], [0.24, 1], [0.46, 0], [1, 0]], p);
-  const sweep = keyed([[0, 0], [0.24, 0], [0.40, 1], [0.58, 1.25], [1, 0]], p);
-  const twist = keyed([[0, 0], [0.24, -0.45], [0.42, 0.55], [0.6, 0.5], [1, 0]], p) * s;
-  J.chest.rot.y += -(twist);
-  J.pelvis.rot.y += -(twist * 0.5);
-  J.spine.rot.x += -(sweep * 0.30 - raise * 0.12);
-  J.head.rot.y += -(-twist * 0.5);
-  // Arm: up and back, then down and across the front.
-  J.shoulderR.rot.x += -(-2.4 * raise - 1.6 * sweep);
-  J.shoulderR.rot.y += -((0.35 * raise - 1.15 * sweep) * s);
-  J.shoulderR.rot.z += 0.6 * raise + 0.3 * sweep;
-  J.elbowR.rot.x += -(1.5 * raise + 1.9 * sweep);
-  J.handR.rot.x += -(-0.5 * raise + 0.5 * sweep);
-  // The off hand braces and the weight shifts to the front foot.
-  J.shoulderL.rot.x += -(-0.6 * sweep);
-  J.shoulderL.rot.z += -0.5 * raise;
-  J.hipR.rot.x += 0.25 * sweep; J.kneeR.rot.x += -0.45 * sweep;
-  J.hipL.rot.x += -(0.2 * sweep);
+  // Absolute joint poses avoid stacking a second full swing on top of the
+  // already bent carry elbow. At STRIKE_AT the arm extends and the weapon
+  // points forward, instead of folding behind the commander's shoulder.
+  const at=STRIKE_AT.melee, s=side;
+  const joint=(rest,wind,hit,follow)=>keyed([[0,rest],[.22,wind],[at,hit],[.58,follow],[1,rest]],p);
+  const turn=joint(0,-.24*s,0,.32*s);
+  J.chest.rot.y=turn;J.pelvis.rot.y=turn*.35;J.head.rot.y=-turn*.6;
+  J.shoulderR.rot.set(joint(.35,.65,1.15,1.35),joint(0,.85*s,-.08,-.75*s),joint(.30,.50,.10,.18));
+  J.elbowR.rot.x=joint(2.25,1.55,.30,.55);
+  J.handR.rot.x=joint(-.35,-.55,-1.45,-1.60);
+  J.handR.rot.y=joint(0,.2*s,.08,.25*s);
+  J.spine.rot.x=joint(0,.04,-.10,-.13);
+  J.shoulderL.rot.x=joint(-.1,.25,.6,.3);
+  J.elbowL.rot.x=joint(.35,.75,.95,.6);
 }
 
 // Two quick cuts, alternating hands: the striking arm snaps forward from the

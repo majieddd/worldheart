@@ -826,7 +826,7 @@ export class NavGraph {
   }
 
   // Would blocking this footprint sever any portal from the heart?
-  validatePlacement(center, radius) {
+  validatePlacement(center, radius, requiredNodes = []) {
     const nodes = this.nodesInRadius(center, radius);
     const temp = new Set();
     for (const i of nodes) {
@@ -845,13 +845,13 @@ export class NavGraph {
     stack.length = 0;
     stack.push(this.heartNode);
     mark[this.heartNode] = g;
-    let need = this.portalNodes.length;
-    const isPortal = this._portalSet || (this._portalSet = new Set());
-    if (this._portalSetFor !== this.portalNodes) {
-      isPortal.clear();
-      for (const p of this.portalNodes) isPortal.add(p);
-      this._portalSetFor = this.portalNodes;
-    }
+    // Original entrances alone are insufficient after units walk past a
+    // junction, or a campaign authors a nest on that route. Closing their
+    // last exit strands a live wave even if every original portal reroutes.
+    const isPortal = new Set([...this.portalNodes,...requiredNodes]);
+    isPortal.delete(this.heartNode);
+    let need = isPortal.size;
+    for(const node of isPortal)if(temp.has(node))return {ok:false,reason:'path'};
     while (stack.length && need > 0) {
       const a = stack.pop();
       for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {

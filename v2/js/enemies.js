@@ -148,6 +148,7 @@ class Enemy {
     this.active = false;
   }
   init(typeKey, type, dirVec, node, hpScale) {
+    this.sourceNest = null; this.guardianNest = null;
     this.id = nextId++;
     this.typeKey = typeKey;
     this.type = type;
@@ -1106,10 +1107,8 @@ export class EnemyManager {
   spawn(typeKey, portalNode, hpScale = 1) {
     if (this.active.length >= CONFIG.limits.maxEnemies) return null;
     const type = planetBoss(ENEMY_TYPES[typeKey],CONFIG.campaign?.boss);
-    // A mode may pull the spawn point inward. 99 Planets does: its breach
-    // sites are authored across the FINAL cap, so at wave 1 an unremapped
-    // spawn appears ~125 units outside a ~12 unit circle and the walk in is
-    // most of the wave.
+    // A mode may adapt its source node. Campaign sources already name their
+    // physical nest and therefore use an identity mapping here.
     if (this.spawnNodeOverride) {
       const remapped = this.spawnNodeOverride(portalNode, !!type.flying);
       if (remapped >= 0) portalNode = remapped;
@@ -1219,6 +1218,14 @@ export class EnemyManager {
     return e._frzOk;
   }
 
+  _spawnReinforcement(parent) {
+    const node=this.reinforcementSource?this.reinforcementSource(parent):parent.node;
+    if(!(node>=0))return null;
+    const child=this.spawn('mite',node,parent.hpScaleUsed);
+    if(child&&this.reinforcementSource){child.sourceNest=node;this.onReinforcement?.(child,parent,node);}
+    return child;
+  }
+
   damage(e, amount, opts = {}) {
     if (!e.active || e.dead) return 0;
     let dmg = amount;
@@ -1256,8 +1263,8 @@ export class EnemyManager {
       while (e.plates > target) {
         e.plates--;
         if (this.onShedFx) this.onShedFx(e);
-        this.spawn('mite', e.node, e.hpScaleUsed);
-        this.spawn('mite', e.node, e.hpScaleUsed);
+        this._spawnReinforcement(e);
+        this._spawnReinforcement(e);
       }
     }
     if (e.hp <= 0 && !e.dead) {
@@ -1265,7 +1272,7 @@ export class EnemyManager {
       // Tier 4: mites divide. isSplit stops the cascade being infinite.
       if (evo.split && e.typeKey === 'mite' && !e.isSplit) {
         for (let i = 0; i < 2; i++) {
-          const child = this.spawn('mite', e.node, e.hpScaleUsed);
+          const child = this._spawnReinforcement(e);
           if (child) { child.isSplit = true; child.hp = Math.max(1, child.hp * 0.4); }
         }
       }

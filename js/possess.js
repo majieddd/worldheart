@@ -300,6 +300,7 @@ export class Possession {
       // Never swallow keys aimed at a text field.
       const t = e.target;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+      if (this.suspended) return;
       this.keys.add(e.code);
       if (e.code === 'Escape' || e.code === 'Tab') {
         e.preventDefault();
@@ -328,6 +329,12 @@ export class Possession {
       if (e.code === 'KeyH') { e.preventDefault(); this.dismiss(); }
     });
     addEventListener('keyup', (e) => this.keys.delete(e.code));
+    // A pending lock request may resolve after an inspection panel borrows
+    // the mouse. Release that late grant as well, or visible buttons still
+    // route their clicks to the canvas until the player presses Escape twice.
+    document.addEventListener('pointerlockchange', () => {
+      if (this.suspended && document.pointerLockElement === this.canvas) document.exitPointerLock?.();
+    });
     addEventListener('blur', () => this.keys.clear());
 
     // Left click strikes.
@@ -469,8 +476,10 @@ export class Possession {
   // most of what made a fast mouse swing land somewhere unpredictable; a
   // browser that rejects the option gets the plain request.
   _lock() {
+    if (this.suspended || !this.active) return;
     const el = this.canvas;
     const plain = () => {
+      if (this.suspended || !this.active) return;
       try {
         const p = el.requestPointerLock?.();
         if (p && typeof p.catch === 'function') p.catch(() => {});

@@ -160,11 +160,12 @@ function mesh(geo, mat) { return new THREE.Mesh(geo, mat); }
 // once per weapon so the hand sits on the actual grip.
 function arm(g, side = 1, ex = 0, ey = 0, ez = 0) {
   const a = new THREE.Group();
-  const fist = mesh(slab(0.11, 0.12, 0.10, 0.11, -0.07, 0.07), MAT.dark);
-  const cuff = mesh(slab(0.15, 0.16, 0.13, 0.14, -0.06, 0.06), MAT.steel);
+  a.name = 'holding-arm';
+  const fist = mesh(slab(0.22, 0.23, 0.21, 0.22, -0.10, 0.10), MAT.dark);
+  const cuff = mesh(slab(0.28, 0.29, 0.27, 0.28, -0.08, 0.08), MAT.steel);
   cuff.position.set(0.02 * side, -0.05, 0.14);
-  const fore = mesh(slab(0.13, 0.14, 0.10, 0.11, -0.02, 0.42), MAT.steel);
-  const under = mesh(slab(0.16, 0.16, 0.12, 0.13, 0.43, 0.70), MAT.body);
+  const fore = mesh(slab(0.27, 0.28, 0.25, 0.26, -0.02, 0.44), MAT.steel);
+  const under = mesh(slab(0.30, 0.30, 0.28, 0.28, 0.44, 0.82), MAT.body);
   // The forearm leans back toward the shoulder: rotate so its +y runs to
   // camera-right (for the right arm), down and toward the viewer.
   const forearm = new THREE.Group();

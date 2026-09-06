@@ -1888,7 +1888,7 @@ export class World {
 
   // Returns true when this hit was the one that brought it down.
   damagePortal(p, amount) {
-    if (!p || p.destroyed) return false;
+    if (!p || p.destroyed || p.guardianPending) return false;
     p.hp -= amount;
     p.flash = Math.max(p.flash, 0.35);
     if (p.hp > 0) return false;

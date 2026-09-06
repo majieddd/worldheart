@@ -973,7 +973,7 @@ export class HUD {
       : (g.selectedTower ? '' : '');
 
     // tower panel
-    const t = g.selectedTower;
+    const t = g.context ? g.contextTower : g.selectedTower;
     const panel = e['tower-panel'];
     panel.classList.toggle('show', !!t);
     if (t) {
@@ -1016,7 +1016,7 @@ export class HUD {
       if (g.uncappedTiers || t.tier < 2) {
         const capped = Number.isFinite(g.tierCap) && t.tier + 1 >= g.tierCap;
         const cost = tierCost(t.typeKey, t.tier + 1);
-        e['tp-upgrade'].textContent = capped ? 'Capped: raise the Worldheart' : `Upgrade ${fmt(cost)}`;
+        e['tp-upgrade'].textContent = capped ? 'Raise Worldheart' : `Upgrade ${fmt(cost)}`;
         e['tp-upgrade'].disabled = capped || g.gold < cost;
         e['tp-upgrade'].title = capped ? 'Upgrade the Worldheart (B) to raise the tier cap' : '';
         e['tp-upgrade'].style.display = '';
