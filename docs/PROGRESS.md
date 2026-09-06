@@ -31,6 +31,15 @@ were corrected; these losses do not prove the planet is unwinnable. The
 [six follow-up request IDs U22-U27](qa/2026-09-06-COMMANDER-REQUEST.md) are
 implemented-awaiting-verification in the agent's local worktree, not yet live.
 
+PR [#20](https://github.com/majieddd/worldheart/pull/20) is now integrated locally:
+221 tests, 29 primary interaction checks, 11 campaign checkpoint/loot checks,
+29 combat checks and all five camera harnesses pass. Parent verification adds
+three actual Upgrade/Sell checks. Unforced ocean retesting found a later
+wave-9 stranding after passing wave 4, so movement repair and another retest
+remain active before this feedback slice is published. See the
+[dedicated evidence](qa/implementation/COMMANDER-FEEDBACK.md) and
+[unforced results](qa/implementation/OCEAN-STRATEGY.md).
+
 ## Completed in this batch
 
 | Work | Status | Owner | Evidence | Usage |

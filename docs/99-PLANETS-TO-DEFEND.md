@@ -250,6 +250,16 @@ forgiving commander contacts, nest-only campaign assaults and actual unit
 route lines. [Issue #19](https://github.com/majieddd/worldheart/issues/19)
 tracks the extra-high agent's implementation and verification separately.
 
+[PR #20](https://github.com/majieddd/worldheart/pull/20) implements the follow-up.
+F lends the pointer while possessing, with 14m tower reach and 2.8m loot pickup.
+Campaign nests wake on waves 1/3/7/11/15, with a 3s warning and a protected
+final guardian launch. Waves, raids, boss escorts and evolved splits use
+surviving physical nests; destroyed sources cancel pending buildup, while
+living enemies remain owed. Placement must preserve routes from physical
+nests and occupied ground-enemy nodes. Unit lines consume the actual remaining
+route. These are implemented prototype decisions with owner feel and broader
+balance acceptance still open.
+
 | Decision | Status | Evidence |
 |---|---|---|
 | Existing campaign has an enjoyable playable defense loop | in game | Blind natural defeat wave 11, [terminal capture](qa/2026-09-05/images/23-defeat.png) |
@@ -282,6 +292,13 @@ The first deployment passed 17 public browser/hash/save-isolation checks;
 [publication evidence](qa/implementation/V2-PREVIEW.md) records both source IDs.
 The root game remains from main. Publish future verified checkpoints under
 [PREVIEW.md](PREVIEW.md); full campaign and art/feel acceptance remain open.
+
+The [U22-U27 follow-up](qa/implementation/COMMANDER-FEEDBACK.md) is integrated
+locally from PR #20. Its automated UI, inventory, motion and camera checks
+pass, including actual checkpoint overlap coverage. Continued ocean testing
+exposed additional movement/placement softlocks; [the retained integration
+record](qa/implementation/OCEAN-STRATEGY.md) tracks the repair and retest.
+This follow-up is not yet published to V2.
 
 M3 update: four terrain profiles, directed ground routes, separate flight
 clearance, swimming, raised elemental placement and spherical/terrain range

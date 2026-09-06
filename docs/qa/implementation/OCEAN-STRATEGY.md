@@ -68,13 +68,14 @@ stalled live wave, not a terminal victory or defeat. There were no runtime
 exceptions. The run records the actual loaded asset hashes and exact policy
 source hash; it tested an intermediate uncommitted feature build.
 
-Source review confirmed that tower placement protected only the original
+Source review found that tower placement protected only the original
 portal nodes. A placement could preserve those routes while cutting off a
 new physical nest or an enemy that had already moved through a junction.
-This is a game softlock, unlike the limited-controller defeats above. The
-agent is adding active sources and occupied ground-enemy nodes to placement
-connectivity validation, plus an explicit nest footprint exclusion. A passing
-regression and a new ordinary defended run are required before publication.
+This is a game softlock, unlike the limited-controller defeats above. Active
+sources and occupied ground-enemy nodes were added to placement connectivity
+validation, with a nest footprint exclusion and a synthetic bridge regression.
+That proves the placement vulnerability, but does not uniquely establish it
+as the cause of the original wave-4 stall, which lacked full terminal nav data.
 
 The parent also ran [real-worldgen nest route fixtures](OCEAN-STRATEGY/nest-nav/results.json)
 for planets 1/2/3/4/33/34/66/67/99, covering the four terrain profiles and
@@ -89,6 +90,30 @@ The self-play harness now records terminal tower/nest/enemy navigation data
 and loaded runtime hashes. It stops for a diagnostic failure if the same
 non-heart enemy remains without a path at two consecutive 100-second samples,
 rather than waiting out the whole simulation bound.
+
+## Retest at integrated e93d2cb
+
+The [ocean retest](OCEAN-STRATEGY/physical-nests-wave9-stall/run.json) on
+`e93d2cb5b65d6bc0cf6401dc9ea12b42bc046863` passed wave 4, then stopped at
+wave 9 with eight persistently stranded ground enemies. It retained 22 heart
+health, 175 kills, four towers and two destroyed nests. Source nest 5946 still
+had a valid route; stranded nodes were unblocked but had `next = -1`.
+The diagnostic stopped after repeated observations, with no game exceptions.
+Full tower positions, nest and enemy nodes, source IDs and loaded asset hashes
+are in that record. [Capture](OCEAN-STRATEGY/physical-nests-wave9-stall/terminal.png).
+
+A separate [fresh defensive run](OCEAN-STRATEGY/fresh-nests-defeat/run.json)
+on the same build ended in commander defeat at wave 10, with 18 heart health,
+370 kills and six towers. Its last progress sample also observed an unblocked
+Aegis without a route. [Capture](OCEAN-STRATEGY/fresh-nests-defeat/terminal.png).
+Both used normal gameplay transactions; neither is a victory or a balance pass.
+
+Follow-up review found that commander melee knockback directly rotated the
+enemy direction without validating terrain or navigation. An exact-world
+reproduction and repair are active. This is an older interaction exposed by
+more active exploration, rather than evidence that every stalled enemy came
+from the new placement code. The new physical-nest build remains unpublished
+until this failure is repaired and retested.
 
 Reproduce the current corrected policy against a local source checkout:
 
