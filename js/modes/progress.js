@@ -55,6 +55,7 @@ export function saveProfile(profile) {
   campaignStore.updateAccount(profile);
   return loadProfile();
 }
+export function persistProfile(){return campaignStore.retry();}
 
 export function bankVictory(coins = 0) {
   const p = loadProfile();

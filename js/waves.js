@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG } from './config.js';
 import { SIM_RANDOM } from './noise.js';
+import { planetGroups } from './encounters.js';
 
 // Wave direction: 30 authored waves, then endless scaling. Portals wake at
 // waves 1, 4, 9, 14. Bosses at 10, 20, 30. Early calls pay the remaining
@@ -45,7 +46,7 @@ export function raidComp(wave) {
 }
 
 export function raidInterval(wave, paceMul = 1) {
-  return Math.max(RAID_INTERVAL_FLOOR, RAID_INTERVAL - (wave - 1) * RAID_INTERVAL_SLOPE) * paceMul;
+  return Math.max(RAID_INTERVAL_FLOOR, RAID_INTERVAL - (wave - 1) * RAID_INTERVAL_SLOPE) * paceMul * (CONFIG.campaign?.pressure==='raids'?.85:1);
 }
 
 const _nd = new THREE.Vector3();
@@ -194,8 +195,7 @@ export class WaveDirector {
     if (nowPortals > prevPortals && this.wave > 1 && this.onPortalWake) {
       this.onPortalWake(nowPortals - 1);
     }
-    const comp = waveComp(this.wave).map(g=>({...g}));
-    if(CONFIG.campaign?.pressure==='wings')for(const g of comp)if(g.type==='wisp')g.count=Math.ceil(g.count*1.25);
+    const comp = planetGroups(waveComp(this.wave),CONFIG.campaign);
     const scale = hpScale(this.wave)*(CONFIG.campaign?.enemyHealth||1);
     // Enemy melee grows with the wave so a garrison does not stay free forever,
     // but on a much shallower slope than health does and with a ceiling, so a
@@ -275,7 +275,7 @@ export class WaveDirector {
   // other, but with spawnRaw raised so the mode's frontier remap leaves them
   // where the breach stands.
   _queueRaid(node) {
-    const scale = hpScale(this.wave);
+    const scale = hpScale(this.wave)*(CONFIG.campaign?.enemyHealth||1);
     let i = 0;
     for (const g of raidComp(this.wave)) {
       for (let k = 0; k < g.count; k++) {
@@ -329,8 +329,9 @@ export class WaveDirector {
     }
     this.raidClock += dt;
     while (this.raidQueue.length && this.raidQueue[0].t <= this.raidClock) {
-      const q = this.raidQueue.shift();
-      this._spawnRaw(q.type, q.node, q.scale);
+      const q = this.raidQueue[0];
+      if(!this._spawnRaw(q.type,q.node,q.scale))break;
+      this.raidQueue.shift();
       if (this.onSpawnPortal) this.onSpawnPortal(q.node);
     }
   }
@@ -346,8 +347,11 @@ export class WaveDirector {
     if (this.state === 'spawning' || this.state === 'combat') {
       this.clock += dt;
       while (this.queues.length && this.queues[0].t <= this.clock) {
-        const q = this.queues.shift();
-        this.enemies.spawn(q.type, q.portal, q.scale);
+        const q = this.queues[0];
+        // Pool pressure delays a spawn; it must not erase an owed enemy and
+        // make a crowded campaign wave pay out before it has been defended.
+        if(!this.enemies.spawn(q.type,q.portal,q.scale))break;
+        this.queues.shift();
         this.pendingSpawns--;
         if (this.onSpawnPortal) this.onSpawnPortal(q.portal);
       }

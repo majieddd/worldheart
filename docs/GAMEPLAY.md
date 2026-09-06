@@ -9,6 +9,24 @@ given as `file.js:LINE` so you can check any figure in a second, and you should,
 because a document that quietly goes stale is worse than no document. The last
 section lists the places where the code disagrees with itself.
 
+## 99 Planets campaign preview, 2026-09-06
+
+The active integration adds `?map=ninetynine&campaign=1`. This is a saved
+99-destination campaign; the plain mode URL is a single-planet sandbox.
+`js/run/planets.js` owns region, terrain, pressure, era and milestone definitions.
+Four terrain profiles and five pressure patterns produce twenty combinations;
+health scaling is bounded at 1.35x. `js/encounters.js` applies flyer, armor and
+swarm composition changes and three milestone attack patterns without mutating
+global enemy templates. Raider pressure uses a 0.85 interval multiplier.
+
+Weapons retain family and parts across extraction. Tiers 1-33 are ancient,
+34-66 technological, 67-99 empowered. Defeat/assault reload restores previously
+extracted gear; victory reload restores cleared-field salvage. `wh99Campaign`
+version 1 stores the account, expedition and idempotent assault receipts in one
+envelope. Title purchases require Apply upgrades to save and rebuild that same
+planet with the new account profile. See [M5B](qa/implementation/M5B.md) for exact
+implementation/evidence scope and the remaining release gates.
+
 ## Towers
 
 Six types, in `TOWER_TYPES` at `js/towers.js:16`.

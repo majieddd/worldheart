@@ -1,0 +1,814 @@
+{
+  "scope": "Fabricated boundary checkpoints and wave-clear fixtures",
+  "results": [
+    {
+      "index": 1,
+      "checks": [
+        {
+          "name": "The saved node reaches live config",
+          "ok": true,
+          "actual": {
+            "index": 1,
+            "terrain": "varied",
+            "seed": 28183,
+            "era": "ancient"
+          }
+        },
+        {
+          "name": "Infusion preserves identity and reaches the current era model",
+          "ok": true,
+          "actual": {
+            "item": {
+              "id": "starter-28183",
+              "seed": 28183,
+              "tier": 1,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "balanced",
+                "core": "tempered"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            "model": "commander:sword:ancient:tempered"
+          }
+        },
+        {
+          "name": "The milestone boss uses its authoritative red tell",
+          "ok": true,
+          "actual": {
+            "name": "Colossus",
+            "arc": 120,
+            "wind": 0.6,
+            "hp": 3600
+          }
+        },
+        {
+          "name": "The global Colossus template stays unchanged",
+          "ok": true
+        },
+        {
+          "name": "A guaranteed boss drop carries the real planet tier",
+          "ok": true,
+          "actual": {
+            "tier": 1,
+            "era": "ancient",
+            "family": "sword"
+          }
+        },
+        {
+          "name": "Era boundary matches the planned progression",
+          "ok": true
+        },
+        {
+          "name": "Normal extraction loads the next node with the exact inventory",
+          "ok": true
+        }
+      ],
+      "bossName": "Colossus",
+      "era": "ancient",
+      "inventory": {
+        "version": 1,
+        "items": [
+          {
+            "id": "starter-28183",
+            "seed": 28183,
+            "tier": 1,
+            "family": "sword",
+            "era": "ancient",
+            "rarity": "common",
+            "parts": {
+              "head": "balanced",
+              "grip": "balanced",
+              "core": "tempered"
+            },
+            "affixes": [],
+            "infusions": 0
+          },
+          {
+            "id": "weapon-expedition-1-1-1-1",
+            "seed": 120975822,
+            "tier": 1,
+            "family": "sword",
+            "era": "ancient",
+            "rarity": "rare",
+            "parts": {
+              "head": "long",
+              "grip": "balanced",
+              "core": "ember"
+            },
+            "affixes": [
+              "forceful"
+            ],
+            "infusions": 0
+          }
+        ],
+        "slots": [
+          "starter-28183",
+          null
+        ],
+        "active": 0,
+        "scrap": 0
+      },
+      "seed": 28183,
+      "terrain": "varied",
+      "faults": [],
+      "pass": true
+    },
+    {
+      "index": 33,
+      "checks": [
+        {
+          "name": "The saved node reaches live config",
+          "ok": true,
+          "actual": {
+            "index": 33,
+            "terrain": "ocean",
+            "seed": 3419106,
+            "era": "ancient"
+          }
+        },
+        {
+          "name": "Infusion preserves identity and reaches the current era model",
+          "ok": true,
+          "actual": {
+            "item": {
+              "id": "boundary-starter",
+              "seed": 42,
+              "tier": 33,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "weighted",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 1
+            },
+            "model": "commander:sword:ancient:frost"
+          }
+        },
+        {
+          "name": "The milestone boss uses its authoritative red tell",
+          "ok": true,
+          "actual": {
+            "name": "Last Bronze King",
+            "arc": 155,
+            "wind": 0.9,
+            "hp": 3600
+          }
+        },
+        {
+          "name": "The global Colossus template stays unchanged",
+          "ok": true
+        },
+        {
+          "name": "A guaranteed boss drop carries the real planet tier",
+          "ok": true,
+          "actual": {
+            "tier": 33,
+            "era": "ancient",
+            "family": "carbine"
+          }
+        },
+        {
+          "name": "Era boundary matches the planned progression",
+          "ok": true
+        },
+        {
+          "name": "Normal extraction loads the next node with the exact inventory",
+          "ok": true
+        }
+      ],
+      "bossName": "Last Bronze King",
+      "era": "ancient",
+      "inventory": {
+        "version": 1,
+        "items": [
+          {
+            "id": "boundary-starter",
+            "seed": 42,
+            "tier": 33,
+            "family": "sword",
+            "era": "ancient",
+            "rarity": "common",
+            "parts": {
+              "head": "long",
+              "grip": "weighted",
+              "core": "frost"
+            },
+            "affixes": [],
+            "infusions": 1
+          },
+          {
+            "id": "weapon-expedition-1-33-33-1",
+            "seed": 737377131,
+            "tier": 33,
+            "family": "carbine",
+            "era": "ancient",
+            "rarity": "uncommon",
+            "parts": {
+              "head": "balanced",
+              "grip": "quick",
+              "core": "frost"
+            },
+            "affixes": [
+              "forceful"
+            ],
+            "infusions": 0
+          }
+        ],
+        "slots": [
+          "boundary-starter",
+          null
+        ],
+        "active": 0,
+        "scrap": 0
+      },
+      "seed": 3419106,
+      "terrain": "ocean",
+      "faults": [],
+      "pass": true
+    },
+    {
+      "index": 34,
+      "checks": [
+        {
+          "name": "The saved node reaches live config",
+          "ok": true,
+          "actual": {
+            "index": 34,
+            "terrain": "varied",
+            "seed": 3476321,
+            "era": "technological"
+          }
+        },
+        {
+          "name": "Infusion preserves identity and reaches the current era model",
+          "ok": true,
+          "actual": {
+            "item": {
+              "id": "boundary-starter",
+              "seed": 42,
+              "tier": 34,
+              "family": "sword",
+              "era": "technological",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "weighted",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 1
+            },
+            "model": "commander:sword:technological:frost"
+          }
+        },
+        {
+          "name": "The milestone boss uses its authoritative red tell",
+          "ok": true,
+          "actual": {
+            "name": "Colossus",
+            "arc": 120,
+            "wind": 0.6,
+            "hp": 3600
+          }
+        },
+        {
+          "name": "The global Colossus template stays unchanged",
+          "ok": true
+        },
+        {
+          "name": "A guaranteed boss drop carries the real planet tier",
+          "ok": true,
+          "actual": {
+            "tier": 34,
+            "era": "technological",
+            "family": "sword"
+          }
+        },
+        {
+          "name": "Era boundary matches the planned progression",
+          "ok": true
+        },
+        {
+          "name": "Normal extraction loads the next node with the exact inventory",
+          "ok": true
+        }
+      ],
+      "bossName": "Colossus",
+      "era": "technological",
+      "inventory": {
+        "version": 1,
+        "items": [
+          {
+            "id": "boundary-starter",
+            "seed": 42,
+            "tier": 34,
+            "family": "sword",
+            "era": "technological",
+            "rarity": "common",
+            "parts": {
+              "head": "long",
+              "grip": "weighted",
+              "core": "frost"
+            },
+            "affixes": [],
+            "infusions": 1
+          },
+          {
+            "id": "weapon-expedition-1-34-34-1",
+            "seed": 178161409,
+            "tier": 34,
+            "family": "sword",
+            "era": "technological",
+            "rarity": "common",
+            "parts": {
+              "head": "keen",
+              "grip": "balanced",
+              "core": "ember"
+            },
+            "affixes": [],
+            "infusions": 0
+          }
+        ],
+        "slots": [
+          "boundary-starter",
+          null
+        ],
+        "active": 0,
+        "scrap": 0
+      },
+      "seed": 3476321,
+      "terrain": "varied",
+      "faults": [],
+      "pass": true
+    },
+    {
+      "index": 66,
+      "checks": [
+        {
+          "name": "The saved node reaches live config",
+          "ok": true,
+          "actual": {
+            "index": 66,
+            "terrain": "varied",
+            "seed": 6867244,
+            "era": "technological"
+          }
+        },
+        {
+          "name": "Infusion preserves identity and reaches the current era model",
+          "ok": true,
+          "actual": {
+            "item": {
+              "id": "boundary-starter",
+              "seed": 42,
+              "tier": 66,
+              "family": "sword",
+              "era": "technological",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "weighted",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 1
+            },
+            "model": "commander:sword:technological:frost"
+          }
+        },
+        {
+          "name": "The milestone boss uses its authoritative red tell",
+          "ok": true,
+          "actual": {
+            "name": "The Silent Machine",
+            "arc": 120,
+            "wind": 1,
+            "hp": 4248
+          }
+        },
+        {
+          "name": "The global Colossus template stays unchanged",
+          "ok": true
+        },
+        {
+          "name": "A guaranteed boss drop carries the real planet tier",
+          "ok": true,
+          "actual": {
+            "tier": 66,
+            "era": "technological",
+            "family": "spear"
+          }
+        },
+        {
+          "name": "Era boundary matches the planned progression",
+          "ok": true
+        },
+        {
+          "name": "Normal extraction loads the next node with the exact inventory",
+          "ok": true
+        }
+      ],
+      "bossName": "The Silent Machine",
+      "era": "technological",
+      "inventory": {
+        "version": 1,
+        "items": [
+          {
+            "id": "boundary-starter",
+            "seed": 42,
+            "tier": 66,
+            "family": "sword",
+            "era": "technological",
+            "rarity": "common",
+            "parts": {
+              "head": "long",
+              "grip": "weighted",
+              "core": "frost"
+            },
+            "affixes": [],
+            "infusions": 1
+          },
+          {
+            "id": "weapon-expedition-1-66-66-1",
+            "seed": 4178956319,
+            "tier": 66,
+            "family": "spear",
+            "era": "technological",
+            "rarity": "common",
+            "parts": {
+              "head": "balanced",
+              "grip": "weighted",
+              "core": "frost"
+            },
+            "affixes": [],
+            "infusions": 0
+          }
+        ],
+        "slots": [
+          "boundary-starter",
+          null
+        ],
+        "active": 0,
+        "scrap": 0
+      },
+      "seed": 6867244,
+      "terrain": "varied",
+      "faults": [],
+      "pass": true
+    },
+    {
+      "index": 67,
+      "checks": [
+        {
+          "name": "The saved node reaches live config",
+          "ok": true,
+          "actual": {
+            "index": 67,
+            "terrain": "canyon",
+            "seed": 6948216,
+            "era": "empowered"
+          }
+        },
+        {
+          "name": "Infusion preserves identity and reaches the current era model",
+          "ok": true,
+          "actual": {
+            "item": {
+              "id": "boundary-starter",
+              "seed": 42,
+              "tier": 67,
+              "family": "sword",
+              "era": "empowered",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "weighted",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 1
+            },
+            "model": "commander:sword:empowered:frost"
+          }
+        },
+        {
+          "name": "The milestone boss uses its authoritative red tell",
+          "ok": true,
+          "actual": {
+            "name": "Colossus",
+            "arc": 120,
+            "wind": 0.6,
+            "hp": 3600
+          }
+        },
+        {
+          "name": "The global Colossus template stays unchanged",
+          "ok": true
+        },
+        {
+          "name": "A guaranteed boss drop carries the real planet tier",
+          "ok": true,
+          "actual": {
+            "tier": 67,
+            "era": "empowered",
+            "family": "lobber"
+          }
+        },
+        {
+          "name": "Era boundary matches the planned progression",
+          "ok": true
+        },
+        {
+          "name": "Normal extraction loads the next node with the exact inventory",
+          "ok": true
+        }
+      ],
+      "bossName": "Colossus",
+      "era": "empowered",
+      "inventory": {
+        "version": 1,
+        "items": [
+          {
+            "id": "boundary-starter",
+            "seed": 42,
+            "tier": 67,
+            "family": "sword",
+            "era": "empowered",
+            "rarity": "common",
+            "parts": {
+              "head": "long",
+              "grip": "weighted",
+              "core": "frost"
+            },
+            "affixes": [],
+            "infusions": 1
+          },
+          {
+            "id": "weapon-expedition-1-67-67-1",
+            "seed": 3942707795,
+            "tier": 67,
+            "family": "lobber",
+            "era": "empowered",
+            "rarity": "common",
+            "parts": {
+              "head": "balanced",
+              "grip": "steady",
+              "core": "ember"
+            },
+            "affixes": [],
+            "infusions": 0
+          }
+        ],
+        "slots": [
+          "boundary-starter",
+          null
+        ],
+        "active": 0,
+        "scrap": 0
+      },
+      "seed": 6948216,
+      "terrain": "canyon",
+      "faults": [],
+      "pass": true
+    },
+    {
+      "index": 98,
+      "checks": [
+        {
+          "name": "The saved node reaches live config",
+          "ok": true,
+          "actual": {
+            "index": 98,
+            "terrain": "ocean",
+            "seed": 10242329,
+            "era": "empowered"
+          }
+        },
+        {
+          "name": "Infusion preserves identity and reaches the current era model",
+          "ok": true,
+          "actual": {
+            "item": {
+              "id": "boundary-starter",
+              "seed": 42,
+              "tier": 98,
+              "family": "sword",
+              "era": "empowered",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "weighted",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 1
+            },
+            "model": "commander:sword:empowered:frost"
+          }
+        },
+        {
+          "name": "The milestone boss uses its authoritative red tell",
+          "ok": true,
+          "actual": {
+            "name": "Colossus",
+            "arc": 120,
+            "wind": 0.6,
+            "hp": 3600
+          }
+        },
+        {
+          "name": "The global Colossus template stays unchanged",
+          "ok": true
+        },
+        {
+          "name": "A guaranteed boss drop carries the real planet tier",
+          "ok": true,
+          "actual": {
+            "tier": 98,
+            "era": "empowered",
+            "family": "carbine"
+          }
+        },
+        {
+          "name": "Era boundary matches the planned progression",
+          "ok": true
+        },
+        {
+          "name": "Normal extraction loads the next node with the exact inventory",
+          "ok": true
+        }
+      ],
+      "bossName": "Colossus",
+      "era": "empowered",
+      "inventory": {
+        "version": 1,
+        "items": [
+          {
+            "id": "boundary-starter",
+            "seed": 42,
+            "tier": 98,
+            "family": "sword",
+            "era": "empowered",
+            "rarity": "common",
+            "parts": {
+              "head": "long",
+              "grip": "weighted",
+              "core": "frost"
+            },
+            "affixes": [],
+            "infusions": 1
+          },
+          {
+            "id": "weapon-expedition-1-98-98-1",
+            "seed": 3113040238,
+            "tier": 98,
+            "family": "carbine",
+            "era": "empowered",
+            "rarity": "common",
+            "parts": {
+              "head": "long",
+              "grip": "weighted",
+              "core": "tempered"
+            },
+            "affixes": [],
+            "infusions": 0
+          }
+        ],
+        "slots": [
+          "boundary-starter",
+          null
+        ],
+        "active": 0,
+        "scrap": 0
+      },
+      "seed": 10242329,
+      "terrain": "ocean",
+      "faults": [],
+      "pass": true
+    },
+    {
+      "index": 99,
+      "checks": [
+        {
+          "name": "The saved node reaches live config",
+          "ok": true,
+          "actual": {
+            "index": 99,
+            "terrain": "varied",
+            "seed": 10291625,
+            "era": "empowered"
+          }
+        },
+        {
+          "name": "Infusion preserves identity and reaches the current era model",
+          "ok": true,
+          "actual": {
+            "item": {
+              "id": "boundary-starter",
+              "seed": 42,
+              "tier": 99,
+              "family": "sword",
+              "era": "empowered",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "weighted",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 1
+            },
+            "model": "commander:sword:empowered:frost"
+          }
+        },
+        {
+          "name": "The milestone boss uses its authoritative red tell",
+          "ok": true,
+          "actual": {
+            "name": "The Returning Crown",
+            "arc": 155,
+            "wind": 0.9,
+            "hp": 3600
+          }
+        },
+        {
+          "name": "The global Colossus template stays unchanged",
+          "ok": true
+        },
+        {
+          "name": "A guaranteed boss drop carries the real planet tier",
+          "ok": true,
+          "actual": {
+            "tier": 99,
+            "era": "empowered",
+            "family": "lobber"
+          }
+        },
+        {
+          "name": "Era boundary matches the planned progression",
+          "ok": true
+        },
+        {
+          "name": "Planet 99 ends the campaign without creating planet 100",
+          "ok": true
+        }
+      ],
+      "bossName": "The Returning Crown",
+      "era": "empowered",
+      "inventory": {
+        "version": 1,
+        "items": [
+          {
+            "id": "boundary-starter",
+            "seed": 42,
+            "tier": 99,
+            "family": "sword",
+            "era": "empowered",
+            "rarity": "common",
+            "parts": {
+              "head": "long",
+              "grip": "weighted",
+              "core": "frost"
+            },
+            "affixes": [],
+            "infusions": 1
+          },
+          {
+            "id": "weapon-expedition-1-99-99-1",
+            "seed": 3991670544,
+            "tier": 99,
+            "family": "lobber",
+            "era": "empowered",
+            "rarity": "common",
+            "parts": {
+              "head": "balanced",
+              "grip": "steady",
+              "core": "frost"
+            },
+            "affixes": [],
+            "infusions": 0
+          }
+        ],
+        "slots": [
+          "boundary-starter",
+          null
+        ],
+        "active": 0,
+        "scrap": 0
+      },
+      "seed": 10291625,
+      "terrain": "varied",
+      "faults": [],
+      "pass": true
+    }
+  ]
+}

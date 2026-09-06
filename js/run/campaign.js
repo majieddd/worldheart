@@ -51,6 +51,12 @@ export function startExpedition(s,{seed,limit=2}) {
   s.expedition={id:`expedition-${s.sequence}`,seed,limit,planet:1,completed:0,status:'ready',attempt:0,
     commander:null,banked:null,assault:null,receipts:[]};return true;
 }
+export function extendExpedition(s,limit) {
+  const e=s.expedition;if(!e||!integer(limit,e.limit+1,99))return false;
+  e.limit=limit;
+  if(e.status==='complete'){e.status='ready';e.planet=e.completed+1;}
+  return true;
+}
 export function beginAssault(s,{commander,inventory,effectiveSeed}) {
   const e=s.expedition;if(!e||!['ready','assault','defeat'].includes(e.status))return false;
   if(e.status==='assault')return e.assault.id;

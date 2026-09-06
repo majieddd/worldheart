@@ -18,8 +18,9 @@ import { LootField } from '../loot-field.js';
 import { WeaponPanel } from '../ui-weapons.js';
 import { ThreatGuides } from '../threat-guides.js';
 import { campaignStore } from './campaign-store.js';
-import { beginAssault, awardWave, resolveAssault, updateSalvage, extractPlanet } from '../run/campaign.js';
+import { beginAssault, awardWave, resolveAssault, updateSalvage, extractPlanet, startExpedition } from '../run/campaign.js';
 import { CampaignPanel } from '../ui-campaign.js';
+import { planetDefinition } from '../run/planets.js';
 
 export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, allies, possession, caches }) {
   // What this player has permanently unlocked. Read here in the shell and
@@ -455,8 +456,16 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   }
   const campaignApi=campaign ? {
     state:()=>campaign.snapshot().expedition,name:CONFIG.campaign.name,brief:CONFIG.campaign.brief,
+    destination:index=>planetDefinition(index,expedition.seed),
+    arsenal:()=>campaign.snapshot().expedition.banked?.items.map(item=>({name:weaponName(item),tier:item.tier,rarity:item.rarity,core:item.parts.core})) || [],
     showReceipt:showCampaignReceipt,
     reload(){const url=new URL(location.href);url.searchParams.set('map','ninetynine');url.searchParams.set('campaign','1');url.searchParams.delete('seed');url.searchParams.delete('terrain');location.href=url.href;},
+    restart(){
+      if(campaign.expeditionStatus()!=='complete'||!campaign.status().saved)return false;
+      const seed=crypto.getRandomValues(new Uint32Array(1))[0]||12345;
+      const result=campaign.commit(s=>startExpedition(s,{seed,limit:CONFIG.campaign.limit}));
+      if(result.ok&&result.saved)this.reload();return result.ok;
+    },
     extract(){
       if(busyWeapon()||inventory.pending){ui.toast('Finish the current attack before extracting.','info');return false;}
       persistSalvage();if(!campaign.status().saved)return false;

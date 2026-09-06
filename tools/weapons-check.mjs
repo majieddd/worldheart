@@ -88,6 +88,13 @@ try {
     W.enemies.damage(boss,boss.hpMax*3,{armorPierce:99});
     check('A repeated corpse hit cannot duplicate the boss drop',m.inventory.drops.length===beforeDrop+1);
     m.weaponPanel.open();check('Inventory pauses battle and suspends possessed input',W.game.paused&&W.possession.suspended&&document.getElementById('weapon-dialog').open);
+    const longitude=W.rig.lon,latitude=W.rig.lat;
+    dispatchEvent(new KeyboardEvent('keydown',{code:'KeyW'}));W.rig.update(.2);dispatchEvent(new KeyboardEvent('keyup',{code:'KeyW'}));
+    check('Inventory owns movement keys on the board too',Math.abs(W.rig.lon-longitude)<1e-8&&Math.abs(W.rig.lat-latitude)<1e-8);
+    const originalSell=W.game.sellSelected,selected=W.game.selectedTower;let sold=0;W.game.selectedTower={};W.game.sellSelected=()=>sold++;
+    dispatchEvent(new KeyboardEvent('keydown',{code:'KeyX'}));dispatchEvent(new KeyboardEvent('keydown',{code:'KeyP'}));
+    check('An open inventory cannot sell a tower or unpause through board hotkeys',sold===0&&W.game.paused);
+    W.game.sellSelected=originalSell;W.game.selectedTower=selected;
     return checks;
   });
   await page.waitForFunction(()=>getComputedStyle(document.getElementById('title-overlay')).opacity==='0',{},{polling:50});

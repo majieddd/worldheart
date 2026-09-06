@@ -4,6 +4,7 @@ import { clamp, SIM_RANDOM } from './noise.js';
 import { R, terrainHeight, surfaceTravel, canFlyAt } from './world.js';
 import { MAX_SLOW, swimOffset } from './traversal.js';
 import { enemyStrike, insideStrike } from './attacks.js';
+import { planetBoss } from './encounters.js';
 import { Skeleton, slab, box, wedge, cone, merge, shift, spin, easeOut, hump, keyed } from './rig.js';
 
 // Evolution tier, set by the 99 Planets shell and 0 in every other mode.
@@ -1104,7 +1105,7 @@ export class EnemyManager {
 
   spawn(typeKey, portalNode, hpScale = 1) {
     if (this.active.length >= CONFIG.limits.maxEnemies) return null;
-    const type = ENEMY_TYPES[typeKey];
+    const type = planetBoss(ENEMY_TYPES[typeKey],CONFIG.campaign?.boss);
     // A mode may pull the spawn point inward. 99 Planets does: its breach
     // sites are authored across the FINAL cap, so at wave 1 an unremapped
     // spawn appears ~125 units outside a ~12 unit circle and the walk in is
@@ -1650,7 +1651,7 @@ export class EnemyManager {
         1 + flash * 2 + slow + wg * 1.2 + sh * 0.5,
       );
       _colBody.setRGB(1 + flash * 5 + slow * 0.1, 1 + flash * 5 + slow * 0.9, 1 + flash * 5 + slow * 2.2);
-      _colPlate.copy(_plateTint);
+      if(type.plateTint!==undefined)_colPlate.setHex(type.plateTint);else _colPlate.copy(_plateTint);
       if (sh > 0) _colPlate.lerp(_shieldCol, sh * 0.7);
       _colPlate.r *= 1 + flash * 5 + slow * 0.1;
       _colPlate.g *= 1 + flash * 5 + slow * 0.9;

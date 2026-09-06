@@ -1,0 +1,131 @@
+{
+  "scope": "Injected wave-clear and persistence fixtures, not natural campaign completion",
+  "checks": [
+    {
+      "name": "Fresh saved expedition starts on planet one",
+      "ok": true,
+      "actual": {
+        "id": "expedition-1",
+        "seed": 12345,
+        "limit": 3,
+        "planet": 1,
+        "completed": 0,
+        "status": "ready",
+        "attempt": 0,
+        "commander": null,
+        "banked": null,
+        "assault": null,
+        "receipts": []
+      }
+    },
+    {
+      "name": "Begin is visible in the first 720p viewport",
+      "ok": true
+    },
+    {
+      "name": "Mid-assault reload restores the checkpoint and keeps its reward identity",
+      "ok": true
+    },
+    {
+      "name": "A boss weapon reaches the assault inventory",
+      "ok": true
+    },
+    {
+      "name": "Victory creates saved salvage without advancing the planet",
+      "ok": true
+    },
+    {
+      "name": "Victory reload restores collected weapons and the terminal core",
+      "ok": true
+    },
+    {
+      "name": "Victory reload pays no duplicate wave coins",
+      "ok": true
+    },
+    {
+      "name": "A failed transition write keeps the field open and offers exact retry",
+      "ok": true
+    },
+    {
+      "name": "Extraction loads a real second terrain with the banked inventory",
+      "ok": true,
+      "actual": {
+        "planet": 2,
+        "terrain": "canyon",
+        "seed": 36102,
+        "items": 2
+      }
+    },
+    {
+      "name": "Defeat retains prior extraction and excludes temporary loot",
+      "ok": true
+    },
+    {
+      "name": "Retry starts the same planet with previously banked items",
+      "ok": true
+    },
+    {
+      "name": "The third terrain pilot equips all three era fixtures through live combat stats",
+      "ok": true,
+      "actual": {
+        "terrain": "alpine",
+        "records": [
+          {
+            "tier": 1,
+            "era": "ancient",
+            "model": "commander:sword:ancient:frost",
+            "damage": 40.48,
+            "ok": true
+          },
+          {
+            "tier": 34,
+            "era": "technological",
+            "model": "commander:sword:technological:frost",
+            "damage": 59.18176,
+            "ok": true
+          },
+          {
+            "tier": 67,
+            "era": "empowered",
+            "model": "commander:sword:empowered:frost",
+            "damage": 77.88351999999999,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "The pilot ends distinctly after its last planet",
+      "ok": true
+    },
+    {
+      "name": "Final receipt has no horizontal overflow",
+      "ok": true
+    },
+    {
+      "name": "Export downloads the completed checkpoint",
+      "ok": true
+    },
+    {
+      "name": "A corrupt checkpoint remains intact and exposes recovery controls",
+      "ok": true
+    },
+    {
+      "name": "Import validates and restores the exported expedition",
+      "ok": true
+    },
+    {
+      "name": "The final receipt exposes its banked arsenal",
+      "ok": true
+    },
+    {
+      "name": "Canceling a new expedition preserves the completed checkpoint",
+      "ok": true
+    },
+    {
+      "name": "An explicitly confirmed new expedition keeps account coins and resets the route",
+      "ok": true
+    }
+  ],
+  "faults": []
+}

@@ -3,29 +3,52 @@
 // no gold/lives/enemies/waves/powers are injected. This is not a blind human run.
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+import { validSave } from '../js/run/campaign.js';
 const require=createRequire(process.env.WH_NODE_MODULES?resolve(process.env.WH_NODE_MODULES,'package.json'):import.meta.url);
 const {chromium}=require('playwright');
 const seed=process.argv[2]||'12345',rootOut=resolve(process.argv[3]||`artifacts/self-play-${seed}`);let out=rootOut;mkdirSync(out,{recursive:true});
 const expeditionOnly=process.argv.includes('--expedition');
 const useWeapons=process.argv.includes('--weapons');
 const campaign=process.argv.includes('--campaign');
+const useTalents=process.argv.includes('--talents');
+const campaignCount=Number(process.argv.find(x=>x.startsWith('--planets='))?.split('=')[1])||2;
+const checkpointPath=process.argv.find(x=>x.startsWith('--checkpoint='))?.slice('--checkpoint='.length);
+let sourceCheckpoint=null;
+if(checkpointPath){const parsed=JSON.parse(readFileSync(resolve(checkpointPath),'utf8'));sourceCheckpoint=parsed.checkpoint||parsed;if(!campaign||!validSave(sourceCheckpoint))throw Error('Resume requires --campaign and a valid exported checkpoint');}
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:720}});const faults=[];
 page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
 await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(window.__qaFramesEnabled)fn(t);});});
 await page.addInitScript(value=>{window.__qaUseWeapons=value;},useWeapons);
+if(sourceCheckpoint)await page.addInitScript(value=>{if(!localStorage.getItem('wh99Campaign'))localStorage.setItem('wh99Campaign',JSON.stringify(value));},sourceCheckpoint);
 try{
   await page.goto(`http://127.0.0.1:8139/?map=ninetynine&seed=${seed}${campaign?'&campaign=1':''}`,{waitUntil:'domcontentloaded',timeout:120000});
   const campaignResults=[];
-  for(let planet=1;planet<=(campaign?2:1);planet++){
+  await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:180000});
+  const startPlanet=campaign?await page.evaluate(()=>WH.mode99.campaign.state().planet):1;
+  const endPlanet=campaign?Math.min(startPlanet+campaignCount-1,await page.evaluate(()=>WH.mode99.campaign.state().limit)):1;
+  for(let planet=startPlanet;planet<=endPlanet;planet++){
   if(campaign){out=resolve(rootOut,`planet-${planet}`);mkdirSync(out,{recursive:true});}
   await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:120000});
+  let purchases=[];
+  if(useTalents){
+    purchases=await page.evaluate(()=>{
+      document.getElementById('btn-talents').click();const result=[];
+      for(const name of ['Mortar','Counting House','Arc Spire','Helios Lance','Twinfang','Veterancy','Forward Scout','Quartermaster','Cryo Bloom']){
+        const button=[...document.querySelectorAll('.talent-node.ready')].find(b=>b.querySelector('.tn-name').textContent===name);
+        if(button){const before=Number(document.getElementById('talent-coins').textContent);button.click();result.push({name,before,after:Number(document.getElementById('talent-coins').textContent)});}
+      }return result;
+    });
+    if(purchases.length){await Promise.all([page.waitForEvent('load',{timeout:180000}),page.locator('#btn-talents-close').click()]);await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:180000});}
+    else await page.locator('#btn-talents-close').click();
+  }
   await page.evaluate(async()=>{
     window.__qaFramesEnabled=false;
     const THREE=await import('/lib/three.module.min.js');
     const {surfacePoint}=await import('/js/world.js');
     const {tierCost}=await import('/js/towers.js');
+    const {weaponStats}=await import('/js/run/weapons.js');
     const W=WH,g=W.game,run=W.mode99.run;window.__qaTrace=[];
     document.getElementById('btn-begin').click();g.paused=false;
     const centre=W.nav.fieldCenter.clone(),up=new THREE.Vector3(0,1,0);if(Math.abs(up.dot(centre))>.9)up.set(1,0,0);
@@ -34,9 +57,11 @@ try{
     function build(index){
       const type=g.hand[index],def=W.TOWER_TYPES[type];if(g.gold<g._cost(def))return false;
       const paths=W.nav.previewPaths();const samples=[];
-      for(const flat of paths)for(let k=0;k<flat.length;k+=9){const p=new THREE.Vector3(flat[k],flat[k+1],flat[k+2]);if(p.distanceTo(W.heartPos)<20)samples.push(p);}
+      for(const flat of paths)for(let k=0;k<flat.length;k+=9){const p=new THREE.Vector3(flat[k],flat[k+1],flat[k+2]);if(p.distanceTo(W.heartPos)<38)samples.push(p);}
       const options=[];
-      for(const radius of [4.1,5.6,7.2,9.0,11.0])for(let i=0;i<36;i++){
+      // Shorelines need positions beyond the opening foothold. These remain
+      // normal validated placements inside the player's purchased territory.
+      for(const radius of [4.1,5.6,7.2,9.0,11.0,14,18,22,26])for(let i=0;i<36;i++){
         const a=i*Math.PI/18,dir=centre.clone().addScaledVector(side,Math.cos(a)*radius/240).addScaledVector(forward,Math.sin(a)*radius/240).normalize();
         const pos=surfacePoint(dir,new THREE.Vector3());let score=0;
         for(const p of samples){const d=pos.distanceTo(p);if(d<def.tiers[0].range)score+=(1-d/def.tiers[0].range)*(1+Math.max(0,12-p.distanceTo(W.heartPos))*.08);}
@@ -59,9 +84,14 @@ try{
       const commander=W.allies.active.find(a=>a.type.commander);
       if(window.__qaUseWeapons&&commander&&W.mode99.weapons){
         const mode=W.mode99;
-        for(const item of mode.weapons.nearby())if(mode.weapons.pickup(item.id)){
-          trace('weapon-picked-up',{id:item.id,family:item.family,rarity:item.rarity});
-          if(mode.weaponPanel.rules.compatible(item.family)&&mode.weapons.request({kind:'equip',id:item.id,slot:0}))trace('weapon-equipped',{id:item.id,family:item.family});
+        const rating=item=>{const stats=weaponStats(item,commander.typeKey);return stats?stats.dmg/stats.cd:0;};
+        for(const item of mode.weapons.nearby()){
+          const bag=mode.inventory.items.filter(x=>!mode.inventory.slots.includes(x.id)).sort((a,b)=>rating(a)-rating(b));
+          const replace=bag.length>=12&&rating(item)>rating(bag[0])?bag[0].id:null;
+          if(bag.length>=12&&!replace)continue;
+          if(!mode.weapons.pickup(item.id,replace))continue;
+          trace('weapon-picked-up',{id:item.id,family:item.family,rarity:item.rarity,replace});
+          if(mode.weaponPanel.rules.compatible(item.family)&&(!mode.inventory.current||rating(item)>rating(mode.inventory.current))&&mode.weapons.request({kind:'equip',id:item.id,slot:0}))trace('weapon-equipped',{id:item.id,family:item.family});
         }
         if(!weaponAttempted&&!retreating&&window.__qaTripState==='done'&&run.getWave()<=7&&commander.hp>commander.hpMax*.85&&W.enemies.active.filter(e=>!e.dead).length<12){
           const candidates=[...mode.loot.entries.values()].filter(e=>mode.weaponPanel.rules.compatible(e.item.family)).map(e=>({entry:e,path:W.nav.findPath(commander.dir,e.position.clone().normalize())})).filter(x=>x.path.length&&x.path.cost<30).sort((a,b)=>a.path.cost-b.path.cost);
@@ -186,16 +216,21 @@ try{
     if(expeditionOnly&&trip==='done')break;
     if(result.state==='defeat'||result.phase==='victory')break;
   }
+  if(result.state==='defeat'||result.phase==='victory')await page.waitForFunction(()=>getComputedStyle(document.getElementById('end-overlay')).opacity==='1',{},{polling:50});
   await page.screenshot({path:resolve(out,'terminal.png')});
-  result.trace=await page.evaluate(()=>__qaTrace);result.faults=faults;result.scope='Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile';
+  result.talentPurchases=purchases;
+  result.trace=await page.evaluate(()=>__qaTrace);result.faults=[...faults];result.policy='Expanded shore defense positions, DPS-based compatible weapon replacement, eight-tower economy';result.scope=`Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; ${sourceCheckpoint?'resumed exported checkpoint':planet===1?'fresh profile':'continued earned campaign profile'}`;
   if(useWeapons){result.inventory=await page.evaluate(()=>WH.mode99.inventory.snapshot());result.weaponLoop=result.trace.some(a=>a.action==='weapon-picked-up')&&result.trace.some(a=>a.action==='weapon-equipped');}
   if(expeditionOnly)result.scope='Unforced instrumented crystal out-and-back; not a full planet';
   writeFileSync(resolve(out,'run.json'),JSON.stringify(result,null,2)+'\n');console.log('TERMINAL '+JSON.stringify({...result,trace:result.trace.length}));
-  if((expeditionOnly?lastTrip!=='done':result.phase!=='victory')||faults.length||(useWeapons&&!result.weaponLoop)){process.exitCode=1;break;}
+  if((expeditionOnly?lastTrip!=='done':result.phase!=='victory')||faults.length){
+    if(campaign)writeFileSync(resolve(rootOut,'checkpoint.json'),await page.evaluate(async()=>(await import('/js/modes/campaign-store.js')).campaignStore.export()));
+    process.exitCode=1;break;
+  }
   if(campaign){
     const checkpoint=await page.evaluate(()=>WH.mode99.campaign.state());
     campaignResults.push({planet,result:{...result,trace:result.trace.length},checkpoint});
-    if(planet<2){
+    if(planet<checkpoint.limit){
       await Promise.all([page.waitForEvent('load',{timeout:180000}),page.locator('#btn-extract').click()]);
       await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:180000});
       const arrived=await page.evaluate(()=>({planet:WH.mode99.campaign.state().planet,inventory:WH.mode99.inventory.snapshot(),terrain:WH.CONFIG.terrainKey}));
@@ -205,10 +240,12 @@ try{
     }else{
       await page.locator('#btn-extract').click();
       const final=await page.evaluate(()=>WH.mode99.campaign.state());
-      if(final.status!=='complete')throw Error('Pilot did not reach its real final receipt');
-      writeFileSync(resolve(rootOut,'campaign.json'),JSON.stringify({scope:'Two unforced planets linked by normal saved extraction; no wave/resource/enemy injection',planets:campaignResults,final,faults},null,2)+'\n');
+      if(final.status!=='complete')throw Error('Campaign did not reach its real final receipt');
       await page.screenshot({path:resolve(rootOut,'campaign-complete.png')});
     }
+    const final=await page.evaluate(()=>WH.mode99.campaign.state());
+    writeFileSync(resolve(rootOut,'campaign.json'),JSON.stringify({scope:`Unforced planets ${startPlanet} through ${planet}, linked by normal saved extraction; no wave/resource/enemy injection. A ready checkpoint means remaining planets are unplayed.`,sourceCheckpoint:checkpointPath||null,planets:campaignResults,final,faults},null,2)+'\n');
+    writeFileSync(resolve(rootOut,'checkpoint.json'),await page.evaluate(async()=>(await import('/js/modes/campaign-store.js')).campaignStore.export()));
   }
   }
 }catch(e){console.error(e);await page.screenshot({path:resolve(out,'error.png')});process.exitCode=1;}finally{await browser.close();}

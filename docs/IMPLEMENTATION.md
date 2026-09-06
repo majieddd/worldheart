@@ -14,6 +14,7 @@ Tracker: https://github.com/majieddd/worldheart/issues/1.
 | M3 terrain strategy | implemented, automated verification passed | terrain, nav, traversal, placement, ranges | [178 tests, four profiles, 60 route arrivals, five camera harnesses and unforced boss victory](qa/implementation/M3.md); visual/feel and startup review open | unmeasured |
 | M4 weapons and choreography | implemented, automated verification passed | inventory, loot, attacks, models, HUD | [187 tests, 27 browser checks, unforced loot/equip/boss victory](qa/implementation/M4.md); extraction follows in M5, visual review open | unmeasured |
 | M5A | implemented, verification passed | campaign rules, storage, transition UI | [Two unforced linked planets, 200 tests and 16 recovery fixtures](qa/implementation/M5A.md); remaining M5 content/rename active | unmeasured |
+| M5B | implemented; release verification active | 99 destinations, guardians, briefing, inventory UI and title talent apply | [Three unforced planets, all 99 routes and live boundary/recovery fixtures](qa/implementation/M5B.md); ocean losses retained, full balance/performance/rename release open | unmeasured |
 | M6 | future | See blueprint | Stable campaign dependency remains open | unmeasured |
 
 Audit correction: Quartermaster already works through
