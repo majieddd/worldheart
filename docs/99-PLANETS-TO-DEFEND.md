@@ -61,6 +61,12 @@ Outputs: presentation camera pose, context-specific hints and selection focus; n
 Edge cases: paused zoom, interrupted portal flight, extreme peak, canopy, 180-degree turn, pointer-lock refusal, overlapping unit/tower, UI focus.
 Failure: retain a valid collision-safe pose and restore input ownership. Add a distinct Return to heart action; R remains explicitly labelled Reset rotation. Prefer a breach ping over forced flight during active targeting. Provide separate bob, shake and automatic-focus controls.
 
+The 2026-09-06 follow-up requires clickable tower controls anchored to the
+selected, hovered or looked-at tower, including first-person possession.
+Checkpoint status cannot cover Upgrade/Sell. Keep a clear keyboard interaction,
+pointer-lock handoff and range validation. Ordered units should display their
+actual navigation route, with stale lines removed on arrival, death or handoff.
+
 ### Combat choreography, models and feedback
 
 Purpose: make moving, attacking and landing hits readable, dynamic and satisfying.
@@ -72,6 +78,16 @@ Failure: cancel invalid attacks and remove their tell; never leave invisible dam
 
 Fix the current block-like Bulwark arm by reviewing attachment axes, elbow/wrist proportions and silhouette through the full arc. Inspect winding, normals and near-plane behavior before altering geometry. Extend the existing shared strike-frame rig rather than layering a second unsynchronized animation clock. Measure foot sliding, aim tracking, return-to-idle, cape/limb motion and hit readability before adding secondary motion.
 
+The latest owner comparison favors a fuller blocky Minecraft-inspired sword
+arm. Third-person swings need continuous, readable poses through movement and
+attack transitions. These refinements retain the light faceted aesthetic.
+
+Terrain knockback follows the same graph edges and reachability as movement.
+Sweep impulses in steps no larger than 0.12m, keep valid partial displacement,
+and stop at an illegal edge. Carry direction, tangent heading, tracked node
+and height together; flyers retain their air route and ceiling constraints.
+An impulse cannot remove living enemy debt or change damage release timing.
+
 ### Terrain traversal and flight
 
 Purpose: create large-scale spectacle and strategic route tradeoffs.
@@ -82,6 +98,10 @@ Edge cases: shores, thin ridges, steep drops, canyon exit, flying dive under an 
 Failure: choose another valid route or clearly reject the destination. Worldgen must guarantee heart/breach connectivity and accessible crystals; never strand essential content behind impossible terrain.
 
 Use directed uphill edge cost in flow-field Dijkstra, since climbing and descending differ. Commander movement and AI use the same cost function. Swimmable ground actors enter a swim state at sufficient water depth; ground enemies and Wardens initially use the same rule, with explicit per-species opt-outs later. No drowning or oxygen meter in the first slice. Flying creatures clear ordinary terrain, but route around peaks exceeding their maximum radial flight envelope; they must not ride an unlimited terrain-relative altitude over every mountain.
+
+Make incidental commander contacts forgiving while preserving genuine terrain
+and tower barriers. Compare identical movement inputs before/after; faster
+movement alone is not evidence that collision remains valid.
 
 ### Raised placement, climate and spherical ranges
 
@@ -116,6 +136,10 @@ Failure: leave a full-inventory drop visible with a replace/salvage action; neve
 
 Start with four families: sword, spear, projectile carbine and lobber. Support both melee and ranged loadouts without making every commander use every animation immediately: define compatibility and show it. Commander identities become handling/specialty traits as weapon choice expands. Two equipment slots and twelve carried items are the prototype. Weapon data contains family, era, tier, rarity, seed, compatible part IDs and affixes; keep rendering out of it. Start customization with a striking head/barrel, grip/stock and power core. Parts change reach, arc, cadence, recoil, projectile behavior or resource use with visible costs, not only additive DPS.
 
+Before pickup, hovered or looked-at ground loot should show its actual weapon
+model, comparison stats and compatibility. Pickup and equip are deliberate
+choices; a full bag must retain the drop with actionable feedback.
+
 Use ancient, technological and empowered-relic art/behavior sets. The first content pilot shows all three in three representative planets; the provisional full campaign uses planets 1-33, 34-66, 67-99 for the era arcs. At a new era, preserve and upgrade favorite weapons through a bounded infusion path, so a lucky sword does not become instantly disposable. Keep rarity distinct from tier and era. No armor, trading or crafting economy in the first weapon slice.
 
 ### Campaign, persistence and endings
@@ -128,6 +152,21 @@ Edge cases: win/death race, duplicate victory, refresh mid-transition, storage f
 Failure: recover the last committed checkpoint without duplicate coins/items. Show a save-failure notice with export/retry. Build and play a two-planet continuation before creating 99 content entries.
 
 Maintain separate account unlocks, expedition state and temporary assault state. Migrate `wh99Progress` with explicit versions and test fixtures; do not infer 99 completed unique worlds from the old counter. Keep stable internal map keys and existing shared URLs when the title becomes 99 Planets To Defend. Move classic modes to an accessible legacy/sandbox entry only after campaign parity and a measured regression pass.
+
+### Nest-driven assaults
+
+Purpose: make exploring and destroying nests visibly reduce enemy buildup.
+Experience: see a source, defend its incoming route or leave the base to stop it.
+Inputs: wave composition, surviving visible nests, new-nest schedule and valid ground/air routes.
+Outputs: enemies born at the nest's actual location, source destruction and accountable wave progress.
+Edge cases: last nest destroyed mid-spawn, no surviving sources, newly awakened nests, guardian warning, expansion past a nest, save/retry and flying routes over high terrain.
+Failure: never silently spawn at an invisible frontier substitute. Cancel prevented ordinary arrivals consistently without a wave softlock; retain an earned guardian encounter and valid routes. Existing enemies continue their assault after their source is destroyed.
+
+This owner request supersedes the former campaign frontier-mapped wave sources.
+Some waves introduce visible new nests; exact wake timing is prototype tuning.
+Classic maps keep their existing rules. Verification must distinguish source
+fixtures from ordinary defended play and record how much pressure nest hunting
+prevents, as well as periods with no enemies.
 
 ## Numbers and tuning
 
@@ -211,6 +250,22 @@ gameplay into main. [PREVIEW.md](PREVIEW.md) defines publishing, root-file
 preservation, isolated saves and live verification. This changes preview access,
 not the campaign's release acceptance criteria.
 
+2026-09-06 gameplay follow-up: [U22-U27](qa/2026-09-06-COMMANDER-REQUEST.md)
+add contextual tower/loot interactions, fuller arm and smoother swings,
+forgiving commander contacts, nest-only campaign assaults and actual unit
+route lines. [Issue #19](https://github.com/majieddd/worldheart/issues/19)
+tracks the extra-high agent's implementation and verification separately.
+
+[PR #20](https://github.com/majieddd/worldheart/pull/20) implements the follow-up.
+F lends the pointer while possessing, with 14m tower reach and 2.8m loot pickup.
+Campaign nests wake on waves 1/3/7/11/15, with a 3s warning and a protected
+final guardian launch. Waves, raids, boss escorts and evolved splits use
+surviving physical nests; destroyed sources cancel pending buildup, while
+living enemies remain owed. Placement must preserve routes from physical
+nests and occupied ground-enemy nodes. Unit lines consume the actual remaining
+route. These are implemented prototype decisions with owner feel and broader
+balance acceptance still open.
+
 | Decision | Status | Evidence |
 |---|---|---|
 | Existing campaign has an enjoyable playable defense loop | in game | Blind natural defeat wave 11, [terminal capture](qa/2026-09-05/images/23-defeat.png) |
@@ -228,6 +283,11 @@ not the campaign's release acceptance criteria.
 
 The [GitHub-linked progress ledger](PROGRESS.md) is the live task index. It carries owner, dependency, status, evidence and usage. The request map is: U01/U19/U20 -> M5/M6; U02 -> M1; U03-U07 -> M1/M4; U08-U10 -> M4/M5; U11-U16/U18 -> M3; U17 -> M2; U21 -> the ledger and every PR. The [original request intake](qa/2026-09-05/REQUEST.md) spells out each ID.
 
+The [follow-up intake](qa/2026-09-06-COMMANDER-REQUEST.md) maps U22/U27 to
+contextual controls, U23 to arm/swing presentation, U24 to traversal, U25 to
+loot inspection and U26 to nest-driven campaign waves. These extend the
+existing milestones rather than replacing their remaining acceptance gates.
+
 Continue in dependency order and keep each behavior reviewable. A task closes only when its stated player behavior is evidenced, with remaining gaps named. M0-M2 implementation records distinguish automated evidence from remaining owner review.
 
 ## Where we are
@@ -238,6 +298,18 @@ The first deployment passed 17 public browser/hash/save-isolation checks;
 [publication evidence](qa/implementation/V2-PREVIEW.md) records both source IDs.
 The root game remains from main. Publish future verified checkpoints under
 [PREVIEW.md](PREVIEW.md); full campaign and art/feel acceptance remain open.
+
+The [U22-U27 follow-up](qa/implementation/COMMANDER-FEEDBACK.md) is integrated
+from PR #20, with 228 headless tests and UI/inventory/motion/camera coverage.
+Actual checkpoint overlap and Upgrade/Sell transactions pass. Unforced
+testing exposed and reproduced unsafe knockback; after repair the ocean run
+passed its former stalls and ended in wave-12 defeat, while fresh active
+commander play reached the final encounter before wave-15 defeat. The
+[retained integration record](qa/implementation/OCEAN-STRATEGY.md) separates
+these outcomes from a balance pass. All six changes are now live at V2 from
+`0be12ef`, with 17 public deployment/save checks and 14 public contextual
+interaction checks passing. The same record links the deployment and captures;
+owner feel and broader campaign acceptance remain open.
 
 M3 update: four terrain profiles, directed ground routes, separate flight
 clearance, swimming, raised elemental placement and spherical/terrain range

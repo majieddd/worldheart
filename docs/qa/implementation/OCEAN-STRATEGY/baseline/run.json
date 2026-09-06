@@ -1,0 +1,557 @@
+{
+  "state": "defeat",
+  "phase": "defeat",
+  "wave": 9,
+  "lives": 0,
+  "gold": 2833,
+  "kills": 176,
+  "score": 3100,
+  "towers": 1,
+  "commander": [
+    {
+      "hp": 1176.8686500000024,
+      "hpMax": 1680,
+      "state": "roam",
+      "dir": [
+        -0.12924538489558007,
+        0.8431115981433093,
+        0.5219755392347695
+      ]
+    }
+  ],
+  "seed": 389884,
+  "talentPurchases": [],
+  "trace": [
+    {
+      "action": "build",
+      "wave": 1,
+      "lives": 20,
+      "gold": 450,
+      "type": "bolt",
+      "pos": [
+        83.45918784791729,
+        197.27175146701512,
+        110.37066221513923
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "start",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "stage": "outbound",
+      "nodes": 64
+    },
+    {
+      "action": "crystal-picked-up",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "id": "crystal-389884-3",
+      "theta": 0.11474489795918368
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "stage": "return",
+      "nodes": 60
+    },
+    {
+      "action": "crystal-deposited",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "ledger": {
+        "version": 1,
+        "carried": [],
+        "claimed": [
+          "crystal-389884-3"
+        ],
+        "deposited": [
+          "crystal-389884-3"
+        ],
+        "credit": 100
+      },
+      "theta": 0.11474489795918368
+    },
+    {
+      "action": "crystal-funded-upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "creditBefore": 100,
+      "creditAfter": 0,
+      "level": 1,
+      "theta": 0.2298469387755102
+    },
+    {
+      "action": "assault-goal",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "id": "nest-113516",
+      "kind": "nest",
+      "nodes": 460,
+      "cost": 275.44525146484375
+    },
+    {
+      "action": "upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 9,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "assault-weapon",
+      "wave": 1,
+      "lives": 20,
+      "gold": 33,
+      "id": "weapon-expedition-1-2-2-20",
+      "family": "sword"
+    },
+    {
+      "action": "draft",
+      "wave": 2,
+      "lives": 20,
+      "gold": 338,
+      "power": "overclock"
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 4,
+      "lives": 18,
+      "gold": 779,
+      "total": 1
+    },
+    {
+      "action": "assault-goal",
+      "wave": 4,
+      "lives": 18,
+      "gold": 779,
+      "id": "nest-143765",
+      "kind": "nest",
+      "nodes": 543,
+      "cost": 331.0101623535156
+    },
+    {
+      "action": "draft",
+      "wave": 4,
+      "lives": 18,
+      "gold": 1093,
+      "power": "twin-rails"
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1666,
+      "total": 2
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1666,
+      "id": "enemy-96",
+      "kind": "enemy",
+      "nodes": 227,
+      "cost": 143.21255493164062
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1678,
+      "id": "enemy-97",
+      "kind": "enemy",
+      "nodes": 225,
+      "cost": 141.88162231445312
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1690,
+      "id": "enemy-98",
+      "kind": "enemy",
+      "nodes": 223,
+      "cost": 140.7155303955078
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1708,
+      "id": "enemy-99",
+      "kind": "enemy",
+      "nodes": 225,
+      "cost": 141.88162231445312
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1720,
+      "id": "enemy-100",
+      "kind": "enemy",
+      "nodes": 225,
+      "cost": 141.88162231445312
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1744,
+      "id": "enemy-103",
+      "kind": "enemy",
+      "nodes": 224,
+      "cost": 141.32350158691406
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1756,
+      "id": "enemy-105",
+      "kind": "enemy",
+      "nodes": 219,
+      "cost": 138.53602600097656
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1768,
+      "id": "enemy-106",
+      "kind": "enemy",
+      "nodes": 217,
+      "cost": 137.51516723632812
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1780,
+      "id": "enemy-107",
+      "kind": "enemy",
+      "nodes": 213,
+      "cost": 135.3133087158203
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1792,
+      "id": "enemy-108",
+      "kind": "enemy",
+      "nodes": 212,
+      "cost": 134.90744018554688
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1804,
+      "id": "enemy-109",
+      "kind": "enemy",
+      "nodes": 207,
+      "cost": 131.94078063964844
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1816,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 232,
+      "cost": 146.0789031982422
+    },
+    {
+      "action": "draft",
+      "wave": 6,
+      "lives": 18,
+      "gold": 1940,
+      "power": "hardened-heart"
+    },
+    {
+      "action": "assault-goal",
+      "wave": 7,
+      "lives": 20,
+      "gold": 1940,
+      "id": "nest-5780",
+      "kind": "nest",
+      "nodes": 408,
+      "cost": 280.5783386230469
+    },
+    {
+      "action": "draft",
+      "wave": 8,
+      "lives": 3,
+      "gold": 2551,
+      "power": "hardened-heart"
+    }
+  ],
+  "faults": [],
+  "policy": {
+    "strategy": "assault",
+    "towerPriority": [
+      "mortar",
+      "bolt",
+      "tesla",
+      "helios",
+      "cryo",
+      "warden"
+    ],
+    "towerLimit": 10
+  },
+  "assault": {
+    "portalKills": 2,
+    "attacks": 18,
+    "distance": 797.523460697217,
+    "stalledSeconds": 0,
+    "replanCount": 80,
+    "commanderDamage": 4252.289522688002
+  },
+  "towerStats": [
+    {
+      "type": "bolt",
+      "tier": 2,
+      "damage": 15260.069999999938,
+      "kills": 127
+    }
+  ],
+  "scope": "Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; resumed exported checkpoint",
+  "inventory": {
+    "version": 1,
+    "items": [
+      {
+        "id": "starter-28183",
+        "seed": 28183,
+        "tier": 1,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "balanced",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-1",
+        "seed": 2013013496,
+        "tier": 1,
+        "family": "carbine",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "long",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-2",
+        "seed": 2108306693,
+        "tier": 1,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "steady",
+          "core": "ember"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-1",
+        "seed": 2690661315,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "long",
+          "grip": "balanced",
+          "core": "ember"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-2",
+        "seed": 945372618,
+        "tier": 2,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "long",
+          "grip": "weighted",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-3",
+        "seed": 1287322961,
+        "tier": 2,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "steady",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-4",
+        "seed": 192736594,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "long",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [
+          "farseeing"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-6",
+        "seed": 2647749002,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "broad",
+          "grip": "steady",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-20",
+        "seed": 2413145999,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "broad",
+          "grip": "balanced",
+          "core": "tempered"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-3-3-1",
+        "seed": 382733854,
+        "tier": 3,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "broad",
+          "grip": "quick",
+          "core": "ember"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-3-3-2",
+        "seed": 3606758411,
+        "tier": 3,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "balanced",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-3-3-3",
+        "seed": 2401526631,
+        "tier": 3,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "keen",
+          "grip": "balanced",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-3-3-4",
+        "seed": 2071851339,
+        "tier": 3,
+        "family": "carbine",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "keen",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      }
+    ],
+    "slots": [
+      "weapon-expedition-1-2-2-20",
+      null
+    ],
+    "active": 0,
+    "scrap": 0
+  },
+  "weaponLoop": false
+}

@@ -1,0 +1,976 @@
+{
+  "state": "defeat",
+  "phase": "defeat",
+  "wave": 10,
+  "lives": 18,
+  "gold": 203,
+  "kills": 370,
+  "score": 7560,
+  "towers": 6,
+  "commander": [],
+  "seed": 28183,
+  "talentPurchases": [],
+  "trace": [
+    {
+      "action": "build",
+      "wave": 1,
+      "lives": 20,
+      "gold": 300,
+      "type": "bolt",
+      "pos": [
+        228.92343808670196,
+        64.48895613227677,
+        36.63856154627714
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "start",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "stage": "outbound",
+      "nodes": 360
+    },
+    {
+      "action": "crystal-picked-up",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "id": "crystal-28183-3",
+      "theta": 0.05
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "stage": "return",
+      "nodes": 36
+    },
+    {
+      "action": "crystal-deposited",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "ledger": {
+        "version": 1,
+        "carried": [],
+        "claimed": [
+          "crystal-28183-0"
+        ],
+        "deposited": [
+          "crystal-28183-0"
+        ],
+        "credit": 100
+      },
+      "theta": 0.05
+    },
+    {
+      "action": "crystal-funded-upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 30,
+      "creditBefore": 100,
+      "creditAfter": 0,
+      "level": 1,
+      "theta": 0.2298469387755102
+    },
+    {
+      "action": "build",
+      "wave": 2,
+      "lives": 20,
+      "gold": 43,
+      "type": "bolt",
+      "pos": [
+        228.7756177616931,
+        66.0876385437925,
+        34.21644963328861
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 2,
+      "lives": 20,
+      "gold": 7,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "draft",
+      "wave": 2,
+      "lives": 20,
+      "gold": 95,
+      "power": "keen-rails"
+    },
+    {
+      "action": "upgrade",
+      "wave": 3,
+      "lives": 20,
+      "gold": 168,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 3,
+      "lives": 20,
+      "gold": 5,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 4,
+      "lives": 20,
+      "gold": 174,
+      "id": "weapon-expedition-1-1-1-1",
+      "family": "carbine",
+      "rarity": "common",
+      "replace": null
+    },
+    {
+      "action": "build",
+      "wave": 4,
+      "lives": 20,
+      "gold": 2,
+      "type": "warden",
+      "pos": [
+        228.54017945128007,
+        67.14773562787808,
+        37.32650948111817
+      ]
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 4,
+      "lives": 20,
+      "gold": 94,
+      "id": "weapon-expedition-1-1-1-2",
+      "family": "spear",
+      "rarity": "common",
+      "replace": null
+    },
+    {
+      "action": "weapon-equipped",
+      "wave": 4,
+      "lives": 20,
+      "gold": 94,
+      "id": "weapon-expedition-1-1-1-2",
+      "family": "spear"
+    },
+    {
+      "action": "possess-and-retreat",
+      "wave": 4,
+      "lives": 20,
+      "gold": 94,
+      "nodes": 74,
+      "cost": 52.98011779785156
+    },
+    {
+      "action": "draft",
+      "wave": 4,
+      "lives": 20,
+      "gold": 244,
+      "power": "hardened-heart"
+    },
+    {
+      "action": "upgrade-rejected",
+      "wave": 5,
+      "lives": 22,
+      "gold": 244,
+      "type": "warden",
+      "tier": 0
+    },
+    {
+      "action": "upgrade-rejected",
+      "wave": 5,
+      "lives": 22,
+      "gold": 244,
+      "type": "warden",
+      "tier": 0
+    },
+    {
+      "action": "upgrade-rejected",
+      "wave": 5,
+      "lives": 22,
+      "gold": 244,
+      "type": "warden",
+      "tier": 0
+    },
+    {
+      "action": "upgrade-rejected",
+      "wave": 5,
+      "lives": 22,
+      "gold": 244,
+      "type": "warden",
+      "tier": 0
+    },
+    {
+      "action": "upgrade-rejected",
+      "wave": 5,
+      "lives": 22,
+      "gold": 244,
+      "type": "warden",
+      "tier": 0
+    },
+    {
+      "action": "upgrade-rejected",
+      "wave": 5,
+      "lives": 22,
+      "gold": 256,
+      "type": "warden",
+      "tier": 0
+    },
+    {
+      "action": "upgrade-rejected",
+      "wave": 5,
+      "lives": 22,
+      "gold": 256,
+      "type": "warden",
+      "tier": 0
+    },
+    {
+      "action": "upgrade-rejected",
+      "wave": 5,
+      "lives": 22,
+      "gold": 256,
+      "type": "warden",
+      "tier": 0
+    },
+    {
+      "action": "upgrade-rejected",
+      "wave": 5,
+      "lives": 22,
+      "gold": 256,
+      "type": "warden",
+      "tier": 0
+    },
+    {
+      "action": "retreat-arrived-and-posted",
+      "wave": 5,
+      "lives": 22,
+      "gold": 256
+    },
+    {
+      "action": "upgrade",
+      "wave": 5,
+      "lives": 22,
+      "gold": 80,
+      "type": "warden",
+      "tier": 1
+    },
+    {
+      "action": "build",
+      "wave": 6,
+      "lives": 22,
+      "gold": 121,
+      "type": "warden",
+      "pos": [
+        229.9015435153973,
+        61.54559606197688,
+        34.78307171668879
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 6,
+      "lives": 22,
+      "gold": 17,
+      "type": "warden",
+      "tier": 1
+    },
+    {
+      "action": "draft",
+      "wave": 6,
+      "lives": 22,
+      "gold": 309,
+      "power": "twin-rails"
+    },
+    {
+      "action": "upgrade",
+      "wave": 7,
+      "lives": 22,
+      "gold": 23,
+      "type": "warden",
+      "tier": 2
+    },
+    {
+      "action": "build",
+      "wave": 8,
+      "lives": 22,
+      "gold": 222,
+      "type": "bolt",
+      "pos": [
+        230.66586612421557,
+        59.803867165962096,
+        32.714251009810475
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 22,
+      "gold": 102,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 22,
+      "gold": 3,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 22,
+      "gold": 5,
+      "type": "warden",
+      "tier": 2
+    },
+    {
+      "action": "draft",
+      "wave": 8,
+      "lives": 22,
+      "gold": 189,
+      "power": "chain-coil"
+    },
+    {
+      "action": "base",
+      "wave": 9,
+      "lives": 22,
+      "gold": 9,
+      "level": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 22,
+      "gold": 12,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "build",
+      "wave": 10,
+      "lives": 22,
+      "gold": 1,
+      "type": "mortar",
+      "pos": [
+        231.03737902099937,
+        59.80223052298269,
+        29.928627959462734
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 22,
+      "gold": 1,
+      "type": "mortar",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 18,
+      "gold": 6,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 18,
+      "gold": 13,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 18,
+      "gold": 12,
+      "type": "mortar",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 18,
+      "gold": 3,
+      "type": "warden",
+      "tier": 3
+    }
+  ],
+  "faults": [],
+  "policy": {
+    "strategy": "defense",
+    "towerPriority": [
+      "bolt",
+      "tesla",
+      "helios",
+      "warden",
+      "mortar",
+      "cryo"
+    ],
+    "towerLimit": 8
+  },
+  "assault": null,
+  "towerStats": [
+    {
+      "type": "bolt",
+      "tier": 3,
+      "damage": 29935.602983923873,
+      "kills": 196
+    },
+    {
+      "type": "bolt",
+      "tier": 3,
+      "damage": 19528.177222478687,
+      "kills": 140
+    },
+    {
+      "type": "warden",
+      "tier": 3,
+      "damage": 2663.9255000000035,
+      "kills": 12
+    },
+    {
+      "type": "warden",
+      "tier": 2,
+      "damage": 79.55199999999999,
+      "kills": 0
+    },
+    {
+      "type": "bolt",
+      "tier": 3,
+      "damage": 975.1759999999997,
+      "kills": 8
+    },
+    {
+      "type": "mortar",
+      "tier": 2,
+      "damage": 71.11660418554139,
+      "kills": 1
+    }
+  ],
+  "scope": "Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile",
+  "runtimeHashes": {
+    "/": "dd653ed1e4372bb5cd050f67dd5de94019f7777322f9e719c284951f637198ac",
+    "/css/style.css": "e5295f2f0037ab0224b6c6d97b38439d610cf0e5dfcf45ca8c1cde30cf11c9c2",
+    "/js/main.js": "70701779434b2013847ca8e958b556034d0b32959479f3289123f40b4524f3d5",
+    "/js/camera.js": "9da81e491f349cbd8ab2f26beb7ff092dfd37d764d3060dc8ad3757472e97095",
+    "/js/config.js": "904169d563f03a4d13fb300b30e7f3c15be7933d5ce51f4ba90930b38540d5f7",
+    "/js/postfx.js": "02b77ea84ee18092b3bae10e70666140e972a95c8e1c7f761b6d8cf2a3605093",
+    "/js/noise.js": "f59d0548bdd9f359ec6667e521ccf49ba1aa61ddfb81069ad460555d2a5ea435",
+    "/js/run/rng.js": "0d483c3fa2a21d2e282b0ecd99667b9e8ad01702de1d40c4e6c9994d21b0e862",
+    "/js/nav.js": "e23beb314ab8985a4c7ce73c922f12c22ebf2a1b1cc2e889d55d6f05fc680f7a",
+    "/js/viewmodel.js": "c53e585598912a202b1b6f4b6c7ec005672bab878eef5f2ad6f937ac8a6f432c",
+    "/js/world.js": "1286f5f1b80b15844a90bcec04e39fc2c9671142e483e4ba0c36a0efc17661df",
+    "/js/effects.js": "78c2025b4ea7fef22470b5e1538af1a906d1465baf14b04388342c4171dad2fd",
+    "/js/possess.js": "fdd9488728f927494a2307281281d26b02dbca0480a701f0f0d98ea99986280a",
+    "/js/combatfx.js": "3daa379919932b9eb251ba0a4001158d0c60ad4a3dea7373d228640b5aa8c163",
+    "/js/allies.js": "47c5bcd3692e5be5b83249534b777b3ec9b157a3fdbf18c4ce6168c10bb09c49",
+    "/js/audio.js": "0b9586817664b3192d72995e7d20bc7b2cf94389170163e023c0c8df554645ee",
+    "/js/waves.js": "56bc5c9dd2524b3ab2383087c98e51fc32b2797d4e1cee5771f9ccda28f1f183",
+    "/js/enemies.js": "4c003649e2c73b0c6dc51193288af3070bc9e7d0108be82c7a2c5f83b82bd715",
+    "/js/towers.js": "206993eddce78b55072c017dfc2e78ffc9d8440a514d34a00091223010e1dd70",
+    "/js/world-context.js": "762ea64ec54478066c343ede2085f6e5311d9477518540732cc153f98863aa98",
+    "/js/ui.js": "6db0a69d65eee8b8172402c02b8ed713c6bdafb956d3f6d44caccbb8e960e841",
+    "/js/game.js": "14909dc8d854c60c54a32ccff11bce0ae3d91055da93238cc3db9cf1f776d2ce",
+    "/lib/three.module.min.js": "852c06b9fe936cf8ebc2870c86370d1015c310b04de98cdfc07f4efaf6afd2af",
+    "/js/modes/campaign-launch.js": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+    "/js/traversal.js": "441ce4f53ae080f92c46b21cbc37f37c8d397d772068f8a9f7193d2db736885e",
+    "/js/storage.js": "ec604cf1117c488e54cd66f2e0cbda87fd5af2dde165c3a744a54b9b3e7a2ecc",
+    "/js/rig.js": "472a67493c48053a43a8713842d224f47d9c88e428e19c1a8c839556e096e33c",
+    "/js/attacks.js": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+    "/js/encounters.js": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+    "/js/rewards.js": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+    "/js/ui-icons.js": "fc391ee3a21bce7a65b7eecaebbb5ad62b64451b85796037f49e7aba1bc9f0b3",
+    "/js/modes/progress.js": "18a842c013711e7466eee6f7654a5f95850642044a55e814405fd3d791716962",
+    "/js/run/frontier.js": "2eb79cf668687ec1971b85f6940aee8e821b79934a20608ae85e6c33a3c7326f",
+    "/js/range-guide.js": "7615a7379b9147656b6669accb0186c93f37cbbaa895b8cfa9431ea24ba82e41",
+    "/js/soldier.js": "5d33289384fca6003a17c3c055e783139ec92a3d49bd471c516a16ebc0125722",
+    "/js/modes/campaign-store.js": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+    "/js/run/campaign.js": "10668ba911e11448876dd587ad5f6abe96d79260672630d21e9fab91920f7ee8",
+    "/js/run/planets.js": "c23ad4ac7d6c34bccd28b3dd486f078fc35413d47d46f40d2648b4ef3ced8f91",
+    "/lib/three.core.min.js": "4183cee05f0aa093682fdf551363a16bb20bd92b68e14f7576905f45c461ba82",
+    "/js/run/weapons.js": "56aa0a95c80b89a42be771debc64dea0902218ae975a6af9ffeac25706d70950",
+    "/js/modes/ninetynine.js": "210f079d012d72099d9425f6808d982491ef38de3a58869799e57946f3d4a946",
+    "/js/run/run.js": "aad6a255f3af44281429c8c1dfee0c5591dc0660cb7e94c90806451d4fdf25b0",
+    "/js/run/crystals.js": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+    "/js/run/schedule.js": "4b5be25bb1a28b89ca7299cdbaad74806ac2a4597b4443a794c1fb9b7b3e9520",
+    "/js/loot-field.js": "53fc8c7ca1d9b64862178911c9623509baa35205f5721300efdb0e75045ec536",
+    "/js/ui-weapons.js": "a057956a42bf35f7d7220391a463b2ada3c12f284b8dc29a46895dbd0928cbb6",
+    "/js/unit-routes.js": "83a05fc947b2835b0d3be521f5ee541ca7d8aa82d0082e6c359bf72b9c503b1b",
+    "/js/nest-sites.js": "6aa7d51263de79f3b94f436de7e847b84fdfa0f0a28589f78c106415f35f12c0",
+    "/js/threat-guides.js": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+    "/js/ui-campaign.js": "e4b28e567b846049ca6403d69aa19d294b32386b7610a0c753d86b387630a1ca",
+    "/js/run/modifiers.js": "0f7fc001625d5e54e0051c54e08cc6962354ac005c125478603598b18590cd44",
+    "/js/run/powers.js": "314493afbfe65425784095045b70272e5591c32e8b961802e88695265090c9b3",
+    "/js/run/draft.js": "3d38483829fae8a29b3786d49453041abb536d372776ac2ddf3f9bb63d9e1310",
+    "/js/run/state.js": "7bd46fdc2b1bcca4a0126c23035e7d30234fd64964c4f2f053427a90aeacaa90"
+  },
+  "policySourceHash": null,
+  "navigation": {
+    "heartNode": 165519,
+    "towers": [
+      {
+        "type": "bolt",
+        "pos": [
+          228.92343808670196,
+          64.48895613227677,
+          36.63856154627714
+        ]
+      },
+      {
+        "type": "bolt",
+        "pos": [
+          228.7756177616931,
+          66.0876385437925,
+          34.21644963328861
+        ]
+      },
+      {
+        "type": "warden",
+        "pos": [
+          228.54017945128007,
+          67.14773562787808,
+          37.32650948111817
+        ]
+      },
+      {
+        "type": "warden",
+        "pos": [
+          229.9015435153973,
+          61.54559606197688,
+          34.78307171668879
+        ]
+      },
+      {
+        "type": "bolt",
+        "pos": [
+          230.66586612421557,
+          59.803867165962096,
+          32.714251009810475
+        ]
+      },
+      {
+        "type": "mortar",
+        "pos": [
+          231.03737902099937,
+          59.80223052298269,
+          29.928627959462734
+        ]
+      }
+    ],
+    "nests": [
+      {
+        "node": 176487,
+        "destroyed": true,
+        "next": 11033,
+        "airNext": 11033,
+        "blocked": false,
+        "pos": [
+          225.36666870117188,
+          71.35807800292969,
+          41.62077713012695
+        ]
+      },
+      {
+        "node": 119632,
+        "destroyed": false,
+        "next": 119618,
+        "airNext": 7524,
+        "blocked": false,
+        "pos": [
+          229.541015625,
+          15.441568374633789,
+          70.16790771484375
+        ]
+      },
+      {
+        "node": 110788,
+        "destroyed": false,
+        "next": 110827,
+        "airNext": 110827,
+        "blocked": false,
+        "pos": [
+          236.0433807373047,
+          3.5017971992492676,
+          44.04477310180664
+        ]
+      }
+    ],
+    "enemies": [
+      {
+        "id": 263,
+        "type": "aegis",
+        "node": 116687,
+        "nearest": 116687,
+        "next": -1,
+        "blocked": false,
+        "source": 119632,
+        "dir": [
+          0.940702838666851,
+          0.27483221981357064,
+          0.19886030342045063
+        ]
+      },
+      {
+        "id": 335,
+        "type": "aegis",
+        "node": 7343,
+        "nearest": 7343,
+        "next": -1,
+        "blocked": false,
+        "source": 119632,
+        "dir": [
+          0.937727039062533,
+          0.2875083837624924,
+          0.19495365982021054
+        ]
+      },
+      {
+        "id": 347,
+        "type": "aegis",
+        "node": 7343,
+        "nearest": 7343,
+        "next": -1,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.9379281682649365,
+          0.2867935400584102,
+          0.19503901290753647
+        ]
+      },
+      {
+        "id": 371,
+        "type": "aegis",
+        "node": 116555,
+        "nearest": 116555,
+        "next": 29218,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.9389543602013517,
+          0.27486213857506836,
+          0.20691910070559047
+        ]
+      },
+      {
+        "id": 375,
+        "type": "aegis",
+        "node": 116552,
+        "nearest": 116552,
+        "next": 116549,
+        "blocked": false,
+        "source": 119632,
+        "dir": [
+          0.9421304861605182,
+          0.266592179737467,
+          0.20327015705649418
+        ]
+      },
+      {
+        "id": 378,
+        "type": "husk",
+        "node": 116490,
+        "nearest": 116490,
+        "next": 7333,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.9356022579358375,
+          0.29561037982905203,
+          0.19303605435950563
+        ]
+      },
+      {
+        "id": 379,
+        "type": "aegis",
+        "node": 30513,
+        "nearest": 30513,
+        "next": 121785,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.9545495410914264,
+          0.19540075173978538,
+          0.22506381277689672
+        ]
+      },
+      {
+        "id": 382,
+        "type": "husk",
+        "node": 116681,
+        "nearest": 116560,
+        "next": 29247,
+        "blocked": false,
+        "source": 119632,
+        "dir": [
+          0.9401914605667465,
+          0.2737668400891567,
+          0.2027109635539391
+        ]
+      },
+      {
+        "id": 383,
+        "type": "aegis",
+        "node": 122166,
+        "nearest": 122166,
+        "next": 122165,
+        "blocked": false,
+        "source": 119632,
+        "dir": [
+          0.952242529996887,
+          0.20124980320356695,
+          0.22963597448059692
+        ]
+      },
+      {
+        "id": 384,
+        "type": "mite",
+        "node": 116486,
+        "nearest": 116486,
+        "next": 116489,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.9347384341064251,
+          0.29614970885566116,
+          0.1963655004041582
+        ]
+      },
+      {
+        "id": 385,
+        "type": "mite",
+        "node": 116705,
+        "nearest": 116705,
+        "next": 116706,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.9382078573032674,
+          0.28315946433108835,
+          0.19896415318881686
+        ]
+      },
+      {
+        "id": 386,
+        "type": "husk",
+        "node": 122046,
+        "nearest": 122046,
+        "next": 30579,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.9588126243815982,
+          0.17257415923035765,
+          0.22560255072229932
+        ]
+      },
+      {
+        "id": 387,
+        "type": "aegis",
+        "node": 119819,
+        "nearest": 119819,
+        "next": 30026,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.9633409693689726,
+          0.11681334658379519,
+          0.24151359960702523
+        ]
+      },
+      {
+        "id": 388,
+        "type": "mite",
+        "node": 122370,
+        "nearest": 122368,
+        "next": 122368,
+        "blocked": false,
+        "source": 119632,
+        "dir": [
+          0.950872819947532,
+          0.20980800849552567,
+          0.22764331717880512
+        ]
+      },
+      {
+        "id": 389,
+        "type": "mite",
+        "node": 122349,
+        "nearest": 122352,
+        "next": 122351,
+        "blocked": false,
+        "source": 119632,
+        "dir": [
+          0.9520843001369091,
+          0.20402587661057126,
+          0.22783530697874713
+        ]
+      },
+      {
+        "id": 390,
+        "type": "husk",
+        "node": 123938,
+        "nearest": 123938,
+        "next": 123939,
+        "blocked": false,
+        "source": 119632,
+        "dir": [
+          0.9624570184406211,
+          0.14159469212509723,
+          0.23157597201866403
+        ]
+      },
+      {
+        "id": 391,
+        "type": "aegis",
+        "node": 120119,
+        "nearest": 120119,
+        "next": 30098,
+        "blocked": false,
+        "source": 119632,
+        "dir": [
+          0.9640250941806425,
+          0.10663035431896513,
+          0.24348631445692265
+        ]
+      },
+      {
+        "id": 392,
+        "type": "mite",
+        "node": 111602,
+        "nearest": 111602,
+        "next": 111592,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.972964769529292,
+          0.06224784837684997,
+          0.22240675040849084
+        ]
+      },
+      {
+        "id": 393,
+        "type": "mite",
+        "node": 111695,
+        "nearest": 111683,
+        "next": 27998,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.975519937240488,
+          0.04409440633537384,
+          0.21544497064504836
+        ]
+      },
+      {
+        "id": 394,
+        "type": "husk",
+        "node": 111387,
+        "nearest": 111387,
+        "next": 111394,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.979695346063115,
+          0.024896516999505826,
+          0.19894017277454776
+        ]
+      },
+      {
+        "id": 395,
+        "type": "aegis",
+        "node": 27786,
+        "nearest": 27786,
+        "next": 110831,
+        "blocked": false,
+        "source": 110788,
+        "dir": [
+          0.9822097530953625,
+          0.01564348168127326,
+          0.18713439663844444
+        ]
+      }
+    ]
+  },
+  "inventory": {
+    "version": 1,
+    "items": [
+      {
+        "id": "starter-28183",
+        "seed": 28183,
+        "tier": 1,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "balanced",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-1",
+        "seed": 2013013496,
+        "tier": 1,
+        "family": "carbine",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "long",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-2",
+        "seed": 2108306693,
+        "tier": 1,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "steady",
+          "core": "ember"
+        },
+        "affixes": [],
+        "infusions": 0
+      }
+    ],
+    "slots": [
+      "weapon-expedition-1-1-1-2",
+      null
+    ],
+    "active": 0,
+    "scrap": 0
+  },
+  "weaponLoop": true
+}

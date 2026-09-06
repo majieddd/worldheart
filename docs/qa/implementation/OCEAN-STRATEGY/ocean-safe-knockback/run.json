@@ -1,0 +1,1820 @@
+{
+  "state": "defeat",
+  "phase": "defeat",
+  "wave": 12,
+  "lives": 0,
+  "gold": 381,
+  "kills": 245,
+  "score": 5120,
+  "towers": 5,
+  "commander": [
+    {
+      "hp": 950.1887374999997,
+      "hpMax": 1680,
+      "state": "roam",
+      "dir": [
+        0.260932385691225,
+        0.8269676292902682,
+        0.49803496885612303
+      ]
+    }
+  ],
+  "seed": 389884,
+  "talentPurchases": [],
+  "trace": [
+    {
+      "action": "build",
+      "wave": 1,
+      "lives": 20,
+      "gold": 450,
+      "type": "bolt",
+      "pos": [
+        83.45918784791729,
+        197.27175146701512,
+        110.37066221513923
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "start",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "stage": "outbound",
+      "nodes": 64
+    },
+    {
+      "action": "crystal-picked-up",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "id": "crystal-389884-3",
+      "theta": 0.11474489795918368
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "stage": "return",
+      "nodes": 60
+    },
+    {
+      "action": "crystal-deposited",
+      "wave": 1,
+      "lives": 20,
+      "gold": 330,
+      "ledger": {
+        "version": 1,
+        "carried": [],
+        "claimed": [
+          "crystal-389884-3"
+        ],
+        "deposited": [
+          "crystal-389884-3"
+        ],
+        "credit": 100
+      },
+      "theta": 0.11474489795918368
+    },
+    {
+      "action": "crystal-funded-upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "creditBefore": 100,
+      "creditAfter": 0,
+      "level": 1,
+      "theta": 0.2298469387755102
+    },
+    {
+      "action": "assault-goal",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "id": "nest-39576",
+      "kind": "nest",
+      "nodes": 65,
+      "cost": 46.30912780761719
+    },
+    {
+      "action": "assault-weapon",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "id": "weapon-expedition-1-2-2-20",
+      "family": "sword"
+    },
+    {
+      "action": "upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 9,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "draft",
+      "wave": 2,
+      "lives": 20,
+      "gold": 416,
+      "power": "overclock"
+    },
+    {
+      "action": "build",
+      "wave": 3,
+      "lives": 20,
+      "gold": 116,
+      "type": "tesla",
+      "pos": [
+        81.35924183118208,
+        198.79242754424683,
+        109.27235212299524
+      ]
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 3,
+      "lives": 20,
+      "gold": 116,
+      "total": 1
+    },
+    {
+      "action": "assault-goal",
+      "wave": 3,
+      "lives": 20,
+      "gold": 116,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 51,
+      "cost": 36.63611602783203
+    },
+    {
+      "action": "assault-goal",
+      "wave": 3,
+      "lives": 20,
+      "gold": 116,
+      "id": "nest-148740",
+      "kind": "nest",
+      "nodes": 134,
+      "cost": 85.31137084960938
+    },
+    {
+      "action": "upgrade",
+      "wave": 3,
+      "lives": 20,
+      "gold": 8,
+      "type": "tesla",
+      "tier": 1
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 4,
+      "lives": 20,
+      "gold": 309,
+      "total": 2
+    },
+    {
+      "action": "assault-goal",
+      "wave": 4,
+      "lives": 20,
+      "gold": 309,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 128,
+      "cost": 83.05919647216797
+    },
+    {
+      "action": "draft",
+      "wave": 4,
+      "lives": 20,
+      "gold": 415,
+      "power": "twin-rails"
+    },
+    {
+      "action": "upgrade",
+      "wave": 5,
+      "lives": 20,
+      "gold": 25,
+      "type": "tesla",
+      "tier": 2
+    },
+    {
+      "action": "draft",
+      "wave": 6,
+      "lives": 20,
+      "gold": 264,
+      "power": "hardened-heart"
+    },
+    {
+      "action": "build",
+      "wave": 7,
+      "lives": 22,
+      "gold": 64,
+      "type": "cryo",
+      "pos": [
+        79.63414670992736,
+        198.04495086740698,
+        111.92748609404629
+      ]
+    },
+    {
+      "action": "assault-goal",
+      "wave": 7,
+      "lives": 22,
+      "gold": 64,
+      "id": "nest-5946",
+      "kind": "nest",
+      "nodes": 168,
+      "cost": 103.87757873535156
+    },
+    {
+      "action": "upgrade",
+      "wave": 7,
+      "lives": 22,
+      "gold": 24,
+      "type": "cryo",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 22,
+      "gold": 5,
+      "type": "cryo",
+      "tier": 2
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 8,
+      "lives": 22,
+      "gold": 95,
+      "id": "weapon-expedition-1-4-7-2",
+      "family": "spear",
+      "rarity": "common",
+      "replace": "weapon-expedition-1-1-1-1"
+    },
+    {
+      "action": "assault-rest-start",
+      "wave": 8,
+      "lives": 22,
+      "gold": 159,
+      "hp": 1086.4841999999987
+    },
+    {
+      "action": "assault-goal",
+      "wave": 8,
+      "lives": 22,
+      "gold": 159,
+      "id": "recover-away-from-assault",
+      "kind": "recover",
+      "nodes": 192,
+      "cost": 128.12973022460938
+    },
+    {
+      "action": "build",
+      "wave": 8,
+      "lives": 22,
+      "gold": 11,
+      "type": "tesla",
+      "pos": [
+        76.991591763308,
+        197.572857817771,
+        114.63241345519117
+      ]
+    },
+    {
+      "action": "assault-rest-end",
+      "wave": 8,
+      "lives": 22,
+      "gold": 11,
+      "hp": 1596.40060000001
+    },
+    {
+      "action": "assault-goal",
+      "wave": 8,
+      "lives": 22,
+      "gold": 11,
+      "id": "nest-5946",
+      "kind": "nest",
+      "nodes": 210,
+      "cost": 138.4240264892578
+    },
+    {
+      "action": "draft",
+      "wave": 8,
+      "lives": 22,
+      "gold": 177,
+      "power": "twin-rails"
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 22,
+      "gold": 9,
+      "type": "tesla",
+      "tier": 1
+    },
+    {
+      "action": "assault-rest-start",
+      "wave": 9,
+      "lives": 22,
+      "gold": 177,
+      "hp": 1082.1471000000038
+    },
+    {
+      "action": "assault-goal",
+      "wave": 9,
+      "lives": 22,
+      "gold": 177,
+      "id": "recover-away-from-assault",
+      "kind": "recover",
+      "nodes": 167,
+      "cost": 106.81791687011719
+    },
+    {
+      "action": "build",
+      "wave": 10,
+      "lives": 22,
+      "gold": 242,
+      "type": "mortar",
+      "pos": [
+        88.43123543987254,
+        195.0195018227992,
+        111.56772181376188
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 22,
+      "gold": 42,
+      "type": "mortar",
+      "tier": 1
+    },
+    {
+      "action": "assault-rest-end",
+      "wave": 10,
+      "lives": 22,
+      "gold": 42,
+      "hp": 1600.4023000000143
+    },
+    {
+      "action": "assault-goal",
+      "wave": 10,
+      "lives": 22,
+      "gold": 42,
+      "id": "nest-5946",
+      "kind": "nest",
+      "nodes": 150,
+      "cost": 94.89253997802734
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 13,
+      "gold": 29,
+      "type": "mortar",
+      "tier": 2
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 10,
+      "lives": 13,
+      "gold": 119,
+      "id": "weapon-expedition-1-4-7-5",
+      "family": "spear",
+      "rarity": "uncommon",
+      "replace": "weapon-expedition-1-3-3-4"
+    },
+    {
+      "action": "draft",
+      "wave": 10,
+      "lives": 13,
+      "gold": 361,
+      "power": "overclock"
+    },
+    {
+      "action": "assault-rest-start",
+      "wave": 11,
+      "lives": 13,
+      "gold": 361,
+      "hp": 1082.23625
+    },
+    {
+      "action": "assault-goal",
+      "wave": 11,
+      "lives": 13,
+      "gold": 361,
+      "id": "recover-away-from-assault",
+      "kind": "recover",
+      "nodes": 167,
+      "cost": 106.81791687011719
+    },
+    {
+      "action": "upgrade",
+      "wave": 11,
+      "lives": 13,
+      "gold": 3,
+      "type": "tesla",
+      "tier": 2
+    },
+    {
+      "action": "assault-rest-end",
+      "wave": 11,
+      "lives": 13,
+      "gold": 83,
+      "hp": 1598.73965000001
+    },
+    {
+      "action": "assault-goal",
+      "wave": 11,
+      "lives": 13,
+      "gold": 83,
+      "id": "nest-5946",
+      "kind": "nest",
+      "nodes": 171,
+      "cost": 107.68279266357422
+    },
+    {
+      "action": "base",
+      "wave": 11,
+      "lives": 7,
+      "gold": 41,
+      "level": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 1,
+      "gold": 33,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "assault-rest-start",
+      "wave": 12,
+      "lives": 1,
+      "gold": 319,
+      "hp": 1085.2312374999997
+    },
+    {
+      "action": "assault-goal",
+      "wave": 12,
+      "lives": 1,
+      "gold": 319,
+      "id": "recover-away-from-assault",
+      "kind": "recover",
+      "nodes": 205,
+      "cost": 128.9861602783203
+    }
+  ],
+  "faults": [],
+  "policy": {
+    "strategy": "assault",
+    "towerPriority": [
+      "mortar",
+      "bolt",
+      "tesla",
+      "helios",
+      "cryo",
+      "warden"
+    ],
+    "towerLimit": 10
+  },
+  "assault": {
+    "portalKills": 2,
+    "attacks": 106,
+    "distance": 734.4714293391555,
+    "stalledSeconds": 0,
+    "replanCount": 90,
+    "commanderDamage": 8383.673414656005
+  },
+  "towerStats": [
+    {
+      "type": "bolt",
+      "tier": 3,
+      "damage": 19186.03960979671,
+      "kills": 122
+    },
+    {
+      "type": "tesla",
+      "tier": 2,
+      "damage": 9796.241703124988,
+      "kills": 59
+    },
+    {
+      "type": "cryo",
+      "tier": 2,
+      "damage": 0,
+      "kills": 0
+    },
+    {
+      "type": "tesla",
+      "tier": 2,
+      "damage": 1082.896,
+      "kills": 6
+    },
+    {
+      "type": "mortar",
+      "tier": 2,
+      "damage": 2151.447821965812,
+      "kills": 10
+    }
+  ],
+  "scope": "Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; resumed exported checkpoint",
+  "runtimeHashes": {
+    "/": "dd653ed1e4372bb5cd050f67dd5de94019f7777322f9e719c284951f637198ac",
+    "/css/style.css": "e5295f2f0037ab0224b6c6d97b38439d610cf0e5dfcf45ca8c1cde30cf11c9c2",
+    "/js/main.js": "70701779434b2013847ca8e958b556034d0b32959479f3289123f40b4524f3d5",
+    "/js/config.js": "904169d563f03a4d13fb300b30e7f3c15be7933d5ce51f4ba90930b38540d5f7",
+    "/js/run/rng.js": "0d483c3fa2a21d2e282b0ecd99667b9e8ad01702de1d40c4e6c9994d21b0e862",
+    "/js/camera.js": "9da81e491f349cbd8ab2f26beb7ff092dfd37d764d3060dc8ad3757472e97095",
+    "/js/postfx.js": "02b77ea84ee18092b3bae10e70666140e972a95c8e1c7f761b6d8cf2a3605093",
+    "/js/noise.js": "f59d0548bdd9f359ec6667e521ccf49ba1aa61ddfb81069ad460555d2a5ea435",
+    "/js/viewmodel.js": "c53e585598912a202b1b6f4b6c7ec005672bab878eef5f2ad6f937ac8a6f432c",
+    "/js/nav.js": "e23beb314ab8985a4c7ce73c922f12c22ebf2a1b1cc2e889d55d6f05fc680f7a",
+    "/js/combatfx.js": "3daa379919932b9eb251ba0a4001158d0c60ad4a3dea7373d228640b5aa8c163",
+    "/js/possess.js": "fdd9488728f927494a2307281281d26b02dbca0480a701f0f0d98ea99986280a",
+    "/js/waves.js": "56bc5c9dd2524b3ab2383087c98e51fc32b2797d4e1cee5771f9ccda28f1f183",
+    "/js/effects.js": "78c2025b4ea7fef22470b5e1538af1a906d1465baf14b04388342c4171dad2fd",
+    "/js/game.js": "14909dc8d854c60c54a32ccff11bce0ae3d91055da93238cc3db9cf1f776d2ce",
+    "/js/audio.js": "0b9586817664b3192d72995e7d20bc7b2cf94389170163e023c0c8df554645ee",
+    "/js/world-context.js": "762ea64ec54478066c343ede2085f6e5311d9477518540732cc153f98863aa98",
+    "/js/towers.js": "206993eddce78b55072c017dfc2e78ffc9d8440a514d34a00091223010e1dd70",
+    "/js/world.js": "1286f5f1b80b15844a90bcec04e39fc2c9671142e483e4ba0c36a0efc17661df",
+    "/js/ui.js": "6db0a69d65eee8b8172402c02b8ed713c6bdafb956d3f6d44caccbb8e960e841",
+    "/lib/three.module.min.js": "852c06b9fe936cf8ebc2870c86370d1015c310b04de98cdfc07f4efaf6afd2af",
+    "/js/modes/campaign-launch.js": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+    "/js/storage.js": "ec604cf1117c488e54cd66f2e0cbda87fd5af2dde165c3a744a54b9b3e7a2ecc",
+    "/js/rig.js": "472a67493c48053a43a8713842d224f47d9c88e428e19c1a8c839556e096e33c",
+    "/js/ui-icons.js": "fc391ee3a21bce7a65b7eecaebbb5ad62b64451b85796037f49e7aba1bc9f0b3",
+    "/js/modes/progress.js": "18a842c013711e7466eee6f7654a5f95850642044a55e814405fd3d791716962",
+    "/js/encounters.js": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+    "/js/run/frontier.js": "2eb79cf668687ec1971b85f6940aee8e821b79934a20608ae85e6c33a3c7326f",
+    "/js/attacks.js": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+    "/js/range-guide.js": "7615a7379b9147656b6669accb0186c93f37cbbaa895b8cfa9431ea24ba82e41",
+    "/js/rewards.js": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+    "/js/traversal.js": "441ce4f53ae080f92c46b21cbc37f37c8d397d772068f8a9f7193d2db736885e",
+    "/js/run/campaign.js": "10668ba911e11448876dd587ad5f6abe96d79260672630d21e9fab91920f7ee8",
+    "/js/modes/campaign-store.js": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+    "/js/run/planets.js": "c23ad4ac7d6c34bccd28b3dd486f078fc35413d47d46f40d2648b4ef3ced8f91",
+    "/js/run/weapons.js": "56aa0a95c80b89a42be771debc64dea0902218ae975a6af9ffeac25706d70950",
+    "/js/allies.js": "77c6df706ff20f674852e103cd67ed052d1a17ee6d2a0e2924e24ca1233b74d1",
+    "/js/enemies.js": "563ea0491571be6424140c666264efe6bd1a3f10ebb22c2d7526d67596615746",
+    "/lib/three.core.min.js": "4183cee05f0aa093682fdf551363a16bb20bd92b68e14f7576905f45c461ba82",
+    "/js/soldier.js": "5d33289384fca6003a17c3c055e783139ec92a3d49bd471c516a16ebc0125722",
+    "/js/modes/ninetynine.js": "210f079d012d72099d9425f6808d982491ef38de3a58869799e57946f3d4a946",
+    "/js/run/schedule.js": "4b5be25bb1a28b89ca7299cdbaad74806ac2a4597b4443a794c1fb9b7b3e9520",
+    "/js/run/run.js": "aad6a255f3af44281429c8c1dfee0c5591dc0660cb7e94c90806451d4fdf25b0",
+    "/js/run/crystals.js": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+    "/js/unit-routes.js": "83a05fc947b2835b0d3be521f5ee541ca7d8aa82d0082e6c359bf72b9c503b1b",
+    "/js/loot-field.js": "53fc8c7ca1d9b64862178911c9623509baa35205f5721300efdb0e75045ec536",
+    "/js/nest-sites.js": "6aa7d51263de79f3b94f436de7e847b84fdfa0f0a28589f78c106415f35f12c0",
+    "/js/ui-weapons.js": "a057956a42bf35f7d7220391a463b2ada3c12f284b8dc29a46895dbd0928cbb6",
+    "/js/threat-guides.js": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+    "/js/ui-campaign.js": "e4b28e567b846049ca6403d69aa19d294b32386b7610a0c753d86b387630a1ca",
+    "/js/run/modifiers.js": "0f7fc001625d5e54e0051c54e08cc6962354ac005c125478603598b18590cd44",
+    "/js/run/powers.js": "314493afbfe65425784095045b70272e5591c32e8b961802e88695265090c9b3",
+    "/js/run/state.js": "7bd46fdc2b1bcca4a0126c23035e7d30234fd64964c4f2f053427a90aeacaa90",
+    "/js/run/draft.js": "3d38483829fae8a29b3786d49453041abb536d372776ac2ddf3f9bb63d9e1310"
+  },
+  "policySourceHash": "e142baa9e86db676bad349cc48dfc9d1b83e9c3fe606e5dfdc0bb93aae91561a",
+  "navigation": {
+    "heartNode": 121313,
+    "towers": [
+      {
+        "type": "bolt",
+        "pos": [
+          83.45918784791729,
+          197.27175146701512,
+          110.37066221513923
+        ]
+      },
+      {
+        "type": "tesla",
+        "pos": [
+          81.35924183118208,
+          198.79242754424683,
+          109.27235212299524
+        ]
+      },
+      {
+        "type": "cryo",
+        "pos": [
+          79.63414670992736,
+          198.04495086740698,
+          111.92748609404629
+        ]
+      },
+      {
+        "type": "tesla",
+        "pos": [
+          76.991591763308,
+          197.572857817771,
+          114.63241345519117
+        ]
+      },
+      {
+        "type": "mortar",
+        "pos": [
+          88.43123543987254,
+          195.0195018227992,
+          111.56772181376188
+        ]
+      }
+    ],
+    "nests": [
+      {
+        "node": 39576,
+        "destroyed": true,
+        "next": 158119,
+        "airNext": 158117,
+        "blocked": false,
+        "pos": [
+          102.02970123291016,
+          179.0591278076172,
+          123.05352020263672
+        ]
+      },
+      {
+        "node": 148740,
+        "destroyed": true,
+        "next": 37262,
+        "airNext": 148746,
+        "blocked": false,
+        "pos": [
+          85.05744934082031,
+          161.27455139160156,
+          156.10940551757812
+        ]
+      },
+      {
+        "node": 5946,
+        "destroyed": false,
+        "next": 94247,
+        "airNext": 94247,
+        "blocked": false,
+        "pos": [
+          26.86343002319336,
+          218.5711669921875,
+          95.49555206298828
+        ]
+      },
+      {
+        "node": 134592,
+        "destroyed": false,
+        "next": 134671,
+        "airNext": 134671,
+        "blocked": false,
+        "pos": [
+          136.9685821533203,
+          180.27114868164062,
+          79.72655487060547
+        ]
+      }
+    ],
+    "enemies": [
+      {
+        "id": 254,
+        "type": "aegis",
+        "node": 158180,
+        "nearest": 158180,
+        "next": 9913,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.415462625375848,
+          0.7678040963778465,
+          0.4877167994863479
+        ]
+      },
+      {
+        "id": 258,
+        "type": "aegis",
+        "node": 76659,
+        "nearest": 76659,
+        "next": 76658,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.30178325943077255,
+          0.822565917981363,
+          0.48198773314558163
+        ]
+      },
+      {
+        "id": 261,
+        "type": "husk",
+        "node": 121340,
+        "nearest": 121338,
+        "next": 121339,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.3690283744193572,
+          0.8123470443216914,
+          0.45156432371835875
+        ]
+      },
+      {
+        "id": 262,
+        "type": "aegis",
+        "node": 162937,
+        "nearest": 162937,
+        "next": 162940,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4808406814137788,
+          0.705365240392396,
+          0.5208186985350184
+        ]
+      },
+      {
+        "id": 266,
+        "type": "aegis",
+        "node": 93686,
+        "nearest": 93681,
+        "next": 93681,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.24388450690482288,
+          0.836896330890916,
+          0.49002538570273474
+        ]
+      },
+      {
+        "id": 268,
+        "type": "mite",
+        "node": 121474,
+        "nearest": 121474,
+        "next": 30407,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.376852197336438,
+          0.8088165488563329,
+          0.4514401529093638
+        ]
+      },
+      {
+        "id": 269,
+        "type": "mite",
+        "node": 23197,
+        "nearest": 23197,
+        "next": 92532,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.26240792967001975,
+          0.8249387748491386,
+          0.5006177146253378
+        ]
+      },
+      {
+        "id": 270,
+        "type": "husk",
+        "node": 160661,
+        "nearest": 160661,
+        "next": 160658,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.48650932839238503,
+          0.7073623575632415,
+          0.5127837443696549
+        ]
+      },
+      {
+        "id": 271,
+        "type": "husk",
+        "node": 77947,
+        "nearest": 77947,
+        "next": 19562,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.29972135097408464,
+          0.8604606373301836,
+          0.4120371383450814
+        ]
+      },
+      {
+        "id": 272,
+        "type": "mite",
+        "node": 121416,
+        "nearest": 121418,
+        "next": 121413,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.38567852868629926,
+          0.801301813925096,
+          0.4573483087436998
+        ]
+      },
+      {
+        "id": 273,
+        "type": "mite",
+        "node": 23150,
+        "nearest": 23150,
+        "next": 92337,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.2962745540488741,
+          0.8216655077504338,
+          0.4869159906969195
+        ]
+      },
+      {
+        "id": 274,
+        "type": "mite",
+        "node": 120555,
+        "nearest": 120555,
+        "next": 7572,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.39756770461633123,
+          0.783911556895642,
+          0.47688844734544805
+        ]
+      },
+      {
+        "id": 275,
+        "type": "aegis",
+        "node": 122531,
+        "nearest": 122531,
+        "next": 122610,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4847895171737678,
+          0.7662812836358762,
+          0.42165402688433923
+        ]
+      },
+      {
+        "id": 276,
+        "type": "mite",
+        "node": 1229,
+        "nearest": 1229,
+        "next": 76655,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.3014632122060191,
+          0.8197937543779849,
+          0.486886159147369
+        ]
+      },
+      {
+        "id": 277,
+        "type": "husk",
+        "node": 40721,
+        "nearest": 40721,
+        "next": 162743,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4731600154939181,
+          0.7207043973283619,
+          0.5066604103434152
+        ]
+      },
+      {
+        "id": 278,
+        "type": "mite",
+        "node": 120644,
+        "nearest": 30200,
+        "next": 30200,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.3960817563095944,
+          0.7883321191003905,
+          0.4707990147753016
+        ]
+      },
+      {
+        "id": 279,
+        "type": "mite",
+        "node": 92374,
+        "nearest": 92374,
+        "next": 92341,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.29196992964116886,
+          0.8219300806027583,
+          0.4890649269633579
+        ]
+      },
+      {
+        "id": 280,
+        "type": "mite",
+        "node": 1901,
+        "nearest": 120612,
+        "next": 120612,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.39139587843832335,
+          0.7911197565751487,
+          0.47004127169640236
+        ]
+      },
+      {
+        "id": 281,
+        "type": "mite",
+        "node": 92529,
+        "nearest": 92529,
+        "next": 92528,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.2591351381346662,
+          0.8277013664268923,
+          0.49775438541411443
+        ]
+      },
+      {
+        "id": 282,
+        "type": "husk",
+        "node": 78052,
+        "nearest": 78052,
+        "next": 78051,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.28824249491970383,
+          0.8568635767483662,
+          0.42743546292330664
+        ]
+      },
+      {
+        "id": 284,
+        "type": "mite",
+        "node": 158239,
+        "nearest": 158178,
+        "next": 158178,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.41586655390493626,
+          0.7636496790450601,
+          0.4938564336298654
+        ]
+      },
+      {
+        "id": 285,
+        "type": "mite",
+        "node": 92524,
+        "nearest": 92525,
+        "next": 92525,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.2627024538157406,
+          0.828301793629331,
+          0.49487731755418146
+        ]
+      },
+      {
+        "id": 286,
+        "type": "mite",
+        "node": 92652,
+        "nearest": 92652,
+        "next": 23226,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.2695475122425475,
+          0.826809047100299,
+          0.4936911365185216
+        ]
+      },
+      {
+        "id": 287,
+        "type": "mite",
+        "node": 158229,
+        "nearest": 158229,
+        "next": 158241,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4200474668154285,
+          0.7560665120654982,
+          0.5019198690578539
+        ]
+      },
+      {
+        "id": 289,
+        "type": "husk",
+        "node": 160591,
+        "nearest": 160591,
+        "next": 160590,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.46748007741041553,
+          0.7372950545340358,
+          0.4877072685371884
+        ]
+      },
+      {
+        "id": 290,
+        "type": "mite",
+        "node": 158032,
+        "nearest": 158032,
+        "next": 158038,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4084950954563951,
+          0.7696686144169921,
+          0.49065464531531555
+        ]
+      },
+      {
+        "id": 291,
+        "type": "husk",
+        "node": 77564,
+        "nearest": 77564,
+        "next": 19471,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.28018818135271334,
+          0.8608296090562328,
+          0.4248140383772087
+        ]
+      },
+      {
+        "id": 293,
+        "type": "mite",
+        "node": 158175,
+        "nearest": 158175,
+        "next": 39554,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.41302321154584093,
+          0.7668713609407455,
+          0.49124346559852416
+        ]
+      },
+      {
+        "id": 294,
+        "type": "mite",
+        "node": 77239,
+        "nearest": 77239,
+        "next": 19377,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.3420766507134785,
+          0.833234205806121,
+          0.4344011087822999
+        ]
+      },
+      {
+        "id": 295,
+        "type": "husk",
+        "node": 77803,
+        "nearest": 77809,
+        "next": 77796,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.2719191466870439,
+          0.8722873376214997,
+          0.40641700049356394
+        ]
+      },
+      {
+        "id": 296,
+        "type": "aegis",
+        "node": 97003,
+        "nearest": 97003,
+        "next": 6118,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.2176028011963377,
+          0.8890157139259215,
+          0.4028648424773394
+        ]
+      },
+      {
+        "id": 297,
+        "type": "mite",
+        "node": 158252,
+        "nearest": 158252,
+        "next": 158239,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4176347664127928,
+          0.7607015530978775,
+          0.49690476854001825
+        ]
+      },
+      {
+        "id": 299,
+        "type": "mite",
+        "node": 158241,
+        "nearest": 158241,
+        "next": 158251,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.41923405715324225,
+          0.758051047578654,
+          0.49960125559063334
+        ]
+      },
+      {
+        "id": 300,
+        "type": "husk",
+        "node": 160608,
+        "nearest": 160608,
+        "next": 40198,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.46773521612414276,
+          0.740667383810076,
+          0.48232312214659495
+        ]
+      },
+      {
+        "id": 301,
+        "type": "mite",
+        "node": 19377,
+        "nearest": 19377,
+        "next": 77214,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.3430670190993112,
+          0.8316995725080468,
+          0.43655565681393393
+        ]
+      },
+      {
+        "id": 302,
+        "type": "mite",
+        "node": 162972,
+        "nearest": 162972,
+        "next": 10216,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.453807801876545,
+          0.7117836750664425,
+          0.5361179710333235
+        ]
+      },
+      {
+        "id": 304,
+        "type": "mite",
+        "node": 162966,
+        "nearest": 162967,
+        "next": 162967,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.45810216611085947,
+          0.7083104775842698,
+          0.5370648682876981
+        ]
+      },
+      {
+        "id": 305,
+        "type": "husk",
+        "node": 77443,
+        "nearest": 77443,
+        "next": 77739,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.26524343715769444,
+          0.876228458389575,
+          0.4023302222714582
+        ]
+      },
+      {
+        "id": 306,
+        "type": "mite",
+        "node": 19384,
+        "nearest": 19384,
+        "next": 77235,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.33929899530852115,
+          0.8370239964207716,
+          0.4292633471406898
+        ]
+      },
+      {
+        "id": 307,
+        "type": "mite",
+        "node": 2559,
+        "nearest": 163156,
+        "next": 162968,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4564918738442368,
+          0.7072440142284243,
+          0.5398343018484855
+        ]
+      },
+      {
+        "id": 308,
+        "type": "mite",
+        "node": 19533,
+        "nearest": 19533,
+        "next": 77816,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.3325458171263042,
+          0.8379423657110304,
+          0.43274226886034706
+        ]
+      },
+      {
+        "id": 309,
+        "type": "mite",
+        "node": 40792,
+        "nearest": 163016,
+        "next": 163016,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.46181795956060795,
+          0.7054080476200812,
+          0.5377022025062774
+        ]
+      },
+      {
+        "id": 310,
+        "type": "husk",
+        "node": 122562,
+        "nearest": 122562,
+        "next": 122683,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4818621779950837,
+          0.7601508768545038,
+          0.4358663623579634
+        ]
+      },
+      {
+        "id": 311,
+        "type": "mite",
+        "node": 77287,
+        "nearest": 77287,
+        "next": 77286,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.3317591121194186,
+          0.8440686856017338,
+          0.42128843505643115
+        ]
+      },
+      {
+        "id": 312,
+        "type": "mite",
+        "node": 40809,
+        "nearest": 40809,
+        "next": 163077,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4477471997432998,
+          0.7183132438677183,
+          0.532492750003481
+        ]
+      },
+      {
+        "id": 313,
+        "type": "mite",
+        "node": 77838,
+        "nearest": 77838,
+        "next": 77850,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.3276320570145628,
+          0.8454933162149144,
+          0.4216613421364505
+        ]
+      },
+      {
+        "id": 314,
+        "type": "husk",
+        "node": 92754,
+        "nearest": 92754,
+        "next": 92733,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.24799188072318135,
+          0.8774494130583095,
+          0.41058805951830596
+        ]
+      },
+      {
+        "id": 315,
+        "type": "mite",
+        "node": 160727,
+        "nearest": 160727,
+        "next": 160728,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.47776399088719135,
+          0.720795912268952,
+          0.5021900256555414
+        ]
+      },
+      {
+        "id": 316,
+        "type": "mite",
+        "node": 78109,
+        "nearest": 78109,
+        "next": 78119,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.29745934508016925,
+          0.8573051785663879,
+          0.4201734984833416
+        ]
+      },
+      {
+        "id": 317,
+        "type": "mite",
+        "node": 160659,
+        "nearest": 160659,
+        "next": 162662,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4836312100507045,
+          0.7061609838392817,
+          0.5171436140648255
+        ]
+      },
+      {
+        "id": 318,
+        "type": "mite",
+        "node": 77954,
+        "nearest": 77954,
+        "next": 19567,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.3187917052945695,
+          0.8519202154189396,
+          0.41545612908696894
+        ]
+      },
+      {
+        "id": 319,
+        "type": "mite",
+        "node": 40210,
+        "nearest": 161449,
+        "next": 160657,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4877664654560503,
+          0.7049647641744018,
+          0.5148869355975559
+        ]
+      },
+      {
+        "id": 320,
+        "type": "mite",
+        "node": 19600,
+        "nearest": 19600,
+        "next": 78106,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.3148796526668731,
+          0.8522638395102331,
+          0.4177285628247909
+        ]
+      },
+      {
+        "id": 321,
+        "type": "mite",
+        "node": 162669,
+        "nearest": 162669,
+        "next": 162673,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4778274926478608,
+          0.7157617923954297,
+          0.5092798285979335
+        ]
+      },
+      {
+        "id": 322,
+        "type": "mite",
+        "node": 19478,
+        "nearest": 19478,
+        "next": 77589,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.2695996368337308,
+          0.8689643101419939,
+          0.4149904378640178
+        ]
+      },
+      {
+        "id": 323,
+        "type": "mite",
+        "node": 40710,
+        "nearest": 40710,
+        "next": 162671,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.47442233184395394,
+          0.7171213164398186,
+          0.510549183287337
+        ]
+      },
+      {
+        "id": 324,
+        "type": "mite",
+        "node": 77683,
+        "nearest": 77683,
+        "next": 77930,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.29360725827667733,
+          0.8633291270206477,
+          0.4104358614022645
+        ]
+      },
+      {
+        "id": 325,
+        "type": "mite",
+        "node": 160624,
+        "nearest": 160624,
+        "next": 160652,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.47447050255223117,
+          0.7447272618527488,
+          0.46931764047512714
+        ]
+      },
+      {
+        "id": 326,
+        "type": "mite",
+        "node": 160652,
+        "nearest": 40209,
+        "next": 40209,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.4712977257983652,
+          0.7462874140216179,
+          0.4700356894217877
+        ]
+      },
+      {
+        "id": 327,
+        "type": "husk",
+        "node": 122085,
+        "nearest": 122085,
+        "next": 122097,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.5038153981557291,
+          0.7707704597251159,
+          0.3899781314334403
+        ]
+      },
+      {
+        "id": 328,
+        "type": "aegis",
+        "node": 134439,
+        "nearest": 134439,
+        "next": 134394,
+        "blocked": false,
+        "source": 134592,
+        "dir": [
+          0.5343727202219168,
+          0.7727053187531056,
+          0.3425963897260019
+        ]
+      },
+      {
+        "id": 329,
+        "type": "mite",
+        "node": 96986,
+        "nearest": 96986,
+        "next": 96992,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.2136488385966799,
+          0.8882515646679181,
+          0.4066489046232451
+        ]
+      },
+      {
+        "id": 330,
+        "type": "mite",
+        "node": 96960,
+        "nearest": 96960,
+        "next": 96958,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.20769514608434395,
+          0.8936510862152914,
+          0.39780706680403877
+        ]
+      },
+      {
+        "id": 331,
+        "type": "husk",
+        "node": 94917,
+        "nearest": 94917,
+        "next": 94914,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.1849441045473399,
+          0.9064450248189497,
+          0.37967498623711843
+        ]
+      },
+      {
+        "id": 332,
+        "type": "aegis",
+        "node": 94333,
+        "nearest": 94333,
+        "next": 94332,
+        "blocked": false,
+        "source": 5946,
+        "dir": [
+          0.14867831819589206,
+          0.9109955136887866,
+          0.38468419741048004
+        ]
+      }
+    ]
+  },
+  "inventory": {
+    "version": 1,
+    "items": [
+      {
+        "id": "starter-28183",
+        "seed": 28183,
+        "tier": 1,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "balanced",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-2",
+        "seed": 2108306693,
+        "tier": 1,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "steady",
+          "core": "ember"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-1",
+        "seed": 2690661315,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "long",
+          "grip": "balanced",
+          "core": "ember"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-2",
+        "seed": 945372618,
+        "tier": 2,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "long",
+          "grip": "weighted",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-3",
+        "seed": 1287322961,
+        "tier": 2,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "steady",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-4",
+        "seed": 192736594,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "long",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [
+          "farseeing"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-6",
+        "seed": 2647749002,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "broad",
+          "grip": "steady",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-20",
+        "seed": 2413145999,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "broad",
+          "grip": "balanced",
+          "core": "tempered"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-3-3-1",
+        "seed": 382733854,
+        "tier": 3,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "broad",
+          "grip": "quick",
+          "core": "ember"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-3-3-2",
+        "seed": 3606758411,
+        "tier": 3,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "balanced",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-3-3-3",
+        "seed": 2401526631,
+        "tier": 3,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "keen",
+          "grip": "balanced",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-4-7-2",
+        "seed": 4278281655,
+        "tier": 4,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "keen",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-4-7-5",
+        "seed": 3857872510,
+        "tier": 4,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "long",
+          "grip": "balanced",
+          "core": "frost"
+        },
+        "affixes": [
+          "nimble"
+        ],
+        "infusions": 0
+      }
+    ],
+    "slots": [
+      "weapon-expedition-1-2-2-20",
+      null
+    ],
+    "active": 0,
+    "scrap": 2
+  },
+  "weaponLoop": false
+}

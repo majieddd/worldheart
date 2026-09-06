@@ -63,3 +63,14 @@ to reach zero before pausing browser frames or taking a capture. The
 [settled original title](V2-PREVIEW/settled-original-title.png) confirms the
 loading layer has cleared. This was a capture-timing refinement, not a game
 loading defect or a change to the published gameplay.
+
+## Commander feedback checkpoint
+
+The six U22-U27 improvements are published from `0be12ef` by
+[deployment 34050434063](https://github.com/majieddd/worldheart/actions/runs/34050434063).
+The [current public evidence](OCEAN-STRATEGY.md) records another 17 passing
+deployment/browser/save checks and 14 passing tower/loot interaction checks.
+The manifest confirms unchanged main `1374122` and now 55 preview files.
+All 71 production files remain tied to that main source. This batch has
+228 headless tests; preview publication leaves owner feel and broader campaign
+acceptance open. Follow-up documentation retains the tested runtime hashes.

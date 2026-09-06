@@ -93,7 +93,7 @@ frontier sizes, six distinct sites, and husk/mite/wisp. No stranded unit or
 flight ceiling violation occurred. This covers routes before placed towers;
 it is separate from the placement regression and natural campaign play.
 
-## Current handoff
+## Initial agent handoff
 
 The initial commit `c5e5e4a` passed source syntax/style and 221 headless tests. Primary UI and
 combat regressions, campaign checkpoint/loot edge fixtures and all five camera
@@ -156,8 +156,9 @@ Seven focused headless regressions cover full open-ground displacement,
 thin tower footprints, forbidden edges between otherwise reachable nodes,
 unwalkable/disconnected cells, air-layer behavior, dead/invalid impulses and
 classic behavior. Full suite: 228/228; syntax: 50/50; style: pass. Generated
-v2/dist are refreshed. Parent's next unforced campaign retest remains the
-publication gate. No balance improvement or sustained performance is claimed.
+v2/dist are refreshed. Parent's next unforced campaign retest was the
+publication gate. Its completed outcomes and public verification follow below.
+No balance improvement or sustained performance is claimed.
 
 Reproduce from this checkout:
 
@@ -165,3 +166,21 @@ Reproduce from this checkout:
 node --test tests/shell/knockback.test.mjs
 node tools/knockback-check.mjs artifacts/knockback-recheck
 ```
+
+## Completed integration and publication
+
+Parent integrated both agent commits on `feature/ocean-strategy`. Corrected
+unforced retests passed the earlier stalls and ended in ordinary defeat:
+ocean wave 12 and fresh active-commander wave 15 during the final encounter.
+Neither reported runtime faults or a persistent stranded-enemy diagnostic.
+They are coverage evidence, not a campaign balance pass or victory.
+
+All six changes are [live at V2](https://majieddd.github.io/worldheart/v2/)
+from source `0be12ef`, published by
+[deployment 34050434063](https://github.com/majieddd/worldheart/actions/runs/34050434063).
+The parent [integration record](OCEAN-STRATEGY.md) retains all failed attempts,
+corrected diagnoses, 17 passing public deployment checks and 14 passing public
+contextual checks, including actual first-person Upgrade and exact Sell refund.
+Shared ledgers and the blueprint now carry the completed implementation status.
+Owner feel, ocean/late-wave balance, full 99-planet play and sustained performance
+remain open. Main has not been merged. Usage is unmeasured.

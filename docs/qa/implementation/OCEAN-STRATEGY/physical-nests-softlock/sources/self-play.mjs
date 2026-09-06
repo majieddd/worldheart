@@ -180,11 +180,7 @@ try{
         const eligible=owned.filter(t=>t.tier+1<g.tierCap&&g.gold>=tierCost(t.typeKey,t.tier+1));
         eligible.sort((a,b)=>((b.damageDealt+40)/(tierCost(b.typeKey,b.tier+1)+1))-((a.damageDealt+40)/(tierCost(a.typeKey,a.tier+1)+1)));
         const t=eligible.find(t=>['bolt','tesla','helios','mortar'].includes(t.typeKey))||eligible[0];
-        if(t){
-          const before=t.tier;g.select(t);document.getElementById('tp-upgrade').click();
-          if(t.tier===before){trace('upgrade-rejected',{type:t.typeKey,tier:t.tier});break;}
-          trace('upgrade',{type:t.typeKey,tier:t.tier});changes++;continue;
-        }
+        if(t){g.select(t);document.getElementById('tp-upgrade').click();trace('upgrade',{type:t.typeKey,tier:t.tier});changes++;continue;}
         const cost=run.getHeartCost();
         if(cost!==null&&owned.length>=2&&g.gold>=cost){document.getElementById('heart-panel').click();trace('base',{level:run.getHeartLevel()});changes++;continue;}
         break;
@@ -236,18 +232,12 @@ try{
       };
     }
   });
-  let lastWave=0,lastTrip='',result,previousStranded='';
+  let lastWave=0,lastTrip='',result;
   for(let i=0;i<900;i++){
     result=await page.evaluate(()=>{__qaPolicy();for(let n=0;n<20;n++){window.__qaTrip?.();window.__qaWeaponTrip?.();window.__qaRetreat?.();window.__qaAssault?.update(.1);WH.step(.1);}return {state:WH.game.state,phase:WH.mode99.run.getPhase(),wave:WH.mode99.run.getWave(),lives:WH.game.lives,gold:WH.game.gold,kills:WH.game.kills,score:WH.game.score,towers:WH.towers.towers.length,commander:WH.allies.active.filter(a=>a.type.commander).map(a=>({hp:a.hp,hpMax:a.hpMax,state:a.state,dir:a.dir.toArray()})),seed:WH.CONFIG.seed};});
     if(result.wave!==lastWave){lastWave=result.wave;console.log(JSON.stringify(result));await page.screenshot({path:resolve(out,`wave-${String(lastWave).padStart(2,'0')}.png`)});}
     const trip=await page.evaluate(()=>window.__qaTripState||'');
-    if(i>0&&i%50===0){
-      const progress=await page.evaluate(()=>({time:WH.enemies.time,trip:window.__qaTripState,live:WH.enemies.active.length,stopped:WH.enemies.active.filter(e=>e.moveV===0).map(e=>({id:e.id,type:e.typeKey,node:e.node,next:e.type.flying?WH.nav.airNext[e.node]:WH.nav.next[e.node],heart:e.node===WH.nav.heartNode,height:e.height,source:e.sourceNest,blocked:!!WH.nav.block[e.node]}))}));
-      console.log('PROGRESS '+JSON.stringify(progress));
-      const stranded=progress.stopped.filter(e=>e.next<0&&!e.heart).map(e=>e.id+':'+e.node).sort().join(',');
-      if(stranded&&stranded===previousStranded){result.termination='stranded-enemy-stall';break;}
-      previousStranded=stranded;
-    }
+    if(i>0&&i%50===0)console.log('PROGRESS '+JSON.stringify(await page.evaluate(()=>({time:WH.enemies.time,trip:window.__qaTripState,live:WH.enemies.active.length,stopped:WH.enemies.active.filter(e=>e.moveV===0).map(e=>({type:e.typeKey,node:e.node,next:WH.nav.next[e.node],height:e.height}))}))));
     if(trip&&trip!==lastTrip){lastTrip=trip;await page.screenshot({path:resolve(out,`expedition-${trip}.jpg`),type:'jpeg',quality:85});}
     if(expeditionOnly&&trip==='done')break;
     if(result.state==='defeat'||result.phase==='victory')break;
@@ -257,11 +247,9 @@ try{
   result.talentPurchases=purchases;
   result.trace=await page.evaluate(()=>__qaTrace);result.faults=[...faults];result.policy={strategy,towerPriority,towerLimit};result.assault=await page.evaluate(()=>window.__qaAssault?.metrics||null);result.towerStats=await page.evaluate(()=>WH.towers.towers.map(t=>({type:t.typeKey,tier:t.tier,damage:t.damageDealt,kills:t.kills})));result.scope=`Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; ${sourceCheckpoint?'resumed exported checkpoint':planet===1?'fresh profile':'continued earned campaign profile'}`;
   await Promise.all(responseReads);result.runtimeHashes={...runtimeHashes};result.policySourceHash=assaultSource?createHash('sha256').update(assaultSource).digest('hex'):null;
-  result.navigation=await page.evaluate(()=>({heartNode:WH.nav.heartNode,towers:WH.towers.towers.map(t=>({type:t.typeKey,pos:t.pos.toArray()})),nests:WH.world.portals.filter(p=>p.established).map(p=>({node:p.node,destroyed:p.destroyed,next:WH.nav.next[p.node],airNext:WH.nav.airNext[p.node],blocked:!!WH.nav.block[p.node],pos:p.group.position.toArray()})),enemies:WH.enemies.active.filter(e=>e.active&&!e.dead).map(e=>({id:e.id,type:e.typeKey,node:e.node,nearest:WH.nav.nearestNode(e.dir),next:e.type.flying?WH.nav.airNext[e.node]:WH.nav.next[e.node],blocked:!!WH.nav.block[e.node],source:e.sourceNest,dir:e.dir.toArray()}))}));
   if(useWeapons){result.inventory=await page.evaluate(()=>WH.mode99.inventory.snapshot());result.weaponLoop=result.trace.some(a=>a.action==='weapon-picked-up')&&result.trace.some(a=>a.action==='weapon-equipped');}
   if(expeditionOnly)result.scope='Unforced instrumented crystal out-and-back; not a full planet';
-  writeFileSync(resolve(out,'run.json'),JSON.stringify(result,null,2)+'\n');
-  console.log('TERMINAL '+JSON.stringify({...result,trace:result.trace.length,runtimeHashes:Object.keys(result.runtimeHashes).length,inventory:result.inventory?.items.length,navigation:undefined}));
+  writeFileSync(resolve(out,'run.json'),JSON.stringify(result,null,2)+'\n');console.log('TERMINAL '+JSON.stringify({...result,trace:result.trace.length}));
   if((expeditionOnly?lastTrip!=='done':result.phase!=='victory')||faults.length){
     if(campaign)writeFileSync(resolve(rootOut,'checkpoint.json'),await page.evaluate(async()=>(await import('/js/modes/campaign-store.js')).campaignStore.export()));
     process.exitCode=1;break;
