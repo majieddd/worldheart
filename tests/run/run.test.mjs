@@ -62,7 +62,7 @@ test('the drafted power is added to the run and reaches the modifiers', () => {
   assert.notEqual(JSON.stringify(run.getModifiers()), before, 'modifiers unchanged');
 });
 
-test('the frontier grows once on an unraised heart, then holds', () => {
+test('the frontier never grows on an unraised heart', () => {
   // The circle used to widen on every cleared wave whether or not the player
   // did anything, which was the pacing the owner called too fast. Level 0
   // holds exactly one ring; everything after that is banked until the heart
@@ -71,23 +71,23 @@ test('the frontier grows once on an unraised heart, then holds', () => {
   const start = run.getFrontierTheta();
   clearWaveChoosingFirst(run);
   const first = run.getFrontierTheta();
-  assert.ok(first > start, 'the first wave must still widen the foothold');
+  assert.equal(first, start, 'only an explicit upgrade widens the foothold');
   for (let i = 0; i < 4; i++) {
     clearWaveChoosingFirst(run);
     assert.equal(run.getFrontierTheta(), first, 'frontier moved on wave ' + (i + 2) + ' without a heart upgrade');
   }
-  assert.equal(run.getHeldRings(), 4);
+  assert.equal(run.getHeldRings(), 0);
 });
 
-test('raising the heart pays out the rings the waves had banked', () => {
+test('raising the heart grants its territory independently of waves', () => {
   const run = newRun();
   for (let w = 1; w <= 5; w++) clearWaveChoosingFirst(run);
   const events = run.upgradeHeart();
   assert.ok(events.some((e) => e.type === 'heartUpgraded'));
   // Level 1 permits three rings, so two of the four held are paid now.
-  assert.equal(events.filter((e) => e.type === 'frontierGrew').length, 2);
+  assert.equal(events.filter((e) => e.type === 'frontierGrew').length, 3);
   assert.equal(run.getFrontierSteps(), 3);
-  assert.equal(run.getHeldRings(), 2);
+  assert.equal(run.getHeldRings(), 0);
 });
 
 test('towers unlock on waves 2, 4, 6, 8 and 10', () => {
@@ -144,7 +144,7 @@ test('completeWave emits the beats the shell needs', () => {
   const run = newRun();
   const odd = run.completeWave().map((e) => e.type);
   assert.ok(odd.includes('waveCleared'));
-  assert.ok(odd.includes('frontierGrew'));
+  assert.ok(!odd.includes('frontierGrew'));
   assert.ok(odd.includes('handDrawn'), 'an odd wave pays a card');
   assert.ok(!odd.includes('draftOpened'), 'an odd wave must not open a draft');
   const even = run.completeWave().map((e) => e.type);

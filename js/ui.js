@@ -87,6 +87,10 @@ export class HUD {
           <div class="hp-buys" id="heart-buys"></div>
           <div class="hp-cost"><span class="kbd">B</span><span id="heart-action">Upgrade</span><span class="gold-text" id="heart-cost"></span></div>
         </button>
+        <div class="panel" id="crystal-panel" hidden>
+          <div class="marker" id="crystal-readout"></div>
+          <button class="btn" id="btn-deposit" title="Deposit carried crystals at the heart (C)">C Deposit</button>
+        </div>
       </div>
 
       <div class="hud-top-center">
@@ -162,6 +166,7 @@ export class HUD {
           <div class="bar" id="fp-hp-track"><div class="bar-fill" id="fp-hp"></div></div>
           <div id="fp-swing-track"><div id="fp-swing"></div></div>
           <div id="fp-link">BASE CONTROL DISCONNECTED<span>outside the frontier - walk back to reconnect</span></div>
+          <div id="fp-crystals" hidden></div>
         <div id="fp-keys">
             <span><b>WASD</b> move</span><span><b>Shift</b> sprint</span><span><b>LMB</b> strike</span>
             <span><b>Space</b> jump</span><span><b>1-6</b> build</span><span><b>Scroll</b> view</span><span><b>P</b> pause</span>
@@ -183,6 +188,7 @@ export class HUD {
             <span class="kbd">-</span> to zoom, <span class="kbd">Q</span> <span class="kbd">E</span> or
             <span class="kbd">Ctrl</span> + middle-drag to rotate (<span class="kbd">R</span> resets rotation; <span class="kbd">Home</span> returns to the heart).
             Keys <span class="kbd">1</span> to <span class="kbd">${CONFIG.map.mode === 'ninetynine' ? '6' : '5'}</span> choose ${CONFIG.map.mode === 'ninetynine' ? 'a hand slot' : 'a tower'}, click to build.
+            ${CONFIG.map.mode === 'ninetynine' ? '<br>Carry up to 3 crystals home and press <span class="kbd">C</span> to deposit. Each gives 100 base-only credit. Only an explicit base upgrade expands your territory.' : ''}
             <span class="kbd">U</span> upgrade, <span class="kbd">X</span> sell,
             <span class="kbd">Space</span> pause, <span class="kbd">F</span> speed. Camera feel sliders live in settings.</div></details>
           <div class="map-row" id="map-row"></div>
@@ -245,6 +251,7 @@ export class HUD {
     for (const id of [
       'lives-fill', 'lives-num', 'gold-num', 'score-line', 'wave-label', 'wave-sub',
       'nest-sep', 'nest-count', 'heart-panel', 'heart-level', 'heart-buys', 'heart-action', 'heart-cost',
+      'crystal-panel', 'crystal-readout', 'btn-deposit', 'fp-crystals',
       'btn-call', 'call-bonus', 'boss-bar', 'boss-fill', 'boss-name',
       'btn-speed', 'speed-label', 'btn-pause', 'btn-home', 'btn-sound', 'btn-settings', 'settings-pop',
       'set-quality', 'set-shake', 'set-bob', 'set-focus', 'set-seed', 'toast-anchor', 'wave-banner', 'banner-big', 'banner-small',
@@ -459,6 +466,7 @@ export class HUD {
     this.el['btn-speed'].addEventListener('click', () => this.cycleSpeed());
     this.el['btn-pause'].addEventListener('click', () => this.togglePause());
     this.el['btn-home'].addEventListener('click', () => this.returnToHeart());
+    this.el['btn-deposit'].addEventListener('click', () => this.onCrystalDeposit?.());
     this.el['btn-sound'].addEventListener('click', () => this.toggleSound());
     this.el['btn-settings'].addEventListener('click', () => {
       this.el['settings-pop'].classList.toggle('show');
@@ -685,13 +693,23 @@ export class HUD {
     } else {
       const rings = info.ringsGain === 1 ? '+1 ring' : `+${info.ringsGain} rings`;
       const owed = info.held ? ` (${info.held} held)` : '';
-      e['heart-buys'].textContent = `Current ${markLabel(info.tierCap)}. Next: ${markLabel(info.nextTierCap)}, ${rings}${owed}`;
+      e['heart-buys'].textContent = `Current ${markLabel(info.tierCap)}. Next: ${markLabel(info.nextTierCap)}, ${rings}${owed}${info.radius ? `. Radius ${info.radius}` : ''}`;
       e['heart-action'].textContent = 'Upgrade';
-      e['heart-cost'].textContent = fmt(info.cost);
+      e['heart-cost'].textContent = info.credit ? `${fmt(info.goldCost)} gold + ${info.credit} credit` : fmt(info.cost);
       e['heart-panel'].disabled = false;
     }
     e['heart-panel'].classList.toggle('poor', info.cost !== null && !info.afford);
     e['heart-panel'].classList.toggle('held', !!info.held);
+  }
+
+  renderCrystals(info) {
+    this.el['crystal-panel'].hidden = false;
+    this.el['fp-crystals'].hidden = false;
+    const count = `Crystals ${info.carried}/${info.capacity} · Base credit ${info.credit}`;
+    if (this.el['crystal-readout'].textContent !== count) this.el['crystal-readout'].textContent = count;
+    this.el['btn-deposit'].disabled = !info.canDeposit;
+    const text = `${count}\nHeart ${Math.round(info.distance)}m ${info.direction}. ${info.distance <= 4.5 ? 'C: deposit' : 'Return to deposit'}`;
+    if (this.el['fp-crystals'].textContent !== text) this.el['fp-crystals'].textContent = text;
   }
 
   // One pulse when a cleared wave's ring cannot be held. A transform only:

@@ -167,7 +167,7 @@ First validate one complete planet, then two linked planets. Expand to a three-p
 - **Draft and inventory:** solo choices wait by default; compare meaningful mechanics and compatibility, equip/salvage by deliberate action; no important feedback dependent on a toast that can expire unseen.
 - **Between planets:** settlement receipt, banked/unbanked distinction, next destination, save state and clear final campaign ending.
 
-Preserve `DESIGN.md` type/color/spacing language. New UI must be reviewed in the running game at 1280 x 720 and 1920 x 1080, keyboard-only and reduced-motion settings. No new UI or motion implementation is included in this documentation batch.
+Preserve `DESIGN.md` type/color/spacing language. New UI must be reviewed in the running game at 1280 x 720 and 1920 x 1080, keyboard-only and reduced-motion settings. Implemented slices and remaining acceptance are linked in the progress ledger.
 
 ## Build order and milestones
 
@@ -212,7 +212,7 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 | Keep simple faceted aesthetic and extend existing rig/world systems | partial | [Live baseline](qa/2026-09-05/README.md); new model/feel acceptance still open |
 | Trust every offered/purchased reward | implemented, review open | [M0 live consumers and verification](qa/implementation/M0.md); wider balance/manual sampling remains open |
 | Camera/POV/animation polish and readable strike zones | partial, M1 implementation verified | [Camera ownership, paused visibility and arm comparison](qa/implementation/M1.md); owner feel and M4 telegraph acceptance remain open |
-| Crystal-driven explicit upgrades are the only frontier expansion trigger | not yet | M2; existing code still earns wave rings |
+| Crystal-driven explicit upgrades are the only frontier expansion trigger | implemented, review open | [M2 ledger, expedition and boss victory](qa/implementation/M2.md); terrain profile sampling continues in M3 |
 | Massive terrain variation, swimming, slope cost, climate placement, flight ceilings, spherical ranges | partial | Existing ranges/canyons and 3D targeting; requested extension not built |
 | Weapon inventory, loot, modular customization and era arc | not yet | M4-M5 |
 | Actual 99-planet continuation and final ending | not yet | Current victory only banks a counter |
@@ -222,22 +222,19 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 
 The [GitHub-linked progress ledger](PROGRESS.md) is the live task index. It carries owner, dependency, status, evidence and usage. The request map is: U01/U19/U20 -> M5/M6; U02 -> M1; U03-U07 -> M1/M4; U08-U10 -> M4/M5; U11-U16/U18 -> M3; U17 -> M2; U21 -> the ledger and every PR. The [original request intake](qa/2026-09-05/REQUEST.md) spells out each ID.
 
-Start M0 with one reward contract and an actual before/after shell test; then complete the catalog. Do not simultaneously rewrite terrain, combat, loot and campaign state. A task closes only when its stated player behavior is evidenced, with remaining gaps named. No gameplay task is marked implemented by this planning PR.
+Continue in dependency order and keep each behavior reviewable. A task closes only when its stated player behavior is evidenced, with remaining gaps named. M0-M2 implementation records distinguish automated evidence from remaining owner review.
 
 ## Where we are
 
-M1 update: camera ownership, opt-in focus, motion preferences and Bulwark arm
-attachment are implemented on feature/99-planets-camera. Camera fixtures and
-all five map harnesses pass. Paused camera changes also exposed and repaired
-stale visible body instances. M2 crystal delivery and upgrade-only expansion
-are now active. Full choreography/graphics acceptance remains open.
+M2 update: explicit upgrades now own all runtime territory growth. The carried
+crystal/deposit/credit loop passed 16 shell checks and an unforced out-and-back
+expedition followed by a wave-15 victory. The current suite has 174 tests.
+M3 terrain classification, traversal and range work is active. M4-M6 remain
+queued. The stacked feature PRs have not been merged to production.
 
-Implementation update, 2026-09-05: M0 reward and deliberate-draft changes are
-implemented on the feature branch. 168 headless tests and 14 browser assertions
-pass; all five maps pass their camera harnesses. Unforced instrumented play
-defeated the wave-15 boss after a direct-control retreat, with commander defeat
-and retry recorded separately. This is not a blind human victory or complete
-campaign acceptance. M1 camera/POV work is active; M2-M6 remain queued. See the
-[live implementation record](IMPLEMENTATION.md). No gameplay has shipped yet.
-
-2026-09-05: Astra's blind attempt ended naturally at wave 11/15. Repository study, a source retrospective, a targeted commander POV retry, 128 existing tests and a read-only reward diagnostic now establish a documented baseline. The current repository still ships Worldheart with a one-planet 99 Planets mode. This batch supplies QA evidence, direction, acceptance gates and collaboration tracking; M0 is the next development milestone. The external blueprint checker was absent, so these fourteen sections were reviewed manually without claiming its gate passed.
+M0 rewards and deliberate drafts, and M1 camera ownership/motion preferences/
+Bulwark arm attachment, have implemented slices with automated evidence. Owner
+continuous-input feel and broader model/choreography review remain open. The
+[implementation record](IMPLEMENTATION.md) carries the current handoff; the
+[frozen blind baseline](qa/2026-09-05/README.md) remains separate. No external
+blueprint-checker pass is claimed because that checker was unavailable.

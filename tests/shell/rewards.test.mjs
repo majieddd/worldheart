@@ -82,9 +82,9 @@ test('Cryo Field installs a bounded live aura and a healthy control has none',()
 test('Veterancy reaches real spawned bodies and pooled ownership resets',()=>{
   const manager=Object.assign(Object.create(AllyManager.prototype),{active:[],pool:[],healthMultiplier:1.2});
   const dir=new THREE.Vector3(0,1,0),a=manager.spawn('warden',dir,dir);
-  assert.equal(a.hpMax,264);assert.equal(a.hp,264);a.homeTower=41;
+  assert.equal(a.hpMax,264);assert.equal(a.hp,264);a.homeTower=41;a.carryMul=.9;
   manager.active.length=0;manager.pool.push(a);const b=manager.spawn('commander',dir,dir);
-  assert.equal(a,b);assert.equal(b.homeTower,null);assert.equal(b.hpMax,1680);
+  assert.equal(a,b);assert.equal(b.homeTower,null);assert.equal(b.hpMax,1680);assert.equal(b.carryMul,1);
 });
 test('Warden damage and kill attribution survives AI/player shared path',()=>{
   const calls=[];const manager=Object.assign(Object.create(AllyManager.prototype),{modifiers:mods('keen-rails'),

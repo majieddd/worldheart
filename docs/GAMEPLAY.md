@@ -244,7 +244,7 @@ wave gives exactly one of the two (`js/run/schedule.js:61`).
 
 | Level | Cost | Rings held | Tier cap |
 |---|---|---|---|
-| 0 | - | 1 | MK II |
+| 0 | - | 0 | MK II |
 | 1 | 250 | 3 | MK III |
 | 2 | 450 | 5 | MK IV |
 | 3 | 700 | 8 | MK V |
@@ -254,9 +254,20 @@ wave gives exactly one of the two (`js/run/schedule.js:61`).
 Tables at `js/run/schedule.js:29`. The full ladder costs 3,800 gold. The tier cap
 is `2 + level`.
 
-A wave earns a ring whether or not the heart can hold it, and the debt is
-remembered: `wavesCleared` and `frontierSteps` are two separate numbers on
-purpose (`js/run/state.js:27`). Buying a level pays out every banked ring at once.
+Only buying a base level grants territory, immediately and independently of
+wave count. Waves do not expand or bank rings. Forward Scout still starts the
+run one geometric step wider, without granting a free level.
+
+Crystals are seeded on reachable nav nodes outside the frontier. A commander
+automatically picks up at most three, with a total 10% movement penalty at full
+load. Return within 4.5 units of the heart and press C to deposit. One crystal
+grants 100 base-only credit; deposit does not expand territory or grant tower
+gold. The next explicit base upgrade uses credit first, then quotes the gold
+remainder. Deposit and pickup identities cannot pay twice.
+
+Cargo and base credit belong to the current assault. Death loses carried
+crystals; reload starts a fresh assault, just like towers and run gold. This
+is not yet the M5 versioned expedition checkpoint/inventory system.
 
 The frontier angle eases out from 0.05 to 0.52 radians over 14 steps
 (`js/run/schedule.js:77`), so early expansions read as dramatic and late ones as

@@ -272,6 +272,7 @@ class Ally {
     this.order = null;   // a place this unit was told to walk to
     this.orderUntil = 0;
     this.hidden = false;
+    this.carryMul = 1;
     this.hop = 0;        // metres above the ground while airborne
     this.vertVel = 0;
     this.airT = 0;
@@ -611,7 +612,7 @@ export class AllyManager {
             if (!mayStep) { a.target = null; a.state = 'roam'; }
           }
           if (a.target) {
-            if (mayStep) advanceToward(a.dir, a.target.dir, (type.speed * dt) / R, a.fwd);
+            if (mayStep) advanceToward(a.dir, a.target.dir, (type.speed * a.carryMul * dt) / R, a.fwd);
             faceToward(a.fwd, a.dir, a.target.dir, dt * 6);
           }
         }
@@ -633,7 +634,7 @@ export class AllyManager {
           if (d > 2.6) {
             const leadSpeed = lead.type.speed * (lead.possessed ? 1.25 : 1);
             const catchup = Math.min(type.speed * 2, Math.max(type.speed * 1.15, leadSpeed * 1.15));
-            advanceToward(a.dir, lead.dir, (catchup * dt) / R, a.fwd);
+            advanceToward(a.dir, lead.dir, (catchup * a.carryMul * dt) / R, a.fwd);
           }
         }
       } else if (a.order) {
@@ -649,7 +650,7 @@ export class AllyManager {
           // being hit, is a gamble the player did not choose to take.
           this.clearOrder(a);
           if (this.onOrderFailed) this.onOrderFailed(a);
-        } else if (advanceToward(a.dir, a.order, (type.speed * dt) / R, a.fwd)) {
+        } else if (advanceToward(a.dir, a.order, (type.speed * a.carryMul * dt) / R, a.fwd)) {
           this._finishOrder(a);
         } else {
           faceToward(a.fwd, a.dir, a.order, dt * 6);
@@ -658,7 +659,7 @@ export class AllyManager {
         a.state = 'roam';
         a.wanderT -= dt;
         if (a.wanderT <= 0) this._reroll(a);
-        if (advanceToward(a.dir, a.wander, (type.speed * 0.55 * dt) / R, a.fwd)) this._reroll(a);
+        if (advanceToward(a.dir, a.wander, (type.speed * a.carryMul * 0.55 * dt) / R, a.fwd)) this._reroll(a);
       }
 
       this._ground(a);
@@ -726,7 +727,7 @@ export class AllyManager {
     _axis.crossVectors(a.dir, _tmp2);
     if (_axis.lengthSq() < 1e-12) return;
     _axis.normalize();
-    const step = (a.type.speed * 1.25 * mul * mag * dt) / R;
+    const step = (a.type.speed * 1.25 * mul * mag * a.carryMul * dt) / R;
     a.dir.applyAxisAngle(_axis, step).normalize();
     reflatten(a.fwd.applyAxisAngle(_axis, step), a.dir);
     this._ground(a);

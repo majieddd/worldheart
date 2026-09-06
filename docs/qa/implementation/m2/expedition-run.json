@@ -1,0 +1,89 @@
+{
+  "state": "playing",
+  "phase": "building",
+  "wave": 1,
+  "lives": 20,
+  "gold": 30,
+  "kills": 0,
+  "score": 0,
+  "towers": 1,
+  "commander": [
+    {
+      "hp": 1400,
+      "hpMax": 1400,
+      "state": "roam",
+      "dir": [
+        0.2794698695677846,
+        0.3006981121233329,
+        0.9118537368291195
+      ]
+    }
+  ],
+  "seed": 51940,
+  "trace": [
+    {
+      "action": "build",
+      "wave": 1,
+      "lives": 20,
+      "gold": 300,
+      "type": "bolt",
+      "pos": [
+        73.44112169776143,
+        69.7165735898771,
+        218.53793324934432
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "start",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180
+    },
+    {
+      "action": "crystal-picked-up",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "id": "crystal-51940-3",
+      "theta": 0.05
+    },
+    {
+      "action": "crystal-deposited",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "ledger": {
+        "version": 1,
+        "carried": [],
+        "claimed": [
+          "crystal-51940-3"
+        ],
+        "deposited": [
+          "crystal-51940-3"
+        ],
+        "credit": 100
+      },
+      "theta": 0.05
+    },
+    {
+      "action": "crystal-funded-upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 30,
+      "creditBefore": 100,
+      "creditAfter": 0,
+      "level": 1,
+      "theta": 0.2298469387755102
+    }
+  ],
+  "faults": [],
+  "scope": "Unforced instrumented crystal out-and-back; not a full planet"
+}

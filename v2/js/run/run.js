@@ -8,7 +8,7 @@
 
 import { makeRng, pick } from './rng.js';
 import {
-  TOTAL_WAVES, EXPANSIONS, frontierTheta, unlocksTowerAt,
+  TOTAL_WAVES, frontierTheta, unlocksTowerAt,
   evolutionTierAfter, isBossWave, drawsCardAfter, draftsPowerAfter,
   heartCost, ringsPermitted, tierCapForHeart, MAX_HEART_LEVEL,
 } from './schedule.js';
@@ -82,18 +82,10 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
     events.push({ type: 'towerUnlocked', tower });
   }
 
-  // How many rings the run has EARNED: one per cleared wave, never more than
-  // there are expansions, because the boss wave is not one.
-  function ringsEarned() {
-    return Math.min(state.wavesCleared, EXPANSIONS);
-  }
-
-  // Applies every expansion that is both earned and permitted by the heart,
-  // one frontierGrew per ring so the shell can seed each new band of ground.
-  // Called on a cleared wave, where it can add at most one ring, and on a
-  // heart upgrade, where it pays out everything the wave count had banked.
+  // Only an explicit heart purchase may expand the frontier. Waves, elapsed
+  // time, kills, crystal pickups and deposits never call this function.
   function growFrontier(events) {
-    const allowed = Math.min(ringsEarned(), ringsPermitted(state.heartLevel));
+    const allowed = ringsPermitted(state.heartLevel);
     while (state.frontierSteps < allowed) {
       state.frontierSteps += 1;
       events.push({ type: 'frontierGrew', theta: frontierTheta(state.frontierSteps) });
@@ -139,9 +131,8 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
     // two differ by however many rings the heart is holding back.
     getFrontierTheta: () => frontierTheta(state.frontierSteps),
     getFrontierSteps: () => state.frontierSteps,
-    // Rings earned by waves that the heart cannot yet hold. The HUD shows this
-    // so a held frontier reads as a debt the next upgrade pays, not a stall.
-    getHeldRings: () => Math.max(0, ringsEarned() - state.frontierSteps),
+    // Compatibility query: territory no longer accumulates wave debt.
+    getHeldRings: () => 0, // retained query for older integrations; no wave debt
     getHeartLevel: () => state.heartLevel,
     getHeartCost: () => heartCost(state.heartLevel),
     getTierCap: () => tierCapForHeart(state.heartLevel),
@@ -181,19 +172,6 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
         return events;
       }
 
-      // The circle only widens if the heart can hold the new ring. When it
-      // cannot, the shell is told so, with the price, because a wave that
-      // silently paid nothing was the complaint that made the hand draw loud.
-      growFrontier(events);
-      if (state.frontierSteps < ringsEarned()) {
-        events.push({
-          type: 'frontierHeld',
-          level: state.heartLevel,
-          cost: heartCost(state.heartLevel),
-          held: ringsEarned() - state.frontierSteps,
-        });
-      }
-
       if (draftsPowerAfter(wave)) {
         draft = openDraft(rollOffers(rng, state.powers), state.players.map((p) => p.id), draftSeconds);
         state.phase = 'drafting';
@@ -210,7 +188,7 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
 
     // Raises the Worldheart one level. Gold lives in the shell, so the shell
     // checks the price and deducts it BEFORE calling this; the core only
-    // records the level and pays out whatever rings the waves had banked. An
+    // records the level and grants its territory immediately. An
     // ended run or a heart already at its ceiling changes nothing and says so
     // by returning no events, which is what lets the shell refund safely.
     upgradeHeart() {

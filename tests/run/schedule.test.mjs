@@ -69,7 +69,7 @@ test('the schedule gates tower upgrades by the heart, not by the wave', async ()
 test('the heart tables agree with the number of expansions', async () => {
   const { HEART_COSTS, HEART_RINGS, MAX_HEART_LEVEL, heartCost, ringsPermitted } = await import('../../js/run/schedule.js');
   assert.deepEqual(HEART_COSTS, [250, 450, 700, 1000, 1400]);
-  assert.deepEqual(HEART_RINGS, [1, 3, 5, 8, 11, 14]);
+  assert.deepEqual(HEART_RINGS, [0, 3, 5, 8, 11, 14]);
   assert.equal(MAX_HEART_LEVEL, 5);
   // One ring entry per level 0..5, rising, and the top level holds every
   // expansion or the final frontier could never be reached.

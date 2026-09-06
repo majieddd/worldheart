@@ -1,0 +1,113 @@
+{
+  "scope": "Injected-position/resource shell fixtures; natural expedition is separate",
+  "checks": [
+    {
+      "name": "Opening crystals are reachable and outside the frontier",
+      "ok": true,
+      "actual": [
+        {
+          "id": "crystal-51940-0",
+          "node": 161044,
+          "cost": 20.896955490112305
+        },
+        {
+          "id": "crystal-51940-1",
+          "node": 154649,
+          "cost": 24.647960662841797
+        },
+        {
+          "id": "crystal-51940-2",
+          "node": 38402,
+          "cost": 21.138774871826172
+        },
+        {
+          "id": "crystal-51940-3",
+          "node": 161141,
+          "cost": 15.268901824951172
+        },
+        {
+          "id": "crystal-51940-4",
+          "node": 38956,
+          "cost": 18.644630432128906
+        },
+        {
+          "id": "crystal-51940-5",
+          "node": 10136,
+          "cost": 22.59995460510254
+        }
+      ]
+    },
+    {
+      "name": "Pause does not collect resources",
+      "ok": true
+    },
+    {
+      "name": "Proximity collects one carried crystal",
+      "ok": true
+    },
+    {
+      "name": "Pickup grants no gold or expansion",
+      "ok": true
+    },
+    {
+      "name": "Carried crystal slows the actual body",
+      "ok": true,
+      "actual": 0.9666666666666667
+    },
+    {
+      "name": "Real travel distance matches the carry penalty",
+      "ok": true,
+      "actual": {
+        "ratio": 0.9666666666527429,
+        "penalty": 0.9666666666666667
+      }
+    },
+    {
+      "name": "Full carry leaves the fourth crystal in the world",
+      "ok": true
+    },
+    {
+      "name": "Far-away deposit is refused",
+      "ok": true
+    },
+    {
+      "name": "Deposit pays base-only credit",
+      "ok": true
+    },
+    {
+      "name": "Deposit never expands territory",
+      "ok": true
+    },
+    {
+      "name": "Duplicate deposit cannot pay twice",
+      "ok": true
+    },
+    {
+      "name": "Explicit purchase spends credit and expands",
+      "ok": true
+    },
+    {
+      "name": "Insufficient mixed payment changes nothing",
+      "ok": true
+    },
+    {
+      "name": "A live wave callback does not expand territory",
+      "ok": true
+    },
+    {
+      "name": "Commander death loses cargo and refuses deposits",
+      "ok": true
+    },
+    {
+      "name": "Reload starts a fresh assault without duplicate credit",
+      "ok": true,
+      "actual": {
+        "credit": 0,
+        "carried": 0,
+        "level": 0,
+        "theta": 0.05
+      }
+    }
+  ],
+  "faults": []
+}

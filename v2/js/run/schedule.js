@@ -13,21 +13,15 @@ export const BOSS_WAVE = 15;
 export const THETA_START = 0.05;
 export const THETA_END = 0.52;
 
-// Fourteen expansions: one earned per wave 1..14. Clearing the boss grants
-// none, because the planet itself is that reward.
+// Fourteen geometric steps across the complete territory. They are granted
+// only by explicit base upgrades; no wave grants a ring.
 export const EXPANSIONS = 14;
 
-// The Worldheart's own ladder. Clearing a wave EARNS an expansion, but the
-// heart decides how many of them can be HELD: the circle used to widen
-// fourteen times whether or not the player did anything, and the owner called
-// that pacing too fast. Now each heart level permits a number of rings, and a
-// wave cleared past that number is banked until the heart is raised.
-//
-// Costs are paid in run gold by the shell (the core does not hold gold), one
-// entry per level 1..5. Rings are indexed by heart level 0..5: level 0 holds
-// only the first foothold expansion, level 5 holds all fourteen.
+// A purchase pays its full territory immediately, independently of wave count.
+// The shell quotes a mixture of gold and deposited crystal credit. Level zero
+// is the original foothold; Forward Scout alters only the initial start.
 export const HEART_COSTS = [250, 450, 700, 1000, 1400];
-export const HEART_RINGS = [1, 3, 5, 8, 11, 14];
+export const HEART_RINGS = [0, 3, 5, 8, 11, 14];
 export const MAX_HEART_LEVEL = HEART_COSTS.length;
 
 // Towers may climb two marks on an unraised heart, and one more per level. The
