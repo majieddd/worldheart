@@ -1,0 +1,99 @@
+{
+  "format": "99-planets-save-export",
+  "checkpoint": {
+    "version": 1,
+    "revision": 20,
+    "sequence": 1,
+    "account": {
+      "version": 2,
+      "planetsBeaten": 1,
+      "coins": 490,
+      "towers": [
+        "bolt"
+      ],
+      "commanders": [
+        "commander"
+      ],
+      "bonuses": {},
+      "loadout": "bolt"
+    },
+    "expedition": {
+      "id": "expedition-1",
+      "seed": 12345,
+      "limit": 99,
+      "planet": 2,
+      "completed": 1,
+      "status": "ready",
+      "attempt": 1,
+      "commander": "commander",
+      "banked": {
+        "version": 1,
+        "items": [
+          {
+            "id": "starter-28183",
+            "seed": 28183,
+            "tier": 1,
+            "family": "sword",
+            "era": "ancient",
+            "rarity": "common",
+            "parts": {
+              "head": "balanced",
+              "grip": "balanced",
+              "core": "tempered"
+            },
+            "affixes": [],
+            "infusions": 0
+          },
+          {
+            "id": "weapon-expedition-1-1-1-1",
+            "seed": 2013013496,
+            "tier": 1,
+            "family": "carbine",
+            "era": "ancient",
+            "rarity": "common",
+            "parts": {
+              "head": "long",
+              "grip": "quick",
+              "core": "frost"
+            },
+            "affixes": [],
+            "infusions": 0
+          },
+          {
+            "id": "weapon-expedition-1-1-1-2",
+            "seed": 2108306693,
+            "tier": 1,
+            "family": "spear",
+            "era": "ancient",
+            "rarity": "common",
+            "parts": {
+              "head": "balanced",
+              "grip": "steady",
+              "core": "ember"
+            },
+            "affixes": [],
+            "infusions": 0
+          }
+        ],
+        "slots": [
+          "weapon-expedition-1-1-1-2",
+          null
+        ],
+        "active": 0,
+        "scrap": 0
+      },
+      "assault": null,
+      "receipts": [
+        {
+          "id": "expedition-1-1",
+          "planet": 1,
+          "items": 3,
+          "coins": 490,
+          "kills": 1340,
+          "score": 25900
+        }
+      ]
+    }
+  },
+  "original": null
+}
