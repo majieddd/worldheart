@@ -12,6 +12,7 @@ import { CONFIG } from '../config.js';
 import * as THREE from 'three';
 import { bankVictory, bankCoins, loadProfile } from './progress.js';
 import { createRewardConsumer } from '../rewards.js';
+import { createCrystalLedger, CRYSTAL_CAPACITY } from '../run/crystals.js';
 
 export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, allies, possession, caches }) {
   // What this player has permanently unlocked. Read here in the shell and
@@ -28,6 +29,13 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // A seeded stream for shell-side choices, kept separate from the core's so
   // that adding a roll here cannot shift the run's own sequence.
   const rng = makeRng((CONFIG.seed ^ 0x5bf03635) >>> 0);
+  const crystalRng = makeRng((CONFIG.seed ^ 0x73d16e2b) >>> 0);
+  const crystals = createCrystalLedger();
+  if (caches) {
+    caches.kind = 'crystal';
+    caches.mesh.material.color.setHex(0x91b7ff);
+    caches.mesh.material.emissive.setHex(0x718bff);
+  }
 
   // One seeded stream for the whole simulation, so a seed replays identically.
   // Offset from the world seed so terrain and combat are not correlated.
@@ -43,6 +51,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const _sdir = new THREE.Vector3();
   const _axis = new THREE.Vector3();
   const _up = new THREE.Vector3();
+  const _home = new THREE.Vector3();
   let frontierTheta = 0;
 
   function applyFrontier(theta) {
@@ -133,15 +142,19 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     game.tierCap = run.getTierCap();
     const level = run.getHeartLevel();
     const cost = run.getHeartCost();
+    const price = crystals.quote(cost, game.gold);
     ui.renderHeart({
       level,
       max: MAX_HEART_LEVEL,
       cost,
       tierCap: run.getTierCap(),
       nextTierCap: run.getTierCap() + 1,
-      ringsGain: cost === null ? 0 : HEART_RINGS[level + 1] - HEART_RINGS[level],
-      held: run.getHeldRings(),
-      afford: cost !== null && game.gold >= cost,
+      ringsGain: cost === null ? 0 : HEART_RINGS[level + 1] - run.getFrontierSteps(),
+      held: 0,
+      radius: Math.round(CONFIG.planetRadius * run.getFrontierTheta()),
+      credit: price?.credit || 0,
+      goldCost: price?.gold ?? cost,
+      afford: !!price?.afford,
     });
     ui.refresh();
     applyFrontier(run.getFrontierTheta());
@@ -152,23 +165,28 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // no events, and the gold goes back, so a stray B can never charge for
   // nothing.
   function tryUpgradeHeart() {
+    if (game.state !== 'playing' || run.getPhase() !== 'building') return false;
+    if (possession?.active && !possession.linked) {
+      ui.toast('Return inside the frontier to control the base', 'warn');
+      return false;
+    }
     const cost = run.getHeartCost();
     if (cost === null) {
       ui.toast('The Worldheart is at full strength', 'info');
       return false;
     }
-    if (game.gold < cost) {
-      ui.toast(`Not enough gold: the Worldheart needs ${cost}`, 'warn');
+    const price = crystals.quote(cost, game.gold);
+    if (!price?.afford) {
+      ui.toast(`The Worldheart needs ${price?.shortfall ?? cost} more gold after crystal credit`, 'warn');
       ui.audio?.play('deny');
       return false;
     }
-    game.gold -= cost;
     const events = run.upgradeHeart();
-    if (!events.length) {
-      game.gold += cost;
-      return false;
-    }
+    if (!events.length) return false;
+    crystals.spend(cost, game.gold);
+    game.gold -= price.gold;
     handle(events);
+    updateCrystals();
     return true;
   }
   ui.onHeartUpgrade = tryUpgradeHeart;
@@ -192,15 +210,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         ui.toast('The swarm evolves', 'danger');
       } else if (e.type === 'frontierGrew') {
         grew++;
-        // Each ring seeds its own band, so a paid-out debt of three rings
-        // still scatters caches across all three.
+        // Each purchased geometric step seeds its own reachable band.
         seedCaches(e.theta);
-      } else if (e.type === 'frontierHeld') {
-        // The wave paid a ring the heart cannot hold. Say so, with the price,
-        // and pulse the panel that sells it: the owner's whole premise is
-        // that expanding has to be something the player chooses to afford.
-        ui.toast(`The Worldheart cannot hold more ground. Upgrade it (${e.cost} gold)`, 'warn');
-        ui.pulseHeart();
       } else if (e.type === 'heartUpgraded') {
         ui.toast(`Worldheart raised to level ${e.level}: towers may reach mark ${run.getTierCap()}`, 'info');
         ui.audio?.play('upgrade');
@@ -309,6 +320,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // tree hangs its commander unlocks on.
     commander = allies.spawn(pickCommander(), centre, centre, 8);
     allies.onCommanderLost = () => {
+      crystals.loseCarried();
       run.loseRun();
       game.state = 'defeat';
       ui.showEnd(false, 'the commander fell');
@@ -510,19 +522,88 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // Seeded fresh each expansion, on the ring between the new frontier and the
   // far edge, so there is always something worth walking into the dark for.
   function seedCaches(theta) {
-    if (!caches || !centre) return;
-    caches.scatter(centre, theta * 1.15, Math.min(theta * 2.6, CONFIG.map.fieldTheta), 4);
+    if (!caches || !centre || caches.caches.length >= 60) return;
+    const inner = theta * 1.12, outer = Math.min(theta * 1.8, CONFIG.map.fieldTheta * .97);
+    if (inner >= outer) return;
+    let added = 0;
+    for (let tries = 0; tries < 180 && added < 6 && caches.caches.length < 60; tries++) {
+      _up.set(crystalRng() - .5, crystalRng() - .5, crystalRng() - .5);
+      _axis.crossVectors(centre, _up);
+      if (_axis.lengthSq() < 1e-9) continue;
+      _axis.normalize();
+      _sdir.copy(centre).applyAxisAngle(_axis, inner + (outer - inner) * crystalRng()).normalize();
+      const node = nav.nearestWalkableNode(_sdir);
+      if (node < 0 || !Number.isFinite(nav.dist[node])) continue;
+      nav.nodeDir(node, _sdir);
+      const angle = Math.acos(Math.max(-1, Math.min(1, _sdir.dot(centre))));
+      if (angle < inner || angle > outer) continue;
+      if (caches.caches.some(c => Math.acos(Math.min(1, c.dir.dot(_sdir))) * CONFIG.planetRadius < 3)) continue;
+      const id = `crystal-${CONFIG.seed}-${caches.caches.length}`;
+      crystals.register(id);
+      caches.caches.push({ id, node, dir: _sdir.clone(), taken: false, gold: 0 });
+      added++;
+    }
+    caches._render();
   }
 
+  function homeDistance() {
+    return commander?.active && !commander.dead
+      ? Math.acos(Math.max(-1, Math.min(1, commander.dir.dot(centre)))) * CONFIG.planetRadius : Infinity;
+  }
+
+  function depositCrystals() {
+    if (game.state !== 'playing' || game.paused || run.getPhase() !== 'building') return false;
+    const receipt = crystals.deposit({ alive: !!commander?.active && !commander.dead, nearHeart: homeDistance() <= 4.5 });
+    if (!receipt.count) { ui.toast('Carry crystals within 4.5 units of the heart to deposit', 'info'); return false; }
+    ui.toast(`${receipt.count} crystals delivered: +${receipt.credit} base upgrade credit`, 'info');
+    ui.audio?.play('upgrade');
+    syncFromRun(); updateCrystals();
+    return true;
+  }
+  ui.onCrystalDeposit = depositCrystals;
+  addEventListener('keydown', e => {
+    if (e.code !== 'KeyC' || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.target?.matches?.('input,textarea,select,[contenteditable="true"]')) return;
+    e.preventDefault(); depositCrystals();
+  });
+
+  function updateCrystals() {
+    if (!commander?.active || commander.dead) return;
+    if (game.state === 'playing' && !game.paused && run.getPhase() === 'building'
+      && crystals.carried.length < CRYSTAL_CAPACITY && caches) {
+      const found = caches.peekCrystal(allies.worldPos(commander, _up));
+      if (found && crystals.pickup(found.id)) {
+        found.taken = true;
+        ui.toast(`Crystal carried (${crystals.carried.length}/${CRYSTAL_CAPACITY}). Return to the heart and press C.`, 'info');
+        ui.audio?.play('coin');
+      }
+    }
+    commander.carryMul = 1 - .1 * crystals.carried.length / CRYSTAL_CAPACITY;
+    if (caches) { caches.carrier = commander; caches.carriedCount = crystals.carried.length; }
+    const distance = homeDistance();
+    const home = _home.copy(centre).addScaledVector(commander.dir, -centre.dot(commander.dir)).normalize();
+    _axis.crossVectors(commander.fwd, commander.dir).normalize();
+    const angle = Math.atan2(home.dot(_axis), home.dot(commander.fwd));
+    const directions = ['Ahead', 'Ahead-right', 'Right', 'Behind-right', 'Behind', 'Behind-left', 'Left', 'Ahead-left'];
+    const direction = directions[(Math.round(angle / (Math.PI / 4)) + 8) % 8];
+    ui.renderCrystals({ carried: crystals.carried.length, capacity: CRYSTAL_CAPACITY, credit: crystals.credit,
+      distance, direction, canDeposit: distance <= 4.5 && !game.paused && crystals.carried.length > 0 });
+  }
+
+  seedCaches(run.getFrontierTheta());
   syncFromRun();
+  updateCrystals();
 
   return {
     run,
+    crystals,
+    depositCrystals,
     // The same path the panel and the B key use, exposed so a scripted run
     // can buy a level without synthesising a click.
     upgradeHeart: tryUpgradeHeart,
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
+      updateCrystals();
       const draft = run.getDraft();
       if (draft) {
         ui.setDraftTimer(draft.remaining === null ? null : draft.remaining / 10);

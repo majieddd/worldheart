@@ -13,7 +13,7 @@ Layouts are designed against four named modes:
 - **Planetary Battlefield**: the entire globe is in play.
 - **Battlefield**: one walled zone on a planet's surface, scaled so play inside feels identical to a planetary map. Towers cannot leave the bounds, the camera is confined to the zone, and the world beyond grays out under fog.
 - **Space Battlefield**: floating rock platforms over open void, in predetermined balanced positions of varying size and altitude, tall spire rocks included. Placement stays freeform on every rock, sides included (towers align to the local surface). The swarm flies lanes that bend around the rocks in three altitude bands, so matching coverage height replaces mazing.
-- **Roguelite campaign**: a walled front that GROWS. You start on a circle twelve units across, earn a ring of ground for every wave you survive, and widen the circle as far as your Worldheart can hold, fighting fifteen waves to a planetary boss. See [99 Planets](#99-planets).
+- **Roguelite campaign**: a walled front that GROWS through explicit Worldheart upgrades. Venture out with your commander, carry crystals home, and deposit base-only upgrade credit while defending fifteen waves to a planetary boss. See [99 Planets](#99-planets).
 
 ## Worlds
 
@@ -135,9 +135,9 @@ up to 90% with the Salvage power.
 
 `?map=ninetynine`, or the fifth card on the title screen.
 
-Fifteen waves on one planet. You begin holding a circle twelve units across with
-a single tower from your loadout. Every wave you survive **earns** a ring of
-ground, but the circle only widens as far as your **Worldheart** can hold. The
+Fifteen waves on one planet. You begin holding a circle with a twelve-unit radius
+and a single tower from your loadout. Only an explicit **Worldheart upgrade**
+widens the circle; waves and crystal deposits do not expand territory. The
 two rewards alternate: an **odd** wave hands you a tower card, an **even** one
 opens a draft of three powers. Enemies evolve on waves 3, 6, 9 and 12 - gaining
 armour, then speed, then a shield that only sustained fire breaks, then the
@@ -145,15 +145,16 @@ ability to split - and wave 15 is a planetary boss.
 
 ### The Worldheart
 
-The heart is the run's one upgradable base, bought with run gold from the panel
-under the gold readout or with **B**. Its level sets two things: the highest
-mark any tower may reach, and how many of the fourteen frontier rings the run
-can hold. A wave cleared past what the heart permits is banked, not lost: the
-panel counts the rings held and the next upgrade pays them all out at once.
+The heart is the run's one upgradable base, bought from the panel under the gold
+readout or with **B**. Its level sets the tower mark cap and territory radius.
+Carry up to three crystals, return within 4.5 units of the heart, and press **C**
+to deposit. Each grants 100 base-only credit. The next upgrade uses credit first
+and quotes the remaining gold cost. Full cargo slows movement by 10%. Cargo and
+base credit reset with the assault on defeat/reload; account talents persist.
 
 | Level | Cost | Tier cap | Rings held |
 |---|---|---|---|
-| 0 | - | MK II | 1 |
+| 0 | - | MK II | 0 |
 | 1 | 250 | MK III | 3 |
 | 2 | 450 | MK IV | 5 |
 | 3 | 700 | MK 5 | 8 |

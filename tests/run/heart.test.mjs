@@ -50,35 +50,31 @@ test('the heart cannot be raised past its ceiling', () => {
   assert.equal(run.getHeartLevel(), HEART_COSTS.length);
 });
 
-test('a held wave reports the level and the price of relief', () => {
+test('wave settlement does not grant or bank territory', () => {
   const run = newRun();
   clearWave(run);
   const events = clearWave(run);
-  const held = events.find((e) => e.type === 'frontierHeld');
-  assert.ok(held, 'the second wave on an unraised heart must be held');
-  assert.equal(held.level, 0);
-  assert.equal(held.cost, HEART_COSTS[0]);
-  assert.equal(held.held, 1);
-  assert.ok(!events.some((e) => e.type === 'frontierGrew'), 'a held wave must not also grow');
+  assert.equal(run.getHeldRings(), 0);
+  assert.equal(run.getFrontierSteps(), 0);
+  assert.ok(!events.some((e) => e.type === 'frontierHeld' || e.type === 'frontierGrew'));
 });
 
-test('a wave the heart can hold grows and is not reported as held', () => {
+test('even the first wave leaves the original foothold unchanged', () => {
   const run = newRun();
+  const before = run.getFrontierTheta();
   const events = clearWave(run);
-  assert.ok(events.some((e) => e.type === 'frontierGrew'));
+  assert.equal(run.getFrontierTheta(), before);
+  assert.ok(!events.some((e) => e.type === 'frontierGrew'));
   assert.ok(!events.some((e) => e.type === 'frontierHeld'));
 });
 
-test('an upgrade never grants rings the waves have not earned', () => {
-  // Level 1 permits three rings, but only one wave has cleared, so only one
-  // ring exists to hold. Raising the heart early buys the cap, not ground.
+test('an early upgrade grants its full territory without requiring a wave', () => {
   const run = newRun();
-  clearWave(run);
   const events = run.upgradeHeart();
-  assert.ok(!events.some((e) => e.type === 'frontierGrew'));
-  assert.equal(run.getFrontierSteps(), 1);
+  assert.equal(events.filter((e) => e.type === 'frontierGrew').length, 3);
+  assert.equal(run.getFrontierSteps(), 3);
   clearWave(run);
-  assert.equal(run.getFrontierSteps(), 2, 'the next wave grows straight away under the raised heart');
+  assert.equal(run.getFrontierSteps(), 3, 'waves cannot expand the upgraded frontier');
 });
 
 test('the frontier at every level matches the rings table', () => {

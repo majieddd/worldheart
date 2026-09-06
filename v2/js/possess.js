@@ -171,6 +171,7 @@ export class CacheField {
 
   // Nearest untaken cache within reach of a world position.
   collectNear(point, reach = CACHE_REACH) {
+    if (this.kind === 'crystal') return 0;
     for (const c of this.caches) {
       if (c.taken) continue;
       surfacePoint(c.dir, _tmp2);
@@ -182,6 +183,15 @@ export class CacheField {
       }
     }
     return 0;
+  }
+
+  peekCrystal(point, reach = CACHE_REACH) {
+    for (const c of this.caches) {
+      if (c.taken) continue;
+      surfacePoint(c.dir, _tmp2).addScaledVector(c.dir, 0.5);
+      if (_tmp2.distanceTo(point) <= reach) return c;
+    }
+    return null;
   }
 
   remaining() {
@@ -204,6 +214,16 @@ export class CacheField {
       this._q.setFromAxisAngle(c.dir, this.time * 0.8);
       this._m4.compose(_tmp, this._q, this._s);
       this.mesh.setMatrixAt(n++, this._m4);
+    }
+    if (this.carrier?.active && !this.carrier.dead) {
+      const a = this.carrier;
+      for (let i = 0; i < (this.carriedCount || 0) && n < 64; i++) {
+        surfacePoint(a.dir, _tmp).addScaledVector(a.dir, 2.4 + i * .28);
+        _tmp.addScaledVector(a.fwd, -.45);
+        this._q.setFromAxisAngle(a.dir, this.time * .8 + i);
+        this._m4.compose(_tmp, this._q, this._s);
+        this.mesh.setMatrixAt(n++, this._m4);
+      }
     }
     this.mesh.count = n;
     this.mesh.instanceMatrix.needsUpdate = true;

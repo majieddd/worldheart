@@ -7,6 +7,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 const require=createRequire(process.env.WH_NODE_MODULES?resolve(process.env.WH_NODE_MODULES,'package.json'):import.meta.url);
 const {chromium}=require('playwright');
 const seed=process.argv[2]||'12345',out=resolve(process.argv[3]||`artifacts/self-play-${seed}`);mkdirSync(out,{recursive:true});
+const expeditionOnly=process.argv.includes('--expedition');
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:720}});const faults=[];
 page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
@@ -85,15 +86,49 @@ try{
       g.select(null);return changes;
     };
     __qaPolicy();trace('start');
+    if(W.mode99.crystals){
+      const a=W.allies.active.find(a=>a.type.commander);
+      const cache=[...W.caches.caches].sort((x,y)=>y.dir.dot(a.dir)-x.dir.dot(a.dir))[0];
+      if(!cache)throw Error('No reachable opening crystal');
+      W.possession.enter(a);
+      let stage='outbound';window.__qaTripState=stage;const startTheta=run.getFrontierTheta();
+      window.__qaTrip=()=>{
+        if(stage==='done'||!a.active)return;
+        if(stage==='outbound'&&W.mode99.crystals.carried.length){stage='return';window.__qaTripState=stage;trace('crystal-picked-up',{id:cache.id,theta:run.getFrontierTheta()});}
+        const destination=stage==='outbound'?cache.dir:centre;
+        const distance=Math.acos(Math.min(1,a.dir.dot(destination)))*240;
+        if(stage==='return'&&distance<3.5){
+          dispatchEvent(new KeyboardEvent('keyup',{code:'KeyW'}));
+          dispatchEvent(new KeyboardEvent('keydown',{code:'KeyC'}));
+          trace('crystal-deposited',{ledger:W.mode99.crystals.snapshot(),theta:run.getFrontierTheta()});
+          if(run.getFrontierTheta()!==startTheta)throw Error('Travel or deposit expanded the frontier');
+          const credit=W.mode99.crystals.credit;
+          W.possession.exit();document.getElementById('heart-panel').click();
+          trace('crystal-funded-upgrade',{creditBefore:credit,creditAfter:W.mode99.crystals.credit,level:run.getHeartLevel(),theta:run.getFrontierTheta()});
+          if(credit===0||W.mode99.crystals.credit>=credit)throw Error('Delivery credit was not spent on expansion');
+          stage='done';window.__qaTripState=stage;return;
+        }
+        const tangent=destination.clone().addScaledVector(a.dir,-destination.dot(a.dir)).normalize();
+        const right=new THREE.Vector3().crossVectors(a.fwd,a.dir).normalize();
+        const turn=Math.atan2(tangent.dot(right),tangent.dot(a.fwd));
+        // Normal right-drag look and W input; no body position assignment.
+        W.possession.canvas.dispatchEvent(new MouseEvent('mousemove',{buttons:2,movementX:turn/.0032}));
+        dispatchEvent(new KeyboardEvent(Math.abs(turn)<.6?'keydown':'keyup',{code:'KeyW'}));
+      };
+    }
   });
-  let lastWave=0,result;
+  let lastWave=0,lastTrip='',result;
   for(let i=0;i<600;i++){
-    result=await page.evaluate(()=>{__qaPolicy();WH.step(2);return {state:WH.game.state,phase:WH.mode99.run.getPhase(),wave:WH.mode99.run.getWave(),lives:WH.game.lives,gold:WH.game.gold,kills:WH.game.kills,score:WH.game.score,towers:WH.towers.towers.length,commander:WH.allies.active.filter(a=>a.type.commander).map(a=>({hp:a.hp,hpMax:a.hpMax,state:a.state,dir:a.dir.toArray()})),seed:WH.CONFIG.seed};});
+    result=await page.evaluate(()=>{__qaPolicy();for(let n=0;n<20;n++){window.__qaTrip?.();WH.step(.1);}return {state:WH.game.state,phase:WH.mode99.run.getPhase(),wave:WH.mode99.run.getWave(),lives:WH.game.lives,gold:WH.game.gold,kills:WH.game.kills,score:WH.game.score,towers:WH.towers.towers.length,commander:WH.allies.active.filter(a=>a.type.commander).map(a=>({hp:a.hp,hpMax:a.hpMax,state:a.state,dir:a.dir.toArray()})),seed:WH.CONFIG.seed};});
     if(result.wave!==lastWave){lastWave=result.wave;console.log(JSON.stringify(result));await page.screenshot({path:resolve(out,`wave-${String(lastWave).padStart(2,'0')}.png`)});}
+    const trip=await page.evaluate(()=>window.__qaTripState||'');
+    if(trip&&trip!==lastTrip){lastTrip=trip;await page.screenshot({path:resolve(out,`expedition-${trip}.jpg`),type:'jpeg',quality:85});}
+    if(expeditionOnly&&trip==='done')break;
     if(result.state==='defeat'||result.phase==='victory')break;
   }
   await page.screenshot({path:resolve(out,'terminal.png')});
   result.trace=await page.evaluate(()=>__qaTrace);result.faults=faults;result.scope='Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile';
+  if(expeditionOnly)result.scope='Unforced instrumented crystal out-and-back; not a full planet';
   writeFileSync(resolve(out,'run.json'),JSON.stringify(result,null,2)+'\n');console.log('TERMINAL '+JSON.stringify({...result,trace:result.trace.length}));
-  if(result.phase!=='victory'||faults.length)process.exitCode=1;
+  if((expeditionOnly?lastTrip!=='done':result.phase!=='victory')||faults.length)process.exitCode=1;
 }catch(e){console.error(e);await page.screenshot({path:resolve(out,'error.png')});process.exitCode=1;}finally{await browser.close();}
