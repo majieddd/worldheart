@@ -70,9 +70,9 @@ export function weaponName(item) {
   const eras = { ancient: 'Forged', technological: 'Circuit', empowered: 'Awakened' };
   return `${eras[item.era]} ${FAMILIES[item.family].name}`;
 }
-export function weaponStats(item, commander) {
-  if (!validWeapon(item) || !compatible(commander, item.family)) return null;
-  const s = { ...FAMILIES[item.family] }, trait = COMPATIBILITY[commander];
+export function weaponStats(item, commander, inspect = false) {
+  if (!validWeapon(item) || (!inspect && !compatible(commander, item.family))) return null;
+  const s = { ...FAMILIES[item.family] }, trait = compatible(commander,item.family) ? COMPATIBILITY[commander] : {};
   // Tier is bounded independently of rarity. Era changes identity and core
   // presentation; it does not invalidate a favorite weapon's family.
   s.dmg *= Math.min(2.4, 1 + (item.tier - 1) * 0.014) * (1 + RARITIES.indexOf(item.rarity) * 0.08);

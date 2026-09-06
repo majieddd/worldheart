@@ -9,6 +9,7 @@ import { MODS, TOWER_TYPES } from '../towers.js';
 import { EVO } from '../enemies.js';
 import { SIM_RANDOM } from '../noise.js';
 import { CONFIG } from '../config.js';
+import { portalCount } from '../waves.js';
 import * as THREE from 'three';
 import { bankVictory, bankCoins, loadProfile } from './progress.js';
 import { createRewardConsumer } from '../rewards.js';
@@ -16,6 +17,8 @@ import { createCrystalLedger, CRYSTAL_CAPACITY } from '../run/crystals.js';
 import { createInventory, generateWeapon, weaponStats, weaponName, shouldDrop, compatible, validPart, PARTS, FAMILIES, COMPATIBILITY } from '../run/weapons.js';
 import { LootField } from '../loot-field.js';
 import { WeaponPanel } from '../ui-weapons.js';
+import { UnitRoutes } from '../unit-routes.js';
+import { nestSite } from '../nest-sites.js';
 import { ThreatGuides } from '../threat-guides.js';
 import { campaignStore } from './campaign-store.js';
 import { beginAssault, awardWave, resolveAssault, updateSalvage, extractPlanet, startExpedition } from '../run/campaign.js';
@@ -98,43 +101,6 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         if (a.type.commander && a.active && !a.dead) a.leash = post;
       }
     }
-  }
-
-  // Breach sites are authored across the FINAL cap, so an unremapped spawn at
-  // wave 1 appears far outside a tiny circle and the walk in is most of the
-  // wave. Pull the spawn along the great circle from the cap centre toward its
-  // portal until it sits just outside the current frontier: the direction each
-  // breach attacks from is preserved, the distance is not.
-  function spawnNodeNearFrontier(portalNode, flying = false) {
-    if (!centre || portalNode < 0) return -1;
-    // A raid from a nest is the one spawn that must NOT be pulled in: the
-    // whole point of a nest is that it sits outside the circle and the
-    // player has to go out to it. The director raises this flag around the
-    // spawn call; nothing else sets it.
-    if (enemies.spawnRaw) return portalNode;
-    if (CONFIG.terrain) {
-      // Follow the solved route into the current frontier. Snapping a great
-      // circle to merely walkable ground can choose an isolated mountaintop.
-      const next = flying ? nav.airNext : nav.next;
-      const limit = frontierTheta * 1.12;
-      let node = portalNode;
-      for (let guard = 0; guard < nav.n && next[node] >= 0; guard++) {
-        nav.nodeDir(next[node], _sdir);
-        if (Math.acos(Math.max(-1, Math.min(1, _sdir.dot(centre)))) < limit) break;
-        node = next[node];
-      }
-      return node;
-    }
-    nav.nodeDir(portalNode, _sdir);
-    const ang = Math.acos(Math.max(-1, Math.min(1, _sdir.dot(centre))));
-    const want = frontierTheta * 1.12;
-    if (ang <= want || ang < 1e-4) return portalNode;   // already close enough
-    _axis.crossVectors(centre, _sdir);
-    if (_axis.lengthSq() < 1e-12) return portalNode;    // portal is dead centre
-    _axis.normalize();
-    _up.copy(centre).applyAxisAngle(_axis, want).normalize();
-    const node = nav.nearestWalkableNode(_up);
-    return node >= 0 ? node : portalNode;
   }
 
   // Everything the renderer needs to know is derived from the core, never
@@ -306,14 +272,57 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     handle(run.completeWave());
   };
 
-  enemies.spawnNodeOverride = spawnNodeNearFrontier;
+  enemies.spawnNodeOverride = node => node;
 
-  // Nests. Every woken breach outside the circle trickles raids from where it
-  // actually stands, so a frontier that does not grow toward the breaches is
-  // a frontier under steady pressure from them: the reason to expand, or to
-  // send units out, that the owner asked for. The director reads the frontier
-  // off game.frontier and asks the core, through this predicate, whether a
-  // raid may spawn at all - never while a draft is open.
+  // A campaign wave comes from the nest the player can actually see. New
+  // nests are established once on solved routes near the current frontier;
+  // expanding later never teleports that structure or its spawn point.
+  waves.nestOnly = true;
+  waves.nestSources = [];
+  const sourcePortals = nav.portalNodes.slice();
+  for (const p of world.portals) { p.active = false; p.group.visible = false; }
+  const establishNest = (index, wave, guardian = false) => {
+    const original = sourcePortals[index % sourcePortals.length];
+    let node;
+    // Two structures cannot share the destruction identity. Search back
+    // along the same certified route if an earlier nest occupies this node.
+    const used = new Set(world.portals.filter(p => p.established).map(p => p.node));
+    node=nestSite(nav,original,centre,frontierTheta,used,_sdir);
+    for(const alternative of sourcePortals)if(node<0)node=nestSite(nav,alternative,centre,frontierTheta,used,_sdir);
+    if(node<0)throw new Error('No reachable visible nest site remains');
+    const pos = nav.nodePos(node, new THREE.Vector3());
+    const p = guardian ? world.addPortal(pos) : world.portals[index];
+    p.group.position.copy(pos); p.group.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), pos.clone().normalize());
+    p.node=node; p.established=true; p.sourceWave=wave; p.active=true; p.group.visible=true;
+    p.guardianPending=guardian; p.flash=1;
+    world.crushDecorNear(pos,3.2);
+    ui.banner(guardian ? 'GUARDIAN NEST' : 'NEST EMERGING', guardian ? 'Protected until its guardian emerges. Defeat the guardian to win.' : 'Enemies emerge here in 3 seconds. Destroy the nest to stop its buildup.', false);
+    ui.audio?.play('portal');
+    return p;
+  };
+  waves.prepareNests = wave => {
+    const count = portalCount(wave);
+    for (let i=0; i<count; i++) if (!world.portals[i].established) establishNest(i,wave);
+    if (wave === CONFIG.waves.count) waves.guardianNode=establishNest(sourcePortals.length,wave,true).node;
+    return world.portals.filter(p => p.established && !p.destroyed).map(p=>p.node);
+  };
+  waves.onNestSpawn = (q, enemy) => {
+    if (q.type !== 'colossus') return;
+    for (const p of world.portals) p.guardianPending=false;
+    enemy.guardianNest=q.portal;
+  };
+  enemies.reinforcementSource = parent => {
+    const sources=waves.activePortals();
+    return sources.includes(parent.sourceNest)?parent.sourceNest:(sources[0]??-1);
+  };
+  enemies.onReinforcement = (child,parent,node) => {
+    if(waves.raiderIds.has(parent.id))waves.raiderIds.add(child.id);
+    waves.onSpawnPortal?.(node);
+  };
+
+  // Surviving physical nests supply both waves and additional raids. Growing
+  // the frontier no longer silently removes a source; destroying it does.
+  // The core still owns whether a raid may run while a draft is open.
   waves.nestMode = true;
   waves.canRaid = () => run.getPhase() === 'building';
   waves.onNestWake = (count) => {
@@ -373,7 +382,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const initialInventory=expedition?.assault?.victory?.inventory || expedition?.assault?.start || expedition?.banked;
   const inventory = createInventory(commander.typeKey,initialInventory);
   const lootRng = makeRng((CONFIG.seed ^ 0x19427cb5) >>> 0);
-  const loot = new LootField(game.scene, allies);
+  const previewModel = item => allies.weaponPreview(FAMILIES[item.family].visual,{era:item.era,core:item.parts.core},item.parts.head==='long'?1.2:1);
+  const loot = new LootField(game.scene, allies, previewModel);
+  const unitRoutes = new UnitRoutes(game.scene,allies,nav);
   const threats = new ThreatGuides(game.scene,enemies);
   let lootSequence = 0, weaponSignature = '';
   const starterFamily = { commander:'sword', duelist:'sword', marksman:'carbine', bombardier:'lobber', oracle:'spear' }[commander.typeKey];
@@ -398,6 +409,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   }
   const weaponApi = {
     inventory,
+    previewModel,
+    inspect:id=>loot.entries.get(id),
     canInteract: () => game.state === 'playing' && ['building','victory'].includes(run.getPhase()) && (!campaign||['assault','victory'].includes(campaign.expeditionStatus())) && commander.active && !commander.dead,
     nearby: nearbyLoot,
     request(op) {
@@ -421,7 +434,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     campaign:!!campaign,
   };
   const weaponPanel = new WeaponPanel({game,possession,ui,api:weaponApi,rules:{
-    name:weaponName,stats:item=>weaponStats(item,commander.typeKey),parts:PARTS,
+    name:weaponName,stats:item=>weaponStats(item,commander.typeKey),inspectStats:item=>weaponStats(item,commander.typeKey,true),parts:PARTS,
     compatible:family=>compatible(commander.typeKey,family),validPart,trait:COMPATIBILITY[commander.typeKey].label,
   }});
   const previousKill = enemies.onKill;
@@ -765,11 +778,12 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     depositCrystals,
     inventory,
     loot,
+    unitRoutes,
     threats,
     weapons: weaponApi,
     weaponPanel,
     campaign:campaignApi,
-    renderEffects(dt) { loot.update(dt); threats.update(); weaponPanel.update(); if(campaignPanel){campaignPanel.badge.hidden=game.state==='title';} },
+    renderEffects(dt) { loot.update(dt); unitRoutes.update(); threats.update(); weaponPanel.update(); if(campaignPanel){campaignPanel.badge.hidden=game.state==='title';} },
     // The same path the panel and the B key use, exposed so a scripted run
     // can buy a level without synthesising a click.
     upgradeHeart: tryUpgradeHeart,

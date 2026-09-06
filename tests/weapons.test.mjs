@@ -3,6 +3,14 @@ import assert from 'node:assert/strict';
 import { createInventory, generateWeapon, weaponStats, shouldDrop, eraForPlanet, validWeapon } from '../js/run/weapons.js';
 import { makeRng } from '../js/run/rng.js';
 const item = (id, family = 'sword', seed = 42) => generateWeapon({ id, family, seed, rng: makeRng(seed) });
+test('incompatible inspection exposes item stats without granting an equip contract',()=>{
+ const carbine=item('inspect','carbine');
+ assert.equal(weaponStats(carbine,'commander'),null);
+ const stats=weaponStats(carbine,'commander',true);assert.ok(stats.dmg>0&&stats.cd>0&&stats.range>0);
+ const inventory=createInventory('commander');inventory.register(carbine);inventory.pickup(carbine.id);
+ assert.equal(inventory.request({kind:'equip',id:carbine.id,slot:0}),false);
+ assert.equal(inventory.current,null);
+});
 test('generation replays, families differ and tier/era/rarity remain separate', () => {
   const a = item('a'); assert.deepEqual(a, item('a')); assert.equal(validWeapon(a), true);
   const sword = weaponStats(a, 'commander'), spear = weaponStats(item('b', 'spear'), 'commander');

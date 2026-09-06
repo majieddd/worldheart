@@ -14,7 +14,7 @@ try{
     page.on('pageerror',e=>faults.push(String(e)));
     page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
     await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(window.__qaFramesEnabled)fn(t);});});
-    await page.goto(`http://127.0.0.1:8139/?map=${map}&seed=12345`);
+    await page.goto(`${process.env.WH_BASE_URL||'http://127.0.0.1:8139'}/?map=${map}&seed=12345`);
     await page.waitForFunction(()=>window.WH?.game&&document.getElementById('boot').classList.contains('done'),{},{timeout:120000});
     await page.evaluate(()=>{window.__qaFramesEnabled=false;WH.game.paused=true;});
     await page.screenshot({path:resolve(out,`${map}-title.png`)});
