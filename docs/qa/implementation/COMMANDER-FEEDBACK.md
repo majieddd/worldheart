@@ -77,13 +77,15 @@ or owner feel approval is claimed by implementation alone.
   after all sources are destroyed. The earlier `final/results.json` retained
   an overstrict exact-direction assertion that rejected intentional scatter.
 
-The parent observed a real ocean wave-4 softlock before final integration:
-placement protected original entrances but could disconnect a moved nest or
-an occupied enemy pocket. The retained parent run reached its 1800s bound
-with one stranded Aegis. Placement now protects living physical nest nodes
-and occupied ground-enemy nodes, with an explicit nest footprint exclusion.
+The parent observed a real ocean wave-4 softlock before final integration.
+Source review found placement protected original entrances but could disconnect
+a moved nest or occupied enemy pocket. The retained parent run reached its
+1800s bound with one stranded Aegis. Placement now protects living physical
+nest nodes and occupied ground-enemy nodes, with a nest footprint exclusion.
 Two synthetic bridge regressions prove old validation accepted the cut and
-the updated validator rejects it. The parent's unforced retest remains required.
+the updated validator rejects it. Those fixtures prove a placement vulnerability,
+not the unique cause of that natural stall: its stranded transition was not
+recorded. The follow-up below finds an independently reproduced knockback cause.
 
 The parent independently verified 486/486 isolated real enemy arrivals using
 the actual nest-site selector: nine profile/era boundary planets, three
@@ -93,9 +95,73 @@ it is separate from the placement regression and natural campaign play.
 
 ## Current handoff
 
-Source syntax and style pass; all 221 headless tests pass. Primary UI and
+The initial commit `c5e5e4a` passed source syntax/style and 221 headless tests. Primary UI and
 combat regressions, campaign checkpoint/loot edge fixtures and all five camera
 harnesses pass. Regenerated mirrors accompany the review commit.
 Parent owns shared ledger/blueprint updates, natural ocean retest, integration
 and publication. Broader commander feel, 99-planet balance and sustained
 performance acceptance remain open. Usage is unmeasured.
+
+## Follow-up: terrain-safe melee knockback
+
+The parent's unforced `e93d2cb` ocean retest cleared wave 4, then stalled at
+wave 9. Eight living ground enemies remained at unreachable, unblocked nodes
+through repeated observations near simulation seconds 294, 392 and 492.
+The physical source at node 5946 still had a route. Evidence remains in the
+parent's `artifacts/ocean-assault-fixed-nests/planet-4/run.json`. A separate
+fresh-campaign defeat also contained one unreachable Aegis; that is supporting
+natural evidence, not a reproduced transition.
+
+`tools/knockback-check.mjs` rebuilds the exact ocean from requested seed 326532,
+which retries to effective seed 389884 and heart node 121313. All seven distinct
+reported wave-9 nodes, plus the original wave-4 node 157860, have `walk=0` and
+`next=-1` on the empty graph. Reapplying the four reported tower footprints
+does not change them. The earlier assumption that these were traversable
+islands was incorrect: an unblocked cell need not be walkable.
+
+The old `_meleeSweep` applied a 0.6m angular shove without any navigation test.
+A controlled real strike moved a living husk from reachable node 12438 into
+reported node 49752. Twenty nearby boundary strikes each retained their hit
+damage, entered a non-walkable node, and stayed active there after 60 seconds
+of real enemy updates. This reproduces the mechanism and an exact reported
+destination. It does not recover the historical run's missing strike frame.
+
+The enemy manager now owns knockback and sweeps the impulse in steps no larger
+than 0.12m. Each accepted step must have a finite route and pass the same graph
+edge rules as walking. Flyers use the air layer and flight ceiling. A blocked
+step stops the impulse at its last legal position; the accepted portion carries
+the body's direction, tangent heading, tracked node and height together. Open
+ground retains the full shove. Classic maps use the original angular branch.
+Damage, active-frame timing, spawn debt and enemy life are unchanged.
+
+Preserved evidence:
+
+- `commander-feedback/knockback-before/`: initial fixture rebuilt from the
+  effective seed directly and produced a different cap. Its mismatched heart
+  is retained as a fixture error, not ocean evidence.
+- `commander-feedback/knockback-before-exact/`: correct graph survey; the
+  original search incorrectly restricted destinations to walkable cells and
+  therefore found zero cases. The non-walkable destination search fixes it.
+- `commander-feedback/knockback-before-reproduced/results.json`: 20/20 actual
+  sword strikes strand living Husks before the fix, including node 49752.
+- `commander-feedback/knockback-after-initial/results.json`: the same first
+  20 cases retain partial shoves and reach the heart after the fix.
+- `commander-feedback/knockback-final/results.json`: 105 boundary cases with
+  both Husks and Aegis, 210/210 damaging strikes and legitimate heart arrivals.
+  No injected relocation, health removal or cancellation resolves an enemy.
+- `commander-feedback/knockback-weapons/weapon-results.json`: 29/29 existing
+  browser weapon and choreography checks pass, with no browser faults.
+
+Seven focused headless regressions cover full open-ground displacement,
+thin tower footprints, forbidden edges between otherwise reachable nodes,
+unwalkable/disconnected cells, air-layer behavior, dead/invalid impulses and
+classic behavior. Full suite: 228/228; syntax: 50/50; style: pass. Generated
+v2/dist are refreshed. Parent's next unforced campaign retest remains the
+publication gate. No balance improvement or sustained performance is claimed.
+
+Reproduce from this checkout:
+
+```powershell
+node --test tests/shell/knockback.test.mjs
+node tools/knockback-check.mjs artifacts/knockback-recheck
+```
