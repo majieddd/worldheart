@@ -418,7 +418,7 @@ async function boot() {
   allies.onSwingStart = (a) => possession?.swingStarted?.(a);
   allies.onStrikeResolved = (a, hits, spec) => {
     possession?.strikeResolved?.(a, hits, spec);
-    if (spec && hits > 0 && possession && possession.unit === a) game.hitStop = Math.max(game.hitStop || 0, 0.07);
+    if (spec?.kind === 'melee' && hits > 0 && possession && possession.unit === a) game.hitStop = Math.max(game.hitStop || 0, 0.07);
   };
   // Being hit in first person should land on the player, not only on a number.
   // The thump when a hop ends. onLand was declared and fired and had never been
@@ -609,6 +609,7 @@ function stepFrame(dt, render) {
     allies?._render(0);
   }
   if (game) game.update(dt);
+  mode99?.renderEffects?.(simDt);
   if (ui) ui.update(dt);
   if (fx) {
     // Strategic scale: swell models with zoom, then hand over to icons.

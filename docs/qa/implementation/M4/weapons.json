@@ -1,0 +1,135 @@
+{
+  "scope": "Instrumented weapon and choreography fixtures",
+  "checks": [
+    {
+      "name": "Equipment changes live attack and model while preserving commander body",
+      "ok": true,
+      "actual": {
+        "model": "commander:sword:ancient:tempered",
+        "kind": "melee"
+      }
+    },
+    {
+      "name": "Melee anticipation cannot deal early damage",
+      "ok": true,
+      "actual": {
+        "hp": 1000,
+        "pending": true
+      }
+    },
+    {
+      "name": "Changing a part during a swing is queued",
+      "ok": true,
+      "actual": 3
+    },
+    {
+      "name": "Melee damage lands on the shared strike frame",
+      "ok": true,
+      "actual": 960
+    },
+    {
+      "name": "Recovery commits the queued part before another AI attack",
+      "ok": true,
+      "actual": 3.75
+    },
+    {
+      "name": "A fitted frost core reaches live combat slow",
+      "ok": true,
+      "actual": 0.18
+    },
+    {
+      "name": "A fitted ember core starts a bounded burn",
+      "ok": true,
+      "actual": {
+        "duration": 3,
+        "dps": 3
+      }
+    },
+    {
+      "name": "Carbine anticipation does not launch early",
+      "ok": true
+    },
+    {
+      "name": "Carbine launches a travelling projectile without instant damage",
+      "ok": true
+    },
+    {
+      "name": "A swept projectile damages the target on arrival",
+      "ok": true,
+      "actual": 971
+    },
+    {
+      "name": "Lobber holds its shell through anticipation",
+      "ok": true
+    },
+    {
+      "name": "Lobber releases at its choreographed frame",
+      "ok": true
+    },
+    {
+      "name": "The red guide references the authoritative attack definition",
+      "ok": true
+    },
+    {
+      "name": "The threatened commander is inside the displayed strike volume",
+      "ok": true
+    },
+    {
+      "name": "An attack resolves against the same red volume",
+      "ok": true,
+      "actual": {
+        "before": 1400,
+        "after": 1389
+      }
+    },
+    {
+      "name": "Moving behind the locked strike escapes its volume",
+      "ok": true
+    },
+    {
+      "name": "The escaped strike deals no damage",
+      "ok": true
+    },
+    {
+      "name": "Ground loot is visible and nearby before pickup",
+      "ok": true
+    },
+    {
+      "name": "Pickup reaches inventory and removes only the claimed visual",
+      "ok": true
+    },
+    {
+      "name": "A second pickup cannot duplicate the weapon",
+      "ok": true
+    },
+    {
+      "name": "Spear equipment has a distinct model and reach/arc",
+      "ok": true
+    },
+    {
+      "name": "Actual boss death creates exactly one guaranteed weapon",
+      "ok": true
+    },
+    {
+      "name": "A repeated corpse hit cannot duplicate the boss drop",
+      "ok": true
+    },
+    {
+      "name": "Inventory pauses battle and suspends possessed input",
+      "ok": true
+    },
+    {
+      "name": "Part fitting keeps the customization controls expanded",
+      "ok": true
+    },
+    {
+      "name": "Inventory fits narrow viewport without horizontal overflow",
+      "ok": true
+    },
+    {
+      "name": "Closing inventory restores the previous pause state",
+      "ok": true
+    }
+  ],
+  "faults": []
+}

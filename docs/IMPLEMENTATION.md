@@ -12,7 +12,8 @@ Tracker: https://github.com/majieddd/worldheart/issues/1.
 | M1 camera and arm | implemented, automated verification passed | camera, possession, viewmodel, UI | [M1 evidence](qa/implementation/M1.md); owner feel/all-model review remains open | unmeasured |
 | M2 crystals and explicit expansion | implemented, automated verification passed | run, mode, cache field, UI | [M2 resource contracts, expedition and boss victory](qa/implementation/M2.md) | unmeasured |
 | M3 terrain strategy | implemented, automated verification passed | terrain, nav, traversal, placement, ranges | [178 tests, four profiles, 60 route arrivals, five camera harnesses and unforced boss victory](qa/implementation/M3.md); visual/feel and startup review open | unmeasured |
-| M4-M6 | planned | See blueprint | Dependencies and exit gates remain open | unmeasured |
+| M4 weapons and choreography | implemented, automated verification passed | inventory, loot, attacks, models, HUD | [187 tests, 27 browser checks, unforced loot/equip/boss victory](qa/implementation/M4.md); extraction follows in M5, visual review open | unmeasured |
+| M5-M6 | planned | See blueprint | Dependencies and exit gates remain open | unmeasured |
 
 Audit correction: Quartermaster already works through
 `prof.bonuses?.quartermaster` in `js/run/run.js`, with the profile passed by the

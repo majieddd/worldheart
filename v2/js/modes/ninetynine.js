@@ -13,6 +13,10 @@ import * as THREE from 'three';
 import { bankVictory, bankCoins, loadProfile } from './progress.js';
 import { createRewardConsumer } from '../rewards.js';
 import { createCrystalLedger, CRYSTAL_CAPACITY } from '../run/crystals.js';
+import { createInventory, generateWeapon, weaponStats, weaponName, shouldDrop, compatible, validPart, PARTS, FAMILIES, COMPATIBILITY } from '../run/weapons.js';
+import { LootField } from '../loot-field.js';
+import { WeaponPanel } from '../ui-weapons.js';
+import { ThreatGuides } from '../threat-guides.js';
 
 export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, allies, possession, caches }) {
   // What this player has permanently unlocked. Read here in the shell and
@@ -343,6 +347,73 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     allies.onDeath = (a) => { if (a.type.commander) syncFromRun(); };
   }
 
+  // ---- weapons ----------------------------------------------------------
+  const inventory = createInventory(commander.typeKey);
+  const lootRng = makeRng((CONFIG.seed ^ 0x19427cb5) >>> 0);
+  const loot = new LootField(game.scene, allies);
+  const threats = new ThreatGuides(game.scene,enemies);
+  let lootSequence = 0, weaponSignature = '';
+  const starterFamily = { commander:'sword', duelist:'sword', marksman:'carbine', bombardier:'lobber', oracle:'spear' }[commander.typeKey];
+  const starter = generateWeapon({id:`starter-${CONFIG.seed}`,seed:CONFIG.seed,family:starterFamily,rng:makeRng(CONFIG.seed ^ 0xa42)});
+  starter.rarity = 'common'; starter.affixes = []; starter.parts = {head:'balanced',grip:'balanced',core:'tempered'};
+  inventory.register(starter); inventory.pickup(starter.id); inventory.request({kind:'equip',id:starter.id,slot:0}); inventory.request({kind:'select',slot:'native'});
+  const basic = { ...starter, id:`basic-${CONFIG.seed}`, family:'sword', rarity:'common', tier:1, affixes:[], parts:{head:'balanced',grip:'balanced',core:'tempered'} };
+  const busyWeapon = () => commander.swingT > 0 || commander.strikePending;
+  const nearbyLoot = () => commander.active && !commander.dead ? loot.nearby(allies.worldPos(commander, _up)) : [];
+  function syncWeapon() {
+    const item = inventory.active === 'basic' ? basic : inventory.current;
+    const signature = JSON.stringify([inventory.active,item]);
+    if (signature === weaponSignature || busyWeapon()) return;
+    const spec = item ? weaponStats(item,commander.typeKey) : null;
+    const family = item && FAMILIES[item.family];
+    const appearance=item?{era:item.era,core:item.parts.core}:null;
+    if (allies.setWeapon(commander,spec,family?.visual,family?.view,0xffffff,item?.parts.head==='long'?1.2:1,appearance)) {
+      weaponSignature = signature;
+      if (possession.unit === commander) { possession.baseFov = commander.type.strike.fov || 80; ui.showPossession(commander); }
+    }
+  }
+  const weaponApi = {
+    inventory,
+    canInteract: () => game.state === 'playing' && ['building','victory'].includes(run.getPhase()) && commander.active && !commander.dead,
+    nearby: nearbyLoot,
+    request(op) {
+      if (!this.canInteract()) return false;
+      const ok = inventory.request(op,busyWeapon());
+      if (ok) { if (possession.unit===commander) possession.firing=false; syncWeapon(); }
+      return ok;
+    },
+    pickup(id,replace=null) {
+      if (!this.canInteract() || !nearbyLoot().some(x=>x.id===id) || !inventory.pickup(id,replace)) return false;
+      loot.remove(id); ui.audio?.play('coin'); ui.toast('Weapon recovered. I to compare and equip.','info'); return true;
+    },
+    salvage(id) {
+      if (!this.canInteract() || (inventory.drops.some(x=>x.id===id) && !nearbyLoot().some(x=>x.id===id))) return false;
+      if (!inventory.salvage(id)) return false;
+      loot.remove(id); ui.audio?.play('coin'); return true;
+    },
+  };
+  const weaponPanel = new WeaponPanel({game,possession,ui,api:weaponApi,rules:{
+    name:weaponName,stats:item=>weaponStats(item,commander.typeKey),parts:PARTS,
+    compatible:family=>compatible(commander.typeKey,family),validPart,trait:COMPATIBILITY[commander.typeKey].label,
+  }});
+  const previousKill = enemies.onKill;
+  enemies.onKill = e => {
+    previousKill?.(e);
+    if (!shouldDrop({boss:!!e.type.boss,elite:e.typeKey === 'aegis'},lootRng)) return;
+    const item = generateWeapon({id:`weapon-${CONFIG.seed}-${++lootSequence}`,seed:(lootRng()*0x100000000)>>>0,tier:CONFIG.planetIndex || 1,rng:lootRng});
+    if (inventory.register(item)) {
+      let node = nav.nearestWalkableNode(e.dir,true);
+      if (node < 0 || !Number.isFinite(nav.dist[node])) node = nav.heartNode;
+      if (node >= 0) nav.nodeDir(node,_up); else _up.copy(e.dir);
+      loot.add(item,_up);
+      if (item.rarity !== 'common' || e.type.boss) ui.toast(`${weaponName(item)} dropped (${item.rarity}).`,'info');
+    }
+  };
+  const previousProjectile = allies.onProjectileFired;
+  allies.onProjectileFired = (a,bolt) => { previousProjectile?.(a,bolt); ui.audio?.play('rifle'); if (possession.unit===a) possession.kick = Math.min(.5,possession.kick+bolt.spec.kick); };
+  const previousReady = allies.onAttackReady;
+  allies.onAttackReady = a => { previousReady?.(a); if (a===commander && inventory.settle(false)) syncWeapon(); };
+
   // ---- click to possess, and posting a patrol ---------------------------
   const _pd = new THREE.Vector3();
   const _od = new THREE.Vector3();
@@ -611,11 +682,18 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     run,
     crystals,
     depositCrystals,
+    inventory,
+    loot,
+    threats,
+    weapons: weaponApi,
+    weaponPanel,
+    renderEffects(dt) { loot.update(dt); threats.update(); weaponPanel.update(); },
     // The same path the panel and the B key use, exposed so a scripted run
     // can buy a level without synthesising a click.
     upgradeHeart: tryUpgradeHeart,
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
+      inventory.settle(busyWeapon()); syncWeapon();
       updateCrystals();
       const draft = run.getDraft();
       if (draft) {

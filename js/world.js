@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CONFIG, PALETTE } from './config.js';
+import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import {
   makeNoise3D, fbm3, ridged3, mulberry32,
@@ -1278,23 +1278,36 @@ function makeCrystalGeometry() {
   ]);
 }
 
-function applySway(mat) {
-  mat.customProgramCacheKey = () => 'worldheart-sway';
+function applySway(mat, uniforms = null) {
+  const shared = uniforms || { uTime: { value: 0 }, uSway: { value: REDUCED_MOTION ? 0 : 0.045 } };
+  mat.userData.swayUniforms = shared;
+  mat.customProgramCacheKey = () => 'worldheart-sway-normal-shadow-v2';
   mat.onBeforeCompile = (shader) => {
-    shader.uniforms.uTime = { value: 0 };
-    shader.vertexShader = 'uniform float uTime;\n' + shader.vertexShader.replace(
+    Object.assign(shader.uniforms, shared);
+    shader.vertexShader = 'uniform float uTime;\nuniform float uSway;\n' + shader.vertexShader.replace(
+      '#include <beginnormal_vertex>',
+      `#include <beginnormal_vertex>
+      #ifdef USE_INSTANCING
+        float nPhase = dot(instanceMatrix[3].xyz, vec3(12.9898, 78.233, 37.719));
+        float bendT = clamp((position.y - 0.2) / 1.3, 0.0, 1.0);
+        float derivative = sin(uTime * 1.35 + nPhase) * uSway * 6.0 * bendT * (1.0 - bendT) / 1.3;
+        objectNormal.y -= derivative * (objectNormal.x + 0.6 * objectNormal.z);
+        objectNormal = normalize(objectNormal);
+      #endif`,
+    ).replace(
       '#include <begin_vertex>',
       `#include <begin_vertex>
       #ifdef USE_INSTANCING
         vec3 iPos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
         float swPh = dot(iPos, vec3(12.9898, 78.233, 37.719));
-        float sw = sin(uTime * 1.35 + swPh) * 0.045 * smoothstep(0.2, 1.5, transformed.y);
+        float sw = sin(uTime * 1.35 + swPh) * uSway * smoothstep(0.2, 1.5, transformed.y);
         transformed.x += sw;
         transformed.z += sw * 0.6;
       #endif`,
     );
     mat.userData.shader = shader;
   };
+  return shared;
 }
 
 function scatterDecor(rng) {
@@ -1304,7 +1317,9 @@ function scatterDecor(rng) {
   const crysGeo = makeCrystalGeometry();
 
   const treeMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0 });
-  applySway(treeMat);
+  const swayUniforms = applySway(treeMat);
+  const treeDepth = new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking});
+  applySway(treeDepth,swayUniforms);
   const rockMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, metalness: 0 });
   const crysMat = new THREE.MeshStandardMaterial({
     vertexColors: true, roughness: 0.3, metalness: 0.1,
@@ -1380,6 +1395,7 @@ function scatterDecor(rng) {
 
   const pines = makeInstanced(pineGeo, treeMat, spots.pine, 0.72, 0.16);
   const leafs = makeInstanced(leafGeo, treeMat, spots.leaf, 0.6, 0.14);
+  pines.customDepthMaterial = treeDepth; leafs.customDepthMaterial = treeDepth;
   const rocks = makeInstanced(rockGeo, rockMat, spots.rock, 0.25, 0.2);
   const crys = makeInstanced(crysGeo, crysMat, spots.crys, 0.55, 0.1);
 
@@ -1958,8 +1974,8 @@ export class World {
       this.sky.position.copy(cameraPos);
       this.sky.rotation.y = t * 0.0035;
     }
-    const swayShader = this.decor?.treeMat.userData.shader;
-    if (swayShader) swayShader.uniforms.uTime.value = t;
+    const swayUniforms = this.decor?.treeMat.userData.swayUniforms;
+    if (swayUniforms) swayUniforms.uTime.value = t;
     if (this.fieldWall) this.fieldWall.mat.uniforms.uTime.value = t;
     if (this.cloudDeck) this.cloudDeck.mat.uniforms.uTime.value = t;
     if (this.dust) this.dust.mat.uniforms.uTime.value = t;

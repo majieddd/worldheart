@@ -1,0 +1,106 @@
+// Fixed-state browser fixtures, separate from an unforced run.
+import {createRequire} from 'node:module';
+import {resolve} from 'node:path';
+import {mkdirSync,writeFileSync} from 'node:fs';
+const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright');
+const out=resolve(process.argv[2]||'artifacts/m4');mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true});
+try {
+  const page=await browser.newPage({viewport:{width:1280,height:720}}),faults=[];
+  page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
+  await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(window.__qaFramesEnabled)fn(t);});});
+  await page.goto('http://127.0.0.1:8139/?map=ninetynine&seed=12345',{waitUntil:'domcontentloaded',timeout:120000});
+  await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:120000});
+  const checks=await page.evaluate(async()=>{
+    __qaFramesEnabled=false;document.getElementById('btn-begin').click();WH.game.paused=false;
+    const W=WH,m=W.mode99,a=W.allies.active.find(x=>x.type.commander),checks=[];
+    const check=(name,ok,actual)=>checks.push({name,ok:!!ok,actual});
+    const {generateWeapon,weaponStats,FAMILIES}=await import('/js/run/weapons.js'),{makeRng}=await import('/js/run/rng.js');
+    const {surfacePoint,terrainHeight,R}=await import('/js/world.js');
+    const make=(id,family)=>{const item=generateWeapon({id,family,seed:42,rng:makeRng(42)});item.parts={head:'balanced',grip:'balanced',core:'tempered'};return item;};
+    const stats=(family,key='commander')=>weaponStats(make('fixture',family),key);
+    const putEnemy=(unit,distance=2,type='husk')=>{
+      const e=W.enemies.spawn(type,W.nav.portalNodes[0],12);
+      e.dir.copy(unit.dir).addScaledVector(unit.fwd,distance/R).normalize();e.height=terrainHeight(e.dir.x,e.dir.y,e.dir.z);e.alt=0;e.swimming=false;
+      e.hp=e.hpMax=1000;return e;
+    };
+    a.possessed=true;a.swingT=0;
+    const starter=m.inventory.slots[0];m.weapons.request({kind:'select',slot:0});
+    check('Equipment changes live attack and model while preserving commander body',a.weaponFamily==='sword'&&a.type.hp===a.baseType.hp&&a.modelKey.startsWith('commander:sword'),{model:a.modelKey,kind:a.type.strike.kind});
+    const e=putEnemy(a),hp=e.hp,cd=a.type.strike.cd;
+    W.allies.playerAttack(a);W.allies.update(cd*.39);
+    check('Melee anticipation cannot deal early damage',e.hp===hp,{hp:e.hp,pending:a.strikePending});
+    m.weapons.request({kind:'part',id:starter,slot:'head',part:'long'});
+    check('Changing a part during a swing is queued',!!m.inventory.pending&&a.type.strike.radius===3, a.type.strike.radius);
+    W.allies.update(cd*.02);check('Melee damage lands on the shared strike frame',e.hp<hp,e.hp);
+    W.allies.update(cd*.61);
+    check('Recovery commits the queued part before another AI attack',!m.inventory.pending&&a.type.strike.radius>3,a.type.strike.radius);
+    m.weapons.request({kind:'part',id:starter,slot:'core',part:'frost'});W.allies.playerAttack(a);W.allies.update(a.swingDur*.41);
+    check('A fitted frost core reaches live combat slow',e.slowFrac>0&&e.slowFrac<=.7,e.slowFrac);
+    W.allies.update(a.swingDur);m.weapons.request({kind:'part',id:starter,slot:'core',part:'ember'});W.allies.playerAttack(a);W.allies.update(a.swingDur*.41);
+    check('A fitted ember core starts a bounded burn',e.burnT===3&&e.burnDps>0,{duration:e.burnT,dps:e.burnDps});
+    for(const enemy of [...W.enemies.active])W.enemies._release(enemy);
+
+    const marksman=W.allies.spawn('marksman',a.dir,a.dir,8);marksman.possessed=true;marksman.hop=20;
+    W.allies.setWeapon(marksman,stats('carbine','marksman'),'rifle','marksman');
+    const target=putEnemy(marksman,8),targetPoint=W.allies.worldPos(marksman,marksman.dir.clone()).addScaledVector(marksman.fwd,8);
+    target.dir.copy(targetPoint).normalize();target.height=targetPoint.length()-R-target.type.radius*.9;const before=target.hp;
+    W.allies.playerAttack(marksman);W.allies.update(marksman.swingDur*.11);
+    check('Carbine anticipation does not launch early',W.allies._bolts.every(b=>!b.live));
+    W.allies.update(marksman.swingDur*.02);
+    check('Carbine launches a travelling projectile without instant damage',W.allies._bolts.some(b=>b.live)&&target.hp===before);
+    W.allies._updateBolts(.25);
+    check('A swept projectile damages the target on arrival',target.hp<before,target.hp);
+    for(const enemy of [...W.enemies.active])W.enemies._release(enemy);
+    for(const b of W.allies._bolts)b.live=false;
+    marksman.swingT=0;marksman.strikePending=false;marksman.active=false;
+
+    a.swingT=0;a.strikePending=false;W.allies.setWeapon(a,stats('lobber'),'mortar','bombardier');
+    W.allies.playerAttack(a);W.allies.update(a.swingDur*.41);
+    check('Lobber holds its shell through anticipation',W.allies._shells.every(s=>!s.live));
+    W.allies.update(a.swingDur*.02);check('Lobber releases at its choreographed frame',W.allies._shells.some(s=>s.live));
+    for(const s of W.allies._shells)s.live=false;
+
+    const threat=putEnemy(a,1,'husk');a.hop=0;a.swingT=0;a.strikePending=false;
+    threat.atkCd=0;threat.scanT=0;W.enemies._melee(threat,0);m.threats.update();
+    const origin=W.allies.worldPos(a,a.dir.clone()),plan=threat.attackPlan,oldHp=a.hp;
+    check('The red guide references the authoritative attack definition',!!plan&&m.threats.pool.some(g=>g.visible&&g.userData.attack===plan));
+    check('The threatened commander is inside the displayed strike volume',m.threats.contains(threat,origin));
+    W.enemies._melee(threat,threat.windT+.001);
+    check('An attack resolves against the same red volume',a.hp<oldHp,{before:oldHp,after:a.hp});
+    threat.atkCd=0;threat.scanT=0;W.enemies._melee(threat,0);
+    const oldDir=a.dir.clone(),safeHp=a.hp;
+    a.dir.copy(threat.dir).addScaledVector(threat.attackFacing,-4/R).normalize();W.allies._ground(a);
+    check('Moving behind the locked strike escapes its volume',!m.threats.contains(threat,W.allies.worldPos(a,origin)));
+    W.enemies._melee(threat,threat.windT+.001);check('The escaped strike deals no damage',a.hp===safeHp);
+    a.dir.copy(oldDir);W.allies._ground(a);W.enemies._release(threat);
+
+    a.possessed=false;m.weapons.request({kind:'select',slot:'native'});
+    const drop=make('qa-drop','spear');m.inventory.register(drop);m.loot.add(drop,a.dir);
+    check('Ground loot is visible and nearby before pickup',m.loot.entries.has(drop.id)&&m.weapons.nearby().some(x=>x.id===drop.id));
+    check('Pickup reaches inventory and removes only the claimed visual',m.weapons.pickup(drop.id)&&m.inventory.items.some(x=>x.id===drop.id)&&!m.loot.entries.has(drop.id));
+    check('A second pickup cannot duplicate the weapon',!m.weapons.pickup(drop.id));
+    m.weapons.request({kind:'equip',id:drop.id,slot:1});
+    check('Spear equipment has a distinct model and reach/arc',a.weaponVisual==='spear'&&a.type.strike.radius>4&&a.type.strike.arcDeg<50);
+    const beforeDrop=m.inventory.drops.length,boss=W.enemies.spawn('colossus',W.nav.heartNode,1);
+    W.enemies.damage(boss,boss.hpMax*3,{armorPierce:99});
+    check('Actual boss death creates exactly one guaranteed weapon',m.inventory.drops.length===beforeDrop+1);
+    W.enemies.damage(boss,boss.hpMax*3,{armorPierce:99});
+    check('A repeated corpse hit cannot duplicate the boss drop',m.inventory.drops.length===beforeDrop+1);
+    m.weaponPanel.open();check('Inventory pauses battle and suspends possessed input',W.game.paused&&W.possession.suspended&&document.getElementById('weapon-dialog').open);
+    return checks;
+  });
+  await page.waitForFunction(()=>getComputedStyle(document.getElementById('title-overlay')).opacity==='0',{},{polling:50});
+  await page.screenshot({path:resolve(out,'inventory-720.png')});
+  await page.getByText('Customize parts',{exact:true}).first().click();
+  await page.locator('select[data-part="head"]').first().selectOption('keen');
+  checks.push({name:'Part fitting keeps the customization controls expanded',ok:await page.locator('details[open]').count()>0});
+  await page.setViewportSize({width:390,height:844});
+  await page.screenshot({path:resolve(out,'inventory-390.png')});
+  checks.push({name:'Inventory fits narrow viewport without horizontal overflow',ok:await page.evaluate(()=>{const d=document.getElementById('weapon-dialog');return d.scrollWidth<=d.clientWidth+1;})});
+  await page.getByRole('button',{name:'Resume',exact:true}).click();
+  checks.push({name:'Closing inventory restores the previous pause state',ok:await page.evaluate(()=>!WH.game.paused&&!WH.possession.suspended)});
+  writeFileSync(resolve(out,'weapon-results.json'),JSON.stringify({scope:'Instrumented weapon and choreography fixtures',checks,faults},null,2)+'\n');
+  console.log(JSON.stringify({checks:checks.length,failed:checks.filter(c=>!c.ok),faults}));
+  if(faults.length||checks.some(c=>!c.ok))process.exitCode=1;
+} finally {await browser.close();}

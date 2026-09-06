@@ -349,6 +349,26 @@ are denied. Three range orbits show actual 3D acquisition, with terrain
 intersection contours and a red Mortar inner exclusion. Warden instead shows
 its labelled surface leash. See [M3 evidence](qa/implementation/M3.md).
 
+## Weapon and strike prototype
+
+Campaign commanders have two equipment slots and twelve backpack spaces.
+I opens a paused inventory, R collects nearby loot, and X cycles equipped/native
+attacks. Full backpacks preserve drops and require explicit replacement or
+salvage. Native techniques and a basic sword remain available. Compatible sword,
+spear, carbine and lobber families have head/grip/core tradeoffs. Pending changes
+settle after recovery; launched projectiles retain their release stats.
+
+Drop chances are 2% ordinary, 10% Aegis and one guaranteed Colossus weapon.
+Rarities are 68% common, 22% uncommon, 8.5% rare and 1.5% relic. Tiers 1-33 use
+ancient presentation, 34-66 technological and 67-99 empowered. These numbers
+remain balance prototypes. Inventory persistence is part of M5, not M4.
+
+Enemy red volumes and damage share a locked origin, facing, radius and arc.
+Damage resolves after anticipation; moving outside avoids the hit. Generated
+carbines travel through swept collision instead of dealing immediate damage.
+Ember burns for three seconds and frost slows for two, respecting the global
+70% slow cap. See [M4 evidence and limitations](qa/implementation/M4.md).
+
 ## Audit follow-up
 
 The 2026-09-05 implementation repairs the missing reward/talent consumers and

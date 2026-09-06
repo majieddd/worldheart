@@ -414,7 +414,7 @@ export class CombatFx {
     // body and for anything near the camera; a whole wave winding up on a far
     // garrison would otherwise cycle the twenty-slot ring pool every second and
     // erase the explosion rings the towers are drawing.
-    if (player || _v.distanceTo(this.fx.camera.position) < 45) {
+    if (!e.attackPlan && (player || _v.distanceTo(this.fx.camera.position) < 45)) {
       _v2.copy(e.dir).multiplyScalar(R + Math.max(e.height, 0.03) + 0.04);
       this.fx.rings.spawn(_v2, PALETTE.voidEmissive, (e.type.reach || 1.2) * 1.15, (e.type.wind || 0.3) + 0.15);
     }

@@ -3,7 +3,8 @@ import { CONFIG, PALETTE } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
 import { R, terrainHeight, surfaceTravel } from './world.js';
 import { swimOffset, isSwimming } from './traversal.js';
-import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState, STRIKE_AT } from './soldier.js';
+import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
+import { insideStrike, STRIKE_AT } from './attacks.js';
 const _routePoint = new THREE.Vector3(), _routeBearing = new THREE.Vector3(), _routeStep = new THREE.Vector3();
 
 // Friendly units. Summoned by warden towers, and the thing the player can take
@@ -257,6 +258,14 @@ class Ally {
     this.id = nextAllyId++;
     this.typeKey = typeKey;
     this.type = type;
+    this.baseType = type;
+    this.modelKey = typeKey;
+    this.weaponFamily = null;
+    this.weaponVisual = null;
+    this.weaponView = null;
+    this.weaponTint = 0xffffff;
+    this.weaponLength = 1;
+    this.weaponEra = null; this.weaponCore = null;
     this.dir.copy(dirVec).normalize();
     this.anchor.copy(anchorDir).normalize();
     this.leash = leash;
@@ -310,6 +319,7 @@ class Ally {
     this._renderDir.copy(this.dir);
     this.weaponM.identity();
     this.height = terrainHeight(this.dir.x, this.dir.y, this.dir.z);
+    this._renderHeight = Math.max(0.03,this.height);
     _tmp.set(0, 1, 0);
     if (Math.abs(this.dir.y) > 0.9) _tmp.set(1, 0, 0);
     this.fwd.crossVectors(this.dir, _tmp).normalize();
@@ -331,6 +341,7 @@ export class AllyManager {
       live: false, t: 0, spec: null,
       pos: new THREE.Vector3(), vel: new THREE.Vector3(),
     }));
+    this._bolts = Array.from({ length: 32 }, () => ({ live: false, pos: new THREE.Vector3(), previous: new THREE.Vector3(), velocity: new THREE.Vector3() }));
     this.onDeath = null;            // (ally) => void
     this.onCommanderLost = null;    // (ally) => void
     this.onPortalDestroyed = null;  // (portal) => void
@@ -370,10 +381,23 @@ export class AllyManager {
     // bend, hold anything, or plant a foot. Each build carries its skeleton,
     // its parts (geometry, material, joint attachments) and its spec.
     this.species = {};
-    for (const key of Object.keys(ALLY_TYPES)) {
-      const build = buildSoldier(key, mats);
+    for (const key of Object.keys(ALLY_TYPES)) this._addSpecies(key, key);
+  }
+
+  _addSpecies(key, typeKey, weapon = null, appearance = null) {
+      const mats = this.mats, scene = this.scene;
+      const build = buildSoldier(typeKey, mats, weapon);
       const parts = build.parts.map((p) => {
-        const mesh = new THREE.InstancedMesh(p.geo, p.mat, MAX_ALLIES * p.at.length);
+        const isWeapon=p.at.some(a=>a.joint.name==='weaponR'||a.joint.name==='weaponL');
+        const material=appearance&&isWeapon?p.mat.clone():p.mat;
+        if(appearance&&isWeapon){
+          if(p.mat===mats.energy){
+            const color={tempered:0xffd399,ember:0xff794d,frost:0x91ddff,pulse:0xa9a0ff}[appearance.core];
+            material.color.setHex(color);material.emissive.setHex(color);
+            material.emissiveIntensity={ancient:.12,technological:1.3,empowered:2.2}[appearance.era];
+          }else if(p.mat===mats.trim||p.mat===mats.gold){material.color.setHex(appearance.era==='technological'?0xcbe4ef:0xcaa56f);material.metalness=appearance.era==='ancient'?.25:.55;}
+        }
+        const mesh = new THREE.InstancedMesh(p.geo, material, MAX_ALLIES * p.at.length);
         mesh.count = 0;
         mesh.frustumCulled = false;
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -382,10 +406,21 @@ export class AllyManager {
         mesh.castShadow = p.mat !== mats.gold && p.mat !== mats.energy;
         mesh.receiveShadow = true;
         scene.add(mesh);
-        return { mesh, at: p.at, glow: p.mat === mats.energy || p.mat === mats.gold };
+        return { mesh, at: p.at, weapon:isWeapon, glow: p.mat === mats.energy || p.mat === mats.gold };
       });
       this.species[key] = { skeleton: build.skeleton, parts, spec: build.spec };
-    }
+  }
+
+  setWeapon(a, spec = null, visual = null, view = null, tint = 0xffffff, length = 1, appearance = null) {
+    if (!a?.active || a.dead || a.swingT > 0 || a.strikePending) return false;
+    a.type = spec ? { ...a.baseType, strike: { ...spec }, reach: spec.radius || spec.range || 14 } : a.baseType;
+    a.weaponFamily = spec?.weaponFamily || null;
+    a.weaponVisual = visual; a.weaponView = view; a.weaponTint = tint; a.weaponLength = length;
+    a.weaponEra=appearance?.era||null;a.weaponCore=appearance?.core||null;
+    a.modelKey = visual ? `${a.typeKey}:${visual}${appearance?':'+appearance.era+':'+appearance.core:''}` : a.typeKey;
+    if (!this.species[a.modelKey]) this._addSpecies(a.modelKey, a.typeKey, visual,appearance);
+    a.heat = 0; a.heatLock = 0; a.beamOn = null; a.beamRamp = 0;
+    return true;
   }
 
   count(typeKey) {
@@ -530,12 +565,14 @@ export class AllyManager {
   update(dt) {
     this.time += dt;
     this._updateShells(dt);
+    this._updateBolts(dt);
     for (let i = this.active.length - 1; i >= 0; i--) {
       const a = this.active[i];
       if (!a.active || a.dead) continue;
       if (a.flashT > 0) a.flashT -= dt;
       if (a.swingT > 0) a.swingT -= dt;
       if (a.strikePending && a.swingT <= a.strikeAt) this._resolveStrike(a);
+      if (a.swingT <= 0) this.onAttackReady?.(a);
       if (a.airT > 0) this._fall(a, dt);
       if (a.heatLock > 0) { a.heatLock -= dt; if (a.heatLock <= 0) a.heat = 0; }
       else if (a.heat > 0 && a.type.strike?.heatDown) {
@@ -600,8 +637,11 @@ export class AllyManager {
           // fight; holding it as well spends the budget for no extra effect and
           // stunlocks it out of ever swinging back.
           const enemyReach = a.target.type.reach || 0;
-          if (d > enemyReach && this._mayHold(a.target, dt)) this.enemies.applyStun(a.target, 0.22);
-          if (a.swingT <= 0) this._beginStrike(a, 0.55, null, a.target);
+          if (d <= a.baseType.reach + 0.4 && d > enemyReach && this._mayHold(a.target, dt)) this.enemies.applyStun(a.target, 0.22);
+          if (a.swingT <= 0) {
+            if (a.weaponFamily) this.playerAttack(a, dt);
+            else this._beginStrike(a, 0.55, null, a.target);
+          }
         } else {
           a.state = 'chase';
           // A guard closes the last few metres itself, but never steps past its
@@ -794,8 +834,6 @@ export class AllyManager {
     if (a.swingT > 0) return 0;
     a.swingT = s.cd;
     a.swingDur = s.cd;
-    if (s.kind === 'hitscan') return this._hitscanStrike(a, s);
-    if (s.kind === 'lob') return this._lobStrike(a, s);
     // Melee resolves later, at the strike frame of the swing, through
     // _resolveStrike. Reporting zero here is correct: nothing has landed yet.
     this._beginStrike(a, s.cd, s, null);
@@ -811,7 +849,7 @@ export class AllyManager {
     a.swingDur = dur;
     a.swingSide = -(a.swingSide || 1);
     const kind = spec ? spec.kind : 'melee';
-    const twin = a.typeKey === 'duelist';
+    const twin = !a.weaponFamily && a.typeKey === 'duelist';
     const at = twin ? STRIKE_AT.twin : (STRIKE_AT[kind] ?? 0.4);
     a.strikeAt = dur * (1 - at);
     a.strikePending = true;
@@ -828,7 +866,10 @@ export class AllyManager {
     a.strikeTarget = null;
     if (!a.active || a.dead) return 0;
     let hits = 0;
-    if (spec) {
+    if (spec?.kind === 'projectile') this._projectileStrike(a, spec);
+    else if (spec?.kind === 'hitscan') hits = this._hitscanStrike(a, spec);
+    else if (spec?.kind === 'lob') hits = this._lobStrike(a, spec);
+    else if (spec) {
       hits = this._meleeSweep(a, spec);
     } else if (target && target.active && !target.dead) {
       // The AI blow lands only if the target is still in reach, so an enemy
@@ -859,6 +900,12 @@ export class AllyManager {
     return dealt;
   }
 
+  _weaponEffect(enemy, spec, landed) {
+    if (!(landed > 0) || !enemy.active || enemy.dead) return;
+    if (spec.slow) this.enemies.applySlow(enemy, Math.min(0.7, spec.slow), 2);
+    if (spec.burn) this.enemies.applyBurn(enemy, spec.burn, 3);
+  }
+
   // The player's melee sweep: everything inside the radius and the facing arc
   // takes the blow, nearest first at full damage, the rest at the cleave
   // fraction. Breaches inside the radius take a structure-scaled hit.
@@ -884,6 +931,7 @@ export class AllyManager {
         armorPierce: s.pierce,
         capFrac: STRIKE_CAP_FRAC,
       });
+      this._weaponEffect(e, s, landed);
       if (this.onStrikeHit) this.onStrikeHit(e, landed, e === primary);
       if (s.knockback && e.active && !e.dead) {
         // Shove the body back along the surface. A heavy swing that does not
@@ -920,16 +968,68 @@ export class AllyManager {
   // along its facing can never hit a flyer overhead - a.aim is written by
   // js/possess.js each frame. Anything unpossessed just aims where it faces.
   _aimOf(a, out) {
+    if (a.weaponFamily && !a.possessed && a.target?.active && !a.target.dead) {
+      this.enemyPos(a.target, out); this.worldPos(a, _strikeBearing);
+      return out.sub(_strikeBearing).normalize();
+    }
     return a.aim ? out.copy(a.aim) : out.copy(a.fwd);
   }
 
   _inArc(a, worldPoint, arcDeg) {
-    if (!arcDeg || arcDeg >= 359) return true;
     _strikeBearing.copy(worldPoint).sub(_strikeOrigin);
-    _strikeBearing.addScaledVector(a.dir, -_strikeBearing.dot(a.dir));
-    if (_strikeBearing.lengthSq() < 1e-8) return true;
-    _strikeBearing.normalize();
-    return _strikeBearing.dot(a.fwd) >= Math.cos((arcDeg * 0.5) * Math.PI / 180);
+    return insideStrike(_strikeBearing, a.dir, a.fwd, Infinity, arcDeg || 360);
+  }
+
+  _projectileStrike(a, spec) {
+    const bolt = this._bolts.find(b => !b.live);
+    if (!bolt) return 0;
+    bolt.live = true; bolt.spec = { ...spec }; bolt.owner = a; bolt.ownerId = a.id; bolt.travel = 0;
+    this.worldPos(a, bolt.pos); this._aimOf(a, bolt.velocity); bolt.velocity.multiplyScalar(spec.speed);
+    this.onProjectileFired?.(a, bolt);
+    return 1;
+  }
+
+  _updateBolts(dt) {
+    for (const b of this._bolts) {
+      if (!b.live) continue;
+      const step = Math.min(dt * b.spec.speed, b.spec.range - b.travel);
+      b.previous.copy(b.pos); b.pos.addScaledVector(b.velocity, step / b.spec.speed); b.travel += step;
+      _aimV.copy(b.velocity).normalize();
+      let nearest = step + 1, victim = null;
+      let structure = null;
+      for (const e of this.enemies.active) {
+        if (!e.active || e.dead) continue;
+        this.enemyPos(e, _tmp2).sub(b.previous);
+        const along = clamp(_tmp2.dot(_aimV), 0, step);
+        const radius = (e.type.radius || 0.3) + b.spec.corridor;
+        if (_tmp2.addScaledVector(_aimV, -along).lengthSq() <= radius * radius && along < nearest) { nearest = along; victim = e; }
+      }
+      for (const p of this.world?.portals || []) {
+        if (p.destroyed) continue;
+        _tmp2.copy(p.group.position).sub(b.previous);
+        const along = clamp(_tmp2.dot(_aimV),0,step);
+        if (_tmp2.addScaledVector(_aimV,-along).lengthSq() <= 2.6*2.6 && along<nearest) { nearest=along;structure=p;victim=null; }
+      }
+      // Sweep the segment so fast bolts cannot tunnel through cliffs.
+      let terrainAt = step + 1;
+      const samples = Math.max(1, Math.ceil(step / 0.2));
+      for (let i = 0; i <= samples; i++) {
+        const d = step * i / samples;
+        _tmp.copy(b.previous).addScaledVector(_aimV, d); _tmp2.copy(_tmp).normalize();
+        const floor = R + Math.max(0.03, terrainHeight(_tmp2.x, _tmp2.y, _tmp2.z));
+        if (_tmp.length() <= floor) { terrainAt = d; break; }
+      }
+      if (structure && nearest <= terrainAt) {
+        const felled=this.world.damagePortal(structure,b.spec.dmg*STRUCTURE_MUL);
+        if(felled)this.onPortalDestroyed?.(structure);
+        b.live=false;
+      } else if (victim && nearest <= terrainAt) {
+        b.pos.copy(b.previous).addScaledVector(_aimV, nearest);
+        const landed = this.enemies.damage(victim, b.spec.dmg, { armorPierce: b.spec.pierce, capFrac: STRIKE_CAP_FRAC });
+        this._weaponEffect(victim, b.spec, landed); this.onStrikeHit?.(victim, landed, true);
+        b.live = false;
+      } else if (terrainAt <= step || b.travel >= b.spec.range) b.live = false;
+    }
   }
 
   // A shot straight down the crosshair. Everything inside a thin corridor along
@@ -1018,6 +1118,7 @@ export class AllyManager {
       const landed = this.enemies.damage(e, s.dmg * (1 - 0.5 * Math.min(1, d / s.aoe)), {
         armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
       });
+      this._weaponEffect(e, s, landed);
       if (this.onStrikeHit) this.onStrikeHit(e, landed, hits === 0);
       hits++;
     }
@@ -1157,12 +1258,15 @@ export class AllyManager {
       for (let p = 0; p < parts.length; p++) parts[p]._n = 0;
       const sk = sp.skeleton;
       for (const a of this.active) {
-        if (!a.active || a.dead || a.typeKey !== key) continue;
+        if (!a.active || a.dead || a.modelKey !== key) continue;
         // Cosmetic state advances from what the body actually did since the
         // last frame drawn, whatever moved it: the AI, an order, a party
         // leash, or the player. Measured here rather than in each mover so
         // no mover can forget to report.
-        const moved = Math.acos(clamp(a._renderDir.dot(a.dir), -1, 1)) * R;
+        const h = Math.max(0.03,a.height)-swimOffset(a);
+        const horizontal = Math.acos(clamp(a._renderDir.dot(a.dir), -1, 1)) * (R+(h+a._renderHeight)*.5);
+        const moved = CONFIG.terrain ? Math.hypot(horizontal,h-a._renderHeight) : Math.acos(clamp(a._renderDir.dot(a.dir),-1,1))*R;
+        a._renderHeight = h;
         a._renderDir.copy(a.dir);
         advanceSoldierState(a.cos, a, dt, moved, a.strafeIn, a.sprint);
         // The body you are looking out of is not drawn. From the inside the
@@ -1213,8 +1317,10 @@ export class AllyManager {
           const at = part.at;
           for (let k = 0; k < at.length; k++) {
             _m4.multiplyMatrices(at[k].joint.world, at[k].off);
+            if (part.weapon && a.weaponFamily) _m4.scale(_s.set(1, 1, a.weaponLength));
             part.mesh.setMatrixAt(part._n, _m4);
-            _col.setScalar(flash);
+            if (part.weapon && a.weaponFamily) _col.setHex(a.weaponTint).multiplyScalar(flash);
+            else _col.setScalar(flash);
             part.mesh.setColorAt(part._n, _col);
             part._n++;
           }
@@ -1232,9 +1338,9 @@ export class AllyManager {
   // `tip` at the point. Used by the third-person trail. Returns false when
   // the body has not been drawn yet.
   weaponLine(a, base, tip) {
-    const sp = this.species[a.typeKey];
+    const sp = this.species[a.modelKey];
     if (!sp || !a.weaponM) return false;
-    const len = WEAPON_TIP[sp.spec.weapon] || 1;
+    const len = (WEAPON_TIP[sp.spec.weapon] || 1) * (a.weaponLength || 1);
     // Weapons run along the hand's -z (see buildSoldier).
     base.set(0, 0, -0.1).applyMatrix4(a.weaponM);
     tip.set(0, 0, -len).applyMatrix4(a.weaponM);
