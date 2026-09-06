@@ -1,0 +1,3278 @@
+{
+  "scope": "Injected actor population and direct GPU buffer readback; not a campaign or timing benchmark.",
+  "checks": [
+    {
+      "name": "full: real GPU values match written transforms",
+      "ok": true,
+      "actual": {
+        "phase": "full",
+        "active": 100,
+        "totalBytes": 2676688,
+        "matrixBytes": 2467072,
+        "writes": 256,
+        "gpuMatches": true,
+        "oversized": [
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 84480,
+            "count": 150
+          },
+          {
+            "bytes": 84480,
+            "count": 150
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 70400,
+            "count": 125
+          },
+          {
+            "bytes": 84480,
+            "count": 150
+          },
+          {
+            "bytes": 84480,
+            "count": 150
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 28160,
+            "count": 50
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 25
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 42240,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 42240,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "full: packed matrices upload only their live prefix",
+      "ok": false
+    },
+    {
+      "name": "shrunk: real GPU values match written transforms",
+      "ok": true,
+      "actual": {
+        "phase": "shrunk",
+        "active": 7,
+        "totalBytes": 2676688,
+        "matrixBytes": 2467072,
+        "writes": 256,
+        "gpuMatches": true,
+        "oversized": [
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 28160,
+            "count": 4
+          },
+          {
+            "bytes": 28160,
+            "count": 4
+          },
+          {
+            "bytes": 84480,
+            "count": 12
+          },
+          {
+            "bytes": 84480,
+            "count": 12
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 70400,
+            "count": 10
+          },
+          {
+            "bytes": 84480,
+            "count": 12
+          },
+          {
+            "bytes": 84480,
+            "count": 12
+          },
+          {
+            "bytes": 14080,
+            "count": 1
+          },
+          {
+            "bytes": 14080,
+            "count": 1
+          },
+          {
+            "bytes": 14080,
+            "count": 1
+          },
+          {
+            "bytes": 28160,
+            "count": 2
+          },
+          {
+            "bytes": 28160,
+            "count": 2
+          },
+          {
+            "bytes": 28160,
+            "count": 2
+          },
+          {
+            "bytes": 28160,
+            "count": 2
+          },
+          {
+            "bytes": 28160,
+            "count": 2
+          },
+          {
+            "bytes": 28160,
+            "count": 2
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 28160,
+            "count": 4
+          },
+          {
+            "bytes": 28160,
+            "count": 4
+          },
+          {
+            "bytes": 28160,
+            "count": 4
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 14080,
+            "count": 2
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 42240,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 42240,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "shrunk: packed matrices upload only their live prefix",
+      "ok": false
+    },
+    {
+      "name": "empty: real GPU values match written transforms",
+      "ok": true,
+      "actual": {
+        "phase": "empty",
+        "active": 0,
+        "totalBytes": 2676688,
+        "matrixBytes": 2467072,
+        "writes": 256,
+        "gpuMatches": true,
+        "oversized": [
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 70400,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 42240,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 42240,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "empty: packed matrices upload only their live prefix",
+      "ok": false
+    },
+    {
+      "name": "reused: real GPU values match written transforms",
+      "ok": true,
+      "actual": {
+        "phase": "reused",
+        "active": 13,
+        "totalBytes": 2676688,
+        "matrixBytes": 2467072,
+        "writes": 256,
+        "gpuMatches": true,
+        "oversized": [
+          {
+            "bytes": 14080,
+            "count": 7
+          },
+          {
+            "bytes": 14080,
+            "count": 7
+          },
+          {
+            "bytes": 14080,
+            "count": 7
+          },
+          {
+            "bytes": 14080,
+            "count": 7
+          },
+          {
+            "bytes": 28160,
+            "count": 14
+          },
+          {
+            "bytes": 28160,
+            "count": 14
+          },
+          {
+            "bytes": 84480,
+            "count": 42
+          },
+          {
+            "bytes": 84480,
+            "count": 42
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 70400,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 6
+          },
+          {
+            "bytes": 14080,
+            "count": 6
+          },
+          {
+            "bytes": 28160,
+            "count": 12
+          },
+          {
+            "bytes": 28160,
+            "count": 12
+          },
+          {
+            "bytes": 28160,
+            "count": 12
+          },
+          {
+            "bytes": 14080,
+            "count": 6
+          },
+          {
+            "bytes": 14080,
+            "count": 6
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 14080,
+            "count": 0
+          },
+          {
+            "bytes": 42240,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 28160,
+            "count": 0
+          },
+          {
+            "bytes": 84480,
+            "count": 0
+          },
+          {
+            "bytes": 42240,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 12288,
+            "count": 2
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 1
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 12288,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          },
+          {
+            "bytes": 6144,
+            "count": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "reused: packed matrices upload only their live prefix",
+      "ok": false
+    },
+    {
+      "name": "Static cache positions stay exact and invalidate on movement",
+      "actual": null
+    },
+    {
+      "name": "A same-cell route avoids searching the whole graph",
+      "ok": false,
+      "actual": {
+        "calls": 1,
+        "path": [
+          165519
+        ],
+        "cost": 0,
+        "heart": 165519
+      }
+    }
+  ],
+  "faults": []
+}

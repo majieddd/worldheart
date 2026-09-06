@@ -49,7 +49,7 @@ Two things will confuse you if nobody says them:
 ## The shape of it
 
 ```
-js/run/       THE PURE CORE - the 99 Planets run state machine. Imports nothing.
+js/run/       THE PURE CORE - run state, importing only its own pure modules.
 js/modes/     ninetynine.js is the ONLY file that knows both the core and Three.
 js/*.js       the engine: world, nav, towers, enemies, allies, possess, ui, main
 tests/run/    tests for the core. tests/tools/ tests the bundler.
@@ -64,7 +64,7 @@ tower, an enemy or a commander.
 
 These break **silently**. Each one has cost this project real time.
 
-**1. `js/run/` imports nothing.** No `three`, no DOM, no `window`, no
+**1. `js/run/` only imports its own pure modules.** No `three`, no DOM, no `window`, no
 `localStorage`, no `Math.random`, no `Date.now`. It takes `dt` and its RNG by
 injection, keeps state plain and serialisable, models players as a list even when
 solo, and reports what happened by returning events - it never calls the
@@ -146,7 +146,10 @@ read a few before writing one.
 
 Honest list, so you are not surprised:
 
-- **No shell tests.** Everything outside `js/run/` is verified by hand.
+- **Shell verification is optional browser tooling.** `tools/*-check.mjs` and
+  `tools/browser-regression.mjs` now exercise rendering, DOM input, movement,
+  persistence and GPU recovery. They require the external Playwright runtime
+  in CONTRIBUTING.md. Passing pure run tests still does not prove gameplay.
 - **Sun elevation swings across a playfield** (measured 3° to 61° on one seed). A
   60°-wide cap under a fixed sun has a gradient by construction; fixing it needs
   a per-field sun or a smaller cap.

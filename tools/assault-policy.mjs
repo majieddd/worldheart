@@ -5,10 +5,11 @@ import { weaponStats } from '../js/run/weapons.js';
 
 export function installAssaultPolicy(W, trace) {
   const mode = W.mode99, g = W.game, p = W.possession, R = W.CONFIG.planetRadius;
+  const cautious = window.__qaCautious === true;
   const pressed = new Set(); let firing = false, target = null, route = [], at = 0;
   let refresh = 0, stalled = 0, previous = null, lastGoal = '', previousNestCount = 0;
   let resting = false, lastWeapon = null;
-  const metrics = { portalKills: 0, attacks: 0, distance: 0, stalledSeconds: 0, replanCount: 0, commanderDamage: 0 };
+  const metrics = { portalKills: 0, attacks: 0, distance: 0, stalledSeconds: 0, replanCount: 0, commanderDamage: 0, evasions: 0, cautious };
   const oldDamage = W.allies.onDamage;
   W.allies.onDamage = (unit, dealt, killed) => {
     if (unit.type.commander) metrics.commanderDamage += dealt;
@@ -25,7 +26,7 @@ export function installAssaultPolicy(W, trace) {
     if (down) { p.canvas.dispatchEvent(new MouseEvent('mousedown', { button: 0, buttons: 1 })); metrics.attacks++; }
     else dispatchEvent(new MouseEvent('mouseup', { button: 0 }));
   };
-  const stop = () => { key('KeyW', false); key('KeyS', false); key('ShiftLeft', false); fire(false); };
+  const stop = () => { for(const code of ['KeyW','KeyS','KeyA','KeyD','ShiftLeft'])key(code,false);fire(false); };
   function equip(commander, family) {
     const eligible = mode.inventory.items.map(item => ({ item, stats: weaponStats(item, commander.typeKey) }))
       .filter(x => x.stats && (family === 'ranged' ? x.item.family === 'carbine' : ['sword', 'spear'].includes(x.item.family)))
@@ -45,7 +46,7 @@ export function installAssaultPolicy(W, trace) {
     }
   }
   function recoveryGoal(unit) {
-    if (target?.kind === 'recover') { setGoal(target.id, target.dir, 'recover'); return; }
+    if (target?.kind === 'recover' && (!cautious || W.enemies.time < refresh)) { setGoal(target.id, target.dir, 'recover'); return; }
     const centre = W.nav.fieldCenter;
     const side = new THREE.Vector3().crossVectors(centre, new THREE.Vector3(0, 1, 0));
     if (side.lengthSq() < .001) side.crossVectors(centre, new THREE.Vector3(1, 0, 0));
@@ -89,15 +90,32 @@ export function installAssaultPolicy(W, trace) {
         if (pressed.has('KeyW') && moved < .004) { stalled += dt; metrics.stalledSeconds += dt; } else stalled = 0;
       }
       previous = unit.dir.clone();
+      key('KeyA',false);key('KeyD',false);
       const destroyed = W.world.portals.filter(n => n.destroyed).length;
       if (destroyed > previousNestCount) { metrics.portalKills += destroyed - previousNestCount; trace('assault-nest-destroyed', { total: destroyed }); previousNestCount = destroyed; lastGoal = ''; }
-      if (!resting && unit.hp < unit.hpMax * .65) { resting = true; trace('assault-rest-start', { hp: unit.hp }); }
+      if (!resting && unit.hp < unit.hpMax * (cautious ? .78 : .65)) { resting = true; trace('assault-rest-start', { hp: unit.hp }); }
       if (resting && unit.hp > unit.hpMax * .95) { resting = false; trace('assault-rest-end', { hp: unit.hp }); }
       const pos = W.allies.worldPos(unit, new THREE.Vector3());
       const nearby = W.enemies.active.filter(e => e.active && !e.dead)
         .map(e => ({ enemy: e, pos: W.allies.enemyPos(e, new THREE.Vector3()) }))
         .map(e => ({ ...e, distance: e.pos.distanceTo(pos) })).sort((a, b) => a.distance - b.distance);
       const danger = nearby[0];
+      if(cautious){
+        // Read the visible locked tells, then try ordinary movement away
+        // from their volume. Position, speed, health and damage stay owned
+        // by the game; an obstructed sidestep can still fail.
+        const tells=nearby.filter(x=>x.enemy.windT>0&&x.enemy.attackPlan&&mode.threats.contains(x.enemy,pos));
+        if(tells.length){
+          const right=new THREE.Vector3().crossVectors(unit.fwd,unit.dir).normalize();
+          const candidates=[['KeyD',right],['KeyA',right.clone().negate()],['KeyS',unit.fwd.clone().negate()],['KeyW',unit.fwd.clone()]].map(([code,dir])=>{
+            const point=pos.clone().addScaledVector(dir,unit.type.speed*.2),node=W.nav.nearestWalkableNode(point.clone().normalize(),true);
+            const safe=tells.filter(x=>!mode.threats.contains(x.enemy,point)).length;
+            const clearance=nearby.slice(0,8).reduce((n,x)=>Math.min(n,x.pos.distanceTo(point)),20);
+            return {code,score:node>=0&&Number.isFinite(W.nav.dist[node])?safe*100+clearance:-1000};
+          }).sort((a,b)=>b.score-a.score);
+          stop();key(candidates[0].code,true);key('ShiftLeft',!unit.swimming);metrics.evasions++;return;
+        }
+      }
       const nestNodes = W.waves.liveNests();
       const nests = W.world.portals.filter(n => !n.destroyed && nestNodes.includes(n.node));
       const hunting = !resting && mode.run.getWave() <= 12 && nests.length && unit.hp > unit.hpMax * .6;
@@ -117,9 +135,9 @@ export function installAssaultPolicy(W, trace) {
       }
       if (!target) { stop(); return; }
       const nestDistance = target.kind === 'nest' ? target.entity.group.position.distanceTo(pos) : Infinity;
-      const inMelee = danger && danger.distance < 4;
-      equip(unit, nestDistance < 8 || inMelee ? 'melee' : 'ranged');
+      equip(unit, nestDistance < 8 || danger?.distance < 4 ? 'melee' : 'ranged');
       const spec = unit.type.strike;
+      const inMelee = danger && danger.distance < (cautious ? (spec.radius || 3)-.15 : 4);
       if (!resting && ((target.kind === 'nest' && nestDistance < (spec.radius || 3) + 2) || inMelee)) {
         key('KeyW', false); key('KeyS', false); key('ShiftLeft', false);
         aimAt(unit, inMelee ? danger.pos : target.entity.group.position); fire(true); return;

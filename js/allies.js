@@ -1,9 +1,10 @@
 import * as THREE from 'three';
-import { CONFIG, PALETTE } from './config.js';
+import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
 import { R, terrainHeight, surfaceTravel } from './world.js';
 import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
+import { uploadInstances } from './rig.js';
 import { insideStrike, STRIKE_AT } from './attacks.js';
 const _routePoint = new THREE.Vector3(), _routeBearing = new THREE.Vector3(), _routeStep = new THREE.Vector3();
 
@@ -1338,7 +1339,7 @@ export class AllyManager {
 
         // Hit flash brightens every part; the instance colour multiplies the
         // material, so values above one push it toward white.
-        const flash = a.flashT > 0 ? 1 + a.flashT * 22 : 1;
+        const flash = PRESENTATION.flashes && a.flashT > 0 ? 1 + a.flashT * 22 : 1;
         for (let p = 0; p < parts.length; p++) {
           const part = parts[p];
           const at = part.at;
@@ -1354,9 +1355,7 @@ export class AllyManager {
         }
       }
       for (let p = 0; p < parts.length; p++) {
-        parts[p].mesh.count = parts[p]._n;
-        parts[p].mesh.instanceMatrix.needsUpdate = true;
-        if (parts[p].mesh.instanceColor) parts[p].mesh.instanceColor.needsUpdate = true;
+        uploadInstances(parts[p].mesh,parts[p]._n);
       }
     }
   }

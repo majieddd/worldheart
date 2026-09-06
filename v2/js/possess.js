@@ -4,6 +4,7 @@ import { PALETTE, CAM_TUNE, PRESENTATION } from './config.js';
 import { SIM_RANDOM } from './noise.js';
 import { BladeTrail } from './viewmodel.js';
 import { swimOffset } from './traversal.js';
+import { uploadInstances } from './rig.js';
 
 // Direct control of a friendly unit, in first or third person.
 //
@@ -171,11 +172,20 @@ export class CacheField {
   }
 
   // Nearest untaken cache within reach of a world position.
+  _surface(c,out) {
+    // Terrain and cache positions stay fixed throughout an assault. Keep
+    // exact sampled positions; invalidate if a fixture or future mover
+    // changes the direction instead of resampling every cache each frame.
+    if(!c._surfaceDir){c._surfaceDir=c.dir.clone();c._surface=surfacePoint(c.dir,new THREE.Vector3());}
+    else if(!c._surfaceDir.equals(c.dir)){c._surfaceDir.copy(c.dir);surfacePoint(c.dir,c._surface);}
+    return out.copy(c._surface);
+  }
+
   collectNear(point, reach = CACHE_REACH) {
     if (this.kind === 'crystal') return 0;
     for (const c of this.caches) {
       if (c.taken) continue;
-      surfacePoint(c.dir, _tmp2);
+      this._surface(c, _tmp2);
       _tmp2.addScaledVector(c.dir, 0.5);
       if (_tmp2.distanceTo(point) <= reach) {
         c.taken = true;
@@ -189,7 +199,7 @@ export class CacheField {
   peekCrystal(point, reach = CACHE_REACH) {
     for (const c of this.caches) {
       if (c.taken) continue;
-      surfacePoint(c.dir, _tmp2).addScaledVector(c.dir, 0.5);
+      this._surface(c, _tmp2).addScaledVector(c.dir, 0.5);
       if (_tmp2.distanceTo(point) <= reach) return c;
     }
     return null;
@@ -210,7 +220,7 @@ export class CacheField {
     let n = 0;
     for (const c of this.caches) {
       if (c.taken) continue;
-      surfacePoint(c.dir, _tmp);
+      this._surface(c, _tmp);
       _tmp.addScaledVector(c.dir, 0.55 + Math.sin(this.time * 2 + c.gold) * 0.08);
       this._q.setFromAxisAngle(c.dir, this.time * 0.8);
       this._m4.compose(_tmp, this._q, this._s);
@@ -226,8 +236,7 @@ export class CacheField {
         this.mesh.setMatrixAt(n++, this._m4);
       }
     }
-    this.mesh.count = n;
-    this.mesh.instanceMatrix.needsUpdate = true;
+    uploadInstances(this.mesh,n);
   }
 }
 

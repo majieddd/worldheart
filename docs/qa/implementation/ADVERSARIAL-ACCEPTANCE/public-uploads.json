@@ -1,0 +1,94 @@
+{
+  "scope": "Injected actor population and direct GPU buffer readback; not a campaign or timing benchmark.",
+  "checks": [
+    {
+      "name": "full: real GPU values match written transforms",
+      "ok": true,
+      "actual": {
+        "phase": "full",
+        "active": 100,
+        "totalBytes": 126008,
+        "matrixBytes": 106112,
+        "writes": 114,
+        "gpuMatches": true,
+        "oversized": []
+      }
+    },
+    {
+      "name": "full: packed matrices upload only their live prefix",
+      "ok": true
+    },
+    {
+      "name": "shrunk: real GPU values match written transforms",
+      "ok": true,
+      "actual": {
+        "phase": "shrunk",
+        "active": 7,
+        "totalBytes": 11248,
+        "matrixBytes": 9472,
+        "writes": 114,
+        "gpuMatches": true,
+        "oversized": []
+      }
+    },
+    {
+      "name": "shrunk: packed matrices upload only their live prefix",
+      "ok": true
+    },
+    {
+      "name": "empty: real GPU values match written transforms",
+      "ok": true,
+      "actual": {
+        "phase": "empty",
+        "active": 0,
+        "totalBytes": 2508,
+        "matrixBytes": 2112,
+        "writes": 54,
+        "gpuMatches": true,
+        "oversized": []
+      }
+    },
+    {
+      "name": "empty: packed matrices upload only their live prefix",
+      "ok": true
+    },
+    {
+      "name": "reused: real GPU values match written transforms",
+      "ok": true,
+      "actual": {
+        "phase": "reused",
+        "active": 13,
+        "totalBytes": 17708,
+        "matrixBytes": 14912,
+        "writes": 84,
+        "gpuMatches": true,
+        "oversized": []
+      }
+    },
+    {
+      "name": "reused: packed matrices upload only their live prefix",
+      "ok": true
+    },
+    {
+      "name": "Static cache positions stay exact and invalidate on movement",
+      "ok": true,
+      "actual": {
+        "same": true,
+        "invalidated": true
+      }
+    },
+    {
+      "name": "A same-cell route avoids searching the whole graph",
+      "ok": true,
+      "actual": {
+        "calls": 0,
+        "path": [
+          165519
+        ],
+        "cost": 0,
+        "heart": 165519
+      }
+    }
+  ],
+  "faults": []
+}

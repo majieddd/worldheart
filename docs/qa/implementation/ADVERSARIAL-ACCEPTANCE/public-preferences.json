@@ -1,0 +1,210 @@
+{
+  "scope": "Actual settings clicks/keyboard, injected effect and strike fixtures, reload and fresh reduced-motion profile; not a photosensitivity certification.",
+  "checks": [
+    {
+      "name": "set-flashes: independently available",
+      "ok": true
+    },
+    {
+      "name": "set-trails: independently available",
+      "ok": true
+    },
+    {
+      "name": "set-numbers: independently available",
+      "ok": true
+    },
+    {
+      "name": "set-grain: independently available",
+      "ok": true
+    },
+    {
+      "name": "flashes: keyboard toggle changes only its preference",
+      "ok": true,
+      "actual": {
+        "before": {
+          "bob": true,
+          "shake": true,
+          "autoFocus": false,
+          "flashes": true,
+          "trails": true,
+          "numbers": true,
+          "grain": true
+        },
+        "after": {
+          "bob": true,
+          "shake": true,
+          "autoFocus": false,
+          "flashes": false,
+          "trails": true,
+          "numbers": true,
+          "grain": true
+        }
+      }
+    },
+    {
+      "name": "trails: keyboard toggle changes only its preference",
+      "ok": true,
+      "actual": {
+        "before": {
+          "bob": true,
+          "shake": true,
+          "autoFocus": false,
+          "flashes": false,
+          "trails": true,
+          "numbers": true,
+          "grain": true
+        },
+        "after": {
+          "bob": true,
+          "shake": true,
+          "autoFocus": false,
+          "flashes": false,
+          "trails": false,
+          "numbers": true,
+          "grain": true
+        }
+      }
+    },
+    {
+      "name": "numbers: keyboard toggle changes only its preference",
+      "ok": true,
+      "actual": {
+        "before": {
+          "bob": true,
+          "shake": true,
+          "autoFocus": false,
+          "flashes": false,
+          "trails": false,
+          "numbers": true,
+          "grain": true
+        },
+        "after": {
+          "bob": true,
+          "shake": true,
+          "autoFocus": false,
+          "flashes": false,
+          "trails": false,
+          "numbers": false,
+          "grain": true
+        }
+      }
+    },
+    {
+      "name": "grain: keyboard toggle changes only its preference",
+      "ok": true,
+      "actual": {
+        "before": {
+          "bob": true,
+          "shake": true,
+          "autoFocus": false,
+          "flashes": false,
+          "trails": false,
+          "numbers": false,
+          "grain": true
+        },
+        "after": {
+          "bob": true,
+          "shake": true,
+          "autoFocus": false,
+          "flashes": false,
+          "trails": false,
+          "numbers": false,
+          "grain": false
+        }
+      }
+    },
+    {
+      "name": "Numbers can hide while BLOCKED remains readable",
+      "ok": true,
+      "actual": {
+        "texts": [
+          "BLOCKED"
+        ],
+        "fpTrail": false,
+        "tpTrail": false,
+        "grain": 0,
+        "guide": true,
+        "damage": 11,
+        "vignette": "0",
+        "hitClass": "go blocked",
+        "hitAnimation": "none",
+        "paused": true
+      }
+    },
+    {
+      "name": "Blade trail preference applies in both camera modes",
+      "ok": true
+    },
+    {
+      "name": "Grain can be disabled independently of bloom quality",
+      "ok": true
+    },
+    {
+      "name": "Reduced flashes retain static hit feedback and suppress the screen flash",
+      "ok": true
+    },
+    {
+      "name": "Red danger tells and real damage remain with cosmetics reduced",
+      "ok": true
+    },
+    {
+      "name": "Static hit marker expires instead of sticking on screen",
+      "ok": true
+    },
+    {
+      "name": "Settings fit 1280px and remain scrollable",
+      "ok": true
+    },
+    {
+      "name": "Settings controls at 1280px are above build cards and alerts",
+      "ok": true
+    },
+    {
+      "name": "Settings fit 1920px and remain scrollable",
+      "ok": true
+    },
+    {
+      "name": "Settings controls at 1920px are above build cards and alerts",
+      "ok": true
+    },
+    {
+      "name": "Settings fit 390px and remain scrollable",
+      "ok": true
+    },
+    {
+      "name": "Settings controls at 390px are above build cards and alerts",
+      "ok": true
+    },
+    {
+      "name": "Escape closes settings and returns keyboard focus",
+      "ok": true
+    },
+    {
+      "name": "Feedback preferences survive a normal reload",
+      "ok": true,
+      "actual": {
+        "bob": true,
+        "shake": true,
+        "autoFocus": false,
+        "flashes": false,
+        "trails": false,
+        "numbers": false,
+        "grain": false
+      }
+    },
+    {
+      "name": "Reduced-motion defaults turn optional flashes, trails, numbers and grain off",
+      "ok": true,
+      "actual": {
+        "bob": false,
+        "shake": false,
+        "autoFocus": false,
+        "flashes": false,
+        "trails": false,
+        "numbers": false,
+        "grain": false
+      }
+    }
+  ],
+  "faults": []
+}

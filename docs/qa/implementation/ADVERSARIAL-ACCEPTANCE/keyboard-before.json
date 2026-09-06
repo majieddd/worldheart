@@ -1,0 +1,118 @@
+{
+  "scope": "Keyboard/viewport fixtures with explicit inventory setup, not natural play",
+  "base": "http://127.0.0.1:8141/",
+  "checks": [
+    {
+      "name": "I opens an actual modal with focus and pauses the battle",
+      "ok": true
+    },
+    {
+      "name": "Tab reaches customization without a pointer",
+      "ok": true
+    },
+    {
+      "name": "Keyboard part fitting preserves focus on the same control",
+      "ok": false,
+      "actual": {
+        "tag": "BODY"
+      }
+    },
+    {
+      "name": "Keyboard part fitting commits the selected value",
+      "ok": true
+    },
+    {
+      "name": "Part fitting preserves expanded controls and scroll position",
+      "ok": true
+    },
+    {
+      "name": "Tab reaches a carried item equip action",
+      "ok": true
+    },
+    {
+      "name": "Equipping by keyboard keeps focus with the moved item",
+      "ok": false
+    },
+    {
+      "name": "Tab reaches salvage on a carried item",
+      "ok": true
+    },
+    {
+      "name": "Removing a focused item moves focus to another usable inventory control",
+      "ok": false
+    },
+    {
+      "name": "Inventory owns movement/build/pause/sell/deposit shortcuts",
+      "ok": true,
+      "actual": {
+        "before": {
+          "lon": 1.3887574231774316,
+          "lat": 0.2906432331034221,
+          "gold": 450,
+          "paused": true
+        },
+        "after": {
+          "lon": 1.3887574231774316,
+          "lat": 0.2906432331034221,
+          "gold": 450,
+          "paused": true,
+          "build": null
+        }
+      }
+    },
+    {
+      "name": "Escape closes inventory and restores the previous running state",
+      "ok": true
+    },
+    {
+      "name": "Opening and closing from pause keeps the game paused",
+      "ok": true
+    },
+    {
+      "name": "Inventory is readable without horizontal scrolling at 1280x720",
+      "ok": true,
+      "actual": {
+        "width": 1280,
+        "dialog": {
+          "left": 180,
+          "right": 1100,
+          "top": 43.203125,
+          "bottom": 676.796875
+        },
+        "overflow": false,
+        "pageOverflow": false
+      }
+    },
+    {
+      "name": "Inventory is readable without horizontal scrolling at 1920x1080",
+      "ok": true,
+      "actual": {
+        "width": 1920,
+        "dialog": {
+          "left": 500,
+          "right": 1420,
+          "top": 64.796875,
+          "bottom": 1015.1875
+        },
+        "overflow": false,
+        "pageOverflow": false
+      }
+    },
+    {
+      "name": "Inventory is readable without horizontal scrolling at 390x844",
+      "ok": true,
+      "actual": {
+        "width": 390,
+        "dialog": {
+          "left": 17,
+          "right": 373,
+          "top": 50.640625,
+          "bottom": 793.359375
+        },
+        "overflow": false,
+        "pageOverflow": false
+      }
+    }
+  ],
+  "faults": []
+}

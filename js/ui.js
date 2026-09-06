@@ -123,6 +123,10 @@ export class HUD {
         <div class="set-row"><span>Screen shake</span><button class="btn" id="set-shake">${PRESENTATION.shake ? 'On' : 'Off'}</button></div>
         <div class="set-row"><span>Head and weapon bob</span><button class="btn" id="set-bob">${PRESENTATION.bob ? 'On' : 'Off'}</button></div>
         <div class="set-row"><span>Automatic breach focus</span><button class="btn" id="set-focus">${PRESENTATION.autoFocus ? 'On' : 'Off'}</button></div>
+        <div class="set-row"><span>Impact flashes</span><button class="btn" id="set-flashes">${PRESENTATION.flashes ? 'On' : 'Off'}</button></div>
+        <div class="set-row"><span>Blade trails</span><button class="btn" id="set-trails">${PRESENTATION.trails ? 'On' : 'Off'}</button></div>
+        <div class="set-row"><span>Damage numbers</span><button class="btn" id="set-numbers">${PRESENTATION.numbers ? 'On' : 'Off'}</button></div>
+        <div class="set-row"><span>Film grain</span><button class="btn" id="set-grain">${PRESENTATION.grain ? 'On' : 'Off'}</button></div>
         <div class="set-row"><span>Seed</span><span class="marker" id="set-seed" style="color:var(--text)">0</span></div>
         <div class="marker" style="margin-top:var(--sp-2)">camera feel</div>
         <div id="cam-sliders"></div>
@@ -256,6 +260,7 @@ export class HUD {
       'btn-call', 'call-bonus', 'boss-bar', 'boss-fill', 'boss-name',
       'btn-speed', 'speed-label', 'btn-pause', 'btn-home', 'btn-sound', 'btn-settings', 'settings-pop',
       'set-quality', 'set-shake', 'set-bob', 'set-focus', 'set-seed', 'toast-anchor', 'wave-banner', 'banner-big', 'banner-small',
+      'set-flashes', 'set-trails', 'set-numbers', 'set-grain',
       'hint-line', 'build-bar', 'tower-panel', 'tp-name', 'tp-tier', 'tp-desc', 'tp-stats',
       'tp-upgrade', 'tp-sell', 'tp-close', 'damage-vignette',
       'fp-hud', 'fp-cross', 'fp-hit', 'fp-name', 'fp-hp', 'fp-swing', 'fp-keys', 'fp-rally',
@@ -485,7 +490,15 @@ export class HUD {
     this.el['btn-deposit'].addEventListener('click', () => this.onCrystalDeposit?.());
     this.el['btn-sound'].addEventListener('click', () => this.toggleSound());
     this.el['btn-settings'].addEventListener('click', () => {
-      this.el['settings-pop'].classList.toggle('show');
+      const shown=this.el['settings-pop'].classList.toggle('show');
+      this.el['btn-settings'].setAttribute('aria-expanded',String(shown));
+    });
+    this.el['btn-settings'].setAttribute('aria-controls','settings-pop');
+    this.el['btn-settings'].setAttribute('aria-expanded','false');
+    this.el['settings-pop'].addEventListener('keydown',e=>{
+      if(e.code!=='Escape')return;
+      e.preventDefault();e.stopPropagation();this.el['settings-pop'].classList.remove('show');
+      this.el['btn-settings'].setAttribute('aria-expanded','false');this.el['btn-settings'].focus();
     });
     this.el['set-shake'].addEventListener('click', () => {
       this.rig.shakeEnabled = !this.rig.shakeEnabled;
@@ -493,12 +506,19 @@ export class HUD {
       this.rig.trauma = 0;
       savePresentation();
       this.el['set-shake'].textContent = this.rig.shakeEnabled ? 'On' : 'Off';
+      this.el['set-shake'].setAttribute('aria-pressed',String(PRESENTATION.shake));
     });
-    for (const [id, key] of [['set-bob', 'bob'], ['set-focus', 'autoFocus']]) {
+    document.body.classList.toggle('subdued-flashes',!PRESENTATION.flashes);
+    for (const [id, key] of [['set-shake','shake'],['set-bob','bob'],['set-focus','autoFocus'],['set-flashes','flashes'],['set-trails','trails'],['set-numbers','numbers'],['set-grain','grain']]) {
+      this.el[id].setAttribute('aria-label',this.el[id].previousElementSibling.textContent);
+      this.el[id].setAttribute('aria-pressed',String(PRESENTATION[key]));
+      if(key==='shake')continue;
       this.el[id].addEventListener('click', () => {
         PRESENTATION[key] = !PRESENTATION[key];
         savePresentation();
         this.el[id].textContent = PRESENTATION[key] ? 'On' : 'Off';
+        this.el[id].setAttribute('aria-pressed',String(PRESENTATION[key]));
+        document.body.classList.toggle('subdued-flashes',!PRESENTATION.flashes);
       });
     }
     this.el['set-quality'].addEventListener('click', () => {
@@ -541,14 +561,16 @@ export class HUD {
     });
     this.el['btn-continue'].addEventListener('click', () => {
       this.el['end-overlay'].classList.remove('show');
+      document.body.classList.remove('end-open');
       this._ended = false;
       this.game.paused = false;
+      this.possession?.suspend?.(!!this.endWasSuspended);
       this.audio?.play('click');
       this.onContinue?.();
     });
 
     addEventListener('keydown', (e) => {
-      if(document.querySelector('dialog[open]')||e.target?.matches?.('input,textarea,select,button,[contenteditable="true"]'))return;
+      if(document.querySelector('dialog[open],#end-overlay.show')||e.target?.matches?.('input,textarea,select,button,[contenteditable="true"]'))return;
       // Pause and sound belong to the player wherever they are, but the SPEED
       // key does not: F is a jump alias while a body is possessed, and these
       // are two separate window listeners, so preventDefault in one does not
@@ -834,6 +856,7 @@ export class HUD {
     void h.offsetWidth;              // restart the animation
     h.classList.add('go');
     if (blocked) h.classList.add('blocked');
+    clearTimeout(this._hitT);this._hitT=setTimeout(()=>h.classList.remove('go'),260);
   }
 
   showEnd(won, subtitle) {
@@ -844,6 +867,15 @@ export class HUD {
     // had just taken.
     if (this._ended) return;
     this._ended = true;
+    this.el['settings-pop'].classList.remove('show');
+    this.el['btn-settings'].setAttribute('aria-expanded','false');
+    // Pausing simulation does not release a possessed mouse. The visible
+    // victory buttons used to receive clicks at the locked crosshair instead
+    // of the pointer, trapping a natural commander win on its receipt.
+    this.game.context?.close();
+    this.endWasSuspended = this.possession?.suspended;
+    this.possession?.suspend?.(true);
+    this.rig.keys.clear(); this.rig.velLon=0; this.rig.velLat=0; this.rig.cancelFlight();
     const e = this.el;
     e['end-mark'].textContent = won ? 'THE DAWN HOLDS' : 'THE HEART FADES';
     e['end-sub'].textContent = subtitle
@@ -859,7 +891,13 @@ export class HUD {
     e['btn-continue'].style.display = won ? '' : 'none';
     e['btn-continue'].textContent = CONFIG.mapKey==='ninetynine' ? 'Collect remaining loot' : 'Hold the line (endless)';
     e['end-overlay'].classList.add('show');
+    document.body.classList.add('end-open');
     this.game.paused = true;
+    queueMicrotask(() => {
+      if (!e['end-overlay'].classList.contains('show')) return;
+      [...e['end-card'].querySelectorAll('.o-actions button:not([hidden]):not(:disabled)')]
+        .find(button => getComputedStyle(button).display !== 'none')?.focus({preventScroll:true});
+    });
     this.audio?.play(won ? 'victory' : 'defeat');
   }
 

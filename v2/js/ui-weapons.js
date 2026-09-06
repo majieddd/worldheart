@@ -42,16 +42,30 @@ export class WeaponPanel {
   }
   open() {
     if (!this.api.canInteract() || this.dialog.open) return;
-    this.wasPaused = this.game.paused; this.game.paused = true; this.possession.suspend(true);
+    this.wasPaused = this.game.paused;
+    // Inventory can sit above the victory receipt. It must return that
+    // receipt's suspended input, while taking over a world inspection panel
+    // that closes once the inventory becomes modal.
+    this.wasSuspended = this.possession.suspended && !this.game.context?.editing;
+    this.game.paused = true; this.possession.suspend(true);
     this.ui.rig.keys.clear();this.ui.rig.velLon=0;this.ui.rig.velLat=0;this.ui.rig.cancelFlight();
     this.game.cancelBuild(); this.ui.reflectPause?.(); this.notice = '';
     this.render(); this.dialog.showModal(); this.dialog.querySelector('button').focus();
   }
   close() {
     if (!this.dialog.open) return;
-    this.dialog.close(); this.game.paused = this.wasPaused; this.possession.suspend(false); this.ui.reflectPause?.();
+    this.dialog.close(); this.game.paused = this.wasPaused; this.possession.suspend(!!this.wasSuspended); this.ui.reflectPause?.();
   }
   render() {
+    // Transactions rebuild the inventory, including items that move between
+    // equipment and backpack. Keep keyboard ownership by item and action,
+    // rather than leaving focus on the body when the old node is removed.
+    const controls = [...this.dialog.querySelectorAll('button:not(:disabled),select:not(:disabled),summary')];
+    const active = document.activeElement, owned = this.dialog.contains(active);
+    const key = el => [el.tagName, el.dataset.action || '', el.dataset.id || el.closest('details')?.dataset.item || '', el.dataset.slot || '', el.dataset.part || '', el.dataset.replace || ''].join('|');
+    const focusedKey = owned ? key(active) : null, focusedAt = controls.indexOf(active);
+    const remainingKeys = owned ? [...controls.slice(focusedAt + 1), ...controls.slice(0, focusedAt).reverse()].map(key) : [];
+    const scroll = this.dialog.scrollTop;
     const expanded = new Set([...this.dialog.querySelectorAll('details[open]')].map(d=>d.dataset.item));
     const inv = this.api.inventory, { name, stats, parts, compatible, trait } = this.rules;
     const equipped = new Set(inv.slots.filter(Boolean)),banked=new Set(this.api.bankedIds?.()||[]);
@@ -73,6 +87,16 @@ export class WeaponPanel {
     for (const d of this.dialog.querySelectorAll('details')) {
       d.dataset.item = d.querySelector('select').dataset.id;
       if (expanded.has(d.dataset.item)) d.open = true;
+    }
+    this.dialog.scrollTop = scroll;
+    if (focusedKey) {
+      const current = [...this.dialog.querySelectorAll('button:not(:disabled),select:not(:disabled),summary')]
+        .filter(el => !el.closest('details:not([open])') || el.tagName === 'SUMMARY');
+      const byKey = new Map(current.map(el => [key(el), el]));
+      const next = byKey.get(focusedKey) || remainingKeys.map(k => byKey.get(k)).find(Boolean) || current[0];
+      next?.focus({preventScroll:true});
+      const bounds = this.dialog.getBoundingClientRect(), target = next?.getBoundingClientRect();
+      if (target && (target.top < bounds.top || target.bottom > bounds.bottom)) next.scrollIntoView({block:'nearest'});
     }
   }
   update() {

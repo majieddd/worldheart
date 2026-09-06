@@ -244,6 +244,22 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 
 ## Decided
 
+2026-09-06 adversarial acceptance: inventory rebuilds must preserve keyboard
+focus by item/action. Victory receipts own pause, pointer lock and hotkeys;
+inventory above a receipt returns to that same context. Weapon length and era
+materials belong to the held prop, never the commander's arm. Preserve failing
+controls and natural losses, and validate sustained simulation rather than
+counting frames after a stress fixture has ended the assault.
+
+2026-09-06 feedback/performance continuation: independent Impact flashes,
+Blade trails, Damage numbers and Film grain controls preserve red strike
+guides and essential hit/block cues. Reduced-motion defaults lower optional
+feedback. Profiled packed instance buffers upload their live prefix; immutable
+cache locations reuse exact terrain positions, invalidating on direction
+change. Keep camera and authoritative combat/traversal values unchanged while
+measuring these presentation costs. Use GPU readback and real frame-time
+measurements rather than equating fewer bytes with a frame-budget pass.
+
 2026-09-06 workflow decision: the owner authorized ongoing publication to
 `/worldheart/v2/` from a dedicated preview integration branch, without merging
 gameplay into main. [PREVIEW.md](PREVIEW.md) defines publishing, root-file
@@ -291,6 +307,19 @@ existing milestones rather than replacing their remaining acceptance gates.
 Continue in dependency order and keep each behavior reviewable. A task closes only when its stated player behavior is evidenced, with remaining gaps named. M0-M2 implementation records distinguish automated evidence from remaining owner review.
 
 ## Where we are
+
+Current continuation: Codex on `feature/adversarial-acceptance` has repaired
+interaction/model defects and GPU recovery. [The acceptance audit](qa/implementation/ADVERSARIAL-ACCEPTANCE.md)
+retains the before/after browser controls, a natural victory with repaired
+extraction, a subsequent canyon defeat and eight foliage geometry cases.
+Terrain-edge tells now pass 300 probes across five enemy species. A cautious
+ocean continuation won and extracted to planet 5 with all 13 weapons retained.
+Independent comfort settings pass 23 checks; exact instance-upload savings
+are verified. The reference desktop budget passes, but reduced CPU capability
+still fails. Richer authored weapon silhouettes, broader device/strategy
+coverage, full campaign and owner feel remain open. This record does not close
+M0-M5 or the production release. [All 27 owner requests](qa/implementation/OWNER-ALIGNMENT.md)
+are mapped to current evidence and remaining work.
 
 The implementation stack is now [live at V2](https://majieddd.github.io/worldheart/v2/)
 through [PR #18's preview workflow](https://github.com/majieddd/worldheart/pull/18).

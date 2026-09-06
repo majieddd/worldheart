@@ -1,0 +1,220 @@
+{
+  "base": "https://majieddd.github.io/worldheart/",
+  "build": {
+    "format": 1,
+    "previewBranch": "preview/v2",
+    "previewSha": "d9324592b38cdbd5d9c612ff93ab744d95567c57",
+    "productionBranch": "main",
+    "productionSha": "1374122d1109919a5fab10b69fefdfb80308eb6e",
+    "productionFiles": 71,
+    "previewFiles": 55,
+    "productionHashes": {
+      "css/style.css": "ad2ce23de733123176d05bed0e7e6b14416410076bf312ed8705e0129e042539",
+      "dist/worldheart.html": "8702e11c8d6a96f6cef084adc69fb29c2317dfe1ad60140b67b266111c881fd4",
+      "index.html": "710df6ae4620a8a9f7acd949e9a68e7abbafce4dd918931717650c7052256989",
+      "js/allies.js": "f70d7d4e32673f565dc8c6b0c3181886ffebb8f815b9185aa5642e41b185df4c",
+      "js/audio.js": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "js/camera.js": "ea20bf891afc6feaab9ee5dc56888a740a9bf7fe90241711e42a4c6edf382ddf",
+      "js/combatfx.js": "2c739f44acd35a1a5902aed6076d3b3634dea8f7f2a481caa01ba549f920494c",
+      "js/config.js": "942b23808098f48050ba3a3a7d5e05e1373f4dc793ce5081bf70cf1c5e94f9bf",
+      "js/effects.js": "bf2c372a599f9477ef9b2ca1a6bf1ea7e69cc77158aca7fe9b50ec5585235b41",
+      "js/enemies.js": "71038674a14eaded530878e8401ac4fff5a9e552044c21e294c278fd1fb5748b",
+      "js/game.js": "0a7e4c8509e877beff2ec50c1c681261a5e27534f07c0b7e5c3753121779d28f",
+      "js/main.js": "4b2906a2149e944156d8f0f52efaf4869e1ee04be3b4b94d3d2e3fcb44eb364a",
+      "js/modes/ninetynine.js": "7630c2b4c67aa8f9af63f8981e8046aad1d2b0300d06f806cd3fefc5a0863357",
+      "js/modes/progress.js": "78f6585855c5557efc12234891042472e2059a4ec6ac3254ea4468da2652cc11",
+      "js/nav.js": "86887ca58c4dd3df79cf4e933f0ce128ce7949d64faffc9d341056c6d2c9f4b8",
+      "js/noise.js": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "js/possess.js": "e15ef2a31c7820af489e291393ec55ae1885b821fdce2e72eeb9bb016b9c7ed2",
+      "js/postfx.js": "f2048ab65b321f6cacc04ad55c44051bdf8275fc4a032846febb652d05c4ce58",
+      "js/rig.js": "beb79b2fda8fe8283055c64ff1011054a15233a7e7fe57cdf14de17af1582b7e",
+      "js/run/draft.js": "be60615d597653b20a89f9865b45b78cb451fb0ee2fb77ec14b2e24568c23f6b",
+      "js/run/frontier.js": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "js/run/modifiers.js": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "js/run/powers.js": "4abd2db4808a90e2b512657811bc2f9fb74107f1b74eb7f015a405796c7efc2c",
+      "js/run/rng.js": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "js/run/run.js": "258fddb92cda8aa29793e74b0bd67fc99e90f8f22168bdaebdb6a73014ac448d",
+      "js/run/schedule.js": "418c06888108e69adecf985a39b07d35f987f5d86f1d6c1611de5c4556ac2c92",
+      "js/run/state.js": "b9422a97330adedb1a1bd87249e305c8368f86e657e0b8209f4397fbd6d6471f",
+      "js/soldier.js": "03ffb3ed08dc7254e68cb749b24ba9a813bc2b76d633e3a34b42700ee5f5bf16",
+      "js/towers.js": "cd926b0a93aa763cd772db068cc01256c588e927646708c69ab27c6ad4e91c93",
+      "js/ui-icons.js": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "js/ui.js": "ffee80551b560d004ce90c904f2efc4d029a6d690d25bf4937aab96df9208a75",
+      "js/viewmodel.js": "f4fdc51ec6fc63340249d733ce13ef963a4d634fb9bd9a76f6f91291243df869",
+      "js/waves.js": "5da1b3516147eff7650fc656e57b5633361beaccb683f4c5f8aca5009deeea27",
+      "js/world.js": "c3441bce4cd0a0ce773ca2d5f23e618d5443dfec47ea7703e776822a93370a2d",
+      "lib/THREE-LICENSE.txt": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "lib/three.core.min.js": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "lib/three.module.min.js": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6"
+    },
+    "previewHashes": {
+      "css/style.css": "d49d996482e9d547f55b090222ac8ee6831b84826878e5b4b85ef5b11f74a9c4",
+      "index.html": "3342e6628765f150f40837d8dcc4fe6330562fe66e97a9b6c01c7e282813cd9c",
+      "js/allies.js": "23205c5a792664293df8b18bfbef7256a9c5e0e4c6dbf649e5790bf0024529a5",
+      "js/attacks.js": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+      "js/audio.js": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "js/camera.js": "8f769b1d462b218a3a3ebf1383860e8a56d31acb9379c6cb84ff50a22c99198e",
+      "js/combatfx.js": "5439e9b4b67073cec7253fe7d11d0b158b7f6c7025516a5973368cc8b8eb9dce",
+      "js/config.js": "5ac070d59d4514cb3656f81e7c3db129be1540aede71d5782a37b1a2894d7b32",
+      "js/effects.js": "af007c2a0664c28d1046e0e8885af31a32a6d9d46fe194849b7deb9918a0170d",
+      "js/encounters.js": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+      "js/enemies.js": "2dd4bfbdd37f15e732f8957f5177f4dbbe9c200584987de3c30c2b7ffe8076ca",
+      "js/game.js": "fbadb59eedca4f0a0a661469b4a1dba26284c892b73ac5fa6270a96ebaed752a",
+      "js/loot-field.js": "76b59860043f3d545730314cce8b133b4fe55ba30a6044065e4fca36d27cbbe6",
+      "js/main.js": "795e8cae0507458e5ce1833879025058c138c29be970959a3ddff8c2630e9bd4",
+      "js/modes/campaign-launch.js": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+      "js/modes/campaign-store.js": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+      "js/modes/ninetynine.js": "66c9cf38f7a00d10112c7b263aeb870b14bfc430a75812e19318c8c17c4148e9",
+      "js/modes/progress.js": "8a6d7aedfbc8fe26c2c63e09e39bad460e66e247ae0c6399fdd69f59fabcb2a1",
+      "js/nav.js": "39430936ae171e5f5de0de14f2d5b7c91459b5b86b46e5058f0cd24012e13669",
+      "js/nest-sites.js": "dcf11530b9bf0d331d8dc00251da1782f720c9f44739866f8189cd922d6a8ef0",
+      "js/noise.js": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "js/possess.js": "9e607a2f4b86b0840a4403a151a02751bf6a561f493d09f4ea19351ca65f6349",
+      "js/postfx.js": "2163df8b9633467c99ccc539f44bf08be2a046c204b181c7e308fb956b85ae10",
+      "js/range-guide.js": "7615a7379b9147656b6669accb0186c93f37cbbaa895b8cfa9431ea24ba82e41",
+      "js/rewards.js": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+      "js/rig.js": "d6668243b143908d3038bdf768532fe6952fe7c1b239091a64078ecee8a16505",
+      "js/run/campaign.js": "10668ba911e11448876dd587ad5f6abe96d79260672630d21e9fab91920f7ee8",
+      "js/run/crystals.js": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+      "js/run/draft.js": "4e87a1e9e20dcf994338f49979e2aaf54b717491043b4b6b640248f5d96145fd",
+      "js/run/frontier.js": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "js/run/modifiers.js": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "js/run/planets.js": "c23ad4ac7d6c34bccd28b3dd486f078fc35413d47d46f40d2648b4ef3ced8f91",
+      "js/run/powers.js": "8737b19b84326641076eb2908336ecb4e733dda10dd9b44e40201e038808d089",
+      "js/run/rng.js": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "js/run/run.js": "3c5662295e14aa46acc2707d9170bdf911783abc46965e61e05093b07530b880",
+      "js/run/schedule.js": "6a4a7ee78e2fb3fdad81c3cc73aeb725dcf7b0f43674f6a7b535ed7b56f1e89e",
+      "js/run/state.js": "e2fee4fa3e928e1d0c3197303ca8338fa8c1893a715f66b350abe1a95924564d",
+      "js/run/weapons.js": "c3f9da7d8af62baf83e8d90fd8dc896e6b755335ed4fe8998a63a6e12a0bdd90",
+      "js/soldier.js": "d1df56b175a28669779c906a8c2ac4115412ba9dd1f1a50b54cf14fd2d9a1e3d",
+      "js/storage.js": "ec604cf1117c488e54cd66f2e0cbda87fd5af2dde165c3a744a54b9b3e7a2ecc",
+      "js/threat-guides.js": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+      "js/towers.js": "76a465760c2cb6ccd36d946742efd45024fd1536b838cc645630657641a34e9b",
+      "js/traversal.js": "441ce4f53ae080f92c46b21cbc37f37c8d397d772068f8a9f7193d2db736885e",
+      "js/ui-campaign.js": "e4b28e567b846049ca6403d69aa19d294b32386b7610a0c753d86b387630a1ca",
+      "js/ui-icons.js": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "js/ui-weapons.js": "52bcb7b29ebe2f0774ed7044061aeae08c2b69624aa5ed484ff7da120c761b69",
+      "js/ui.js": "3a0e6b09056b5622649fffbaeefed962b43c63a95f4edc627076a6b695d50919",
+      "js/unit-routes.js": "0875c3bb7a2d77562b2eb33a95fc4dbc8cb7932c3305d7bb90d15814a38573ed",
+      "js/viewmodel.js": "d1d5802c94c7ea0c52101e5c9abe54f3a2e1d7cd59984189ff8fca97e4077d62",
+      "js/waves.js": "109148c5fcd3b7893c1e7ad7efc8966a20083895bbf72ae961902b57746e13b7",
+      "js/world-context.js": "2710ffc9b46891cb161aeaca18c1c64fce54cdaf4c2d24d4e19aa1d575ed7de8",
+      "js/world.js": "db32749dc77c8b7a6ed237fb9363526284294fbec146c84f4d8a38582ddc7ff1",
+      "lib/THREE-LICENSE.txt": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "lib/three.core.min.js": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "lib/three.module.min.js": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6"
+    }
+  },
+  "checks": [
+    {
+      "name": "Production bytes: index.html",
+      "ok": true,
+      "actual": "710df6ae4620a8a9f7acd949e9a68e7abbafce4dd918931717650c7052256989"
+    },
+    {
+      "name": "Production bytes: js/main.js",
+      "ok": true,
+      "actual": "4b2906a2149e944156d8f0f52efaf4869e1ee04be3b4b94d3d2e3fcb44eb364a"
+    },
+    {
+      "name": "Production bytes: js/config.js",
+      "ok": true,
+      "actual": "942b23808098f48050ba3a3a7d5e05e1373f4dc793ce5081bf70cf1c5e94f9bf"
+    },
+    {
+      "name": "Production bytes: js/camera.js",
+      "ok": true,
+      "actual": "ea20bf891afc6feaab9ee5dc56888a740a9bf7fe90241711e42a4c6edf382ddf"
+    },
+    {
+      "name": "Production bytes: css/style.css",
+      "ok": true,
+      "actual": "ad2ce23de733123176d05bed0e7e6b14416410076bf312ed8705e0129e042539"
+    },
+    {
+      "name": "Production bytes: dist/worldheart.html",
+      "ok": true,
+      "actual": "8702e11c8d6a96f6cef084adc69fb29c2317dfe1ad60140b67b266111c881fd4"
+    },
+    {
+      "name": "Preview bytes: index.html",
+      "ok": true,
+      "actual": "3342e6628765f150f40837d8dcc4fe6330562fe66e97a9b6c01c7e282813cd9c"
+    },
+    {
+      "name": "Preview bytes: js/config.js",
+      "ok": true,
+      "actual": "5ac070d59d4514cb3656f81e7c3db129be1540aede71d5782a37b1a2894d7b32"
+    },
+    {
+      "name": "Preview bytes: js/storage.js",
+      "ok": true,
+      "actual": "ec604cf1117c488e54cd66f2e0cbda87fd5af2dde165c3a744a54b9b3e7a2ecc"
+    },
+    {
+      "name": "Preview bytes: js/modes/campaign-store.js",
+      "ok": true,
+      "actual": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d"
+    },
+    {
+      "name": "Bare V2 starts saved 99-planet campaign",
+      "ok": true,
+      "actual": {
+        "map": "ninetynine",
+        "planet": 1,
+        "limit": 99,
+        "coins": 0,
+        "stableMap": "pocket",
+        "stableSave": "{\"coins\":900,\"marker\":\"production-save\"}",
+        "rootCampaign": null
+      }
+    },
+    {
+      "name": "Preview ignores original profile",
+      "ok": true,
+      "actual": {
+        "map": "ninetynine",
+        "planet": 1,
+        "limit": 99,
+        "coins": 0,
+        "stableMap": "pocket",
+        "stableSave": "{\"coins\":900,\"marker\":\"production-save\"}",
+        "rootCampaign": null
+      }
+    },
+    {
+      "name": "V2 begins real assault and saves only preview checkpoint",
+      "ok": true,
+      "actual": {
+        "state": "playing",
+        "status": "assault",
+        "save": true,
+        "rootCampaign": null,
+        "stableSave": "{\"coins\":900,\"marker\":\"production-save\"}"
+      }
+    },
+    {
+      "name": "V2 reload retains checkpoint and original save",
+      "ok": true
+    },
+    {
+      "name": "Original game boots with original profile and retains V2 save",
+      "ok": true
+    },
+    {
+      "name": "Explicit classic map remains available in V2",
+      "ok": true,
+      "actual": {
+        "map": "pocket",
+        "campaign": false
+      }
+    },
+    {
+      "name": "No browser runtime faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "faults": [],
+  "scope": "Deployment identity, root preservation and instrumented title/play/save/reload smoke test"
+}

@@ -1,11 +1,11 @@
 import * as THREE from 'three';
-import { CONFIG, PALETTE } from './config.js';
+import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
 import { R, terrainHeight, surfaceTravel, canFlyAt } from './world.js';
 import { MAX_SLOW, swimOffset } from './traversal.js';
 import { enemyStrike, insideStrike } from './attacks.js';
 import { planetBoss } from './encounters.js';
-import { Skeleton, slab, box, wedge, cone, merge, shift, spin, easeOut, hump, keyed } from './rig.js';
+import { Skeleton, slab, box, wedge, cone, merge, shift, spin, easeOut, hump, keyed, uploadInstances } from './rig.js';
 
 // Evolution tier, set by the 99 Planets shell and 0 in every other mode.
 export const EVO = { tier: 0 };
@@ -1681,7 +1681,7 @@ export class EnemyManager {
       // shipped; the wind-up brightens the glow so the tell reads from the
       // board, and an armed shield pulses the plates toward the tier colour
       // so a blocked hit reads as a shield rather than as a miss.
-      const flash = e.flashT > 0 ? 1 : 0;
+      const flash = PRESENTATION.flashes && e.flashT > 0 ? 1 : 0;
       const slow = e.slowFrac > 0 ? 1 : 0;
       const wg = _c.wind;
       const sh = _c.shield ? 0.55 + 0.45 * Math.sin(t * 16) : 0;
@@ -1728,9 +1728,7 @@ export class EnemyManager {
       const parts = list[i].parts;
       for (let p = 0; p < parts.length; p++) {
         const part = parts[p];
-        part.mesh.count = part._n;
-        part.mesh.instanceMatrix.needsUpdate = true;
-        if (part.mesh.instanceColor) part.mesh.instanceColor.needsUpdate = true;
+        uploadInstances(part.mesh,part._n);
       }
     }
   }

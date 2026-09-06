@@ -1,0 +1,27 @@
+{
+  "scope": "Possessed victory and extraction fixtures with real pointer/mouse input; wave completions injected",
+  "base": "http://127.0.0.1:8139/",
+  "checks": [
+    {
+      "name": "Fixture enters commander with a real granted pointer lock",
+      "ok": true
+    },
+    {
+      "name": "The campaign receipt releases commander input and pointer lock",
+      "ok": false,
+      "actual": {
+        "locked": true,
+        "suspended": false,
+        "paused": true,
+        "active": "",
+        "phase": "victory"
+      }
+    },
+    {
+      "name": "Collect remaining loot accepts a real click",
+      "ok": false,
+      "actual": "TimeoutError: locator.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#btn-continue')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"btn-continue\" class=\"btn primary\">Collect remaining loot</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - performing click action\u001b[22m\n\u001b[2m      - <div id=\"end-overlay\" class=\"overlay show\">…</div> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - performing click action\u001b[22m\n\u001b[2m      - <div id=\"end-overlay\" class=\"overlay show\">…</div> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    4 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - performing click action\u001b[22m\n\u001b[2m      - <div id=\"end-overlay\" class=\"overlay show\">…</div> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n"
+    }
+  ],
+  "faults": []
+}

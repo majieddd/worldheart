@@ -1,0 +1,3236 @@
+{
+  "scope": "Injected terrain/pose fixtures; grounded acquisition plus exact displayed-volume probes at 30/60/120 Hz. Not natural dodging or campaign play.",
+  "checks": [
+    {
+      "name": "Samples include a slope, shoreline, hill and flat ground",
+      "ok": true,
+      "actual": {
+        "shore": {
+          "node": 1869,
+          "height": -0.0016858037561178207,
+          "slope": 0.15637727061300236,
+          "cost": 0.0016858037561178207
+        },
+        "peak": {
+          "node": 118636,
+          "height": 5.835999488830566,
+          "slope": 0.6822368377474396,
+          "cost": -5.835999488830566
+        },
+        "flat": {
+          "node": 165746,
+          "height": 0.5561995506286621,
+          "slope": 0.017028667463566603,
+          "cost": 0.017028667463566603
+        },
+        "slope": {
+          "node": 176183,
+          "height": 1.8890197277069092,
+          "slope": 0.7541925080692656,
+          "cost": -0.7541925080692656
+        }
+      }
+    },
+    {
+      "name": "shore/mite: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "shore",
+        "type": "mite",
+        "grounded": {
+          "origin": [
+            220.3164688175704,
+            70.95976828169316,
+            64.63827022101475
+          ],
+          "point": [
+            220.44118202143392,
+            71.04993569970995,
+            65.24953089532622
+          ],
+          "swimming": false,
+          "wind": 0.25
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.2583333333333333,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.2583333333333333,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "shore/husk: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "shore",
+        "type": "husk",
+        "grounded": {
+          "origin": [
+            220.39897816848702,
+            70.98634298331913,
+            64.662477497706
+          ],
+          "point": [
+            220.44118202143392,
+            71.04993569970995,
+            65.24953089532622
+          ],
+          "swimming": false,
+          "wind": 0.4
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.41666666666666663,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.41666666666666663,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4000000000000004,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4000000000000004,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "shore/aegis: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "shore",
+        "type": "aegis",
+        "grounded": {
+          "origin": [
+            220.50624032467866,
+            71.02089009543292,
+            64.69394695740465
+          ],
+          "point": [
+            220.44118202143392,
+            71.04993569970995,
+            65.24953089532622
+          ],
+          "swimming": false,
+          "wind": 0.45
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.45000000000000057,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.45000000000000057,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "shore/wisp: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "shore",
+        "type": "wisp",
+        "grounded": {
+          "origin": [
+            221.0242156943219,
+            71.18772016675157,
+            64.84591486107759
+          ],
+          "point": [
+            220.44118202143392,
+            71.04993569970995,
+            65.24953089532622
+          ],
+          "swimming": false,
+          "wind": 0.3
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.31666666666666665,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.31666666666666665,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3000000000000001,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3000000000000001,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "shore/colossus: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "shore",
+        "type": "colossus",
+        "grounded": {
+          "origin": [
+            220.91878707926176,
+            71.15376360356282,
+            64.81498334086098
+          ],
+          "point": [
+            220.44118202143392,
+            71.04993569970995,
+            65.24953089532622
+          ],
+          "swimming": false,
+          "wind": 0.6
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000002,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000002,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000003,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000003,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "peak/mite: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "peak",
+        "type": "mite",
+        "grounded": {
+          "origin": [
+            218.9842965924469,
+            94.60718528792654,
+            60.600172612456966
+          ],
+          "point": [
+            219.45001550403347,
+            94.87356266904571,
+            61.31593315502345
+          ],
+          "swimming": false,
+          "wind": 0.25
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.2583333333333333,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.2583333333333333,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "peak/husk: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "peak",
+        "type": "husk",
+        "grounded": {
+          "origin": [
+            219.06437243560862,
+            94.6417802349112,
+            60.62233223756799
+          ],
+          "point": [
+            219.45001550403347,
+            94.87356266904571,
+            61.31593315502345
+          ],
+          "swimming": false,
+          "wind": 0.4
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.41666666666666663,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.41666666666666663,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4000000000000004,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4000000000000004,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "peak/aegis: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "peak",
+        "type": "aegis",
+        "grounded": {
+          "origin": [
+            219.16847103171892,
+            94.68675366599129,
+            60.65113975021232
+          ],
+          "point": [
+            219.45001550403347,
+            94.87356266904571,
+            61.31593315502345
+          ],
+          "swimming": false,
+          "wind": 0.45
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.45000000000000057,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.45000000000000057,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "peak/wisp: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "peak",
+        "type": "wisp",
+        "grounded": {
+          "origin": [
+            219.67116938045663,
+            94.90393305539506,
+            60.79025295229822
+          ],
+          "point": [
+            219.45001550403347,
+            94.87356266904571,
+            61.31593315502345
+          ],
+          "swimming": false,
+          "wind": 0.3
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.31666666666666665,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.31666666666666665,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3000000000000001,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3000000000000001,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "peak/colossus: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "peak",
+        "type": "colossus",
+        "grounded": {
+          "origin": [
+            219.5688502475277,
+            94.85972840091463,
+            60.76193787576746
+          ],
+          "point": [
+            219.45001550403347,
+            94.87356266904571,
+            61.31593315502345
+          ],
+          "swimming": false,
+          "wind": 0.6
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000002,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000002,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000003,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000003,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "flat/mite: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "flat",
+        "type": "mite",
+        "grounded": {
+          "origin": [
+            231.92070255910198,
+            59.87156851582831,
+            25.181569954417306
+          ],
+          "point": [
+            232.1476774211616,
+            59.94556267552168,
+            25.76207918967267
+          ],
+          "swimming": false,
+          "wind": 0.25
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.2583333333333333,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.2583333333333333,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "flat/husk: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "flat",
+        "type": "husk",
+        "grounded": {
+          "origin": [
+            232.00736797711585,
+            59.89394165654113,
+            25.1909799435311
+          ],
+          "point": [
+            232.1476774211616,
+            59.94556267552168,
+            25.76207918967267
+          ],
+          "swimming": false,
+          "wind": 0.4
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.41666666666666663,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.41666666666666663,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4000000000000004,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4000000000000004,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "flat/aegis: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "flat",
+        "type": "aegis",
+        "grounded": {
+          "origin": [
+            232.12003302053392,
+            59.9230267394678,
+            25.203212929379042
+          ],
+          "point": [
+            232.1476774211616,
+            59.94556267552168,
+            25.76207918967267
+          ],
+          "swimming": false,
+          "wind": 0.45
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.45000000000000057,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.45000000000000057,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "flat/wisp: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "flat",
+        "type": "wisp",
+        "grounded": {
+          "origin": [
+            232.66409925584335,
+            60.06348034505386,
+            25.262286749926776
+          ],
+          "point": [
+            232.1476774211616,
+            59.94556267552168,
+            25.76207918967267
+          ],
+          "swimming": false,
+          "wind": 0.3
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.31666666666666665,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.31666666666666665,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3000000000000001,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3000000000000001,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "flat/colossus: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "flat",
+        "type": "colossus",
+        "grounded": {
+          "origin": [
+            232.55336011060336,
+            60.034892443031914,
+            25.25026287494803
+          ],
+          "point": [
+            232.1476774211616,
+            59.94556267552168,
+            25.76207918967267
+          ],
+          "swimming": false,
+          "wind": 0.6
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000002,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000002,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000003,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000003,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "slope/mite: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "slope",
+        "type": "mite",
+        "grounded": {
+          "origin": [
+            229.169980391702,
+            69.49728292729394,
+            36.06877573638626
+          ],
+          "point": [
+            228.8868807430894,
+            69.43757568734968,
+            36.58555719088131
+          ],
+          "swimming": false,
+          "wind": 0.25
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.26666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.2583333333333333,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 7,
+            "firstDamage": 0.2583333333333333,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "slope/husk: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "slope",
+        "type": "husk",
+        "grounded": {
+          "origin": [
+            229.25514659891667,
+            69.52311013201127,
+            36.08217993890481
+          ],
+          "point": [
+            228.8868807430894,
+            69.43757568734968,
+            36.58555719088131
+          ],
+          "swimming": false,
+          "wind": 0.4
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.41666666666666663,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.41666666666666663,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4000000000000004,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 11,
+            "firstDamage": 0.4000000000000004,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "slope/aegis: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "slope",
+        "type": "aegis",
+        "grounded": {
+          "origin": [
+            229.36586266829573,
+            69.55668549814379,
+            36.09960540217894
+          ],
+          "point": [
+            228.8868807430894,
+            69.43757568734968,
+            36.58555719088131
+          ],
+          "swimming": false,
+          "wind": 0.45
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.4666666666666666,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.45000000000000057,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 16,
+            "firstDamage": 0.45000000000000057,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "slope/wisp: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "slope",
+        "type": "wisp",
+        "grounded": {
+          "origin": [
+            229.90051719136557,
+            69.71882294998034,
+            36.18375400687877
+          ],
+          "point": [
+            228.8868807430894,
+            69.43757568734968,
+            36.58555719088131
+          ],
+          "swimming": false,
+          "wind": 0.3
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.31666666666666665,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.31666666666666665,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3000000000000001,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 6,
+            "firstDamage": 0.3000000000000001,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    },
+    {
+      "name": "slope/colossus: rendered volume, damage timing and removal",
+      "ok": true,
+      "actual": {
+        "site": "slope",
+        "type": "colossus",
+        "grounded": {
+          "origin": [
+            229.79169370436904,
+            69.68582152173042,
+            36.16662641477173
+          ],
+          "point": [
+            228.8868807430894,
+            69.43757568734968,
+            36.58555719088131
+          ],
+          "swimming": false,
+          "wind": 0.6
+        },
+        "results": [
+          {
+            "fps": 30,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6333333333333333,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 30,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000002,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000002,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 60,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "centre",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000003,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "elevated",
+            "expected": true,
+            "hit": true,
+            "damage": 90,
+            "firstDamage": 0.6000000000000003,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "past-radius",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "behind",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          },
+          {
+            "fps": 120,
+            "label": "outside-arc",
+            "expected": false,
+            "hit": false,
+            "damage": 0,
+            "firstDamage": null,
+            "ok": true
+          }
+        ],
+        "cancelled": true
+      }
+    }
+  ],
+  "faults": []
+}
