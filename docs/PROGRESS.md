@@ -17,6 +17,20 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
+Active parallel work, 2026-09-06: Codex on `feature/ocean-strategy` investigates
+ocean planet 4 with active commander/nest tactics and varied legal tower layouts.
+The owner-requested extra-high agent on `feature/commander-feedback` owns
+[six commander/interaction/nest feedback items](https://github.com/majieddd/worldheart/issues/19)
+in a separate worktree. Codex coordinates integration and V2 publication.
+The first ocean baseline uses ded4fbc rules; nest-only waves require a new
+balance pass after integration. Usage is unmeasured.
+
+Ocean update: [three additional commander/nest attempts](qa/implementation/OCEAN-STRATEGY.md)
+are preserved, ending at waves 9/11/11. Two limitations in the testing strategy
+were corrected; these losses do not prove the planet is unwinnable. The
+[six follow-up request IDs U22-U27](qa/2026-09-06-COMMANDER-REQUEST.md) are
+implemented-awaiting-verification in the agent's local worktree, not yet live.
+
 ## Completed in this batch
 
 | Work | Status | Owner | Evidence | Usage |

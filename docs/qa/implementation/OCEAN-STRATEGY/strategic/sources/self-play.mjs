@@ -14,8 +14,6 @@ const campaign=process.argv.includes('--campaign');
 const useTalents=process.argv.includes('--talents');
 const strategy=process.argv.find(x=>x.startsWith('--strategy='))?.split('=')[1]||'defense';
 if(!['defense','assault'].includes(strategy))throw Error('Unknown strategy');
-const baseUrl=process.argv.find(x=>x.startsWith('--base-url='))?.slice('--base-url='.length)||'http://127.0.0.1:8139/';
-const assaultSource=strategy==='assault'?readFileSync(new URL('./assault-policy.mjs',import.meta.url),'utf8'):null;
 const towerPriority=process.argv.find(x=>x.startsWith('--tower-priority='))?.split('=')[1].split(',')||['bolt','tesla','helios','warden','mortar','cryo'];
 const towerLimit=Number(process.argv.find(x=>x.startsWith('--tower-limit='))?.split('=')[1])||8;
 const campaignCount=Number(process.argv.find(x=>x.startsWith('--planets='))?.split('=')[1])||2;
@@ -28,10 +26,9 @@ page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()
 await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(window.__qaFramesEnabled)fn(t);});});
 await page.addInitScript(value=>{window.__qaUseWeapons=value;},useWeapons);
 await page.addInitScript(value=>{window.__qaStrategy=value.strategy;window.__qaTowerPriority=value.towerPriority;window.__qaTowerLimit=value.towerLimit;},{strategy,towerPriority,towerLimit});
-if(assaultSource)await page.addInitScript(value=>{window.__qaAssaultSource=value;},assaultSource);
 if(sourceCheckpoint)await page.addInitScript(value=>{if(!localStorage.getItem('wh99Campaign'))localStorage.setItem('wh99Campaign',JSON.stringify(value));},sourceCheckpoint);
 try{
-  await page.goto(`${baseUrl.replace(/\/?$/,'/')}?map=ninetynine&seed=${seed}${campaign?'&campaign=1':''}`,{waitUntil:'domcontentloaded',timeout:120000});
+  await page.goto(`http://127.0.0.1:8139/?map=ninetynine&seed=${seed}${campaign?'&campaign=1':''}`,{waitUntil:'domcontentloaded',timeout:120000});
   const campaignResults=[];
   await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:180000});
   const startPlanet=campaign?await page.evaluate(()=>WH.mode99.campaign.state().planet):1;
@@ -181,10 +178,7 @@ try{
       g.select(null);return changes;
     };
     if(window.__qaStrategy==='assault'){
-      // The policy belongs to this checkout; game imports belong to the
-      // tested local server, which can be a collaborator's separate worktree.
-      const source=window.__qaAssaultSource.replaceAll("from '../",`from '${new URL('.',location.href).href}`);
-      const {installAssaultPolicy}=await import('data:text/javascript,'+encodeURIComponent(source));
+      const {installAssaultPolicy}=await import('/tools/assault-policy.mjs');
       window.__qaAssault=installAssaultPolicy(W,trace);
     }
     __qaPolicy();trace('start');
