@@ -5,8 +5,9 @@ const COLORS = { common: 0xd7e1dd, uncommon: 0x68e6aa, rare: 0x75b4ff, relic: 0x
 // No loot rules live here. This is the visible, persistent-on-ground side of
 // the shell's transactions, with identities instead of recyclable enemy refs.
 export class LootField {
-  constructor(scene, allies) {
+  constructor(scene, allies, model) {
     this.scene = scene; this.allies = allies; this.entries = new Map(); this.time = 0;
+    this.model=model;
     this.geometry = new THREE.OctahedronGeometry(0.32, 0);
     this.beamGeometry = new THREE.CylinderGeometry(0.018, 0.045, 2.7, 5);
     this.materials = Object.fromEntries(Object.entries(COLORS).map(([key, color]) => [key, new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:0.8,roughness:0.4,metalness:0.15,flatShading:true})]));
@@ -15,7 +16,8 @@ export class LootField {
   }
   add(item, direction) {
     if (this.entries.has(item.id)) return;
-    const group = new THREE.Group(), token = new THREE.Mesh(this.geometry, this.materials[item.rarity]);
+    const group = new THREE.Group(), token = this.model(item);
+    token.rotation.x=-.45;token.rotation.z=.5;
     token.position.y = 0.7; group.add(token);
     const beam = new THREE.Mesh(this.beamGeometry, this.materials[item.rarity]); beam.position.y = 1.5; group.add(beam);
     const position = surfacePoint(direction, new THREE.Vector3());

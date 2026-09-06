@@ -10,13 +10,10 @@ import { planetGroups } from './encounters.js';
 const ATK_SCALE_SLOPE = 0.35;
 const ATK_SCALE_CAP = 4;
 
-// Nests: 99 Planets only. A woken breach that stands OUTSIDE the frontier is
-// a nest, and a nest trickles a small raid from where it actually stands
-// every RAID_INTERVAL seconds of sim time, on top of the wave. The wave's own
-// spawns are pulled in to the edge of the circle by the mode; a raid is not,
-// which is what makes ground outside the circle worth taking. The interval
-// tightens a little with the wave and is scaled by paceMul like every other
-// cadence in the director.
+// Nests: 99 Planets only. The shell authors visible stationary sources;
+// waves and extra raids both emerge at those exact nodes. Destroying a nest
+// cancels its remaining buildup. The old frontier-only nest predicate below
+// remains the legacy mode contract for tests and other callers.
 // Measured at the brief's 16 s with a one-tower wave-1 base under 99 Planets'
 // half-length cadence: ten raiders in 46 s of sim, the wave never reached
 // zero enemies and so never cleared, and the leaks took five lives. A raid is
@@ -179,6 +176,7 @@ export class WaveDirector {
   }
 
   activePortals() {
+    if (this.nestOnly) return this.nestSources.filter(n => !this.destroyedNodes?.has(n));
     const woken = this.nav.portalNodes.slice(0, portalCount(Math.max(this.wave, 1)));
     // A breach that units have destroyed stops feeding the wave. Falling back
     // to the full woken list when every breach is down matters: an empty list
@@ -190,9 +188,12 @@ export class WaveDirector {
 
   _startWave() {
     this.wave++;
+    // Campaign sources are physical structures prepared before any unit is
+    // queued. An empty list means the player prevented this assault.
+    if (this.nestOnly) this.nestSources = this.prepareNests(this.wave);
     const prevPortals = portalCount(Math.max(this.wave - 1, 1));
     const nowPortals = portalCount(this.wave);
-    if (nowPortals > prevPortals && this.wave > 1 && this.onPortalWake) {
+    if (!this.nestOnly && nowPortals > prevPortals && this.wave > 1 && this.onPortalWake) {
       this.onPortalWake(nowPortals - 1);
     }
     const comp = planetGroups(waveComp(this.wave),CONFIG.campaign);
@@ -206,14 +207,15 @@ export class WaveDirector {
     this.pendingSpawns = 0;
 
     for (const g of comp) {
+      if (!active.length) continue;
       let portals;
-      if (g.portal === 'far') portals = [active[0]];
+      if (g.portal === 'far') portals = [this.nestOnly && g.type === 'colossus' ? this.guardianNode : active[0]];
       else if (typeof g.portal === 'number') portals = [active[g.portal % active.length]];
       else portals = active;
       for (let i = 0; i < g.count; i++) {
         const portal = portals[i % portals.length];
         this.queues.push({
-          t: (1.2 + i * g.gap + SIM_RANDOM.next() * 0.3) * this.paceMul,
+          t: (1.2 + i * g.gap + SIM_RANDOM.next() * 0.3) * this.paceMul + (this.nestOnly ? 3 : 0),
           type: g.type, portal, scale,
         });
         this.pendingSpawns++;
@@ -243,6 +245,7 @@ export class WaveDirector {
   // breather.
   liveNests() {
     if (!this.nestMode || this.wave < 1 || !this.game.frontier) return [];
+    if (this.nestOnly) return this.activePortals();
     const woken = this.nav.portalNodes.slice(0, portalCount(this.wave));
     return woken.filter((n) => this._isNest(n));
   }
@@ -291,6 +294,7 @@ export class WaveDirector {
     this.enemies.spawnRaw = true;
     try {
       const e = this.enemies.spawn(type, node, scale);
+      if (e && this.nestOnly) e.sourceNest=node;
       if (e) this.raiderIds.add(e.id);
       return e;
     } finally {
@@ -345,12 +349,20 @@ export class WaveDirector {
       return;
     }
     if (this.state === 'spawning' || this.state === 'combat') {
+      if (this.nestOnly) {
+        // Cancellation is earned by destroying the visible source. Existing
+        // enemies remain owed; the protected guardian queue cannot vanish.
+        this.queues = this.queues.filter(q => !this.destroyedNodes?.has(q.portal));
+        this.pendingSpawns = this.queues.length;
+      }
       this.clock += dt;
       while (this.queues.length && this.queues[0].t <= this.clock) {
         const q = this.queues[0];
         // Pool pressure delays a spawn; it must not erase an owed enemy and
         // make a crowded campaign wave pay out before it has been defended.
-        if(!this.enemies.spawn(q.type,q.portal,q.scale))break;
+        const enemy = this.enemies.spawn(q.type,q.portal,q.scale);
+        if(!enemy)break;
+        if (this.nestOnly) { enemy.sourceNest = q.portal; this.onNestSpawn?.(q, enemy); }
         this.queues.shift();
         this.pendingSpawns--;
         if (this.onSpawnPortal) this.onSpawnPortal(q.portal);

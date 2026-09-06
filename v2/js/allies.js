@@ -172,6 +172,9 @@ const _up = new THREE.Vector3();
 const _right = new THREE.Vector3();
 const _axis = new THREE.Vector3();
 const _bearing = new THREE.Vector3();
+const _driveBearing = new THREE.Vector3();
+const _slideBearing = new THREE.Vector3();
+const DRIVE_SLIDES = [0, Math.PI/6, -Math.PI/6, Math.PI/3, -Math.PI/3, Math.PI*4/9, -Math.PI*4/9];
 const _m4 = new THREE.Matrix4();
 const _q = new THREE.Quaternion();
 const _s = new THREE.Vector3();
@@ -421,6 +424,22 @@ export class AllyManager {
     if (!this.species[a.modelKey]) this._addSpecies(a.modelKey, a.typeKey, visual,appearance);
     a.heat = 0; a.heatLock = 0; a.beamOn = null; a.beamRamp = 0;
     return true;
+  }
+
+  weaponPreview(visual, appearance, length=1) {
+    // Preview and ground-drop meshes borrow the same cached species geometry
+    // and material as an equipped weapon. Replacing a preview discards only
+    // its lightweight group; disposing these shared GPU assets would break
+    // the equipped model and every matching drop still on the ground.
+    const key=`commander:${visual}:${appearance.era}:${appearance.core}`;
+    if(!this.species[key])this._addSpecies(key,'commander',visual,appearance);
+    const group=new THREE.Group();
+    for(const part of this.species[key].parts)if(part.weapon)for(const at of part.at)if(at.joint.name==='weaponR') {
+      const mesh=new THREE.Mesh(part.mesh.geometry,part.mesh.material);
+      mesh.applyMatrix4(at.off);group.add(mesh);
+    }
+    group.scale.z=length;group.userData.weaponVisual=visual;
+    return group;
   }
 
   count(typeKey) {
@@ -801,16 +820,30 @@ export class AllyManager {
     if (_tmp2.lengthSq() < 1e-8) return;
     const mag = Math.min(1, _tmp2.length());
     _tmp2.normalize();
-    _axis.crossVectors(a.dir, _tmp2);
-    if (_axis.lengthSq() < 1e-12) return;
-    _axis.normalize();
-    const factor = surfaceTravel(a, _tmp2, a.type.speed * 1.25 * mul * mag * a.carryMul * dt);
+    _driveBearing.copy(_tmp2);
     if (a.swimming) { mul = Math.min(1, mul); a.sprint = false; }
-    const step = (a.type.speed * 1.25 * mul * mag * a.carryMul * factor * dt) / R;
-    _routeStep.copy(a.dir).applyAxisAngle(_axis, step).normalize();
-    if (!this.enemies.nav.canStep(a.dir, _routeStep)) return;
-    a.dir.applyAxisAngle(_axis, step).normalize();
-    reflatten(a.fwd.applyAxisAngle(_axis, step), a.dir);
+    const distance = a.type.speed * 1.25 * mul * mag * a.carryMul * Math.min(dt, 0.1);
+    const segments = Math.max(1, Math.ceil(distance / 0.12));
+    for (let segment=0; segment<segments; segment++) {
+      // Keep the forward component of a glancing input while sliding along
+      // a legal boundary. Every candidate still crosses the authoritative
+      // graph edge, so tower footprints and steep walls remain solid.
+      let moved=false;
+      for (const angle of DRIVE_SLIDES) {
+        _slideBearing.copy(_driveBearing).applyAxisAngle(a.dir,angle);
+        const factor=surfaceTravel(a,_slideBearing,distance/segments);
+        const step=distance/segments*factor*Math.cos(angle)/R;
+        if (!(step>0)) continue;
+        _axis.crossVectors(a.dir,_slideBearing).normalize();
+        _routeStep.copy(a.dir).applyAxisAngle(_axis,step).normalize();
+        if (!this.enemies.nav.canStep(a.dir,_routeStep)) continue;
+        a.dir.copy(_routeStep);
+        reflatten(a.fwd.applyAxisAngle(_axis,step),a.dir);
+        reflatten(_driveBearing.applyAxisAngle(_axis,step),a.dir);
+        moved=true;break;
+      }
+      if(!moved)break;
+    }
     this._ground(a);
   }
 
@@ -934,13 +967,7 @@ export class AllyManager {
       this._weaponEffect(e, s, landed);
       if (this.onStrikeHit) this.onStrikeHit(e, landed, e === primary);
       if (s.knockback && e.active && !e.dead) {
-        // Shove the body back along the surface. A heavy swing that does not
-        // move anything does not read as heavy.
-        _axis.crossVectors(a.dir, e.dir);
-        if (_axis.lengthSq() > 1e-12) {
-          _axis.normalize();
-          e.dir.applyAxisAngle(_axis, s.knockback / R).normalize();
-        }
+        this.enemies.knockback(e, a.dir, s.knockback);
       }
       hits++;
     }

@@ -17,6 +17,7 @@ import { Game } from './game.js';
 import { WaveDirector, portalCount } from './waves.js';
 import { HUD } from './ui.js';
 import { AudioEngine } from './audio.js';
+import { WorldContext } from './world-context.js';
 
 const canvas = document.getElementById('view');
 const renderer = new THREE.WebGLRenderer({
@@ -349,11 +350,12 @@ async function boot() {
     ui.audio?.play('portal');
   };
   waves.onSpawnPortal = (node) => {
-    const idx = nav.portalNodes.indexOf(node);
-    if (world.portals[idx]) world.portals[idx].flash = Math.max(world.portals[idx].flash, 0.6);
+    const portal = world.portals.find(p => p.node === node && !p.destroyed);
+    if (portal) portal.flash = Math.max(portal.flash, 0.6);
     audio.play('spawn');
   };
   const syncPortals = () => {
+    if (waves.nestOnly) return;
     const count = portalCount(Math.max(waves.wave, 1));
     world.portals.forEach((p, i) => { p.active = i < count; });
   };
@@ -487,6 +489,7 @@ async function boot() {
     window.WH.mode99 = mode99;
   }
   window.WH.heartPos = heartPos;
+  game.context = new WorldContext({game,ui,rig,possession,mode:mode99});
   window.WH.portalPositions = portalPositions;
 
   bootFill.style.width = '100%';
@@ -611,6 +614,7 @@ function stepFrame(dt, render) {
   if (game) game.update(dt);
   mode99?.renderEffects?.(simDt);
   if (ui) ui.update(dt);
+  game?.context?.update();
   if (fx) {
     // Strategic scale: swell models with zoom, then hand over to icons.
     // Bigger worlds get a stronger swell so a tower stays a landmark even

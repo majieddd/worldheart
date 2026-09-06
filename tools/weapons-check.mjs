@@ -9,7 +9,7 @@ try {
   const page=await browser.newPage({viewport:{width:1280,height:720}}),faults=[];
   page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
   await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(window.__qaFramesEnabled)fn(t);});});
-  await page.goto('http://127.0.0.1:8139/?map=ninetynine&seed=12345',{waitUntil:'domcontentloaded',timeout:120000});
+  await page.goto(`${process.env.WH_BASE_URL||'http://127.0.0.1:8139'}/?map=ninetynine&seed=12345`,{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:120000});
   const checks=await page.evaluate(async()=>{
     __qaFramesEnabled=false;document.getElementById('btn-begin').click();WH.game.paused=false;
