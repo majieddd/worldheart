@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CONFIG, CAM_TUNE, PALETTE, LIGHTING } from './config.js';
+import { CONFIG, CAM_TUNE, PALETTE, LIGHTING, PRESENTATION } from './config.js';
 import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
 import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR } from './world.js';
@@ -339,7 +339,12 @@ async function boot() {
   waves.onPortalWake = (newestIdx) => {
     ui.toast('A new breach tears open', 'danger');
     const p = world.portals[newestIdx];
-    if (p) rig.flyTo(p.group.position, rig.targetDist, 1.1);
+    // The ping is always visible; a camera move is an opted-in convenience
+    // only when the player is not aiming, building, dragging or issuing input.
+    if (p && PRESENTATION.autoFocus && !possession?.active && !game.buildType
+      && !rig.dragging && !rig.keys.size && rig.interactionAge > 4) {
+      rig.flyTo(p.group.position, rig.targetDist, 0.3);
+    }
     ui.audio?.play('portal');
   };
   waves.onSpawnPortal = (node) => {
@@ -427,6 +432,7 @@ async function boot() {
 
   caches = new CacheField(scene);
   possession = new Possession({ canvas, rig, allies, game, ui: null, caches, scene });
+  rig.inputBlocked = () => possession.active;
   // The weapon in your hands, drawn in its own pass over the world.
   viewModel = new ViewModel();
   possession.viewModel = viewModel;
@@ -596,6 +602,10 @@ function stepFrame(dt, render) {
     waves.update(simDt);
     enemies.update(simDt);
     towerMgr.update(simDt);
+  } else {
+    // Possession can cross the first/third-person boundary while paused. Its
+    // hidden flag must reach instance buffers without advancing combat.
+    allies?._render(0);
   }
   if (game) game.update(dt);
   if (ui) ui.update(dt);

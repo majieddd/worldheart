@@ -24,8 +24,8 @@ Issue closure requires evidence, not just a merged diff. Proposed future impleme
 | Milestone | Work item | Status | Owner | Depends on | Exit evidence |
 |---|---|---|---|---|---|
 | M0 | [M0 implementation issue](https://github.com/majieddd/worldheart/issues/2) | implemented; review open | Codex, feature/99-planets-integration | QA baseline | [Automated and unforced instrumented evidence](qa/implementation/M0.md); manual continuous-input acceptance remains open |
-| M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | active | Codex, feature/99-planets-integration | M0 | Natural camera/control input, Bulwark/animation before-after, all-map camera harness |
-| M2 | [M2 implementation issue](https://github.com/majieddd/worldheart/issues/4) | planned | unassigned | M0-M1 | Crystal expedition, deposit, explicit base expansion and natural defended planet |
+| M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | implemented; feel review open | Codex, feature/99-planets-camera | M0 | [Input harness and Bulwark comparison](qa/implementation/M1.md); full visual acceptance remains open |
+| M2 | [M2 implementation issue](https://github.com/majieddd/worldheart/issues/4) | active | Codex, feature/99-planets-crystals | M0-M1 | Crystal expedition, deposit, explicit base expansion and natural defended planet |
 | M3 | [M3 implementation issue](https://github.com/majieddd/worldheart/issues/5) | planned | unassigned | M2 | Ground/air terrain routes, swim/climb, climate placement and spherical-range agreement |
 | M4 | [M4 implementation issue](https://github.com/majieddd/worldheart/issues/6) | planned | unassigned | M1/M3 | Loot to inventory to equipped combat to extraction; telegraph/hit agreement; graphics sweep |
 | M5 | [M5 implementation issue](https://github.com/majieddd/worldheart/issues/7) | planned | unassigned | M4 | Two-world continuation, campaign boundary tests, then full 99-world completion and rename |

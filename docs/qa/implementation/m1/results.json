@@ -1,0 +1,88 @@
+{
+  "scope": "Camera/input and fixed-state fixtures",
+  "checks": [
+    {
+      "name": "Breach focus defaults off",
+      "ok": true
+    },
+    {
+      "name": "Wheel interrupts flight without jumping",
+      "ok": true
+    },
+    {
+      "name": "Return to heart starts explicit focus",
+      "ok": true
+    },
+    {
+      "name": "Possession cancels orbit flight",
+      "ok": true
+    },
+    {
+      "name": "Movement belongs only to commander",
+      "ok": true
+    },
+    {
+      "name": "Right-drag look works with pointer lock refused",
+      "ok": true
+    },
+    {
+      "name": "Tangent frame at 30 FPS",
+      "ok": true
+    },
+    {
+      "name": "Tangent frame at 60 FPS",
+      "ok": true
+    },
+    {
+      "name": "Tangent frame at 120 FPS",
+      "ok": true
+    },
+    {
+      "name": "Look filter agrees at 30/60/120 FPS",
+      "ok": true,
+      "actual": [
+        [
+          0.9441902145974457,
+          0.08403782224403257,
+          -0.31850036591958575
+        ],
+        [
+          0.9441902145974456,
+          0.08403782224403256,
+          -0.31850036591958564
+        ],
+        [
+          0.9441902145974457,
+          0.08403782224403242,
+          -0.3185003659195857
+        ]
+      ]
+    },
+    {
+      "name": "Camera shake does not consume combat RNG",
+      "ok": true,
+      "actual": 0
+    },
+    {
+      "name": "Bob and shake independently disable",
+      "ok": true
+    },
+    {
+      "name": "Motion settings persist",
+      "ok": true
+    },
+    {
+      "name": "Third-person scroll works while paused",
+      "ok": true
+    },
+    {
+      "name": "First-person hides the body while paused",
+      "ok": true
+    },
+    {
+      "name": "OS reduced motion starts bob/shake disabled",
+      "ok": true
+    }
+  ],
+  "faults": []
+}

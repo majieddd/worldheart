@@ -491,7 +491,9 @@ input[type="range"].cam-slider::-moz-range-thumb {
 @keyframes fp-hit-pop { 0% { opacity: 0.95; transform: scale(0.45); } 100% { opacity: 0; transform: scale(1.15); } }
 
 #fp-panel { position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%); width: 280px;
-  display: flex; flex-direction: column; gap: 5px; align-items: center; text-align: center; }
+  display: flex; flex-direction: column; gap: 5px; align-items: center; text-align: center;
+  padding: var(--sp-3); border: 1px solid var(--hairline-strong); border-radius: var(--r-3);
+  background: rgba(12, 16, 32, 0.94); }
 #fp-name { font-size: var(--fs-12); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
 #fp-hp-track { width: 100%; height: 8px; }
 #fp-hp { background: linear-gradient(90deg, #3ad0a0, #7ef0c8); transition: width 0.12s linear; }
@@ -499,7 +501,7 @@ input[type="range"].cam-slider::-moz-range-thumb {
 #fp-swing-track { width: 62%; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
 #fp-swing { height: 100%; width: 100%; background: var(--text-faint); transition: width 0.06s linear; }
 #fp-swing.ready { background: var(--accent); }
-#fp-keys { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; font-size: 10px; color: var(--text-faint); }
+#fp-keys { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; font-size: var(--fs-11); color: var(--text-muted); }
 #fp-keys b { color: var(--text-muted); font-weight: 600; }
 
 #damage-vignette.fp-hurt { box-shadow: inset 0 0 160px rgba(216, 87, 79, 0.55); opacity: 1; }

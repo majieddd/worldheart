@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CONFIG, CAM_TUNE, REDUCED_MOTION } from './config.js';
+import { CONFIG, CAM_TUNE, REDUCED_MOTION, PRESENTATION } from './config.js';
 import { clamp, lerp, easeInOut, easeOutCubic } from './noise.js';
 
 const _aim = new THREE.Vector3();
@@ -73,7 +73,9 @@ export class OrbitRig {
     this.fovKickV = 0;
     this.autoOrbit = 0;          // rad/s, used by the title screen
     this.flight = null;          // active tween {fromLon...toDist,t,dur}
-    this.shakeEnabled = !REDUCED_MOTION;
+    this.shakeEnabled = PRESENTATION.shake;
+    this.inputBlocked = null;
+    this.interactionAge = 10;
     this.frontierTheta = null;   // live cap angle when a mode drives one
     this.confine = null;         // {center: Vector3, maxAng} battlefield bounds
     this.onWheelOverride = null; // (e) => true to consume the wheel elsewhere
@@ -91,6 +93,8 @@ export class OrbitRig {
     this.dragButton = 0;
     this.dragMoved = 0;
     this.lastX = 0; this.lastY = 0;
+    this.lastPointerT = 0;
+    this.pointerDt = 1 / 60;
     this.pointers = new Map();
     this.pinchDist = 0;
     this.keys = new Set();
@@ -113,6 +117,8 @@ export class OrbitRig {
     el.addEventListener('contextmenu', (e) => e.preventDefault());
 
     el.addEventListener('pointerdown', (e) => {
+      if (this.inputBlocked?.()) return;
+      this.cancelFlight();
       try { el.setPointerCapture(e.pointerId); } catch { /* synthetic or stale pointer */ }
       this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (e.button === 1) e.preventDefault();
@@ -126,6 +132,7 @@ export class OrbitRig {
         this.dragButton = e.button;
         this.dragMoved = 0;
         this.lastX = e.clientX; this.lastY = e.clientY;
+        this.lastPointerT = e.timeStamp;
         this.velLon = 0; this.velLat = 0;
         // Remember the exact point of the globe under the cursor; the drag
         // keeps that point pinned to the cursor for the rest of the gesture.
@@ -140,6 +147,7 @@ export class OrbitRig {
     });
 
     el.addEventListener('pointermove', (e) => {
+      if (this.inputBlocked?.()) return;
       const p = this.pointers.get(e.pointerId);
       if (p) { p.x = e.clientX; p.y = e.clientY; }
 
@@ -151,6 +159,8 @@ export class OrbitRig {
         return;
       }
       if (this.dragging && p) {
+        this.pointerDt = clamp((e.timeStamp - this.lastPointerT) / 1000, 1 / 240, 1 / 15);
+        this.lastPointerT = e.timeStamp;
         const dx = e.clientX - this.lastX;
         const dy = e.clientY - this.lastY;
         this.lastX = e.clientX; this.lastY = e.clientY;
@@ -206,7 +216,7 @@ export class OrbitRig {
         (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable));
     };
     addEventListener('keydown', (e) => {
-      if (typing(e)) return;
+      if (typing(e) || this.inputBlocked?.()) return;
       if (PAN_KEYS[e.code] || e.code === 'KeyQ' || e.code === 'KeyE'
         || e.code === 'Equal' || e.code === 'Minus' || e.code === 'NumpadAdd' || e.code === 'NumpadSubtract') {
         this.keys.add(e.code);
@@ -219,7 +229,16 @@ export class OrbitRig {
     addEventListener('blur', () => this.keys.clear());
   }
 
+  cancelFlight() {
+    // Interrupt at the current pose. skipFlight deliberately jumps to the end
+    // and is reserved for the intro's explicit skip action.
+    this.flight = null;
+    this.autoOrbit = 0;
+    this.interactionAge = 0;
+  }
+
   resetView() {
+    this.cancelFlight();
     this.viewYaw = 0;
     this.tiltOffset = 0;
   }
@@ -314,6 +333,7 @@ export class OrbitRig {
   // size or how narrow the height limits are. Sizing steps against absolute
   // distance instead made a notch jump half the band on a colossal world.
   zoomBy(amount) {
+    this.cancelFlight();
     const dMin = this.distMin, dMax = this.distMax;
     const aMin = Math.max(dMin, 0.05);
     const aMax = Math.max(dMax, aMin * 1.0001);
@@ -478,8 +498,7 @@ export class OrbitRig {
   // because the anchor never moves during the gesture.
   panGrab(clientX, clientY, pxMoved = 0) {
     const prevLat = this.lat, prevLon = this.lon;
-    this.flight = null;
-    this.autoOrbit = 0;
+    this.cancelFlight();
 
     // Track whether the cursor is on the globe. Leaving it and coming back
     // re-anchors the grab, so the view never jumps when the cursor returns
@@ -552,8 +571,8 @@ export class OrbitRig {
     let dLon = this.lon - prevLon;
     while (dLon > Math.PI) dLon -= Math.PI * 2;
     while (dLon < -Math.PI) dLon += Math.PI * 2;
-    this.velLon = dLon * 60;
-    this.velLat = (this.lat - prevLat) * 60;
+    this.velLon = dLon / this.pointerDt;
+    this.velLat = (this.lat - prevLat) / this.pointerDt;
   }
 
   // Pan by a screen-space pixel delta. Uses the camera's own world basis
@@ -561,8 +580,7 @@ export class OrbitRig {
   // any view rotation or pitch.
   panPixels(dx, dy, withInertia = false) {
     if (!dx && !dy) return;
-    this.flight = null;
-    this.autoOrbit = 0;
+    this.cancelFlight();
     const s = this._panScale();
 
     const cosLat = Math.cos(this.lat);
@@ -587,13 +605,14 @@ export class OrbitRig {
       let dLon = this.lon - prevLon;
       while (dLon > Math.PI) dLon -= Math.PI * 2;
       while (dLon < -Math.PI) dLon += Math.PI * 2;
-      this.velLon = dLon * 60;
-      this.velLat = (this.lat - prevLat) * 60;
+      this.velLon = dLon / this.pointerDt;
+      this.velLat = (this.lat - prevLat) / this.pointerDt;
     }
   }
 
   _keyboardStep(dt) {
     if (!this.keys.size) return;
+    this.cancelFlight();
     let kx = 0, ky = 0;
     for (const code of this.keys) {
       const v = PAN_KEYS[code];
@@ -667,6 +686,7 @@ export class OrbitRig {
 
   update(dt) {
     const c = CONFIG.camera;
+    this.interactionAge += dt;
     this._keyboardStep(dt);
 
     if (this.flight) {
@@ -763,7 +783,7 @@ export class OrbitRig {
     // Wide immersive lens on the ground, telephoto from orbit. Player-tunable.
     this.fovKickV = Math.max(0, this.fovKickV - dt * 26);
     const targetFov = lerp(CAM_TUNE.fovNear, CAM_TUNE.fovFar, this.zoomT) + this.fovKickV;
-    const fov = this.camera.fov + (targetFov - this.camera.fov) * Math.min(1, dt * 7);
+    const fov = this.camera.fov + (targetFov - this.camera.fov) * (1 - Math.exp(-dt * 7));
     if (Math.abs(this.camera.fov - fov) > 0.005) {
       this.camera.fov = fov;
       this.camera.updateProjectionMatrix();

@@ -9,8 +9,9 @@ Tracker: https://github.com/majieddd/worldheart/issues/1.
 | Reusable implementation tracking skill | verified | personal skill and AGENTS.md | quick_validate.py: Skill is valid; default implicit invocation retained | unmeasured |
 | M0 reward/talent contracts | implemented, automated verification passed | run, mode bridge, towers, allies, enemy effects | [168 tests and unforced instrumented victory](qa/implementation/M0.md); review open | unmeasured |
 | M0 control/draft clarity | implemented, automated verification passed | mode, UI | Current/next labels, immediate deliberate solo pick, contextual help, retry | unmeasured |
-| M1 camera and arm | active | camera, possession, viewmodel, UI | Before/after captures and all-map harness; owner feel review remains necessary | unmeasured |
-| M2-M6 | planned | See blueprint | Dependencies and exit gates remain open | unmeasured |
+| M1 camera and arm | implemented, automated verification passed | camera, possession, viewmodel, UI | [M1 evidence](qa/implementation/M1.md); owner feel/all-model review remains open | unmeasured |
+| M2 crystals and explicit expansion | active | run, mode, cache field, UI | Resource conservation and a real out-and-back delivery before expanding | unmeasured |
+| M3-M6 | planned | See blueprint | Dependencies and exit gates remain open | unmeasured |
 
 Audit correction: Quartermaster already works through
 `prof.bonuses?.quartermaster` in `js/run/run.js`, with the profile passed by the

@@ -211,7 +211,7 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 | Center future development on this mode and rename after campaign readiness | not yet | Owner direction; M5 |
 | Keep simple faceted aesthetic and extend existing rig/world systems | partial | [Live baseline](qa/2026-09-05/README.md); new model/feel acceptance still open |
 | Trust every offered/purchased reward | implemented, review open | [M0 live consumers and verification](qa/implementation/M0.md); wider balance/manual sampling remains open |
-| Camera/POV/animation polish and readable strike zones | partial | Current possession/strike systems exist; current arm screenshot and missing telegraph-area acceptance |
+| Camera/POV/animation polish and readable strike zones | partial, M1 implementation verified | [Camera ownership, paused visibility and arm comparison](qa/implementation/M1.md); owner feel and M4 telegraph acceptance remain open |
 | Crystal-driven explicit upgrades are the only frontier expansion trigger | not yet | M2; existing code still earns wave rings |
 | Massive terrain variation, swimming, slope cost, climate placement, flight ceilings, spherical ranges | partial | Existing ranges/canyons and 3D targeting; requested extension not built |
 | Weapon inventory, loot, modular customization and era arc | not yet | M4-M5 |
@@ -225,6 +225,12 @@ The [GitHub-linked progress ledger](PROGRESS.md) is the live task index. It carr
 Start M0 with one reward contract and an actual before/after shell test; then complete the catalog. Do not simultaneously rewrite terrain, combat, loot and campaign state. A task closes only when its stated player behavior is evidenced, with remaining gaps named. No gameplay task is marked implemented by this planning PR.
 
 ## Where we are
+
+M1 update: camera ownership, opt-in focus, motion preferences and Bulwark arm
+attachment are implemented on feature/99-planets-camera. Camera fixtures and
+all five map harnesses pass. Paused camera changes also exposed and repaired
+stale visible body instances. M2 crystal delivery and upgrade-only expansion
+are now active. Full choreography/graphics acceptance remains open.
 
 Implementation update, 2026-09-05: M0 reward and deliberate-draft changes are
 implemented on the feature branch. 168 headless tests and 14 browser assertions

@@ -254,6 +254,15 @@ export const PALETTE = {
 
 export const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Presentation preferences never enter combat RNG or movement rules.
+export const PRESENTATION = (() => {
+  let saved = {};
+  try { saved = JSON.parse(stored('whPresentation') || '{}') || {}; } catch { /* defaults */ }
+  return { bob: !REDUCED_MOTION && saved.bob !== false,
+    shake: !REDUCED_MOTION && saved.shake !== false, autoFocus: saved.autoFocus === true };
+})();
+export function savePresentation() { storeLocal('whPresentation', JSON.stringify(PRESENTATION)); }
+
 // Player-tunable camera feel. The rig reads these every frame, the settings
 // panel writes them, and they persist per browser. Ranges double as the
 // slider bounds and the load-time sanity clamp.

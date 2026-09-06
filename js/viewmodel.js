@@ -162,13 +162,16 @@ function arm(g, side = 1, ex = 0, ey = 0, ez = 0) {
   const fist = mesh(slab(0.11, 0.12, 0.10, 0.11, -0.07, 0.07), MAT.dark);
   const cuff = mesh(slab(0.15, 0.16, 0.13, 0.14, -0.06, 0.06), MAT.steel);
   cuff.position.set(0.02 * side, -0.05, 0.14);
-  const fore = mesh(slab(0.12, 0.13, 0.16, 0.17, -0.02, 0.62), MAT.steel);
-  const under = mesh(slab(0.11, 0.12, 0.13, 0.14, 0.60, 0.95), MAT.body);
+  const fore = mesh(slab(0.13, 0.14, 0.10, 0.11, -0.02, 0.42), MAT.steel);
+  const under = mesh(slab(0.16, 0.16, 0.12, 0.13, 0.43, 0.70), MAT.body);
   // The forearm leans back toward the shoulder: rotate so its +y runs to
   // camera-right (for the right arm), down and toward the viewer.
   const forearm = new THREE.Group();
   forearm.add(fore, under);
-  forearm.rotation.set(-1.15, 0, -0.55 * side);
+  // In camera space +Z is toward the viewer. A negative X rotation sent the
+  // elbow toward -Z, beside the blade, producing the tall rectangular spur.
+  // Bend back below the wrist, with a visible narrow elbow articulation.
+  forearm.rotation.set(1.9, 0, -0.45 * side);
   forearm.position.set(0.03 * side, -0.06, 0.10);
   a.add(fist, cuff, forearm);
   a.position.set(ex, ey, ez);
@@ -493,25 +496,26 @@ export class ViewModel {
     // Idle sway and walk bob, layered under whatever the swing is doing so the
     // weapon is never completely still. The bob is the eye's figure-eight,
     // counter-phased a little so the weapon lags the head.
-    const mv = opts.moveT || 0;
+    const motion = opts.bob === false ? 0 : 1;
+    const mv = (opts.moveT || 0) * motion;
     const stride = opts.stride || 0;
     const amp = mv * (1 + 0.5 * (opts.sprint || 0));
-    ox += Math.sin(this.t * 1.2) * 0.010 * g + Math.sin(stride - 0.4) * 0.040 * g * amp;
-    oy += Math.sin(this.t * 1.7) * 0.008 * g + Math.sin(stride * 2 - 0.6) * 0.030 * g * amp
-      + (opts.spring || 0) * 0.03 * g;
+    ox += Math.sin(this.t * 1.2) * 0.010 * g * motion + Math.sin(stride - 0.4) * 0.040 * g * amp;
+    oy += Math.sin(this.t * 1.7) * 0.008 * g * motion + Math.sin(stride * 2 - 0.6) * 0.030 * g * amp
+      + (opts.spring || 0) * 0.03 * g * motion;
     rz += Math.sin(stride - 0.4) * 0.05 * amp;
-    rx += Math.sin(this.t * 1.7) * 0.016 + Math.sin(stride * 2 - 0.6) * 0.02 * amp;
+    rx += Math.sin(this.t * 1.7) * 0.016 * motion + Math.sin(stride * 2 - 0.6) * 0.02 * amp;
     // Sprinting drops the weapon low and forward, the way a runner carries it.
-    const sp = opts.sprint || 0;
+    const sp = (opts.sprint || 0) * motion;
     oy += -0.10 * g * sp;
     oz += 0.06 * g * sp;
     rx += 0.25 * sp;
     // In the air the weapon drifts up with the body's lift.
-    if (opts.airborne) { oy += 0.03 * g; rx += -0.12; }
+    if (opts.airborne && motion) { oy += 0.03 * g; rx += -0.12; }
 
     // Aim lag: the weapon trails the turn for a moment, then catches up.
-    this._sway.x += ((opts.yawRate || 0) * -0.9 - this._sway.x) * Math.min(1, dt * 10);
-    this._sway.y += ((opts.pitchRate || 0) * -0.7 - this._sway.y) * Math.min(1, dt * 10);
+    this._sway.x += ((opts.yawRate || 0) * -0.9 * motion - this._sway.x) * (1 - Math.exp(-dt * 10));
+    this._sway.y += ((opts.pitchRate || 0) * -0.7 * motion - this._sway.y) * (1 - Math.exp(-dt * 10));
     ox += Math.max(-0.09, Math.min(0.09, this._sway.x)) * g;
     oy += Math.max(-0.07, Math.min(0.07, this._sway.y)) * g;
     rz += Math.max(-0.09, Math.min(0.09, this._sway.x)) * 1.4;
