@@ -54,3 +54,12 @@ and explicit V2 Pocket map both booted. All images were inspected.
 Main has not been merged or edited. This evidence follow-up changes docs only;
 the next preview deployment retains the tested game asset hashes. Remaining
 M0-M6 acceptance gates are unchanged by making the preview accessible.
+
+The first original-title screenshot caught the loading layer during its fade.
+That image is retained; the harness now waits for the layer's computed opacity
+to reach zero before pausing browser frames or taking a capture. The
+[repeated 17 live checks](V2-PREVIEW/settled.json) passed at documentation commit
+8ba1539, with the same runtime hashes and unchanged production SHA. The
+[settled original title](V2-PREVIEW/settled-original-title.png) confirms the
+loading layer has cleared. This was a capture-timing refinement, not a game
+loading defect or a change to the published gameplay.

@@ -41,6 +41,9 @@ try {
   const open = async path => {
     await page.goto(new URL(path, base).href, { waitUntil: 'domcontentloaded', timeout: 120000 });
     await page.waitForFunction(() => window.WH?.game && document.getElementById('boot')?.classList.contains('done'), {}, { timeout: 180000, polling: 50 });
+    // The done class begins a fade. Capture only after the loading layer has
+    // disappeared and ordinary browser frames have painted the title behind it.
+    await page.waitForFunction(() => getComputedStyle(document.getElementById('boot')).opacity === '0', {}, { timeout: 10000, polling: 50 });
     await page.evaluate(() => { __qaFramesEnabled = false; });
   };
   await open('v2/?seed=12345');
