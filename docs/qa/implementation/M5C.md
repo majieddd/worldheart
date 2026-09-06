@@ -1,6 +1,7 @@
 # M5C: terrain visibility while moving the camera
 
 Owner: Codex, `feature/99-planets-visibility`, stacked on M5B PR #16.
+Published for review as [draft PR #17](https://github.com/majieddd/worldheart/pull/17).
 Status: implemented and verified by instrumented checks and an unforced planet
 win/extraction. Broader owner feel and whole-campaign release acceptance remain open.
 The previous eye-clearance solve kept the camera outside the mountain under it,

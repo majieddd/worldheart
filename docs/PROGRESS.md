@@ -4,6 +4,9 @@ Updated 2026-09-06. This is the collaborator entry point for the owner's new dir
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
+Latest review slices: [99 destinations, PR #16](https://github.com/majieddd/worldheart/pull/16)
+and [terrain camera visibility, PR #17](https://github.com/majieddd/worldheart/pull/17).
+Both are stacked drafts. The production site has not been changed by these PRs.
 
 ## Completed in this batch
 
