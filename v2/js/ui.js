@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CONFIG, MAPS, PALETTE, storeLocal, CAM_RANGES, CAM_TUNE, saveCamTune, resetCamTune } from './config.js';
+import { CONFIG, MAPS, PALETTE, storeLocal, CAM_RANGES, CAM_TUNE, saveCamTune, resetCamTune, PRESENTATION, savePresentation } from './config.js';
 import { TOWER_TYPES, tierCost, buildTowerVisual, TOWER_SCALE, MAT } from './towers.js';
 import { powerSigil } from './ui-icons.js';
 import { TALENTS, loadProfile, buyTalent, isOwned, isReachable } from './modes/progress.js';
@@ -106,7 +106,8 @@ export class HUD {
 
       <div class="hud-corner hud-top-right">
         <button class="btn icon" id="btn-speed" title="Game speed (F)"><span class="marker" id="speed-label" style="color:inherit">1x</span></button>
-        <button class="btn icon" id="btn-pause" title="Pause (Space)">${icon('pause')}</button>
+        <button class="btn icon" id="btn-home" title="Return to heart (Home)">${icon('heart')}</button>
+        <button class="btn icon" id="btn-pause" title="Pause (P; Space on the board)">${icon('pause')}</button>
         <button class="btn icon" id="btn-sound" title="Sound (M)">${icon('volume')}</button>
         <button class="btn icon" id="btn-settings" title="Settings">${icon('settings')}</button>
       </div>
@@ -115,7 +116,9 @@ export class HUD {
         <div class="set-row"><span>World</span><span class="marker" style="color:var(--text)">${CONFIG.map.name}</span></div>
         <div class="set-row"><span>Mode</span><span class="marker" style="color:var(--gold)">${CONFIG.map.modeLabel}</span></div>
         <div class="set-row"><span>Quality</span><button class="btn" id="set-quality">Auto</button></div>
-        <div class="set-row"><span>Screen shake</span><button class="btn" id="set-shake">On</button></div>
+        <div class="set-row"><span>Screen shake</span><button class="btn" id="set-shake">${PRESENTATION.shake ? 'On' : 'Off'}</button></div>
+        <div class="set-row"><span>Head and weapon bob</span><button class="btn" id="set-bob">${PRESENTATION.bob ? 'On' : 'Off'}</button></div>
+        <div class="set-row"><span>Automatic breach focus</span><button class="btn" id="set-focus">${PRESENTATION.autoFocus ? 'On' : 'Off'}</button></div>
         <div class="set-row"><span>Seed</span><span class="marker" id="set-seed" style="color:var(--text)">0</span></div>
         <div class="marker" style="margin-top:var(--sp-2)">camera feel</div>
         <div id="cam-sliders"></div>
@@ -178,7 +181,7 @@ export class HUD {
             ${CONFIG.map.mode === 'ninetynine' ? 'Right-drag or middle-drag to pan; left-drag selects units. Click a unit to possess it. In a body: Space jumps, P pauses, Esc releases. ' : 'Drag to pan. '}
             <span class="kbd">WASD</span> to move, scroll or <span class="kbd">+</span>
             <span class="kbd">-</span> to zoom, <span class="kbd">Q</span> <span class="kbd">E</span> or
-            <span class="kbd">Ctrl</span> + middle-drag to rotate (<span class="kbd">R</span> resets rotation).
+            <span class="kbd">Ctrl</span> + middle-drag to rotate (<span class="kbd">R</span> resets rotation; <span class="kbd">Home</span> returns to the heart).
             Keys <span class="kbd">1</span> to <span class="kbd">${CONFIG.map.mode === 'ninetynine' ? '6' : '5'}</span> choose ${CONFIG.map.mode === 'ninetynine' ? 'a hand slot' : 'a tower'}, click to build.
             <span class="kbd">U</span> upgrade, <span class="kbd">X</span> sell,
             <span class="kbd">Space</span> pause, <span class="kbd">F</span> speed. Camera feel sliders live in settings.</div></details>
@@ -243,8 +246,8 @@ export class HUD {
       'lives-fill', 'lives-num', 'gold-num', 'score-line', 'wave-label', 'wave-sub',
       'nest-sep', 'nest-count', 'heart-panel', 'heart-level', 'heart-buys', 'heart-action', 'heart-cost',
       'btn-call', 'call-bonus', 'boss-bar', 'boss-fill', 'boss-name',
-      'btn-speed', 'speed-label', 'btn-pause', 'btn-sound', 'btn-settings', 'settings-pop',
-      'set-quality', 'set-shake', 'set-seed', 'toast-anchor', 'wave-banner', 'banner-big', 'banner-small',
+      'btn-speed', 'speed-label', 'btn-pause', 'btn-home', 'btn-sound', 'btn-settings', 'settings-pop',
+      'set-quality', 'set-shake', 'set-bob', 'set-focus', 'set-seed', 'toast-anchor', 'wave-banner', 'banner-big', 'banner-small',
       'hint-line', 'build-bar', 'tower-panel', 'tp-name', 'tp-tier', 'tp-desc', 'tp-stats',
       'tp-upgrade', 'tp-sell', 'tp-close', 'damage-vignette',
       'fp-hud', 'fp-cross', 'fp-hit', 'fp-name', 'fp-hp', 'fp-swing', 'fp-keys', 'fp-rally',
@@ -455,14 +458,25 @@ export class HUD {
     });
     this.el['btn-speed'].addEventListener('click', () => this.cycleSpeed());
     this.el['btn-pause'].addEventListener('click', () => this.togglePause());
+    this.el['btn-home'].addEventListener('click', () => this.returnToHeart());
     this.el['btn-sound'].addEventListener('click', () => this.toggleSound());
     this.el['btn-settings'].addEventListener('click', () => {
       this.el['settings-pop'].classList.toggle('show');
     });
     this.el['set-shake'].addEventListener('click', () => {
       this.rig.shakeEnabled = !this.rig.shakeEnabled;
+      PRESENTATION.shake = this.rig.shakeEnabled;
+      this.rig.trauma = 0;
+      savePresentation();
       this.el['set-shake'].textContent = this.rig.shakeEnabled ? 'On' : 'Off';
     });
+    for (const [id, key] of [['set-bob', 'bob'], ['set-focus', 'autoFocus']]) {
+      this.el[id].addEventListener('click', () => {
+        PRESENTATION[key] = !PRESENTATION[key];
+        savePresentation();
+        this.el[id].textContent = PRESENTATION[key] ? 'On' : 'Off';
+      });
+    }
     this.el['set-quality'].addEventListener('click', () => {
       const next = { Auto: 'High', High: 'Low', Low: 'Auto' }[this.el['set-quality'].textContent];
       this.el['set-quality'].textContent = next;
@@ -514,6 +528,7 @@ export class HUD {
       else if (e.code === 'KeyP') { e.preventDefault(); this.togglePause(); }
       else if (e.code === 'KeyF') { if (!this.possession?.active) this.cycleSpeed(); }
       else if (e.code === 'KeyM') this.toggleSound();
+      else if (e.code === 'Home') { e.preventDefault(); this.returnToHeart(); }
       // B raises the Worldheart. A board verb like F: on the ground the panel
       // is not even visible, and spending 450 gold from inside a body with no
       // readout of what it bought would be a surprise, not a purchase.
@@ -538,6 +553,15 @@ export class HUD {
     const comp = this.waves.constructor === Object ? [] : [];
     const tags = ['the swarm gathers', 'skitterers incoming', 'wings on the horizon', 'heavy plating ahead', 'a mixed tide'];
     return tags[n % tags.length];
+  }
+
+  returnToHeart() {
+    if (this.possession?.active) {
+      this.toast('Return to heart moves the board camera. Release control first.', 'info');
+      return;
+    }
+    this.game.cancelBuild();
+    this.rig.flyTo(this.world.heart.group.position, this.rig.defaultDist, 0.3);
   }
 
   beginGame() {

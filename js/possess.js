@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { R, terrainHeight, surfacePoint } from './world.js';
-import { PALETTE, CAM_TUNE } from './config.js';
+import { PALETTE, CAM_TUNE, PRESENTATION } from './config.js';
 import { SIM_RANDOM } from './noise.js';
 import { BladeTrail } from './viewmodel.js';
 
@@ -364,6 +364,11 @@ export class Possession {
     if (!unit || !unit.active || unit.dead) return false;
     if (this.unit) this.exit();
     this.unit = unit;
+    this.rig.cancelFlight();
+    this.rig.keys.clear();
+    this.rig.pointers.clear();
+    this.rig.dragging = false;
+    this.rig.velLon = this.rig.velLat = 0;
     unit.possessed = true;
     unit.following = null;
     this.keys.clear();
@@ -575,7 +580,7 @@ export class Possession {
     // the rest next frame, so a fast swing lands smoothly and stops where the
     // hand stopped rather than a frame late or a frame early.
     if (this.yawQueue !== 0 || this.pitchQueue !== 0) {
-      const k = Math.min(1, LOOK_SMOOTH * Math.max(0.5, Math.min(2, dt * 60)) + (dt <= 0 ? 1 : 0));
+      const k = dt > 0 ? 1 - Math.pow(1 - LOOK_SMOOTH, dt * 60) : 1;
       const yaw = this.yawQueue * k;
       const pit = this.pitchQueue * k;
       this.yawQueue -= yaw;
@@ -586,6 +591,11 @@ export class Possession {
       this._yawUsed = yaw;
       this.pitch = clamp(this.pitch + pit, -PITCH_MAX, PITCH_MAX);
     }
+    // View changes remain responsive while solo simulation is paused. Update
+    // body/weapon visibility before either path can place an inside-head eye.
+    this.boom += (this.boomWant - this.boom) * (1 - Math.exp(-dt * TP_EASE));
+    u.hidden = this.boom <= 0.35;
+    if (this.viewModel) this.viewModel.visible = u.hidden && !!this.viewModel.current;
     if (!simRunning || this.suspended) {
       // Paused, or the mouse is lent to an overlay: the camera must still be
       // placed, but nothing this body does may touch the world.
@@ -630,13 +640,6 @@ export class Possession {
     }
 
     if (this.firing) this.attack(dt);
-    // Eased rather than snapped, so a scroll reads as the camera pulling out.
-    this.boom += (this.boomWant - this.boom) * Math.min(1, dt * TP_EASE);
-    // Your own body is hidden from the inside and shown from behind. Without
-    // this the first-person eye sits inside the commander's own head, and
-    // pulling back would reveal nothing to look at.
-    u.hidden = this.boom <= 0.35;
-    if (this.viewModel) this.viewModel.visible = this.boom <= 0.35 && !!this.viewModel.current;
     // The kick settles back over a few frames rather than snapping.
     if (this.kick > 0) this.kick = Math.max(0, this.kick - this.kick * Math.min(1, dt * 14) - dt * 0.05);
     if (this.fovKick > 0) this.fovKick = Math.max(0, this.fovKick - this.fovKick * Math.min(1, dt * 9) - dt * 0.5);
@@ -693,6 +696,7 @@ export class Possession {
       spring: this.springY,
       yawRate: live && dt > 0 ? this._yawUsed / dt : 0,
       pitchRate: live && dt > 0 ? (this.pitch - this._prevPitch) / dt : 0,
+      bob: PRESENTATION.bob,
     };
   }
 
@@ -767,18 +771,19 @@ export class Possession {
 
     // The bob. Vertical at twice the stride, lateral and roll at the stride,
     // all scaled by the smoothed speed and lifted by sprint.
-    const amp = this.moveT * (1 + (SPRINT_BOB - 1) * this.sprintT);
+    const motion = PRESENTATION.bob ? 1 : 0;
+    const amp = this.moveT * (1 + (SPRINT_BOB - 1) * this.sprintT) * motion;
     const s1 = Math.sin(this.stride);
     const s2 = Math.sin(this.stride * 2);
     const bobY = s2 * BOB_Y * amp;
     const bobX = s1 * BOB_X * amp;
-    const wantRoll = s1 * BOB_ROLL * amp + this.vel.y * STRAFE_ROLL;
+    const wantRoll = s1 * BOB_ROLL * amp + this.vel.y * STRAFE_ROLL * motion;
     this.roll += (wantRoll - this.roll) * Math.min(1, dtShake * 12 + (dtShake === 0 ? 1 : 0) * 0);
 
     const alt = Math.max(u.height, 0.03) + (u.hop || 0);
     _right.crossVectors(u.fwd, u.dir).normalize();
     _eye.copy(u.dir).multiplyScalar(
-      R + alt + EYE_HEIGHT * u.type.scale + bobY + this.springY * 0.11 - this.kick * 0.06);
+      R + alt + EYE_HEIGHT * u.type.scale + bobY + this.springY * 0.11 * motion - this.kick * 0.06 * motion);
     _eye.addScaledVector(_right, bobX);
     this.aimDir(_aim);
     // Published on the body so the strike paths aim where the player is
@@ -847,18 +852,20 @@ export class Possession {
     // DECAYED and applied inside rig.update, which possession skips - so every
     // shake this mode asked for went nowhere and then discharged into the orbit
     // camera the moment control was released. First person consumes it here.
+    if (!this.rig.shakeEnabled) this.rig.trauma = 0;
     if (this.rig.trauma > 0) {
       this.rig.trauma = Math.max(0, this.rig.trauma - dtShake * 1.7);
+      this._shakePhase = (this._shakePhase || 0) + dtShake * 34;
       const t = this.rig.trauma * this.rig.trauma * FP_SHAKE;
       if (t > 1e-5) {
-        cam.rotateX((SIM_RANDOM.next() * 2 - 1) * t);
-        cam.rotateY((SIM_RANDOM.next() * 2 - 1) * t * 1.3);
-        cam.rotateZ((SIM_RANDOM.next() * 2 - 1) * t * 1.6);
+        cam.rotateX(Math.sin(this._shakePhase * 1.13) * t);
+        cam.rotateY(Math.sin(this._shakePhase * 1.71) * t * 1.3);
+        cam.rotateZ(Math.sin(this._shakePhase * 2.09) * t * 1.6);
       }
     }
 
     // The lens: the archetype's base, widened by sprint and by brief kicks.
-    const fov = (this.baseFov || cam.fov) + SPRINT_FOV * this.sprintT + this.fovKick;
+    const fov = (this.baseFov || cam.fov) + (SPRINT_FOV * this.sprintT + this.fovKick) * motion;
     let proj = false;
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; proj = true; }
     // The orbit near plane is metres deep and swallowed everything close to the
