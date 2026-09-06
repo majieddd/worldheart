@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { PALETTE, REDUCED_MOTION } from './config.js';
+import { PALETTE, REDUCED_MOTION, PRESENTATION } from './config.js';
 import { clamp } from './noise.js';
 import { R } from './world.js';
 import { swimOffset } from './traversal.js';
@@ -322,13 +322,13 @@ export class CombatFx {
   _drawBeam(slot, dt) {
     const rib = slot.rib;
     const u = rib.mat.uniforms;
-    const pulse = 0.5 + 0.5 * Math.sin(this.time * 38);
+    const pulse = PRESENTATION.flashes ? 0.5 + 0.5 * Math.sin(this.time * 38) : .5;
     // Width and colour both climb with the ramp, so a beam held on one body
     // visibly thickens toward its 1.9x, and both breathe a little so a held
     // beam is not a static bar.
     const width = 0.07 + 0.11 * slot.ramp + 0.02 * pulse;
     u.uAlpha.value = 0.85 + 0.15 * pulse;
-    u.uTime.value = this.time;
+    u.uTime.value = PRESENTATION.flashes ? this.time : 0;
     u.uRamp.value = slot.ramp;
     // The muzzle end warms from energy toward ember as heat rises, which is the
     // lock warning: the sim locks the weapon at heat 1.
@@ -339,7 +339,7 @@ export class CombatFx {
     // Impact glow where the beam lands, and heat glow at the muzzle. Both are
     // throttled rather than per frame so a two-second channel does not empty
     // the glow pool for everything else on the board.
-    if (REDUCED_MOTION) return;
+    if (REDUCED_MOTION || !PRESENTATION.flashes) return;
     slot.sputterT -= dt;
     if (slot.sputterT <= 0) {
       slot.sputterT = 0.035;

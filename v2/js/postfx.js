@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { REDUCED_MOTION } from './config.js';
+import { REDUCED_MOTION, PRESENTATION } from './config.js';
 
 // Custom HDR pipeline: MSAA scene target in half-float, soft-knee bright pass,
 // dual-Kawase blur pyramid, then one composite pass doing additive bloom,
@@ -143,6 +143,7 @@ export class PostPipeline {
     this.enabled = true;
     this.bloomStrength = 0.62;
     this.renderScale = 1;
+    this.grainStrength = .028;
     // The kernel spans 2^levels pixels, so a fixed level count is a fixed PIXEL
     // radius - 0.883% of frame width at 720p but only 0.447% at 4K. The glow is
     // the most brand-identifying thing in the frame and it was a wide halo on
@@ -273,6 +274,7 @@ export class PostPipeline {
     cu.uBloom.value = lower.texture;
     cu.uBloomStrength.value = this.bloomStrength;
     cu.uTime.value = REDUCED_MOTION ? 0 : this.time;
+    cu.uGrain.value = PRESENTATION.grain ? this.grainStrength : 0;
     r.setRenderTarget(null);
     r.render(this._scene, this._cam);
   }
@@ -281,11 +283,11 @@ export class PostPipeline {
     if (q === 'low') {
       this.renderScale = 0.78;
       this.baseLevels = 3;
-      this.compositeMat.uniforms.uGrain.value = 0;
+      this.grainStrength = 0;
     } else {
       this.renderScale = 1;
       this.baseLevels = 4;
-      this.compositeMat.uniforms.uGrain.value = 0.028;
+      this.grainStrength = .028;
     }
     this._w = -1; // force realloc on next setSize
   }

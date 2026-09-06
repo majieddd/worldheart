@@ -1,7 +1,8 @@
 import * as THREE from 'three';
-import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
+import { CONFIG, PALETTE, REDUCED_MOTION, PRESENTATION } from './config.js';
 import { clamp } from './noise.js';
 import { R, groundNormal, orientOnSurface } from './world.js';
+import { uploadInstances } from './rig.js';
 
 // Pooled visual effects. Nothing here allocates in the frame loop: every
 // system pre-builds its buffers and recycles slots. Reduced motion trims
@@ -41,14 +42,15 @@ class GlowPoints {
 
     const mat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-      uniforms: { uScale: { value: 1 } },
+      uniforms: { uScale: { value: 1 }, uBrightness: { value: 1 } },
       vertexShader: /* glsl */ `
         attribute vec4 aColor;
         attribute float aSize;
         varying vec4 vCol;
         uniform float uScale;
+        uniform float uBrightness;
         void main() {
-          vCol = aColor;
+          vCol = aColor; vCol.rgb *= uBrightness;
           vec4 mv = modelViewMatrix * vec4(position, 1.0);
           gl_PointSize = aSize * uScale * (240.0 / -mv.z);
           gl_Position = projectionMatrix * mv;
@@ -82,6 +84,7 @@ class GlowPoints {
   }
 
   update(dt) {
+    this.points.material.uniforms.uBrightness.value = PRESENTATION.flashes ? 1 : .3;
     const n = this.max;
     for (let i = 0; i < n; i++) {
       if (this.life[i] <= 0) { this.aCol.array[i * 4 + 3] = 0; continue; }
@@ -396,6 +399,7 @@ class DamageNumbers {
   // what makes a big hit read as a big hit rather than as larger type. `dur`
   // lets a player's strike hang a little longer than a tower's tick.
   spawn(pos, text, color = '#e8ecf8', size = 13, pop = 0, dur = 0.8) {
+    if (!PRESENTATION.numbers && Number.isFinite(Number(text))) return;
     // Prefer a dead slot over the next one in the ring. A bare ring buffer
     // overwrites numbers that are still on screen, so a mortar volley or a
     // cleave erased its own damage readout - the more the player did at once,
@@ -413,7 +417,7 @@ class DamageNumbers {
     it.life = dur;
     it.dur = dur;
     it.vy = 0;
-    it.pop = pop;
+    it.pop = PRESENTATION.flashes && !REDUCED_MOTION ? pop : 0;
     it.el.textContent = text;
     it.el.style.color = color;
     it.el.style.fontSize = size + 'px';
@@ -422,6 +426,7 @@ class DamageNumbers {
   update(dt) {
     const w = innerWidth, h = innerHeight;
     for (const it of this.items) {
+      if (!PRESENTATION.numbers && Number.isFinite(Number(it.el.textContent))) it.life=0;
       if (it.life <= 0) { if (it.el.style.opacity !== '0') it.el.style.opacity = '0'; continue; }
       it.life -= dt;
       it.vy += dt * 46;
@@ -469,8 +474,7 @@ class BlobShadows {
       n++;
       if (n >= 200) break;
     }
-    this.mesh.count = n;
-    this.mesh.instanceMatrix.needsUpdate = true;
+    uploadInstances(this.mesh,n);
   }
 }
 const _qFlat2 = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);

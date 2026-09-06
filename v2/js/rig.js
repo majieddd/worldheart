@@ -231,3 +231,15 @@ export function keyed(keys, t) {
   }
   return keys[keys.length - 1][1];
 }
+
+// Packed instance buffers draw only their live prefix. Upload that same
+// prefix instead of sending every unused capacity slot on every frame.
+export function uploadInstances(mesh, count) {
+  mesh.count=count;
+  uploadAttribute(mesh.instanceMatrix,count);
+  if(mesh.instanceColor)uploadAttribute(mesh.instanceColor,count);
+}
+function uploadAttribute(attribute,count) {
+  attribute.clearUpdateRanges();
+  if(count>0){attribute.addUpdateRange(0,count*attribute.itemSize);attribute.needsUpdate=true;}
+}

@@ -276,7 +276,9 @@ export const PRESENTATION = (() => {
   let saved = {};
   try { saved = JSON.parse(stored('whPresentation') || '{}') || {}; } catch { /* defaults */ }
   return { bob: !REDUCED_MOTION && saved.bob !== false,
-    shake: !REDUCED_MOTION && saved.shake !== false, autoFocus: saved.autoFocus === true };
+    shake: !REDUCED_MOTION && saved.shake !== false, autoFocus: saved.autoFocus === true,
+    flashes: !REDUCED_MOTION && saved.flashes !== false, trails: !REDUCED_MOTION && saved.trails !== false,
+    numbers: !REDUCED_MOTION && saved.numbers !== false, grain: !REDUCED_MOTION && saved.grain !== false };
 })();
 export function savePresentation() { storeLocal('whPresentation', JSON.stringify(PRESENTATION)); }
 

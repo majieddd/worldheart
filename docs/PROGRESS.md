@@ -31,7 +31,20 @@ unreproduced. The corrected 180-second reference stress run passes at 125 fps
 median / 42.55 fps 1% low with active simulation, 100 enemies and 30 towers.
 All five enemy species pass 300 terrain strike probes; GPU restoration now
 preserves play without stale render-target warnings. Lower-capability and
-actual background-tab checks remain open. These repairs are ready to publish.
+actual background-tab checks remain open. These repairs are published at
+`b17ec77` via [PR #22](https://github.com/majieddd/worldheart/pull/22) and
+[deployment 34056541006](https://github.com/majieddd/worldheart/actions/runs/34056541006).
+Thirty-eight public deployment/keyboard/victory checks passed; main is unchanged.
+The [U01-U27 alignment review](qa/implementation/OWNER-ALIGNMENT.md) maps every
+original and follow-up request to current evidence and explicit remaining work.
+Independent feedback settings pass 23 local checks. Profiling the failed 4x CPU
+configuration led to verified instance upload and exact cache-sampling savings;
+the reduced-CPU frame budget still fails, with a similarly slow frozen control.
+No FPS gain is claimed. The final reference rerun passed at 129.87 fps median
+and 62.5 fps inverse p99. The cautious ocean continuation won wave 15 with two
+heart health and extracted to planet 5, retaining all 13 weapons. This extends
+the earned pilot; it does not complete the full campaign. Publication of these
+settings and exact rendering efficiencies is the next checkpoint.
 
 Latest batch, 2026-09-06: the owner-requested extra-high agent implemented
 [U22-U27](qa/2026-09-06-COMMANDER-REQUEST.md) on `feature/commander-feedback`,

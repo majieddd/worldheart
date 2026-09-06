@@ -13,11 +13,12 @@ verification and campaign completion are separate claims.
 | Item | State | Acceptance check | Evidence | Usage |
 |---|---|---|---|---|
 | A1 Keyboard and input ownership | repaired, browser verified | Inventory actions/customization retain focus and scroll; modal shortcuts cannot mutate the world; closing resumes the prior input/pause context | 15 keyboard, 6 possessed-ending, 20 campaign recovery checks; natural victory and extraction | unmeasured |
-| A2 Combat readability and model alignment | arm repair verified, broader audit active | Strike guides remain visible and agree with damage on hills/shore/flat terrain; weapon era/parts have meaningful readable representation | 12 arm proportion/material checks; 29 combat regressions. Terrain-edge tells and authored era silhouettes remain | unmeasured |
+| A2 Combat readability and model alignment | arm and terrain contracts verified; authored content open | Strike guides remain visible and agree with damage on hills/shore/flat terrain; weapon era/parts have meaningful readable representation | 12 arm checks, 29 combat regressions, 300 terrain strike probes. Human readability and authored era silhouettes remain | unmeasured |
 | A3 Foliage and geometry | expanded geometry audit passed, visual acceptance open | Fixed-seed close orbit, normals/winding, moving color/shadow deformation and all map families; preserve an unreproduced complaint as open | Eight map/profile cases and rendered close views; original artifact not reproduced identically | unmeasured |
-| A4 Ocean and campaign pacing | active | Varied legal strategy from earned checkpoint, clear win/loss and no indefinite stalls; preserve losses and distinguish controller defects from game balance | Fresh planet 1 won and extracted; planet 2 lost at wave 12. Ocean failures in OCEAN-STRATEGY.md remain | unmeasured |
-| A5 Sustained performance and recovery | reference desktop passed; recovery repair active | Reproducible load, frame-time distribution and resource growth over a prolonged session; pause/background recovery and reduced capability configuration | Valid 180-second moving-camera load and pause/resume passed; reduced capability and actual background visibility remain | unmeasured |
-| A6 Final alignment and release gates | planned | Original U01-U27 and M0-M5 mapped to current evidence and actionable remaining work; all new changes tested on public V2 | Main release, owner feel and full 99-planet play remain open | unmeasured |
+| A4 Ocean and campaign pacing | ocean victory and extraction verified; broader balance open | Varied legal strategy from earned checkpoint, clear win/loss and no indefinite stalls; preserve losses and distinguish controller defects from game balance | Fresh planet 1 won and extracted; planet 2 lost at wave 12. Cautious ocean won wave 15 and arrived at planet 5 with 13 weapons. Prior failures retained | unmeasured |
+| A5 Sustained performance and recovery | reference desktop and GPU recovery passed; reduced CPU budget failed | Reproducible load, frame-time distribution and resource growth over a prolonged session; pause/background recovery and reduced capability configuration | Valid 180-second reference and final 60-second rerun passed; exact upload savings verified. Reduced CPU and actual background visibility remain | unmeasured |
+| A6 Final alignment and release gates | U01-U27 review recorded; second publication pending | Original U01-U27 and M0-M5 mapped to current evidence and actionable remaining work; all new changes tested on public V2 | OWNER-ALIGNMENT.md separates implemented contracts from remaining art, feel, device and campaign gates | unmeasured |
+| A7 Independent feedback preferences | implemented, 23 local browser checks passed | Flashes, blade trails, floating numbers and grain can be reduced separately; saved preferences preserve damage, red tells and essential hit/block information | Four missing old-build controls, narrow overlay repair, keyboard and real combat checks. Publication pending | unmeasured |
 
 Start with baseline failures before source fixes. Browser fixtures may inject
 explicit setup resources/positions to isolate a rule; only unforced legal play
@@ -88,7 +89,24 @@ simulation at 60 Hz but renders once per two simulated seconds plus captures;
 it is not frame-rate evidence. Its changed sampling cadence and boot timing
 mean the two outcomes are not a deterministic performance comparison. A weak
 controller losing does not establish an unwinnable planet or justify lowering
-difficulty. Full 99-planet completion and varied ocean tactics remain open.
+difficulty. Full 99-planet completion remains open.
+
+The [cautious ocean continuation](ADVERSARIAL-ACCEPTANCE/ocean-victory.json)
+resumed the earned M5B planet-4 talent checkpoint, effective seed 389884. It
+won wave 15 with two heart health, 940 kills, seven towers, 724 gold and
+commander HP 1,501.39/1,680. It destroyed three nests, issued 404 attacks and
+used 1,495 ordinary evasive-input decisions. The commander recovered after
+wave 13, but the heart lost health while the remaining pressure was cleared.
+[Victory receipt](ADVERSARIAL-ACCEPTANCE/ocean-victory.png),
+[pre-extraction save](ADVERSARIAL-ACCEPTANCE/ocean-victory-checkpoint.json),
+[actual planet-5 arrival](ADVERSARIAL-ACCEPTANCE/ocean-arrival.json) and
+[earned ready checkpoint](ADVERSARIAL-ACCEPTANCE/planet-5-checkpoint.json)
+preserve the result and all 13 banked weapons. No combat state was injected;
+the input policy chose legal purchases, attacks, movement and placement.
+The trace retains transient stopped enemies, but the wave cleared naturally
+and there was no persistent commander stall or runtime fault. This is one
+successful varied strategy, not late-campaign or overall ocean balance
+acceptance. Sparse rendering has the same limits as the repaired run above.
 
 ## Geometry and regression coverage
 
@@ -158,16 +176,102 @@ and [shore wisp](ADVERSARIAL-ACCEPTANCE/shore-wisp.jpg) preserve rendered tells.
 These checks establish transform/timing agreement; owner readability and
 continuous-input combat feel remain separate review.
 
-The optional assault policy now has a `--cautious` variant for the next ocean
+The optional assault policy now has a `--cautious` variant for the ocean
 attempt: read visible windups, use ordinary sidesteps, stop at actual melee
 reach and reconsider recovery routes. It alters input decisions only, not
-game health, damage, movement, rewards or difficulty. No cautious outcome is
-claimed until its legal run finishes. The harness also recognizes its actual
+game health, damage, movement, rewards or difficulty. Its completed outcome
+is recorded above. The harness also recognizes its actual
 assault equipment trace action when summarizing the weapon loop; previous
 false summaries remain preserved with their raw actions.
 
 [228 headless tests](ADVERSARIAL-ACCEPTANCE/headless.txt), 50-module syntax,
 house style and regenerated deployment mirrors passed after the recovery fix.
+
+## V2 checkpoint and continued work
+
+Source `b17ec771f5b26e93b9f976f87fd33ffe8ae639dd` is live via
+[deployment 34056541006](https://github.com/majieddd/worldheart/actions/runs/34056541006)
+and [draft PR #22](https://github.com/majieddd/worldheart/pull/22). Public V2
+passed [17 deployment/root/save checks](ADVERSARIAL-ACCEPTANCE/public-preview.json),
+[six possessed-receipt checks](ADVERSARIAL-ACCEPTANCE/public-ending.json) and
+[15 keyboard checks](ADVERSARIAL-ACCEPTANCE/public-keyboard.json). Production
+remains `1374122d1109919a5fab10b69fefdfb80308eb6e`; no gameplay PR was merged.
+
+The [4x CPU slowdown run](ADVERSARIAL-ACCEPTANCE/performance-cpu4-before.json)
+kept its 100-enemy/30-tower simulation alive and passed pause/resume, but failed
+the frame budget at 1280x720: median 39 ms (25.64 fps), p99 106.5 ms (9.39 fps),
+maximum 215 ms, boot 39.76 seconds. Auto quality reduced bloom to three levels.
+It is reduced CPU capability on the same GPU, not actual low-end hardware.
+[Capture](ADVERSARIAL-ACCEPTANCE/performance-cpu4-before.png). CPU profiling and
+the subsequent control are recorded below; the desktop pass cannot conceal this failure.
+
+The approved blueprint called for independent cosmetic controls. The old build
+has [none of these four controls](ADVERSARIAL-ACCEPTANCE/preferences-before.json).
+The new settings provide Impact flashes, Blade trails, Damage numbers and Film
+grain, persisted independently of bob, shake and focus. Reduced-motion defaults
+disable all four. Lowered flashes retain a static expiring hit marker and
+blocked feedback; trails apply to first and third person. Damage and red attack
+tells, actual projectiles and beams remain active. The renderer lowers optional
+particle brightness and actor hit whitening without changing combat values.
+[Nineteen browser checks](ADVERSARIAL-ACCEPTANCE/preferences-after.json) cover
+keyboard input, isolation, persistence, reduced defaults and effect behavior.
+Settings were inspected at [720p](ADVERSARIAL-ACCEPTANCE/settings-1280.png),
+[1080p](ADVERSARIAL-ACCEPTANCE/settings-1920.png) and
+[390px](ADVERSARIAL-ACCEPTANCE/settings-390.png). This is a scoped comfort feature,
+not a photosensitivity certification or a whole accessibility audit.
+
+The first narrow screenshot exposed a build card covering lower Settings
+controls. The settings surface now sits above world panels, closes on a
+victory receipt and supports Escape with focus returned to its button.
+[Expanded checks](ADVERSARIAL-ACCEPTANCE/preferences-expanded.json) pass 23/23,
+including element hit-testing of every button and slider after scrolling at
+all three sizes. [Repaired narrow view](ADVERSARIAL-ACCEPTANCE/settings-390-after.png).
+[29 combat regressions](ADVERSARIAL-ACCEPTANCE/preferences-weapons.json) also pass.
+
+## Measured CPU work
+
+The [60-second sampled CPU profile](ADVERSARIAL-ACCEPTANCE/cpu-profile.json)
+identified GPU buffer uploads, terrain noise sampling and ally route searches.
+Profiler overhead makes its frame rates diagnostic rather than acceptance
+evidence. Packed actor instance buffers were uploading their entire reserved
+capacity, even when empty. They now upload only the live prefix and skip
+empty buffers. Static cache positions retain the exact terrain sample until
+their direction changes. A route whose endpoints are in the same valid cell
+returns its zero-cost path without resetting and searching the graph.
+
+[Before GPU readback control](ADVERSARIAL-ACCEPTANCE/uploads-before.json) and
+[after](ADVERSARIAL-ACCEPTANCE/uploads-after.json) both verify the actual GPU
+values against the CPU data after full, shrinking, empty and reused actor
+populations. All ten after assertions pass. With 100 fixture enemies, measured
+bufferSubData traffic per sampled frame falls from 2,676,688 to 126,008 bytes
+(95.3%); empty actor traffic falls to 2,508 bytes. These are upload counts, not
+an inferred FPS improvement. Exact cache positions and invalidation are
+verified, and the same-cell path avoids the previous Dijkstra call. No terrain
+sampling approximation, camera pose, navigation cost or combat value changed.
+The slower-CPU frame budget was retested separately.
+
+The [180-second optimized retry](ADVERSARIAL-ACCEPTANCE/performance-cpu4-after.json)
+still fails: 18.12 fps median / 6.03 fps inverse p99. A subsequent
+[60-second frozen old-build control](ADVERSARIAL-ACCEPTANCE/performance-cpu4-control.json)
+also measured 18.35 / 6.13, showing that the initial 25.64 fps result cannot be
+used as a stable before/after comparison in this session. One headless QA
+browser was active at a time. The upload reduction is verified, but no FPS
+improvement or lower-capability acceptance is claimed. Further camera terrain
+query and path-search costs remain profiled leads rather than speculative
+changes to camera feel or authoritative terrain rules.
+
+The [final 60-second reference rerun](ADVERSARIAL-ACCEPTANCE/performance-final-native.json)
+on the updated source passed with 7,374 frames: median 7.7 ms (129.87 fps),
+p95 15.3 ms, p99 16 ms (62.5 fps), maximum 32.2 ms and boot 8.39 seconds.
+All load samples were active, pause/resume passed, and no runtime faults
+occurred. This preserves the reference desktop gate; it does not turn the
+reduced-CPU failure into a pass or establish a causal FPS improvement.
+
+Final source regressions pass [all five maps](ADVERSARIAL-ACCEPTANCE/final-regression.json),
+[16 crystal transactions](ADVERSARIAL-ACCEPTANCE/final-crystals.json),
+[four covered GPU recovery checks](ADVERSARIAL-ACCEPTANCE/final-recovery.json)
+and [228 headless tests](ADVERSARIAL-ACCEPTANCE/final-headless.txt). Actual
+background visibility remains untested because both headless tabs stayed visible.
 
 ## Reproduce
 
@@ -182,6 +286,9 @@ node tools/viewmodel-proportion-check.mjs artifacts/acceptance-proportions
 node tools/foliage-audit.mjs artifacts/acceptance-foliage
 node tools/self-play.mjs 12345 artifacts/acceptance-play --campaign --weapons --talents --planets=4 --strategy=assault --sparse-render
 node tools/performance-check.mjs artifacts/acceptance-performance --orbit --seconds=180
+node tools/feedback-preferences-check.mjs artifacts/acceptance-preferences
+node tools/instance-upload-check.mjs artifacts/acceptance-uploads
+node tools/self-play.mjs 12345 artifacts/acceptance-ocean --campaign --weapons --talents --planets=1 --checkpoint=docs/qa/implementation/M5B/planet-4-talent-checkpoint.json --strategy=assault --cautious --tower-priority=helios,bolt,tesla,mortar,cryo,warden --tower-limit=10 --sparse-render
 ```
 
 Performance measurements must run without another QA browser job. CPU slowdown

@@ -740,6 +740,7 @@ export class NavGraph {
   findPath(fromDir, toDir) {
     const start = this.nearestWalkableNode(fromDir, true), end = this.nearestWalkableNode(toDir, true);
     if (start < 0 || end < 0 || this.block[end]) return [];
+    if(start===end){const path=[start];path.cost=0;return path;}
     if (!this._route || this._route.dist.length !== this.n) this._route = { dist: new Float32Array(this.n), next: new Int32Array(this.n) };
     this._dijkstra(end, null, { ...this._route, walk: this.walk, cost: this.cost, block: this.block }, start);
     if (!Number.isFinite(this._route.dist[start])) return [];

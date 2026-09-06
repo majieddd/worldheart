@@ -1,0 +1,38 @@
+{
+  "scope": "Possessed victory and extraction fixtures with real pointer/mouse input; wave completions injected",
+  "base": "https://majieddd.github.io/worldheart/v2/",
+  "checks": [
+    {
+      "name": "Fixture enters commander with a real granted pointer lock",
+      "ok": true
+    },
+    {
+      "name": "The campaign receipt releases commander input and pointer lock",
+      "ok": true,
+      "actual": {
+        "locked": false,
+        "suspended": true,
+        "paused": true,
+        "active": "btn-extract",
+        "phase": "victory"
+      }
+    },
+    {
+      "name": "Collect remaining loot resumes the same commander",
+      "ok": true
+    },
+    {
+      "name": "Inventory returns pointer ownership to the still-open receipt",
+      "ok": true
+    },
+    {
+      "name": "Receipt owns pause and construction shortcuts",
+      "ok": true
+    },
+    {
+      "name": "A real extraction click loads planet two",
+      "ok": true
+    }
+  ],
+  "faults": []
+}

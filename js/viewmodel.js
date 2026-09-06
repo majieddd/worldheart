@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { PALETTE } from './config.js';
+import { PALETTE, PRESENTATION } from './config.js';
 import { slab, cone, merge, shift, spin, keyed, hump } from './rig.js';
 import { STRIKE_AT } from './attacks.js';
 
@@ -380,6 +380,7 @@ export class BladeTrail {
   }
 
   push(base, tip) {
+    if (!PRESENTATION.trails) return;
     const i = this.head;
     this.bases[i * 3] = base.x; this.bases[i * 3 + 1] = base.y; this.bases[i * 3 + 2] = base.z;
     this.tips[i * 3] = tip.x; this.tips[i * 3 + 1] = tip.y; this.tips[i * 3 + 2] = tip.z;
@@ -391,6 +392,7 @@ export class BladeTrail {
   // `live` keeps the newest sample bright; when the sweep ends the whole
   // ribbon fades out over `life` and hides itself.
   update(dt, live) {
+    if (!PRESENTATION.trails) { this.clear(); return; }
     if (this.count === 0) return;
     let visible = 0;
     for (let i = 0; i < this.n; i++) this.ages[i] += dt;
