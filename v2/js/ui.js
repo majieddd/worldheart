@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, MAPS, TERRAIN_PROFILES, PALETTE, storeLocal, CAM_RANGES, CAM_TUNE, saveCamTune, resetCamTune, PRESENTATION, savePresentation } from './config.js';
 import { TOWER_TYPES, tierCost, buildTowerVisual, TOWER_SCALE, MAT } from './towers.js';
 import { powerSigil } from './ui-icons.js';
-import { TALENTS, loadProfile, buyTalent, isOwned, isReachable } from './modes/progress.js';
+import { TALENTS, loadProfile, buyTalent, isOwned, isReachable, persistProfile } from './modes/progress.js';
 
 // DOM HUD. All chrome lives here; the scene renders beneath it. Per the
 // design contract: per-shot and per-kill readouts update with zero animation,
@@ -320,7 +320,7 @@ export class HUD {
       row.appendChild(card);
     }
     if(CONFIG.mapKey==='ninetynine'&&!CONFIG.campaign){
-      const campaignButton=document.createElement('button');campaignButton.className='btn';campaignButton.id='btn-campaign';campaignButton.textContent='Saved expedition pilot';
+      const campaignButton=document.createElement('button');campaignButton.className='btn';campaignButton.id='btn-campaign';campaignButton.textContent='99 Planets campaign';
       document.getElementById('btn-begin').parentElement.append(campaignButton);
       campaignButton.onclick=()=>{const url=new URL(location.href);url.searchParams.set('map','ninetynine');url.searchParams.set('campaign','1');location.href=url.href;};
     }
@@ -518,6 +518,12 @@ export class HUD {
     this.el['btn-begin'].addEventListener('click', () => this.beginGame());
     this.el['btn-talents'].addEventListener('click', () => this.showTalents());
     this.el['btn-talents-close'].addEventListener('click', () => {
+      if(this._talentsDirty&&this.game.state==='title'){
+        // The run and commander were constructed before the purchase. Reboot
+        // the same URL after saving so the next Defend uses the paid profile.
+        if(!persistProfile()){this.toast('Upgrades could not be saved. Keep this page open and retry Apply upgrades.','warn');return;}
+        location.reload();return;
+      }
       this.el['talent-overlay'].classList.remove('show');
       this.audio?.play('click');
     });
@@ -528,6 +534,7 @@ export class HUD {
       this._reboot();
     });
     this.el['btn-new'].addEventListener('click', () => {
+      if(this.onCampaignNew){this.onCampaignNew();return;}
       storeLocal('whMap', CONFIG.mapKey);
       storeLocal('whSeed', String((Math.random() * 9e6 + 1e6) | 0));
       this._reboot();
@@ -564,7 +571,7 @@ export class HUD {
 
     this.waves.onWaveStart = (n) => {
       const boss = CONFIG.waves.count === 30 ? n % 10 === 0 : n === CONFIG.waves.count;
-      this.banner(`WAVE ${n}`, boss ? 'the colossus stirs' : this._waveTag(n), boss);
+      this.banner(`WAVE ${n}`, boss ? `${CONFIG.campaign?.boss?.name || 'The Colossus'} stirs` : this._waveTag(n), boss);
       this.audio?.play(boss ? 'boss' : 'waveStart');
       this.refresh();
     };
@@ -592,6 +599,7 @@ export class HUD {
   }
 
   beginGame() {
+    if(this._talentsDirty){this.el['btn-talents-close'].click();return;}
     if(this.onBegin?.()===false)return;
     this.el['title-overlay'].classList.remove('show');
     this.game.state = 'playing';
@@ -636,6 +644,7 @@ export class HUD {
           b.addEventListener('click', () => {
             const r = buyTalent(t.id);
             if (r.ok) {
+              this._talentsDirty=true;this.el['btn-talents-close'].textContent='Apply upgrades';
               this.toast(`${t.name} unlocked`, 'info');
               this.audio?.play('talent');
               this.renderTalents();
@@ -1062,6 +1071,7 @@ export class HUD {
     const bb = e['boss-bar'];
     if (boss) {
       bb.classList.add('show');
+      e['boss-name'].textContent=boss.type.name.toUpperCase();
       e['boss-fill'].style.transform = `scaleX(${Math.max(0, boss.hp / boss.hpMax)})`;
     } else if (bb.classList.contains('show')) {
       bb.classList.remove('show');

@@ -293,7 +293,7 @@ html, body {
   visibility: hidden;
   transition: opacity 320ms var(--ease-out), visibility 0s linear 320ms;
 }
-.overlay.show { opacity: 1; pointer-events: auto; visibility: visible; transition: opacity 320ms var(--ease-out); }
+#hud .overlay.show { opacity: 1; pointer-events: auto; visibility: visible; transition: opacity 320ms var(--ease-out); }
 .overlay-card {
   text-align: center;
   background: var(--surface-raised);
@@ -617,5 +617,11 @@ body.fp-mode #heart-panel, body.fp-mode #crystal-panel { display: none; }
 .save-import { display:inline-flex; padding:5px 8px; border:1px solid var(--hairline-strong); border-radius:4px; cursor:pointer; }
 .campaign-save button,.save-import { font-size:11px; padding:5px 8px; }
 .campaign-worlds { color:var(--text-muted); font-size:12px; margin:12px 0; }
-.campaign-worlds summary { color:var(--accent); cursor:pointer; }
+.campaign-worlds summary { color:var(--accent); cursor:pointer; pointer-events:auto; }
+.campaign-arsenal { margin:12px 0; color:var(--text-muted); font-size:12px; }
+.campaign-arsenal summary { cursor:pointer; color:var(--accent); pointer-events:auto; }
+.campaign-arsenal ul { max-height:160px; overflow:auto; text-align:left; line-height:1.8; pointer-events:auto; }
+.campaign-reset { margin:auto; max-width:480px; padding:24px; border:1px solid var(--hairline-strong); border-radius:10px; background:var(--surface-raised); color:var(--text); }
+.campaign-reset p { line-height:1.6; color:var(--text-muted); }
+.campaign-reset::backdrop { background:rgba(4,6,16,.7); }
 @media(max-width:600px) { .campaign-save { right:8px; bottom:55px; max-width:240px; } .campaign-badge { top:88px; max-width:48%; font-size:10px; } }

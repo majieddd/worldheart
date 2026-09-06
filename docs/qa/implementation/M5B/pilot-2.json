@@ -1,0 +1,808 @@
+{
+  "state": "playing",
+  "phase": "victory",
+  "wave": 15,
+  "lives": 24,
+  "gold": 512,
+  "kills": 1206,
+  "score": 23830,
+  "towers": 8,
+  "commander": [
+    {
+      "hp": 1400,
+      "hpMax": 1400,
+      "state": "roam",
+      "dir": [
+        0.9688489361636111,
+        0.24605688615800672,
+        -0.028066842873127842
+      ]
+    }
+  ],
+  "seed": 36102,
+  "trace": [
+    {
+      "action": "build",
+      "wave": 1,
+      "lives": 20,
+      "gold": 300,
+      "type": "bolt",
+      "pos": [
+        220.21462770471433,
+        96.50673525574615,
+        6.641430686818054
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "start",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "stage": "outbound",
+      "nodes": 27
+    },
+    {
+      "action": "crystal-picked-up",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "id": "crystal-36102-1",
+      "theta": 0.05
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "stage": "return",
+      "nodes": 23
+    },
+    {
+      "action": "crystal-deposited",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "ledger": {
+        "version": 1,
+        "carried": [],
+        "claimed": [
+          "crystal-36102-1"
+        ],
+        "deposited": [
+          "crystal-36102-1"
+        ],
+        "credit": 100
+      },
+      "theta": 0.05
+    },
+    {
+      "action": "crystal-funded-upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 30,
+      "creditBefore": 100,
+      "creditAfter": 0,
+      "level": 1,
+      "theta": 0.2298469387755102
+    },
+    {
+      "action": "build",
+      "wave": 2,
+      "lives": 20,
+      "gold": 43,
+      "type": "bolt",
+      "pos": [
+        220.87168595164766,
+        94.84509564893365,
+        8.810631626034757
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 2,
+      "lives": 20,
+      "gold": 7,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "draft",
+      "wave": 2,
+      "lives": 20,
+      "gold": 95,
+      "power": "deep-crit"
+    },
+    {
+      "action": "upgrade",
+      "wave": 3,
+      "lives": 20,
+      "gold": 10,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 3,
+      "lives": 20,
+      "gold": 28,
+      "id": "weapon-expedition-1-2-2-1",
+      "family": "sword",
+      "rarity": "uncommon"
+    },
+    {
+      "action": "weapon-equipped",
+      "wave": 3,
+      "lives": 20,
+      "gold": 28,
+      "id": "weapon-expedition-1-2-2-1",
+      "family": "sword"
+    },
+    {
+      "action": "upgrade",
+      "wave": 4,
+      "lives": 20,
+      "gold": 2,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 4,
+      "lives": 20,
+      "gold": 26,
+      "id": "weapon-expedition-1-2-2-2",
+      "family": "spear",
+      "rarity": "common"
+    },
+    {
+      "action": "weapon-equipped",
+      "wave": 4,
+      "lives": 20,
+      "gold": 26,
+      "id": "weapon-expedition-1-2-2-2",
+      "family": "spear"
+    },
+    {
+      "action": "build",
+      "wave": 4,
+      "lives": 20,
+      "gold": 20,
+      "type": "cryo",
+      "pos": [
+        218.91351390687004,
+        99.47586625079488,
+        6.457833443788714
+      ]
+    },
+    {
+      "action": "draft",
+      "wave": 4,
+      "lives": 20,
+      "gold": 230,
+      "power": "thrift"
+    },
+    {
+      "action": "upgrade",
+      "wave": 5,
+      "lives": 20,
+      "gold": 86,
+      "type": "cryo",
+      "tier": 1
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 5,
+      "lives": 20,
+      "gold": 98,
+      "id": "weapon-expedition-1-2-2-3",
+      "family": "spear",
+      "rarity": "common"
+    },
+    {
+      "action": "weapon-equipped",
+      "wave": 5,
+      "lives": 20,
+      "gold": 98,
+      "id": "weapon-expedition-1-2-2-3",
+      "family": "spear"
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 5,
+      "lives": 20,
+      "gold": 234,
+      "id": "weapon-expedition-1-2-2-4",
+      "family": "sword",
+      "rarity": "uncommon"
+    },
+    {
+      "action": "weapon-equipped",
+      "wave": 5,
+      "lives": 20,
+      "gold": 234,
+      "id": "weapon-expedition-1-2-2-4",
+      "family": "sword"
+    },
+    {
+      "action": "upgrade",
+      "wave": 5,
+      "lives": 20,
+      "gold": 0,
+      "type": "cryo",
+      "tier": 2
+    },
+    {
+      "action": "build",
+      "wave": 6,
+      "lives": 20,
+      "gold": 76,
+      "type": "bolt",
+      "pos": [
+        220.25522481115942,
+        96.49525587763796,
+        3.831482051422843
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 6,
+      "lives": 20,
+      "gold": 4,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 6,
+      "lives": 20,
+      "gold": 20,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "draft",
+      "wave": 6,
+      "lives": 20,
+      "gold": 258,
+      "power": "flywheel"
+    },
+    {
+      "action": "base",
+      "wave": 7,
+      "lives": 20,
+      "gold": 12,
+      "level": 2
+    },
+    {
+      "action": "possess-and-retreat",
+      "wave": 8,
+      "lives": 20,
+      "gold": 319,
+      "nodes": 114,
+      "cost": 71.7016372680664
+    },
+    {
+      "action": "build",
+      "wave": 8,
+      "lives": 20,
+      "gold": 184,
+      "type": "bolt",
+      "pos": [
+        219.35673266418132,
+        98.68417196001823,
+        1.6080259258701277
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 20,
+      "gold": 76,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 8,
+      "lives": 20,
+      "gold": 82,
+      "id": "weapon-expedition-1-2-2-6",
+      "family": "sword",
+      "rarity": "common"
+    },
+    {
+      "action": "weapon-equipped",
+      "wave": 8,
+      "lives": 20,
+      "gold": 82,
+      "id": "weapon-expedition-1-2-2-6",
+      "family": "sword"
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 20,
+      "gold": 20,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "retreat-arrived-and-posted",
+      "wave": 8,
+      "lives": 20,
+      "gold": 82
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 20,
+      "gold": 1,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 20,
+      "gold": 14,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "draft",
+      "wave": 8,
+      "lives": 20,
+      "gold": 240,
+      "power": "long-lens"
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 20,
+      "gold": 1,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 20,
+      "gold": 14,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 20,
+      "gold": 41,
+      "type": "cryo",
+      "tier": 3
+    },
+    {
+      "action": "build",
+      "wave": 10,
+      "lives": 20,
+      "gold": 439,
+      "type": "bolt",
+      "pos": [
+        221.8965083410825,
+        92.27873255386989,
+        9.322558770301528
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 20,
+      "gold": 331,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 20,
+      "gold": 155,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 20,
+      "gold": 28,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "base",
+      "wave": 10,
+      "lives": 20,
+      "gold": 36,
+      "level": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 20,
+      "gold": 95,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 20,
+      "gold": 24,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "draft",
+      "wave": 10,
+      "lives": 20,
+      "gold": 308,
+      "power": "mending"
+    },
+    {
+      "action": "upgrade",
+      "wave": 11,
+      "lives": 20,
+      "gold": 1,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "upgrade",
+      "wave": 11,
+      "lives": 20,
+      "gold": 62,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "upgrade",
+      "wave": 11,
+      "lives": 20,
+      "gold": 3,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "build",
+      "wave": 12,
+      "lives": 20,
+      "gold": 388,
+      "type": "tesla",
+      "pos": [
+        223.31449287222023,
+        89.22595617765212,
+        6.02329623162545
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 20,
+      "gold": 172,
+      "type": "tesla",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 20,
+      "gold": 33,
+      "type": "tesla",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 20,
+      "gold": 16,
+      "type": "tesla",
+      "tier": 3
+    },
+    {
+      "action": "draft",
+      "wave": 12,
+      "lives": 20,
+      "gold": 612,
+      "power": "hardened-heart"
+    },
+    {
+      "action": "upgrade",
+      "wave": 13,
+      "lives": 22,
+      "gold": 85,
+      "type": "cryo",
+      "tier": 4
+    },
+    {
+      "action": "weapon-picked-up",
+      "wave": 13,
+      "lives": 22,
+      "gold": 473,
+      "id": "weapon-expedition-1-2-2-20",
+      "family": "sword",
+      "rarity": "uncommon"
+    },
+    {
+      "action": "weapon-equipped",
+      "wave": 13,
+      "lives": 22,
+      "gold": 473,
+      "id": "weapon-expedition-1-2-2-20",
+      "family": "sword"
+    },
+    {
+      "action": "upgrade",
+      "wave": 13,
+      "lives": 22,
+      "gold": 7,
+      "type": "tesla",
+      "tier": 4
+    },
+    {
+      "action": "build",
+      "wave": 14,
+      "lives": 22,
+      "gold": 1035,
+      "type": "bolt",
+      "pos": [
+        223.33339025805068,
+        88.98894385439014,
+        8.918316390159793
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 22,
+      "gold": 927,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 22,
+      "gold": 751,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 22,
+      "gold": 488,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 22,
+      "gold": 93,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "base",
+      "wave": 14,
+      "lives": 22,
+      "gold": 17,
+      "level": 4
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 22,
+      "gold": 7,
+      "type": "bolt",
+      "tier": 5
+    },
+    {
+      "action": "draft",
+      "wave": 14,
+      "lives": 22,
+      "gold": 593,
+      "power": "hardened-heart"
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 24,
+      "gold": 1,
+      "type": "bolt",
+      "tier": 5
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 24,
+      "gold": 1,
+      "type": "bolt",
+      "tier": 5
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 24,
+      "gold": 133,
+      "type": "bolt",
+      "tier": 5
+    }
+  ],
+  "faults": [],
+  "scope": "Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile",
+  "inventory": {
+    "version": 1,
+    "items": [
+      {
+        "id": "starter-28183",
+        "seed": 28183,
+        "tier": 1,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "balanced",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-1",
+        "seed": 2013013496,
+        "tier": 1,
+        "family": "carbine",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "long",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-2",
+        "seed": 2108306693,
+        "tier": 1,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "steady",
+          "core": "ember"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-1",
+        "seed": 2690661315,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "long",
+          "grip": "balanced",
+          "core": "ember"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-2",
+        "seed": 945372618,
+        "tier": 2,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "long",
+          "grip": "weighted",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-3",
+        "seed": 1287322961,
+        "tier": 2,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "steady",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-4",
+        "seed": 192736594,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "long",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [
+          "farseeing"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-6",
+        "seed": 2647749002,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "broad",
+          "grip": "steady",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-2-2-20",
+        "seed": 2413145999,
+        "tier": 2,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "broad",
+          "grip": "balanced",
+          "core": "tempered"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      }
+    ],
+    "slots": [
+      "weapon-expedition-1-2-2-20",
+      null
+    ],
+    "active": 0,
+    "scrap": 0
+  },
+  "weaponLoop": true
+}

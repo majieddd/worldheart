@@ -1,0 +1,70 @@
+{
+  "scope": "Title purchase fixtures, including failed-write hold and normal same-planet apply",
+  "results": [
+    {
+      "campaign": false,
+      "before": {
+        "gold": 450,
+        "seed": 28183,
+        "url": "http://127.0.0.1:8139/?map=ninetynine&seed=12345"
+      },
+      "after": {
+        "gold": 600,
+        "seed": 28183,
+        "url": "http://127.0.0.1:8139/?map=ninetynine&seed=12345",
+        "profile": {
+          "version": 2,
+          "planetsBeaten": 0,
+          "coins": 700,
+          "towers": [
+            "bolt",
+            "cryo"
+          ],
+          "commanders": [
+            "commander"
+          ],
+          "bonuses": {
+            "interest": true
+          },
+          "loadout": "bolt"
+        }
+      },
+      "failedSaveHeld": true,
+      "faults": [],
+      "pass": true
+    },
+    {
+      "campaign": true,
+      "before": {
+        "gold": 450,
+        "seed": 28183,
+        "url": "http://127.0.0.1:8139/?map=ninetynine&seed=12345&campaign=1"
+      },
+      "after": {
+        "gold": 600,
+        "seed": 28183,
+        "url": "http://127.0.0.1:8139/?map=ninetynine&seed=12345&campaign=1",
+        "profile": {
+          "version": 2,
+          "planetsBeaten": 0,
+          "coins": 700,
+          "towers": [
+            "bolt",
+            "cryo"
+          ],
+          "commanders": [
+            "commander"
+          ],
+          "bonuses": {
+            "interest": true
+          },
+          "loadout": "bolt"
+        },
+        "planet": 1
+      },
+      "failedSaveHeld": true,
+      "faults": [],
+      "pass": true
+    }
+  ]
+}

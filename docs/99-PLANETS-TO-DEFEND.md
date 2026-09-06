@@ -214,8 +214,8 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 | Camera/POV/animation polish and readable strike zones | partial, M1 implementation verified | [Camera ownership, paused visibility and arm comparison](qa/implementation/M1.md); owner feel and M4 telegraph acceptance remain open |
 | Crystal-driven explicit upgrades are the only frontier expansion trigger | implemented, review open | [M2 ledger, expedition and boss victory](qa/implementation/M2.md); terrain profile sampling continues in M3 |
 | Massive terrain variation, swimming, slope cost, climate placement, flight ceilings, spherical ranges | implemented, review open | [M3 four profiles, route and range fixtures, unforced victory](qa/implementation/M3.md); extreme-cliff framing and startup review open |
-| Weapon inventory, loot, modular customization and era arc | implemented prototype; retention next | [M4 gameplay and pose evidence](qa/implementation/M4.md); M5 extraction/retention and wider visual review remain |
-| Actual 99-planet continuation and final ending | two-world continuation implemented | [M5A natural linked wins and checkpoint recovery](qa/implementation/M5A.md); third pilot and 99 content expansion remain |
+| Weapon inventory, loot, modular customization and era arc | implemented prototype with retention | [M4 gameplay and poses](qa/implementation/M4.md), [M5B extraction, era and distribution checks](qa/implementation/M5B.md); wider visual review remains |
+| Actual 99-planet continuation and final ending | implemented; release acceptance active | [M5B three unforced planets, 99 routes and live boundary fixtures](qa/implementation/M5B.md); later combat balance/full completion remain |
 | PvPvE galaxies and platform ports | not yet | M6 after single-player evidence |
 
 ## Task list
@@ -233,11 +233,18 @@ harnesses passed. The final Highlands run completed its crystal expedition and
 wave-15 victory. Visual feel, cliff framing and startup review remain open.
 M4 weapon/inventory and choreography work is implemented on feature/99-planets-weapons:
 187 tests, 27 browser checks and an unforced victory with five recovered weapons.
-The red strike volume shares its damage predicate. Extraction follows in M5;
+The red strike volume shares its damage predicate. M5 now supplies extraction;
 broader visual and combat-feel review remains open.
 M5A on feature/99-planets-campaign has two unforced linked victories, eight
 extracted weapons at the pilot ending, 200 headless tests and 16 browser recovery
-fixtures. The representative third pilot and 99-node route remain M5 work.
+fixtures. M5B on feature/99-planets-content adds the completed third pilot,
+99 destinations, thirteen milestone guardians, all 1,485 isolated route arrivals,
+seven live boundary fixtures and the campaign preview identity/briefing. Ocean
+combat defeats are preserved, and earned-coin retries continue. The title talent
+apply flow was repaired after testing found the prepared run kept its old profile.
+The [M5B evidence record](qa/implementation/M5B.md) separates fixtures from play.
+Full-route unforced completion, performance, broader feel/visual acceptance and
+the production default/rename release remain open.
 M6 remains future. The stacked feature PRs are not merged
 to production.
 

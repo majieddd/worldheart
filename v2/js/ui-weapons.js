@@ -43,6 +43,7 @@ export class WeaponPanel {
   open() {
     if (!this.api.canInteract() || this.dialog.open) return;
     this.wasPaused = this.game.paused; this.game.paused = true; this.possession.suspend(true);
+    this.ui.rig.keys.clear();this.ui.rig.velLon=0;this.ui.rig.velLat=0;this.ui.rig.cancelFlight();
     this.game.cancelBuild(); this.ui.reflectPause?.(); this.notice = '';
     this.render(); this.dialog.showModal(); this.dialog.querySelector('button').focus();
   }

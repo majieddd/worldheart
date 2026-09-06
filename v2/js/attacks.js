@@ -10,5 +10,5 @@ export function insideStrike(offset, up, facing, radius, arcDeg = 360) {
   return length < 1e-8 || (x * facing.x + y * facing.y + z * facing.z) / length >= Math.cos(arcDeg * Math.PI / 360) - 1e-8;
 }
 export function enemyStrike(type) {
-  return { radius: type.reach + 0.35, arcDeg: type.boss ? 120 : 100, wind: type.wind, damage: type.atk };
+  return { radius: type.reach + 0.35, arcDeg: type.arcDeg ?? (type.boss ? 120 : 100), wind: type.wind, damage: type.atk };
 }

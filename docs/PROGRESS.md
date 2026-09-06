@@ -1,6 +1,6 @@
 # 99 Planets development progress
 
-Updated 2026-09-05. This is the collaborator entry point for the owner's new direction.
+Updated 2026-09-06. This is the collaborator entry point for the owner's new direction.
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
@@ -27,8 +27,8 @@ Issue closure requires evidence, not just a merged diff. Proposed future impleme
 | M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | implemented; feel review open | Codex, feature/99-planets-camera | M0 | [Input harness and Bulwark comparison](qa/implementation/M1.md); full visual acceptance remains open |
 | M2 | [M2 implementation issue](https://github.com/majieddd/worldheart/issues/4) | implemented; review open | Codex, feature/99-planets-crystals | M0-M1 | [Resource fixtures and unforced expedition/boss victory](qa/implementation/M2.md) |
 | M3 | [M3 implementation issue](https://github.com/majieddd/worldheart/issues/5) | implemented; review open | Codex, feature/99-planets-terrain | M2 | [Terrain, ground/air routes, range agreement and unforced boss victory](qa/implementation/M3.md); cliff framing/startup/feel review open |
-| M4 | [M4 implementation issue](https://github.com/majieddd/worldheart/issues/6) | implemented; extraction/visual review open | Codex, feature/99-planets-weapons | M1/M3 | [187 tests, 27 browser checks and unforced loot/equip/boss victory](qa/implementation/M4.md); M5 supplies extraction |
-| M5 | [M5 implementation issue](https://github.com/majieddd/worldheart/issues/7) | active; two-world continuation verified | Codex, feature/99-planets-campaign | M4 | [M5A two natural wins, saved inventory arrival, 16 recovery fixtures](qa/implementation/M5A.md); third pilot/99 content/rename next |
+| M4 | [M4 implementation issue](https://github.com/majieddd/worldheart/issues/6) | implemented; visual review open | Codex, feature/99-planets-weapons | M1/M3 | [M4 combat/loot evidence](qa/implementation/M4.md); M5A/B now verify extraction and retention |
+| M5 | [M5 implementation issue](https://github.com/majieddd/worldheart/issues/7) | 99-route implementation verified; release acceptance active | Codex, feature/99-planets-content | M4 | [M5B three unforced planets, 99 navigation checks, boundary/recovery fixtures and preserved ocean defeats](qa/implementation/M5B.md); full campaign balance, performance and public default/rename release open |
 | M6 | [M6 implementation issue](https://github.com/majieddd/worldheart/issues/8) | future | unassigned | M5 | Authoritative co-op/PvPvE prototype, then independent native platform feasibility evidence |
 
 ## Verification record

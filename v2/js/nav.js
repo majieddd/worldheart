@@ -151,7 +151,10 @@ export class NavGraph {
     // resolution) and cheap because the land test skips slope and forest.
     const scoutDetail = DETAIL > 6 ? DETAIL - 1 : 0;
 
-    for (let attempt = 0; attempt < 14; attempt++) {
+    // Ocean campaign fronts can exhaust the old fourteen-seed neighborhood
+    // without a dry buildable anchor. Keep deterministic retries and all site
+    // constraints, but give these varied worlds a wider bounded search.
+    for (let attempt = 0; attempt < (CONFIG.terrain ? 32 : 14); attempt++) {
       this.attempts = attempt + 1;
       if (attempt > 0) {
         CONFIG.seed = (CONFIG.seed + 7919) >>> 0;

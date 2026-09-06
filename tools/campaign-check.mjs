@@ -42,8 +42,28 @@ try{
  await endVisible();await page.screenshot({path:resolve(out,'defeat-720.png')});
  await Promise.all([page.waitForEvent('load',{timeout:180000}),page.locator('#btn-retry').click()]);await boot();await page.locator('#btn-begin').click();
  check('Retry starts the same planet with previously banked items',await page.evaluate(()=>WH.mode99.campaign.state().planet===2&&!WH.mode99.inventory.items.some(x=>x.id==='unbanked-fixture')));
- await finish();await page.locator('#btn-extract').click();
- check('The pilot ends distinctly after its last planet',await page.evaluate(()=>WH.mode99.campaign.state().status==='complete'&&document.getElementById('end-mark').textContent==='EXPEDITION COMPLETE'));
+ await finish();
+ while((await state()).campaign.planet<3){
+   await Promise.all([page.waitForEvent('load',{timeout:180000}),page.locator('#btn-extract').click()]);await boot();await page.locator('#btn-begin').click();
+   const pilot=await page.evaluate(async()=>{
+     const {generateWeapon,eraForPlanet}=await import('/js/run/weapons.js'),{makeRng}=await import('/js/run/rng.js'),m=WH.mode99,a=WH.allies.active.find(a=>a.type.commander),records=[];
+     for(const tier of [1,34,67]){const item=generateWeapon({id:`era-fixture-${tier}`,seed:42,tier,family:'sword',rng:makeRng(42)});m.inventory.register(item);m.inventory.pickup(item.id);m.weapons.request({kind:'equip',id:item.id,slot:0});records.push({tier,era:item.era,model:a.modelKey,damage:a.type.strike.dmg,ok:item.era===eraForPlanet(tier)&&a.modelKey.includes(item.era)&&Number.isFinite(a.type.strike.dmg)});}
+     return{terrain:WH.CONFIG.terrainKey,records};
+   });
+   check('The third terrain pilot equips all three era fixtures through live combat stats',pilot.terrain==='alpine'&&pilot.records.every(x=>x.ok)&&pilot.records[0].damage<pilot.records[1].damage&&pilot.records[1].damage<pilot.records[2].damage,pilot);
+   await finish();
+ }
+ // The first three transitions above run in the live shell. Advance a valid
+ // checkpoint with pure fixtures to exercise the final receipt without
+ // pretending that 96 intervening planets were naturally played.
+ await page.evaluate(async()=>{
+   const {campaignStore}=await import('/js/modes/campaign-store.js');
+   const {beginAssault,resolveAssault,extractPlanet}=await import('/js/run/campaign.js');
+   campaignStore.commit(s=>{const e=s.expedition,inventory=e.assault.victory.inventory;extractPlanet(s,e.assault.id,inventory);while(e.planet<e.limit){const id=beginAssault(s,{commander:e.commander,inventory,effectiveSeed:1});resolveAssault(s,id,'victory',{inventory,drops:[],kills:0,score:0,lives:24});extractPlanet(s,id,inventory);}return true;});
+ });
+ await page.reload({waitUntil:'domcontentloaded',timeout:180000});await boot();await page.locator('#btn-begin').click();await finish();
+ await page.locator('#btn-extract').click();
+ check('The final checkpoint fixture ends distinctly after planet 99',await page.evaluate(()=>WH.mode99.campaign.state().status==='complete'&&WH.mode99.campaign.state().planet===99&&document.getElementById('end-mark').textContent==='EXPEDITION COMPLETE'));
  await endVisible();await page.screenshot({path:resolve(out,'complete-720.png')});
  await page.setViewportSize({width:1920,height:1080});await page.screenshot({path:resolve(out,'complete-1080.png')});
  await page.setViewportSize({width:390,height:844});await page.screenshot({path:resolve(out,'complete-390.png')});
@@ -56,6 +76,13 @@ try{
  const imported=resolve(out,'exported-checkpoint.json');writeFileSync(imported,exported);
  await Promise.all([page.waitForEvent('load',{timeout:180000}),page.locator('#campaign-save input[type="file"]').setInputFiles(imported)]);await boot();
  check('Import validates and restores the exported expedition',await page.evaluate(()=>WH.mode99.campaign.state().status==='complete'));
+ await page.locator('#btn-begin').click();await endVisible();
+ await page.locator('.campaign-arsenal summary').click();check('The final receipt exposes its banked arsenal',await page.locator('.campaign-arsenal li').count()>0);
+ const beforeNew=await page.evaluate(()=>({id:WH.mode99.campaign.state().id,coins:JSON.parse(localStorage.getItem('wh99Campaign')).account.coins}));
+ await page.locator('#btn-new').click();await page.keyboard.press('Escape');
+ check('Canceling a new expedition preserves the completed checkpoint',(await state()).campaign.id===beforeNew.id&&(await state()).campaign.status==='complete');
+ await page.locator('#btn-new').click();await Promise.all([page.waitForEvent('load',{timeout:180000}),page.locator('[data-reset="start"]').click()]);await boot();
+ check('An explicitly confirmed new expedition keeps account coins and resets the route',await page.evaluate(expected=>{const e=WH.mode99.campaign.state();return e.planet===1&&e.status==='ready'&&e.id!==expected.id&&e.banked===null&&JSON.parse(localStorage.getItem('wh99Campaign')).account.coins===expected.coins;},beforeNew));
  writeFileSync(resolve(out,'campaign-results.json'),JSON.stringify({scope:'Injected wave-clear and persistence fixtures, not natural campaign completion',checks,faults},null,2)+'\n');
  console.log(JSON.stringify({checks:checks.length,failed:checks.filter(x=>!x.ok),faults}));if(faults.length||checks.some(x=>!x.ok))process.exitCode=1;
 }catch(error){console.error(error);await page.screenshot({path:resolve(out,'error.png')});writeFileSync(resolve(out,'partial.json'),JSON.stringify({checks,faults,error:String(error)},null,2));process.exitCode=1;}finally{await browser.close();}

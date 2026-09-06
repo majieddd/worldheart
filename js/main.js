@@ -433,7 +433,7 @@ async function boot() {
 
   caches = new CacheField(scene);
   possession = new Possession({ canvas, rig, allies, game, ui: null, caches, scene });
-  rig.inputBlocked = () => possession.active;
+  rig.inputBlocked = () => possession.active || !!document.querySelector('dialog[open]');
   // The weapon in your hands, drawn in its own pass over the world.
   viewModel = new ViewModel();
   possession.viewModel = viewModel;
