@@ -552,10 +552,11 @@ export class Tower {
     let d = desired - this.yaw;
     while (d > Math.PI) d -= Math.PI * 2;
     while (d < -Math.PI) d += Math.PI * 2;
-    const step = clamp(d, -rate * dt, rate * dt);
+    const eased = CONFIG.terrain ? d * (1-Math.exp(-18*dt)) : d;
+    const step = clamp(eased, -rate * dt, rate * dt);
     this.yaw += step;
     this.head.rotation.y = this.yaw;
-    return Math.abs(d) < 0.15;
+    return Math.abs(d-step) < 0.15;
   }
 
   update(dt, enemies, fx) {

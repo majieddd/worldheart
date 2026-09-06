@@ -8,10 +8,12 @@ const require=createRequire(process.env.WH_NODE_MODULES?resolve(process.env.WH_N
 const {chromium}=require('playwright');
 const seed=process.argv[2]||'12345',out=resolve(process.argv[3]||`artifacts/self-play-${seed}`);mkdirSync(out,{recursive:true});
 const expeditionOnly=process.argv.includes('--expedition');
+const useWeapons=process.argv.includes('--weapons');
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:720}});const faults=[];
 page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
 await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(window.__qaFramesEnabled)fn(t);});});
+await page.addInitScript(value=>{window.__qaUseWeapons=value;},useWeapons);
 try{
   await page.goto(`http://127.0.0.1:8139/?map=ninetynine&seed=${seed}`);
   await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:120000});
@@ -47,11 +49,35 @@ try{
       }
       g.cancelBuild();return false;
     }
-    let retreating=false;
+    let retreating=false,weaponAttempted=false;
     window.__qaPolicy=()=>{
       if(g.state!=='playing'||run.getPhase()==='victory')return;
       const commander=W.allies.active.find(a=>a.type.commander);
-      if(commander&&!retreating&&(run.getWave()>=8||commander.hp<commander.hpMax*.8)&&window.__qaTripState==='done'){
+      if(window.__qaUseWeapons&&commander&&W.mode99.weapons){
+        const mode=W.mode99;
+        for(const item of mode.weapons.nearby())if(mode.weapons.pickup(item.id)){
+          trace('weapon-picked-up',{id:item.id,family:item.family,rarity:item.rarity});
+          if(mode.weaponPanel.rules.compatible(item.family)&&mode.weapons.request({kind:'equip',id:item.id,slot:0}))trace('weapon-equipped',{id:item.id,family:item.family});
+        }
+        if(!weaponAttempted&&!retreating&&window.__qaTripState==='done'&&run.getWave()<=7&&commander.hp>commander.hpMax*.85&&W.enemies.active.filter(e=>!e.dead).length<12){
+          const candidates=[...mode.loot.entries.values()].filter(e=>mode.weaponPanel.rules.compatible(e.item.family)).map(e=>({entry:e,path:W.nav.findPath(commander.dir,e.position.clone().normalize())})).filter(x=>x.path.length&&x.path.cost<30).sort((a,b)=>a.path.cost-b.path.cost);
+          const chosen=candidates[0];
+          if(chosen){
+            weaponAttempted=true;W.possession.enter(commander);let waypoint=0;
+            trace('weapon-expedition',{id:chosen.entry.item.id,nodes:chosen.path.length,cost:chosen.path.cost});
+            window.__qaWeaponTrip=()=>{
+              const id=chosen.entry.item.id;
+              if(!mode.loot.entries.has(id)||commander.hp<commander.hpMax*.65){dispatchEvent(new KeyboardEvent('keyup',{code:'KeyW'}));W.possession.exit();window.__qaWeaponTrip=null;trace('weapon-expedition-ended',{recovered:mode.inventory.items.some(x=>x.id===id)});return;}
+              let aim=chosen.entry.position.clone().normalize();
+              while(waypoint<chosen.path.length){const p=W.nav.nodeDir(chosen.path[waypoint],new THREE.Vector3());if(commander.dir.angleTo(p)*240>.32){aim=p;break;}waypoint++;}
+              const tangent=aim.clone().addScaledVector(commander.dir,-aim.dot(commander.dir)).normalize(),right=new THREE.Vector3().crossVectors(commander.fwd,commander.dir).normalize();
+              const turn=Math.atan2(tangent.dot(right),tangent.dot(commander.fwd));
+              W.possession.canvas.dispatchEvent(new MouseEvent('mousemove',{buttons:2,movementX:turn/.0032}));dispatchEvent(new KeyboardEvent(Math.abs(turn)<.6?'keydown':'keyup',{code:'KeyW'}));
+            };
+          }
+        }
+      }
+      if(commander&&!retreating&&!window.__qaWeaponTrip&&(run.getWave()>=8||commander.hp<commander.hpMax*.8)&&window.__qaTripState==='done'){
         W.possession.enter(commander);retreating=true;
         if(W.CONFIG.terrain){
           const options=[];
@@ -148,7 +174,7 @@ try{
   });
   let lastWave=0,lastTrip='',result;
   for(let i=0;i<900;i++){
-    result=await page.evaluate(()=>{__qaPolicy();for(let n=0;n<20;n++){window.__qaTrip?.();window.__qaRetreat?.();WH.step(.1);}return {state:WH.game.state,phase:WH.mode99.run.getPhase(),wave:WH.mode99.run.getWave(),lives:WH.game.lives,gold:WH.game.gold,kills:WH.game.kills,score:WH.game.score,towers:WH.towers.towers.length,commander:WH.allies.active.filter(a=>a.type.commander).map(a=>({hp:a.hp,hpMax:a.hpMax,state:a.state,dir:a.dir.toArray()})),seed:WH.CONFIG.seed};});
+    result=await page.evaluate(()=>{__qaPolicy();for(let n=0;n<20;n++){window.__qaTrip?.();window.__qaWeaponTrip?.();window.__qaRetreat?.();WH.step(.1);}return {state:WH.game.state,phase:WH.mode99.run.getPhase(),wave:WH.mode99.run.getWave(),lives:WH.game.lives,gold:WH.game.gold,kills:WH.game.kills,score:WH.game.score,towers:WH.towers.towers.length,commander:WH.allies.active.filter(a=>a.type.commander).map(a=>({hp:a.hp,hpMax:a.hpMax,state:a.state,dir:a.dir.toArray()})),seed:WH.CONFIG.seed};});
     if(result.wave!==lastWave){lastWave=result.wave;console.log(JSON.stringify(result));await page.screenshot({path:resolve(out,`wave-${String(lastWave).padStart(2,'0')}.png`)});}
     const trip=await page.evaluate(()=>window.__qaTripState||'');
     if(i>0&&i%50===0)console.log('PROGRESS '+JSON.stringify(await page.evaluate(()=>({time:WH.enemies.time,trip:window.__qaTripState,live:WH.enemies.active.length,stopped:WH.enemies.active.filter(e=>e.moveV===0).map(e=>({type:e.typeKey,node:e.node,next:WH.nav.next[e.node],height:e.height}))}))));
@@ -158,7 +184,8 @@ try{
   }
   await page.screenshot({path:resolve(out,'terminal.png')});
   result.trace=await page.evaluate(()=>__qaTrace);result.faults=faults;result.scope='Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile';
+  if(useWeapons){result.inventory=await page.evaluate(()=>WH.mode99.inventory.snapshot());result.weaponLoop=result.trace.some(a=>a.action==='weapon-picked-up')&&result.trace.some(a=>a.action==='weapon-equipped');}
   if(expeditionOnly)result.scope='Unforced instrumented crystal out-and-back; not a full planet';
   writeFileSync(resolve(out,'run.json'),JSON.stringify(result,null,2)+'\n');console.log('TERMINAL '+JSON.stringify({...result,trace:result.trace.length}));
-  if((expeditionOnly?lastTrip!=='done':result.phase!=='victory')||faults.length)process.exitCode=1;
+  if((expeditionOnly?lastTrip!=='done':result.phase!=='victory')||faults.length||(useWeapons&&!result.weaponLoop))process.exitCode=1;
 }catch(e){console.error(e);await page.screenshot({path:resolve(out,'error.png')});process.exitCode=1;}finally{await browser.close();}

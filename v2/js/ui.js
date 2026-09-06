@@ -838,6 +838,7 @@ export class HUD {
       ? `Highest damage: <b style="color:var(--accent)">${top.def.name}</b> with ${fmt(Math.round(top.damageDealt))}.`
       : 'The world stood undefended.';
     e['btn-continue'].style.display = won ? '' : 'none';
+    e['btn-continue'].textContent = CONFIG.mapKey==='ninetynine' ? 'Collect remaining loot' : 'Hold the line (endless)';
     e['end-overlay'].classList.add('show');
     this.game.paused = true;
     this.audio?.play(won ? 'victory' : 'defeat');

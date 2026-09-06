@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { PALETTE } from './config.js';
 import { slab, cone, merge, shift, spin, keyed, hump } from './rig.js';
+import { STRIKE_AT } from './attacks.js';
 
 // The thing in your hands.
 //
@@ -449,6 +450,7 @@ export class ViewModel {
   }
 
   show(typeKey) {
+    this.typeKey = typeKey;
     if (this.current) this.current.visible = false;
     this.current = this._model(typeKey);
     this.current.visible = true;
@@ -466,11 +468,34 @@ export class ViewModel {
   // Called every frame while possessed, after the main camera is placed.
   update(dt, cam, unit, opts = {}) {
     if (!this.visible || !this.current) return;
+    const visual = unit.weaponView || unit.typeKey;
+    if (visual !== this.typeKey) this.show(visual);
+    const appearance = `${unit.weaponFamily}:${unit.weaponTint}:${unit.weaponLength}:${unit.weaponEra}:${unit.weaponCore}`;
+    if (this.current.userData.appearance !== appearance) {
+      this.current.userData.appearance = appearance;
+      this.current.traverse(o => {
+        if (!o.isMesh) return;
+        if (!o.userData.weaponMaterial) {
+          o.userData.energyPart=o.material===MAT.energy;o.userData.metalPart=o.material===MAT.steel||o.material===MAT.gold;
+          o.material = o.material.clone(); o.userData.weaponMaterial = true; o.userData.baseColor = o.material.color.clone();
+          o.userData.baseEmission=o.material.emissive.clone();o.userData.baseIntensity=o.material.emissiveIntensity;
+        }
+        o.material.color.copy(o.userData.baseColor);
+        o.material.emissive.copy(o.userData.baseEmission);o.material.emissiveIntensity=o.userData.baseIntensity;
+        if (unit.weaponFamily) o.material.color.multiply(new THREE.Color(unit.weaponTint));
+        if(unit.weaponEra&&o.userData.energyPart){
+          const color={tempered:0xffd399,ember:0xff794d,frost:0x91ddff,pulse:0xa9a0ff}[unit.weaponCore];
+          o.material.color.setHex(color);o.material.emissive.setHex(color);o.material.emissiveIntensity={ancient:.12,technological:1.3,empowered:2.2}[unit.weaponEra];
+        }
+        if(unit.weaponEra&&o.userData.metalPart)o.material.color.setHex(unit.weaponEra==='technological'?0xcbe4ef:0xcaa56f);
+      });
+      this.current.scale.set(VM_SCALE, VM_SCALE, VM_SCALE * (unit.weaponLength || 1));
+    }
     this.t += dt;
     const g = this.grip;
     const kind = unit.type.strike?.kind || 'melee';
-    const twin = unit.typeKey === 'duelist';
-    const spear = unit.typeKey === 'warden';
+    const twin = !unit.weaponFamily && unit.typeKey === 'duelist';
+    const spear = unit.weaponVisual === 'spear' || (!unit.weaponFamily && unit.typeKey === 'warden');
     const rest = kind !== 'melee' ? RESTS.ranged : twin ? RESTS.twin : spear ? RESTS.spear : RESTS.melee;
 
     // Progress through the current swing, if any.
@@ -521,9 +546,10 @@ export class ViewModel {
     rz += Math.max(-0.09, Math.min(0.09, this._sway.x)) * 1.4;
 
     if (p >= 0) {
-      if (kind === 'hitscan') {
+      if (kind === 'hitscan' || kind === 'projectile') {
         // A short punch straight back with muzzle climb, decaying fast.
-        const rec = Math.exp(-p * 7);
+        const release = kind === 'projectile' ? STRIKE_AT.projectile : 0;
+        const rec = p < release ? -0.12 * p / release : Math.exp(-(p - release) * 7);
         oz += 0.16 * g * rec;
         rx += 0.30 * rec;
         ry += 0.05 * rec;
@@ -572,7 +598,7 @@ export class ViewModel {
     _e.set(rx, ry, rz, 'YXZ');
     _lq.setFromEuler(_e);
     this.current.quaternion.copy(_lq);
-    this.current.scale.setScalar(VM_SCALE);
+    this.current.scale.set(VM_SCALE, VM_SCALE, VM_SCALE * (unit.weaponLength || 1));
     // The twin blades swap which hand leads: the striking blade is brought to
     // the centre of the frame, the other stays out at its side.
     if (unit.typeKey === 'duelist') {

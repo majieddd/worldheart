@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Skeleton, slab, box, wedge, cone, merge, mirrorX, shift, spin, grow, easeOut, easeIn, smooth, hump, keyed } from './rig.js';
+import { STRIKE_AT } from './attacks.js';
 
 // The friendly bodies: one humanoid rig, six builds, one pose function.
 //
@@ -230,8 +231,9 @@ export const ARCHETYPES = {
   oracle: { w: 0.88, helmet: 'crown', crest: 'gem', cape: true, weapon: 'staff', twoHand: true, pauldron: 'small' },
 };
 
-export function buildSoldier(key, mats) {
-  const spec = ARCHETYPES[key];
+export function buildSoldier(key, mats, weapon = null) {
+  const spec = { ...ARCHETYPES[key] };
+  if (weapon) { spec.weapon = weapon; spec.twoHand = ['spear', 'rifle', 'mortar', 'staff'].includes(weapon); }
   const w = spec.w;
   const sk = buildSkeleton(w);
   const P = new PartList(sk);
@@ -399,7 +401,6 @@ const SPEED_ARM = 0.5;
 
 // Where along the swing the blade connects, per kind. allies.js resolves the
 // hit at the same fraction, so the number is here once and read there.
-export const STRIKE_AT = { melee: 0.40, twin: 0.34, hitscan: 0.05, lob: 0.42, beam: 0 };
 
 export function poseSoldier(sk, spec, a, st, t) {
   sk.reset();
@@ -485,6 +486,7 @@ export function poseSoldier(sk, spec, a, st, t) {
     else if (kind === 'melee' && spec.weapon === 'spear') thrust(J, p);
     else if (kind === 'melee') cleave(J, p, a.swingSide || 1);
     else if (kind === 'hitscan') recoil(J, p);
+    else if (kind === 'projectile') recoil(J, Math.max(0, (p - STRIKE_AT.projectile) / (1 - STRIKE_AT.projectile)));
     else if (kind === 'lob') overhand(J, p);
   }
   if (kind === 'beam') brace(J, a, t);

@@ -3,6 +3,7 @@ import { CONFIG, PALETTE } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
 import { R, terrainHeight, surfaceTravel, canFlyAt } from './world.js';
 import { MAX_SLOW, swimOffset } from './traversal.js';
+import { enemyStrike, insideStrike } from './attacks.js';
 import { Skeleton, slab, box, wedge, cone, merge, shift, spin, easeOut, hump, keyed } from './rig.js';
 
 // Evolution tier, set by the 99 Planets shell and 0 in every other mode.
@@ -141,6 +142,8 @@ class Enemy {
     // Last frame's heading, kept by the renderer to read the turn rate off.
     // Allocated once per pooled body, never per frame.
     this.prevFwd = new THREE.Vector3();
+    this.renderDir = new THREE.Vector3();
+    this.attackOrigin = new THREE.Vector3(); this.attackFacing = new THREE.Vector3(); this.attackUp = new THREE.Vector3();
     this.active = false;
   }
   init(typeKey, type, dirVec, node, hpScale) {
@@ -155,6 +158,7 @@ class Enemy {
     this.speed = type.speed;
     this.slowFrac = 0;
     this.slowT = 0;
+    this.burnT = 0; this.burnDps = 0; this.burnTick = 0;
     this.swimming = false;
     this.stunT = 0;
     this.flashT = 0;
@@ -171,6 +175,7 @@ class Enemy {
     this.isSplit = false;
     this.atkCd = 0;
     this.windT = 0;
+    this.attackPlan = null;
     this.scanT = 0;
     this.atkVictim = null;
     // Player chase (see the note above SPOT): chaseT is how long the current
@@ -214,6 +219,7 @@ class Enemy {
     this.fwd.crossVectors(this.dir, _tmp).normalize();
     this.prevFwd.copy(this.fwd);
     this.height = terrainHeight(this.dir.x, this.dir.y, this.dir.z);
+    this.renderDir.copy(this.dir); this.renderHeight = Math.max(0.03,this.height);
   }
 }
 
@@ -1144,7 +1150,15 @@ export class EnemyManager {
       const v = e.atkVictim;
       e.atkVictim = null;
       e.atkCd = blowCd(type);
-      if (v && v.active && !v.dead) {
+      if (e.attackPlan) {
+        const plan = e.attackPlan; e.attackPlan = null;
+        for (const a of this.allies.active) {
+          if (!a.active || a.dead) continue;
+          this.allies.worldPos(a,_alPos).sub(e.attackOrigin);
+          if (!insideStrike(_alPos,e.attackUp,e.attackFacing,plan.radius,plan.arcDeg)) continue;
+          this.allies.damage(a,plan.damage * this.atkScale); this.onMeleeHit?.(e,a);
+        }
+      } else if (v && v.active && !v.dead) {
         this.enemyPos(e, _mePos);
         this.allies.worldPos(v, _alPos);
         if (_alPos.distanceTo(_mePos) <= type.reach + 0.35) {
@@ -1173,6 +1187,13 @@ export class EnemyManager {
     if (!best) { e.scanT = MELEE_SCAN; return false; }
     e.atkVictim = best;
     e.windT = type.wind;
+    if (CONFIG.terrain) {
+      e.attackPlan = enemyStrike(type); e.attackOrigin.copy(_mePos); e.attackUp.copy(e.dir);
+      this.allies.worldPos(best,e.attackFacing).sub(_mePos);
+      e.attackFacing.addScaledVector(e.dir,-e.attackFacing.dot(e.dir));
+      if (e.attackFacing.lengthSq() < 1e-8) e.attackFacing.copy(e.fwd); else e.attackFacing.normalize();
+      e.fwd.copy(e.attackFacing);
+    }
     if (this.onMeleeWindUp) this.onMeleeWindUp(e, best);
     return true;
   }
@@ -1256,6 +1277,7 @@ export class EnemyManager {
       // in progress dies with the body: a corpse's blow must never land.
       e.dying = DYING_T;
       e.windT = 0;
+      e.attackPlan = null;
       e.atkVictim = null;
       e.chaseT = 0;
     }
@@ -1317,6 +1339,11 @@ export class EnemyManager {
     e.stunT = Math.max(e.stunT, dur);
   }
 
+  applyBurn(e, dps, duration) {
+    if (!e.active || e.dead || !(dps > 0) || !(duration > 0)) return;
+    e.burnDps = Math.max(e.burnDps, dps); e.burnT = Math.max(e.burnT, duration);
+  }
+
   applyBrittle(e, dur) {
     if (!e.active) return;
     e.brittle = Math.max(e.brittle, dur);
@@ -1350,6 +1377,13 @@ export class EnemyManager {
       e.flashT = Math.max(0, e.flashT - dt);
       e.brittle = Math.max(0, e.brittle - dt);
       if (e.slowT > 0) { e.slowT -= dt; if (e.slowT <= 0) e.slowFrac = 0; }
+      if (e.burnT > 0 && !e.dead) {
+        e.burnTick += Math.min(dt, e.burnT); e.burnT = Math.max(0, e.burnT - dt);
+        if (e.burnTick >= 0.5 || e.burnT === 0) {
+          this.damage(e, e.burnTick * e.burnDps, { armorPierce: 99 }); e.burnTick = 0;
+          if (e.burnT === 0) e.burnDps = 0;
+        }
+      }
       // Cleared before any early exit below, so a held or stunned body reports
       // no progress and its gait freezes with it.
       e.moveV = 0;
@@ -1438,6 +1472,7 @@ export class EnemyManager {
         if (_tmp.lengthSq() < 1e-10) _tmp.copy(e.dir); else _tmp.normalize();
         e.fwd.applyAxisAngle(_tmp, off * Math.min(1, turn * dt));
       }
+      if (swinging && e.attackPlan) e.fwd.copy(e.attackFacing);
       const fd = e.fwd.dot(e.dir);
       e.fwd.addScaledVector(e.dir, -fd).normalize();
 
@@ -1538,15 +1573,20 @@ export class EnemyManager {
     this._syncTint();
     const evo = evoTraits();
     const inv = dt > 1e-6 ? 1 / dt : 0;
-    const kMove = Math.min(1, dt * 10);
-    const kStun = Math.min(1, dt * 14);
-    const kTurn = Math.min(1, dt * 6);
+    const kMove = 1-Math.exp(-dt*10);
+    const kStun = 1-Math.exp(-dt*14);
+    const kTurn = 1-Math.exp(-dt*6);
 
     for (let i = 0; i < this.active.length; i++) {
       const e = this.active[i];
       const type = e.type;
       const rig = this._rigs[e.typeKey];
       const hRaw = Math.max(e.height, 0.03) - swimOffset(e);
+      if (CONFIG.terrain && !type.flying && dt > 0) {
+        const horizontal = Math.acos(clamp(e.dir.dot(e.renderDir),-1,1)) * (R+(hRaw+e.renderHeight)*.5);
+        e.moveV = Math.hypot(horizontal,hRaw-e.renderHeight)/dt;
+      }
+      e.renderDir.copy(e.dir); e.renderHeight=hRaw;
       const bob = (type.flying || this.spaceMode) ? Math.sin(t * 3.1 + e.phase) * 0.2 : 0;
       _tmp.copy(e.dir).multiplyScalar(R + hRaw + e.alt + bob);
       _up.copy(e.dir);

@@ -552,7 +552,7 @@ export class Possession {
   // input is heard the instant it registers.
   swingStarted(u) {
     if (u !== this.unit) return;
-    this.audio?.play('swing');
+    if (u.type.strike.kind === 'melee') this.audio?.play('swing');
     this.fovKick = Math.max(this.fovKick, 0.8);
   }
 
@@ -560,6 +560,8 @@ export class Possession {
   // and the lens snap all belong to the moment of contact, not the click.
   strikeResolved(u, hits, spec) {
     if (u !== this.unit || !spec) return;
+    if (spec.kind === 'hitscan') this.audio?.play('rifle');
+    if (spec.kind === 'lob') this.audio?.play('lob');
     this.kick = Math.min(0.5, this.kick + (spec.kick || 0) * (hits > 0 ? 1 : 0.5));
     this.rig.addTrauma((spec.trauma || 0.05) * (hits > 0 ? 1 : 0.4));
     if (hits > 0) this.fovKick = Math.max(this.fovKick, 2);

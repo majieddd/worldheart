@@ -214,7 +214,7 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 | Camera/POV/animation polish and readable strike zones | partial, M1 implementation verified | [Camera ownership, paused visibility and arm comparison](qa/implementation/M1.md); owner feel and M4 telegraph acceptance remain open |
 | Crystal-driven explicit upgrades are the only frontier expansion trigger | implemented, review open | [M2 ledger, expedition and boss victory](qa/implementation/M2.md); terrain profile sampling continues in M3 |
 | Massive terrain variation, swimming, slope cost, climate placement, flight ceilings, spherical ranges | implemented, review open | [M3 four profiles, route and range fixtures, unforced victory](qa/implementation/M3.md); extreme-cliff framing and startup review open |
-| Weapon inventory, loot, modular customization and era arc | not yet | M4-M5 |
+| Weapon inventory, loot, modular customization and era arc | implemented prototype; retention next | [M4 gameplay and pose evidence](qa/implementation/M4.md); M5 extraction/retention and wider visual review remain |
 | Actual 99-planet continuation and final ending | not yet | Current victory only banks a counter |
 | PvPvE galaxies and platform ports | not yet | M6 after single-player evidence |
 
@@ -231,7 +231,11 @@ clearance, swimming, raised elemental placement and spherical/terrain range
 guides are implemented. The current suite has 178 tests; all five camera
 harnesses passed. The final Highlands run completed its crystal expedition and
 wave-15 victory. Visual feel, cliff framing and startup review remain open.
-M4-M6 remain queued. The stacked feature PRs are not merged to production.
+M4 weapon/inventory and choreography work is implemented on feature/99-planets-weapons:
+187 tests, 27 browser checks and an unforced victory with five recovered weapons.
+The red strike volume shares its damage predicate. Extraction follows in M5;
+broader visual and combat-feel review remains open.
+M5-M6 remain queued. The stacked feature PRs are not merged to production.
 
 M0 rewards and deliberate drafts, and M1 camera ownership/motion preferences/
 Bulwark arm attachment, have implemented slices with automated evidence. Owner
