@@ -17,28 +17,26 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
-Active parallel work, 2026-09-06: Codex on `feature/ocean-strategy` investigates
-ocean planet 4 with active commander/nest tactics and varied legal tower layouts.
-The owner-requested extra-high agent on `feature/commander-feedback` owns
-[six commander/interaction/nest feedback items](https://github.com/majieddd/worldheart/issues/19)
-in a separate worktree. Codex coordinates integration and V2 publication.
-The first ocean baseline uses ded4fbc rules; nest-only waves require a new
-balance pass after integration. Usage is unmeasured.
+Latest batch, 2026-09-06: the owner-requested extra-high agent implemented
+[U22-U27](qa/2026-09-06-COMMANDER-REQUEST.md) on `feature/commander-feedback`,
+[PR #20](https://github.com/majieddd/worldheart/pull/20). Codex integrated it
+on `feature/ocean-strategy`, [QA PR #21](https://github.com/majieddd/worldheart/pull/21),
+while continuing ocean tactics. The six changes are verified for V2 publication;
+publication is pending and owner feel/broader balance acceptance remain open.
 
-Ocean update: [three additional commander/nest attempts](qa/implementation/OCEAN-STRATEGY.md)
-are preserved, ending at waves 9/11/11. Two limitations in the testing strategy
-were corrected; these losses do not prove the planet is unwinnable. The
-[six follow-up request IDs U22-U27](qa/2026-09-06-COMMANDER-REQUEST.md) are
-implemented-awaiting-verification in the agent's local worktree, not yet live.
+Evidence: 228 headless tests, 29 primary interaction checks, 14 integrated
+campaign/context transaction checks, 29 combat checks and all five camera
+harnesses. Real route fixtures recorded 486 arrivals; exact-world combat
+fixtures recorded 210 safe strike-and-arrival cases after reproducing unchecked
+knockback stranding. Placement protection is a separate verified improvement.
+See [feature evidence](qa/implementation/COMMANDER-FEEDBACK.md).
 
-PR [#20](https://github.com/majieddd/worldheart/pull/20) is now integrated locally:
-221 tests, 29 primary interaction checks, 11 campaign checkpoint/loot checks,
-29 combat checks and all five camera harnesses pass. Parent verification adds
-three actual Upgrade/Sell checks. Unforced ocean retesting found a later
-wave-9 stranding after passing wave 4, so movement repair and another retest
-remain active before this feedback slice is published. See the
-[dedicated evidence](qa/implementation/COMMANDER-FEEDBACK.md) and
-[unforced results](qa/implementation/OCEAN-STRATEGY.md).
+[Unforced retests](qa/implementation/OCEAN-STRATEGY.md) now pass the previously
+stalled waves: ocean ends in normal defeat at wave 12, and a fresh active
+commander reaches the final encounter before defeat at wave 15. Neither has
+a runtime fault or persistent stranded-enemy diagnostic. Failed attempts and
+diagnosis corrections remain preserved. These are progress on QA coverage,
+not a campaign balance pass or an optimal-player verdict. Usage is unmeasured.
 
 ## Completed in this batch
 
@@ -52,6 +50,7 @@ remain active before this feedback slice is published. See the
 | Reusable implementation tracking skill | verified | Codex | Personal implementation-tracker skill validated; root AGENTS.md carries the workflow for every collaborator | unmeasured |
 | Live V2 publication workflow | published and live-verified | Codex, PR #18 | [213 tests, all five maps, 17 public browser/hash/save checks](qa/implementation/V2-PREVIEW.md); [standing workflow](PREVIEW.md) | unmeasured |
 | M0 reward/control implementation | verified by automated fixtures and unforced instrumented play | Codex | [Implementation evidence](qa/implementation/M0.md); 168 tests, 14 browser assertions, all five camera harnesses, victory and defeat/retry | unmeasured |
+| Owner feedback U22-U27 | implemented and verified; publication pending | Extra-high agent, Codex integration | [PR #20](https://github.com/majieddd/worldheart/pull/20), [PR #21](https://github.com/majieddd/worldheart/pull/21), [feature evidence](qa/implementation/COMMANDER-FEEDBACK.md), [unforced retests](qa/implementation/OCEAN-STRATEGY.md); owner feel and campaign balance open | unmeasured |
 
 ## Development queue
 

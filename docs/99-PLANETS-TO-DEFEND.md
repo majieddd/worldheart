@@ -82,6 +82,12 @@ The latest owner comparison favors a fuller blocky Minecraft-inspired sword
 arm. Third-person swings need continuous, readable poses through movement and
 attack transitions. These refinements retain the light faceted aesthetic.
 
+Terrain knockback follows the same graph edges and reachability as movement.
+Sweep impulses in steps no larger than 0.12m, keep valid partial displacement,
+and stop at an illegal edge. Carry direction, tangent heading, tracked node
+and height together; flyers retain their air route and ceiling constraints.
+An impulse cannot remove living enemy debt or change damage release timing.
+
 ### Terrain traversal and flight
 
 Purpose: create large-scale spectacle and strategic route tradeoffs.
@@ -294,11 +300,13 @@ The root game remains from main. Publish future verified checkpoints under
 [PREVIEW.md](PREVIEW.md); full campaign and art/feel acceptance remain open.
 
 The [U22-U27 follow-up](qa/implementation/COMMANDER-FEEDBACK.md) is integrated
-locally from PR #20. Its automated UI, inventory, motion and camera checks
-pass, including actual checkpoint overlap coverage. Continued ocean testing
-exposed additional movement/placement softlocks; [the retained integration
-record](qa/implementation/OCEAN-STRATEGY.md) tracks the repair and retest.
-This follow-up is not yet published to V2.
+from PR #20, with 228 headless tests and UI/inventory/motion/camera coverage.
+Actual checkpoint overlap and Upgrade/Sell transactions pass. Unforced
+testing exposed and reproduced unsafe knockback; after repair the ocean run
+passed its former stalls and ended in wave-12 defeat, while fresh active
+commander play reached the final encounter before wave-15 defeat. The
+[retained integration record](qa/implementation/OCEAN-STRATEGY.md) separates
+these outcomes from a balance pass. V2 publication is pending.
 
 M3 update: four terrain profiles, directed ground routes, separate flight
 clearance, swimming, raised elemental placement and spherical/terrain range
