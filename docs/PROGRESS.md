@@ -17,6 +17,12 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
+Active 2026-09-06: Codex on `feature/adversarial-acceptance` is checking the
+remaining owner brief and acceptance gaps. [Current audit and work order](qa/implementation/ADVERSARIAL-ACCEPTANCE.md)
+cover keyboard/input ownership, combat/model readability, foliage, ocean
+strategy and sustained performance. Claims and repairs require browser evidence;
+owner feel and whole-campaign completion remain separate gates.
+
 Latest batch, 2026-09-06: the owner-requested extra-high agent implemented
 [U22-U27](qa/2026-09-06-COMMANDER-REQUEST.md) on `feature/commander-feedback`,
 [PR #20](https://github.com/majieddd/worldheart/pull/20). Codex integrated it
