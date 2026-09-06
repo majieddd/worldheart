@@ -1,0 +1,4326 @@
+{
+  "scope": "Exact ocean terrain and reported towers; controlled real melee strikes and enemy updates",
+  "seed": 389884,
+  "heart": 121313,
+  "expectedHeart": 121313,
+  "empty": [
+    {
+      "node": 97274,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 97287,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 97295,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 97266,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 6129,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 97285,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 49752,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 157860,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    }
+  ],
+  "placed": [
+    {
+      "node": 97274,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 97287,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 97295,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 97266,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 6129,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 97285,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 49752,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    },
+    {
+      "node": 157860,
+      "walk": 0,
+      "blocked": 0,
+      "next": -1,
+      "distance": null
+    }
+  ],
+  "candidates": 105,
+  "results": [
+    {
+      "type": "husk",
+      "from": 782,
+      "illegalDestination": 50030,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 782,
+        "next": 49773,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 782,
+      "illegalDestination": 50030,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 782,
+        "next": 49773,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 782,
+      "illegalDestination": 50066,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 782,
+        "next": 49773,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 782,
+      "illegalDestination": 50066,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 782,
+        "next": 49773,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 3119,
+      "illegalDestination": 50031,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 3119,
+        "next": 49726,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 3119,
+      "illegalDestination": 50031,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 3119,
+        "next": 49726,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 3121,
+      "illegalDestination": 49744,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 3121,
+        "next": 92360,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 3121,
+      "illegalDestination": 49744,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 3121,
+        "next": 92360,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 3121,
+      "illegalDestination": 49746,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 3121,
+        "next": 92360,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 3121,
+      "illegalDestination": 49746,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 3121,
+        "next": 92360,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 5826,
+      "illegalDestination": 92358,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 5826,
+        "next": 92379,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 5826,
+      "illegalDestination": 92358,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 5826,
+        "next": 92379,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 5858,
+      "illegalDestination": 92850,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 5858,
+        "next": 92852,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 5858,
+      "illegalDestination": 92850,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 5858,
+        "next": 92852,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 5858,
+      "illegalDestination": 97159,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 5858,
+        "next": 92852,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 5858,
+      "illegalDestination": 97159,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 5858,
+        "next": 92852,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 6116,
+      "illegalDestination": 97219,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 6116,
+        "next": 96958,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 6116,
+      "illegalDestination": 97219,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 6116,
+        "next": 96958,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 6116,
+      "illegalDestination": 97229,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 6116,
+        "next": 96958,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 6116,
+      "illegalDestination": 97229,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 6116,
+        "next": 96958,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 12431,
+      "illegalDestination": 49702,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 12431,
+        "next": 49703,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 12431,
+      "illegalDestination": 49702,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 12431,
+        "next": 49703,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 12431,
+      "illegalDestination": 49783,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 12431,
+        "next": 49703,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 12431,
+      "illegalDestination": 49783,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 12431,
+        "next": 49703,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 12431,
+      "illegalDestination": 49786,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 12431,
+        "next": 49703,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 76696,
+        "next": 120142
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 12431,
+      "illegalDestination": 49786,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 12431,
+        "next": 49703,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 12438,
+      "illegalDestination": 49750,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 12438,
+        "next": 49731,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 12438,
+      "illegalDestination": 49750,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 12438,
+        "next": 49731,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 12438,
+      "illegalDestination": 49752,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 12438,
+        "next": 49731,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 12438,
+      "illegalDestination": 49752,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 12438,
+        "next": 49731,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 12456,
+      "illegalDestination": 49792,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000008599117,
+      "after": {
+        "node": 12456,
+        "next": 49798,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 12456,
+      "illegalDestination": 49792,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000008599117,
+      "after": {
+        "node": 12456,
+        "next": 49798,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 12518,
+      "illegalDestination": 50038,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 12518,
+        "next": 50021,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 12518,
+      "illegalDestination": 50038,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 12518,
+        "next": 50021,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 23154,
+      "illegalDestination": 92357,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 23154,
+        "next": 92356,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 23154,
+      "illegalDestination": 92357,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 23154,
+        "next": 92356,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 23154,
+      "illegalDestination": 92359,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 23154,
+        "next": 92356,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 23154,
+      "illegalDestination": 92359,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 23154,
+        "next": 92356,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 24384,
+      "illegalDestination": 97268,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000008599117,
+      "after": {
+        "node": 24384,
+        "next": 97267,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 24384,
+      "illegalDestination": 97268,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000008599117,
+      "after": {
+        "node": 24384,
+        "next": 97267,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 24384,
+      "illegalDestination": 97291,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 24384,
+        "next": 97267,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 24384,
+      "illegalDestination": 97291,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 24384,
+        "next": 97267,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 24384,
+      "illegalDestination": 97294,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 24384,
+        "next": 97267,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 24384,
+      "illegalDestination": 97294,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 24384,
+        "next": 97267,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 24385,
+      "illegalDestination": 97266,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 24385,
+        "next": 97278,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 24385,
+      "illegalDestination": 97266,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 24385,
+        "next": 97278,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 24385,
+      "illegalDestination": 97279,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 24385,
+        "next": 97278,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 24385,
+      "illegalDestination": 97279,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 24385,
+        "next": 97278,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49703,
+      "illegalDestination": 49702,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49703,
+        "next": 12433,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49703,
+      "illegalDestination": 49702,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49703,
+        "next": 12433,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49704,
+      "illegalDestination": 49702,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49704,
+        "next": 12433,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49704,
+      "illegalDestination": 49702,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49704,
+        "next": 12433,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49704,
+      "illegalDestination": 781,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49704,
+        "next": 12433,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49704,
+      "illegalDestination": 781,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49704,
+        "next": 12433,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49707,
+      "illegalDestination": 49786,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49707,
+        "next": 49706,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49707,
+      "illegalDestination": 49786,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49707,
+        "next": 49706,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49726,
+      "illegalDestination": 49750,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49726,
+        "next": 12438,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49726,
+      "illegalDestination": 49750,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49726,
+        "next": 12438,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49731,
+      "illegalDestination": 49744,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49731,
+        "next": 3121,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49731,
+      "illegalDestination": 49744,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49731,
+        "next": 3121,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49731,
+      "illegalDestination": 49752,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49731,
+        "next": 3121,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49731,
+      "illegalDestination": 49752,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49731,
+        "next": 3121,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49732,
+      "illegalDestination": 49734,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49732,
+        "next": 49788,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49732,
+      "illegalDestination": 49734,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49732,
+        "next": 49788,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49733,
+      "illegalDestination": 12442,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49733,
+        "next": 12440,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49733,
+      "illegalDestination": 12442,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49733,
+        "next": 12440,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49736,
+      "illegalDestination": 12441,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49736,
+        "next": 49737,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49736,
+      "illegalDestination": 12441,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49736,
+        "next": 49737,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49737,
+      "illegalDestination": 49735,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49737,
+        "next": 49791,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49737,
+      "illegalDestination": 49735,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49737,
+        "next": 49791,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49737,
+      "illegalDestination": 3120,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49737,
+        "next": 49791,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49737,
+      "illegalDestination": 3120,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49737,
+        "next": 49791,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49737,
+      "illegalDestination": 49792,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49737,
+        "next": 49791,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49737,
+      "illegalDestination": 49792,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49737,
+        "next": 49791,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49738,
+      "illegalDestination": 12442,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49738,
+        "next": 49740,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49738,
+      "illegalDestination": 12442,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49738,
+        "next": 49740,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49738,
+      "illegalDestination": 50031,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49738,
+        "next": 49740,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49738,
+      "illegalDestination": 50031,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49738,
+        "next": 49740,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49740,
+      "illegalDestination": 12441,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49740,
+        "next": 49726,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49740,
+      "illegalDestination": 12441,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49740,
+        "next": 49726,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49771,
+      "illegalDestination": 50066,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000008599117,
+      "after": {
+        "node": 49771,
+        "next": 49772,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49771,
+      "illegalDestination": 50066,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000008599117,
+      "after": {
+        "node": 49771,
+        "next": 49772,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49771,
+      "illegalDestination": 50067,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49771,
+        "next": 49772,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49771,
+      "illegalDestination": 50067,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49771,
+        "next": 49772,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49772,
+      "illegalDestination": 12452,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49772,
+        "next": 12454,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 76696,
+        "next": 120142
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49772,
+      "illegalDestination": 12452,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49772,
+        "next": 12454,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49772,
+      "illegalDestination": 49775,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49772,
+        "next": 12454,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49772,
+      "illegalDestination": 49775,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49772,
+        "next": 12454,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49778,
+      "illegalDestination": 49775,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49778,
+        "next": 49777,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49778,
+      "illegalDestination": 49775,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 49778,
+        "next": 49777,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49787,
+      "illegalDestination": 12455,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49787,
+        "next": 49707,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 76696,
+        "next": 120142
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49787,
+      "illegalDestination": 12455,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49787,
+        "next": 49707,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49787,
+      "illegalDestination": 49786,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49787,
+        "next": 49707,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49787,
+      "illegalDestination": 49786,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49787,
+        "next": 49707,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49791,
+      "illegalDestination": 49792,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49791,
+        "next": 12456,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49791,
+      "illegalDestination": 49792,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49791,
+        "next": 12456,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49798,
+      "illegalDestination": 49792,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49798,
+        "next": 49800,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49798,
+      "illegalDestination": 49792,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49798,
+        "next": 49800,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49798,
+      "illegalDestination": 49784,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49798,
+        "next": 49800,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49798,
+      "illegalDestination": 49784,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49798,
+        "next": 49800,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49798,
+      "illegalDestination": 12455,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49798,
+        "next": 49800,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 76696,
+        "next": 120142
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49798,
+      "illegalDestination": 12455,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49798,
+        "next": 49800,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49800,
+      "illegalDestination": 12455,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49800,
+        "next": 49787,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49800,
+      "illegalDestination": 12455,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49800,
+        "next": 49787,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49884,
+      "illegalDestination": 12482,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49884,
+        "next": 3133,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49884,
+      "illegalDestination": 12482,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 49884,
+        "next": 3133,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49884,
+      "illegalDestination": 49883,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49884,
+        "next": 3133,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49884,
+      "illegalDestination": 49883,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 49884,
+        "next": 3133,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 49884,
+      "illegalDestination": 50027,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999987282832,
+      "after": {
+        "node": 49884,
+        "next": 3133,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 49884,
+      "illegalDestination": 50027,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999987282832,
+      "after": {
+        "node": 49884,
+        "next": 3133,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 50021,
+      "illegalDestination": 50031,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 50021,
+        "next": 3119,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 50021,
+      "illegalDestination": 50031,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 50021,
+        "next": 3119,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 50021,
+      "illegalDestination": 50038,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 50021,
+        "next": 3119,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 50021,
+      "illegalDestination": 50038,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 50021,
+        "next": 3119,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 50028,
+      "illegalDestination": 12520,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 50028,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 50028,
+      "illegalDestination": 12520,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 50028,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 50028,
+      "illegalDestination": 50027,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 50028,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 50028,
+      "illegalDestination": 50027,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 50028,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 50036,
+      "illegalDestination": 12520,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 50036,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 50036,
+      "illegalDestination": 12520,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 50036,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 50036,
+      "illegalDestination": 50037,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 50036,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 50036,
+      "illegalDestination": 50037,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 50036,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 50036,
+      "illegalDestination": 50038,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 50036,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 50036,
+      "illegalDestination": 50038,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 50036,
+        "next": 50018,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92312,
+      "illegalDestination": 781,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92312,
+        "next": 23143,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92312,
+      "illegalDestination": 781,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92312,
+        "next": 23143,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92312,
+      "illegalDestination": 92354,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92312,
+        "next": 23143,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92312,
+      "illegalDestination": 92354,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92312,
+        "next": 23143,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92356,
+      "illegalDestination": 92358,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 92356,
+        "next": 5826,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92356,
+      "illegalDestination": 92358,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 92356,
+        "next": 5826,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92356,
+      "illegalDestination": 92357,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 92356,
+        "next": 5826,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92356,
+      "illegalDestination": 92357,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 92356,
+        "next": 5826,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92360,
+      "illegalDestination": 49746,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 92360,
+        "next": 23154,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92360,
+      "illegalDestination": 49746,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 92360,
+        "next": 23154,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92360,
+      "illegalDestination": 92359,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92360,
+        "next": 23154,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92360,
+      "illegalDestination": 92359,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92360,
+        "next": 23154,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92383,
+      "illegalDestination": 92354,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 92383,
+        "next": 92385,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92383,
+      "illegalDestination": 92354,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 92383,
+        "next": 92385,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92383,
+      "illegalDestination": 23153,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92383,
+        "next": 92385,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92383,
+      "illegalDestination": 23153,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92383,
+        "next": 92385,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92386,
+      "illegalDestination": 92358,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92386,
+        "next": 23160,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92386,
+      "illegalDestination": 92358,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92386,
+        "next": 23160,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92387,
+      "illegalDestination": 92358,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92387,
+        "next": 92389,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92387,
+      "illegalDestination": 92358,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92387,
+        "next": 92389,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92848,
+      "illegalDestination": 92845,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 92848,
+        "next": 23278,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92848,
+      "illegalDestination": 92845,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 92848,
+        "next": 23278,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92851,
+      "illegalDestination": 23280,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 92851,
+        "next": 92848,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92851,
+      "illegalDestination": 23280,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 92851,
+        "next": 92848,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92851,
+      "illegalDestination": 92850,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000008599117,
+      "after": {
+        "node": 92851,
+        "next": 92848,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92851,
+      "illegalDestination": 92850,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000008599117,
+      "after": {
+        "node": 92851,
+        "next": 92848,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92851,
+      "illegalDestination": 92845,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 92851,
+        "next": 92848,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92851,
+      "illegalDestination": 92845,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 92851,
+        "next": 92848,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 92852,
+      "illegalDestination": 92850,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92852,
+        "next": 23279,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 92852,
+      "illegalDestination": 92850,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 92852,
+        "next": 23279,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 96949,
+      "illegalDestination": 24304,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 96949,
+        "next": 6116,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 96949,
+      "illegalDestination": 24304,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 96949,
+        "next": 6116,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 96949,
+      "illegalDestination": 97219,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 96949,
+        "next": 6116,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 96949,
+      "illegalDestination": 97219,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 96949,
+        "next": 6116,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 96949,
+      "illegalDestination": 97218,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 96949,
+        "next": 6116,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 96949,
+      "illegalDestination": 97218,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 96949,
+        "next": 6116,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 96958,
+      "illegalDestination": 97229,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 96958,
+        "next": 97230,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 96958,
+      "illegalDestination": 97229,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 96958,
+        "next": 97230,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97144,
+      "illegalDestination": 24355,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97144,
+        "next": 97146,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97144,
+      "illegalDestination": 24355,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97144,
+        "next": 97146,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97144,
+      "illegalDestination": 97143,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97144,
+        "next": 97146,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97144,
+      "illegalDestination": 97143,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97144,
+        "next": 97146,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97145,
+      "illegalDestination": 97143,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97145,
+        "next": 97144,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97145,
+      "illegalDestination": 97143,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97145,
+        "next": 97144,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97145,
+      "illegalDestination": 6129,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97145,
+        "next": 97144,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97145,
+      "illegalDestination": 6129,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97145,
+        "next": 97144,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97146,
+      "illegalDestination": 24355,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97146,
+        "next": 97147,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97146,
+      "illegalDestination": 24355,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97146,
+        "next": 97147,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97147,
+      "illegalDestination": 24355,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97147,
+        "next": 5858,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97147,
+      "illegalDestination": 24355,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97147,
+        "next": 5858,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97147,
+      "illegalDestination": 97159,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97147,
+        "next": 5858,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97147,
+      "illegalDestination": 97159,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97147,
+        "next": 5858,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97147,
+      "illegalDestination": 97166,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999987282832,
+      "after": {
+        "node": 97147,
+        "next": 5858,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97147,
+      "illegalDestination": 97166,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999987282832,
+      "after": {
+        "node": 97147,
+        "next": 5858,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97227,
+      "illegalDestination": 24377,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97227,
+        "next": 97228,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97227,
+      "illegalDestination": 24377,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97227,
+        "next": 97228,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97227,
+      "illegalDestination": 97232,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97227,
+        "next": 97228,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97227,
+      "illegalDestination": 97232,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97227,
+        "next": 97228,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97228,
+      "illegalDestination": 24377,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97228,
+        "next": 97264,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97228,
+      "illegalDestination": 24377,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97228,
+        "next": 97264,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97228,
+      "illegalDestination": 97291,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97228,
+        "next": 97264,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97228,
+      "illegalDestination": 97291,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97228,
+        "next": 97264,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97230,
+      "illegalDestination": 24376,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97230,
+        "next": 97227,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97230,
+      "illegalDestination": 24376,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97230,
+        "next": 97227,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97230,
+      "illegalDestination": 97229,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97230,
+        "next": 97227,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97230,
+      "illegalDestination": 97229,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97230,
+        "next": 97227,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97230,
+      "illegalDestination": 97232,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97230,
+        "next": 97227,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97230,
+      "illegalDestination": 97232,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97230,
+        "next": 97227,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97263,
+      "illegalDestination": 6129,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97263,
+        "next": 97145,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97263,
+      "illegalDestination": 6129,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97263,
+        "next": 97145,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97263,
+      "illegalDestination": 97273,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97263,
+        "next": 97145,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97263,
+      "illegalDestination": 97273,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97263,
+        "next": 97145,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97264,
+      "illegalDestination": 97291,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97264,
+        "next": 24384,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97264,
+      "illegalDestination": 97291,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97264,
+        "next": 24384,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97267,
+      "illegalDestination": 97266,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97267,
+        "next": 24385,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97267,
+      "illegalDestination": 97266,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97267,
+        "next": 24385,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97267,
+      "illegalDestination": 97268,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97267,
+        "next": 24385,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97267,
+      "illegalDestination": 97268,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999997940976,
+      "after": {
+        "node": 97267,
+        "next": 24385,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97278,
+      "illegalDestination": 97279,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97278,
+        "next": 97280,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97278,
+      "illegalDestination": 97279,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97278,
+        "next": 97280,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97280,
+      "illegalDestination": 97273,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 97280,
+        "next": 97263,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97280,
+      "illegalDestination": 97273,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 97280,
+        "next": 97263,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97280,
+      "illegalDestination": 24386,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 97280,
+        "next": 97263,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97280,
+      "illegalDestination": 24386,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.12000000003270046,
+      "after": {
+        "node": 97280,
+        "next": 97263,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "husk",
+      "from": 97280,
+      "illegalDestination": 97279,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97280,
+        "next": 97263,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    },
+    {
+      "type": "aegis",
+      "from": 97280,
+      "illegalDestination": 97279,
+      "hits": 1,
+      "damage": 1,
+      "displacement": 0.11999999992611902,
+      "after": {
+        "node": 97280,
+        "next": 97263,
+        "blocked": 0,
+        "walk": 1
+      },
+      "after60Seconds": {
+        "active": false,
+        "reached": true,
+        "node": 120141,
+        "next": 30076
+      }
+    }
+  ],
+  "pass": true
+}

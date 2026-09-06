@@ -967,13 +967,7 @@ export class AllyManager {
       this._weaponEffect(e, s, landed);
       if (this.onStrikeHit) this.onStrikeHit(e, landed, e === primary);
       if (s.knockback && e.active && !e.dead) {
-        // Shove the body back along the surface. A heavy swing that does not
-        // move anything does not read as heavy.
-        _axis.crossVectors(a.dir, e.dir);
-        if (_axis.lengthSq() > 1e-12) {
-          _axis.normalize();
-          e.dir.applyAxisAngle(_axis, s.knockback / R).normalize();
-        }
+        this.enemies.knockback(e, a.dir, s.knockback);
       }
       hits++;
     }
