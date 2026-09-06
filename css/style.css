@@ -1,5 +1,9 @@
 /* WORLDHEART HUD. Token block below is the DOM design contract (see DESIGN.md). */
 
+.terrain-choice { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--text); font-size: 13px; margin: 12px 0; }
+.terrain-choice select { background: var(--surface-raised); color: var(--text); border: 1px solid var(--hairline-strong); border-radius: 6px; padding: 7px 10px; font: inherit; }
+.terrain-choice span { flex-basis: 100%; color: var(--text-muted); font-size: 12px; }
+
 :root {
   --ground: #0a0e21;
   --surface: rgba(15, 20, 40, 0.84);
@@ -336,6 +340,7 @@ html, body {
 .overlay-card .o-actions { margin-top: var(--sp-6); display: flex; gap: var(--sp-3); justify-content: center; }
 .overlay-card .o-actions .btn { font-size: var(--fs-16); padding: 10px 22px; }
 @media (max-height: 800px) {
+  #title-overlay .m-chip { display: none; }
   #title-overlay .overlay-card { padding-top: var(--sp-4); padding-bottom: var(--sp-4); }
   #title-overlay .o-mark { font-size: var(--fs-48); }
   #title-overlay .o-body, #title-overlay .o-actions { margin-top: var(--sp-3); }

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { terrainTowerStats, swimOffset } from './traversal.js';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { clamp, lerp, SIM_RANDOM } from './noise.js';
 import { R, orientOnSurface } from './world.js';
@@ -448,6 +449,7 @@ export class Tower {
     this.typeKey = typeKey;
     this.def = TOWER_TYPES[typeKey];
     this.tier = 0;
+    this.terrain = 'neutral';
     this.pos = pos.clone();
     this.manager = manager;
     this.invested = this.def.cost;
@@ -490,7 +492,8 @@ export class Tower {
   // The single seam every tower's numbers pass through, so a damage, rate,
   // range or crit power lands everywhere at once.
   get stats() {
-    return modifiedTowerStats(tierStats(this.typeKey, this.tier), MODS.current);
+    const stats = modifiedTowerStats(tierStats(this.typeKey, this.tier), MODS.current);
+    return CONFIG.terrain ? terrainTowerStats(stats, this.typeKey, this.terrain) : stats;
   }
   get range() { return this.stats.range; }
 
@@ -521,8 +524,6 @@ export class Tower {
     const min2 = (st.minRange || 0) * (st.minRange || 0);
     // keep a valid current target (with hysteresis)
     if (this.target && this.target.active && !this.target.dead) {
-      const d2 = this.target.renderPos ? 0 : 0;
-      _v.copy(this.target.dir).multiplyScalar(this.target.type.flying ? 0 : 0);
       const dd = this._dist2(this.target);
       if (dd < r2 * 1.1 && dd > min2 && (this.def.air || !this.target.type.flying)) return this.target;
     }
@@ -904,7 +905,7 @@ export class TowerManager {
   }
 
   enemyWorldPos(e, out) {
-    const h = Math.max(e.height, 0.03);
+    const h = Math.max(e.height, 0.03) - swimOffset(e);
     return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
   }
 

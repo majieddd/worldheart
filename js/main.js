@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, CAM_TUNE, PALETTE, LIGHTING, PRESENTATION } from './config.js';
 import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
-import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR } from './world.js';
+import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight } from './world.js';
 import { NavGraph } from './nav.js';
 import { SIM_RANDOM } from './noise.js';
 import { makeRng } from './run/rng.js';
@@ -261,6 +261,7 @@ async function boot() {
   world.buildStep(0);
   await progress(BOOT_LABELS[1]);
   nav.build();
+  if (CONFIG.terrain) rig.heightProbe = dir => terrainHeight(dir.x, dir.y, dir.z);
   // Capped maps must register the battlefield before any mesh building so
   // terrain tinting, decor scatter, and walkability all agree on the wall.
   if (nav.fieldCenter) {
@@ -828,7 +829,7 @@ function camTest() {
   settle(60);
   const clF = Math.cos(rig.lat);
   _cref.set(Math.sin(rig.lon) * clF, Math.sin(rig.lat), Math.cos(rig.lon) * clF)
-    .multiplyScalar(CONFIG.planetRadius);
+    .multiplyScalar(rig.focusRadius);
   let worstDrift = 0;
   for (let i = 0; i <= 60; i++) {
     rig.targetDist = rig.distMin + ((rig.distMax - rig.distMin) * i) / 60;
@@ -850,7 +851,7 @@ function camTest() {
   function viewAngle() {
     const cl = Math.cos(rig.lat);
     _cref.set(Math.sin(rig.lon) * cl, Math.sin(rig.lat), Math.cos(rig.lon) * cl);
-    _cprobe.copy(rig.camera.position).addScaledVector(_cref, -CONFIG.planetRadius);
+    _cprobe.copy(rig.camera.position).addScaledVector(_cref, -rig.focusRadius);
     const up = _cprobe.dot(_cref);
     return Math.atan2(up, Math.sqrt(Math.max(0, _cprobe.lengthSq() - up * up)));
   }

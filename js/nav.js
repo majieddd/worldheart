@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG } from './config.js';
 import { mulberry32 } from './noise.js';
+import { travelCost } from './traversal.js';
 import { R, SUN_DIR, SPACE, initTerrainField, terrainHeight, isWalkableDir, isLandDir, surfacePoint } from './world.js';
 import * as WORLD from './world.js';
 
@@ -177,7 +178,7 @@ export class NavGraph {
           if (this.capLandFrac < 0.76 - relax * 0.3) break;
           this._buildGraph(center, theta);
           if (this._chooseSites(relax, center, theta)) {
-            this.fieldCenter = center;
+            this.fieldCenter = CONFIG.terrain ? this.nodeDir(this.heartNode, new THREE.Vector3()) : center;
             return;
           }
         }
@@ -205,7 +206,9 @@ export class NavGraph {
       v.normalize();
       if (v.dot(SUN_DIR) < 0.2 - relax * 0.35) continue;
       // Anchor on dry ground before paying for the full cap survey.
-      if (terrainHeight(v.x, v.y, v.z, false) < 0.15) continue;
+      const anchorHeight = terrainHeight(v.x, v.y, v.z, false);
+      if (anchorHeight < 0.15) continue;
+      if (CONFIG.terrain && (anchorHeight > WORLD.FLIGHT_CEILING * 0.5 || !WORLD.isBuildableDir(v) || !isWalkableDir(v) || WORLD.climateAt(v, anchorHeight) !== 'neutral')) continue;
 
       if (Math.abs(v.y) < 0.93) e1.set(0, 1, 0); else e1.set(1, 0, 0);
       e2.crossVectors(v, e1).normalize();
@@ -234,7 +237,7 @@ export class NavGraph {
       // and picks the best lit one available.
       if (minRim < -0.12) continue;
 
-      let land = 0;
+      let land = 0, traversable = 0;
       for (let s = 0; s < SAMPLES; s++) {
         // sunflower spiral: even coverage of the cap with few samples
         const ang = theta * Math.sqrt((s + 0.5) / SAMPLES);
@@ -244,14 +247,16 @@ export class NavGraph {
           .addScaledVector(e2, Math.sin(ang) * Math.sin(az))
           .normalize();
         if (terrainHeight(probe.x, probe.y, probe.z, false) >= 0.05) land++;
+        if (CONFIG.terrain && isWalkableDir(probe)) traversable++;
       }
       const frac = land / SAMPLES;
       // Land is still what matters most - a field in the sea is unplayable
       // where a dim one is merely moody - so rim light is a modest bonus that
       // breaks ties between otherwise equal caps.
-      const score = frac + 0.35 * Math.max(0, Math.min(0.6, minRim));
+      const walkFraction = traversable / SAMPLES;
+      const score = frac + 0.35 * Math.max(0, Math.min(0.6, minRim)) + (CONFIG.terrain ? walkFraction * 0.4 : 0);
       if (score > bestLand) { bestLand = score; bestFrac = frac; best = v.clone(); }
-      if (bestFrac >= 0.86 && minRim > 0.25) break;
+      if (bestFrac >= 0.86 && minRim > 0.25 && (!CONFIG.terrain || walkFraction > 0.65)) break;
     }
     // The blended score chose the field; the land fraction is what the caller
     // gates on, so report that rather than the score.
@@ -300,11 +305,17 @@ export class NavGraph {
     this.dirs = new Float32Array(n * 3);
     this.pos = new Float32Array(n * 3);
     this.height = new Float32Array(n);
+    this.baseHeight = new Float32Array(n);
     this.walk = new Uint8Array(n);
     this.block = new Int16Array(n);
     this.dist = new Float32Array(n);
     this.next = new Int32Array(n);
     this.flow = new Float32Array(n * 3);
+    this.airWalk = CONFIG.terrain ? new Uint8Array(n) : null;
+    this.airDist = CONFIG.terrain ? new Float32Array(n) : null;
+    this.airNext = CONFIG.terrain ? new Int32Array(n) : null;
+    this._airReady = false;
+    this.revision = (this.revision || 0) + 1;
 
     for (let i = 0; i < total; i++) {
       if (keep && !keep[i]) continue;
@@ -314,12 +325,20 @@ export class NavGraph {
       _v.set(x, y, z);
       const h = terrainHeight(x, y, z);
       this.height[idx] = h;
+      this.baseHeight[idx] = CONFIG.terrain ? terrainHeight(x, y, z, false) : h;
+      if (this.airWalk) this.airWalk[idx] = WORLD.canFlyAt(_v, WORLD.FLIGHT_CLEARANCE + 2) ? 1 : 0;
       const p = Math.max(h, 0.03) + R;
       this.pos[idx * 3] = x * p; this.pos[idx * 3 + 1] = y * p; this.pos[idx * 3 + 2] = z * p;
       // Space flight lanes: the void is pathable, the rocks are not, so the
       // flow field bends every lane around the platforms.
       this.walk[idx] = walkAll ? (h < 0.55 ? 1 : 0)
         : (coarse ? (isLandDir(_v) ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0));
+      // The retained mesh includes a stitching margin outside the wall.
+      // It must never become a route that the movement boundary refuses.
+      if (CONFIG.terrain && capCenter && _v.dot(capCenter) < Math.cos(capTheta - 0.8 / R)) {
+        this.walk[idx] = 0;
+        this.airWalk[idx] = 0;
+      }
     }
 
     // CSR adjacency from unique triangle edges (kept nodes only)
@@ -342,11 +361,36 @@ export class NavGraph {
     for (let i = 0; i < n; i++) this.adjOff[i + 1] = this.adjOff[i] + deg[i];
     this.adj = new Int32Array(this.adjOff[n]);
     this.cost = new Float32Array(this.adjOff[n]);
+    this.airCost = CONFIG.terrain ? new Float32Array(this.adjOff[n]) : null;
     const cursor = new Int32Array(n);
     for (const key of edgeSet) {
       const a = Math.floor(key / 1048576), b = key % 1048576;
       this.adj[this.adjOff[a] + cursor[a]++] = b;
       this.adj[this.adjOff[b] + cursor[b]++] = a;
+    }
+    if (this.airWalk) {
+      const centre = new THREE.Vector3(), a = new THREE.Vector3(), b = new THREE.Vector3(), probe = new THREE.Vector3();
+      for (let i = 0; i < n; i++) if (this.airWalk[i]) {
+        let nearRelief = this.baseHeight[i] > WORLD.FLIGHT_CEILING * 0.2;
+        for (let e = this.adjOff[i]; !nearRelief && e < this.adjOff[i + 1]; e++) nearRelief = this.baseHeight[this.adj[e]] > WORLD.FLIGHT_CEILING * 0.2;
+        if (!nearRelief) continue;
+        this.nodeDir(i, centre).normalize();
+        a.set(0, Math.abs(centre.y) < 0.9 ? 1 : 0, Math.abs(centre.y) < 0.9 ? 0 : 1);
+        b.crossVectors(centre, a).normalize(); a.crossVectors(b, centre).normalize();
+        for (let sample = 0; sample < 24; sample++) {
+          const angle = sample % 8 * Math.PI / 4, distance = (1 + Math.floor(sample / 8)) * this.spacing * 0.3;
+          probe.copy(centre).addScaledVector(a, Math.cos(angle) * distance / R).addScaledVector(b, Math.sin(angle) * distance / R).normalize();
+          if (!WORLD.canFlyAt(probe, WORLD.FLIGHT_CLEARANCE + 1)) { this.airWalk[i] = 0; break; }
+        }
+      }
+      const safe = this.airWalk.slice();
+      // Keep the entire steering cell clear of a ceiling-height cliff,
+      // including its corners, not merely the height at its centre.
+      for (let i = 0; i < n; i++) if (safe[i]) {
+        for (let e = this.adjOff[i]; e < this.adjOff[i + 1]; e++) {
+          if (!safe[this.adj[e]]) { this.airWalk[i] = 0; break; }
+        }
+      }
     }
     for (let i = 0; i < n; i++) {
       for (let e = this.adjOff[i]; e < this.adjOff[i + 1]; e++) {
@@ -357,6 +401,16 @@ export class NavGraph {
         const len = Math.hypot(dx, dy, dz);
         const dh = Math.abs(this.height[i] - this.height[j]);
         this.cost[e] = len * (1 + dh * 0.7);
+        if (CONFIG.terrain) {
+          const dot = this.dirs[i * 3] * this.dirs[j * 3] + this.dirs[i * 3 + 1] * this.dirs[j * 3 + 1] + this.dirs[i * 3 + 2] * this.dirs[j * 3 + 2];
+          const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
+          const horizontal = angle * (R + Math.max(0.03, (this.baseHeight[i] + this.baseHeight[j]) * 0.5));
+          // Dijkstra expands OUT from the destination. Store the incoming
+          // j -> i travel cost, so a route uphill really costs more time.
+          this.cost[e] = travelCost(this.baseHeight[j], this.baseHeight[i], horizontal);
+          _v.set(this.dirs[i * 3] + this.dirs[j * 3], this.dirs[i * 3 + 1] + this.dirs[j * 3 + 1], this.dirs[i * 3 + 2] + this.dirs[j * 3 + 2]).normalize();
+          this.airCost[e] = this.airWalk[i] && this.airWalk[j] && WORLD.canFlyAt(_v, WORLD.FLIGHT_CLEARANCE + 2) ? angle * R : Infinity;
+        }
       }
     }
 
@@ -398,10 +452,10 @@ export class NavGraph {
 
   // Nearest node that is actually pathable: BFS outward from the nearest
   // node until one qualifies (goal and spawn anchors sit at rock edges).
-  nearestWalkableNode(dir) {
+  nearestWalkableNode(dir, unblocked = false) {
     let start = this.nearestNode(dir);
     if (start < 0) return -1;
-    if (this.walk[start]) return start;
+    if (this.walk[start] && (!unblocked || !this.block[start])) return start;
     const seen = new Set([start]);
     let frontier = [start];
     for (let hop = 0; hop < 24; hop++) {
@@ -410,14 +464,14 @@ export class NavGraph {
         for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
           const b = this.adj[e];
           if (seen.has(b)) continue;
-          if (this.walk[b]) return b;
+          if (this.walk[b] && (!unblocked || !this.block[b])) return b;
           seen.add(b);
           next.push(b);
         }
       }
       frontier = next;
     }
-    return start;
+    return unblocked ? -1 : start;
   }
 
   // Incremental node tracking for a moving agent: hill-descend to whichever
@@ -519,11 +573,13 @@ export class NavGraph {
     // Heart: open, gently elevated, inside the camera's latitude band
     const rng = mulberry32(CONFIG.seed ^ 0xF00D);
     let heart = -1, heartScore = -1;
-    for (let tries = 0; tries < 1000; tries++) {
-      const i = (rng() * n) | 0;
+    for (let tries = 0; tries < (CONFIG.terrain && capCenter ? 1 : 1000); tries++) {
+      // Campaign territory and crystal delivery are anchored on the actual
+      // base. Choose its surveyed centre, not another point elsewhere in it.
+      const i = CONFIG.terrain && capCenter ? this.nearestWalkableNode(capCenter) : (rng() * n) | 0;
       if (!this.walk[i] || region[i] !== main) continue;
       if (!capCenter && Math.abs(this.dirs[i * 3 + 1]) > 0.82) continue;
-      if (this.height[i] < 0.14 || this.height[i] > 1.6) continue;
+      if (this.height[i] < 0.14 || this.height[i] > (CONFIG.terrain ? WORLD.FLIGHT_CEILING * 0.5 : 1.6)) continue;
       // The heart anchors the main battlefield: keep it in the sun, and on
       // capped maps pull it toward the field's center.
       const sunDot = this.dirs[i * 3] * SUN_DIR.x + this.dirs[i * 3 + 1] * SUN_DIR.y + this.dirs[i * 3 + 2] * SUN_DIR.z;
@@ -557,6 +613,7 @@ export class NavGraph {
     for (let i = 0; i < n; i++) {
       if (!this.walk[i] || region[i] !== main) continue;
       if (this.dist[i] === Infinity) continue;
+      if (CONFIG.terrain && (this.height[i] < 0.14 || !this.airWalk[i])) continue;
       // Spread breaches around the heart, but keep the march to a few minutes:
       // on a colossal world a fraction-of-the-world gate would put portals an
       // ocean away and waves would spend the game walking.
@@ -596,13 +653,15 @@ export class NavGraph {
     }
     this.portalNodes = portals;
     this.recomputeFlow();
+    if (this.airDist && portals.some(i => !Number.isFinite(this.airDist[i]))) return false;
     return true;
   }
 
-  _dijkstra(source, blockFilter) {
+  _dijkstra(source, blockFilter, field = this, stop = -1) {
     const n = this.n;
-    this.dist.fill(Infinity);
-    this.next.fill(-1);
+    const { dist, next, walk, block, cost } = field;
+    dist.fill(Infinity);
+    next.fill(-1);
     // The heap and visited set are reused: on a colossal world these are
     // multi-megabyte buffers and every build re-solves the field.
     if (!this._heap || this._heapFor !== n) {
@@ -614,22 +673,23 @@ export class NavGraph {
     heap.n = 0;
     const done = this._done;
     done.fill(0);
-    this.dist[source] = 0;
+    dist[source] = 0;
     heap.push(source, 0);
     while (heap.n > 0) {
       const a = heap.pop();
       if (done[a]) continue;
       done[a] = 1;
-      const da = this.dist[a];
+      if (a === stop) break;
+      const da = dist[a];
       for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
         const b = this.adj[e];
-        if (done[b] || !this.walk[b]) continue;
-        if (this.block[b] !== 0 && b !== source) continue;
+        if (done[b] || !walk[b]) continue;
+        if (block && block[b] !== 0 && b !== source) continue;
         if (blockFilter && blockFilter.has(b)) continue;
-        const nd = da + this.cost[e];
-        if (nd < this.dist[b]) {
-          this.dist[b] = nd;
-          this.next[b] = a;
+        const nd = da + cost[e];
+        if (nd < dist[b]) {
+          dist[b] = nd;
+          next[b] = a;
           heap.push(b, nd);
         }
       }
@@ -638,6 +698,10 @@ export class NavGraph {
 
   recomputeFlow() {
     this._dijkstra(this.heartNode, null);
+    if (this.airWalk && !this._airReady) {
+      this._dijkstra(this.heartNode, null, { dist: this.airDist, next: this.airNext, walk: this.airWalk, cost: this.airCost });
+      this._airReady = true;
+    }
     const n = this.n;
     for (let i = 0; i < n; i++) {
       const j = this.next[i];
@@ -651,6 +715,53 @@ export class NavGraph {
       const l = Math.hypot(fx, fy, fz) || 1;
       this.flow[i * 3] = fx / l; this.flow[i * 3 + 1] = fy / l; this.flow[i * 3 + 2] = fz / l;
     }
+  }
+
+  sampleAirFlow(node, dir, out) {
+    if (!this.airNext) return this.sampleFlow(node, dir, out);
+    let best = node, bestD = Infinity;
+    // Prefer a reachable neighbor when steering has brushed a blocked peak.
+    for (let e = this.adjOff[node] - 1; e < this.adjOff[node + 1]; e++) {
+      const i = e < this.adjOff[node] ? node : this.adj[e];
+      if (this.airNext[i] < 0) continue;
+      const d = this._dirDist2(i, dir);
+      if (d < bestD) { bestD = d; best = i; }
+    }
+    const next = this.airNext[best];
+    if (next < 0) { out.set(0, 0, 0); return Infinity; }
+    this.nodeDir(next, out);
+    out.addScaledVector(dir, -out.dot(dir)).normalize();
+    return this.airDist[best];
+  }
+
+  findPath(fromDir, toDir) {
+    const start = this.nearestWalkableNode(fromDir, true), end = this.nearestWalkableNode(toDir, true);
+    if (start < 0 || end < 0 || this.block[end]) return [];
+    if (!this._route || this._route.dist.length !== this.n) this._route = { dist: new Float32Array(this.n), next: new Int32Array(this.n) };
+    this._dijkstra(end, null, { ...this._route, walk: this.walk, cost: this.cost, block: this.block }, start);
+    if (!Number.isFinite(this._route.dist[start])) return [];
+    const path = [];
+    for (let i = start, guard = 0; i >= 0 && guard++ < this.n; i = this._route.next[i]) {
+      path.push(i);
+      if (i === end) break;
+    }
+    path.cost = this._route.dist[start];
+    return path;
+  }
+
+  canStep(fromDir, toDir, flying = false, node = -1) {
+    if (!CONFIG.terrain) return true;
+    const from = node >= 0 ? this.descendNode(node, fromDir) : this.nearestNode(fromDir);
+    const to = from >= 0 ? this.descendNode(from, toDir) : -1;
+    const walk = flying ? this.airWalk : this.walk;
+    if (from < 0 || to < 0 || !walk[to] || (!flying && this.block[to] && this.block[to] !== this.block[from])) return false;
+    if (from === to) return true;
+    const cost = flying ? this.airCost : this.cost;
+    // Incoming costs are stored in the destination's adjacency row.
+    for (let e = this.adjOff[to]; e < this.adjOff[to + 1]; e++) {
+      if (this.adj[e] === from) return Number.isFinite(cost[e]);
+    }
+    return false;
   }
 
   // Blend the flow of the tracked node and its neighbors, project to the
@@ -742,7 +853,7 @@ export class NavGraph {
       const a = stack.pop();
       for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
         const b = this.adj[e];
-        if (mark[b] === g || !this.walk[b] || this.block[b] !== 0 || temp.has(b)) continue;
+        if (mark[b] === g || !this.walk[b] || this.block[b] !== 0 || temp.has(b) || !Number.isFinite(this.cost[e])) continue;
         mark[b] = g;
         if (isPortal.has(b)) need--;
         stack.push(b);
@@ -752,6 +863,7 @@ export class NavGraph {
   }
 
   blockNodes(center, radius, towerId) {
+    this.revision++;
     const nodes = this.nodesInRadius(center, radius);
     for (const i of nodes) {
       if (this.block[i] === 0) this.block[i] = towerId;
@@ -760,6 +872,7 @@ export class NavGraph {
   }
 
   unblockNodes(towerId) {
+    this.revision++;
     for (let i = 0; i < this.n; i++) {
       if (this.block[i] === towerId) this.block[i] = 0;
     }
@@ -796,7 +909,7 @@ export class NavGraph {
     return out.set(this.pos[i * 3], this.pos[i * 3 + 1], this.pos[i * 3 + 2]);
   }
   nodeDir(i, out) {
-    return out.set(this.dirs[i * 3], this.dirs[i * 3 + 1], this.dirs[i * 3 + 2]);
+    return out.set(this.dirs[i * 3], this.dirs[i * 3 + 1], this.dirs[i * 3 + 2]).normalize();
   }
 
   buildDebugPoints() {

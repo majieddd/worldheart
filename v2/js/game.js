@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
 import { clamp } from './noise.js';
-import { R, isBuildableDir, surfacePoint, groundNormal, orientOnSurface, raycastTerrain } from './world.js';
+import { R, terrainFootprint, surfacePoint, groundNormal, orientOnSurface, raycastTerrain } from './world.js';
 import { TOWER_TYPES, TOWER_SCALE, tierCost, AUTHORED_TIERS, buildTowerVisual, GHOST_MAT_OK, GHOST_MAT_BAD, MODS } from './towers.js';
 import { insideFrontier } from './run/frontier.js';
+import { RangeGuide } from './range-guide.js';
+import { modifiedTowerStats } from './rewards.js';
 
 // Player-facing game logic: build mode with a live ghost, the placement rule
 // pipeline, marching path previews, tower selection, and the economy.
@@ -219,9 +221,10 @@ export class Game {
     this._lastGhostDir = new THREE.Vector3();
 
     this.pathFlow = new PathFlow(this.scene);
-    this.rangeRing = new SurfaceBand(this.scene);
+    this.rangeRing = new RangeGuide(this.scene);
     this.footRing = new SurfaceBand(this.scene, 44);
-    this.selRing = new SurfaceBand(this.scene);
+    this.selRing = new RangeGuide(this.scene);
+    this.leashRing = new SurfaceBand(this.scene);
 
     this.raycaster = new THREE.Raycaster();
     this.onHudChange = null;   // ui hook
@@ -384,6 +387,7 @@ export class Game {
     this.buildType = null;
     this.ghostHolder.visible = false;
     this.rangeRing.show(false);
+    this.leashRing.show(false);
     this.footRing.show(false);
     this.pathFlow.show(false);
     if (this.onHudChange) this.onHudChange();
@@ -411,7 +415,11 @@ export class Game {
     this.ghostHolder.visible = true;
     orientOnSurface(this.ghostHolder, this.cursorPos);
     this.rangeRing.show(true);
-    this.rangeRing.place(this.cursorPos, def.tiers[0].range, 0.28);
+    const preview = modifiedTowerStats(def.tiers[0], MODS.current);
+    this.rangeRing.place(this.cursorPos, preview.range, preview.minRange || 0);
+    this.rangeRing.show(!def.summoner);
+    this.leashRing.show(!!def.summoner);
+    if (def.summoner) this.leashRing.place(this.cursorPos, preview.leash, 0.28);
     this.footRing.show(true);
     this.footRing.place(this.cursorPos, this._fp(def), 0.15);
 
@@ -445,7 +453,8 @@ export class Game {
       this.possession.allies.worldPos(this.possession.unit, _v2);
       if (_v2.distanceTo(this.cursorPos) > FP_BUILD_REACH) return { ok: false, reason: 'reach' };
     }
-    if (!isBuildableDir(this.cursorDir)) return { ok: false, reason: 'terrain' };
+    const ground = terrainFootprint(this.cursorDir, this._fp(def), this.buildType);
+    if (!ground.ok) return ground;
     // 99 Planets: the frontier masks a world that was built at its FINAL size,
     // so ground can be perfectly walkable and still be out of bounds.
     if (this.frontier && !insideFrontier(this.frontier.centre, this.cursorDir, this.frontier.theta)) {
@@ -466,10 +475,15 @@ export class Game {
       this.towerMgr.enemyWorldPos(e, _v2);
       if (_v2.distanceTo(this.cursorPos) < fp + 0.75) return { ok: false, reason: 'enemies' };
     }
+    if (CONFIG.terrain && this.enemies.allies) for (const a of this.enemies.allies.active) {
+      if (!a.active || a.dead) continue;
+      this.enemies.allies.worldPos(a, _v2);
+      if (_v2.distanceTo(this.cursorPos) < fp + a.type.radius) return { ok: false, reason: 'allies' };
+    }
     const nv = this.nav.validatePlacement(this.cursorPos, fp);
     if (!nv.ok) return { ok: false, reason: nv.reason === 'path' ? 'path' : 'landmark' };
     if (this.gold < this._cost(def)) return { ok: false, reason: 'gold' };
-    return { ok: true };
+    return { ok: true, climate: ground.climate };
   }
 
   // Tower price after run modifiers. Economy powers write costMul; this is the
@@ -493,15 +507,21 @@ export class Game {
     this.validity = this._validate(def);
     if (!this.validity.ok) {
       const msgs = {
-        terrain: CONFIG.map.mode === 'space' ? 'Towers need solid rock underfoot' : 'Needs open walkable ground',
+        terrain: CONFIG.map.mode === 'space' ? 'Towers need solid rock underfoot' : 'Needs stable ground',
+        water: 'The whole tower footprint needs dry ground.',
+        unstable: 'The footprint is too steep or uneven.',
+        hot: 'Too hot. Only Mortars can stand on black stone (+15% damage).',
+        cold: 'Too cold. Only Cryo towers can stand on ice (+10% slow strength).',
+        mixed: 'The footprint crosses hot and cold ground. Move it onto one surface.',
         heart: 'Too close to the Worldheart',
         portal: 'Too close to a breach',
         overlap: 'Overlaps another tower',
         enemies: 'Enemies are in the way',
+        allies: 'A friendly unit is in the footprint. Move it clear first.',
         path: 'PATH BLOCKED: every breach must reach the heart',
         landmark: 'Cannot build on a landmark',
         gold: 'Not enough gold',
-        frontier: 'Beyond the frontier. Survive a wave to push it out.',
+        frontier: 'Beyond the frontier. Upgrade the Worldheart to expand it.',
         reach: 'Too far to build from here. Walk closer.',
       };
       if (this.onToast) this.onToast(msgs[this.validity.reason] || 'Cannot build here', this.validity.reason === 'path' ? 'danger' : 'warn');
@@ -512,6 +532,7 @@ export class Game {
     const paid = this._cost(def);
     this.gold -= paid;
     const tower = this.towerMgr.place(this.buildType, this.cursorPos);
+    tower.terrain = this.validity.climate || 'neutral';
     this.nav.blockNodes(this.cursorPos, this._fp(def), tower.id);
     const crushed = this.world.crushDecorNear(this.cursorPos, this._fp(def) + 0.5);
     this.fx.buildPuff(this.cursorPos);
@@ -549,9 +570,13 @@ export class Game {
     if (tower) {
       this.selRing.show(true);
       this.selRing.setColor(PALETTE.energy);
-      this.selRing.place(tower.pos, tower.range, 0.28);
+      this.selRing.place(tower.pos, tower.range, tower.stats.minRange || 0);
+      this.selRing.show(!tower.def.summoner);
+      this.leashRing.show(!!tower.def.summoner);
+      if (tower.def.summoner) this.leashRing.place(tower.pos, tower.stats.leash, 0.28);
     } else {
       this.selRing.show(false);
+      this.leashRing.show(false);
     }
     if (this.onHudChange) this.onHudChange();
   }
@@ -601,7 +626,8 @@ export class Game {
     t.upgrade();
     this.fx.buildPuff(t.pos);
     this.fx.floaters.spawn(t.pos, `-${cost}`, '#ffc857', 13);
-    this.selRing.place(t.pos, t.range, 0.28);
+    this.selRing.place(t.pos, t.range, t.stats.minRange || 0);
+    if (t.def.summoner) this.leashRing.place(t.pos, t.stats.leash, 0.28);
     if (this.audio) this.audio.play('upgrade');
     this._hud();
   }

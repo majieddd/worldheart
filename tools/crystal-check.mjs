@@ -19,14 +19,21 @@ try{
     const initial=r.getFrontierTheta(),opening=W.caches.caches.slice(),gold=g.gold;
     check('Opening crystals are reachable and outside the frontier',opening.length>=4&&opening.every(c=>Number.isFinite(W.nav.dist[c.node])&&Math.acos(c.dir.dot(W.nav.fieldCenter))>initial),opening.map(c=>({id:c.id,node:c.node,cost:W.nav.dist[c.node]})));
     document.getElementById('btn-begin').click();g.paused=true;
-    const move=dir=>{a.dir.copy(dir);a.fwd.addScaledVector(a.dir,-a.fwd.dot(a.dir)).normalize();};
+    const move=dir=>{a.dir.copy(dir).normalize();a.fwd.addScaledVector(a.dir,-a.fwd.dot(a.dir)).normalize();};
     move(opening[0].dir);W.step(.1);check('Pause does not collect resources',m.crystals.carried.length===0);
     g.paused=false;W.step(.02);check('Proximity collects one carried crystal',m.crystals.carried.length===1&&opening[0].taken);
     check('Pickup grants no gold or expansion',g.gold===gold&&m.crystals.credit===0&&r.getFrontierTheta()===initial);
     check('Carried crystal slows the actual body',Math.abs(a.carryMul-(1-.1/3))<1e-9,a.carryMul);
+    // Isolate cargo on a level water surface now that real hills change the
+    // speed along different-length steps. This remains a position fixture.
+    if(W.CONFIG.terrain){
+      const node=Array.from(W.nav.height).findIndex((h,i)=>h < -1.3&&W.nav.walk[i]&&Number.isFinite(W.nav.dist[i]));
+      if(node<0)throw Error('Missing level-water cargo control');
+      move(W.nav.nodeDir(node,a.dir));
+    }
     const start=a.dir.clone(),fwd=a.fwd.clone(),penalty=a.carryMul;
-    W.allies.driveUnit(a,1,0,.1);const loaded=start.angleTo(a.dir);
-    a.dir.copy(start);a.fwd.copy(fwd);a.carryMul=1;W.allies.driveUnit(a,1,0,.1);const empty=start.angleTo(a.dir);
+    W.allies.driveUnit(a,1,0,.05);const loaded=start.angleTo(a.dir);
+    a.dir.copy(start);a.fwd.copy(fwd);a.carryMul=1;W.allies.driveUnit(a,1,0,.05);const empty=start.angleTo(a.dir);
     a.dir.copy(start);a.fwd.copy(fwd);a.carryMul=penalty;
     check('Real travel distance matches the carry penalty',Math.abs(loaded/empty-penalty)<.0001,{ratio:loaded/empty,penalty});
     for(let i=1;i<4;i++){move(opening[i].dir);W.step(.02);}

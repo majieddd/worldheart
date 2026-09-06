@@ -58,16 +58,17 @@ less (`js/towers.js:100`, `:106`, `:122`).
 
 Scaling is per stat and deliberately uneven at `js/towers.js:130`: damage and
 dps scale with the full multiplier, fire rate at 35% of it, garrison at 50%,
-range by its cube root. Slow saturates at 85% and the surplus is redirected into
-range, which is the only way to keep buying a cryo bloom that cannot slow harder.
+range by its cube root. Authored slow scaling saturates at 85% and redirects
+surplus into range. Campaign combat additionally caps applied slow at 70%,
+including terrain and drafted bonuses; classic maps retain the 85% ceiling.
 
 The classic maps stop at MK III. 99 Planets does not, and instead caps the mark
 at the Worldheart's level (`js/game.js:575`, `:585`).
 
 ### Targeting
 
-`Tower._acquire` at `js/towers.js:526` keeps its current target within 10% range
-hysteresis, and otherwise picks the enemy with the lowest `progress`, which is
+`Tower._acquire` keeps its current target within 1.1 times squared range,
+about 4.9% extra radius, and otherwise picks the enemy with the lowest `progress`, which is
 the flow field's remaining distance to the heart (`js/nav.js:667`). So the policy
 is "whoever is closest to the heart", not closest to the tower. Heads turn at 9
 radians per second, 5 for the mortar, and will not fire until aimed within 0.15
@@ -225,8 +226,9 @@ A URL with no `?map=` and no stored choice loads **Pocket World**, where none of
 the run core, powers, hand, frontier, nests or Worldheart levels exists
 (`js/config.js:102`).
 
-Walkability is global: height at or above 0.05 and at or below 2.05, slope at or
-below 0.95, and not inside dense forest (`js/world.js:318`). The forest threshold
+Classic walkability requires height from 0.05 through 2.05, slope at or
+below 0.95, and no dense forest. Campaign terrain allows water and elevated
+ground, and uses directed slope costs and separate flight clearance. The forest threshold
 matches the tree scatter exactly, so blocked ground is precisely where the player
 sees trees. Lives start at 20, sell refunds 70%.
 
@@ -309,7 +311,7 @@ navigation graph and unit grounding at once. Passing `includeFine = false` gives
 the gameplay surface, so walkability never fractures on visual noise
 (`js/world.js:177`).
 
-**Ranges** are a ridged band standing 7 to 11 units over the land, far above the
+On classic maps, **ranges** are a ridged band standing 7 to 11 units over the land, far above the
 2.05 walk limit, pierced by passes where a separate gap noise runs high. A pass
 both drops the crest and levels the ground beneath it, because lowering the crest
 alone left pass floors at 3 to 4 units, which is still a wall
@@ -325,6 +327,27 @@ Both are sampled on the unwarped direction. Through the continent warp a canyon
 wriggled at the warp's frequency and ranges broke into spikes. Range height also
 scales with planet radius, or a 10.5 unit range on the radius 30 planetoid is
 half the world.
+
+### Campaign terrain profiles
+
+The title selector and `?terrain=varied|alpine|canyon|ocean` choose Highlands,
+Giant peaks, Deep canyons or Ocean islands. Their range/canyon amplitudes are
+28/10, 96/24, 18/38 and 16/5 world units. These are inputs to the composed
+height field, not maximum heights. Canyon width and ramps scale with depth.
+Picking and fog use the same conservative terrain envelope and surface.
+
+Ground route costs include actual 3D distance and a bounded uphill penalty.
+Swimming enters at 0.65 water depth and exits at 0.45, runs at 60% speed and
+disables sprint. Cargo multiplies traversal speed. Route graphs own blocking;
+commander orders and enemies share costs. Flyers use a fixed, separate graph
+and radial clearance ceilings of 22/38/26/20 units for the four profiles.
+
+Stable, dry footprints can hold towers at elevation. Hot black stone accepts
+only Mortars with 15% extra damage; cold blue-white stone accepts only Cryo
+with 10% stronger slow, subject to the 70% campaign ceiling. Mixed climates
+are denied. Three range orbits show actual 3D acquisition, with terrain
+intersection contours and a red Mortar inner exclusion. Warden instead shows
+its labelled surface leash. See [M3 evidence](qa/implementation/M3.md).
 
 ## Audit follow-up
 

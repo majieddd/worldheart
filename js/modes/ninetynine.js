@@ -41,7 +41,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // Offset from the world seed so terrain and combat are not correlated.
   SIM_RANDOM.next = makeRng((CONFIG.seed ^ 0x9e3779b9) >>> 0);
 
-  const centre = nav.fieldCenter ? nav.fieldCenter.clone() : null;
+  const centre = nav.fieldCenter ? nav.nodeDir(nav.heartNode, new THREE.Vector3()) : null;
   const rewards = createRewardConsumer({ game, profile, centre, world, enemies, allies,
     startGold: CONFIG.economy.startGold, startLives: CONFIG.economy.startLives });
   if (allies) allies.onDamage = (a, dealt, killed) => {
@@ -92,13 +92,26 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // wave. Pull the spawn along the great circle from the cap centre toward its
   // portal until it sits just outside the current frontier: the direction each
   // breach attacks from is preserved, the distance is not.
-  function spawnNodeNearFrontier(portalNode) {
+  function spawnNodeNearFrontier(portalNode, flying = false) {
     if (!centre || portalNode < 0) return -1;
     // A raid from a nest is the one spawn that must NOT be pulled in: the
     // whole point of a nest is that it sits outside the circle and the
     // player has to go out to it. The director raises this flag around the
     // spawn call; nothing else sets it.
     if (enemies.spawnRaw) return portalNode;
+    if (CONFIG.terrain) {
+      // Follow the solved route into the current frontier. Snapping a great
+      // circle to merely walkable ground can choose an isolated mountaintop.
+      const next = flying ? nav.airNext : nav.next;
+      const limit = frontierTheta * 1.12;
+      let node = portalNode;
+      for (let guard = 0; guard < nav.n && next[node] >= 0; guard++) {
+        nav.nodeDir(next[node], _sdir);
+        if (Math.acos(Math.max(-1, Math.min(1, _sdir.dot(centre)))) < limit) break;
+        node = next[node];
+      }
+      return node;
+    }
     nav.nodeDir(portalNode, _sdir);
     const ang = Math.acos(Math.max(-1, Math.min(1, _sdir.dot(centre))));
     const want = frontierTheta * 1.12;
@@ -462,7 +475,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         if (n) {
           ui.toast(n === 1 ? 'Moving out' : `${n} moving out`, 'info');
           ui.audio?.play('order');
-        }
+        } else ui.toast('No ground route to that destination.', 'warn');
         return;
       }
       ui.toast('They cannot stand there', 'warn');
@@ -587,7 +600,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     const directions = ['Ahead', 'Ahead-right', 'Right', 'Behind-right', 'Behind', 'Behind-left', 'Left', 'Ahead-left'];
     const direction = directions[(Math.round(angle / (Math.PI / 4)) + 8) % 8];
     ui.renderCrystals({ carried: crystals.carried.length, capacity: CRYSTAL_CAPACITY, credit: crystals.credit,
-      distance, direction, canDeposit: distance <= 4.5 && !game.paused && crystals.carried.length > 0 });
+      distance, direction, swimming: commander.swimming, canDeposit: distance <= 4.5 && !game.paused && crystals.carried.length > 0 });
   }
 
   seedCaches(run.getFrontierTheta());

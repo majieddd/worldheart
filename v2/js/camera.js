@@ -3,6 +3,8 @@ import { CONFIG, CAM_TUNE, REDUCED_MOTION, PRESENTATION } from './config.js';
 import { clamp, lerp, easeInOut, easeOutCubic } from './noise.js';
 
 const _aim = new THREE.Vector3();
+const _terrainDir = new THREE.Vector3();
+const _terrainAnchor = new THREE.Vector3(), _terrainProjected = new THREE.Vector3();
 const _aimDir = new THREE.Vector3();
 const _right = new THREE.Vector3();
 const _up = new THREE.Vector3();
@@ -103,6 +105,9 @@ export class OrbitRig {
     this.rayHit = false;         // last screen ray actually met the globe
     this.grabR = CONFIG.planetRadius + 1;
     this.surfaceProbe = null;    // (origin, dir, out) => bool, set by main
+    this.heightProbe = null;     // campaign terrain height at a unit direction
+    this.dragFocusRadius = null;
+    this.terrainSettle = null;
 
     this.onTap = null;           // (clientX, clientY, button)
     this.onHover = null;         // (clientX, clientY)
@@ -127,6 +132,8 @@ export class OrbitRig {
         // gesture the pan uses. Asked before any drag state is set up, so a
         // claimed gesture never half-starts a pan.
         if (this.dragClaim && this.dragClaim(e)) { this.dragging = false; return; }
+        this.dragFocusRadius = this.focusRadius;
+        this.terrainSettle = null;
         this.dragging = true;
         this.rotating = e.button === 1 && e.ctrlKey;
         this.dragButton = e.button;
@@ -185,7 +192,9 @@ export class OrbitRig {
       this.pointers.delete(e.pointerId);
       if (this.pointers.size < 2) this.pinchDist = 0;
       if (this.pointers.size === 0 && this.dragging) {
+        if (this.heightProbe && !this.rotating) this.terrainSettle = { from: this.focusRadius, t: 0 };
         this.dragging = false;
+        this.dragFocusRadius = null;
         if (this.rotating) {
           // a plain ctrl+middle click resets the view rotation
           if (this.dragMoved <= 4) this.resetView();
@@ -438,9 +447,9 @@ export class OrbitRig {
   // crosshair welded to the ground through any pitch or zoom change. Beyond
   // the horizon angle there is no solution, so the pitch is capped there.
   _placeCamera(shakeX = 0, shakeY = 0, shakeZ = 0) {
-    const R0 = CONFIG.planetRadius;
+    const R0 = this.focusRadius;
     const h = Math.max(this.dist, 0.2);
-    const Rc = R0 + h;
+    let Rc = R0 + h;
 
     // The near plane has to follow the camera down. A fixed near derived from
     // the planet radius cannot work once the minimum height is a slider: at
@@ -469,12 +478,22 @@ export class OrbitRig {
     // The pitch is solved from a view angle that already keeps it under this,
     // so the clamp is a guard against a bad external write rather than part of
     // the framing, and its margin stays small enough not to bend a low view.
-    const horizon = Math.asin(clamp(R0 / Rc, -1, 1));
-    const tilt = clamp(this.appliedTilt, -0.35, horizon - 0.0005);
-    const alpha = Math.asin(clamp((Rc / R0) * Math.sin(tilt), -1, 1)) - tilt;
-
     _axis.crossVectors(_focusDir, _head).normalize();
-    _camDir.copy(_focusDir).applyAxisAngle(_axis, -alpha).normalize();
+    const z = this.zoomT;
+    const view = clamp(lerp(CAM_TUNE.viewNear, CAM_TUNE.viewFar, z * z * (3 - 2 * z)) * Math.PI / 180 - this.tiltOffset, 0.06, 1.5);
+    for (let attempt = 0; attempt < (this.heightProbe ? 9 : 1); attempt++) {
+      const horizon = Math.asin(clamp(R0 / Rc, -1, 1));
+      if (this.heightProbe) this.appliedTilt = Math.asin(clamp(R0 / Rc * Math.cos(view), -1, 1));
+      const tilt = clamp(this.appliedTilt, -0.35, horizon - 0.0005);
+      const alpha = Math.asin(clamp((Rc / R0) * Math.sin(tilt), -1, 1)) - tilt;
+      _camDir.copy(_focusDir).applyAxisAngle(_axis, -alpha).normalize();
+      if (!this.heightProbe) break;
+      const floor = CONFIG.planetRadius + Math.max(0, this.heightProbe(_camDir)) + Math.max(2, this.camera.near * 2);
+      if (Rc >= floor) break;
+      // Re-solve the orbit when clearance raises the eye. Moving just the
+      // finished camera changed the view angle and caused a zoom dip.
+      Rc = attempt < 7 ? floor + 0.05 : CONFIG.planetRadius + CONFIG.terrain.range + CONFIG.terrain.canyon + 22;
+    }
 
     this.camera.position.copy(_camDir).multiplyScalar(Rc);
     this.camera.position.x += shakeX;
@@ -490,6 +509,69 @@ export class OrbitRig {
   // the pose their predecessor produced (otherwise a fast drag over-rotates).
   _syncCamera() {
     this._placeCamera();
+  }
+
+  get focusRadius() {
+    if (!this.heightProbe) return CONFIG.planetRadius;
+    // Keep the gesture's focal altitude fixed. Following every cliff during
+    // a drag can make the screen-space mapping fold back on itself, so no
+    // latitude/longitude solution can hold the anchor under the cursor.
+    if (this.dragging && !this.rotating && this.dragFocusRadius !== null) return this.dragFocusRadius;
+    const c = Math.cos(this.lat);
+    _terrainDir.set(Math.sin(this.lon) * c, Math.sin(this.lat), Math.cos(this.lon) * c);
+    const ground = CONFIG.planetRadius + Math.max(0, this.heightProbe(_terrainDir));
+    const settle = this.terrainSettle;
+    if (!settle) return ground;
+    const t = Math.min(1, settle.t / 0.45);
+    return lerp(settle.from, ground, t * t * (3 - 2 * t));
+  }
+
+  _panOnTerrain(clientX, clientY) {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = (clientX - rect.left) / rect.width * 2 - 1, y = 1 - (clientY - rect.top) / rect.height * 2;
+    _terrainAnchor.copy(this.grabDir).multiplyScalar(this.grabR);
+    const project = () => _terrainProjected.copy(_terrainAnchor).project(this.camera);
+    // A terrain-following camera also translates vertically during a pan.
+    // Solve the grabbed point's screen position with a bounded 2D Jacobian;
+    // the sphere-only rotation solver cannot account for that translation.
+    for (let i = 0; i < 16; i++) {
+      project(); const px = _terrainProjected.x, py = _terrainProjected.y;
+      const ex = x - px, ey = y - py, error = ex * ex + ey * ey;
+      if (error < 1e-9) break;
+      const lon = this.lon, lat = this.lat, eps = 1e-5;
+      this.lon = lon + eps; this._syncCamera(); project();
+      const jxx = (_terrainProjected.x - px) / eps, jyx = (_terrainProjected.y - py) / eps;
+      this.lon = lon; this.lat = lat + eps; this._syncCamera(); project();
+      const jxy = (_terrainProjected.x - px) / eps, jyy = (_terrainProjected.y - py) / eps;
+      const det = jxx * jyy - jxy * jyx;
+      this.lat = lat;
+      if (!Number.isFinite(det) || Math.abs(det) < 1e-8) { this._syncCamera(); break; }
+      let dl = (ex * jyy - ey * jxy) / det, da = (ey * jxx - ex * jyx) / det;
+      const length = Math.hypot(dl, da), scale = length > 0.03 ? 0.03 / length : 1;
+      dl *= scale; da *= scale;
+      let improved = false;
+      for (const fraction of [1, 0.5, 0.25, 0.125]) {
+        this.lon = lon + dl * fraction;
+        this.lat = clamp(lat + da * fraction, -CONFIG.camera.latClamp, CONFIG.camera.latClamp);
+        this._syncCamera(); project();
+        if ((x - _terrainProjected.x) ** 2 + (y - _terrainProjected.y) ** 2 < error) { improved = true; break; }
+      }
+      if (!improved) {
+        let best = error, bestLon = lon, bestLat = lat;
+        // At a cliff the clearance branch is non-smooth. Probe a bounded
+        // neighborhood to leave a local minimum before resuming Newton.
+        for (const radius of [0.002, 0.006, 0.018]) for (let j = 0; j < 8; j++) {
+          const angle = j * Math.PI / 4;
+          this.lon = lon + Math.cos(angle) * radius;
+          this.lat = clamp(lat + Math.sin(angle) * radius, -CONFIG.camera.latClamp, CONFIG.camera.latClamp);
+          this._syncCamera(); project();
+          const e = (x - _terrainProjected.x) ** 2 + (y - _terrainProjected.y) ** 2;
+          if (e < best) { best = e; bestLon = this.lon; bestLat = this.lat; }
+        }
+        this.lon = bestLon; this.lat = bestLat; this._syncCamera();
+        if (best >= error) break;
+      }
+    }
   }
 
   // Exact grab-the-world panning: rotate the rig so the point grabbed at
@@ -519,7 +601,8 @@ export class OrbitRig {
     // the fixed point is found by iteration. Convergence is linear and can be
     // as slow as 0.7 per pass when the pitch feeds back into the solve, so the
     // cap is generous; the early exit means the common case costs two passes.
-    for (let iter = 0; iter < 32; iter++) {
+    if (this.heightProbe && this.rayHit) this._panOnTerrain(clientX, clientY);
+    for (let iter = 0; iter < (this.heightProbe && this.rayHit ? 0 : 32); iter++) {
       if (!this._screenToSphere(clientX, clientY, _grabNow)) break;
       if (_grabNow.dot(this.grabDir) > 1 - 1e-10) break;
       _q.setFromUnitVectors(_grabNow, this.grabDir);
@@ -686,6 +769,10 @@ export class OrbitRig {
 
   update(dt) {
     const c = CONFIG.camera;
+    if (this.terrainSettle) {
+      this.terrainSettle.t += dt;
+      if (this.terrainSettle.t >= 0.45) this.terrainSettle = null;
+    }
     this.interactionAge += dt;
     this._keyboardStep(dt);
 
@@ -756,9 +843,9 @@ export class OrbitRig {
     const view = clamp(
       lerp(viewNear, viewFar, zt * zt * (3 - 2 * zt)) - this.tiltOffset, 0.06, 1.5,
     );
-    const R0 = CONFIG.planetRadius;
-    const Rc = R0 + Math.max(this.dist, 0.2);
-    const tiltTarget = Math.asin(clamp((R0 / Rc) * Math.cos(view), -1, 1));
+    const groundRadius = this.focusRadius;
+    const Rc = groundRadius + Math.max(this.dist, 0.2);
+    const tiltTarget = Math.asin(clamp((groundRadius / Rc) * Math.cos(view), -1, 1));
     // Height is already eased (zoomDamp), and the pitch is a pure function of
     // it, so the pitch inherits that smoothing. Easing it a second time on its
     // own clock only made it lag the height it is derived from, which reads as

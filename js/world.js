@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
+import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import {
   makeNoise3D, fbm3, ridged3, mulberry32,
   clamp, lerp, smoothstep,
@@ -8,7 +9,8 @@ import {
 // The planet: analytic terrain field, faceted terrain mesh, shader water,
 // atmosphere, sky, clouds, instanced decor, and the two landmark builders
 // (Worldheart, breach portals). The same terrainHeight() drives the visual
-// mesh, the nav graph, and unit grounding, so they can never disagree.
+// mesh, the nav graph, and unit grounding. Movement uses the graph's blocking
+// contract and shares its slope/water costs; these agreements need tests.
 
 export const R = CONFIG.planetRadius;
 export const SUN_DIR = new THREE.Vector3(0.62, 0.46, 0.58).normalize();
@@ -32,7 +34,7 @@ const F_RIDGE = 2.35 * FQ;
 // into a canyon, so the walkable graph stays connected through them rather
 // than around them. Sized against the cap: on an R240 world a range every
 // 120 or so units and a canyon every 90.
-const F_RANGE = 1.1 * FQ;
+const F_RANGE = (CONFIG.terrain ? 0.65 : 1.1) * FQ;
 const F_CANYON = 1.55 * FQ;
 const F_GAP = 3.2 * FQ;
 // Range peaks stand 7 to 11 units over the land, far above the walk limit,
@@ -46,8 +48,8 @@ const F_GAP = 3.2 * FQ;
 // rather than a mountain. Never below 0.45, so a range stays a wall (4.7
 // units against a 2.05 walk limit) on the smallest world.
 const RANGE_SCALE = Math.min(1, Math.max(0.45, R / 240));
-const RANGE_HEIGHT = 10.5 * RANGE_SCALE;
-const PASS_DROP = 9.6 * RANGE_SCALE;
+const RANGE_HEIGHT = CONFIG.terrain?.range ?? 10.5 * RANGE_SCALE;
+const PASS_DROP = CONFIG.terrain ? RANGE_HEIGHT - 0.9 : 9.6 * RANGE_SCALE;
 const PASS_FLOOR = 0.9;
 // A canyon is sized in WORLD units from the noise gradient (see below):
 // a floor CANYON_HALF either side of the zero line, cut to a dry
@@ -55,19 +57,22 @@ const PASS_FLOOR = 0.9;
 // a rim crest RIM_LIFT high and RIM_CREST wide that fades back to the land
 // over RIM_FADE. Thresholds in noise units gave a 20 unit floor inside a
 // 40 unit shelf on seed 12345, because the noise runs flat near zero.
-const CANYON_HALF = 2.75;
-const CANYON_WALL = 1.2;
-const RAMP_RUN = 5.0;
-const RIM_LIFT = 2.6;
+const CANYON_HALF = CONFIG.terrain ? Math.max(4, CONFIG.terrain.canyon * 0.2) : 2.75;
+const CANYON_WALL = CONFIG.terrain ? Math.max(4, CONFIG.terrain.canyon * 0.4) : 1.2;
+const RAMP_RUN = CONFIG.terrain ? CONFIG.terrain.canyon * 2 : 5.0;
+const RIM_LIFT = CONFIG.terrain?.canyon ?? 2.6;
 // Crest and fade were 4 and 6: on seed 51940 that put a third of the land
 // above the walk limit (0.6% before the landforms) and read as mesas, not
 // rims. 2.5 and 4 keep the wall and halve the shelf.
-const RIM_CREST = 2.5;
-const RIM_FADE = 4.0;
+const RIM_CREST = CONFIG.terrain ? Math.max(5, CONFIG.terrain.canyon * 0.3) : 2.5;
+const RIM_FADE = CONFIG.terrain ? Math.max(10, CONFIG.terrain.canyon * 0.7) : 4.0;
 const CANYON_FLOOR = 0.55;
 const CANYON_REACH = CANYON_HALF + CANYON_WALL + RAMP_RUN + RIM_CREST + RIM_FADE;
 const F_FINE = Math.pow(2, CONFIG.terrainDetail) / 3.048;
 const F_FINE2 = F_FINE * 2.476;
+export const TERRAIN_TOP = RANGE_HEIGHT + RIM_LIFT + 8;
+export const FLIGHT_CEILING = CONFIG.terrain?.flightCeiling ?? Infinity;
+export const FLIGHT_CLEARANCE = 2.6;
 
 // Battlefield cap for section-of-planet maps: null center means the whole
 // globe is in play. Set before any mesh building.
@@ -204,7 +209,8 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
   const wy = dy + nWarp(dx * F_WARP, dy * F_WARP + 3.1, dz * F_WARP) * w;
   const wz = dz + nWarp(dx * F_WARP, dy * F_WARP, dz * F_WARP + 5.3) * w;
   const c = fbm3(nBase, wx * F_CONT, wy * F_CONT, wz * F_CONT, 4);
-  const cont = smoothstep(-0.14, 0.22, c);
+  const ocean = CONFIG.terrain?.ocean ?? 0;
+  const cont = smoothstep(-0.14 + ocean, 0.22 + ocean, c);
   let h = lerp(-1.65 + 0.5 * c, 0.24, cont);
   const rolling = fbm3(nDetail, dx * F_ROLL, dy * F_ROLL, dz * F_ROLL, 3);
   h += cont * (0.3 + rolling * 0.44);
@@ -227,8 +233,8 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
   // frequency than these features, and through it a range broke into
   // spikes (a 9.5 unit needle two units from a canyon floor on seed 12345).
   const rr = ridged3(nRange, dx * F_RANGE + 23, dy * F_RANGE, dz * F_RANGE, 3);
-  const range = smoothstep(0.64, 0.9, rr);
-  if (range > 0.001 && cont > 0.05) {
+  const range = CONFIG.terrain ? smoothstep(0.28, 0.95, rr) : smoothstep(0.64, 0.9, rr);
+  if (range > 0.001 && cont > (CONFIG.terrain ? 0 : 0.05)) {
     const gap = fbm3(nGap, dx * F_GAP + 41, dy * F_GAP, dz * F_GAP, 2);
     const pass = smoothstep(0.14, 0.38, gap);
     // A pass is a saddle: the land under it is levelled as the crest drops.
@@ -241,13 +247,13 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
   // widens into a ramp, so the corridor can be entered and left. Rims stand
   // at the walk limit and the walls are steeper than the slope limit, so a
   // canyon funnels everything that walks it.
-  if (cont > 0.05) {
+  if (cont > (CONFIG.terrain ? 0 : 0.05)) {
     // Unwarped for the same reason as the ranges: warped, the zero line
     // wriggled with the warp and a 24 unit transect crossed three floors.
     const px = dx * F_CANYON + 5.5, py = dy * F_CANYON, pz = dz * F_CANYON;
     const cn = nCanyon(px, py, pz);
     const acn = Math.abs(cn);
-    if (acn < 0.34) {
+    if (CONFIG.terrain || acn < 0.34) {
       // Distance to the zero line in world units, from the noise gradient
       // (three forward differences, only inside the candidate band). This
       // is what keeps a canyon the same width wherever the noise runs, and
@@ -257,7 +263,10 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
       const gx = nCanyon(px + e, py, pz) - cn;
       const gy = nCanyon(px, py + e, pz) - cn;
       const gz = nCanyon(px, py, pz + e) - cn;
-      const g = Math.sqrt(gx * gx + gy * gy + gz * gz) / e * F_CANYON / R + 1e-6;
+      const gradient = Math.sqrt(gx * gx + gy * gy + gz * gz) / e * F_CANYON / R;
+      // Near a stationary noise point, dividing by an almost-zero gradient
+      // made a canyon rim collapse into a needle. Bound that distance estimate.
+      const g = CONFIG.terrain ? Math.max(gradient, F_CANYON / R * 0.35) : gradient + 1e-6;
       const dist = acn / g;
       if (dist < CANYON_REACH) {
         const ramp = smoothstep(0.24, 0.5, fbm3(nGap, dx * F_GAP * 1.7 + 9, dy * F_GAP * 1.7, dz * F_GAP * 1.7, 2));
@@ -266,10 +275,11 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
         const rim = smoothstep(CANYON_HALF, rimTop, dist)
           * (1 - smoothstep(rimTop + RIM_CREST, rimTop + RIM_CREST + RIM_FADE, dist))
           * (1 - ramp * 0.85);
+        const uncut = h;
         h += cont * rim * RIM_LIFT;
         const band = 1 - smoothstep(CANYON_HALF, rimTop, dist);
         if (band > 0.001) {
-          const floor = CANYON_FLOOR + 0.12 * rolling;
+          const floor = CONFIG.terrain ? Math.max(CANYON_FLOOR + 0.12 * rolling, uncut - CONFIG.terrain.canyon) : CANYON_FLOOR + 0.12 * rolling;
           h = lerp(h, floor, band * cont);
         }
       }
@@ -300,7 +310,7 @@ function tangentBasis(dir, outA, outB) {
 // Gradient magnitude of the gameplay height field (base terrain, no cosmetic
 // relief), in height units per surface unit.
 export function slopeAt(dir) {
-  const eps = 0.016;
+  const eps = CONFIG.terrain ? 0.8 / R : 0.016;
   tangentBasis(dir, _t1, _t2);
   const h0 = terrainHeight(dir.x, dir.y, dir.z, false);
   _p1.copy(dir).addScaledVector(_t1, eps).normalize();
@@ -318,7 +328,8 @@ export function slopeAt(dir) {
 export function isWalkableDir(dir) {
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
   const h = terrainHeight(dir.x, dir.y, dir.z, false);
-  if (h < 0.05 || h > CONFIG.walkMaxHeight) return false;
+  if (CONFIG.terrain && h < 0.05) return true; // water is a slower route
+  if (!CONFIG.terrain && (h < 0.05 || h > CONFIG.walkMaxHeight)) return false;
   if (forestAt(dir.x, dir.y, dir.z) > 0.78 && h > 0.24 && h < 1.8) return false;
   if (slopeAt(dir) > CONFIG.walkMaxSlope) return false;
   return true;
@@ -330,13 +341,15 @@ export function isWalkableDir(dir) {
 export function isLandDir(dir) {
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
   const h = terrainHeight(dir.x, dir.y, dir.z, false);
-  return h >= 0.05 && h <= CONFIG.walkMaxHeight + 1.2;
+  return h >= 0.05 && (CONFIG.terrain || h <= CONFIG.walkMaxHeight + 1.2);
 }
 
 // Where towers may stand. On ground maps this is walkability; on space maps
 // it is any rock surface, sides included (towers align to the local normal,
 // so building on a spire's flank is the point, not an accident).
 export function isBuildableDir(dir) {
+  if (CONFIG.terrain) return inBattlefield(dir.x, dir.y, dir.z)
+    && terrainHeight(dir.x, dir.y, dir.z, false) >= 0.13 && slopeAt(dir) <= 0.55;
   if (!SPACE) return isWalkableDir(dir);
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
   let onRock = false;
@@ -352,6 +365,59 @@ export function isBuildableDir(dir) {
 }
 const _bn = new THREE.Vector3();
 
+// These classifications also tint the mesh. A placement rule must have a
+// visible surface, including where a footprint straddles two climates.
+export function climateAt(dir, height = terrainHeight(dir.x, dir.y, dir.z, false)) {
+  if (!CONFIG.terrain || height < 0.13) return 'neutral';
+  if (height >= CONFIG.terrain.snow) return 'cold';
+  const temperature = nMoist(dir.x * 3.1 + 81, dir.y * 3.1, dir.z * 3.1);
+  if (height > 1.4 && temperature > 0.3) return 'hot';
+  if (height > 1.4 && temperature < -0.3) return 'cold';
+  return 'neutral';
+}
+
+const _footDir = new THREE.Vector3(), _footA = new THREE.Vector3(), _footB = new THREE.Vector3();
+export function terrainFootprint(dir, radius, type) {
+  if (!CONFIG.terrain) return { ok: isBuildableDir(dir), reason: 'terrain', climate: 'neutral' };
+  const climates = [];
+  let low = Infinity, high = -Infinity;
+  tangentBasis(dir, _footA, _footB);
+  for (let i = 0; i < 9; i++) {
+    const angle = (i - 1) * Math.PI / 4, arc = i ? radius / R : 0;
+    _footDir.copy(dir).multiplyScalar(Math.cos(arc))
+      .addScaledVector(_footA, Math.sin(arc) * Math.cos(angle))
+      .addScaledVector(_footB, Math.sin(arc) * Math.sin(angle)).normalize();
+    const h = terrainHeight(_footDir.x, _footDir.y, _footDir.z, false);
+    if (h < 0.13 || !inBattlefield(_footDir.x, _footDir.y, _footDir.z)) return { ok: false, reason: 'water' };
+    low = Math.min(low, h); high = Math.max(high, h);
+    climates.push(climateAt(_footDir, h));
+  }
+  if (high - low > radius * 1.1 || slopeAt(dir) > 0.55) return { ok: false, reason: 'unstable' };
+  return climatePermission(type, climates);
+}
+
+const _travelProbe = new THREE.Vector3();
+export function surfaceTravel(unit, bearing, distance = 0.05) {
+  if (!CONFIG.terrain) return 1;
+  const d = unit.dir;
+  const from = terrainHeight(d.x, d.y, d.z, false);
+  unit.swimming = isSwimming(unit.swimming, -from);
+  const probe = Math.max(0.005, Math.min(0.8, distance));
+  const radius = R + Math.max(0.03, from);
+  _travelProbe.copy(d).addScaledVector(bearing, probe / radius).normalize();
+  if (!inBattlefield(_travelProbe.x, _travelProbe.y, _travelProbe.z)) return 0;
+  const to = terrainHeight(_travelProbe.x, _travelProbe.y, _travelProbe.z, false);
+  const grade = (Math.max(0.03, to) - Math.max(0.03, from)) / probe;
+  // Blocking belongs to the same sampled graph that routes the unit. A
+  // second analytic cutoff here can strand a body on a certified edge.
+  return travelFactor(grade, unit.swimming) / Math.hypot(1, grade) * R / radius;
+}
+
+export function canFlyAt(dir, clearance = FLIGHT_CLEARANCE) {
+  return !CONFIG.terrain || (inBattlefield(dir.x, dir.y, dir.z)
+    && terrainHeight(dir.x, dir.y, dir.z, false) + clearance <= FLIGHT_CEILING);
+}
+
 // Analytic ray-to-surface intersection: enter the terrain shell, march, then
 // bisect. Exact at any planet scale and free of the tessellation error a mesh
 // proxy carries (a coarse proxy on a huge world lands clicks units away from
@@ -359,7 +425,7 @@ const _bn = new THREE.Vector3();
 const _rp = new THREE.Vector3();
 export function raycastTerrain(origin, dir, out) {
   const isSpace = !!SPACE;
-  const rMax = R + (isSpace ? 13 : 6.5);
+  const rMax = R + (isSpace ? 13 : TERRAIN_TOP);
   const rMin = R - (isSpace ? 13 : 0.5);
   const floor = isSpace ? -1e9 : 0.03;
 
@@ -389,7 +455,7 @@ export function raycastTerrain(origin, dir, out) {
   };
 
   const span = t1 - t0;
-  const steps = Math.min(512, Math.max(16, Math.ceil(span / 0.45)));
+  const steps = Math.max(16, Math.ceil(span / 0.45));
   const step = span / steps;
   if (depthAt(t0) <= 0) { out.copy(dir).multiplyScalar(t0).add(origin); return true; }
   let prev = t0;
@@ -418,7 +484,7 @@ export function surfacePoint(dir, out) {
 }
 
 export function groundNormal(dir, out) {
-  const eps = 0.015;
+  const eps = CONFIG.terrain ? 0.8 / R : 0.015;
   tangentBasis(dir, _e1, _e2);
   surfacePoint(dir, _p0);
   _t1.copy(dir).addScaledVector(_e1, eps).normalize();
@@ -478,9 +544,13 @@ function faceColor(dir, h, slope, jrand, out) {
       }
       out.lerp(_cliffCol, clamp(cliff, 0, 1));
     }
-    const snow = smoothstep(2.45, 2.95, h + jrand * 0.25) +
+    const snowLine = CONFIG.terrain?.snow ?? 2.45;
+    const snow = smoothstep(snowLine, snowLine + 0.5, h + jrand * 0.25) +
       smoothstep(0.945, 0.985, Math.abs(dir.y)) * smoothstep(0.25, 0.6, h);
     if (snow > 0) out.lerp(C.snow, clamp(snow, 0, 1));
+    const climate = climateAt(dir, h);
+    if (climate === 'hot') out.setHex(0x33303b).lerp(_hotStone, jrand * 0.2);
+    if (climate === 'cold') out.setHex(0xc6e5f4).lerp(C.snow, jrand * 0.45);
   }
   const j = 1 + (jrand - 0.5) * 0.17;
   out.r = clamp(out.r * j, 0, 1);
@@ -505,6 +575,7 @@ function faceColor(dir, h, slope, jrand, out) {
   }
   return out;
 }
+const _hotStone = new THREE.Color(0xa35038);
 const _cliffCol = new THREE.Color();
 const _outsideCol = new THREE.Color();
 
@@ -1509,18 +1580,20 @@ export function buildPortal(pos) {
 // Containment perimeter for capped battlefields: a terrain-hugging ribbon of
 // player-tech energy, quiet enough to read as a boundary, not a spectacle.
 export function buildFogVeil(centerDir, theta) {
-  // A shell just above the highest terrain. Inside the frontier it is fully
-  // transparent; beyond it, fog closes over the ground. Driven by uniforms so
-  // the frontier can widen every wave without rebuilding anything - the same
-  // trick the cloud deck already uses.
-  const geo = new THREE.SphereGeometry(R + 4.5, 96, 64);
+  // Campaign fog follows the terrain, so peaks are covered without being
+  // sliced by a low spherical shell. Expansion remains a uniform write.
+  const geo = CONFIG.terrain ? displaceGeometry(buildIcoGeometry(CONFIG.terrainDetail)) : new THREE.SphereGeometry(R + 4.5, 96, 64);
+  if (CONFIG.terrain) {
+    const position = geo.attributes.position;
+    for (let i = 0; i < position.count; i++) {
+      _p0.fromBufferAttribute(position, i);
+      _p0.setLength(Math.max(R + 0.03, _p0.length()) + 2);
+      position.setXYZ(i, _p0.x, _p0.y, _p0.z);
+    }
+  }
   const mat = new THREE.ShaderMaterial({
-    // DOUBLE sided. The shell sits at R + 4.5 and a possessed eye stands at
-    // about R + 1.5, which is INSIDE it - so with front-face culling every face
-    // pointed away from the camera and the veil rendered exactly zero pixels in
-    // first and third person. The mode's signature image, the circle you hold,
-    // did not exist in the mode's headline camera, and standing inside the
-    // frontier was an x-ray of the whole out-of-bounds world, breaches included.
+    // The possessed eye can sit inside the veil. Both faces must render or
+    // first person sees through the fog that the board view shows.
     transparent: true, depthWrite: false, side: THREE.DoubleSide,
     uniforms: {
       uCenter: { value: centerDir.clone() },

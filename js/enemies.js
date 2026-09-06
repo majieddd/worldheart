@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { R, terrainHeight } from './world.js';
+import { R, terrainHeight, surfaceTravel, canFlyAt } from './world.js';
+import { MAX_SLOW, swimOffset } from './traversal.js';
 import { Skeleton, slab, box, wedge, cone, merge, shift, spin, easeOut, hump, keyed } from './rig.js';
 
 // Evolution tier, set by the 99 Planets shell and 0 in every other mode.
@@ -12,6 +13,7 @@ const SHIELD_HITS = 3;
 const _mePos = new THREE.Vector3();
 const _alPos = new THREE.Vector3();
 const _plPos = new THREE.Vector3();
+const _nextDir = new THREE.Vector3(), _moveAxis = new THREE.Vector3(), _routeDes = new THREE.Vector3();
 
 // Enemy melee. An enemy never holds a target and never walks toward an AI
 // ally: it swings at whatever is already standing inside its own reach, and
@@ -153,6 +155,7 @@ class Enemy {
     this.speed = type.speed;
     this.slowFrac = 0;
     this.slowT = 0;
+    this.swimming = false;
     this.stunT = 0;
     this.flashT = 0;
     this.spawnT = 0;
@@ -1101,14 +1104,20 @@ export class EnemyManager {
     // spawn appears ~125 units outside a ~12 unit circle and the walk in is
     // most of the wave.
     if (this.spawnNodeOverride) {
-      const remapped = this.spawnNodeOverride(portalNode);
+      const remapped = this.spawnNodeOverride(portalNode, !!type.flying);
       if (remapped >= 0) portalNode = remapped;
     }
     const e = this.pool.pop() || new Enemy();
     this.nav.nodeDir(portalNode, _dir);
     // slight scatter around the portal
-    _tmp.set(SIM_RANDOM.next() - 0.5, SIM_RANDOM.next() - 0.5, SIM_RANDOM.next() - 0.5).multiplyScalar(0.02);
+    _tmp.set(SIM_RANDOM.next() - 0.5, SIM_RANDOM.next() - 0.5, SIM_RANDOM.next() - 0.5).multiplyScalar(CONFIG.terrain ? 0.25 / R : 0.02);
     _dir.add(_tmp).normalize();
+    if (CONFIG.terrain) {
+      const node = this.nav.nearestNode(_dir);
+      const dist = type.flying ? this.nav.airDist : this.nav.dist;
+      if (node < 0 || !Number.isFinite(dist[node]) || (type.flying && !canFlyAt(_dir))) this.nav.nodeDir(portalNode, _dir);
+      else portalNode = node;
+    }
     e.init(typeKey, type, _dir, portalNode, hpScale);
     // Space waves fly in three altitude bands; high rocks command high
     // lanes, low rocks guard the deep drifts. Flyers ride slightly higher.
@@ -1169,7 +1178,7 @@ export class EnemyManager {
   }
 
   enemyPos(e, out) {
-    const h = Math.max(e.height, 0.03);
+    const h = Math.max(e.height, 0.03) - swimOffset(e);
     return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
   }
 
@@ -1299,7 +1308,7 @@ export class EnemyManager {
 
   applySlow(e, frac, dur) {
     if (!e.active) return;
-    e.slowFrac = Math.max(e.slowFrac, frac);
+    e.slowFrac = Math.min(CONFIG.terrain ? MAX_SLOW : 1, Math.max(e.slowFrac, frac));
     e.slowT = Math.max(e.slowT, dur);
   }
 
@@ -1383,7 +1392,9 @@ export class EnemyManager {
       // anti-air placement meaningful. sampleFlow falls back to a great
       // circle wherever the field is undefined.
       e.node = this.nav.descendNode(e.node, e.dir);
-      e.progress = this.nav.sampleFlow(e.node, e.dir, _des);
+      e.progress = type.flying && CONFIG.terrain
+        ? this.nav.sampleAirFlow(e.node, e.dir, _des) : this.nav.sampleFlow(e.node, e.dir, _des);
+      _routeDes.copy(_des);
       // The chase overrides the field's direction, never the node tracking
       // above it, so a body that gives up the chase resumes the field from
       // wherever it actually stands.
@@ -1431,8 +1442,40 @@ export class EnemyManager {
       e.fwd.addScaledVector(e.dir, -fd).normalize();
 
       // Advance along the sphere
+      if (CONFIG.terrain) {
+        let factor = type.flying ? 1 : surfaceTravel(e, e.fwd, stepSpeed * dt);
+        _nextDir.copy(e.dir).addScaledVector(e.fwd, stepSpeed * dt / R).normalize();
+        if (!factor || !this.nav.canStep(e.dir, _nextDir, type.flying, e.node) || (type.flying && !canFlyAt(_nextDir))) {
+          // Separation or a chase may point into a cliff. Resume the route
+          // before attempting motion; never walk through the obstacle.
+          if (!type.flying && this.nav.next[e.node] >= 0) {
+            this.nav.nodeDir(this.nav.next[e.node], _routeDes);
+            _routeDes.addScaledVector(e.dir, -_routeDes.dot(e.dir)).normalize();
+          }
+          e.fwd.copy(_routeDes);
+          factor = type.flying ? 1 : surfaceTravel(e, e.fwd, stepSpeed * dt);
+        }
+        stepSpeed *= factor;
+        _nextDir.copy(e.dir).addScaledVector(e.fwd, stepSpeed * dt / R).normalize();
+        if (!this.nav.canStep(e.dir, _nextDir, type.flying, e.node) || (type.flying && !canFlyAt(_nextDir))) {
+          // A smoothed corner can enter a neighboring blocked cell even
+          // when the centre-to-centre route is valid. Return to this cell's
+          // centre, then take its certified outgoing edge on the next frame.
+          this.nav.nodeDir(e.node, _routeDes).normalize();
+          const distance = e.dir.angleTo(_routeDes) * R;
+          _routeDes.addScaledVector(e.dir, -_routeDes.dot(e.dir)).normalize();
+          e.fwd.copy(_routeDes);
+          stepSpeed = Math.min(stepSpeed, distance / dt);
+        }
+      }
       const ang = (stepSpeed * dt) / R;
-      e.dir.addScaledVector(e.fwd, ang).normalize();
+      _moveAxis.crossVectors(e.dir, e.fwd).normalize();
+      _nextDir.copy(e.dir).applyAxisAngle(_moveAxis, ang).normalize();
+      if ((!type.flying || canFlyAt(_nextDir)) && this.nav.canStep(e.dir, _nextDir, type.flying, e.node)) {
+        e.dir.copy(_nextDir);
+        e.fwd.applyAxisAngle(_moveAxis, ang).addScaledVector(e.dir, -e.fwd.dot(e.dir)).normalize();
+      } else stepSpeed = 0;
+      e.moveV = stepSpeed;
       e.height = terrainHeight(e.dir.x, e.dir.y, e.dir.z);
 
       // The dive (see DIVE_ALT). Space bands keep their own altitudes.
@@ -1503,7 +1546,7 @@ export class EnemyManager {
       const e = this.active[i];
       const type = e.type;
       const rig = this._rigs[e.typeKey];
-      const hRaw = Math.max(e.height, 0.03);
+      const hRaw = Math.max(e.height, 0.03) - swimOffset(e);
       const bob = (type.flying || this.spaceMode) ? Math.sin(t * 3.1 + e.phase) * 0.2 : 0;
       _tmp.copy(e.dir).multiplyScalar(R + hRaw + e.alt + bob);
       _up.copy(e.dir);
