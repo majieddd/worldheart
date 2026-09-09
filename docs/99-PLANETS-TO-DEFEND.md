@@ -244,6 +244,26 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 
 ## Decided
 
+2026-09-08 natural terrain follow-up: preserve major peaks and the faceted
+aesthetic while blending continental, upland and erosion regions into broad
+foothills and rounded canyon shoulders. The shared terrain field still owns
+navigation, grounding, climate placement and flight. Fixed-seed field comparisons
+must bypass the world generator's retry chooser; actual campaign checks must
+record the resulting effective seed. Classic map height formulas remain intact.
+
+Decor camera clearance now follows actual scaled/tilted geometry bounds.
+Commander bob and footsteps follow displacement, including blocked, uphill and
+swimming movement. Reduced-motion hit text stays anchored, close-clipped labels
+disappear and repeated identical warnings refresh one notice. Enemy corner
+recovery completes its certified edge before returning to smoothed steering;
+the discovered planet-95 oscillation is retained as a regression case.
+Profiling then exposed repeated full-field commander path searches. Point
+queries now use a conservative A* heuristic while preserving Dijkstra for
+heart/placement/air fields and validating directed costs against that oracle.
+Revision-scoped weak-connectivity labels reject impossible cross-region
+pursuits before search. Construction/selling and graph changes invalidate them;
+they must never stand in for weighted traversal or loosen collision.
+
 2026-09-06 adversarial acceptance: inventory rebuilds must preserve keyboard
 focus by item/action. Victory receipts own pause, pointer lock and hotkeys;
 inventory above a receipt returns to that same context. Weapon length and era
@@ -308,7 +328,18 @@ Continue in dependency order and keep each behavior reviewable. A task closes on
 
 ## Where we are
 
-Current continuation: Codex on `feature/adversarial-acceptance` has repaired
+Current 2026-09-08 continuation: Codex on `feature/natural-terrain-feel` has
+implemented rounded regional mountains/canyons, actual decor camera clearance
+and displacement-driven bob, plus targeted held-sway and feedback-text repairs.
+[The current ledger](qa/implementation/NATURAL-TERRAIN-FEEL.md) records the
+baseline failures, 36 shape assertions, 99 isolated route passes and a fresh
+15-wave victory with real weapon extraction to planet 2. The sweep also found
+and repaired an enemy corner oscillation on planet 95. [PR #23](https://github.com/majieddd/worldheart/pull/23)
+is live at V2 from source `88e8964`, with 85 public checks and all preview/root
+asset hashes verified. Native desktop stress passes; 4x CPU slowdown still
+misses the p99 target. Full campaign and owner feel remain open.
+
+Previous continuation: Codex on `feature/adversarial-acceptance` has repaired
 interaction/model defects and GPU recovery. [The acceptance audit](qa/implementation/ADVERSARIAL-ACCEPTANCE.md)
 retains the before/after browser controls, a natural victory with repaired
 extraction, a subsequent canyon defeat and eight foliage geometry cases.

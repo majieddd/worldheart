@@ -1,0 +1,87 @@
+{
+  "scope": "Isolated real decor instances and geometry probes",
+  "checks": [
+    {
+      "name": "pine 0: visible solid decor occludes the boom",
+      "ok": false,
+      "actual": -1
+    },
+    {
+      "name": "decor 0/0: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "pine 1: visible solid decor occludes the boom",
+      "ok": false,
+      "actual": -1
+    },
+    {
+      "name": "decor 0/1: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "pine 2: visible solid decor occludes the boom",
+      "ok": false,
+      "actual": -1
+    },
+    {
+      "name": "decor 0/2: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "rock 0: visible solid decor occludes the boom",
+      "ok": false,
+      "actual": -1
+    },
+    {
+      "name": "rock 0: empty space above actual geometry leaves boom clear",
+      "ok": false,
+      "actual": {
+        "clear": 0.49999999999999967,
+        "radius": 0.19633974468436516,
+        "scale": 0.5172574331285432
+      }
+    },
+    {
+      "name": "decor 2/0: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "rock 1: visible solid decor occludes the boom",
+      "ok": false,
+      "actual": -1
+    },
+    {
+      "name": "rock 1: empty space above actual geometry leaves boom clear",
+      "ok": false,
+      "actual": {
+        "clear": 0.5,
+        "radius": 0.37793669154361564,
+        "scale": 0.9956749371718616
+      }
+    },
+    {
+      "name": "decor 2/1: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "rock 2: visible solid decor occludes the boom",
+      "ok": false,
+      "actual": -1
+    },
+    {
+      "name": "rock 2: empty space above actual geometry leaves boom clear",
+      "ok": false,
+      "actual": {
+        "clear": 0.5,
+        "radius": 0.5805424551363687,
+        "scale": 1.5294402091065422
+      }
+    },
+    {
+      "name": "decor 2/2: crushed objects cannot hold the camera",
+      "ok": true
+    }
+  ],
+  "faults": []
+}

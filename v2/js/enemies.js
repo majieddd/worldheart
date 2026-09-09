@@ -156,6 +156,7 @@ class Enemy {
     this.hpScaleUsed = hpScale;
     this.dir.copy(dirVec);
     this.node = node;
+    this.routeCenter = -1; this.routeExit = -1;
     this.hpMax = Math.round(type.hp * hpScale);
     this.hp = this.hpMax;
     this.speed = type.speed;
@@ -1496,6 +1497,24 @@ export class EnemyManager {
         _des.addScaledVector(_sep, 34).normalize();
       }
 
+      // A corner recovery must finish. Previously one frame moved toward
+      // the cell centre, then the blended flow took over and turned back
+      // into the same blocked corner. Planet 95 looped there indefinitely.
+      // Walk to the centre and along its certified next edge, without
+      // teleporting or relaxing collision, before resuming blended steering.
+      let recoveryDistance=Infinity;
+      for(let stage=0;stage<2;stage++){
+        const target=e.routeCenter>=0?e.routeCenter:e.routeExit;
+        if(target<0)break;
+        const walk=type.flying?this.nav.airWalk:this.nav.walk;
+        if(!walk?.[target]||(!type.flying&&this.nav.block[target])){e.routeCenter=-1;e.routeExit=-1;break;}
+        this.nav.nodeDir(target,_routeDes);
+        const distance=e.dir.distanceTo(_routeDes)*R;
+        if(distance<.008){if(e.routeCenter>=0)e.routeCenter=-1;else e.routeExit=-1;continue;}
+        _des.copy(_routeDes).addScaledVector(e.dir,-_routeDes.dot(e.dir)).normalize();
+        recoveryDistance=distance;break;
+      }
+
       // Turn-rate limited steering: the heading closes a fixed fraction of
       // the remaining angle every frame. This used to lerp the two unit
       // vectors, which is the same thing for small angles and nothing at all
@@ -1514,10 +1533,12 @@ export class EnemyManager {
         e.fwd.applyAxisAngle(_tmp, off * Math.min(1, turn * dt));
       }
       if (swinging && e.attackPlan) e.fwd.copy(e.attackFacing);
+      else if(Number.isFinite(recoveryDistance))e.fwd.copy(_des);
       const fd = e.fwd.dot(e.dir);
       e.fwd.addScaledVector(e.dir, -fd).normalize();
 
       // Advance along the sphere
+      if(dt>0)stepSpeed=Math.min(stepSpeed,recoveryDistance/dt);
       if (CONFIG.terrain) {
         let factor = type.flying ? 1 : surfaceTravel(e, e.fwd, stepSpeed * dt);
         _nextDir.copy(e.dir).addScaledVector(e.fwd, stepSpeed * dt / R).normalize();
@@ -1538,6 +1559,8 @@ export class EnemyManager {
           // when the centre-to-centre route is valid. Return to this cell's
           // centre, then take its certified outgoing edge on the next frame.
           this.nav.nodeDir(e.node, _routeDes).normalize();
+          e.routeCenter=e.node;
+          e.routeExit=type.flying?this.nav.airNext[e.node]:this.nav.next[e.node];
           const distance = e.dir.angleTo(_routeDes) * R;
           _routeDes.addScaledVector(e.dir, -_routeDes.dot(e.dir)).normalize();
           e.fwd.copy(_routeDes);

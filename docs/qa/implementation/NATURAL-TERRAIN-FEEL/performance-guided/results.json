@@ -1,0 +1,2791 @@
+{
+  "scope": "60-second real-time stress fixture, not natural campaign play",
+  "cpuRate": 1,
+  "cpuScope": "Native speed",
+  "cameraMotion": "Continuous orbit at 0.15 radians per second",
+  "hardware": {
+    "cpu": "13th Gen Intel(R) Core(TM) i9-13900H",
+    "logicalCpus": 20,
+    "memoryGiB": 63.62815475463867,
+    "os": "win32",
+    "release": "10.0.22631"
+  },
+  "browser": "152.0.7977.77",
+  "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "dpr": 1
+  },
+  "faults": [],
+  "bootMs": 5474,
+  "uploadPolicy": "Runtime default",
+  "setup": {
+    "seed": 36102,
+    "terrain": "varied",
+    "towers": 30,
+    "enemies": 100,
+    "heart": 10000000,
+    "commander": [
+      10000000
+    ],
+    "failures": {
+      "overlap": 96,
+      "unstable": 46,
+      "path": 1
+    },
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "measurement": {
+    "frames": 5118,
+    "frameMs": {
+      "p50": 7.900000000001455,
+      "p95": 16,
+      "p99": 107.69999999999709,
+      "max": 285
+    },
+    "medianFps": 126.58227848098934,
+    "onePercentLowFps": 9.285051067781124,
+    "loads": [
+      {
+        "ms": 19427,
+        "simTime": 9.657999999999998,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 496,
+        "triangles": 1039390,
+        "workMs": 5.160000017711094,
+        "memory": {
+          "geometries": 510,
+          "textures": 12
+        },
+        "heap": 124317727
+      },
+      {
+        "ms": 19701.2,
+        "simTime": 9.912533333333325,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 497,
+        "triangles": 1039710,
+        "workMs": 5.561428574153355,
+        "memory": {
+          "geometries": 511,
+          "textures": 12
+        },
+        "heap": 133927748
+      },
+      {
+        "ms": 20077.5,
+        "simTime": 10.195299999999985,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 498,
+        "triangles": 1040030,
+        "workMs": 6.712142835344587,
+        "memory": {
+          "geometries": 511,
+          "textures": 12
+        },
+        "heap": 127155704
+      },
+      {
+        "ms": 20309.3,
+        "simTime": 10.42709999999998,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 498,
+        "triangles": 1040030,
+        "workMs": 6.729285686356681,
+        "memory": {
+          "geometries": 511,
+          "textures": 12
+        },
+        "heap": 128258261
+      },
+      {
+        "ms": 20541.4,
+        "simTime": 10.659199999999977,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 497,
+        "triangles": 1039710,
+        "workMs": 6.701428536006382,
+        "memory": {
+          "geometries": 511,
+          "textures": 12
+        },
+        "heap": 129205573
+      },
+      {
+        "ms": 20780,
+        "simTime": 10.89779999999997,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 498,
+        "triangles": 1039902,
+        "workMs": 6.761428529875619,
+        "memory": {
+          "geometries": 512,
+          "textures": 12
+        },
+        "heap": 130183759
+      },
+      {
+        "ms": 21008.5,
+        "simTime": 11.126299999999967,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 497,
+        "triangles": 1039662,
+        "workMs": 6.012857099941798,
+        "memory": {
+          "geometries": 512,
+          "textures": 12
+        },
+        "heap": 131250303
+      },
+      {
+        "ms": 21242.6,
+        "simTime": 11.360399999999965,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 498,
+        "triangles": 1039982,
+        "workMs": 5.266428555761065,
+        "memory": {
+          "geometries": 512,
+          "textures": 12
+        },
+        "heap": 132390083
+      },
+      {
+        "ms": 21726.1,
+        "simTime": 11.726966666666634,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043678,
+        "workMs": 7.307857148987907,
+        "memory": {
+          "geometries": 514,
+          "textures": 12
+        },
+        "heap": 141820820
+      },
+      {
+        "ms": 21956.4,
+        "simTime": 11.957266666666634,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043678,
+        "workMs": 7.264285721097674,
+        "memory": {
+          "geometries": 514,
+          "textures": 12
+        },
+        "heap": 142681472
+      },
+      {
+        "ms": 22189.3,
+        "simTime": 12.190166666666633,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043678,
+        "workMs": 7.268571441514151,
+        "memory": {
+          "geometries": 514,
+          "textures": 12
+        },
+        "heap": 143671920
+      },
+      {
+        "ms": 22419.2,
+        "simTime": 12.420066666666637,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043678,
+        "workMs": 7.252142858505249,
+        "memory": {
+          "geometries": 514,
+          "textures": 12
+        },
+        "heap": 117303700
+      },
+      {
+        "ms": 22652.9,
+        "simTime": 12.653766666666636,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043678,
+        "workMs": 6.474999969346182,
+        "memory": {
+          "geometries": 514,
+          "textures": 12
+        },
+        "heap": 118345420
+      },
+      {
+        "ms": 22929.5,
+        "simTime": 12.910099999999968,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043678,
+        "workMs": 5.6107142550604685,
+        "memory": {
+          "geometries": 514,
+          "textures": 12
+        },
+        "heap": 127894909
+      },
+      {
+        "ms": 23358.4,
+        "simTime": 13.245433333333295,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043678,
+        "workMs": 7.163571388380868,
+        "memory": {
+          "geometries": 514,
+          "textures": 12
+        },
+        "heap": 129735813
+      },
+      {
+        "ms": 23590.6,
+        "simTime": 13.477633333333289,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043678,
+        "workMs": 7.162142825126648,
+        "memory": {
+          "geometries": 514,
+          "textures": 12
+        },
+        "heap": 130740977
+      },
+      {
+        "ms": 23821.8,
+        "simTime": 13.708833333333287,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 502,
+        "triangles": 1043998,
+        "workMs": 7.162857116971697,
+        "memory": {
+          "geometries": 515,
+          "textures": 12
+        },
+        "heap": 131736605
+      },
+      {
+        "ms": 24050.6,
+        "simTime": 13.937633333333283,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 502,
+        "triangles": 1043998,
+        "workMs": 7.154285703386579,
+        "memory": {
+          "geometries": 515,
+          "textures": 12
+        },
+        "heap": 132823686
+      },
+      {
+        "ms": 24282.7,
+        "simTime": 14.169733333333284,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 502,
+        "triangles": 1043998,
+        "workMs": 5.630714276858739,
+        "memory": {
+          "geometries": 515,
+          "textures": 12
+        },
+        "heap": 133925486
+      },
+      {
+        "ms": 24516.3,
+        "simTime": 14.403333333333277,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 502,
+        "triangles": 1043998,
+        "workMs": 5.2192856992994034,
+        "memory": {
+          "geometries": 515,
+          "textures": 12
+        },
+        "heap": 134854406
+      },
+      {
+        "ms": 24941.7,
+        "simTime": 14.738366666666616,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 502,
+        "triangles": 1043998,
+        "workMs": 6.762857110159738,
+        "memory": {
+          "geometries": 515,
+          "textures": 12
+        },
+        "heap": 134074378
+      },
+      {
+        "ms": 25179.5,
+        "simTime": 14.976166666666611,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1044014,
+        "workMs": 6.924999972752162,
+        "memory": {
+          "geometries": 516,
+          "textures": 12
+        },
+        "heap": 137231815
+      },
+      {
+        "ms": 25411.4,
+        "simTime": 15.20806666666661,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1044014,
+        "workMs": 7.00142856325422,
+        "memory": {
+          "geometries": 516,
+          "textures": 12
+        },
+        "heap": 144860462
+      },
+      {
+        "ms": 25644.7,
+        "simTime": 15.441366666666605,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1044014,
+        "workMs": 7.039285714285715,
+        "memory": {
+          "geometries": 516,
+          "textures": 12
+        },
+        "heap": 121461378
+      },
+      {
+        "ms": 25876.6,
+        "simTime": 15.673266666666603,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1044030,
+        "workMs": 5.968571441514151,
+        "memory": {
+          "geometries": 516,
+          "textures": 12
+        },
+        "heap": 124997695
+      },
+      {
+        "ms": 26152.4,
+        "simTime": 15.92849999999994,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1044046,
+        "workMs": 6.068571441514152,
+        "memory": {
+          "geometries": 516,
+          "textures": 12
+        },
+        "heap": 140019384
+      },
+      {
+        "ms": 26534.8,
+        "simTime": 16.238199999999942,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1044066,
+        "workMs": 7.139285704067775,
+        "memory": {
+          "geometries": 516,
+          "textures": 12
+        },
+        "heap": 137661832
+      },
+      {
+        "ms": 26767.5,
+        "simTime": 16.470899999999943,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1044046,
+        "workMs": 7.117857115609305,
+        "memory": {
+          "geometries": 516,
+          "textures": 12
+        },
+        "heap": 139916782
+      },
+      {
+        "ms": 27013.4,
+        "simTime": 16.716799999999953,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1044130,
+        "workMs": 7.264285670007978,
+        "memory": {
+          "geometries": 519,
+          "textures": 12
+        },
+        "heap": 145435228
+      },
+      {
+        "ms": 27242,
+        "simTime": 16.945399999999964,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1044738,
+        "workMs": 7.353571387699672,
+        "memory": {
+          "geometries": 519,
+          "textures": 12
+        },
+        "heap": 129073253
+      },
+      {
+        "ms": 27528.7,
+        "simTime": 17.21243333333331,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1044442,
+        "workMs": 6.270714248929705,
+        "memory": {
+          "geometries": 522,
+          "textures": 12
+        },
+        "heap": 120317287
+      },
+      {
+        "ms": 27816.4,
+        "simTime": 17.471866666666653,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1045066,
+        "workMs": 7.149999948910304,
+        "memory": {
+          "geometries": 522,
+          "textures": 12
+        },
+        "heap": 136836431
+      },
+      {
+        "ms": 28103.4,
+        "simTime": 17.7371,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1044686,
+        "workMs": 7.227857095854623,
+        "memory": {
+          "geometries": 522,
+          "textures": 12
+        },
+        "heap": 113862032
+      },
+      {
+        "ms": 28334.9,
+        "simTime": 17.968600000000006,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1044722,
+        "workMs": 7.053571397917612,
+        "memory": {
+          "geometries": 522,
+          "textures": 12
+        },
+        "heap": 115851503
+      },
+      {
+        "ms": 28569.2,
+        "simTime": 18.202900000000017,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 511,
+        "triangles": 1044806,
+        "workMs": 7.038571395192828,
+        "memory": {
+          "geometries": 524,
+          "textures": 12
+        },
+        "heap": 117831720
+      },
+      {
+        "ms": 28852.5,
+        "simTime": 18.45873333333337,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1045434,
+        "workMs": 6.967142837388175,
+        "memory": {
+          "geometries": 524,
+          "textures": 12
+        },
+        "heap": 128498746
+      },
+      {
+        "ms": 29130.9,
+        "simTime": 18.715466666666703,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1045702,
+        "workMs": 6.479285717010498,
+        "memory": {
+          "geometries": 524,
+          "textures": 12
+        },
+        "heap": 139218458
+      },
+      {
+        "ms": 29408.3,
+        "simTime": 18.972800000000042,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1045314,
+        "workMs": 6.836428580965315,
+        "memory": {
+          "geometries": 524,
+          "textures": 12
+        },
+        "heap": 119978106
+      },
+      {
+        "ms": 29693.1,
+        "simTime": 19.237333333333385,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1045986,
+        "workMs": 7.245714293207441,
+        "memory": {
+          "geometries": 524,
+          "textures": 12
+        },
+        "heap": 130635498
+      },
+      {
+        "ms": 30142.4,
+        "simTime": 19.56123333333339,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1046022,
+        "workMs": 8.426428570066179,
+        "memory": {
+          "geometries": 524,
+          "textures": 12
+        },
+        "heap": 128503954
+      },
+      {
+        "ms": 30636.5,
+        "simTime": 19.915033333333405,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 510,
+        "triangles": 1046450,
+        "workMs": 10.48285711152213,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 140911196
+      },
+      {
+        "ms": 30868.1,
+        "simTime": 20.1466333333334,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 510,
+        "triangles": 1045614,
+        "workMs": 10.17714283466339,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 120471759
+      },
+      {
+        "ms": 31098.3,
+        "simTime": 20.37683333333341,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1045558,
+        "workMs": 9.439999968664987,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 123982057
+      },
+      {
+        "ms": 31330,
+        "simTime": 20.60853333333342,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 511,
+        "triangles": 1046322,
+        "workMs": 8.645714269365584,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 126327329
+      },
+      {
+        "ms": 31562.2,
+        "simTime": 20.840733333333425,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 515,
+        "triangles": 1045562,
+        "workMs": 6.06928573676518,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 129983792
+      },
+      {
+        "ms": 31792.7,
+        "simTime": 21.071233333333428,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1046082,
+        "workMs": 5.880714287076677,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 132021847
+      },
+      {
+        "ms": 32242.8,
+        "simTime": 21.391633333333445,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1045226,
+        "workMs": 7.427857157162258,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 131070773
+      },
+      {
+        "ms": 32471.9,
+        "simTime": 21.620733333333458,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 511,
+        "triangles": 1046034,
+        "workMs": 7.429285723822457,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 132869561
+      },
+      {
+        "ms": 32698.6,
+        "simTime": 21.847433333333466,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 515,
+        "triangles": 1046802,
+        "workMs": 7.435000010899135,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 135177317
+      },
+      {
+        "ms": 32930.4,
+        "simTime": 22.079233333333473,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 512,
+        "triangles": 1045990,
+        "workMs": 7.397142853055682,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 137236960
+      },
+      {
+        "ms": 33166.2,
+        "simTime": 22.315033333333478,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 509,
+        "triangles": 1045554,
+        "workMs": 6.358571406773159,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 139995248
+      },
+      {
+        "ms": 33504,
+        "simTime": 22.603800000000152,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 512,
+        "triangles": 1047138,
+        "workMs": 7.52714284488133,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 143207855
+      },
+      {
+        "ms": 34057.2,
+        "simTime": 22.885966666666825,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 518,
+        "triangles": 1047530,
+        "workMs": 9.150000027247838,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 114282045
+      },
+      {
+        "ms": 34501.3,
+        "simTime": 23.174833333333513,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 511,
+        "triangles": 1043206,
+        "workMs": 10.7192857333592,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 123048673
+      },
+      {
+        "ms": 34836.6,
+        "simTime": 23.434566666666854,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 514,
+        "triangles": 1044034,
+        "workMs": 11.44000004019056,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 135766735
+      },
+      {
+        "ms": 35290.8,
+        "simTime": 23.727233333333533,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 510,
+        "triangles": 1043562,
+        "workMs": 13.053571459225246,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 117297251
+      },
+      {
+        "ms": 35520.7,
+        "simTime": 23.957133333333545,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 512,
+        "triangles": 1045454,
+        "workMs": 9.885714275496346,
+        "memory": {
+          "geometries": 526,
+          "textures": 12
+        },
+        "heap": 119660635
+      },
+      {
+        "ms": 35752,
+        "simTime": 24.18843333333355,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 513,
+        "triangles": 1045854,
+        "workMs": 9.120714262553625,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 121647582
+      },
+      {
+        "ms": 36196.4,
+        "simTime": 24.476600000000225,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 514,
+        "triangles": 1046962,
+        "workMs": 9.892857149669103,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 123687864
+      },
+      {
+        "ms": 36526.8,
+        "simTime": 24.73223333333357,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 513,
+        "triangles": 1047278,
+        "workMs": 9.069999991144453,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 142839932
+      },
+      {
+        "ms": 36763.9,
+        "simTime": 24.969333333333584,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 509,
+        "triangles": 1047886,
+        "workMs": 8.167857129233225,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 116011492
+      },
+      {
+        "ms": 37104,
+        "simTime": 25.22726666666693,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 509,
+        "triangles": 1045434,
+        "workMs": 8.937142818314689,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 135342060
+      },
+      {
+        "ms": 37437.3,
+        "simTime": 25.485300000000276,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 509,
+        "triangles": 1046046,
+        "workMs": 8.93357137952532,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 121950066
+      },
+      {
+        "ms": 37665.7,
+        "simTime": 25.713700000000284,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 512,
+        "triangles": 1045870,
+        "workMs": 8.180714212145125,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 123946158
+      },
+      {
+        "ms": 38220.5,
+        "simTime": 25.997266666666956,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1047186,
+        "workMs": 9.792142803328378,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 137703059
+      },
+      {
+        "ms": 38467.6,
+        "simTime": 26.24436666666696,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1047626,
+        "workMs": 9.13285711492811,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 123789051
+      },
+      {
+        "ms": 38700.6,
+        "simTime": 26.47736666666696,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1047698,
+        "workMs": 9.203571401323591,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 124824887
+      },
+      {
+        "ms": 39098.4,
+        "simTime": 26.738800000000296,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 499,
+        "triangles": 1046690,
+        "workMs": 9.626428600719997,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 118384043
+      },
+      {
+        "ms": 39329.4,
+        "simTime": 26.9698000000003,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 498,
+        "triangles": 1046250,
+        "workMs": 8.74642859867641,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 119306209
+      },
+      {
+        "ms": 39673.2,
+        "simTime": 27.23873333333364,
+        "state": "playing",
+        "paused": false,
+        "enemies": 98,
+        "towers": 30,
+        "drawCalls": 500,
+        "triangles": 1045842,
+        "workMs": 7.9028572082519535,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 137495323
+      },
+      {
+        "ms": 39961.6,
+        "simTime": 27.504766666666978,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 496,
+        "triangles": 1046442,
+        "workMs": 8.146428649766104,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 116616012
+      },
+      {
+        "ms": 40191.7,
+        "simTime": 27.734866666666985,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 497,
+        "triangles": 1045562,
+        "workMs": 8.125000071525573,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 117610474
+      },
+      {
+        "ms": 40479.9,
+        "simTime": 27.995200000000334,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 500,
+        "triangles": 1044822,
+        "workMs": 7.314285751751491,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 121763488
+      },
+      {
+        "ms": 40812.5,
+        "simTime": 28.27866666666701,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 498,
+        "triangles": 1044862,
+        "workMs": 8.119285746983119,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 134022658
+      },
+      {
+        "ms": 41098.6,
+        "simTime": 28.53790000000035,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 498,
+        "triangles": 1046674,
+        "workMs": 7.710714295932225,
+        "memory": {
+          "geometries": 527,
+          "textures": 12
+        },
+        "heap": 137350410
+      },
+      {
+        "ms": 41332.4,
+        "simTime": 28.771700000000358,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1045130,
+        "workMs": 7.307142853736877,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 139884926
+      },
+      {
+        "ms": 41620.2,
+        "simTime": 29.037833333333694,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1045770,
+        "workMs": 7.731428575515747,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 121979920
+      },
+      {
+        "ms": 41852,
+        "simTime": 29.269633333333704,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1046106,
+        "workMs": 6.6464285578046525,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 125147598
+      },
+      {
+        "ms": 42247.3,
+        "simTime": 29.58223333333372,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1045166,
+        "workMs": 7.493571438108172,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 115080194
+      },
+      {
+        "ms": 42527.2,
+        "simTime": 29.84256666666706,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1044034,
+        "workMs": 7.947142890521458,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 126654124
+      },
+      {
+        "ms": 42758.6,
+        "simTime": 30.073966666667072,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1044114,
+        "workMs": 7.935714326586042,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 129148048
+      },
+      {
+        "ms": 42988.6,
+        "simTime": 30.303966666667076,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1044922,
+        "workMs": 7.572857185772487,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 132443564
+      },
+      {
+        "ms": 43218.4,
+        "simTime": 30.533766666667095,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1045534,
+        "workMs": 7.600714329310826,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 136632990
+      },
+      {
+        "ms": 43451.8,
+        "simTime": 30.767166666667105,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1044534,
+        "workMs": 6.435000024523053,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 139997888
+      },
+      {
+        "ms": 43781.5,
+        "simTime": 31.046933333333776,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 499,
+        "triangles": 1044362,
+        "workMs": 6.859285736083985,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 126806190
+      },
+      {
+        "ms": 44068.5,
+        "simTime": 31.312666666667123,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 497,
+        "triangles": 1044122,
+        "workMs": 7.637857151031494,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 146592052
+      },
+      {
+        "ms": 44352.9,
+        "simTime": 31.57630000000047,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 497,
+        "triangles": 1043978,
+        "workMs": 7.6049999986376084,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 116948484
+      },
+      {
+        "ms": 44583.2,
+        "simTime": 31.806600000000472,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 497,
+        "triangles": 1043142,
+        "workMs": 7.572857141494751,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 118953964
+      },
+      {
+        "ms": 44821.8,
+        "simTime": 32.0452000000005,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 497,
+        "triangles": 1043142,
+        "workMs": 7.273571412903922,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 114495848
+      },
+      {
+        "ms": 45068.3,
+        "simTime": 32.29170000000052,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 497,
+        "triangles": 1043142,
+        "workMs": 6.439285721097674,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 116471568
+      },
+      {
+        "ms": 45452.3,
+        "simTime": 32.598100000000535,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043274,
+        "workMs": 7.22428572177887,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 144706078
+      },
+      {
+        "ms": 45728.5,
+        "simTime": 32.85353333333388,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043270,
+        "workMs": 7.590000009536743,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 123519771
+      },
+      {
+        "ms": 46123.8,
+        "simTime": 33.15370000000055,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043270,
+        "workMs": 8.7,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 117870049
+      },
+      {
+        "ms": 46354.9,
+        "simTime": 33.38480000000056,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1043246,
+        "workMs": 8.62857142175947,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 120946289
+      },
+      {
+        "ms": 46639.4,
+        "simTime": 33.6418333333339,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1043266,
+        "workMs": 8.270714279583522,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 133237389
+      },
+      {
+        "ms": 46871.9,
+        "simTime": 33.87433333333391,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1043342,
+        "workMs": 7.486428574153355,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 136233449
+      },
+      {
+        "ms": 47369.3,
+        "simTime": 34.1800333333339,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1043246,
+        "workMs": 9.49714286327362,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 120425231
+      },
+      {
+        "ms": 47599.5,
+        "simTime": 34.4102333333339,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1043966,
+        "workMs": 8.315000009536742,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 123082325
+      },
+      {
+        "ms": 47830.7,
+        "simTime": 34.64143333333391,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 501,
+        "triangles": 1043350,
+        "workMs": 8.313571439470564,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 125276603
+      },
+      {
+        "ms": 48222.5,
+        "simTime": 34.93160000000059,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 502,
+        "triangles": 1043370,
+        "workMs": 9.061428553717477,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 120701079
+      },
+      {
+        "ms": 48453.6,
+        "simTime": 35.1627000000006,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1043746,
+        "workMs": 8.27499999659402,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 123500155
+      },
+      {
+        "ms": 48686.2,
+        "simTime": 35.39530000000061,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1043702,
+        "workMs": 7.072857110840934,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 126755639
+      },
+      {
+        "ms": 49027.8,
+        "simTime": 35.679166666667285,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1044418,
+        "workMs": 7.893571400642395,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 114651199
+      },
+      {
+        "ms": 49258.9,
+        "simTime": 35.9102666666673,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 511,
+        "triangles": 1044122,
+        "workMs": 7.907857125146048,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 144965522
+      },
+      {
+        "ms": 49493,
+        "simTime": 36.14436666666732,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1043642,
+        "workMs": 6.679285713604519,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 115991388
+      },
+      {
+        "ms": 49881.3,
+        "simTime": 36.42873333333398,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1043622,
+        "workMs": 7.945000001362392,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 137593911
+      },
+      {
+        "ms": 50287.4,
+        "simTime": 36.72250000000063,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1044494,
+        "workMs": 8.846428602082389,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 132193817
+      },
+      {
+        "ms": 50518.8,
+        "simTime": 36.95390000000065,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1044410,
+        "workMs": 8.432857162611825,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 135219077
+      },
+      {
+        "ms": 50750.6,
+        "simTime": 37.18570000000066,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1043798,
+        "workMs": 8.445714289801462,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 138299829
+      },
+      {
+        "ms": 51080.9,
+        "simTime": 37.46826666666735,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 509,
+        "triangles": 1043854,
+        "workMs": 8.536428618431092,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 131012444
+      },
+      {
+        "ms": 51312.6,
+        "simTime": 37.69996666666734,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1043698,
+        "workMs": 7.52142859527043,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 133356978
+      },
+      {
+        "ms": 51647.3,
+        "simTime": 37.958900000000696,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1043778,
+        "workMs": 7.51642860685076,
+        "memory": {
+          "geometries": 555,
+          "textures": 12
+        },
+        "heap": 119681251
+      },
+      {
+        "ms": 52156.9,
+        "simTime": 38.34663333333404,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 518,
+        "triangles": 1044602,
+        "workMs": 9.578571513720922,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 115692963
+      },
+      {
+        "ms": 52537.3,
+        "simTime": 38.72703333333405,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 509,
+        "triangles": 1043722,
+        "workMs": 10.3092857837677,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 117172535
+      },
+      {
+        "ms": 53063.2,
+        "simTime": 39.13606666666738,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 512,
+        "triangles": 1044470,
+        "workMs": 12.035714309556143,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 133897831
+      },
+      {
+        "ms": 53701.5,
+        "simTime": 39.551033333334054,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 512,
+        "triangles": 1045182,
+        "workMs": 14.27071431364332,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 139900293
+      },
+      {
+        "ms": 54093.4,
+        "simTime": 39.94293333333407,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 512,
+        "triangles": 1043758,
+        "workMs": 14.075714261191232,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 138648977
+      },
+      {
+        "ms": 54610.1,
+        "simTime": 40.33856666666742,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 511,
+        "triangles": 1044490,
+        "workMs": 14.98428568158831,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 120591231
+      },
+      {
+        "ms": 54998.9,
+        "simTime": 40.72736666666744,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 513,
+        "triangles": 1043574,
+        "workMs": 14.019285733359201,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 132307472
+      },
+      {
+        "ms": 55521.4,
+        "simTime": 41.13520000000078,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 514,
+        "triangles": 1044206,
+        "workMs": 15.020714262553623,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 114276844
+      },
+      {
+        "ms": 56163.1,
+        "simTime": 41.52873333333414,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1043522,
+        "workMs": 14.983571297781808,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 113409774
+      },
+      {
+        "ms": 56623.9,
+        "simTime": 41.937966666667485,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 510,
+        "triangles": 1044110,
+        "workMs": 15.52499989100865,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 119734380
+      },
+      {
+        "ms": 57291.5,
+        "simTime": 42.37913333333417,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 513,
+        "triangles": 1044146,
+        "workMs": 16.606428459712436,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 118697908
+      },
+      {
+        "ms": 57662.3,
+        "simTime": 42.74993333333419,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1043402,
+        "workMs": 16.45142845426287,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 119640682
+      },
+      {
+        "ms": 58308.4,
+        "simTime": 43.14436666666753,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1044066,
+        "workMs": 17.374285643441336,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 118474644
+      },
+      {
+        "ms": 58679.6,
+        "simTime": 43.51556666666753,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1043610,
+        "workMs": 14.908571440832956,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 115865296
+      },
+      {
+        "ms": 59217.6,
+        "simTime": 43.94390000000088,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 511,
+        "triangles": 1043802,
+        "workMs": 14.552142872129167,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 130580345
+      },
+      {
+        "ms": 59809.5,
+        "simTime": 44.37176666666753,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1044606,
+        "workMs": 15.555000025885446,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 120707207
+      },
+      {
+        "ms": 60403.1,
+        "simTime": 44.818666666667546,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 511,
+        "triangles": 1044806,
+        "workMs": 17.1414286000388,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 144049905
+      },
+      {
+        "ms": 60918.8,
+        "simTime": 45.222200000000896,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 510,
+        "triangles": 1045146,
+        "workMs": 16.209285742895943,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 125069593
+      },
+      {
+        "ms": 61423,
+        "simTime": 45.60783333333424,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 513,
+        "triangles": 1045102,
+        "workMs": 16.199285691125052,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 139628285
+      },
+      {
+        "ms": 61874.5,
+        "simTime": 46.01596666666761,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 513,
+        "triangles": 1044966,
+        "workMs": 15.549285766056606,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 146342955
+      },
+      {
+        "ms": 62464.8,
+        "simTime": 46.45163333333431,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 517,
+        "triangles": 1046674,
+        "workMs": 15.460000024523055,
+        "memory": {
+          "geometries": 581,
+          "textures": 12
+        },
+        "heap": 138021799
+      },
+      {
+        "ms": 62997.6,
+        "simTime": 46.86896666666764,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 516,
+        "triangles": 1045842,
+        "workMs": 16.057857172829763,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 121597103
+      },
+      {
+        "ms": 63817.5,
+        "simTime": 47.33946666666765,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 515,
+        "triangles": 1046090,
+        "workMs": 17.177142865317208,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 123996983
+      },
+      {
+        "ms": 64415.6,
+        "simTime": 47.774433333334315,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 523,
+        "triangles": 1045846,
+        "workMs": 18.83357137952532,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 114895149
+      },
+      {
+        "ms": 64818.5,
+        "simTime": 48.177333333334346,
+        "state": "playing",
+        "paused": false,
+        "enemies": 98,
+        "towers": 30,
+        "drawCalls": 519,
+        "triangles": 1045554,
+        "workMs": 18.472142798560007,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 113755833
+      },
+      {
+        "ms": 65208.2,
+        "simTime": 48.56703333333436,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 520,
+        "triangles": 1046214,
+        "workMs": 17.071428530556815,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 145935478
+      },
+      {
+        "ms": 65943.2,
+        "simTime": 49.053566666667706,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 524,
+        "triangles": 1047354,
+        "workMs": 17.475714199883598,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 121221247
+      },
+      {
+        "ms": 66318.6,
+        "simTime": 49.428966666667726,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1046194,
+        "workMs": 14.939999955041069,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 120442627
+      },
+      {
+        "ms": 67030.2,
+        "simTime": 49.87296666666775,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1047030,
+        "workMs": 16.215714311599733,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 128561665
+      },
+      {
+        "ms": 67421.5,
+        "simTime": 50.26426666666779,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 510,
+        "triangles": 1046858,
+        "workMs": 16.183571461268834,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 127538195
+      },
+      {
+        "ms": 67877.2,
+        "simTime": 50.66820000000114,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1046670,
+        "workMs": 16.63642860821315,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 136866025
+      },
+      {
+        "ms": 68389,
+        "simTime": 51.06673333333449,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1045918,
+        "workMs": 15.141428681782314,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 119250074
+      },
+      {
+        "ms": 68834.2,
+        "simTime": 51.466366666667845,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1046526,
+        "workMs": 13.748571491241455,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 126243610
+      },
+      {
+        "ms": 69215.1,
+        "simTime": 51.84726666666788,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 504,
+        "triangles": 1046014,
+        "workMs": 13.258571468080794,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 124707600
+      },
+      {
+        "ms": 69660.6,
+        "simTime": 52.24120000000123,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1045974,
+        "workMs": 13.707857193265642,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 131684670
+      },
+      {
+        "ms": 70180.2,
+        "simTime": 52.66606666666791,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1045898,
+        "workMs": 14.17428573199681,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 147506932
+      },
+      {
+        "ms": 70626.2,
+        "simTime": 53.06910000000124,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1046526,
+        "workMs": 13.6542856829507,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 121213406
+      },
+      {
+        "ms": 70999.2,
+        "simTime": 53.44210000000124,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 503,
+        "triangles": 1045854,
+        "workMs": 13.13285711152213,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 119710472
+      },
+      {
+        "ms": 71383.2,
+        "simTime": 53.82610000000127,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1046046,
+        "workMs": 13.164285700661795,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 118309194
+      },
+      {
+        "ms": 71897.5,
+        "simTime": 54.24596666666795,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1046022,
+        "workMs": 12.681428582327706,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 134006146
+      },
+      {
+        "ms": 72390.9,
+        "simTime": 54.68800000000131,
+        "state": "playing",
+        "paused": false,
+        "enemies": 99,
+        "towers": 30,
+        "drawCalls": 512,
+        "triangles": 1046054,
+        "workMs": 13.396428605488369,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 140214455
+      },
+      {
+        "ms": 73142.6,
+        "simTime": 55.18073333333468,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1045862,
+        "workMs": 15.542142942973546,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 120614937
+      },
+      {
+        "ms": 73527.2,
+        "simTime": 55.5653333333347,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1045918,
+        "workMs": 15.60714294569833,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 122439871
+      },
+      {
+        "ms": 74072.1,
+        "simTime": 56.01440000000139,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1046734,
+        "workMs": 15.712142903464182,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 145400785
+      },
+      {
+        "ms": 74601,
+        "simTime": 56.428033333334746,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 516,
+        "triangles": 1046230,
+        "workMs": 16.752142865317207,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 131215367
+      },
+      {
+        "ms": 74977.8,
+        "simTime": 56.80483333333475,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1045982,
+        "workMs": 15.469285712923323,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 130760749
+      },
+      {
+        "ms": 75431.1,
+        "simTime": 57.20766666666808,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 510,
+        "triangles": 1046002,
+        "workMs": 13.869285699299404,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 140368973
+      },
+      {
+        "ms": 76023.5,
+        "simTime": 57.64393333333474,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1045862,
+        "workMs": 14.77857140813555,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 131738663
+      },
+      {
+        "ms": 76387.7,
+        "simTime": 58.008133333334754,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 512,
+        "triangles": 1046830,
+        "workMs": 13.148571440151759,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 133150101
+      },
+      {
+        "ms": 76771.4,
+        "simTime": 58.39183333333475,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 505,
+        "triangles": 1045834,
+        "workMs": 13.12571427822113,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 132315672
+      },
+      {
+        "ms": 77238.4,
+        "simTime": 58.80826666666809,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 509,
+        "triangles": 1046014,
+        "workMs": 13.628571431977408,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 118701212
+      },
+      {
+        "ms": 77823.9,
+        "simTime": 59.23883333333476,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 506,
+        "triangles": 1045766,
+        "workMs": 14.116428542137147,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 115753160
+      },
+      {
+        "ms": 78349.1,
+        "simTime": 59.65186666666812,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 514,
+        "triangles": 1046910,
+        "workMs": 14.162142865998405,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 132354106
+      },
+      {
+        "ms": 78736.4,
+        "simTime": 60.03916666666814,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1045938,
+        "workMs": 14.267857149669103,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 132298628
+      },
+      {
+        "ms": 79405.1,
+        "simTime": 60.499266666668156,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 507,
+        "triangles": 1045618,
+        "workMs": 16.207857172829765,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 131603148
+      },
+      {
+        "ms": 79780.4,
+        "simTime": 60.87456666666815,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 509,
+        "triangles": 1045354,
+        "workMs": 15.157857179641724,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 130168990
+      },
+      {
+        "ms": 80163.3,
+        "simTime": 61.25746666666816,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 515,
+        "triangles": 1045306,
+        "workMs": 14.182857159205845,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 129678900
+      },
+      {
+        "ms": 80525.5,
+        "simTime": 61.61966666666819,
+        "state": "playing",
+        "paused": false,
+        "enemies": 100,
+        "towers": 30,
+        "drawCalls": 508,
+        "triangles": 1045294,
+        "workMs": 13.081428561891828,
+        "memory": {
+          "geometries": 607,
+          "textures": 12
+        },
+        "heap": 129139606
+      }
+    ],
+    "quality": {
+      "bloomLevels": 5,
+      "pixelRatio": 1,
+      "shadowSize": true
+    },
+    "heap": 116701302
+  },
+  "pauseRecovery": {
+    "before": 61.93286666666818,
+    "paused": 61.93286666666818,
+    "resumed": 63.72266666666829,
+    "pass": true
+  },
+  "sustainedSimulation": true,
+  "budgetPassed": false,
+  "resourceChange": {
+    "geometryDelta": 97,
+    "textureDelta": 0,
+    "heapDelta": 4821879,
+    "explanation": "Includes retained stress loot and lazily built equipment appearances; growth alone is not a leak verdict"
+  }
+}

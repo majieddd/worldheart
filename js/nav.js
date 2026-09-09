@@ -395,6 +395,7 @@ export class NavGraph {
         }
       }
     }
+    this._routeHeuristicScale = CONFIG.terrain ? Infinity : 0;
     for (let i = 0; i < n; i++) {
       for (let e = this.adjOff[i]; e < this.adjOff[i + 1]; e++) {
         const j = this.adj[e];
@@ -413,6 +414,11 @@ export class NavGraph {
           this.cost[e] = travelCost(this.baseHeight[j], this.baseHeight[i], horizontal);
           _v.set(this.dirs[i * 3] + this.dirs[j * 3], this.dirs[i * 3 + 1] + this.dirs[j * 3 + 1], this.dirs[i * 3 + 2] + this.dirs[j * 3 + 2]).normalize();
           this.airCost[e] = this.airWalk[i] && this.airWalk[j] && WORLD.canFlyAt(_v, WORLD.FLIGHT_CLEARANCE + 2) ? angle * R : Infinity;
+          // A conservative lower cost per unit chord, measured from every
+          // actual directed edge. This keeps point-search A* admissible even
+          // with Float32 direction/edge rounding or future traversal costs.
+          const chord=Math.hypot(this.dirs[i*3]-this.dirs[j*3],this.dirs[i*3+1]-this.dirs[j*3+1],this.dirs[i*3+2]-this.dirs[j*3+2]);
+          if(chord>0&&Number.isFinite(this.cost[e]))this._routeHeuristicScale=Math.min(this._routeHeuristicScale,this.cost[e]/chord*.999);
         }
       }
     }
@@ -660,9 +666,13 @@ export class NavGraph {
     return true;
   }
 
-  _dijkstra(source, blockFilter, field = this, stop = -1) {
+  _dijkstra(source, blockFilter, field = this, stop = -1, guided = false) {
     const n = this.n;
     const { dist, next, walk, block, cost } = field;
+    // Only commander point-to-point searches use a goal heuristic. Heart,
+    // placement and air fields retain the complete Dijkstra calculation.
+    const scale=guided&&stop>=0&&Number.isFinite(this._routeHeuristicScale)?this._routeHeuristicScale:0;
+    const sx=scale?this.dirs[stop*3]:0,sy=scale?this.dirs[stop*3+1]:0,sz=scale?this.dirs[stop*3+2]:0;
     dist.fill(Infinity);
     next.fill(-1);
     // The heap and visited set are reused: on a colossal world these are
@@ -693,7 +703,8 @@ export class NavGraph {
         if (nd < dist[b]) {
           dist[b] = nd;
           next[b] = a;
-          heap.push(b, nd);
+          const h=scale?Math.hypot(this.dirs[b*3]-sx,this.dirs[b*3+1]-sy,this.dirs[b*3+2]-sz)*scale:0;
+          heap.push(b, nd+h);
         }
       }
     }
@@ -737,12 +748,30 @@ export class NavGraph {
     return this.airDist[best];
   }
 
+  _sameRouteRegion(start,end) {
+    // Tower rings can isolate a unit. Re-solving an impossible chase across
+    // the entire graph on every new target made movement frames hitch. A
+    // cached weak-connectivity check safely rejects separate walkable regions.
+    // Ignore edge weights here: this may allow a later weighted search to
+    // fail, but can never reject a valid directed route. Revision invalidates
+    // labels after construction, selling or a new terrain graph.
+    if(!this._routeRegions||this._routeRegions.labels.length!==this.n)this._routeRegions={labels:new Int32Array(this.n),queue:new Int32Array(this.n),revision:-1,count:0};
+    const r=this._routeRegions;
+    if(r.revision!==this.revision){r.labels.fill(0);r.count=0;r.revision=this.revision;}
+    if(!r.labels[start]){
+      const id=++r.count;let head=0,tail=1;r.queue[0]=start;r.labels[start]=id;
+      while(head<tail){const a=r.queue[head++];for(let edge=this.adjOff[a];edge<this.adjOff[a+1];edge++){const b=this.adj[edge];if(r.labels[b]||!this.walk[b]||this.block[b])continue;r.labels[b]=id;r.queue[tail++]=b;}}
+    }
+    return r.labels[start]===r.labels[end];
+  }
+
   findPath(fromDir, toDir) {
     const start = this.nearestWalkableNode(fromDir, true), end = this.nearestWalkableNode(toDir, true);
     if (start < 0 || end < 0 || this.block[end]) return [];
     if(start===end){const path=[start];path.cost=0;return path;}
+    if(CONFIG.terrain&&!this._sameRouteRegion(start,end))return [];
     if (!this._route || this._route.dist.length !== this.n) this._route = { dist: new Float32Array(this.n), next: new Int32Array(this.n) };
-    this._dijkstra(end, null, { ...this._route, walk: this.walk, cost: this.cost, block: this.block }, start);
+    this._dijkstra(end, null, { ...this._route, walk: this.walk, cost: this.cost, block: this.block }, start, true);
     if (!Number.isFinite(this._route.dist[start])) return [];
     const path = [];
     for (let i = start, guard = 0; i >= 0 && guard++ < this.n; i = this._route.next[i]) {

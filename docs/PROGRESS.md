@@ -1,6 +1,6 @@
 # 99 Planets development progress
 
-Updated 2026-09-06. This is the collaborator entry point for the owner's new direction.
+Updated 2026-09-08. This is the collaborator entry point for the owner's new direction.
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
@@ -17,7 +17,23 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
-Active 2026-09-06: Codex on `feature/adversarial-acceptance` is checking the
+Published 2026-09-08: Codex on `feature/natural-terrain-feel`, [PR #23](https://github.com/majieddd/worldheart/pull/23), has implemented
+rounded mountain/canyon regions, actual decor camera clearance,
+displacement-driven bob, held-sway resets and targeted text-motion repairs.
+[Current scope, retained failures and checks](qa/implementation/NATURAL-TERRAIN-FEEL.md).
+The adversarial sweep also repaired a planet-95 enemy corner loop and costly
+AI pursuit searches. The native desktop stress fixture now passes at 131.58
+fps median / 8.7ms p99 with 100 enemies and 30 towers. The 4x CPU, 720p fixture
+still misses the p99 budget (53.1ms) and remains open. Source `88e8964` is
+live through [deployment 34310871805](https://github.com/majieddd/worldheart/actions/runs/34310871805).
+All 85 focused public checks pass; all 55 preview and 37 production asset hashes
+match. Final source passes 228 core tests, 180 point-route comparisons, all 99
+isolated enemy routes and a fresh legal 15-wave victory with actual extraction
+of 13 weapons to planet 2. Main remains `1374122`. This completes the targeted
+terrain/feel repair checkpoint; the original art/feel, device and full-campaign
+gates below remain open.
+
+Previous 2026-09-06 batch: Codex on `feature/adversarial-acceptance` checked the
 remaining owner brief and acceptance gaps. [Current audit and work order](qa/implementation/ADVERSARIAL-ACCEPTANCE.md)
 cover keyboard/input ownership, combat/model readability, foliage, ocean
 strategy and sustained performance. Claims and repairs require browser evidence;
@@ -94,9 +110,9 @@ Issue closure requires evidence, not just a merged diff. Proposed future impleme
 | Milestone | Work item | Status | Owner | Depends on | Exit evidence |
 |---|---|---|---|---|---|
 | M0 | [M0 implementation issue](https://github.com/majieddd/worldheart/issues/2) | implemented; review open | Codex, feature/99-planets-integration | QA baseline | [Automated and unforced instrumented evidence](qa/implementation/M0.md); manual continuous-input acceptance remains open |
-| M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | implemented; feel review open | Codex, feature/99-planets-camera | M0 | [Input harness and Bulwark comparison](qa/implementation/M1.md); full visual acceptance remains open |
+| M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | implemented; latest camera/bob repairs live-verified; feel review open | Codex, feature/natural-terrain-feel | M0 | [Input harness and Bulwark comparison](qa/implementation/M1.md); [actual decor clearance, motion and feedback fixes](qa/implementation/NATURAL-TERRAIN-FEEL.md); full visual acceptance remains open |
 | M2 | [M2 implementation issue](https://github.com/majieddd/worldheart/issues/4) | implemented; review open | Codex, feature/99-planets-crystals | M0-M1 | [Resource fixtures and unforced expedition/boss victory](qa/implementation/M2.md) |
-| M3 | [M3 implementation issue](https://github.com/majieddd/worldheart/issues/5) | implemented; review open | Codex, feature/99-planets-terrain | M2 | [Terrain, routes, range and unforced victory](qa/implementation/M3.md); [M5C center-focus cliff occlusion fix](qa/implementation/M5C.md). Broad framing/startup/feel review open |
+| M3 | [M3 implementation issue](https://github.com/majieddd/worldheart/issues/5) | implemented; rounded terrain and route repairs live-verified; feel review open | Codex, feature/natural-terrain-feel | M2 | [Terrain, routes, range and unforced victory](qa/implementation/M3.md); [rounded regions, fixed-seed comparisons and 99 routes](qa/implementation/NATURAL-TERRAIN-FEEL.md). Broad framing/startup/feel review open |
 | M4 | [M4 implementation issue](https://github.com/majieddd/worldheart/issues/6) | four-family prototype and comfort controls verified; authored era content/visual review open | Codex, feature/adversarial-acceptance | M1/M3 | [M4 combat/loot evidence](qa/implementation/M4.md); [PR #22 keyboard, 300 terrain probes and feedback controls](qa/implementation/ADVERSARIAL-ACCEPTANCE.md); three authored era silhouettes still missing |
 | M5 | [M5 implementation issue](https://github.com/majieddd/worldheart/issues/7) | 99 destinations and continuation verified; release acceptance open | Codex, feature/adversarial-acceptance | M4 | [M5B three-planet pilot and 99 routes](qa/implementation/M5B.md); [current fresh victory, retained canyon loss and earned ocean win/extraction to planet 5](qa/implementation/ADVERSARIAL-ACCEPTANCE.md). Full campaign, reduced-CPU budget and public rename release open |
 | M6 | [M6 implementation issue](https://github.com/majieddd/worldheart/issues/8) | future | unassigned | M5 | Authoritative co-op/PvPvE prototype, then independent native platform feasibility evidence |
