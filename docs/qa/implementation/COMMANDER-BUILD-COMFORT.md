@@ -2,7 +2,11 @@
 
 2026-09-09. Owner: Codex. Branch: `feature/commander-build-comfort`, based on
 `d79f1d6` from `origin/preview/v2`. Tracks #1, M1 #3 and M3 #5.
-Status: locally verified, V2 publication pending. Usage unmeasured.
+Status: published and live-verified at [V2](https://majieddd.github.io/worldheart/v2/).
+[PR #24](https://github.com/majieddd/worldheart/pull/24), gameplay source
+`f5bee2cf9b7ba7e3fd6bb6894b29859114802e79`,
+[successful deployment](https://github.com/majieddd/worldheart/actions/runs/34332932384).
+Documentation-only follow-ups preserve this runtime. Usage unmeasured.
 
 | Owner report | Implemented outcome | Evidence |
 |---|---|---|
@@ -82,10 +86,16 @@ of hundreds of transient buffers. Retained
 
 ## Handoff
 
-Publish with `node tools/publish-preview.mjs` after committing and pushing the
-feature branch. Verify Pages, build SHA, source and live asset hashes, then run
-`tools/build-comfort-check.mjs` with WH_BASE_URL set to the public V2 URL and
-`tools/preview-check.mjs` for root/save isolation. Main remains unchanged.
+[22 public comfort checks](COMMANDER-BUILD-COMFORT/public-comfort.json) and
+[17 public deployment/save checks](COMMANDER-BUILD-COMFORT/public-preview.json)
+pass. [All 92 asset checks](COMMANDER-BUILD-COMFORT/public-identity.json) match:
+55 preview assets equal their tested Git blobs and live manifest; 37 production
+assets retain main `1374122`. The native public Upgrade/Sell actions restored
+pointer lock, not just a mocked lock request. No gameplay PR was merged.
+
+To repeat, run `tools/build-comfort-check.mjs` with WH_BASE_URL set to the public
+V2 URL, and `tools/preview-check.mjs` for root/save isolation. Future work starts
+from the current `origin/preview/v2` and follows `docs/PREVIEW.md`.
 
 The owner can test the three changes by walking through trees, moving a tower
 preview continuously, and aiming at a nearby tower then pressing F and Upgrade.

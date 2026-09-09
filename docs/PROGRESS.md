@@ -17,8 +17,8 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
-Verified locally 2026-09-09, awaiting V2 publication: Codex on
-`feature/commander-build-comfort` removed tree camera obstruction, added a
+Published and live-verified 2026-09-09: Codex on
+`feature/commander-build-comfort`, [PR #24](https://github.com/majieddd/worldheart/pull/24), removed tree camera obstruction, added a
 reusable translucent range veil and restored first-person mouse capture on
 successful tower Upgrade/Sell. Profiling also found full-graph placement
 searches; isolated detours now reuse the live heart field without mutating it.
@@ -30,7 +30,10 @@ camera regressions, 96 placement-oracle cases and 180 point-route comparisons.
 A fresh legal 15-wave run won with 24 heart health and 1,035 kills, then
 extracted 13 weapons to planet 2. Full campaign/art/device acceptance stays open.
 [Work log and retained failures](qa/implementation/COMMANDER-BUILD-COMFORT.md).
-Usage unmeasured.
+Public V2 passes 22 comfort and 17 deployment/save checks; all 55 preview and
+37 production asset hashes match the tested source and unchanged main.
+Gameplay source `f5bee2c`, [deployment](https://github.com/majieddd/worldheart/actions/runs/34332932384).
+Documentation-only follow-ups preserve the tested runtime. Usage unmeasured.
 
 Published 2026-09-08: Codex on `feature/natural-terrain-feel`, [PR #23](https://github.com/majieddd/worldheart/pull/23), has implemented
 rounded mountain/canyon regions, actual decor camera clearance,
