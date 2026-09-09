@@ -1447,8 +1447,10 @@ function scatterDecor(rng) {
   const crys = makeInstanced(crysGeo, crysMat, spots.crys, 0.55, 0.1);
 
   return { treeMat, crysMat, sets: [
-    { mesh: pines, list: spots.pine, crushable: true },
-    { mesh: leafs, list: spots.leaf, crushable: true },
+    // Trees are scenery, not commander or camera barriers. Keep crushing
+    // independent so passing through foliage never changes targeting rules.
+    { mesh: pines, list: spots.pine, crushable: true, cameraObstacle: false },
+    { mesh: leafs, list: spots.leaf, crushable: true, cameraObstacle: false },
     { mesh: rocks, list: spots.rock, crushable: true },
     { mesh: crys, list: spots.crys, crushable: false },
   ] };
@@ -1954,16 +1956,15 @@ export class World {
 
   // Where along the segment a->b the first piece of decor sits within
   // `radius`, as a fraction in 0..1, or -1 for a clear line. The third-person
-  // boom asks this every frame so the camera stops short of a tree instead of
-  // looking out from inside its canopy. Bounds are in the real instance's
-  // local frame: the old three fixed trunk points invented a 2.5m obstacle
-  // over a small rock and ignored a scaled tree's actual canopy. This query
+  // boom asks this every frame for solid decor; foliage is explicitly ignored.
+  // Bounds are in the real instance's local frame: the old fixed trunk
+  // points invented a 2.5m obstacle over even a small rock. This query
   // affects the camera only; commander movement uses terrain/tower edges.
   decorHit(a, b, radius) {
     if (!this.decor) return -1;
     let best = -1;
     for (const set of this.decor.sets) {
-      if (!set.crushable) continue;
+      if (!set.crushable || set.cameraObstacle === false) continue;
       const box=set.mesh.geometry.boundingBox;
       for (let i = 0; i < set.list.length; i++) {
         const it = set.list[i];

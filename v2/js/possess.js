@@ -872,10 +872,9 @@ export class Possession {
       _gn.copy(_tp).normalize();
       const ground = R + Math.max(terrainHeight(_gn.x, _gn.y, _gn.z), 0) + TP_CLEAR;
       if (_tp.length() < ground) _tp.setLength(ground);
-      // A tree between the eye and the boom pulls the camera in front of it.
-      // Eased asymmetrically: quick to duck inside a trunk that just came
-      // between, slower to let the boom back out, so a run through a wood
-      // does not pump the camera.
+      // Solid rocks can shorten the boom, but trees never do: walking
+      // through foliage must not feel like the commander hit a wall.
+      // Ease in quickly and return more slowly for remaining solid decor.
       let allow = 1;
       if (this.world) {
         const t = this.world.decorHit(_eye, _tp, 0.3);

@@ -35,7 +35,7 @@ try{
  const firstPersonTier=await page.evaluate(()=>__tower.tier);await page.locator('#tp-upgrade').click();
  check('First-person Upgrade button purchases the displayed tower tier',await page.evaluate(()=>__tower.tier)===firstPersonTier+1);
  await page.screenshot({path:resolve(out,'checkpoint-first-person.png')});
- await page.evaluate(()=>{const old=__tower.tier;__a.dir.copy(WH.nav.nodeDir(WH.nav.portalNodes[0],__a.dir.clone()));WH.allies._ground(__a);WH.game.upgradeSelected();window.__farResult=__tower.tier===old;WH.game.context.close();});
+ await page.evaluate(()=>{const old=__tower.tier,c=WH.game.context;c.dismissed=null;c.update();c.open();if(WH.game.contextTower!==__tower)throw Error('Out-of-reach fixture must start with a managed tower');__a.dir.copy(WH.nav.nodeDir(WH.nav.portalNodes[0],__a.dir.clone()));WH.allies._ground(__a);WH.game.upgradeSelected();window.__farResult=__tower.tier===old;WH.game.context.close();});
  check('An out-of-reach tower cannot be remotely upgraded',await page.evaluate(()=>__farResult));
  await page.evaluate(async()=>{
   const W=WH,a=__a,m=W.mode99,{generateWeapon}=await import(new URL('js/run/weapons.js',location.href).href),{makeRng}=await import(new URL('js/run/rng.js',location.href).href);

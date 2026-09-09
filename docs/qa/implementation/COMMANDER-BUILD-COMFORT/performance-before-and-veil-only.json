@@ -1,0 +1,108 @@
+{
+  "scope": "Same runtime with only previous RangeGuide swapped by request interception; 240 moving-preview rendered frames after warmup, paused combat; CPU slowdown uses the same GPU, not a lower-end device",
+  "reference": "d79f1d6",
+  "browser": "152.0.7977.77",
+  "results": [
+    {
+      "variant": "before",
+      "cpuRate": 1,
+      "seed": 36102,
+      "framesMs": {
+        "median": 8,
+        "p95": 115.5,
+        "p99": 117.40000000000146,
+        "max": 117.69999999999891
+      },
+      "mainWorkMs": {
+        "median": 6.800000011920929,
+        "p95": 113.10000002384186,
+        "p99": 114.39999997615814,
+        "max": 115.80000001192093
+      },
+      "guideMs": {
+        "median": 4.399999976158142,
+        "p95": 4.900000035762787,
+        "p99": 5,
+        "max": 5.399999976158142
+      },
+      "geometryIds": 561,
+      "visible": true
+    },
+    {
+      "variant": "before",
+      "cpuRate": 4,
+      "seed": 36102,
+      "framesMs": {
+        "median": 38.80000000000291,
+        "p95": 593.5,
+        "p99": 607,
+        "max": 626.5
+      },
+      "mainWorkMs": {
+        "median": 33.39999997615814,
+        "p95": 585.3999999761581,
+        "p99": 596.4000000357628,
+        "max": 616.1000000238419
+      },
+      "guideMs": {
+        "median": 20,
+        "p95": 23.600000023841858,
+        "p99": 24.69999998807907,
+        "max": 25.600000023841858
+      },
+      "geometryIds": 561,
+      "visible": true
+    },
+    {
+      "variant": "after",
+      "cpuRate": 1,
+      "seed": 36102,
+      "framesMs": {
+        "median": 8.100000000000364,
+        "p95": 130.3000000000011,
+        "p99": 132,
+        "max": 132.6999999999989
+      },
+      "mainWorkMs": {
+        "median": 3.899999976158142,
+        "p95": 128.30000001192093,
+        "p99": 129,
+        "max": 130.39999997615814
+      },
+      "guideMs": {
+        "median": 0,
+        "p95": 0.09999996423721313,
+        "p99": 0.10000002384185791,
+        "max": 0.19999998807907104
+      },
+      "geometryIds": 2,
+      "visible": true
+    },
+    {
+      "variant": "after",
+      "cpuRate": 4,
+      "seed": 36102,
+      "framesMs": {
+        "median": 8.099999999998545,
+        "p95": 166.79999999999927,
+        "p99": 207.70000000000437,
+        "max": 331.59999999999854
+      },
+      "mainWorkMs": {
+        "median": 6.299999952316284,
+        "p95": 160.19999998807907,
+        "p99": 207.0999999642372,
+        "max": 326.4000000357628
+      },
+      "guideMs": {
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.10000002384185791,
+        "max": 0.20000004768371582
+      },
+      "geometryIds": 2,
+      "visible": true
+    }
+  ],
+  "faults": []
+}
