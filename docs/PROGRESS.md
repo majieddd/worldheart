@@ -1,6 +1,6 @@
 # 99 Planets development progress
 
-Updated 2026-09-06. This is the collaborator entry point for the owner's new direction.
+Updated 2026-09-08. This is the collaborator entry point for the owner's new direction.
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
@@ -17,7 +17,12 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
-Active 2026-09-06: Codex on `feature/adversarial-acceptance` is checking the
+Active 2026-09-08: Codex on `feature/natural-terrain-feel` owns the requested
+rounded mountain approaches/coherent terrain regions and follow-up obstacle,
+first-person bob/weapon and text-motion review. [Current scope and checks](qa/implementation/NATURAL-TERRAIN-FEEL.md).
+The previous verified runtime remains live until the next tested checkpoint.
+
+Previous 2026-09-06 batch: Codex on `feature/adversarial-acceptance` checked the
 remaining owner brief and acceptance gaps. [Current audit and work order](qa/implementation/ADVERSARIAL-ACCEPTANCE.md)
 cover keyboard/input ownership, combat/model readability, foliage, ocean
 strategy and sustained performance. Claims and repairs require browser evidence;
