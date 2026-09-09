@@ -1,0 +1,72 @@
+{
+  "scope": "Actual keyboard input with injected solid boundary and isolated feedback fixtures; no natural gameplay claim",
+  "checks": [
+    {
+      "name": "30 Hz: blocked movement settles camera/weapon bob and footsteps",
+      "ok": true,
+      "actual": {
+        "hz": 30,
+        "moveT": 0,
+        "strideLastSecond": 0,
+        "distance": 0
+      }
+    },
+    {
+      "name": "60 Hz: blocked movement settles camera/weapon bob and footsteps",
+      "ok": true,
+      "actual": {
+        "hz": 60,
+        "moveT": 0,
+        "strideLastSecond": 0,
+        "distance": 0
+      }
+    },
+    {
+      "name": "120 Hz: blocked movement settles camera/weapon bob and footsteps",
+      "ok": true,
+      "actual": {
+        "hz": 120,
+        "moveT": 0,
+        "strideLastSecond": 0,
+        "distance": 0
+      }
+    },
+    {
+      "name": "Turning bob off while paused immediately clears residual roll and weapon sway",
+      "ok": true,
+      "actual": {
+        "roll": 0,
+        "sway": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Repeated identical notification refreshes one readable message",
+      "ok": true,
+      "actual": [
+        "Too steep to build here"
+      ]
+    },
+    {
+      "name": "Feedback inside the camera near plane cannot flash over the HUD",
+      "ok": true,
+      "actual": [
+        {
+          "text": "321",
+          "opacity": "1"
+        }
+      ]
+    },
+    {
+      "name": "Reduced-motion essential block text stays anchored",
+      "ok": true,
+      "actual": {
+        "drift": 0,
+        "transform": "translate3d(640px, 360px, 0px) translate(-50%, -100%) scale(1)"
+      }
+    }
+  ],
+  "faults": []
+}

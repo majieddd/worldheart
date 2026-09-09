@@ -334,8 +334,10 @@ and displacement-driven bob, plus targeted held-sway and feedback-text repairs.
 [The current ledger](qa/implementation/NATURAL-TERRAIN-FEEL.md) records the
 baseline failures, 36 shape assertions, 99 isolated route passes and a fresh
 15-wave victory with real weapon extraction to planet 2. The sweep also found
-and repaired an enemy corner oscillation on planet 95. Final performance and
-V2 publication are tracked there; full campaign and owner feel remain open.
+and repaired an enemy corner oscillation on planet 95. [PR #23](https://github.com/majieddd/worldheart/pull/23)
+is live at V2 from source `88e8964`, with 85 public checks and all preview/root
+asset hashes verified. Native desktop stress passes; 4x CPU slowdown still
+misses the p99 target. Full campaign and owner feel remain open.
 
 Previous continuation: Codex on `feature/adversarial-acceptance` has repaired
 interaction/model defects and GPU recovery. [The acceptance audit](qa/implementation/ADVERSARIAL-ACCEPTANCE.md)

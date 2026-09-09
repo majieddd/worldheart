@@ -1,0 +1,87 @@
+{
+  "scope": "Isolated real decor instances and geometry probes",
+  "checks": [
+    {
+      "name": "pine 0: visible solid decor occludes the boom",
+      "ok": true,
+      "actual": 0.4071623238082051
+    },
+    {
+      "name": "decor 0/0: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "pine 1: visible solid decor occludes the boom",
+      "ok": true,
+      "actual": 0.421962712587179
+    },
+    {
+      "name": "decor 0/1: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "pine 2: visible solid decor occludes the boom",
+      "ok": true,
+      "actual": 0.4214248031003791
+    },
+    {
+      "name": "decor 0/2: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "rock 0: visible solid decor occludes the boom",
+      "ok": true,
+      "actual": 0.43264939717837625
+    },
+    {
+      "name": "rock 0: empty space above actual geometry leaves boom clear",
+      "ok": true,
+      "actual": {
+        "clear": -1,
+        "radius": 0.28871022847536515,
+        "scale": 0.7606076494557783
+      }
+    },
+    {
+      "name": "decor 2/0: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "rock 1: visible solid decor occludes the boom",
+      "ok": true,
+      "actual": 0.4286609553492743
+    },
+    {
+      "name": "rock 1: empty space above actual geometry leaves boom clear",
+      "ok": true,
+      "actual": {
+        "clear": -1,
+        "radius": 0.3243010508120335,
+        "scale": 0.8543717390159145
+      }
+    },
+    {
+      "name": "decor 2/1: crushed objects cannot hold the camera",
+      "ok": true
+    },
+    {
+      "name": "rock 2: visible solid decor occludes the boom",
+      "ok": true,
+      "actual": 0.40656099000677265
+    },
+    {
+      "name": "rock 2: empty space above actual geometry leaves boom clear",
+      "ok": true,
+      "actual": {
+        "clear": -1,
+        "radius": 0.521534867452672,
+        "scale": 1.3739846064243466
+      }
+    },
+    {
+      "name": "decor 2/2: crushed objects cannot hold the camera",
+      "ok": true
+    }
+  ],
+  "faults": []
+}
