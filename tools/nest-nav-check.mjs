@@ -9,6 +9,7 @@ import { pathToFileURL } from 'node:url';
 
 const option = key => process.argv.find(x => x.startsWith(`--${key}=`))?.slice(key.length + 3);
 const source = resolve(option('source-dir') || '.'), seed = Number(option('seed')) || 12345;
+const seconds=Number(option('seconds')||500);if(!Number.isFinite(seconds)||seconds<1||seconds>3600)throw Error('Invalid route time budget');
 const index = Number(option('planet'));
 if (index) {
   const moduleUrl = path => pathToFileURL(resolve(source, path)).href;
@@ -44,14 +45,17 @@ if (index) {
     const enemies = new EnemyManager(new THREE.Scene(), nav); enemies._render = () => {}; enemies.onLeak = () => {};
     enemies.setHeart(world.surfacePoint(nav.nodeDir(nav.heartNode, scratch), new THREE.Vector3()));
     for (const site of sites) if (site.valid) for (const type of ['husk', 'mite', 'wisp']) enemies.spawn(type, site.node, 1);
-    const spawned = enemies.active.length; let steps = 0, ceilingViolation = false;
-    for (; steps < 15000 && enemies.active.length; steps++) {
+    const spawned = enemies.active.length; let steps = 0, ceilingViolation = false, floorViolation=false;const floorLocked=new Set();
+    for (; steps < seconds*30 && enemies.active.length; steps++) {
       enemies.update(1 / 30);
-      for (const e of enemies.active) if (e.type.flying && world.terrainHeight(e.dir.x, e.dir.y, e.dir.z, false) + e.alt > world.FLIGHT_CEILING + .01) ceilingViolation = true;
+      for (const e of enemies.active){
+        if (e.type.flying && world.terrainHeight(e.dir.x, e.dir.y, e.dir.z, false) + e.alt > world.FLIGHT_CEILING + .01) ceilingViolation = true;
+        if(!e.type.flying&&nav.march){if(nav.march.floorReach[e.node])floorLocked.add(e.id);else if(floorLocked.has(e.id))floorViolation=true;}
+      }
     }
     const stranded = enemies.active.map(e => ({ type: e.typeKey, node: e.node }));
-    records.push({ rings, sites, spawned, arrived: spawned - stranded.length, seconds: steps / 30, ceilingViolation, stranded,
-      pass: sites.every(s => s.valid) && spawned === sites.length * 3 && !stranded.length && !ceilingViolation });
+    records.push({ rings, sites, spawned, arrived: spawned - stranded.length, seconds: steps / 30, ceilingViolation, floorViolation, stranded,
+      pass: sites.every(s => s.valid) && spawned === sites.length * 3 && !stranded.length && !ceilingViolation && !floorViolation });
   }
   const result = { index, name: definition.name, terrain: definition.terrain, requestedSeed: definition.seed, effectiveSeed: CONFIG.seed,
     source, originalPortalCount: nav.portalNodes.length, records, pass: records.every(r => r.pass) };
@@ -64,7 +68,7 @@ if (index) {
     while (queue.length) {
       const i = queue.shift(); let result;
       try {
-        const r = await run(process.execPath, [resolve('tools/nest-nav-check.mjs'), `--planet=${i}`, `--seed=${seed}`, `--source-dir=${source}`],
+        const r = await run(process.execPath, [resolve('tools/nest-nav-check.mjs'), `--planet=${i}`, `--seed=${seed}`, `--source-dir=${source}`,`--seconds=${seconds}`],
           { timeout: 300000, windowsHide: true, maxBuffer: 4 * 1024 * 1024 });
         result = JSON.parse(r.stdout.trim().split(/\r?\n/).at(-1));
       } catch (error) {

@@ -325,6 +325,7 @@ async function boot() {
     game.audio?.play('shed');
   };
   towerMgr = new TowerManager(scene, enemies, fx, nav);
+  towerMgr.world = world;
   game = new Game({ scene, rig, world, nav, enemies, towerMgr, fx });
   const audio = new AudioEngine();
   game.audio = audio;

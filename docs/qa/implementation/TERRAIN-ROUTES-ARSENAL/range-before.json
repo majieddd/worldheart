@@ -1,0 +1,126 @@
+{
+  "scope": "Current integrated placement, with optional preceding RangeGuide and NavGraph swapped by request interception; 240 moving-preview rendered frames after warmup, paused combat; CPU slowdown uses the same GPU, not a lower-end device",
+  "reference": "d79f1d6",
+  "browser": "152.0.7977.77",
+  "results": [
+    {
+      "variant": "after",
+      "cpuRate": 1,
+      "seed": 44021,
+      "legalPositions": 45,
+      "routeValidations": 274,
+      "framesMs": {
+        "median": 8.100000000000364,
+        "p95": 30.299999999999272,
+        "p99": 31.700000000000728,
+        "max": 37.70000000000073
+      },
+      "mainWorkMs": {
+        "median": 9.800000011920929,
+        "p95": 29.899999976158142,
+        "p99": 30.599999964237213,
+        "max": 30.69999998807907
+      },
+      "guideMs": {
+        "median": 0,
+        "p95": 0,
+        "p99": 0.10000002384185791,
+        "max": 0.10000002384185791
+      },
+      "operations": {
+        "validatePlacement": {
+          "median": 0.5,
+          "p95": 1.600000023841858,
+          "p99": 1.899999976158142,
+          "max": 2
+        },
+        "previewPaths": {
+          "median": 7,
+          "p95": 25.600000023841858,
+          "p99": 26.399999976158142,
+          "max": 26.80000001192093
+        },
+        "_validate": {
+          "median": 0.5,
+          "p95": 1.600000023841858,
+          "p99": 1.9000000357627869,
+          "max": 2
+        },
+        "setPaths": {
+          "median": 0,
+          "p95": 0.10000002384185791,
+          "p99": 0.19999998807907104,
+          "max": 0.19999998807907104
+        },
+        "place": {
+          "median": 0.10000002384185791,
+          "p95": 0.20000004768371582,
+          "p99": 0.30000001192092896,
+          "max": 0.30000001192092896
+        }
+      },
+      "geometryIds": 2,
+      "visible": true
+    },
+    {
+      "variant": "after",
+      "cpuRate": 4,
+      "seed": 44021,
+      "legalPositions": 45,
+      "routeValidations": 274,
+      "framesMs": {
+        "median": 54.5,
+        "p95": 155.20000000000073,
+        "p99": 167.29999999999927,
+        "max": 168.20000000000073
+      },
+      "mainWorkMs": {
+        "median": 49.80000001192093,
+        "p95": 150.70000004768372,
+        "p99": 158.5,
+        "max": 163.89999997615814
+      },
+      "guideMs": {
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.19999998807907104,
+        "max": 0.5
+      },
+      "operations": {
+        "validatePlacement": {
+          "median": 2,
+          "p95": 7.900000035762787,
+          "p99": 8.799999952316284,
+          "max": 9.900000035762787
+        },
+        "previewPaths": {
+          "median": 33.80000001192093,
+          "p95": 128.60000002384186,
+          "p99": 136.29999995231628,
+          "max": 139
+        },
+        "_validate": {
+          "median": 2.200000047683716,
+          "p95": 8.100000023841858,
+          "p99": 8.900000035762787,
+          "max": 10.199999988079071
+        },
+        "setPaths": {
+          "median": 0.19999998807907104,
+          "p95": 0.3999999761581421,
+          "p99": 0.699999988079071,
+          "max": 2.300000011920929
+        },
+        "place": {
+          "median": 0.5999999642372131,
+          "p95": 1,
+          "p99": 1.4000000357627869,
+          "max": 1.699999988079071
+        }
+      },
+      "geometryIds": 2,
+      "visible": true
+    }
+  ],
+  "faults": []
+}

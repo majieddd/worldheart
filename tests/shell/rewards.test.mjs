@@ -114,7 +114,7 @@ test('Salvage uses the real sale fraction and cannot make a refund loop profitab
 test('Pierce hits only a second body in the corridor beyond the first target',()=>{
   const target={p:[0,0,5]},inside={p:[0,0,8]},behind={p:[0,0,2]},side={p:[2,0,8]},far={p:[0,0,12]};
   const bodies=[target,inside,behind,side,far].map(e=>Object.assign(e,{active:true}));const hits=[];
-  const m=Object.assign(Object.create(TowerManager.prototype),{enemies:{active:bodies},enemyWorldPos:(e,out)=>out.fromArray(e.p),applyDamage:(t,e,n)=>hits.push([e,n])});
+  const m=Object.assign(Object.create(TowerManager.prototype),{enemies:{active:bodies},targets:bodies,enemyWorldPos:(e,out)=>out.fromArray(e.p),applyDamage:(t,e,n)=>hits.push([e,n])});
   m._pierceThrough({from:new THREE.Vector3(),target,dmg:40,crit:false,tower:{}},new THREE.Vector3(0,0,5));
   assert.deepEqual(hits,[[inside,40]]);
 });
@@ -122,7 +122,7 @@ test('Pierce hits only a second body in the corridor beyond the first target',()
 test('Scorched Earth damages ground bodies, expires, and credits its originating tower',()=>{
   const ground={active:true,type:{flying:false}},air={active:true,type:{flying:true}},hits=[];
   const origin={id:31};const m=Object.assign(Object.create(TowerManager.prototype),{
-    burns:[{active:false,pos:new THREE.Vector3()}],fx:{glow:{emit(){}}},enemies:{active:[ground,air]},
+    burns:[{active:false,pos:new THREE.Vector3()}],fx:{glow:{emit(){}}},enemies:{active:[ground,air]},targets:[ground,air],
     enemyWorldPos:(e,out)=>out.set(0,0,0),applyDamage:(t,e,n)=>hits.push([t,e,n])});
   m._leaveBurn(new THREE.Vector3(),{dmg:100,aoe:3},origin);m._updateBurns(.25);
   assert.deepEqual(hits,[[origin,ground,5.5]]);m._updateBurns(5);assert.equal(m.burns[0].active,false);assert.equal(hits.length,1);

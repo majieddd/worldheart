@@ -1,0 +1,547 @@
+{
+  "scope": "Repositioned fixtures with real continuous driveUnit input and unchanged terrain/tower collision; not human traversal feel",
+  "checks": [
+    {
+      "name": "Fixture legally places a solid tower",
+      "ok": true
+    },
+    {
+      "name": "terrain: twelve current-layout boundary sites exist",
+      "ok": true,
+      "actual": [
+        {
+          "node": 71,
+          "obstacle": 69301
+        },
+        {
+          "node": 90,
+          "obstacle": 87213
+        },
+        {
+          "node": 157,
+          "obstacle": 156184
+        },
+        {
+          "node": 211,
+          "obstacle": 52673
+        },
+        {
+          "node": 247,
+          "obstacle": 60273
+        },
+        {
+          "node": 266,
+          "obstacle": 64893
+        },
+        {
+          "node": 282,
+          "obstacle": 69703
+        },
+        {
+          "node": 326,
+          "obstacle": 128552
+        },
+        {
+          "node": 495,
+          "obstacle": 120699
+        },
+        {
+          "node": 508,
+          "obstacle": 124726
+        },
+        {
+          "node": 512,
+          "obstacle": 126841
+        },
+        {
+          "node": 538,
+          "obstacle": 132876
+        }
+      ]
+    },
+    {
+      "name": "terrain: 30 Hz glancing travel preserves solid boundaries",
+      "ok": true,
+      "actual": {
+        "seed": 44021,
+        "glides": 10,
+        "runs": [
+          {
+            "node": 71,
+            "distance": 0.8806484859461602,
+            "violations": 0
+          },
+          {
+            "node": 90,
+            "distance": 2.469775022724552,
+            "violations": 0
+          },
+          {
+            "node": 157,
+            "distance": 0.8240036378855087,
+            "violations": 0
+          },
+          {
+            "node": 211,
+            "distance": 0.18821881764366155,
+            "violations": 0
+          },
+          {
+            "node": 247,
+            "distance": 0.22830109294879508,
+            "violations": 0
+          },
+          {
+            "node": 266,
+            "distance": 0.24494375402532698,
+            "violations": 0
+          },
+          {
+            "node": 282,
+            "distance": 1.3560417777255074,
+            "violations": 0
+          },
+          {
+            "node": 326,
+            "distance": 1.7611692578773142,
+            "violations": 0
+          },
+          {
+            "node": 495,
+            "distance": 0.1603748006004036,
+            "violations": 0
+          },
+          {
+            "node": 508,
+            "distance": 1.7993047728344398,
+            "violations": 0
+          },
+          {
+            "node": 512,
+            "distance": 1.008485165372133,
+            "violations": 0
+          },
+          {
+            "node": 538,
+            "distance": 0.933527350733333,
+            "violations": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain: 60 Hz glancing travel preserves solid boundaries",
+      "ok": true,
+      "actual": {
+        "seed": 44021,
+        "glides": 11,
+        "runs": [
+          {
+            "node": 71,
+            "distance": 0.9059306764999958,
+            "violations": 0
+          },
+          {
+            "node": 90,
+            "distance": 2.388496796756995,
+            "violations": 0
+          },
+          {
+            "node": 157,
+            "distance": 0.8286395999718323,
+            "violations": 0
+          },
+          {
+            "node": 211,
+            "distance": 0.2005567322105682,
+            "violations": 0
+          },
+          {
+            "node": 247,
+            "distance": 0.20205050914766187,
+            "violations": 0
+          },
+          {
+            "node": 266,
+            "distance": 0.21402808438100726,
+            "violations": 0
+          },
+          {
+            "node": 282,
+            "distance": 1.3136807248752405,
+            "violations": 0
+          },
+          {
+            "node": 326,
+            "distance": 1.4907414042997005,
+            "violations": 0
+          },
+          {
+            "node": 495,
+            "distance": 0.13860806081422938,
+            "violations": 0
+          },
+          {
+            "node": 508,
+            "distance": 1.740028207274801,
+            "violations": 0
+          },
+          {
+            "node": 512,
+            "distance": 0.8896519440739082,
+            "violations": 0
+          },
+          {
+            "node": 538,
+            "distance": 0.9180916580260353,
+            "violations": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain: 120 Hz glancing travel preserves solid boundaries",
+      "ok": true,
+      "actual": {
+        "seed": 44021,
+        "glides": 11,
+        "runs": [
+          {
+            "node": 71,
+            "distance": 0.9278686596378329,
+            "violations": 0
+          },
+          {
+            "node": 90,
+            "distance": 2.3791019005721363,
+            "violations": 0
+          },
+          {
+            "node": 157,
+            "distance": 0.8273215385553923,
+            "violations": 0
+          },
+          {
+            "node": 211,
+            "distance": 0.20899142255465666,
+            "violations": 0
+          },
+          {
+            "node": 247,
+            "distance": 0.20940596932885183,
+            "violations": 0
+          },
+          {
+            "node": 266,
+            "distance": 0.20951309721192027,
+            "violations": 0
+          },
+          {
+            "node": 282,
+            "distance": 1.290116743396077,
+            "violations": 0
+          },
+          {
+            "node": 326,
+            "distance": 1.4615357881416442,
+            "violations": 0
+          },
+          {
+            "node": 495,
+            "distance": 0.14101007892931375,
+            "violations": 0
+          },
+          {
+            "node": 508,
+            "distance": 1.6814590464738253,
+            "violations": 0
+          },
+          {
+            "node": 512,
+            "distance": 0.9058760268678413,
+            "violations": 0
+          },
+          {
+            "node": 538,
+            "distance": 0.9220266953866701,
+            "violations": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "tower: twelve current-layout boundary sites exist",
+      "ok": true,
+      "actual": [
+        {
+          "node": 28039,
+          "obstacle": 111850
+        },
+        {
+          "node": 28057,
+          "obstacle": 111935
+        },
+        {
+          "node": 111813,
+          "obstacle": 28027
+        },
+        {
+          "node": 111814,
+          "obstacle": 28027
+        },
+        {
+          "node": 111815,
+          "obstacle": 28029
+        },
+        {
+          "node": 111816,
+          "obstacle": 28029
+        },
+        {
+          "node": 111849,
+          "obstacle": 111850
+        },
+        {
+          "node": 111851,
+          "obstacle": 28038
+        },
+        {
+          "node": 111852,
+          "obstacle": 111853
+        },
+        {
+          "node": 111854,
+          "obstacle": 111853
+        },
+        {
+          "node": 111865,
+          "obstacle": 28040
+        },
+        {
+          "node": 111866,
+          "obstacle": 28027
+        }
+      ]
+    },
+    {
+      "name": "tower: 30 Hz glancing travel preserves solid boundaries",
+      "ok": true,
+      "actual": {
+        "seed": 44021,
+        "glides": 12,
+        "runs": [
+          {
+            "node": 28039,
+            "distance": 2.459790500811392,
+            "violations": 0
+          },
+          {
+            "node": 28057,
+            "distance": 3.058724749394966,
+            "violations": 0
+          },
+          {
+            "node": 111813,
+            "distance": 2.9882654345817037,
+            "violations": 0
+          },
+          {
+            "node": 111814,
+            "distance": 2.19725824485859,
+            "violations": 0
+          },
+          {
+            "node": 111815,
+            "distance": 2.259015445062199,
+            "violations": 0
+          },
+          {
+            "node": 111816,
+            "distance": 0.20106592286119837,
+            "violations": 0
+          },
+          {
+            "node": 111849,
+            "distance": 1.707259485198413,
+            "violations": 0
+          },
+          {
+            "node": 111851,
+            "distance": 2.149405467674629,
+            "violations": 0
+          },
+          {
+            "node": 111852,
+            "distance": 2.401178685566359,
+            "violations": 0
+          },
+          {
+            "node": 111854,
+            "distance": 1.8799776517848537,
+            "violations": 0
+          },
+          {
+            "node": 111865,
+            "distance": 2.3107425985005254,
+            "violations": 0
+          },
+          {
+            "node": 111866,
+            "distance": 0.2929040357654634,
+            "violations": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "tower: 60 Hz glancing travel preserves solid boundaries",
+      "ok": true,
+      "actual": {
+        "seed": 44021,
+        "glides": 11,
+        "runs": [
+          {
+            "node": 28039,
+            "distance": 2.339681279951887,
+            "violations": 0
+          },
+          {
+            "node": 28057,
+            "distance": 3.085466799806914,
+            "violations": 0
+          },
+          {
+            "node": 111813,
+            "distance": 3.007284187498199,
+            "violations": 0
+          },
+          {
+            "node": 111814,
+            "distance": 1.9424543490099098,
+            "violations": 0
+          },
+          {
+            "node": 111815,
+            "distance": 2.0138316269369523,
+            "violations": 0
+          },
+          {
+            "node": 111816,
+            "distance": 0.14502928837417725,
+            "violations": 0
+          },
+          {
+            "node": 111849,
+            "distance": 1.6981056585309193,
+            "violations": 0
+          },
+          {
+            "node": 111851,
+            "distance": 1.732326515882838,
+            "violations": 0
+          },
+          {
+            "node": 111852,
+            "distance": 2.3599562114141452,
+            "violations": 0
+          },
+          {
+            "node": 111854,
+            "distance": 1.8942428565536726,
+            "violations": 0
+          },
+          {
+            "node": 111865,
+            "distance": 2.150185937833594,
+            "violations": 0
+          },
+          {
+            "node": 111866,
+            "distance": 0.20769415634331798,
+            "violations": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "tower: 120 Hz glancing travel preserves solid boundaries",
+      "ok": true,
+      "actual": {
+        "seed": 44021,
+        "glides": 11,
+        "runs": [
+          {
+            "node": 28039,
+            "distance": 2.3442623798866062,
+            "violations": 0
+          },
+          {
+            "node": 28057,
+            "distance": 2.9956421500363573,
+            "violations": 0
+          },
+          {
+            "node": 111813,
+            "distance": 2.9268697631993446,
+            "violations": 0
+          },
+          {
+            "node": 111814,
+            "distance": 1.890039468068998,
+            "violations": 0
+          },
+          {
+            "node": 111815,
+            "distance": 1.8187338531065604,
+            "violations": 0
+          },
+          {
+            "node": 111816,
+            "distance": 0.14975390419038054,
+            "violations": 0
+          },
+          {
+            "node": 111849,
+            "distance": 1.5027357052548578,
+            "violations": 0
+          },
+          {
+            "node": 111851,
+            "distance": 1.4993807715300427,
+            "violations": 0
+          },
+          {
+            "node": 111852,
+            "distance": 2.3679861863466813,
+            "violations": 0
+          },
+          {
+            "node": 111854,
+            "distance": 1.8544830206521592,
+            "violations": 0
+          },
+          {
+            "node": 111865,
+            "distance": 2.1652399130944513,
+            "violations": 0
+          },
+          {
+            "node": 111866,
+            "distance": 0.21219991384104414,
+            "violations": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "A real commander route after tower placement matches weighted Dijkstra without changing enemy flow",
+      "ok": true,
+      "actual": {
+        "steps": 334,
+        "cost": 212.0409698486328,
+        "oracle": 212.0409698486328
+      }
+    }
+  ],
+  "faults": []
+}

@@ -523,7 +523,7 @@ export class Tower {
     const r2 = st.range * st.range;
     const min2 = (st.minRange || 0) * (st.minRange || 0);
     // keep a valid current target (with hysteresis)
-    if (this.target && this.target.active && !this.target.dead) {
+    if (this.target && !this.target.nest && this.target.active && !this.target.dead) {
       const dd = this._dist2(this.target);
       if (dd < r2 * 1.1 && dd > min2 && (this.def.air || !this.target.type.flying)) return this.target;
     }
@@ -533,7 +533,7 @@ export class Tower {
       if (!this.def.air && e.type.flying) continue;
       const d2 = this._dist2(e);
       if (d2 > r2 || d2 < min2) continue;
-      if (e.progress < bestProgress) { bestProgress = e.progress; best = e; }
+      if (!best || e.progress < bestProgress) { bestProgress = e.progress; best = e; }
     }
     this.target = best;
     return best;
@@ -663,14 +663,14 @@ export class Tower {
         this.manager.enemyWorldPos(current, _v2);
         fx.zaps.fire(from, _v2, PALETTE.energy, 0.16, 0.1);
         const dealt = this.manager.applyDamage(this, current, dmg, { armorPierce: 3 });
-        this.manager.enemies.applyStun(current, st.stun);
+        if(!current.nest)this.manager.enemies.applyStun(current, st.stun);
         fx.impactSpark(_v2, PALETTE.energy);
         hit.add(current.id);
         from = _v.copy(_v2);
         dmg *= 0.75;
         // next hop
         let next = null, nd = st.hop * st.hop;
-        for (const e of this.manager.enemies.active) {
+        for (const e of this.manager.targets) {
           if (!e.active || e.dead || hit.has(e.id)) continue;
           if (!this.def.air && e.type.flying) continue;
           this.manager.enemyWorldPos(e, _v3);
@@ -696,7 +696,7 @@ export class Tower {
     }
     const r2 = st.range * st.range;
     for (const e of enemies) {
-      if (!e.active || e.dead) continue;
+      if (!e.active || e.dead || e.nest) continue;
       if (this._dist2(e) < r2) {
         this.manager.enemies.applySlow(e, st.slow, 0.35);
         if (st.brittle) this.manager.enemies.applyBrittle(e, 0.4);
@@ -803,6 +803,8 @@ export class TowerManager {
     this.time = 0;
     this.zoomScale = 1;
     this.onKillReward = null;
+    this.targets=[];
+    this.nestTargets=new WeakMap();
 
     // bolt tracers
     const boltGeo = new THREE.CylinderGeometry(0.03, 0.05, 1, 5, 1);
@@ -874,7 +876,7 @@ export class TowerManager {
       b.tick = TICK;
       this.fx.glow.emit(b.pos.x, b.pos.y, b.pos.z, 0, 0, 0, 0xff7a3c, 2.2, 0.5, 0.5, 0);
       const r2 = b.r * b.r;
-      for (const e of this.enemies.active) {
+      for (const e of this.targets) {
         if (!e.active || e.dead || e.type.flying) continue;
         this.enemyWorldPos(e, _v3);
         if (_v3.distanceToSquared(b.pos) < r2) {
@@ -893,7 +895,7 @@ export class TowerManager {
     const flight = _v.length();
     if (flight < 0.001) return;
     _v.multiplyScalar(1 / flight);          // unit direction of travel
-    for (const e of this.enemies.active) {
+    for (const e of this.targets) {
       if (!e.active || e.dead || e === bolt.target) continue;
       this.enemyWorldPos(e, _v2);
       _v2.sub(bolt.from);
@@ -906,6 +908,7 @@ export class TowerManager {
   }
 
   enemyWorldPos(e, out) {
+    if(e.nest){out.copy(e.nest.group.position);return out.multiplyScalar(1+1.2/out.length());}
     const h = Math.max(e.height, 0.03) - swimOffset(e);
     return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
   }
@@ -942,7 +945,12 @@ export class TowerManager {
 
   applyDamage(tower, enemy, amount, opts = {}) {
     const wasDead = enemy.dead;
-    const dealt = this.enemies.damage(enemy, amount, opts);
+    let dealt;
+    if(enemy.nest){
+      if(!enemy.active||!(amount>0)||!Number.isFinite(amount))return 0;
+      dealt=Math.min(enemy.nest.hp,amount);
+      if(this.world.damagePortal(enemy.nest,amount))this.allies?.onPortalDestroyed?.(enemy.nest);
+    }else dealt = this.enemies.damage(enemy, amount, opts);
     tower.damageDealt += dealt;
     if (!opts.silent && dealt > 0) {
       this.enemyWorldPos(enemy, _v3);
@@ -1034,7 +1042,19 @@ export class TowerManager {
 
   update(dt) {
     this.time += dt;
-    const enemyList = this.enemies.active;
+    // Stable wrappers let in-flight bolts observe destruction immediately.
+    // Dormant, unestablished and guardian-protected sources are not targets.
+    this.targets.length=0;this.targets.push(...this.enemies.active);
+    for(const p of this.world?.portals||[]){
+      if(!p.established||p.destroyed||p.guardianPending)continue;
+      let target=this.nestTargets.get(p);
+      if(!target){
+        target={nest:p,id:p,progress:Infinity,type:{flying:false},get active(){return p.established&&!p.destroyed&&!p.guardianPending;},get dead(){return p.destroyed;}};
+        this.nestTargets.set(p,target);
+      }
+      this.targets.push(target);
+    }
+    const enemyList = this.targets;
     for (const t of this.towers) t.update(dt, enemyList, this.fx);
     this._updateBurns(dt);
 
@@ -1076,7 +1096,7 @@ export class TowerManager {
         this.fx.explosion(s.to, s.st.aoe);
         this.audio?.play('explosion');
         const r2 = s.st.aoe * s.st.aoe;
-        for (const e of this.enemies.active) {
+        for (const e of this.targets) {
           if (!e.active || e.dead || e.type.flying) continue;
           this.enemyWorldPos(e, _v3);
           if (_v3.distanceToSquared(s.to) < r2) {
