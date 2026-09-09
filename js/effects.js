@@ -429,9 +429,12 @@ class DamageNumbers {
       if (!PRESENTATION.numbers && Number.isFinite(Number(it.el.textContent))) it.life=0;
       if (it.life <= 0) { if (it.el.style.opacity !== '0') it.el.style.opacity = '0'; continue; }
       it.life -= dt;
-      it.vy += dt * 46;
+      if(it.life<=0){it.el.style.opacity='0';continue;}
+      if(!REDUCED_MOTION)it.vy += dt * 46;
       _v.copy(it.pos).project(this.camera);
-      if (_v.z > 1) { it.life = 0; it.el.style.opacity = '0'; continue; }
+      // Labels inside the near plane used to project across the HUD as the
+      // commander ran through their spawn point. Cull both clip planes.
+      if (_v.z < -1 || _v.z > 1) { it.life = 0; it.el.style.opacity = '0'; continue; }
       const x = (_v.x * 0.5 + 0.5) * w;
       const y = (-_v.y * 0.5 + 0.5) * h - it.vy;
       // The pop: overshoot in the first tenth of a second, then settle.

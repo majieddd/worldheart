@@ -129,6 +129,7 @@ const _gn = new THREE.Vector3();
 const _right = new THREE.Vector3();
 const _base = new THREE.Vector3();
 const _tip = new THREE.Vector3();
+const _driveStart = new THREE.Vector3();
 // The frame delta placeCamera needs to decay trauma, set by update().
 let dtShake = 0;
 
@@ -664,17 +665,25 @@ export class Possession {
     this.sprint = !u.swimming && (this.keys.has('ShiftLeft') || this.keys.has('ShiftRight')) && fwd > 0.5;
     const airborne = u.airT > 0;
     const rate = airborne ? AIR_CONTROL : (wantLen > 0 ? ACCEL : DECEL);
-    const k = Math.min(1, dt * rate);
+    const k = 1 - Math.exp(-dt * rate);
     this.vel.x += (fwd - this.vel.x) * k;
     this.vel.y += (strafe - this.vel.y) * k;
     if (Math.abs(this.vel.x) < 0.002) this.vel.x = 0;
     if (Math.abs(this.vel.y) < 0.002) this.vel.y = 0;
     const speedFrac = Math.min(1, this.vel.length());
-    this.moveT += (speedFrac - this.moveT) * Math.min(1, dt * 10);
-    this.sprintT += ((this.sprint ? 1 : 0) - this.sprintT) * Math.min(1, dt * 5);
+    this.sprintT += ((this.sprint ? 1 : 0) - this.sprintT) * (1-Math.exp(-dt*5));
     u.sprint = this.sprint;
+    _driveStart.copy(u.dir);
     if (speedFrac > 0) this.allies.driveUnit(u, this.vel.x, this.vel.y, dt, 1 + (SPRINT_MUL - 1) * this.sprintT);
     else u.strafeIn = 0;
+    // Input velocity is intent, not travel: a blocked commander used to run
+    // the full head/weapon bob and footstep cycle while standing still.
+    // Chord distance is stable for these tiny steps and retains slope/swim
+    // slowdown instead of animating a full-speed stride over slow ground.
+    const travelled=_driveStart.distanceTo(u.dir)*R;
+    const fullSpeed=u.type.speed*1.25*(1+(SPRINT_MUL-1)*this.sprintT);
+    const actual=dt>0?Math.min(1,travelled/(fullSpeed*dt)):0;
+    this.moveT+=((airborne?0:actual)-this.moveT)*(1-Math.exp(-dt*10));
     if (this.jumpBuffer > 0) {
       this.jumpBuffer -= dt;
       if (!airborne) this.jump();
@@ -689,7 +698,7 @@ export class Possession {
     // where feet have nothing to fall on. Each half-stride is a footfall.
     if (!airborne && this.moveT > 0.05) {
       const hz = (u.type.strike?.strideHz || 2) * (1 + 0.25 * this.sprintT);
-      this.stride += dt * hz * Math.PI * 2 * this.moveT;
+      this.stride += dt * hz * Math.PI * 2 * actual;
       const half = Math.floor(this.stride / Math.PI);
       if (half !== this.stepPhase) {
         this.stepPhase = half;
@@ -699,8 +708,8 @@ export class Possession {
 
     // The landing spring integrates every frame, so a jump's lift and a
     // touchdown's dip both settle on their own.
-    this.springV += (-SPRING_K * this.springY - SPRING_C * this.springV) * dt;
-    this.springY += this.springV * dt;
+    // Substeps keep the landing spring stable and comparable at 30/60/120Hz.
+    for(let left=dt;left>1e-8;){const step=Math.min(left,1/120);this.springV+=(-SPRING_K*this.springY-SPRING_C*this.springV)*step;this.springY+=this.springV*step;left-=step;}
 
     // Treasure is collected by walking over it.
     if (this.caches) {
@@ -818,8 +827,9 @@ export class Possession {
     const s2 = Math.sin(this.stride * 2);
     const bobY = s2 * BOB_Y * amp;
     const bobX = s1 * BOB_X * amp;
-    const wantRoll = s1 * BOB_ROLL * amp + this.vel.y * STRAFE_ROLL * motion;
-    this.roll += (wantRoll - this.roll) * Math.min(1, dtShake * 12 + (dtShake === 0 ? 1 : 0) * 0);
+    const wantRoll = s1 * BOB_ROLL * amp + this.vel.y * this.moveT * STRAFE_ROLL * motion;
+    this.roll += (wantRoll - this.roll) * (1-Math.exp(-dtShake*12));
+    if(!motion)this.roll=0;
 
     const alt = Math.max(u.height, 0.03) + (u.hop || 0) - swimOffset(u);
     _right.crossVectors(u.fwd, u.dir).normalize();
@@ -868,11 +878,11 @@ export class Possession {
       // does not pump the camera.
       let allow = 1;
       if (this.world) {
-        const t = this.world.decorHit(_eye, _tp, 1.1);
-        if (t >= 0) allow = Math.max(0.12, t - 0.12);
+        const t = this.world.decorHit(_eye, _tp, 0.3);
+        if (t >= 0) allow = Math.max(0.12, t - 0.05/Math.max(this.boom,0.1));
       }
       const rate = allow < this.boomAllow ? 18 : 5;
-      this.boomAllow += (allow - this.boomAllow) * Math.min(1, dtShake * rate + (dtShake === 0 ? 1 : 0));
+      this.boomAllow += (allow - this.boomAllow) * (dtShake===0?1:1-Math.exp(-dtShake*rate));
       if (this.boomAllow < 0.999) _tp.lerpVectors(_eye, _tp, this.boomAllow);
       cam.position.copy(_tp);
       // Look past the head rather than at the feet, so the body sits low in

@@ -1,6 +1,8 @@
 # Owner brief: current alignment and remaining acceptance
 
-2026-09-06. Current owner: Codex, `feature/adversarial-acceptance`, [PR #22](https://github.com/majieddd/worldheart/pull/22).
+Updated 2026-09-08. Current owner: Codex, `feature/natural-terrain-feel`.
+The [natural-terrain ledger](NATURAL-TERRAIN-FEEL.md) adds the latest requested
+terrain/feel repairs to the prior [PR #22](https://github.com/majieddd/worldheart/pull/22) audit.
 Use [PROGRESS.md](../../PROGRESS.md) for publication status and
 [the adversarial record](ADVERSARIAL-ACCEPTANCE.md) for failures and exact evidence.
 The immutable [initial intake](../2026-09-05/REQUEST.md) and
@@ -10,7 +12,7 @@ request identity. Functional verification does not substitute for owner feel.
 | Request | Current implementation and evidence | Remaining work |
 |---|---|---|
 | U01 Campaign focus and eventual rename | V2 defaults to a saved 99-planet expedition with isolated saves; M5B defines all destinations and ending fixtures | Full unforced campaign, release readiness and main title/default/metadata migration |
-| U02 Camera fluidity | M1 input/motion controls; M5C measured cliff visibility and 30/60/120 Hz convergence | Owner continuous-input feel, wider devices and camera-query CPU cost |
+| U02 Camera fluidity | M1/M5C visibility controls; actual decor bounds, displacement-driven bob and time-based response in the September 8 follow-up | Owner continuous-input feel, wider devices and camera-query CPU cost |
 | U03 Sword arm POV | Attachment fixed, fuller arm, and current four-family tests prevent long weapons stretching/recoloring the arm | Owner silhouette/near-plane/feel review across the complete motion catalog |
 | U04 Commander/enemy/tower motion | Shared poses and active frames, surface-distance gait, eased targeting; U23 swing repair | Broader moving combat, foot sliding and all-model art review |
 | U05 Tree/bush polygons | Shared visible/depth wind and normals; eight map/profile geometry cases and close rendered views | Exact original artifact is not reproduced; keep its visual acceptance open |
@@ -19,8 +21,8 @@ request identity. Functional verification does not substitute for owner feel.
 | U08 Inventory and drops | Four families, seeded drops, two slots and twelve backpack spaces; compare/equip/salvage/full bag; 15 keyboard checks | Continued natural loot frequency and long-session clutter review |
 | U09 Weapon diversity/customization | Head/barrel, grip/stock, cores, rarity and affix tradeoffs; deterministic distribution and live effect checks | More authored mechanical choices only after current family/era balance; not a production-size loot library |
 | U10 Ancient/scifi/empowered arc | Era data, colors/cores, bounded infusion, retention and boundary fixtures | Three distinct authored silhouette sets are still missing; current family geometry/tint reuse is a prototype |
-| U11 Major peaks | Varied/alpine profiles, height-aware grounding/placement, M3 route and M5C camera checks | Owner scale/spectacle approval, broader seeds and startup cost |
-| U12 Canyons | Canyon profile and connected graph; current legal planet-2 arrival and wave-12 defeat retained | Wider strategy/balance on deep routes; a controller loss is not proof of impossibility |
+| U11 Major peaks | Broad continental/upland/erosion regions replace abrupt campaign pillars; 36 fixed-field shape assertions retain large peaks; four-profile integration and 99 routes pass | Owner scale/spectacle approval, broader seeds and startup cost |
+| U12 Canyons | Rounded depth-scaled canyon shoulders, stable regional distance and preserved connected routes; fresh actual planet-2 arrival on revised terrain | Wider strategy/balance on deep routes; a controller loss is not proof of impossibility |
 | U13 Oceans/swimming | Shore hysteresis and shared swim slowdown/route cost; cautious earned-checkpoint run won wave 15 and extracted to planet 5 | Wider strategy/seed balance and owner swim feel; one win does not accept the whole profile |
 | U14 Spherical tower ranges | Spheres/orbits and terrain contours use 3D targeting origin, inner mortar range and labels | Owner readability at extreme height/zoom and clutter review |
 | U15 Raised/elemental placement | Stable high ground, restricted hot/cold families, bounded bonuses, clear denial reasons | Broader seed/material-footprint review and balance of strong locations |
@@ -32,13 +34,19 @@ request identity. Functional verification does not substitute for owner feel.
 | U21 Shared tracking | GitHub #1 and milestone issues, stacked draft PRs, durable failures, V2 build identity and current ledger | Keep every future claim/evidence/owner/publication update in the same session |
 | U22 Tower hover/look UI | Anchored Upgrade/Sell, F/Escape pointer handoff, range checks and checkpoint overlap fixtures | Owner interaction feel and more live combat contexts |
 | U23 Fuller arm/third-person swing | Blocky arm and continuous timed swing repair; current anatomy isolation checks | Owner full-motion approval |
-| U24 Forgiving commander hitbox | Swept small steps and sliding preserve real terrain/tower barriers; repeated input comparison | Wider obstacle and crowd density feel |
+| U24 Forgiving commander hitbox | Swept small steps and sliding preserve terrain/tower barriers; September 8 corrects false camera obstacles above small rocks and bob while blocked | Wider current-layout obstacle and crowd density feel; decor camera occlusion is distinct from body collision |
 | U25 Loot hover/inspect/model | Actual cached model preview, comparison, deliberate pickup/equip and full-bag retention | Owner inspection readability and richer weapon silhouettes |
 | U26 Physical nest-only spawns | Waves/raids/guardian escorts/splits originate at physical nests; source destruction and route debt tested | Nest pressure/boss balance and natural full campaign |
 | U27 Unit route lines | Actual remaining route shown and removed/recomputed on lifecycle/nav changes | Owner large-squad legibility and performance |
 
 ## Adversarial additions now addressed
 
+- Fixed-field terrain and actual decor geometry tests reproduce the September
+  8 mountain/camera issues. Blocking motion no longer drives a running bob.
+  Reduced-motion essential labels stay anchored and identical warnings dedupe.
+- The revised all-99 route sweep found one enemy oscillating on planet 95.
+  Persistent center/edge recovery repairs it; the full sweep then recorded
+  1,485 arrivals and a fresh legal 15-wave run extracted normally.
 - A natural victory exposed pointer-lock trapping extraction. The repaired
   public V2 receipt supports real clicks, nested inventory and continuation.
 - Keyboard inventory transactions lost focus; current public controls retain

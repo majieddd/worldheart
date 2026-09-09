@@ -1,0 +1,382 @@
+{
+  "scope": "Fixed equipment/pose fixtures, not natural combat",
+  "checks": [
+    {
+      "name": "sword: long equipment preserves the holding arm size",
+      "ok": true,
+      "actual": {
+        "family": "sword",
+        "frames": [
+          {
+            "length": 1,
+            "era": null,
+            "arms": [
+              {
+                "volume": 0.0068590000000000005,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          },
+          {
+            "length": 1.2,
+            "era": "empowered",
+            "arms": [
+              {
+                "volume": 0.0068590000000000005,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1.2
+          },
+          {
+            "length": 1,
+            "era": "technological",
+            "arms": [
+              {
+                "volume": 0.0068590000000000005,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          },
+          {
+            "length": 1,
+            "era": null,
+            "arms": [
+              {
+                "volume": 0.0068590000000000005,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "sword: weapon era does not recolor commander gauntlets",
+      "ok": true
+    },
+    {
+      "name": "sword: switching back restores the original proportions",
+      "ok": true
+    },
+    {
+      "name": "spear: long equipment preserves the holding arm size",
+      "ok": true,
+      "actual": {
+        "family": "spear",
+        "frames": [
+          {
+            "length": 1,
+            "era": null,
+            "arms": [
+              {
+                "volume": 0.006858999999999999,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006858999999999999,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          },
+          {
+            "length": 1.2,
+            "era": "empowered",
+            "arms": [
+              {
+                "volume": 0.006858999999999999,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006858999999999999,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1.2
+          },
+          {
+            "length": 1,
+            "era": "technological",
+            "arms": [
+              {
+                "volume": 0.006858999999999999,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006858999999999999,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          },
+          {
+            "length": 1,
+            "era": null,
+            "arms": [
+              {
+                "volume": 0.006858999999999999,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006858999999999999,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "spear: weapon era does not recolor commander gauntlets",
+      "ok": true
+    },
+    {
+      "name": "spear: switching back restores the original proportions",
+      "ok": true
+    },
+    {
+      "name": "carbine: long equipment preserves the holding arm size",
+      "ok": true,
+      "actual": {
+        "family": "carbine",
+        "frames": [
+          {
+            "length": 1,
+            "era": null,
+            "arms": [
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          },
+          {
+            "length": 1.2,
+            "era": "empowered",
+            "arms": [
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1.2
+          },
+          {
+            "length": 1,
+            "era": "technological",
+            "arms": [
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          },
+          {
+            "length": 1,
+            "era": null,
+            "arms": [
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "carbine: weapon era does not recolor commander gauntlets",
+      "ok": true
+    },
+    {
+      "name": "carbine: switching back restores the original proportions",
+      "ok": true
+    },
+    {
+      "name": "lobber: long equipment preserves the holding arm size",
+      "ok": true,
+      "actual": {
+        "family": "lobber",
+        "frames": [
+          {
+            "length": 1,
+            "era": null,
+            "arms": [
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          },
+          {
+            "length": 1.2,
+            "era": "empowered",
+            "arms": [
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1.2
+          },
+          {
+            "length": 1,
+            "era": "technological",
+            "arms": [
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          },
+          {
+            "length": 1,
+            "era": null,
+            "arms": [
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              },
+              {
+                "volume": 0.006859,
+                "materials": [
+                  "2a3140",
+                  "cdd8e6"
+                ]
+              }
+            ],
+            "weaponScale": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "lobber: weapon era does not recolor commander gauntlets",
+      "ok": true
+    },
+    {
+      "name": "lobber: switching back restores the original proportions",
+      "ok": true
+    }
+  ],
+  "faults": []
+}

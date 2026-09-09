@@ -929,15 +929,19 @@ export class HUD {
 
   toast(msg, kind = 'info') {
     const anchor = this.el['toast-anchor'];
-    if (anchor.children.length > 2) anchor.firstChild.remove();
-    const t = document.createElement('div');
-    t.className = `toast ${kind === 'info' ? '' : kind}`;
-    t.textContent = msg;
-    anchor.appendChild(t);
-    requestAnimationFrame(() => t.classList.add('show'));
-    setTimeout(() => {
+    // Repeated placement denials used to stack identical moving lines and
+    // push the useful message away. Refresh one notice without restarting
+    // its entrance; a different message still receives its own bounded slot.
+    let t=Array.from(anchor.children).find(el=>el.textContent===msg&&el.dataset.kind===kind);
+    if(!t){
+      if(anchor.children.length>2)anchor.firstChild.remove();
+      t=document.createElement('div');t.className=`toast ${kind==='info'?'':kind}`;
+      t.dataset.kind=kind;t.textContent=msg;anchor.appendChild(t);
+      requestAnimationFrame(()=>t.classList.add('show'));
+    }else{clearTimeout(t._hideTimer);clearTimeout(t._removeTimer);t.classList.add('show');}
+    t._hideTimer=setTimeout(() => {
       t.classList.remove('show');
-      setTimeout(() => t.remove(), 240);
+      t._removeTimer=setTimeout(() => t.remove(), 240);
     }, 2800);
   }
 

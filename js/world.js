@@ -179,6 +179,48 @@ export function initTerrainField(seed) {
   if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
+// Campaign relief comes from broad continental, upland and erosion regions.
+// Multiplying a 96m peak by the old warped coast mask and narrow pass bands
+// produced vertical needles. Regions now carry the large shape; small noise
+// only textures it. The smooth shoulders remain the same authoritative field
+// for rendering, movement, placement and flight.
+function regionalHeight(dx,dy,dz,includeFine) {
+  const profile=CONFIG.terrain;
+  const c=fbm3(nBase,dx*F_CONT,dy*F_CONT,dz*F_CONT,2);
+  const land=smoothstep(-.2+profile.ocean,.18+profile.ocean,c);
+  const inland=smoothstep(-.2+profile.ocean,.8+profile.ocean,c);
+  const rolling=fbm3(nDetail,dx*F_ROLL,dy*F_ROLL,dz*F_ROLL,3);
+  let h=lerp(-1.65+.5*c,.55,land)+land*rolling*.32;
+  const region=nRange(dx*F_RANGE+23,dy*F_RANGE,dz*F_RANGE);
+  const upland=smoothstep(-.3,.65,region);
+  const erosion=nGap(dx*FQ*1.1+41,dy*FQ*1.1,dz*FQ*1.1);
+  const saddle=smoothstep(0,.65,erosion);
+  h+=inland*profile.range*(.15*upland+.85*upland*upland)*(1-.94*saddle);
+
+  // A canyon's shoulders grow with its depth. Use a stable regional distance
+  // coordinate, rather than dividing by a rapidly changing local gradient:
+  // that quotient made narrow isolated rims even beside a broad valley.
+  // These are nominal widths; transect QA measures the actual world-space
+  // result instead of treating noise thresholds as measured metres.
+  const cn=nCanyon(dx*F_CANYON+5.5,dy*F_CANYON,dz*F_CANYON);
+  const dist=Math.abs(cn)*R/(F_CANYON*1.65);
+  const half=Math.max(3,profile.canyon*.16);
+  const wall=Math.max(9,profile.canyon*.85);
+  const fade=Math.max(18,profile.canyon*1.6);
+  const ramp=smoothstep(.15,.7,nGap(dx*FQ*1.25+9,dy*FQ*1.25,dz*FQ*1.25));
+  const run=wall*(1+ramp*.7),shoulder=smoothstep(half,half+run,dist);
+  const rim=shoulder*(1-smoothstep(half+run,half+run+fade,dist))*(1-ramp*.75);
+  const uncut=h;
+  h=lerp(h,Math.max(CANYON_FLOOR+rolling*.08,uncut-profile.canyon),(1-shoulder)*inland);
+  h+=inland*rim*profile.canyon;
+  if(includeFine){
+    const fine=fbm3(nDetail,dx*F_FINE+53,dy*F_FINE,dz*F_FINE,2);
+    const fine2=nDetail(dx*F_FINE2+17,dy*F_FINE2,dz*F_FINE2);
+    h+=land*(fine*.17+fine2*.05);
+  }
+  return h;
+}
+
 // includeFine=false gives the gameplay surface: the same terrain minus the
 // cosmetic facet relief, so walkability never fractures on visual noise.
 export function terrainHeight(dx, dy, dz, includeFine = true) {
@@ -204,6 +246,7 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
     }
     return h;
   }
+  if(CONFIG.terrain)return regionalHeight(dx,dy,dz,includeFine);
   const w = 0.26;
   const wx = dx + nWarp(dx * F_WARP + 7.7, dy * F_WARP, dz * F_WARP) * w;
   const wy = dy + nWarp(dx * F_WARP, dy * F_WARP + 3.1, dz * F_WARP) * w;
@@ -1372,6 +1415,7 @@ function scatterDecor(rng) {
 
   function makeInstanced(geo, mat, list, tiltToNormal, colorJitter) {
     const mesh = new THREE.InstancedMesh(geo, mat, Math.max(list.length, 1));
+    geo.computeBoundingBox();
     const col = new THREE.Color();
     for (let i = 0; i < list.length; i++) {
       const it = list[i];
@@ -1382,6 +1426,9 @@ function scatterDecor(rng) {
       _s.setScalar(it.s);
       _m4.compose(_pos, _q, _s);
       mesh.setMatrixAt(i, _m4);
+      // Decor is static until crushed. Cache its exact instance transform
+      // once so camera queries respect the rendered size and tilt.
+      it.occlusionInverse=_m4.clone().invert();
       const j = 1 + (rng() - 0.5) * colorJitter;
       col.setRGB(j, j * (1 + (rng() - 0.5) * 0.06), j);
       mesh.setColorAt(i, col);
@@ -1730,8 +1777,8 @@ export function buildFieldWall(centerDir, theta) {
 }
 
 const _orientQ = new THREE.Quaternion();
-const _seg = new THREE.Vector3();
-const _d = new THREE.Vector3();
+const _decorA = new THREE.Vector3(), _decorB = new THREE.Vector3(), _decorDelta = new THREE.Vector3();
+const DECOR_AXES=['x','y','z'];
 
 export function orientOnSurface(obj, pos, yaw = 0) {
   _up.copy(pos).normalize();
@@ -1908,33 +1955,32 @@ export class World {
   // Where along the segment a->b the first piece of decor sits within
   // `radius`, as a fraction in 0..1, or -1 for a clear line. The third-person
   // boom asks this every frame so the camera stops short of a tree instead of
-  // looking out from inside its canopy. Brute force over the crushable sets:
-  // a few thousand distance tests, well under a tenth of a millisecond, and
-  // no per-frame allocation.
+  // looking out from inside its canopy. Bounds are in the real instance's
+  // local frame: the old three fixed trunk points invented a 2.5m obstacle
+  // over a small rock and ignored a scaled tree's actual canopy. This query
+  // affects the camera only; commander movement uses terrain/tower edges.
   decorHit(a, b, radius) {
     if (!this.decor) return -1;
-    const r2 = radius * radius;
-    _seg.subVectors(b, a);
-    const len2 = _seg.lengthSq();
-    if (len2 < 1e-8) return -1;
     let best = -1;
     for (const set of this.decor.sets) {
       if (!set.crushable) continue;
+      const box=set.mesh.geometry.boundingBox;
       for (let i = 0; i < set.list.length; i++) {
         const it = set.list[i];
         if (!it.alive) continue;
-        // Decor stands up from its base, and a pine's canopy is wider than
-        // its trunk, so the test is three points stacked up the trunk rather
-        // than one: a single point at trunk height let the camera sit inside
-        // the canopy of a tree whose base was a step to the side.
-        for (let k = 0; k < 3; k++) {
-          _pos.copy(it.dir).multiplyScalar(R + it.h + 0.5 + k * 1.0);
-          _d.subVectors(_pos, a);
-          const t = _d.dot(_seg) / len2;
-          if (t < 0.05 || t > 1) continue;
-          _d.addScaledVector(_seg, -t);
-          if (_d.lengthSq() < r2 && (best < 0 || t < best)) best = t;
+        _decorA.copy(a).applyMatrix4(it.occlusionInverse);
+        _decorB.copy(b).applyMatrix4(it.occlusionInverse);
+        _decorDelta.subVectors(_decorB,_decorA);
+        const pad=(radius+.08)/it.s; // small visible wind allowance
+        let enter=0,leave=1;
+        for(const axis of DECOR_AXES){
+          const start=_decorA[axis],delta=_decorDelta[axis],lo=box.min[axis]-pad,hi=box.max[axis]+pad;
+          if(Math.abs(delta)<1e-8){if(start<lo||start>hi){leave=-1;break;}continue;}
+          const t0=(lo-start)/delta,t1=(hi-start)/delta;
+          enter=Math.max(enter,Math.min(t0,t1));leave=Math.min(leave,Math.max(t0,t1));
+          if(enter>leave)break;
         }
+        if(enter<=leave&&(best<0||enter<best))best=enter;
       }
     }
     return best;

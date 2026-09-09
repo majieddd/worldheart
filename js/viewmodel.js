@@ -465,6 +465,8 @@ export class ViewModel {
     this.current.visible = true;
     this.grip = GRIP[typeKey] ?? 0.6;
     this.visible = true;
+    this._sway.set(0,0);
+    this._beam=0;
     this.trail.clear();
   }
 
@@ -532,6 +534,9 @@ export class ViewModel {
     // weapon is never completely still. The bob is the eye's figure-eight,
     // counter-phased a little so the weapon lags the head.
     const motion = opts.bob === false ? 0 : 1;
+    // Comfort changes also apply while paused; dt=0 must not retain a
+    // weapon's old turn lag after the player disables bob and sway.
+    if(!motion)this._sway.set(0,0);
     const mv = (opts.moveT || 0) * motion;
     const stride = opts.stride || 0;
     const amp = mv * (1 + 0.5 * (opts.sprint || 0));
