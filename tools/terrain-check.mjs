@@ -82,13 +82,15 @@ try {
       g.select(tower);
       check('Range orbit and minimum exclusion match actual stats', g.selRing.outer.scale.x === tower.range && g.selRing.inner.scale.x === tower.stats.minRange && g.selRing.mesh.position.distanceTo(tower.pos) === 0);
       g.selRing.mesh.updateMatrixWorld(true);
-      for (const [line, radius] of [[g.selRing.contour, tower.range], [g.selRing.innerContour, tower.stats.minRange]]) {
+      // The owner replaced expensive terrain contours with a depth-clipped
+      // translucent volume. Its geometry still has to match targeting exactly.
+      for (const [line, radius] of [[g.selRing.veil, tower.range], [g.selRing.innerVeil, tower.stats.minRange]]) {
         const points = line.geometry.getAttribute('position'); let error = 0;
         for (let i = 0; i < points.count; i++) {
           v.fromBufferAttribute(points, i).applyMatrix4(line.matrixWorld);
           error = Math.max(error, Math.abs(v.distanceTo(tower.pos) - radius));
         }
-        check('Terrain intersection follows the actual range boundary', points.count > 0 && error < 0.12, { radius, vertices: points.count, error });
+        check('Depth-clipped range veil follows the actual range boundary', points.count > 0 && error < 0.001 && line.material.transparent && line.material.depthTest && !line.material.depthWrite, { radius, vertices: points.count, error });
       }
       const bolt=W.towers.place('bolt',W.heartPos),enemy=W.enemies.spawn('husk',n.portalNodes[0]);
       enemy.dir.copy(bolt.pos).normalize();enemy.alt=0;enemy.progress=1;

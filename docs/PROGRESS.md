@@ -1,6 +1,6 @@
 # 99 Planets development progress
 
-Updated 2026-09-08. This is the collaborator entry point for the owner's new direction.
+Updated 2026-09-09. This is the collaborator entry point for the owner's new direction.
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
@@ -16,6 +16,21 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 [first deployment](https://github.com/majieddd/worldheart/actions/runs/34044866229)
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
+
+Verified locally 2026-09-09, awaiting V2 publication: Codex on
+`feature/commander-build-comfort` removed tree camera obstruction, added a
+reusable translucent range veil and restored first-person mouse capture on
+successful tower Upgrade/Sell. Profiling also found full-graph placement
+searches; isolated detours now reuse the live heart field without mutating it.
+Moving-preview p99 improved from 117.4ms to 8.7ms at native speed and from
+607ms to 22.9ms at 4x CPU in the controlled 720p fixture. This is not a full
+combat or lower-end device claim. Tests: 230 core, 22 comfort, 28 contextual
+feedback, 14 UI edges, 21 decor, ten surface, four terrain profiles, five map
+camera regressions, 96 placement-oracle cases and 180 point-route comparisons.
+A fresh legal 15-wave run won with 24 heart health and 1,035 kills, then
+extracted 13 weapons to planet 2. Full campaign/art/device acceptance stays open.
+[Work log and retained failures](qa/implementation/COMMANDER-BUILD-COMFORT.md).
+Usage unmeasured.
 
 Published 2026-09-08: Codex on `feature/natural-terrain-feel`, [PR #23](https://github.com/majieddd/worldheart/pull/23), has implemented
 rounded mountain/canyon regions, actual decor camera clearance,

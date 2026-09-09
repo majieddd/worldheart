@@ -669,8 +669,8 @@ export class NavGraph {
   _dijkstra(source, blockFilter, field = this, stop = -1, guided = false) {
     const n = this.n;
     const { dist, next, walk, block, cost } = field;
-    // Only commander point-to-point searches use a goal heuristic. Heart,
-    // placement and air fields retain the complete Dijkstra calculation.
+    // Only commander point-to-point searches use this goal heuristic.
+    // Authoritative heart and air fields retain the complete calculation.
     const scale=guided&&stop>=0&&Number.isFinite(this._routeHeuristicScale)?this._routeHeuristicScale:0;
     const sx=scale?this.dirs[stop*3]:0,sy=scale?this.dirs[stop*3+1]:0,sz=scale?this.dirs[stop*3+2]:0;
     dist.fill(Infinity);
@@ -866,33 +866,69 @@ export class NavGraph {
     for (const p of this.portalNodes) if (temp.has(p)) return { ok: false, reason: 'portal' };
     if (temp.size === 0) return { ok: true };
 
-    // Reachability sweep from the heart with the candidate footprint blocked.
-    // Runs on every hover, so it marks a persistent generation array instead
-    // of allocating a visited buffer the size of the graph.
-    const mark = this._scratch();
-    const g = this._gen;
-    const stack = this._fA;
-    stack.length = 0;
-    stack.push(this.heartNode);
-    mark[this.heartNode] = g;
-    // Original entrances alone are insufficient after units walk past a
-    // junction, or a campaign authors a nest on that route. Closing their
-    // last exit strands a live wave even if every original portal reroutes.
-    const isPortal = new Set([...this.portalNodes,...requiredNodes]);
-    isPortal.delete(this.heartNode);
-    let need = isPortal.size;
-    for(const node of isPortal)if(temp.has(node))return {ok:false,reason:'path'};
-    while (stack.length && need > 0) {
-      const a = stack.pop();
-      for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
+    // Most cursor positions miss every live route. A known route that never
+    // enters the candidate footprint is already proof of a remaining exit.
+    // Share checked suffixes, then search only for the routes that need a
+    // detour. Include living enemies and new nests, not just original gates.
+    const required = new Set([...this.portalNodes, ...requiredNodes]);
+    const verified = new Set([this.heartNode]);
+    for (const node of required) {
+      let i = node; const trail = [];
+      while (!verified.has(i) && i >= 0 && i < this.n && trail.length < this.n) {
+        if (temp.has(i) || this.block[i] || !this.walk[i]) break;
+        trail.push(i); i = this.next[i];
+      }
+      if (!verified.has(i)) {
+        const detour = this._previewRoute(node, temp);
+        if (!detour.length) return { ok: false, reason: 'path' };
+        for (const step of detour) verified.add(step);
+        continue;
+      }
+      for (const step of trail) verified.add(step);
+    }
+    return { ok: true };
+  }
+
+  _previewRoute(from, temp) {
+    if (from < 0 || from >= this.n || !Number.isFinite(this.dist[from]) || this.block[from] || temp.has(from) || temp.has(this.heartNode)) return [];
+    const direct = [];
+    for (let i = from; i >= 0 && direct.length < this.n; i = this.next[i]) {
+      if (temp.has(i)) break;
+      direct.push(i); if (i === this.heartNode) return direct;
+    }
+    // Removing nodes cannot shorten the existing distance to the heart.
+    // That field is a much tighter admissible heuristic than straight-line
+    // distance through mountainous terrain. Search forward with OUTGOING
+    // costs; adjacency rows store incoming costs, so use each reverse edge.
+    if (!this._preview || this._preview.dist.length !== this.n) this._preview = {
+      dist: new Float64Array(this.n), parent: new Int32Array(this.n), seen: new Uint32Array(this.n), closed: new Uint32Array(this.n), generation: 0,
+    };
+    const f = this._preview, generation = f.generation = (f.generation + 1) >>> 0;
+    if (!generation) { f.seen.fill(0xffffffff); f.closed.fill(0xffffffff); }
+    const heap = this._heap; heap.n = 0;
+    // Leave a small margin for the authoritative field's Float32 rounding.
+    const lower = i => this.dist[i] * 0.99999;
+    f.dist[from] = 0; f.parent[from] = -1; f.seen[from] = generation; heap.push(from, lower(from));
+    while (heap.n) {
+      const a = heap.pop(); if (f.closed[a] === generation) continue;
+      f.closed[a] = generation;
+      if (a === this.heartNode) {
+        const path = []; for (let i = a; i >= 0; i = f.parent[i]) path.push(i);
+        return path.reverse();
+      }
+      for (let e = this.adjOff[a]; e < this.adjOff[a+1]; e++) {
         const b = this.adj[e];
-        if (mark[b] === g || !this.walk[b] || this.block[b] !== 0 || temp.has(b) || !Number.isFinite(this.cost[e])) continue;
-        mark[b] = g;
-        if (isPortal.has(b)) need--;
-        stack.push(b);
+        if (!this.walk[b] || this.block[b] || temp.has(b) || f.closed[b] === generation || !Number.isFinite(this.dist[b])) continue;
+        let cost = Infinity;
+        for (let r = this.adjOff[b]; r < this.adjOff[b+1]; r++) if (this.adj[r] === a) { cost = this.cost[r]; break; }
+        const distance = f.dist[a] + cost;
+        if (Number.isFinite(distance) && (f.seen[b] !== generation || distance < f.dist[b])) {
+          f.seen[b] = generation; f.dist[b] = distance; f.parent[b] = a;
+          heap.push(b, distance + lower(b));
+        }
       }
     }
-    return need > 0 ? { ok: false, reason: 'path' } : { ok: true };
+    return [];
   }
 
   blockNodes(center, radius, towerId) {
@@ -923,7 +959,8 @@ export class NavGraph {
   }
 
   // All portal-to-heart polylines, optionally as if a footprint were blocked.
-  // One Dijkstra for the whole preview, flow restored afterward.
+  // Keep preview searches out of the authoritative ground/air fields.
+  // Full-world solve plus restore on every hover caused visible stalls.
   previewPaths(tempCenter = null, radius = 0) {
     let temp = null;
     if (tempCenter) {
@@ -932,9 +969,15 @@ export class NavGraph {
         if (this.walk[i] && this.block[i] === 0) temp.add(i);
       }
     }
-    if (temp && temp.size) this._dijkstra(this.heartNode, temp);
-    const paths = this.portalNodes.map((p) => this._traceChain(p, []));
-    if (temp && temp.size) this.recomputeFlow();
+    if (!temp?.size) return this.portalNodes.map(p => this._traceChain(p, []));
+    const key = `${this.revision}:${this.heartNode}:${this.portalNodes.join(',')}:${[...temp].sort((a,b)=>a-b).join(',')}`;
+    if (this._previewKey === key) return this._previewPaths;
+    const paths = this.portalNodes.map(p => {
+      const flat = [];
+      for (const i of this._previewRoute(p, temp)) flat.push(this.pos[i*3], this.pos[i*3+1], this.pos[i*3+2]);
+      return flat;
+    });
+    this._previewKey = key; this._previewPaths = paths;
     return paths;
   }
 

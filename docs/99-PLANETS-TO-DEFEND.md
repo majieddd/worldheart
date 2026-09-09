@@ -64,8 +64,17 @@ Failure: retain a valid collision-safe pose and restore input ownership. Add a d
 The 2026-09-06 follow-up requires clickable tower controls anchored to the
 selected, hovered or looked-at tower, including first-person possession.
 Checkpoint status cannot cover Upgrade/Sell. Keep a clear keyboard interaction,
-pointer-lock handoff and range validation. Ordered units should display their
+pointer-lock handoff and range validation. Successful commander Upgrade/Sell
+actions close inspection and restore mouse look in the activating click;
+failed purchases keep inspection open. Trees do not obstruct commander body
+or camera travel. Terrain and tower footprints remain solid.
+Ordered units should display their
 actual navigation route, with stale lines removed on arrival, death or handoff.
+
+Placement previews reuse the live heart field as a lower bound for isolated
+detour searches. They never overwrite the authoritative ground or air routes.
+Unchanged footprint/revision previews reuse their result; committing a tower
+still revalidates physical occupancy and every required nest/enemy exit.
 
 ### Combat choreography, models and feedback
 
@@ -108,7 +117,7 @@ movement alone is not evidence that collision remains valid.
 Purpose: make high ground usable while reserving extreme climate positions for appropriate towers.
 Experience: a clear valid/invalid ghost, a useful sphere of reach and an understandable terrain bonus.
 Inputs: stable surface footprint, frontier, shared terrain classification, tower family, nav reachability, actual attack origin/range/target mask.
-Outputs: legal placement, explicit denial reason, one bounded compatible-terrain bonus, sphere/orbit outline and terrain intersection contour.
+Outputs: legal placement, explicit denial reason, one bounded compatible-terrain bonus, translucent range veil and restrained orbit outline clipped by scene depth.
 Edge cases: mixed footprint, summit slope, water, caves/canyons, range through the planet, Mortar minimum range, aura/barracks non-damage range, upgrade preview.
 Failure: explain Too hot, Too cold, Too steep, Outside frontier or Blocks last path. Neutral high ground is legal when stable; only Mortar can occupy hot volcanic/black stone and only Cryo can occupy cold ice/blue-white stone. Apply a bonus once, using a declared terrain sample policy.
 
@@ -201,7 +210,7 @@ First validate one complete planet, then two linked planets. Expand to a three-p
 - **Title and first minute:** center the campaign; display current-mode controls, possess/release, select/pan, base role, nests and loss conditions. Keep advanced detail in a compact contextual help panel.
 - **Board:** current versus next base level/cap/radius/cost; explicit crystal bank; Return to heart; clear tower/unit priority and selected state.
 - **Possession:** readable health, equipped weapon, ammo/resource if applicable, carried crystals, route home and mode-specific pause hint. Test on bright terrain as well as dark sky.
-- **Placement:** spherical orbit range with a ground intersection and labelled special regions; elevation/material bonus or denial; first-person reach indicator.
+- **Placement:** translucent range sphere and thin orbits, clipped against terrain by depth rather than remeshed on pointer movement; labelled special regions, elevation/material bonus or denial, first-person reach indicator. Mortar retains its red inner exclusion.
 - **Combat:** danger shape plus timing cue; distinguish hit, critical hit, blocked strike, loot and crystal effects. Reduce screen shake, flashes, trails and popups independently.
 - **Draft and inventory:** solo choices wait by default; compare meaningful mechanics and compatibility, equip/salvage by deliberate action; no important feedback dependent on a toast that can expire unseen.
 - **Between planets:** settlement receipt, banked/unbanked distinction, next destination, save state and clear final campaign ending.

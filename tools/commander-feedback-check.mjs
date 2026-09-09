@@ -3,6 +3,7 @@ import {resolve} from 'node:path';
 import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';
 const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright');
 const out=resolve(process.argv[2]||'docs/qa/implementation/commander-feedback/after');mkdirSync(out,{recursive:true});
+const base=(process.argv.find(x=>x.startsWith('--base-url='))?.slice(11)||process.env.WH_BASE_URL||'http://127.0.0.1:8139').replace(/\/$/,'');
 const baseline=JSON.parse(readFileSync('docs/qa/implementation/commander-feedback/before/movement.json','utf8'));
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const checks=[],faults=[];const check=(name,ok,actual)=>checks.push({name,ok:!!ok,actual});
@@ -10,7 +11,7 @@ try {
  const page=await browser.newPage({viewport:{width:1280,height:720}});
  page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});
  await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(window.__qaFramesEnabled)fn(t);});});
- await page.goto('http://127.0.0.1:8141/?map=ninetynine&campaign=0&seed=12345',{timeout:120000});
+ await page.goto(`${base}/?map=ninetynine&campaign=0&seed=12345`,{timeout:120000});
  await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:120000});
  const fixtures=await page.evaluate(async baseline=>{
   __qaFramesEnabled=false;document.getElementById('btn-begin').click();WH.game.paused=true;
@@ -18,6 +19,10 @@ try {
   const check=(name,ok,actual)=>checks.push({name,ok:!!ok,actual});
   const {R,surfacePoint}=await import('/js/world.js'),{Vector3,Matrix4}=await import('three'),{poseSoldier}=await import('/js/soldier.js');
   const oldDir=a.dir.clone(),oldFwd=a.fwd.clone(),movement=[];
+  // The rounded terrain chooser can select a different effective seed.
+  // Frozen coordinates on another layout cannot measure collision regression;
+  // commander-surface-check samples actual boundaries in the current world.
+  if(W.CONFIG.seed===baseline.effectiveSeed){
   for(const entry of baseline.records){
    a.dir.fromArray(entry.start);a.fwd.fromArray(entry.bearing);W.allies._ground(a);
    for(let k=0;k<45;k++)W.allies.driveUnit(a,1,.35,1/60);
@@ -25,6 +30,7 @@ try {
   }
   check('Boundary movement improves on the exact retained inputs',movement.reduce((s,r)=>s+r.after,0)>movement.reduce((s,r)=>s+r.distance,0)*1.25,{before:movement.reduce((s,r)=>s+r.distance,0)/movement.length,after:movement.reduce((s,r)=>s+r.after,0)/movement.length,records:movement});
   check('Boundary glides never enter a tower footprint',movement.every(r=>!r.blocked));
+  }else window.__legacyMovement={status:'not-comparable',archivedSeed:baseline.effectiveSeed,currentSeed:W.CONFIG.seed,replacement:'tools/commander-surface-check.mjs'};
   a.dir.copy(oldDir);a.fwd.copy(oldFwd);W.allies._ground(a);
   W.game.gold=100000;W.game.tierCap=10;
   for(let n=0;n<nav.n;n++){
@@ -89,7 +95,9 @@ try {
  await page.screenshot({path:resolve(out,'tower-first-person.png')});
  const fpTier=await page.evaluate(()=>__tower.tier);await page.locator('#tp-upgrade').click();
  check('Commander can click Upgrade while inspecting a nearby tower',await page.evaluate(()=>__tower.tier)===fpTier+1);
- await page.keyboard.press('Escape');check('Escape closes inspection and resumes the same commander',await page.evaluate(()=>!WH.game.context.editing&&!WH.possession.suspended&&WH.possession.active));
+ check('Successful commander upgrade automatically resumes control',await page.evaluate(()=>!WH.game.context.editing&&!WH.possession.suspended&&WH.possession.active));
+ await page.evaluate(()=>{const c=WH.game.context;c.dismissed=null;c.update();});await page.keyboard.press('f');
+ await page.keyboard.press('Escape');check('Escape closes a reopened inspection and resumes the same commander',await page.evaluate(()=>!WH.game.context.editing&&!WH.possession.suspended&&WH.possession.active));
  await page.evaluate(async()=>{
   const {generateWeapon}=await import('/js/run/weapons.js'),{makeRng}=await import('/js/run/rng.js');
   const W=WH,m=W.mode99,a=__a;W.game.select(null);
@@ -113,7 +121,8 @@ try {
  }));
  await page.setViewportSize({width:1280,height:720});await page.evaluate(()=>{WH.game.context.close();WH.possession.exit();WH.step(.5);});
  const camera=await page.evaluate(()=>WH.camTest());check('Campaign camera contract remains green',camera.pass,camera);
- writeFileSync(resolve(out,'results.json'),JSON.stringify({scope:'Instrumented fixtures and real DOM/mouse/keyboard interactions, not a natural campaign victory',checks,faults},null,2)+'\n');
+ const legacyMovement=await page.evaluate(()=>window.__legacyMovement||null);
+ writeFileSync(resolve(out,'results.json'),JSON.stringify({scope:'Instrumented fixtures and real DOM/mouse/keyboard interactions, not a natural campaign victory',legacyMovement,checks,faults},null,2)+'\n');
  console.log(JSON.stringify({passed:checks.filter(c=>c.ok).length,total:checks.length,failed:checks.filter(c=>!c.ok),faults},null,2));
  if(checks.some(c=>!c.ok)||faults.length)process.exitCode=1;
 } catch(error) {writeFileSync(resolve(out,'failure.json'),JSON.stringify({error:String(error),checks,faults},null,2));throw error;}

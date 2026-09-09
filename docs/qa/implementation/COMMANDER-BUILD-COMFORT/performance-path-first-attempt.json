@@ -1,0 +1,58 @@
+{
+  "scope": "Current integrated placement, with optional preceding RangeGuide and NavGraph swapped by request interception; 240 moving-preview rendered frames after warmup, paused combat; CPU slowdown uses the same GPU, not a lower-end device",
+  "reference": "d79f1d6",
+  "browser": "152.0.7977.77",
+  "results": [
+    {
+      "variant": "after",
+      "cpuRate": 1,
+      "seed": 36102,
+      "framesMs": {
+        "median": 8,
+        "p95": 93,
+        "p99": 93.80000000000109,
+        "max": 94.19999999999891
+      },
+      "mainWorkMs": {
+        "median": 2.5,
+        "p95": 95.09999996423721,
+        "p99": 96.60000002384186,
+        "max": 97.69999998807907
+      },
+      "guideMs": {
+        "median": 0,
+        "p95": 0,
+        "p99": 0.10000002384185791,
+        "max": 0.10000002384185791
+      },
+      "geometryIds": 2,
+      "visible": true
+    },
+    {
+      "variant": "after",
+      "cpuRate": 4,
+      "seed": 36102,
+      "framesMs": {
+        "median": 16.099999999998545,
+        "p95": 475.6999999999971,
+        "p99": 484.2999999999993,
+        "max": 500.59999999999854
+      },
+      "mainWorkMs": {
+        "median": 14.100000023841858,
+        "p95": 469.10000002384186,
+        "p99": 477.10000002384186,
+        "max": 491.10000002384186
+      },
+      "guideMs": {
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "p99": 0.19999998807907104,
+        "max": 0.20000004768371582
+      },
+      "geometryIds": 2,
+      "visible": true
+    }
+  ],
+  "faults": []
+}

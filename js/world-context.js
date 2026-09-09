@@ -41,9 +41,16 @@ export class WorldContext {
   }
   close() {
     const wasEditing=this.editing;this.editing=false;
+    if(this.panel()?.contains(document.activeElement))document.activeElement.blur();
     this.dismissed=this.target?.object;this.target=null;this.game.contextTower=null;
     this.game.select(null);this.lootPanel.hidden=true;
-    if(wasEditing&&!this.wasSuspended&&!document.querySelector('dialog[open]'))this.possession.suspend(false);
+    if(wasEditing&&!this.wasSuspended&&this.game.state==='playing'&&!document.querySelector('dialog[open],#end-overlay.show'))this.possession.suspend(false);
+  }
+  completeTowerAction() {
+    // Restore the mouse inside the successful purchase/sale click. Waiting
+    // for update() loses the browser's activation and leaves look unlocked.
+    // Board inspection remains open for repeated upgrades.
+    if(this.editing&&this.possession.active)this.close();
   }
   panel(){return this.target?.kind==='loot'?this.lootPanel:this.towerPanel;}
   pickup(equip) {
@@ -97,7 +104,7 @@ export class WorldContext {
         const valid=this.validTower(tower);
         ui.el['tp-sell'].disabled=!valid;
         if(!valid)ui.el['tp-upgrade'].disabled=true;
-        this.hint.textContent=p.active?(!valid?'Move within 14m to manage':this.editing?'Click Upgrade or Sell. F / Escape resumes.':'F: manage tower'):'Click Upgrade or Sell';
+        this.hint.textContent=p.active?(!valid?'Move within 14m to manage':this.editing?'Upgrade / Sell resumes control. F / Escape closes.':'F: manage tower'):'Click Upgrade or Sell';
       }else this.renderLoot();
       this.place(this.panel(),tower?tower.pos:this.target.object.position);
     }

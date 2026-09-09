@@ -647,6 +647,7 @@ export class Game {
     if (t.def.summoner) this.leashRing.place(t.pos, t.stats.leash, 0.28);
     if (this.audio) this.audio.play('upgrade');
     this._hud();
+    this.context?.completeTowerAction();
   }
 
   sellSelected() {
@@ -662,6 +663,7 @@ export class Game {
     this.select(null);
     if (this.audio) this.audio.play('sell');
     this._hud();
+    this.context?.completeTowerAction();
   }
 
   _hud() { if (this.onHudChange) this.onHudChange(); }
