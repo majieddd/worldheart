@@ -2,7 +2,11 @@
 
 2026-09-09. Owner: Codex. Branch: `feature/terrain-routes-and-arsenal`,
 based on preview `79d6050`. Tracks #1, M1 #3, M3 #5, M4 #6 and M5 #7.
-Status: locally verified; V2 publication pending.
+Status: published and live-verified at [V2](https://majieddd.github.io/worldheart/v2/).
+[PR #25](https://github.com/majieddd/worldheart/pull/25), gameplay source
+`7972fd65f4b2fbdf47aadd1352d36bc2e4f206ef`,
+[successful deployment](https://github.com/majieddd/worldheart/actions/runs/34388444782).
+Documentation-only follow-ups preserve this tested runtime.
 Usage unmeasured. The original main game remains separate under the
 [V2 workflow](../../PREVIEW.md).
 
@@ -63,10 +67,12 @@ proof of perfect surface topology. Final-lighting renders supplement it.
 
 - [237 tests](TERRAIN-ROUTES-ARSENAL/core.txt) pass, including floor detours,
   emergency crossings, blocked exits, floor-safe knockback, 12 weapon
-  assemblies and both slash directions.
+  assemblies and both slash directions. All 51 ESM modules parse, house style
+  passes and the rebuilt V2 mirror matches all 56 source files.
 - [Spawn before](TERRAIN-ROUTES-ARSENAL/spawn-before.json) and
   [spawn after](TERRAIN-ROUTES-ARSENAL/spawn-after.json): twelve nearby forest
-  approaches now pass. The 24-heading record retains legitimate terrain stops.
+  approaches now pass. The 24-heading record measures actual travel and blockage
+  observations across different terrain instead of assuming equal speed.
 - [16 nest targeting checks](TERRAIN-ROUTES-ARSENAL/nest-targets.json) use actual
   attack simulation and destruction callbacks, with towers and HP repositioned
   for isolation. They do not establish natural campaign siege balance.
@@ -157,9 +163,28 @@ animation quality. Copyrighted reference captures remain local research files.
 ## Remaining acceptance
 
 The six actionable reports above and the missing authored era shapes are
-implemented. Public deployment verification is pending. Full 99-planet natural
+implemented and live-verified. Full 99-planet natural
 combat completion, low-capability frame time, actual device/background-tab
 coverage, broad balance/foliage review and owner art/feel approval remain open.
 The long emergency route also needs natural pacing evaluation. Main rename,
 multiplayer/PvPvE and native Roblox/Fortnite feasibility follow those gates;
 this batch does not close M0-M6 or merge gameplay into main.
+
+## Public verification and handoff
+
+The public build passes [spawn movement](TERRAIN-ROUTES-ARSENAL/public-spawn.json),
+[16 nest attack/lifecycle checks](TERRAIN-ROUTES-ARSENAL/public-nests.json),
+[22 comfort checks](TERRAIN-ROUTES-ARSENAL/public-comfort.json),
+[12 weapon-era render fixtures](TERRAIN-ROUTES-ARSENAL/public-weapons.json), and
+[17 deployment/save checks](TERRAIN-ROUTES-ARSENAL/public-preview.json).
+The real Upgrade/Sell clicks restore native pointer lock. Render fixtures
+verify present models and clean execution, not owner art acceptance.
+[All 93 downloaded asset checks](TERRAIN-ROUTES-ARSENAL/public-identity.json)
+match: 56 preview files equal the tested source Git blobs and 37 production
+files retain main `1374122d1109919a5fab10b69fefdfb80308eb6e`.
+
+Tracker #1 and M1/M3/M4/M5 issues carry the current implementation, evidence
+and remaining gates. Start subsequent work from current `origin/preview/v2`,
+retain legal losses and slow-route evidence, and follow [PREVIEW.md](../../PREVIEW.md).
+The owner can reload V2, walk through the forest near spawn, expand a tower
+within range of a nest, and compare sword/lobber handling across both views.

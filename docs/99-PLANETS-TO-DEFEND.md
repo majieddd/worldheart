@@ -359,8 +359,10 @@ tower attacks on nests, mixed ruggedness, floor-first ground routes with slow
 fallbacks, connected weapons and lateral sword cuts. This also supplies the
 previously missing M4 era silhouettes. [Current verification and gaps](qa/implementation/TERRAIN-ROUTES-ARSENAL.md)
 include 237 tests, 96 independent placement/route oracles, 1,485 isolated
-arrivals across all 99 planets, rendered models and legal play. Final public
-verification remains pending. Reduced-CPU budgets, long-route pacing, owner
+arrivals across all 99 planets, rendered models and legal play. [PR #25](https://github.com/majieddd/worldheart/pull/25)
+is live at V2 from gameplay source `7972fd6`. Public movement, nest attacks,
+pointer-lock comfort, weapon-era rendering and deployment/save checks pass;
+all 93 preview/production asset hashes match. Reduced-CPU budgets, long-route pacing, owner
 feel, full natural campaign completion and the main release remain open.
 
 Previous 2026-09-08 continuation: Codex on `feature/natural-terrain-feel` has

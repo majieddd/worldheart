@@ -17,8 +17,8 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
-Active 2026-09-09: Codex on `feature/terrain-routes-and-arsenal`, based on
-`79d6050` from preview/v2, is addressing the next owner feedback: invisible
+Published and live-verified 2026-09-09: Codex on `feature/terrain-routes-and-arsenal`, based on
+`79d6050` from preview/v2, has addressed the next owner feedback: invisible
 spawn barriers, tower attacks on nests, varied rugged mountain regions,
 ground-first enemy routes with slow emergency mountain crossings, connected
 held weapon models and a lateral sword slash. Owned subsystems: world/nav,
@@ -33,7 +33,13 @@ checks pass 237 tests, 96 placement/route oracles, 180 commander comparisons,
 1,485 isolated all-99 arrivals and the movement/model/interaction fixtures.
 Final legal replays end in retained wave-14 and wave-15 defeats after an earlier
 15-wave victory. All 486 sampled physical-nest arrivals pass, including slow
-maximum-expansion crossings; V2 publication is active.
+maximum-expansion crossings. [PR #25](https://github.com/majieddd/worldheart/pull/25)
+is live from gameplay source `7972fd6` through
+[deployment 34388444782](https://github.com/majieddd/worldheart/actions/runs/34388444782).
+Public spawn movement, 16 nest checks, 22 comfort checks, 12 weapon-era render
+fixtures and 17 deployment/save checks pass. All 56 preview and 37 production
+asset hashes match; main remains `1374122`. Documentation-only follow-ups retain
+the tested runtime.
 Reduced-CPU frame times and long-route pacing remain open. Usage unmeasured.
 
 Published and live-verified 2026-09-09: Codex on
@@ -147,9 +153,9 @@ Issue closure requires evidence, not just a merged diff. Proposed future impleme
 | Milestone | Work item | Status | Owner | Depends on | Exit evidence |
 |---|---|---|---|---|---|
 | M0 | [M0 implementation issue](https://github.com/majieddd/worldheart/issues/2) | implemented; review open | Codex, feature/99-planets-integration | QA baseline | [Automated and unforced instrumented evidence](qa/implementation/M0.md); manual continuous-input acceptance remains open |
-| M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | implemented; latest camera/bob repairs live-verified; feel review open | Codex, feature/natural-terrain-feel | M0 | [Input harness and Bulwark comparison](qa/implementation/M1.md); [actual decor clearance, motion and feedback fixes](qa/implementation/NATURAL-TERRAIN-FEEL.md); full visual acceptance remains open |
+| M1 | [M1 implementation issue](https://github.com/majieddd/worldheart/issues/3) | implemented; body-mask, assembly and lateral-cut repairs live-verified; feel review open | Codex, feature/terrain-routes-and-arsenal | M0 | [Input harness and Bulwark comparison](qa/implementation/M1.md); [current traversal and model repairs](qa/implementation/TERRAIN-ROUTES-ARSENAL.md); full visual acceptance remains open |
 | M2 | [M2 implementation issue](https://github.com/majieddd/worldheart/issues/4) | implemented; review open | Codex, feature/99-planets-crystals | M0-M1 | [Resource fixtures and unforced expedition/boss victory](qa/implementation/M2.md) |
-| M3 | [M3 implementation issue](https://github.com/majieddd/worldheart/issues/5) | implemented; rounded terrain and route repairs live-verified; feel review open | Codex, feature/natural-terrain-feel | M2 | [Terrain, routes, range and unforced victory](qa/implementation/M3.md); [rounded regions, fixed-seed comparisons and 99 routes](qa/implementation/NATURAL-TERRAIN-FEEL.md). Broad framing/startup/feel review open |
+| M3 | [M3 implementation issue](https://github.com/majieddd/worldheart/issues/5) | implemented; mixed ruggedness, floor-first routes and nest targeting live-verified; pacing/feel review open | Codex, feature/terrain-routes-and-arsenal | M2 | [Terrain, routes, range and unforced victory](qa/implementation/M3.md); [current 99 routes, 486 nest arrivals and preview oracles](qa/implementation/TERRAIN-ROUTES-ARSENAL.md). Extreme-route pacing, framing/startup and reduced-CPU budgets remain open |
 | M4 | [M4 implementation issue](https://github.com/majieddd/worldheart/issues/6) | four-family prototype plus twelve authored era assemblies implemented; visual acceptance open | Codex, feature/terrain-routes-and-arsenal | M1/M3 | [M4 combat/loot evidence](qa/implementation/M4.md); [connected assemblies, lateral cuts and era views](qa/implementation/TERRAIN-ROUTES-ARSENAL.md); owner art/feel review remains |
 | M5 | [M5 implementation issue](https://github.com/majieddd/worldheart/issues/7) | 99 destinations and continuation verified; release acceptance open | Codex, feature/adversarial-acceptance | M4 | [M5B three-planet pilot and 99 routes](qa/implementation/M5B.md); [current fresh victory, retained canyon loss and earned ocean win/extraction to planet 5](qa/implementation/ADVERSARIAL-ACCEPTANCE.md). Full campaign, reduced-CPU budget and public rename release open |
 | M6 | [M6 implementation issue](https://github.com/majieddd/worldheart/issues/8) | future | unassigned | M5 | Authoritative co-op/PvPvE prototype, then independent native platform feasibility evidence |
