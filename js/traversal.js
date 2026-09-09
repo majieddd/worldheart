@@ -4,6 +4,10 @@ export const SWIM_ENTER = 0.65;
 export const SWIM_EXIT = 0.45;
 export const MAX_GRADE = 0.95;
 export const MAX_SLOW = 0.7;
+export const MOUNTAIN_MARCH = 0.08;
+// These limits meet the meadow-to-stone transition in the terrain palette.
+// Water remains a floor route, with its existing swimming penalty.
+export function isFloorTerrain(height, slope) { return height < 0.05 || (height <= 1.75 && slope <= 0.62); }
 export function swimOffset(unit) { return unit.swimming ? unit.type.radius * 0.75 : 0; }
 
 export function isSwimming(wasSwimming, depth) {

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG } from './config.js';
 import { mulberry32 } from './noise.js';
-import { travelCost } from './traversal.js';
+import { travelCost, isFloorTerrain, MOUNTAIN_MARCH } from './traversal.js';
 import { R, SUN_DIR, SPACE, initTerrainField, terrainHeight, isWalkableDir, isLandDir, surfacePoint } from './world.js';
 import * as WORLD from './world.js';
 
@@ -310,6 +310,8 @@ export class NavGraph {
     this.height = new Float32Array(n);
     this.baseHeight = new Float32Array(n);
     this.walk = new Uint8Array(n);
+    this.floorWalk = CONFIG.terrain ? new Uint8Array(n) : null;
+    this.march = null;
     this.block = new Int16Array(n);
     this.dist = new Float32Array(n);
     this.next = new Int32Array(n);
@@ -336,10 +338,12 @@ export class NavGraph {
       // flow field bends every lane around the platforms.
       this.walk[idx] = walkAll ? (h < 0.55 ? 1 : 0)
         : (coarse ? (isLandDir(_v) ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0));
+      if(this.floorWalk)this.floorWalk[idx]=this.walk[idx]&&isFloorTerrain(this.baseHeight[idx],WORLD.slopeAt(_v))?1:0;
       // The retained mesh includes a stitching margin outside the wall.
       // It must never become a route that the movement boundary refuses.
       if (CONFIG.terrain && capCenter && _v.dot(capCenter) < Math.cos(capTheta - 0.8 / R)) {
         this.walk[idx] = 0;
+        this.floorWalk[idx] = 0;
         this.airWalk[idx] = 0;
       }
     }
@@ -587,6 +591,7 @@ export class NavGraph {
       // base. Choose its surveyed centre, not another point elsewhere in it.
       const i = CONFIG.terrain && capCenter ? this.nearestWalkableNode(capCenter) : (rng() * n) | 0;
       if (!this.walk[i] || region[i] !== main) continue;
+      if (this.floorWalk && !this.floorWalk[i]) continue;
       if (!capCenter && Math.abs(this.dirs[i * 3 + 1]) > 0.82) continue;
       if (this.height[i] < 0.14 || this.height[i] > (CONFIG.terrain ? WORLD.FLIGHT_CEILING * 0.5 : 1.6)) continue;
       // The heart anchors the main battlefield: keep it in the sun, and on
@@ -712,13 +717,14 @@ export class NavGraph {
 
   recomputeFlow() {
     this._dijkstra(this.heartNode, null);
+    if(this.floorWalk)this._marchFlow();
     if (this.airWalk && !this._airReady) {
       this._dijkstra(this.heartNode, null, { dist: this.airDist, next: this.airNext, walk: this.airWalk, cost: this.airCost });
       this._airReady = true;
     }
     const n = this.n;
     for (let i = 0; i < n; i++) {
-      const j = this.next[i];
+      const j = (this.march?.next||this.next)[i];
       if (j < 0) {
         this.flow[i * 3] = 0; this.flow[i * 3 + 1] = 0; this.flow[i * 3 + 2] = 0;
         continue;
@@ -765,6 +771,45 @@ export class NavGraph {
     return r.labels[start]===r.labels[end];
   }
 
+  _marchFlow() {
+    const n=this.n;
+    if(!this.march||this.march.dist.length!==n){
+      const cost=new Float32Array(this.cost.length);
+      for(let i=0;i<n;i++)for(let e=this.adjOff[i];e<this.adjOff[i+1];e++)cost[e]=this.cost[e]/(this.floorWalk[i]&&this.floorWalk[this.adj[e]]?1:MOUNTAIN_MARCH);
+      this.march={dist:new Float64Array(n),next:new Int32Array(n),floorReach:new Uint8Array(n),cost,
+        lowerDist:new Float64Array(n),lowerNext:new Int32Array(n)};
+    }
+    const m=this.march;
+    // Certify floor-only routes first. These nodes never take a mountain
+    // shortcut, however long their valley route is. The second flood joins
+    // disconnected floor regions through the least costly slow passage.
+    this._dijkstra(this.heartNode,null,{...m,walk:this.floorWalk,cost:this.cost,block:this.block});
+    const heap=this._heap,done=this._done;heap.n=0;done.fill(0);
+    for(let i=0;i<n;i++)m.floorReach[i]=Number.isFinite(m.dist[i])?1:0;
+    for(let i=0;i<n;i++)if(m.floorReach[i]){
+      for(let e=this.adjOff[i];e<this.adjOff[i+1];e++)if(this.walk[this.adj[e]]&&!m.floorReach[this.adj[e]]){heap.push(i,m.dist[i]);break;}
+    }
+    while(heap.n){
+      const a=heap.pop();if(done[a])continue;done[a]=1;
+      for(let e=this.adjOff[a];e<this.adjOff[a+1];e++){
+        const b=this.adj[e];if(done[b]||m.floorReach[b]||!this.walk[b]||this.block[b])continue;
+        const d=m.dist[a]+m.cost[e];if(d<m.dist[b]){m.dist[b]=d;m.next[b]=a;heap.push(b,d);}
+      }
+    }
+    // An unconstrained, mountain-weighted distance is a safe lower bound for
+    // emergency preview detours. The floor-first field itself can overestimate
+    // such a detour, so it cannot serve as that search's A* heuristic.
+    this._dijkstra(this.heartNode,null,{dist:m.lowerDist,next:m.lowerNext,walk:this.walk,cost:m.cost,block:this.block});
+  }
+
+  canMarchStep(fromDir,toDir,node=-1) {
+    if(!this.canStep(fromDir,toDir,false,node))return false;
+    if(!this.march)return true;
+    const from=node>=0?this.descendNode(node,fromDir):this.nearestNode(fromDir),to=this.descendNode(from,toDir);
+    // Chase and separation must respect the same valley as the route line.
+    return !this.march.floorReach[from]||!!this.march.floorReach[to];
+  }
+
   findPath(fromDir, toDir) {
     const start = this.nearestWalkableNode(fromDir, true), end = this.nearestWalkableNode(toDir, true);
     if (start < 0 || end < 0 || this.block[end]) return [];
@@ -802,13 +847,14 @@ export class NavGraph {
   sampleFlow(nodeIdx, dir, out) {
     let wSum = 0, fx = 0, fy = 0, fz = 0, dSum = 0;
     const consider = (i) => {
+      if(this.march?.floorReach[nodeIdx]&&!this.march.floorReach[i])return;
       const w = 1 / (this._dirDist2(i, dir) + 1e-5);
-      const hasFlow = this.next[i] >= 0;
+      const hasFlow = (this.march?.next||this.next)[i] >= 0;
       if (hasFlow) {
         fx += this.flow[i * 3] * w;
         fy += this.flow[i * 3 + 1] * w;
         fz += this.flow[i * 3 + 2] * w;
-        dSum += this.dist[i] * w;
+        dSum += (this.march?.dist||this.dist)[i] * w;
         wSum += w;
       }
     };
@@ -889,12 +935,16 @@ export class NavGraph {
     return { ok: true };
   }
 
-  _previewRoute(from, temp) {
+  _previewRoute(from, temp, field = null) {
+    const next=field?.next||this.next,walk=field?.walk||this.walk,costs=field?.cost||this.cost,lowerDist=field?.dist||this.dist;
+    const rejected=field?.rejected;if(rejected)rejected.length=0;
     if (from < 0 || from >= this.n || !Number.isFinite(this.dist[from]) || this.block[from] || temp.has(from) || temp.has(this.heartNode)) return [];
+    if(!walk[from])return [];
     const direct = [];
-    for (let i = from; i >= 0 && direct.length < this.n; i = this.next[i]) {
-      if (temp.has(i)) break;
+    for (let i = field?.direct===false?-1:from; i >= 0 && direct.length < this.n; i = next[i]) {
+      if (temp.has(i)||!walk[i]) break;
       direct.push(i); if (i === this.heartNode) return direct;
+      if(field?.floorReach?.[i]&&!field.floorReach[next[i]])break;
     }
     // Removing nodes cannot shorten the existing distance to the heart.
     // That field is a much tighter admissible heuristic than straight-line
@@ -907,20 +957,23 @@ export class NavGraph {
     if (!generation) { f.seen.fill(0xffffffff); f.closed.fill(0xffffffff); }
     const heap = this._heap; heap.n = 0;
     // Leave a small margin for the authoritative field's Float32 rounding.
-    const lower = i => this.dist[i] * 0.99999;
+    const lower = i => lowerDist[i] * 0.99999;
     f.dist[from] = 0; f.parent[from] = -1; f.seen[from] = generation; heap.push(from, lower(from));
     while (heap.n) {
       const a = heap.pop(); if (f.closed[a] === generation) continue;
       f.closed[a] = generation;
+      if(rejected)rejected.push(a);
       if (a === this.heartNode) {
+        if(rejected)rejected.length=0;
         const path = []; for (let i = a; i >= 0; i = f.parent[i]) path.push(i);
         return path.reverse();
       }
       for (let e = this.adjOff[a]; e < this.adjOff[a+1]; e++) {
         const b = this.adj[e];
-        if (!this.walk[b] || this.block[b] || temp.has(b) || f.closed[b] === generation || !Number.isFinite(this.dist[b])) continue;
+        if (!walk[b] || this.block[b] || temp.has(b) || f.closed[b] === generation || !Number.isFinite(this.dist[b])) continue;
+        if(field?.floorReach?.[a]&&!field.floorReach[b])continue;
         let cost = Infinity;
-        for (let r = this.adjOff[b]; r < this.adjOff[b+1]; r++) if (this.adj[r] === a) { cost = this.cost[r]; break; }
+        for (let r = this.adjOff[b]; r < this.adjOff[b+1]; r++) if (this.adj[r] === a) { cost = costs[r]; break; }
         const distance = f.dist[a] + cost;
         if (Number.isFinite(distance) && (f.seen[b] !== generation || distance < f.dist[b])) {
           f.seen[b] = generation; f.dist[b] = distance; f.parent[b] = a;
@@ -950,10 +1003,10 @@ export class NavGraph {
 
   _traceChain(fromNode, out) {
     let i = fromNode, guard = 0;
-    while (i >= 0 && guard++ < 900) {
+    while (i >= 0 && guard++ < this.n) {
       out.push(this.pos[i * 3], this.pos[i * 3 + 1], this.pos[i * 3 + 2]);
       if (i === this.heartNode) break;
-      i = this.next[i];
+      i = (this.march?.next||this.next)[i];
     }
     return out;
   }
@@ -972,9 +1025,29 @@ export class NavGraph {
     if (!temp?.size) return this.portalNodes.map(p => this._traceChain(p, []));
     const key = `${this.revision}:${this.heartNode}:${this.portalNodes.join(',')}:${[...temp].sort((a,b)=>a-b).join(',')}`;
     if (this._previewKey === key) return this._previewPaths;
+    let floorReach=null;
+    if(this.march){
+      // Only routes entering the removed footprint can lose floor access.
+      // Certify its incoming rim, sharing successful route suffixes. A failed
+      // search supplies its whole disconnected region; everything else keeps
+      // its certification. Avoid a whole-world flood on every mouse move.
+      floorReach=this.march.floorReach;const rim=new Set(),verified=new Set([this.heartNode]),rejected=[];
+      for(const a of temp)if(floorReach[a])for(let e=this.adjOff[a];e<this.adjOff[a+1];e++){const b=this.adj[e];if(floorReach[b]&&!temp.has(b)&&!this.block[b]&&Number.isFinite(this.cost[e]))rim.add(b);}
+      for(const from of rim){
+        if(!floorReach[from]||verified.has(from))continue;
+        const trail=[];let i=from;
+        while(i>=0&&trail.length<this.n&&!verified.has(i)&&floorReach[i]&&!temp.has(i)){trail.push(i);i=this.march.next[i];}
+        if(verified.has(i)){for(const node of trail)verified.add(node);continue;}
+        const route=this._previewRoute(from,temp,{next:this.march.next,walk:floorReach,cost:this.cost,dist:this.march.dist,rejected});
+        if(route.length){for(const node of route)verified.add(node);}
+        else if(rejected.length){if(floorReach===this.march.floorReach)floorReach=floorReach.slice();for(const node of rejected)floorReach[node]=0;}
+      }
+    }
     const paths = this.portalNodes.map(p => {
       const flat = [];
-      for (const i of this._previewRoute(p, temp)) flat.push(this.pos[i*3], this.pos[i*3+1], this.pos[i*3+2]);
+      let route=this.march?(floorReach[p]?this._previewRoute(p,temp,{next:this.march.next,walk:floorReach,cost:this.cost,dist:this.march.dist}):[]):this._previewRoute(p,temp);
+      if(this.march&&!route.length)route=this._previewRoute(p,temp,{next:this.march.next,walk:this.walk,cost:this.march.cost,dist:this.march.lowerDist,floorReach,direct:floorReach===this.march.floorReach});
+      for (const i of route) flat.push(this.pos[i*3], this.pos[i*3+1], this.pos[i*3+2]);
       return flat;
     });
     this._previewKey = key; this._previewPaths = paths;

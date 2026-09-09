@@ -1,0 +1,9 @@
+{
+  "scope": "Current integrated placement, with optional preceding RangeGuide and NavGraph swapped by request interception; 240 moving-preview rendered frames after warmup, paused combat; CPU slowdown uses the same GPU, not a lower-end device",
+  "reference": "d79f1d6",
+  "browser": "152.0.7977.77",
+  "results": [],
+  "faults": [
+    "Error: page.evaluate: TypeError: Cannot read properties of undefined (reading 'footprint')\n    at Game._fp (http://127.0.0.1:8139/js/game.js:445:16)\n    at Game._validate (http://127.0.0.1:8139/js/game.js:458:58)\n    at eval (eval at evaluate (:311:30), <anonymous>:9:10)\n    at async <anonymous>:337:30"
+  ]
+}

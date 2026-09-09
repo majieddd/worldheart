@@ -253,6 +253,22 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 
 ## Decided
 
+2026-09-09 traversal/arsenal follow-up: decorative tree regions must not create
+body collision masks. Campaign ground enemies use floor-only routes whenever
+one exists; mountains are an emergency passage at 8% speed, with existing slope
+effects added. Commanders keep ordinary walkable-terrain movement. Chase,
+knockback and preview lines must agree with the ground route certification.
+Mix craggy upper ranges with rounded foothills and preserved eroded passes.
+Offensive towers target established vulnerable nests within their 3D range,
+prefer living enemies and use the existing single-reward destruction callback.
+
+Sword, spear, carbine and lobber now share grip-space geometry between held,
+world and loot models, with three authored era silhouettes per family. Keep
+attachments connected, anatomy separate from weapon scale/material changes,
+and sword contact moving laterally through the existing active frame. These
+are implemented directions; owner art approval is a separate acceptance gate.
+[Evidence and retained failures](qa/implementation/TERRAIN-ROUTES-ARSENAL.md).
+
 2026-09-08 natural terrain follow-up: preserve major peaks and the faceted
 aesthetic while blending continental, upland and erosion regions into broad
 foothills and rounded canyon shoulders. The shared terrain field still owns
@@ -337,7 +353,17 @@ Continue in dependency order and keep each behavior reviewable. A task closes on
 
 ## Where we are
 
-Current 2026-09-08 continuation: Codex on `feature/natural-terrain-feel` has
+Current 2026-09-09 continuation: Codex on `feature/terrain-routes-and-arsenal`
+has implemented the six latest reports: hidden forest collision masks,
+tower attacks on nests, mixed ruggedness, floor-first ground routes with slow
+fallbacks, connected weapons and lateral sword cuts. This also supplies the
+previously missing M4 era silhouettes. [Current verification and gaps](qa/implementation/TERRAIN-ROUTES-ARSENAL.md)
+include 237 tests, 96 independent placement/route oracles, 1,485 isolated
+arrivals across all 99 planets, rendered models and legal play. Final public
+verification remains pending. Reduced-CPU budgets, long-route pacing, owner
+feel, full natural campaign completion and the main release remain open.
+
+Previous 2026-09-08 continuation: Codex on `feature/natural-terrain-feel` has
 implemented rounded regional mountains/canyons, actual decor camera clearance
 and displacement-driven bob, plus targeted held-sway and feedback-text repairs.
 [The current ledger](qa/implementation/NATURAL-TERRAIN-FEEL.md) records the

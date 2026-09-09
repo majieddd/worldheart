@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Skeleton, slab, box, wedge, cone, merge, mirrorX, shift, spin, grow, easeOut, easeIn, smooth, hump, keyed } from './rig.js';
 import { STRIKE_AT } from './attacks.js';
+import { buildWeapon } from './weapon-model.js';
 
 // The friendly bodies: one humanoid rig, six builds, one pose function.
 //
@@ -231,7 +232,7 @@ export const ARCHETYPES = {
   oracle: { w: 0.88, helmet: 'crown', crest: 'gem', cape: true, weapon: 'staff', twoHand: true, pauldron: 'small' },
 };
 
-export function buildSoldier(key, mats, weapon = null) {
+export function buildSoldier(key, mats, weapon = null, era = 'ancient') {
   const spec = { ...ARCHETYPES[key] };
   if (weapon) { spec.weapon = weapon; spec.twoHand = ['spear', 'rifle', 'mortar', 'staff'].includes(weapon); }
   const w = spec.w;
@@ -314,7 +315,10 @@ export function buildSoldier(key, mats, weapon = null) {
   // it; built along the forearm instead, a resting sword pointed at the
   // soldier's own elbow and hung behind the body point-down.
   const forward = (g) => spin(g, -Math.PI / 2, 0, 0);
-  for (const piece of weapons[spec.weapon]()) P.one(forward(piece.geo), piece.mat, 'weaponR');
+  if(['sword','spear','rifle','mortar'].includes(spec.weapon)){
+    const kit=buildWeapon(spec.weapon,era,mats);spec.blade=kit.blade;
+    for(const piece of kit.parts)P.one(piece.geo,piece.mat,'weaponR');
+  }else for (const piece of weapons[spec.weapon]()) P.one(forward(piece.geo), piece.mat, 'weaponR');
   if (spec.weapon === 'twin') for (const piece of knifeGeo(mats)) P.one(forward(piece.geo), piece.mat, 'weaponL');
 
   return { skeleton: sk, parts: P.parts, spec };
@@ -578,18 +582,20 @@ function hold(J, spec, kind, pitch, a) {
 // and across the body with the chest turning into it, overshoots, and
 // recovers slowly. `side` mirrors the sweep so consecutive swings alternate.
 function cleave(J, p, side) {
-  // Absolute joint poses avoid stacking a second full swing on top of the
-  // already bent carry elbow. At STRIKE_AT the arm extends and the weapon
-  // points forward, instead of folding behind the commander's shoulder.
+  // Set the elbow before the active stroke. Extending it during contact
+  // drove the tip forward like a stab. Chest and shoulder yaw now carry
+  // the edge laterally, with a nearly constant wrist pitch through contact.
   const at=STRIKE_AT.melee, s=side;
-  const joint=(rest,wind,hit,follow)=>keyed([[0,rest],[.22,wind],[at,hit],[.58,follow],[1,rest]],p);
-  const turn=joint(0,-.24*s,0,.32*s);
+  // Contact lies inside one uninterrupted sweep, not at an eased key where
+  // angular velocity falls to zero. Anticipation and recovery stay slower.
+  const joint=(rest,wind,hit,follow)=>keyed([[0,rest],[.24,wind],[2*at-.24,follow],[1,rest]],p);
+  const turn=joint(0,-.30*s,0,.30*s);
   J.chest.rot.y=turn;J.pelvis.rot.y=turn*.35;J.head.rot.y=-turn*.6;
-  J.shoulderR.rot.set(joint(.35,.65,1.15,1.35),joint(0,.85*s,-.08,-.75*s),joint(.30,.50,.10,.18));
-  J.elbowR.rot.x=joint(2.25,1.55,.30,.55);
-  J.handR.rot.x=joint(-.35,-.55,-1.45,-1.60);
-  J.handR.rot.y=joint(0,.2*s,.08,.25*s);
-  J.spine.rot.x=joint(0,.04,-.10,-.13);
+  J.shoulderR.rot.set(joint(.35,1.02,1.04,1.04),joint(0,-1.05*s,0,1.05*s),joint(.30,.20,.15,.10));
+  J.elbowR.rot.x=joint(2.25,.65,.65,.65);
+  J.handR.rot.x=joint(-.35,-1.66,-1.66,-1.66);
+  J.handR.rot.y=0;
+  J.spine.rot.x=joint(0,.02,-.04,-.06);
   J.shoulderL.rot.x=joint(-.1,.25,.6,.3);
   J.elbowL.rot.x=joint(.35,.75,.95,.6);
 }
@@ -637,15 +643,11 @@ function recoil(J, p) {
   J.head.rot.x += -(-0.1 * k);
 }
 
-// Overhand lob: the tube swings back over the shoulder and pitches forward.
+// A held launcher stays braced and recoils after its projectile release.
 function overhand(J, p) {
-  const back = keyed([[0, 0], [0.3, 1], [0.5, 0], [1, 0]], p);
-  const fwd = keyed([[0, 0], [0.3, 0], [0.5, 1], [0.7, 0.7], [1, 0]], p);
-  J.shoulderR.rot.x += -(-1.4 * back - 0.6 * fwd);
-  J.shoulderL.rot.x += -(-1.2 * back - 0.5 * fwd);
-  J.elbowR.rot.x += -(0.4 * back - 0.8 * fwd);
-  J.spine.rot.x += -(-0.2 * back + 0.3 * fwd);
-  J.chest.rot.x += -(-0.1 * back + 0.15 * fwd);
+  const kick=p<STRIKE_AT.lob?0:Math.exp(-(p-STRIKE_AT.lob)*10);
+  J.shoulderR.rot.x+=.16*kick;J.shoulderL.rot.x+=.12*kick;
+  J.chest.rot.x+=.05*kick;
 }
 
 // Beam brace: the staff shakes while it channels and sags as heat builds.

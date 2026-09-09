@@ -270,6 +270,7 @@ class Ally {
     this.weaponTint = 0xffffff;
     this.weaponLength = 1;
     this.weaponEra = null; this.weaponCore = null;
+    this.moveNode = -1;
     this.dir.copy(dirVec).normalize();
     this.anchor.copy(anchorDir).normalize();
     this.leash = leash;
@@ -390,7 +391,7 @@ export class AllyManager {
 
   _addSpecies(key, typeKey, weapon = null, appearance = null) {
       const mats = this.mats, scene = this.scene;
-      const build = buildSoldier(typeKey, mats, weapon);
+      const build = buildSoldier(typeKey, mats, weapon, appearance?.era||'ancient');
       const parts = build.parts.map((p) => {
         const isWeapon=p.at.some(a=>a.joint.name==='weaponR'||a.joint.name==='weaponL');
         const material=appearance&&isWeapon?p.mat.clone():p.mat;
@@ -760,6 +761,17 @@ export class AllyManager {
     if (CONFIG.terrain) a.swimming = isSwimming(a.swimming, -terrainHeight(a.dir.x, a.dir.y, a.dir.z, false));
   }
 
+  _movementNode(a) {
+    const nav=this.enemies.nav;
+    // Small continuous steps need only the neighboring cells. Global scans
+    // for every slide candidate dominated the reduced-CPU combat profile.
+    // Repositioned or recycled units still reacquire from the spatial hash.
+    const limit=nav.spacing*1.2/R;
+    a.moveNode=a.moveNode>=0&&a.moveNode<nav.n&&nav._dirDist2(a.moveNode,a.dir)<limit*limit
+      ?nav.descendNode(a.moveNode,a.dir):nav.nearestNode(a.dir);
+    return a.moveNode;
+  }
+
   _moveToward(a, target, distance) {
     if (!CONFIG.terrain) return advanceToward(a.dir, target, distance * a.carryMul / R, a.fwd);
     const nav = this.enemies.nav;
@@ -782,7 +794,7 @@ export class AllyManager {
     const factor = surfaceTravel(a, _routeBearing, Math.min(distance, a.dir.angleTo(goal) * R));
     _routeStep.copy(a.dir);
     advanceToward(_routeStep, goal, distance * a.carryMul * factor / R);
-    if (!nav.canStep(a.dir, _routeStep)) { a.route = []; a.routeUntil = this.time + 0.5; return false; }
+    if (!nav.canStep(a.dir, _routeStep,false,this._movementNode(a))) { a.route = []; a.routeUntil = this.time + 0.5; return false; }
     const arrived = advanceToward(a.dir, goal, distance * a.carryMul * factor / R, a.fwd);
     if (!factor) { a.route = []; a.routeUntil = this.time + 0.5; }
     return arrived && a.routeAt >= a.route.length;
@@ -824,6 +836,7 @@ export class AllyManager {
     _driveBearing.copy(_tmp2);
     if (a.swimming) { mul = Math.min(1, mul); a.sprint = false; }
     const distance = a.type.speed * 1.25 * mul * mag * a.carryMul * Math.min(dt, 0.1);
+    if(CONFIG.terrain)this._movementNode(a);
     const segments = Math.max(1, Math.ceil(distance / 0.12));
     for (let segment=0; segment<segments; segment++) {
       // Keep the forward component of a glancing input while sliding along
@@ -837,8 +850,9 @@ export class AllyManager {
         if (!(step>0)) continue;
         _axis.crossVectors(a.dir,_slideBearing).normalize();
         _routeStep.copy(a.dir).applyAxisAngle(_axis,step).normalize();
-        if (!this.enemies.nav.canStep(a.dir,_routeStep)) continue;
+        if (!this.enemies.nav.canStep(a.dir,_routeStep,false,a.moveNode)) continue;
         a.dir.copy(_routeStep);
+        if(CONFIG.terrain)a.moveNode=this.enemies.nav.descendNode(a.moveNode,a.dir);
         reflatten(a.fwd.applyAxisAngle(_axis,step),a.dir);
         reflatten(_driveBearing.applyAxisAngle(_axis,step),a.dir);
         moved=true;break;
@@ -1366,6 +1380,11 @@ export class AllyManager {
   weaponLine(a, base, tip) {
     const sp = this.species[a.modelKey];
     if (!sp || !a.weaponM) return false;
+    if(sp.spec.blade){
+      const b=sp.spec.blade,length=a.weaponLength||1;
+      base.set(b[0],b[1],b[2]*length).applyMatrix4(a.weaponM);
+      tip.set(b[3],b[4],b[5]*length).applyMatrix4(a.weaponM);return true;
+    }
     const len = (WEAPON_TIP[sp.spec.weapon] || 1) * (a.weaponLength || 1);
     // Weapons run along the hand's -z (see buildSoldier).
     base.set(0, 0, -0.1).applyMatrix4(a.weaponM);

@@ -195,7 +195,14 @@ function regionalHeight(dx,dy,dz,includeFine) {
   const upland=smoothstep(-.3,.65,region);
   const erosion=nGap(dx*FQ*1.1+41,dy*FQ*1.1,dz*FQ*1.1);
   const saddle=smoothstep(0,.65,erosion);
-  h+=inland*profile.range*(.15*upland+.85*upland*upland)*(1-.94*saddle);
+  // Broad shoulders carry both weathered hills and rugged ranges. Ridge
+  // detail fades out at the foot and at passes, so a crag cannot turn a
+  // meadow into an isolated pillar or close the floor corridor.
+  const rugged=smoothstep(-.1,.55,nMoist(dx*F_RANGE*.65+71,dy*F_RANGE*.65,dz*F_RANGE*.65));
+  const ridge=1-Math.abs(nRidge(dx*F_RANGE*2.2+11,dy*F_RANGE*2.2,dz*F_RANGE*2.2));
+  const shape=.15*upland+.85*upland*upland;
+  const crags=shape*shape*rugged*(Math.pow(ridge,3)*.65-.12)*(1-saddle);
+  h+=inland*profile.range*(shape+crags)*(1-.94*saddle);
 
   // A canyon's shoulders grow with its depth. Use a stable regional distance
   // coordinate, rather than dividing by a rapidly changing local gradient:
@@ -366,14 +373,13 @@ export function slopeAt(dir) {
 
 // Walkability reads only the base gameplay field; the cosmetic facet noise
 // must never perforate the coastal ribbons that keep the graph connected.
-// The forest threshold matches the tree-scatter threshold exactly, so the
-// blocked zone is precisely where the player sees trees standing.
+// Foliage is passable. The old forest-density mask blocked entire patches,
+// including flat empty gaps between trunks, creating invisible body walls.
 export function isWalkableDir(dir) {
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
   const h = terrainHeight(dir.x, dir.y, dir.z, false);
   if (CONFIG.terrain && h < 0.05) return true; // water is a slower route
   if (!CONFIG.terrain && (h < 0.05 || h > CONFIG.walkMaxHeight)) return false;
-  if (forestAt(dir.x, dir.y, dir.z) > 0.78 && h > 0.24 && h < 1.8) return false;
   if (slopeAt(dir) > CONFIG.walkMaxSlope) return false;
   return true;
 }
@@ -1924,8 +1930,8 @@ export class World {
 
   addPortal(pos) {
     const p = buildPortal(pos);
-    // A breach is a structure, so it can be brought down. Units do this; towers
-    // cannot reach it, which is what gives units a job beyond blocking.
+    // Commanders can strike a breach immediately; offensive towers can join
+    // the siege once expansion brings a nest within their actual 3D range.
     p.hpMax = 900;
     p.hp = p.hpMax;
     p.destroyed = false;

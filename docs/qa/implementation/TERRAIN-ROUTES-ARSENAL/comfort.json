@@ -1,0 +1,216 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "scope": "Controlled actual tree/guide fixtures and real DOM/native pointer-lock transactions; no whole-run or device-performance claim",
+  "checks": [
+    {
+      "name": "pine 0: tree does not obstruct camera",
+      "ok": true,
+      "actual": {
+        "label": "pine",
+        "hit": -1
+      }
+    },
+    {
+      "name": "pine 1: tree does not obstruct camera",
+      "ok": true,
+      "actual": {
+        "label": "pine",
+        "hit": -1
+      }
+    },
+    {
+      "name": "pine 2: tree does not obstruct camera",
+      "ok": true,
+      "actual": {
+        "label": "pine",
+        "hit": -1
+      }
+    },
+    {
+      "name": "broadleaf 3: tree does not obstruct camera",
+      "ok": true,
+      "actual": {
+        "label": "broadleaf",
+        "hit": -1
+      }
+    },
+    {
+      "name": "broadleaf 4: tree does not obstruct camera",
+      "ok": true,
+      "actual": {
+        "label": "broadleaf",
+        "hit": -1
+      }
+    },
+    {
+      "name": "broadleaf 5: tree does not obstruct camera",
+      "ok": true,
+      "actual": {
+        "label": "broadleaf",
+        "hit": -1
+      }
+    },
+    {
+      "name": "rock 6: rock camera clearance retained",
+      "ok": true,
+      "actual": {
+        "label": "rock",
+        "hit": 0.4219314725579409
+      }
+    },
+    {
+      "name": "rock 7: rock camera clearance retained",
+      "ok": true,
+      "actual": {
+        "label": "rock",
+        "hit": 0.4331173230350032
+      }
+    },
+    {
+      "name": "rock 8: rock camera clearance retained",
+      "ok": true,
+      "actual": {
+        "label": "rock",
+        "hit": 0.41504770743487984
+      }
+    },
+    {
+      "name": "Commander crosses six actual tree locations with identical travel when decor is removed",
+      "ok": true,
+      "actual": [
+        {
+          "distance": 4.671125227674642,
+          "closestToTrunk": 0.018244994601028183,
+          "withoutTreeDifference": 0
+        },
+        {
+          "distance": 4.781688979754239,
+          "closestToTrunk": 0.022330018762742442,
+          "withoutTreeDifference": 0
+        },
+        {
+          "distance": 3.8770146186972894,
+          "closestToTrunk": 0.00319075366682975,
+          "withoutTreeDifference": 0
+        },
+        {
+          "distance": 4.742292746326822,
+          "closestToTrunk": 0.018809900815569568,
+          "withoutTreeDifference": 0
+        },
+        {
+          "distance": 4.7956175944897685,
+          "closestToTrunk": 0.005316894862085757,
+          "withoutTreeDifference": 0
+        },
+        {
+          "distance": 4.119945268636034,
+          "closestToTrunk": 0.004917237382344314,
+          "withoutTreeDifference": 0
+        }
+      ]
+    },
+    {
+      "name": "Moving guide reuses buffers without terrain remeshing",
+      "ok": true,
+      "actual": {
+        "medianMs": 0,
+        "p95Ms": 0,
+        "maxMs": 0.10000002384185791,
+        "geometryReused": true,
+        "hasVeil": true,
+        "transparent": true,
+        "depthWrite": false,
+        "maxRadius": 12,
+        "minRadius": 3
+      }
+    },
+    {
+      "name": "Moving guide stays below 2ms p95 in the isolated 100-position fixture",
+      "ok": true,
+      "actual": {
+        "medianMs": 0,
+        "p95Ms": 0,
+        "maxMs": 0.10000002384185791,
+        "geometryReused": true,
+        "hasVeil": true,
+        "transparent": true,
+        "depthWrite": false,
+        "maxRadius": 12,
+        "minRadius": 3
+      }
+    },
+    {
+      "name": "Range is a transparent veil with correct maximum and minimum radii",
+      "ok": true,
+      "actual": {
+        "medianMs": 0,
+        "p95Ms": 0,
+        "maxMs": 0.10000002384185791,
+        "geometryReused": true,
+        "hasVeil": true,
+        "transparent": true,
+        "depthWrite": false,
+        "maxRadius": 12,
+        "minRadius": 3
+      }
+    },
+    {
+      "name": "Browser grants native pointer lock on commander entry",
+      "ok": true
+    },
+    {
+      "name": "F opens inspection and releases pointer lock",
+      "ok": true
+    },
+    {
+      "name": "Successful Upgrade buys exactly one tier and restores first-person lock",
+      "ok": true,
+      "actual": {
+        "tier": 1,
+        "editing": false,
+        "suspended": false,
+        "locked": true,
+        "boom": 0,
+        "focus": ""
+      }
+    },
+    {
+      "name": "Upgrade click leaves no stuck attack or focused hidden action",
+      "ok": true
+    },
+    {
+      "name": "Unaffordable upgrade is disabled and retains inspection ownership",
+      "ok": true
+    },
+    {
+      "name": "Refused purchase does not close inspection or change tier",
+      "ok": true
+    },
+    {
+      "name": "Successful Sell closes inspection and restores pointer lock in the click gesture",
+      "ok": true,
+      "actual": {
+        "gone": true,
+        "editing": false,
+        "suspended": false,
+        "locked": true
+      }
+    },
+    {
+      "name": "Pointer-lock refusal retains working drag-look fallback",
+      "ok": true,
+      "actual": 0.19770159117886935
+    },
+    {
+      "name": "Context cannot steal input from an earlier suspension, open modal or terminal state",
+      "ok": true,
+      "actual": {
+        "priorOwner": true,
+        "modalOwner": true,
+        "terminalOwner": true
+      }
+    }
+  ],
+  "faults": []
+}

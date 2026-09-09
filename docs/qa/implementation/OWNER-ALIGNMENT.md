@@ -1,8 +1,9 @@
 # Owner brief: current alignment and remaining acceptance
 
-Updated 2026-09-08. Current owner: Codex, `feature/natural-terrain-feel`.
-The [natural-terrain ledger](NATURAL-TERRAIN-FEEL.md) adds the latest requested
-terrain/feel repairs to the prior [PR #22](https://github.com/majieddd/worldheart/pull/22) audit.
+Updated 2026-09-09. Current owner: Codex, `feature/terrain-routes-and-arsenal`.
+The [terrain/routes/arsenal ledger](TERRAIN-ROUTES-ARSENAL.md) adds the latest
+reports and authored era sets to the [natural-terrain ledger](NATURAL-TERRAIN-FEEL.md)
+and prior [PR #22](https://github.com/majieddd/worldheart/pull/22) audit.
 Use [PROGRESS.md](../../PROGRESS.md) for publication status and
 [the adversarial record](ADVERSARIAL-ACCEPTANCE.md) for failures and exact evidence.
 The immutable [initial intake](../2026-09-05/REQUEST.md) and
@@ -20,27 +21,33 @@ request identity. Functional verification does not substitute for owner feel.
 | U07 Light faceted models and satisfying feedback | Existing kit retained; hit/block/drop cues; independent cosmetic comfort controls in current batch | Owner feedback quality, richer authored model content and long-session cost |
 | U08 Inventory and drops | Four families, seeded drops, two slots and twelve backpack spaces; compare/equip/salvage/full bag; 15 keyboard checks | Continued natural loot frequency and long-session clutter review |
 | U09 Weapon diversity/customization | Head/barrel, grip/stock, cores, rarity and affix tradeoffs; deterministic distribution and live effect checks | More authored mechanical choices only after current family/era balance; not a production-size loot library |
-| U10 Ancient/scifi/empowered arc | Era data, colors/cores, bounded infusion, retention and boundary fixtures | Three distinct authored silhouette sets are still missing; current family geometry/tint reuse is a prototype |
-| U11 Major peaks | Broad continental/upland/erosion regions replace abrupt campaign pillars; 36 fixed-field shape assertions retain large peaks; four-profile integration and 99 routes pass | Owner scale/spectacle approval, broader seeds and startup cost |
+| U10 Ancient/scifi/empowered arc | Twelve authored family/era assemblies now share connected geometry across first person, commander and loot models; era data, infusion and retention remain | Owner silhouette/animation review and balance of the prototype library |
+| U11 Major peaks | Broad regions retain rounded foothills, with regional craggy upper ridges for mixed ruggedness; 36 shape assertions, four profiles and 99 isolated routes | Owner scale/spectacle approval, broader seeds and startup cost |
 | U12 Canyons | Rounded depth-scaled canyon shoulders, stable regional distance and preserved connected routes; fresh actual planet-2 arrival on revised terrain | Wider strategy/balance on deep routes; a controller loss is not proof of impossibility |
 | U13 Oceans/swimming | Shore hysteresis and shared swim slowdown/route cost; cautious earned-checkpoint run won wave 15 and extracted to planet 5 | Wider strategy/seed balance and owner swim feel; one win does not accept the whole profile |
-| U14 Spherical tower ranges | Spheres/orbits and terrain contours use 3D targeting origin, inner mortar range and labels | Owner readability at extreme height/zoom and clutter review |
+| U14 Spherical tower ranges | Reusable translucent veil and restrained orbits use the 3D targeting origin and mortar exclusion; isolated previews follow floor-first routes | Owner readability at extreme height/zoom, clutter and reduced-CPU detour cost |
 | U15 Raised/elemental placement | Stable high ground, restricted hot/cold families, bounded bonuses, clear denial reasons | Broader seed/material-footprint review and balance of strong locations |
 | U16 Flight around tall mountains | Separate air routes/ceiling, dive clearance, historical 99-route and current physical-source arrival fixtures | Wider seeds, crowded flight and natural late-era encounters |
 | U17 Explicit frontier upgrades/crystals | Deposits grant base-only credit; only a quoted explicit upgrade expands territory; M2 fixtures and legal delivery | Continued economy and expedition-risk balance; no automatic wave expansion |
-| U18 Uphill movement penalty | Directed costs and actual movement share terrain rules; collision and knockback cannot cross invalid edges | More natural route-choice comparison and owner traversal feel |
+| U18 Uphill movement penalty | Directed costs and movement share terrain rules; ground enemies prefer any floor route, using mountains at 8% speed only for disconnected regions; chase/knockback honor the same lanes | Long emergency-route pacing and owner traversal feel |
 | U19 Constant action/PvPvE galaxies | Active commander, building, nests, crystals and loot; versioned core boundaries | Single-player pacing first; authoritative multiplayer prototype is M6 future work |
 | U20 Platform ports | Pure run/data rules and separate browser shell; purity guard | Independent Roblox/Luau and Fortnite feasibility/prototypes after campaign readiness |
 | U21 Shared tracking | GitHub #1 and milestone issues, stacked draft PRs, durable failures, V2 build identity and current ledger | Keep every future claim/evidence/owner/publication update in the same session |
 | U22 Tower hover/look UI | Anchored Upgrade/Sell, F/Escape pointer handoff, range checks and checkpoint overlap fixtures | Owner interaction feel and more live combat contexts |
-| U23 Fuller arm/third-person swing | Blocky arm and continuous timed swing repair; current anatomy isolation checks | Owner full-motion approval |
-| U24 Forgiving commander hitbox | Swept small steps and sliding preserve terrain/tower barriers; September 8 corrects false camera obstacles above small rocks and bob while blocked | Wider current-layout obstacle and crowd density feel; decor camera occlusion is distinct from body collision |
+| U23 Fuller arm/third-person swing | Blocky arm, connected grip-space weapon assembly and torso-led lateral cuts; contact velocity and anatomy checks | Owner full-motion approval |
+| U24 Forgiving commander hitbox | Actual hidden forest-density body mask removed after twelve near-spawn reproductions; nearby-node movement, swept steps and sliding preserve terrain/tower barriers | Wider current-layout obstacle and crowd density feel; older mesh-only controls missed the body mask |
 | U25 Loot hover/inspect/model | Actual cached model preview, comparison, deliberate pickup/equip and full-bag retention | Owner inspection readability and richer weapon silhouettes |
-| U26 Physical nest-only spawns | Waves/raids/guardian escorts/splits originate at physical nests; source destruction and route debt tested | Nest pressure/boss balance and natural full campaign |
+| U26 Physical nest-only spawns | Waves/raids/guardian escorts/splits originate at physical nests; offensive towers now damage established vulnerable nests and pay destruction rewards once | Nest pressure/boss balance, remote-route pacing and natural full campaign |
 | U27 Unit route lines | Actual remaining route shown and removed/recomputed on lifecycle/nav changes | Owner large-squad legibility and performance |
 
 ## Adversarial additions now addressed
 
+- Corrected the earlier tree-body claim: removing visible decor left the
+  separate forest-density mask intact. Current movement probes cross that mask.
+- Legal-position placement timing caught a floor-preview regression that the
+  old denied-position probe missed. The current tool requires real validation.
+- Independent solid-component and contact-velocity checks caught floating
+  attachments and a paused/tip-led contact frame in intermediate weapon work.
 - Fixed-field terrain and actual decor geometry tests reproduce the September
   8 mountain/camera issues. Blocking motion no longer drives a running bob.
   Reduced-motion essential labels stay anchored and identical warnings dedupe.
@@ -69,8 +76,8 @@ request identity. Functional verification does not substitute for owner feel.
 3. Continue varied legal tactics from the earned planet-5 checkpoint; the ocean
    now has a win and prior defeats. Separate policy mistakes from balance defects
    and retain defeats, stalls and extraction state.
-4. Author and compare the three weapon-era silhouette sets in first person,
-   third person and loot preview; budget geometry/cache cost before expanding.
+4. Review the twelve implemented weapon-era silhouettes in first person,
+   third person and loot preview; refine owner feedback before expanding content.
 5. Broaden natural combat/foliage/device review, then play the complete campaign.
 6. Only after readiness, perform the main rename/default migration and release
    regression. M6 multiplayer and native ports remain distinct subsequent work.

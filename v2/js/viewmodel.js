@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { PALETTE, PRESENTATION } from './config.js';
 import { slab, cone, merge, shift, spin, keyed, hump } from './rig.js';
 import { STRIKE_AT } from './attacks.js';
+import { buildWeapon } from './weapon-model.js';
 
 // The thing in your hands.
 //
@@ -439,10 +440,19 @@ export class ViewModel {
   }
 
   // Built lazily, so a run only pays for the archetypes it actually holds.
-  _model(typeKey) {
-    if (!this.models.has(typeKey)) {
+  _model(typeKey,era='ancient') {
+    const key=`${typeKey}:${era}`;
+    if (!this.models.has(key)) {
       const build = BUILD[typeKey] || BUILD.warden;
-      const g = build();
+      const visual={commander:'sword',warden:'spear',marksman:'rifle',bombardier:'mortar'}[typeKey];
+      let g;
+      if(visual){
+        g=new THREE.Group();const kit=buildWeapon(visual,era,{...MAT,trim:MAT.steel});
+        for(const piece of kit.parts)g.add(mesh(piece.geo,piece.mat));
+        g.add(arm(g));
+        if(kit.support){const support=arm(g,-1,...kit.support);support.userData.supportZ=kit.support[2];g.add(support);}
+        g.userData.blade=kit.blade;
+      }else g=build();
       // Equipment length belongs to the prop. Scaling the complete view
       // model also stretched the gauntlet and forearm on every long weapon.
       const weaponGroup = new THREE.Group();
@@ -453,15 +463,16 @@ export class ViewModel {
       g.scale.setScalar(VM_SCALE);
       g.visible = false;
       this.scene.add(g);
-      this.models.set(typeKey, g);
+      this.models.set(key, g);
     }
-    return this.models.get(typeKey);
+    return this.models.get(key);
   }
 
-  show(typeKey) {
+  show(typeKey,era='ancient') {
     this.typeKey = typeKey;
+    this.era=era;
     if (this.current) this.current.visible = false;
-    this.current = this._model(typeKey);
+    this.current = this._model(typeKey,era);
     this.current.visible = true;
     this.grip = GRIP[typeKey] ?? 0.6;
     this.visible = true;
@@ -480,7 +491,7 @@ export class ViewModel {
   update(dt, cam, unit, opts = {}) {
     if (!this.visible || !this.current) return;
     const visual = unit.weaponView || unit.typeKey;
-    if (visual !== this.typeKey) this.show(visual);
+    if (visual !== this.typeKey || (unit.weaponEra||'ancient')!==this.era) this.show(visual,unit.weaponEra||'ancient');
     const appearance = `${unit.weaponFamily}:${unit.weaponTint}:${unit.weaponLength}:${unit.weaponEra}:${unit.weaponCore}`;
     if (this.current.userData.appearance !== appearance) {
       this.current.userData.appearance = appearance;
@@ -502,6 +513,7 @@ export class ViewModel {
         if(unit.weaponEra&&o.userData.metalPart)o.material.color.setHex(unit.weaponEra==='technological'?0xcbe4ef:0xcaa56f);
       });
       this.current.userData.weaponGroup.scale.z = unit.weaponLength || 1;
+      for(const child of this.current.children)if(child.userData.supportZ!==undefined)child.position.z=child.userData.supportZ*(unit.weaponLength||1);
     }
     this.t += dt;
     const g = this.grip;
@@ -569,11 +581,9 @@ export class ViewModel {
         rx += 0.30 * rec;
         ry += 0.05 * rec;
       } else if (kind === 'lob') {
-        // Over the shoulder and forward: wind back, then throw.
-        const back = Math.sin(Math.PI * Math.min(1, p * 2.2));
-        oz += 0.22 * g * back;
-        oy += 0.16 * g * back;
-        rx += -0.85 * back;
+        // A braced launcher fires from its tube; it is not a thrown grenade.
+        const recoil=p<STRIKE_AT.lob?0:Math.exp(-(p-STRIKE_AT.lob)*10);
+        oz+=.12*g*recoil;rx+=.17*recoil;
       }
     }
 

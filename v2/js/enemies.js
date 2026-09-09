@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
 import { R, terrainHeight, surfaceTravel, canFlyAt } from './world.js';
-import { MAX_SLOW, swimOffset } from './traversal.js';
+import { MAX_SLOW, swimOffset, MOUNTAIN_MARCH } from './traversal.js';
 import { enemyStrike, insideStrike } from './attacks.js';
 import { planetBoss } from './encounters.js';
 import { Skeleton, slab, box, wedge, cone, merge, shift, spin, easeOut, hump, keyed, uploadInstances } from './rig.js';
@@ -1359,7 +1359,7 @@ export class EnemyManager {
       _pushDir.copy(e.dir).applyAxisAngle(_pushAxis, angle).normalize();
       const node = this.nav.descendNode(e.node, _pushDir);
       if (node < 0 || !Number.isFinite(field[node]) ||
-          !this.nav.canStep(e.dir, _pushDir, flying, e.node) ||
+          !(flying?this.nav.canStep(e.dir,_pushDir,true,e.node):this.nav.canMarchStep(e.dir,_pushDir,e.node)) ||
           (flying && !canFlyAt(_pushDir))) break;
       e.dir.copy(_pushDir);
       e.fwd.applyAxisAngle(_pushAxis, angle).addScaledVector(e.dir, -e.fwd.dot(e.dir)).normalize();
@@ -1468,6 +1468,7 @@ export class EnemyManager {
       // anti-air placement meaningful. sampleFlow falls back to a great
       // circle wherever the field is undefined.
       e.node = this.nav.descendNode(e.node, e.dir);
+      if(!type.flying&&this.nav.floorWalk&&!this.nav.floorWalk[e.node])stepSpeed*=MOUNTAIN_MARCH;
       e.progress = type.flying && CONFIG.terrain
         ? this.nav.sampleAirFlow(e.node, e.dir, _des) : this.nav.sampleFlow(e.node, e.dir, _des);
       _routeDes.copy(_des);
@@ -1542,11 +1543,12 @@ export class EnemyManager {
       if (CONFIG.terrain) {
         let factor = type.flying ? 1 : surfaceTravel(e, e.fwd, stepSpeed * dt);
         _nextDir.copy(e.dir).addScaledVector(e.fwd, stepSpeed * dt / R).normalize();
-        if (!factor || !this.nav.canStep(e.dir, _nextDir, type.flying, e.node) || (type.flying && !canFlyAt(_nextDir))) {
+        if (!factor || !(type.flying?this.nav.canStep(e.dir,_nextDir,true,e.node):this.nav.canMarchStep(e.dir,_nextDir,e.node)) || (type.flying && !canFlyAt(_nextDir))) {
           // Separation or a chase may point into a cliff. Resume the route
           // before attempting motion; never walk through the obstacle.
-          if (!type.flying && this.nav.next[e.node] >= 0) {
-            this.nav.nodeDir(this.nav.next[e.node], _routeDes);
+          const next=(this.nav.march?.next||this.nav.next)[e.node];
+          if (!type.flying && next >= 0) {
+            this.nav.nodeDir(next, _routeDes);
             _routeDes.addScaledVector(e.dir, -_routeDes.dot(e.dir)).normalize();
           }
           e.fwd.copy(_routeDes);
@@ -1554,13 +1556,13 @@ export class EnemyManager {
         }
         stepSpeed *= factor;
         _nextDir.copy(e.dir).addScaledVector(e.fwd, stepSpeed * dt / R).normalize();
-        if (!this.nav.canStep(e.dir, _nextDir, type.flying, e.node) || (type.flying && !canFlyAt(_nextDir))) {
+        if (!(type.flying?this.nav.canStep(e.dir,_nextDir,true,e.node):this.nav.canMarchStep(e.dir,_nextDir,e.node)) || (type.flying && !canFlyAt(_nextDir))) {
           // A smoothed corner can enter a neighboring blocked cell even
           // when the centre-to-centre route is valid. Return to this cell's
           // centre, then take its certified outgoing edge on the next frame.
           this.nav.nodeDir(e.node, _routeDes).normalize();
           e.routeCenter=e.node;
-          e.routeExit=type.flying?this.nav.airNext[e.node]:this.nav.next[e.node];
+          e.routeExit=type.flying?this.nav.airNext[e.node]:(this.nav.march?.next||this.nav.next)[e.node];
           const distance = e.dir.angleTo(_routeDes) * R;
           _routeDes.addScaledVector(e.dir, -_routeDes.dot(e.dir)).normalize();
           e.fwd.copy(_routeDes);
@@ -1570,7 +1572,7 @@ export class EnemyManager {
       const ang = (stepSpeed * dt) / R;
       _moveAxis.crossVectors(e.dir, e.fwd).normalize();
       _nextDir.copy(e.dir).applyAxisAngle(_moveAxis, ang).normalize();
-      if ((!type.flying || canFlyAt(_nextDir)) && this.nav.canStep(e.dir, _nextDir, type.flying, e.node)) {
+      if ((!type.flying || canFlyAt(_nextDir)) && (type.flying?this.nav.canStep(e.dir,_nextDir,true,e.node):this.nav.canMarchStep(e.dir,_nextDir,e.node))) {
         e.dir.copy(_nextDir);
         e.fwd.applyAxisAngle(_moveAxis, ang).addScaledVector(e.dir, -e.fwd.dot(e.dir)).normalize();
       } else stepSpeed = 0;
