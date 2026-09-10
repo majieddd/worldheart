@@ -17,6 +17,19 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
+Implemented and locally verified 2026-09-10: Codex on
+`feature/base-overview-auto-loot`, based on preview `036c57c`, owns U33-U34.
+The furthest zoom now fits all six base levels using viewport shape, unlocked
+terrain and the allowed focus area. Living commanders automatically collect
+nearby weapons into their backpack; equipment stays deliberate and full bags
+leave drops on the ground. The existing crystal cargo/deposit rules remain.
+Local checks pass 64 framing/pickup/save cases, all five map camera harnesses,
+16 pole/input cases, 29 weapon checks, 16 crystal checks and all 260 tests.
+A legal 15-wave victory retained 24 heart health, destroyed 12 nests and extracted
+13 weapons to planet 2 with no runtime faults or controller stalls. Generated
+builds match all 58 source files. Public V2 verification remains in progress.
+[Evidence and handoff](qa/implementation/BASE-OVERVIEW-AUTO-LOOT.md).
+
 Published and live-verified 2026-09-10: Codex on `fix/polar-camera-navigation`,
 based on preview `bdd7c81`, owns U32: polar arrow-key jumps, rotation and inaccessible
 poles. A carried spherical heading replaces the world-axis switch; tangent pan,

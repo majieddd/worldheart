@@ -396,8 +396,11 @@ nest placement never depends on that emergency passage.
 ## Weapon and strike prototype
 
 Campaign commanders have two equipment slots and twelve backpack spaces.
-I opens a paused inventory, R collects nearby loot, and X cycles equipped/native
-attacks. Full backpacks preserve drops and require explicit replacement or
+Living commanders automatically collect weapons within 2.8 world units into the
+backpack while playing, in orbit or either possessed view. Collection leaves
+equipment unchanged and respects vertical distance, pause and campaign phase.
+I opens a paused inventory, R remains a manual pickup shortcut, and X cycles
+equipped/native attacks. Full backpacks preserve drops and require explicit replacement or
 salvage. Native techniques and a basic sword remain available. Compatible sword,
 spear, carbine and lobber families have head/grip/core tradeoffs. Pending changes
 settle after recovery; launched projectiles retain their release stats.
