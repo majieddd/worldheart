@@ -25,22 +25,25 @@ if (index) {
   const world = await import(moduleUrl('js/world.js'));
   const { NavGraph } = await import(moduleUrl('js/nav.js'));
   const { EnemyManager } = await import(moduleUrl('js/enemies.js'));
-  const { nestSite } = await import(moduleUrl('js/nest-sites.js'));
+  const { nestSite, NEST_CLEARANCE, NEST_SEPARATION, NEST_ROUTE_LIMIT } = await import(moduleUrl('js/nest-sites.js'));
   const { frontierTheta } = await import(moduleUrl('js/run/schedule.js'));
   world.initTerrainField(CONFIG.seed);
   const nav = new NavGraph(); nav.build();
   const scratch = new THREE.Vector3(), records = [];
-  // Six distinct sources model the five scheduled originals plus the final
-  // guardian source. Repeat with every source placed at the same frontier,
-  // including maximum expansion, where an interior fallback can be needed.
+  // Seventeen sources model one new nest per wave plus two milestone extras.
+  // Include an unexpanded run, so upgrading the heart is never required for
+  // the wave schedule to have room to create its sources.
   for (const rings of [0, 3, 14]) {
     const theta = frontierTheta(rings), used = new Set(), sites = [];
-    for (let i = 0; i < nav.portalNodes.length + 1; i++) {
+    for (let i = 0; i < 17; i++) {
       let node = nestSite(nav, nav.portalNodes[i % nav.portalNodes.length], nav.fieldCenter, theta, used, scratch);
       for (const alternative of nav.portalNodes) if (node < 0) node = nestSite(nav, alternative, nav.fieldCenter, theta, used, scratch);
       const valid = node >= 0 && !used.has(node) && nav.walk[node] && !nav.block[node]
-        && nav.airWalk[node] && Number.isFinite(nav.dist[node]) && Number.isFinite(nav.airDist[node]);
-      sites.push({ node, valid: !!valid }); if (node >= 0) used.add(node);
+        && nav.airWalk[node] && nav.march.floorReach[node] && nav.march.dist[node]<=NEST_ROUTE_LIMIT
+        && Number.isFinite(nav.airDist[node])
+        && nav.nodesInRadius(nav.nodePos(node,scratch),NEST_CLEARANCE).every(i=>!nav.block[i]&&nav.march.floorReach[i]&&nav.baseHeight[i]>=.18&&nav.baseHeight[i]<=1.5)
+        && [...used].every(i=>nav.nodePos(i,scratch).distanceTo(nav.nodePos(node,new THREE.Vector3()))>=NEST_SEPARATION);
+      sites.push({ node, valid: !!valid, height:nav.baseHeight[node], routeCost:nav.march.dist[node] }); if (node >= 0) used.add(node);
     }
     const enemies = new EnemyManager(new THREE.Scene(), nav); enemies._render = () => {}; enemies.onLeak = () => {};
     enemies.setHeart(world.surfacePoint(nav.nodeDir(nav.heartNode, scratch), new THREE.Vector3()));

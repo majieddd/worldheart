@@ -1,0 +1,132 @@
+{
+  "scope": "Instrumented real shell: overlapping source lifecycle, draft freeze, HUD layout and elevated range boundaries. Controlled enemy removals and tower placement; not natural play.",
+  "checks": [
+    {
+      "name": "Opening wave appears at a dry physical clearing",
+      "ok": true,
+      "actual": {
+        "height": 0.8178713917732239,
+        "route": 15.539316058158875
+      }
+    },
+    {
+      "name": "Next wave adds a new nest while the first wave is alive",
+      "ok": true,
+      "actual": {
+        "wave": 2,
+        "nests": 2
+      }
+    },
+    {
+      "name": "Surviving source contributes to the new wave",
+      "ok": true
+    },
+    {
+      "name": "HUD shows the continuing nest countdown and live count",
+      "ok": true,
+      "actual": {
+        "timer": "nests in 47s",
+        "count": "2 nests / 22 mobs"
+      }
+    },
+    {
+      "name": "Destroying a nest cancels its buildup and updates the count immediately",
+      "ok": true
+    },
+    {
+      "name": "Ordered clears reach the actual reward draft",
+      "ok": true,
+      "actual": {
+        "cleared": 2,
+        "phase": "drafting"
+      }
+    },
+    {
+      "name": "Draft freezes real enemy movement, damage and nest clock",
+      "ok": true
+    },
+    {
+      "name": "Picking a reward resumes the same countdown",
+      "ok": true,
+      "actual": {
+        "before": 46.91666666666667,
+        "after": 46.88333333333334
+      }
+    },
+    {
+      "name": "Wave HUD fits without overlapping controls at 375px",
+      "ok": true,
+      "actual": {
+        "left": 52.71875,
+        "right": 322.265625,
+        "width": 375,
+        "overlap": false
+      }
+    },
+    {
+      "name": "Wave HUD fits without overlapping controls at 768px",
+      "ok": false,
+      "actual": {
+        "left": 216.984375,
+        "right": 551.015625,
+        "width": 768,
+        "overlap": true
+      }
+    },
+    {
+      "name": "Wave HUD fits without overlapping controls at 1280px",
+      "ok": true,
+      "actual": {
+        "left": 472.984375,
+        "right": 807.015625,
+        "width": 1280,
+        "overlap": false
+      }
+    },
+    {
+      "name": "Fixture finds actual stable neutral raised terrain",
+      "ok": true,
+      "actual": {
+        "height": 15.324585914611816
+      }
+    },
+    {
+      "name": "Placement veil equals the actual elevated tower sphere",
+      "ok": true,
+      "actual": {
+        "preview": 18.623478702449415,
+        "range": 18.623478702449415
+      }
+    },
+    {
+      "name": "Elevation provides extra reach and compensates the vertical drop",
+      "ok": true,
+      "actual": {
+        "flat": 8.1,
+        "height": 15.324584867200286,
+        "range": 18.623478702449415
+      }
+    },
+    {
+      "name": "Elevated tower acquires just inside its displayed boundary",
+      "ok": true
+    },
+    {
+      "name": "Elevated tower rejects a new target just outside its displayed boundary",
+      "ok": true
+    },
+    {
+      "name": "Upgrade and selected guide keep the elevation bonus synchronized",
+      "ok": true,
+      "actual": {
+        "before": 18.623478702449415,
+        "after": 19.197218197929963
+      }
+    },
+    {
+      "name": "Tower readout explains its high-ground advantage",
+      "ok": true
+    }
+  ],
+  "faults": []
+}

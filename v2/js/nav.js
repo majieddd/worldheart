@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { nestSite, NEST_SCHEDULE_CAPACITY } from './nest-sites.js';
 import { CONFIG } from './config.js';
 import { mulberry32 } from './noise.js';
 import { travelCost, isFloorTerrain, MOUNTAIN_MARCH } from './traversal.js';
@@ -668,6 +669,18 @@ export class NavGraph {
     this.portalNodes = portals;
     this.recomputeFlow();
     if (this.airDist && portals.some(i => !Number.isFinite(this.airDist[i]))) return false;
+    if (CONFIG.map.mode === 'ninetynine' && this.march) {
+      // A valid original portal route can hide a tiny meadow island. Accept
+      // this battlefield only if a full unexpanded nest schedule fits on dry
+      // connected clearings, without distant emergency mountain approaches.
+      const centre = this.nodeDir(heart, new THREE.Vector3()), scratch = new THREE.Vector3(), used = new Set();
+      for (let i = 0; i < NEST_SCHEDULE_CAPACITY; i++) {
+        const node = nestSite(this, portals[i % portals.length], centre, .05, used, scratch);
+        if (node < 0) return false;
+        used.add(node);
+      }
+      this.nestCapacity = [...used];
+    }
     return true;
   }
 

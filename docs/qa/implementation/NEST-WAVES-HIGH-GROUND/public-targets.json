@@ -1,0 +1,89 @@
+{
+  "scope": "Repositioned tower/target fixtures with real acquisition, projectile simulation, damage and destruction callbacks; not natural siege balance",
+  "checks": [
+    {
+      "name": "Wave establishes a physical target",
+      "ok": true,
+      "actual": {
+        "node": 181725
+      }
+    },
+    {
+      "name": "bolt: acquires and damages a living nest through its real attack",
+      "ok": true,
+      "actual": {
+        "damage": 445.05000000001564,
+        "credited": 445.05000000000035
+      }
+    },
+    {
+      "name": "bolt: nest never receives creature stun state",
+      "ok": true
+    },
+    {
+      "name": "mortar: acquires and damages a living nest through its real attack",
+      "ok": true,
+      "actual": {
+        "damage": 182.3929736683549,
+        "credited": 182.39297366835373
+      }
+    },
+    {
+      "name": "mortar: nest never receives creature stun state",
+      "ok": true
+    },
+    {
+      "name": "tesla: acquires and damages a living nest through its real attack",
+      "ok": true,
+      "actual": {
+        "damage": 207,
+        "credited": 207
+      }
+    },
+    {
+      "name": "tesla: nest never receives creature stun state",
+      "ok": true
+    },
+    {
+      "name": "helios: acquires and damages a living nest through its real attack",
+      "ok": true,
+      "actual": {
+        "damage": 837.6983333337175,
+        "credited": 837.6983333333354
+      }
+    },
+    {
+      "name": "helios: nest never receives creature stun state",
+      "ok": true
+    },
+    {
+      "name": "Nest wrappers stay stable between target-list updates",
+      "ok": true
+    },
+    {
+      "name": "Defenders prioritize enemies over nests after the target list refresh",
+      "ok": true
+    },
+    {
+      "name": "Guardian-protected nests cannot be targeted or damaged",
+      "ok": true
+    },
+    {
+      "name": "Unestablished nests are excluded",
+      "ok": true
+    },
+    {
+      "name": "Lethal tower damage pays one nest reward",
+      "ok": true
+    },
+    {
+      "name": "Repeated and in-flight hits cannot duplicate nest rewards",
+      "ok": true
+    },
+    {
+      "name": "Destroyed sources disappear from future targets",
+      "ok": true
+    }
+  ],
+  "faults": []
+}

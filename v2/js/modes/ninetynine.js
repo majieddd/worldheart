@@ -9,7 +9,7 @@ import { MODS, TOWER_TYPES } from '../towers.js';
 import { EVO } from '../enemies.js';
 import { SIM_RANDOM } from '../noise.js';
 import { CONFIG } from '../config.js';
-import { portalCount } from '../waves.js';
+import { newNestCount } from '../waves.js';
 import * as THREE from 'three';
 import { bankVictory, bankCoins, loadProfile } from './progress.js';
 import { createRewardConsumer } from '../rewards.js';
@@ -278,20 +278,21 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // nests are established once on solved routes near the current frontier;
   // expanding later never teleports that structure or its spawn point.
   waves.nestOnly = true;
+  waves.timedNests = true;
   waves.nestSources = [];
   const sourcePortals = nav.portalNodes.slice();
   for (const p of world.portals) { p.active = false; p.group.visible = false; }
   const establishNest = (index, wave, guardian = false) => {
     const original = sourcePortals[index % sourcePortals.length];
     let node;
-    // Two structures cannot share the destruction identity. Search back
-    // along the same certified route if an earlier nest occupies this node.
+    // Two structures cannot share the destruction identity or crowd each
+    // other's clearing, even after an earlier nest has been destroyed.
     const used = new Set(world.portals.filter(p => p.established).map(p => p.node));
     node=nestSite(nav,original,centre,frontierTheta,used,_sdir);
     for(const alternative of sourcePortals)if(node<0)node=nestSite(nav,alternative,centre,frontierTheta,used,_sdir);
-    if(node<0)throw new Error('No reachable visible nest site remains');
+    if(node<0)return null;
     const pos = nav.nodePos(node, new THREE.Vector3());
-    const p = guardian ? world.addPortal(pos) : world.portals[index];
+    const p = world.portals.find(p => !p.established) || world.addPortal(pos);
     p.group.position.copy(pos); p.group.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), pos.clone().normalize());
     p.node=node; p.established=true; p.sourceWave=wave; p.active=true; p.group.visible=true;
     p.guardianPending=guardian; p.flash=1;
@@ -301,10 +302,26 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     return p;
   };
   waves.prepareNests = wave => {
-    const count = portalCount(wave);
-    for (let i=0; i<count; i++) if (!world.portals[i].established) establishNest(i,wave);
-    if (wave === CONFIG.waves.count) waves.guardianNode=establishNest(sourcePortals.length,wave,true).node;
-    return world.portals.filter(p => p.established && !p.destroyed).map(p=>p.node);
+    const count = newNestCount(wave);
+    const fresh = world.portals.filter(p => p.established && p.sourceWave === wave);
+    for (let i=fresh.length; i<count; i++) {
+      const guardian = wave === CONFIG.waves.count;
+      const p = establishNest(world.portals.filter(p => p.established).length, wave, guardian);
+      if (!p) {
+        // One healthy nest still starts a milestone wave. If none can fit,
+        // retry after a visible breather instead of creating a mountain source
+        // or granting a free wave clear from an empty spawn list.
+        if (fresh.length) break;
+        ui.toast('Nest wave delayed: no clear ground route. Sell a blocking tower to reopen ground.', 'warn');
+        return null;
+      }
+      fresh.push(p);
+      if (guardian) waves.guardianNode=p.node;
+    }
+    // New sources lead the authored distribution so even a small wave sends
+    // enemies from the nest that just appeared. Survivors add their own packs.
+    const previous = world.portals.filter(p => p.established && !p.destroyed && p.sourceWave !== wave);
+    return [...fresh.filter(p=>!p.destroyed), ...previous].map(p=>p.node);
   };
   waves.onNestSpawn = (q, enemy) => {
     if (q.type !== 'colossus') return;
@@ -317,16 +334,17 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   };
   enemies.onReinforcement = (child,parent,node) => {
     if(waves.raiderIds.has(parent.id))waves.raiderIds.add(child.id);
+    waves.inheritAssault(child,parent);
     waves.onSpawnPortal?.(node);
   };
 
-  // Surviving physical nests supply both waves and additional raids. Growing
+  // Surviving physical nests supply an extra pack with each timed wave. Growing
   // the frontier no longer silently removes a source; destroying it does.
   // The core still owns whether a raid may run while a draft is open.
   waves.nestMode = true;
   waves.canRaid = () => run.getPhase() === 'building';
   waves.onNestWake = (count) => {
-    ui.toast(count === 1 ? 'A nest stirs beyond the frontier' : `Nests stir beyond the frontier: ${count}`, 'danger');
+    ui.toast(count === 1 ? 'A nest stirs' : `Active nests: ${count}. Survivors reinforce the next wave.`, 'danger');
     ui.audio?.play('portal');
   };
 
@@ -812,8 +830,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       // dead until the director stopped unparking itself (see waves.js), so
       // the unscaled value here had never actually been played.
       if (waves.state === 'idle') {
-        waves.state = 'countdown';
-        waves.countdown = CONFIG.waves.prepTime * waves.paceMul;
+        if (waves.timedNests) waves.state = waves.wave ? (waves.queues.length ? 'spawning' : 'combat') : 'countdown';
+        else { waves.state = 'countdown'; waves.countdown = CONFIG.waves.prepTime * waves.paceMul; }
       }
     },
   };

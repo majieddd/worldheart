@@ -38,8 +38,22 @@ export function climatePermission(type, climates) {
   return { ok: true, climate };
 }
 
-export function terrainTowerStats(stats, type, climate) {
-  if (type === 'mortar' && climate === 'hot') return { ...stats, dmg: stats.dmg * 1.15 };
-  if (type === 'cryo') return { ...stats, slow: Math.min(MAX_SLOW, stats.slow * (climate === 'cold' ? 1.1 : 1)) };
-  return stats;
+// Vantage adds up to 60% horizontal reach over the first 30 m of elevation.
+// The sphere also includes the drop to sea level, so a tall emplacement can
+// actually reach the valley below it. This is slant distance, not a second
+// planar targeting rule. Minimum range and secondary chain hops stay fixed.
+export function elevatedRange(range, height = 0) {
+  const h = Number.isFinite(height) ? Math.max(0, height) : 0;
+  return Math.hypot(range * (1 + Math.min(.6, h * .02)), h);
+}
+
+export function terrainTowerStats(stats, type, climate, height = 0) {
+  const out = { ...stats };
+  if (type === 'mortar' && climate === 'hot') out.dmg *= 1.15;
+  if (type === 'cryo') out.slow = Math.min(MAX_SLOW, stats.slow * (climate === 'cold' ? 1.1 : 1));
+  if (stats.range !== undefined) out.range = elevatedRange(stats.range, height);
+  // Garrison movement uses surface distance, so its leash gets the horizontal
+  // advantage without adding the vertical drop to a ground travel radius.
+  if (stats.leash !== undefined) out.leash = stats.leash * (1 + Math.min(.6, Math.max(0, height) * .02));
+  return out;
 }

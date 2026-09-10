@@ -1,7 +1,9 @@
 import{test}from'node:test';import assert from'node:assert/strict';import{registerHooks}from'node:module';
 globalThis.location={search:'?map=ninetynine'};globalThis.matchMedia=()=>({matches:false});
 registerHooks({resolve(spec,context,next){if(spec==='three')return{url:new URL('../../lib/three.module.min.js',import.meta.url).href,shortCircuit:true};return next(spec,context);}});
-const{WaveDirector}=await import('../../js/waves.js');
+const{WaveDirector,newNestCount}=await import('../../js/waves.js');
+const{CONFIG}=await import('../../js/config.js');
+const{NEST_SCHEDULE_CAPACITY}=await import('../../js/nest-sites.js');
 const{World}=await import('../../js/world.js');
 const{EnemyManager,EVO}=await import('../../js/enemies.js');
 const nestFixture=()=>{
@@ -42,4 +44,57 @@ test('a full enemy pool delays an owed wave spawn without paying its clear',()=>
  waves.update(.1);assert.equal(waves.pendingSpawns,1);assert.equal(waves.queues.length,1);assert.equal(cleared,0);assert.equal(game.gold,0);
  full=false;waves.update(.1);assert.equal(spawned,1);assert.equal(waves.pendingSpawns,0);assert.equal(cleared,0);
  enemies.active=[];waves.update(.1);assert.equal(cleared,1);assert.ok(game.gold>0);
+});
+function timedFixture() {
+ const f=nestFixture();let id=0;
+ f.enemies.spawn=function(type,node){const e={id:++id,typeKey:type,node};this.active.push(e);return e;};
+ Object.assign(f.waves,{timedNests:true,nestSources:[],wave:0,clearedWaves:0,state:'countdown',countdown:0});
+ f.waves.prepareNests=wave=>[wave,...f.waves.activePortals()];
+ return f;
+}
+test('every timed wave creates a source and every surviving source adds a pack',()=>{
+ const{waves}=timedFixture();waves._startWave();const before=waves.queues.slice();
+ waves._startWave();assert.equal(waves.wave,2);assert.ok(before.every(q=>waves.queues.includes(q)));
+ assert.ok(waves.queues.some(q=>q.wave===2&&q.portal===2));
+ assert.ok(waves.queues.filter(q=>q.wave===2).length>14,'14 authored mites plus surviving-nest pressure');
+ for(let i=1;i<=15;i++)assert.ok(newNestCount(i)>=1);
+ assert.equal(Array.from({length:CONFIG.waves.count},(_,i)=>newNestCount(i+1)).reduce((a,b)=>a+b,0),NEST_SCHEDULE_CAPACITY);
+});
+test('timer overlaps a live assault, pauses for drafts and does not reset owed queues',()=>{
+ const{waves,enemies}=timedFixture();waves._startWave();waves.update(5);assert.ok(enemies.active.length);
+ const owed=waves.queues.slice();waves.countdown=.1;waves.update(.2);
+ assert.equal(waves.wave,2);assert.ok(owed.every(q=>waves.queues.includes(q)));
+ const clock=waves.clock,left=waves.countdown;waves.canRaid=()=>false;waves.update(200);
+ assert.equal(waves.wave,2);assert.equal(waves.clock,clock);assert.equal(waves.countdown,left);
+ waves.canRaid=()=>true;waves.update(1);assert.equal(waves.countdown,left-1);
+});
+test('out of order kills, pool pressure and split ancestry cannot advance rewards early',()=>{
+ const{waves,enemies,game}=timedFixture(),clears=[];waves.onWaveClear=n=>clears.push(n);
+ waves._startWave();waves.update(20);waves._startWave();waves.update(20);
+ const first=enemies.active.find(e=>waves.assaultIds.get(e.id)===1);
+ enemies.active=enemies.active.filter(e=>e===first);waves.queues=[];
+ const child=enemies.spawn('mite',1);waves.inheritAssault(child,first);enemies.active=[child];
+ waves.update(.1);assert.deepEqual(clears,[]);assert.equal(game.gold,0);
+ enemies.active=[];waves.update(.1);waves.update(.1);assert.deepEqual(clears,[1,2]);
+ const gold=game.gold;waves.update(.1);assert.equal(game.gold,gold);
+});
+test('no safe site defers the wave without phantom enemies, rewards or a mountain fallback',()=>{
+ const{waves,game}=timedFixture();waves.prepareNests=()=>null;waves.update(.1);
+ assert.equal(waves.wave,0);assert.equal(waves.pendingSpawns,0);assert.equal(game.gold,0);assert.equal(waves.countdown,5);
+ assert.equal(waves.callEarly(),0);assert.equal(game.gold,0,'blocked-site retries cannot farm early-call bounty');
+ waves.prepareNests=()=>[9];waves.update(5.1);assert.equal(waves.wave,1);assert.ok(waves.pendingSpawns>0);
+});
+test('a full pool retains both overlapping assaults and cannot pay either early',()=>{
+ const{waves,enemies,game}=timedFixture();enemies.spawn=()=>null;
+ waves._startWave();waves._startWave();const queued=waves.queues.length;waves.update(30);
+ assert.equal(waves.pendingSpawns,queued);assert.equal(waves.clearedWaves,0);assert.equal(game.gold,0);
+ assert.ok(waves.queues.some(q=>q.wave===1)&&waves.queues.some(q=>q.wave===2));
+});
+test('final timed assault fires victory once only after every earlier wave and boss child',()=>{
+ const{waves,enemies}=timedFixture();let victories=0;waves.onVictory=()=>victories++;
+ waves.wave=CONFIG.waves.count;waves.state='combat';waves.clearedWaves=13;
+ const child=enemies.spawn('mite',1);waves.assaultIds.set(child.id,15);
+ waves.update(1000);assert.equal(waves.clearedWaves,14);assert.equal(waves.wave,15);assert.equal(victories,0);
+ waves.update(1000);assert.equal(victories,0);enemies.active=[];waves.update(.1);waves.update(1000);
+ assert.equal(victories,1);assert.equal(waves.state,'idle');
 });

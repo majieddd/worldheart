@@ -6,6 +6,7 @@ import { TOWER_TYPES, TOWER_SCALE, tierCost, AUTHORED_TIERS, buildTowerVisual, G
 import { insideFrontier } from './run/frontier.js';
 import { RangeGuide } from './range-guide.js';
 import { modifiedTowerStats } from './rewards.js';
+import { terrainTowerStats } from './traversal.js';
 
 // Player-facing game logic: build mode with a live ghost, the placement rule
 // pipeline, marching path previews, tower selection, and the economy.
@@ -417,7 +418,8 @@ export class Game {
     this.ghostHolder.visible = true;
     orientOnSurface(this.ghostHolder, this.cursorPos);
     this.rangeRing.show(true);
-    const preview = modifiedTowerStats(def.tiers[0], MODS.current);
+    const base = modifiedTowerStats(def.tiers[0], MODS.current);
+    const preview = CONFIG.terrain ? terrainTowerStats(base, this.buildType, 'neutral', this.cursorPos.length() - R) : base;
     this.rangeRing.place(this.cursorPos, preview.range, preview.minRange || 0);
     this.rangeRing.show(!def.summoner);
     this.leashRing.show(!!def.summoner);

@@ -215,18 +215,29 @@ wave of a short run. The 99 Planets boss is hand authored rather than formula
 driven: one colossus, four aegis, eighteen husks, twenty-four mites, ten wisps
 (`js/waves.js:83`).
 
-Breaches wake on a per-map schedule, `portalWakes` in `js/config.js`. Pocket
-World wakes at waves 1, 4, 9 and 14; every other map at 1, 3, 7, 11 and 15.
+Classic breaches follow `portalWakes` in `js/config.js`: Pocket World wakes
+at 1, 4, 9 and 14; other classic maps at 1, 3, 7, 11 and 15.
 
-**Nests** are woken breaches still standing outside the frontier
-(`js/waves.js:231`). From wave 2 each one sends a raid every 26 seconds,
-tightening by 0.5 per wave to a floor of 12, all multiplied by the mode's pace of
-0.5, so in practice 13 seconds down to 6. A raid is one mite, two from wave 4,
-plus a husk from wave 6 and an aegis from wave 9.
+**99 Planets nest waves** create one new physical source every wave, with two
+on waves 5 and 10 when space permits. Wave 15 creates a protected guardian
+nest. New nests warn for three seconds before spawning. The countdown runs
+during combat: `min(75, 45 + (wave - 1) * 2)` simulation seconds between starts.
+Game speed affects this clock; the campaign's half-speed spawn-spacing factor
+does not. Strategic pause and reward drafts freeze both combat and the clock.
 
-Raiders are tracked by id so **a raider never holds a wave open**
-(`js/waves.js:303`). A wave clears when its own enemies are gone; the raiders
-still walking are the running cost of an unexpanded circle.
+Surviving nests join the next wave's authored distribution and each add a pack:
+one mite, two from wave 4, plus one husk from wave 6 and one aegis from wave 9.
+Destroying a source cancels its queued enemies, never its already spawned mobs.
+There are no separate continuous raids in this timed mode. Rewards resolve in
+wave order only after that wave's queued mobs, living enemies and descendants
+are gone. Clearing wave 15 cannot bypass an earlier assault.
+
+Nests require a 2.4 m dry clearing in the heart-connected floor region, at least
+6 m from other nest sites and 10 m from the heart. Their floor route cost is
+at most 160 world units. Generation certifies room for all 17 sources even
+without expansion. Footprints that later remove every safe site delay the next
+wave with a visible warning; selling reopens the search. Blocked-site retries
+cannot pay repeated early-call gold. Nests remain fixed after expansion.
 
 ## Maps
 
@@ -237,7 +248,7 @@ still walking are the running cost of an unexpanded circle.
 | `pocket` | Pocket World | planetary | 30 | 5 | 4 | 400 | whole globe |
 | `giant` | Giant World | planetary | 240 | 7 | 5 | 500 | whole globe |
 | `titan` | Titan's Brow | battlefield | 240 | 9 | 5 | 450 | 0.28 rad cap |
-| `ninetynine` | 99 Planets | ninetynine | 240 | 9 | 5 | 450 | 0.52 rad cap |
+| `ninetynine` | 99 Planets | ninetynine | 240 | 9 | up to 17 nests | 450 | 0.52 rad cap |
 | `reach` | Shattered Reach | space | 70 | 7 | 5 | 450 | 0.5 rad cap |
 
 A URL with no `?map=` and no stored choice loads **Pocket World**, where none of
@@ -363,9 +374,20 @@ and radial clearance ceilings of 22/38/26/20 units for the four profiles.
 Stable, dry footprints can hold towers at elevation. Hot black stone accepts
 only Mortars with 15% extra damage; cold blue-white stone accepts only Cryo
 with 10% stronger slow, subject to the 70% campaign ceiling. Mixed climates
-are denied. Three range orbits show actual 3D acquisition, with terrain
-intersection contours and a red Mortar inner exclusion. Warden instead shows
-its labelled surface leash. See [M3 evidence](qa/implementation/M3.md).
+are denied. A reusable translucent spherical veil and three orbits show actual
+3D acquisition, clipped by scene depth, with a red Mortar inner exclusion.
+At height `h >= 0`, the horizontal reach multiplier is `1 + min(0.6, h * 0.02)`.
+The acquisition radius is `hypot(modifiedRange * multiplier, h)`, which includes
+the vertical drop so towers can attack the valley below. This applies after
+power and upgrade modifiers, once per stat read. Minimum range and secondary
+chain hops stay fixed. Warden gets the horizontal multiplier on its labelled
+surface leash. Placement, selection and targeting share these stats.
+
+Regional erosion channels now reach the meadow floor, while uncut crests retain
+their tall, rugged silhouette. The meadow-to-stone blend meets the same 1.75 m
+height and 0.62 grade boundary used by floor routing. Ground enemies prefer
+connected floor routes; emergency mountain travel remains at 8% speed. Ordinary
+nest placement never depends on that emergency passage.
 
 ## Weapon and strike prototype
 

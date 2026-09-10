@@ -194,7 +194,10 @@ function regionalHeight(dx,dy,dz,includeFine) {
   const region=nRange(dx*F_RANGE+23,dy*F_RANGE,dz*F_RANGE);
   const upland=smoothstep(-.3,.65,region);
   const erosion=nGap(dx*FQ*1.1+41,dy*FQ*1.1,dz*FQ*1.1);
-  const saddle=smoothstep(0,.65,erosion);
+  // Broad erosion channels meet the meadow floor; rock crests remain tall
+  // between them. The old 94% reduction left even the deepest alpine passes
+  // several metres above floor routing, creating long hidden detours.
+  const saddle=smoothstep(-.12,.48,erosion);
   // Broad shoulders carry both weathered hills and rugged ranges. Ridge
   // detail fades out at the foot and at passes, so a crag cannot turn a
   // meadow into an isolated pillar or close the floor corridor.
@@ -202,7 +205,7 @@ function regionalHeight(dx,dy,dz,includeFine) {
   const ridge=1-Math.abs(nRidge(dx*F_RANGE*2.2+11,dy*F_RANGE*2.2,dz*F_RANGE*2.2));
   const shape=.15*upland+.85*upland*upland;
   const crags=shape*shape*rugged*(Math.pow(ridge,3)*.65-.12)*(1-saddle);
-  h+=inland*profile.range*(shape+crags)*(1-.94*saddle);
+  h+=inland*profile.range*(shape+crags)*(1-saddle);
 
   // A canyon's shoulders grow with its depth. Use a stable regional distance
   // coordinate, rather than dividing by a rapidly changing local gradient:
@@ -580,7 +583,7 @@ function faceColor(dir, h, slope, jrand, out) {
     const roll = fbm3(nDetail, dir.x * 6.5, dir.y * 6.5, dir.z * 6.5, 2);
     out.copy(C.meadowLow).lerp(C.meadowHigh, clamp(0.5 + roll * 0.9, 0, 1));
     if (forest > 0.55) out.lerp(MOSS, smoothstep(0.55, 0.75, forest) * 0.75);
-    const cliff = smoothstep(0.62, 1.0, slope) * smoothstep(0.24, 0.5, h) + smoothstep(1.75, 2.45, h) * 0.75;
+    const cliff = smoothstep(0.5, 0.7, slope) * smoothstep(0.24, 0.5, h) + smoothstep(1.4, 1.8, h);
     if (cliff > 0) {
       _cliffCol.copy(C.cliffLow).lerp(C.cliffHigh, smoothstep(1.2, 3.2, h));
       // Steep faces below the snow line are canyon walls and range flanks:

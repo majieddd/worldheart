@@ -457,6 +457,7 @@ async function boot() {
   waves.destroyedNodes = new Set();
   allies.onPortalDestroyed = (p) => {
     if (p.node >= 0) waves.destroyedNodes.add(p.node);
+    waves.refreshNests();
     game.gold += 180;
     // A felled breach used to be a toast in the corner. It is one of the
     // mode's two big moments and the reason to leave the circle, so it gets
@@ -586,7 +587,7 @@ function stepFrame(dt, render) {
   // above the simActive gate on raw dt, so a paused player could still walk,
   // and a beam archetype - which has no swing cooldown to rate-limit it - could
   // channel a whole wave to death against a frozen board.
-  const simRunning = !!(game && game.state === 'playing' && !game.paused);
+  const simRunning = !!(game && game.state === 'playing' && !game.paused && mode99?.run.getPhase() !== 'drafting');
   if (possession && possession.unit) possession.update(dt, simRunning);
   if (!possession || !possession.active) rig.update(dt);
   camFill.position.copy(rig.camera.position);
@@ -598,7 +599,7 @@ function stepFrame(dt, render) {
   // Drives the draft timer. Outside the simDt gate on purpose: the draft must
   // keep counting while the director is held idle between waves.
   if (mode99 && game && game.state === 'playing' && !game.paused) mode99.update(dt);
-  const simActive = game && game.state === 'playing' && !game.paused;
+  const simActive = game && game.state === 'playing' && !game.paused && mode99?.run.getPhase() !== 'drafting';
   let simDt = simActive ? dt * game.speed : 0;
   // Hit stop: the simulation freezes for a few frames after a landed strike
   // while the camera, the view model and the HUD keep running. Consumed on
