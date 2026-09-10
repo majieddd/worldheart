@@ -1,0 +1,146 @@
+{
+  "map": "ninetynine",
+  "seed": 36102,
+  "heartLatitude": 0.22791759266515435,
+  "scope": "Real keyboard/pointer events, controlled polar camera fixtures and actual spawn; deterministic frames with sparse real rendering",
+  "checks": [
+    {
+      "name": "North orientation seam is continuous",
+      "ok": false,
+      "actual": {
+        "maxRotation": 2.9459706028862755,
+        "maxEye": 0.13371490927735677,
+        "maxFocus": 0.003182842507905115,
+        "peakLat": 1.225769492530705,
+        "boundary": 0,
+        "moved": 0.07038429698650966,
+        "lat": 1.2228227153737505,
+        "lon": 1.3866271276271829,
+        "position": [
+          75.00847620077458,
+          263.9909264675796,
+          17.536226527586635
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "North pole can be crossed",
+      "ok": false,
+      "actual": {
+        "maxRotation": 2.686191196286136,
+        "maxEye": 0.13088659996887722,
+        "maxFocus": 0.003182842507905115,
+        "peakLat": 1.42,
+        "boundary": 0,
+        "moved": 0.3122466229217056,
+        "lat": 1.225741197475223,
+        "lon": 1.138940936921129,
+        "position": [
+          67.14465492109804,
+          263.7093362639913,
+          39.673432958742374
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "North polar terrain and boundary accept left input",
+      "ok": false,
+      "actual": {
+        "maxRotation": 0,
+        "maxEye": 0,
+        "maxFocus": 0,
+        "peakLat": 1.42,
+        "boundary": 0.15079632679489624,
+        "moved": 0,
+        "lat": 1.42,
+        "lon": 0,
+        "position": [
+          -18.023613947382213,
+          271.29467148601236,
+          41.22317993037881
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "North pole is exactly focusable",
+      "ok": false,
+      "actual": {
+        "error": 0.15079632679489624,
+        "screenError": 671.1129599301177
+      }
+    },
+    {
+      "name": "South orientation seam is continuous",
+      "ok": false,
+      "actual": {
+        "maxRotation": 0.3921247156083304,
+        "maxEye": 0.026339945282306706,
+        "maxFocus": 0.0031829868644155613,
+        "peakLat": 1.42,
+        "boundary": 0,
+        "moved": 0.4684037855405816,
+        "lat": -1.3773646967189013,
+        "lon": -0.6829432688265871,
+        "position": [
+          -15.398244593233562,
+          -271.45275026944915,
+          41.24679908306861
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "South pole can be crossed",
+      "ok": false,
+      "actual": {
+        "maxRotation": 2.6861911962861407,
+        "maxEye": 0.13088659996887722,
+        "maxFocus": 0.003182842507905115,
+        "peakLat": 1.42,
+        "boundary": 0,
+        "moved": 0.3122466229217056,
+        "lat": -1.225741197475224,
+        "lon": -1.1389409369211336,
+        "position": [
+          -67.14465492109801,
+          -263.7093362639914,
+          39.67343295874187
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "South polar terrain and boundary accept left input",
+      "ok": true,
+      "actual": {
+        "maxRotation": 0.0029103349113839276,
+        "maxEye": 0.0029042186575676874,
+        "maxFocus": 0.002910334911402852,
+        "peakLat": 1.42,
+        "boundary": 0.2199999999999999,
+        "moved": 0.06920367320510175,
+        "lat": -1.3507963267948968,
+        "lon": 3.970732363575465e-16,
+        "position": [
+          -18.024205437227366,
+          -268.32591982288784,
+          60.00288696926294
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "South pole is exactly focusable",
+      "ok": false,
+      "actual": {
+        "error": 0.15079632679489624,
+        "screenError": 673.1635078273614
+      }
+    }
+  ],
+  "faults": [],
+  "pass": false
+}

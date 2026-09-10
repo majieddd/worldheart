@@ -1,6 +1,6 @@
 # 99 Planets development progress
 
-Updated 2026-09-09. This is the collaborator entry point for the owner's new direction.
+Updated 2026-09-10. This is the collaborator entry point for the owner's new direction.
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
@@ -16,6 +16,20 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 [first deployment](https://github.com/majieddd/worldheart/actions/runs/34044866229)
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
+
+Implemented and locally verified 2026-09-10: Codex on `fix/polar-camera-navigation`,
+based on preview `bdd7c81`, owns U32: polar arrow-key jumps, rotation and inaccessible
+poles. A carried spherical heading replaces the world-axis switch; tangent pan,
+drag and inertia cross both poles, flights reach them exactly, and overhead views
+retain their heading. Actual frontier confinement remains enforced. The old
+orientation jump measured 168.8 degrees in one frame; the same sweep now stays
+under 0.183 degrees. Six camera tests, 16 targeted browser cases, all five map
+camera harnesses and 16 camera/possession ownership checks pass; all 257 tests,
+syntax, style and generated mirrors pass. A fresh legal 15-wave victory retained
+24 heart health, destroyed 12 nests and carried 13 weapons into planet 2, with no
+runtime faults or controller stalls. Public V2 verification is pending.
+[Evidence and handoff](qa/implementation/POLAR-CAMERA.md).
+Usage unmeasured. This bounded fix does not close broader M1 feel/device review.
 
 Published and live-verified 2026-09-09: Codex on `feature/modular-landform-recipes`, based on preview
 `ffb1831`, owns U31: grouped reusable mountain/canyon/hill/basin recipes,

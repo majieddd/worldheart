@@ -23,6 +23,23 @@ const _east = new THREE.Vector3();
 const _north = new THREE.Vector3();
 const _head = new THREE.Vector3();
 const _axis = new THREE.Vector3();
+const _frameDir = new THREE.Vector3(), _frameNorth = new THREE.Vector3(), _frameWest = new THREE.Vector3();
+const _frameHead = new THREE.Vector3(), _frameVelocity = new THREE.Vector3(), _frameTarget = new THREE.Vector3();
+const _frameQ = new THREE.Quaternion();
+const _solverDir = new THREE.Vector3(), _solverNorth = new THREE.Vector3(), _solverEast = new THREE.Vector3(), _solverTarget = new THREE.Vector3();
+const _motion = new THREE.Vector3(), _flightFrom = new THREE.Vector3(), _flightTo = new THREE.Vector3();
+
+function focusAt(lon, lat, out) {
+  return out.set(Math.sin(lon) * Math.cos(lat), Math.sin(lat), Math.cos(lon) * Math.cos(lat));
+}
+
+// Longitude supplies an unambiguous initial meridian even at an exact pole.
+// Movement carries the heading across meridians instead of snapping to a new
+// world-axis reference when abs(y) reaches 0.94.
+function frameAt(lon, lat, north, west) {
+  north.set(-Math.sin(lon) * Math.sin(lat), Math.cos(lat), -Math.cos(lon) * Math.sin(lat));
+  west.set(-Math.cos(lon), 0, Math.sin(lon));
+}
 
 // Smallest world scale the height sliders are measured against. Chosen so a
 // planetoid's closest zoom holds about as many towers as a colossal planet's
@@ -258,6 +275,36 @@ export class OrbitRig {
     this.tiltOffset = 0;
   }
 
+  _setFocus(direction) {
+    _frameTarget.copy(direction).normalize();
+    focusAt(this.lon, this.lat, _frameDir);
+    frameAt(this.lon, this.lat, _frameNorth, _frameWest);
+    _frameHead.copy(_frameNorth).multiplyScalar(Math.cos(this.viewYaw))
+      .addScaledVector(_frameWest, Math.sin(this.viewYaw));
+    // These legacy public names now measure tangent angular velocity, not
+    // longitude derivatives, which become unbounded at a pole.
+    _frameVelocity.copy(_frameNorth).multiplyScalar(this.velLat).addScaledVector(_frameWest, -this.velLon);
+    _frameQ.setFromUnitVectors(_frameDir, _frameTarget);
+    _frameHead.applyQuaternion(_frameQ); _frameVelocity.applyQuaternion(_frameQ);
+    const horizontal = Math.hypot(_frameTarget.x, _frameTarget.z);
+    this.lat = Math.atan2(_frameTarget.y, horizontal);
+    if (horizontal > 1e-12) this.lon = Math.atan2(_frameTarget.x, _frameTarget.z);
+    frameAt(this.lon, this.lat, _frameNorth, _frameWest);
+    const yaw = Math.atan2(_frameHead.dot(_frameWest), _frameHead.dot(_frameNorth));
+    this.viewYaw += Math.atan2(Math.sin(yaw - this.viewYaw), Math.cos(yaw - this.viewYaw));
+    this.velLon = -_frameVelocity.dot(_frameWest); this.velLat = _frameVelocity.dot(_frameNorth);
+  }
+
+  _capturePanVelocity(from) {
+    focusAt(this.lon, this.lat, _frameDir);
+    const angle = from.angleTo(_frameDir);
+    _motion.copy(_frameDir).multiplyScalar(from.dot(_frameDir)).sub(from);
+    if (_motion.lengthSq() < 1e-18) { this.velLon = this.velLat = 0; return; }
+    _motion.setLength(angle / this.pointerDt);
+    frameAt(this.lon, this.lat, _frameNorth, _frameWest);
+    this.velLon = -_motion.dot(_frameWest); this.velLat = _motion.dot(_frameNorth);
+  }
+
   // Live zoom bounds from the player's tuning.
   // A third of the way out: close enough to read the ground, far enough to see
   // the shape of the fight.
@@ -473,9 +520,7 @@ export class OrbitRig {
     _focusDir.set(Math.sin(this.lon) * cosLat, Math.sin(this.lat), Math.cos(this.lon) * cosLat);
     _focusPt.copy(_focusDir).multiplyScalar(R0);
 
-    if (Math.abs(_focusDir.y) < 0.94) _east.set(0, 1, 0); else _east.set(1, 0, 0);
-    _north.crossVectors(_focusDir, _east).normalize();
-    _east.crossVectors(_north, _focusDir).normalize();
+    frameAt(this.lon, this.lat, _east, _north);
     _head.copy(_east).multiplyScalar(Math.cos(this.viewYaw))
       .addScaledVector(_north, Math.sin(this.viewYaw)).normalize();
 
@@ -514,7 +559,9 @@ export class OrbitRig {
     this.camera.position.x += shakeX;
     this.camera.position.y += shakeY;
     this.camera.position.z += shakeZ;
-    this.camera.up.copy(_camDir);
+    // Radial up becomes parallel to the look ray at an overhead view. Use
+    // the carried surface heading so exact top-down framing can still turn.
+    this.camera.up.copy(_head);
     this.camera.lookAt(_focusPt);
     this.camera.updateMatrixWorld();
     this.focusDist = this.camera.position.distanceTo(_focusPt);
@@ -590,37 +637,42 @@ export class OrbitRig {
       project(); const px = _terrainProjected.x, py = _terrainProjected.y;
       const ex = x - px, ey = y - py, error = ex * ex + ey * ey;
       if (error < 1e-9) break;
-      const lon = this.lon, lat = this.lat, eps = 1e-5;
-      this.lon = lon + eps; this._syncCamera(); project();
+      const lon = this.lon, lat = this.lat, yaw = this.viewYaw, eps = 1e-5;
+      focusAt(lon, lat, _solverDir); frameAt(lon, lat, _solverNorth, _solverEast); _solverEast.negate();
+      // Differentiate in two surface directions. A longitude derivative is
+      // zero at the pole, so the old solve could neither grab nor cross it.
+      const trial = (east, north) => {
+        this.lon = lon; this.lat = lat; this.viewYaw = yaw;
+        _solverTarget.copy(_solverDir).addScaledVector(_solverEast, east).addScaledVector(_solverNorth, north).normalize();
+        this._setFocus(_solverTarget); this._syncCamera(); project();
+      };
+      trial(eps, 0);
       const jxx = (_terrainProjected.x - px) / eps, jyx = (_terrainProjected.y - py) / eps;
-      this.lon = lon; this.lat = lat + eps; this._syncCamera(); project();
+      trial(0, eps);
       const jxy = (_terrainProjected.x - px) / eps, jyy = (_terrainProjected.y - py) / eps;
       const det = jxx * jyy - jxy * jyx;
-      this.lat = lat;
-      if (!Number.isFinite(det) || Math.abs(det) < 1e-8) { this._syncCamera(); break; }
+      trial(0, 0);
+      if (!Number.isFinite(det) || Math.abs(det) < 1e-8) break;
       let dl = (ex * jyy - ey * jxy) / det, da = (ey * jxx - ex * jyx) / det;
       const length = Math.hypot(dl, da), scale = length > 0.03 ? 0.03 / length : 1;
       dl *= scale; da *= scale;
       let improved = false;
       for (const fraction of [1, 0.5, 0.25, 0.125]) {
-        this.lon = lon + dl * fraction;
-        this.lat = clamp(lat + da * fraction, -CONFIG.camera.latClamp, CONFIG.camera.latClamp);
-        this._syncCamera(); project();
+        trial(dl * fraction, da * fraction);
         if ((x - _terrainProjected.x) ** 2 + (y - _terrainProjected.y) ** 2 < error) { improved = true; break; }
       }
       if (!improved) {
-        let best = error, bestLon = lon, bestLat = lat;
+        let best = error, bestEast = 0, bestNorth = 0;
         // At a cliff the clearance branch is non-smooth. Probe a bounded
         // neighborhood to leave a local minimum before resuming Newton.
         for (const radius of [0.002, 0.006, 0.018]) for (let j = 0; j < 8; j++) {
           const angle = j * Math.PI / 4;
-          this.lon = lon + Math.cos(angle) * radius;
-          this.lat = clamp(lat + Math.sin(angle) * radius, -CONFIG.camera.latClamp, CONFIG.camera.latClamp);
-          this._syncCamera(); project();
+          const east = Math.cos(angle) * radius, north = Math.sin(angle) * radius;
+          trial(east, north);
           const e = (x - _terrainProjected.x) ** 2 + (y - _terrainProjected.y) ** 2;
-          if (e < best) { best = e; bestLon = this.lon; bestLat = this.lat; }
+          if (e < best) { best = e; bestEast = east; bestNorth = north; }
         }
-        this.lon = bestLon; this.lat = bestLat; this._syncCamera();
+        trial(bestEast, bestNorth);
         if (best >= error) break;
       }
     }
@@ -631,7 +683,6 @@ export class OrbitRig {
   // lens, pitch, view rotation, zoom, and planet size, and self-correcting
   // because the anchor never moves during the gesture.
   panGrab(clientX, clientY, pxMoved = 0) {
-    const prevLat = this.lat, prevLon = this.lon;
     this.cancelFlight();
 
     // Track whether the cursor is on the globe. Leaving it and coming back
@@ -646,7 +697,8 @@ export class OrbitRig {
       this._grabOff = !this.rayHit;
     }
 
-    const startLat = this.lat, startLon = this.lon;
+    const startLat = this.lat, startLon = this.lon, startYaw = this.viewYaw;
+    this.velLon = this.velLat = 0;
     const cl0 = Math.cos(startLat);
     _camStart.set(Math.sin(startLon) * cl0, Math.sin(startLat), Math.cos(startLon) * cl0);
     // Rotating the rig also changes which ray passes through the cursor, so
@@ -661,8 +713,7 @@ export class OrbitRig {
       const cosLat = Math.cos(this.lat);
       _camDir.set(Math.sin(this.lon) * cosLat, Math.sin(this.lat), Math.cos(this.lon) * cosLat);
       _camDir.applyQuaternion(_q).normalize();
-      this.lat = clamp(Math.asin(clamp(_camDir.y, -1, 1)), -CONFIG.camera.latClamp, CONFIG.camera.latClamp);
-      this.lon = Math.atan2(_camDir.x, _camDir.z);
+      this._setFocus(_camDir);
       this._syncCamera();
     }
 
@@ -698,16 +749,12 @@ export class OrbitRig {
         _camStart.y * a + _camDir.y * b2,
         _camStart.z * a + _camDir.z * b2,
       ).normalize();
-      this.lat = clamp(Math.asin(clamp(_camDir.y, -1, 1)), -CONFIG.camera.latClamp, CONFIG.camera.latClamp);
-      this.lon = Math.atan2(_camDir.x, _camDir.z);
+      this.lon = startLon; this.lat = startLat; this.viewYaw = startYaw;
+      this._setFocus(_camDir);
       this._syncCamera();
     }
 
-    let dLon = this.lon - prevLon;
-    while (dLon > Math.PI) dLon -= Math.PI * 2;
-    while (dLon < -Math.PI) dLon += Math.PI * 2;
-    this.velLon = dLon / this.pointerDt;
-    this.velLat = (this.lat - prevLat) / this.pointerDt;
+    this._capturePanVelocity(_camStart);
   }
 
   // Pan by a screen-space pixel delta. Uses the camera's own world basis
@@ -730,18 +777,13 @@ export class OrbitRig {
     if (_up.lengthSq() < 1e-9) _up.crossVectors(_aimDir, _right).normalize();
     else _up.normalize();
 
-    const prevLat = this.lat, prevLon = this.lon;
+    _camStart.copy(_aimDir);
     // grab-the-world: the surface follows the cursor
     _aimDir.addScaledVector(_right, -dx * s.h).addScaledVector(_up, dy * s.v).normalize();
-    this.lat = clamp(Math.asin(clamp(_aimDir.y, -1, 1)), -CONFIG.camera.latClamp, CONFIG.camera.latClamp);
-    this.lon = Math.atan2(_aimDir.x, _aimDir.z);
+    this._setFocus(_aimDir);
 
     if (withInertia) {
-      let dLon = this.lon - prevLon;
-      while (dLon > Math.PI) dLon -= Math.PI * 2;
-      while (dLon < -Math.PI) dLon += Math.PI * 2;
-      this.velLon = dLon / this.pointerDt;
-      this.velLat = (this.lat - prevLat) / this.pointerDt;
+      this._capturePanVelocity(_camStart);
     }
   }
 
@@ -774,7 +816,7 @@ export class OrbitRig {
     while (dLon < -Math.PI) dLon += Math.PI * 2;
     this.flight = {
       fromLon: this.lon, toLon: this.lon + dLon,
-      fromLat: this.lat, toLat: clamp(lat, -CONFIG.camera.latClamp, CONFIG.camera.latClamp),
+      fromLat: this.lat, toLat: lat, fromYaw: this.viewYaw,
       fromDist: this.targetDist,
       toDist: clamp(dist ?? this.targetDist, this.distMin, this.distMax),
       t: 0, dur: REDUCED_MOTION ? 0.01 : dur, ease: easeInOut,
@@ -783,19 +825,18 @@ export class OrbitRig {
   }
 
   introFlight(targetDir = null) {
-    const c = CONFIG.camera;
     let toLon = 0.62, toLat = 0.34;
     if (targetDir) {
-      toLat = clamp(Math.asin(clamp(targetDir.y, -1, 1)), -c.latClamp * 0.85, c.latClamp * 0.85);
+      toLat = Math.asin(clamp(targetDir.y, -1, 1));
       toLon = Math.atan2(targetDir.x, targetDir.z);
     }
     const fromDist = this.distMax;
     this.lon = toLon - 1.1;
-    this.lat = clamp(toLat + 0.28, -c.latClamp, c.latClamp);
+    this.lat = clamp(toLat + 0.28, -Math.PI / 2, Math.PI / 2);
     this.dist = fromDist; this.targetDist = fromDist;
     this.flight = {
       fromLon: this.lon, toLon,
-      fromLat: this.lat, toLat,
+      fromLat: this.lat, toLat, fromYaw: this.viewYaw,
       fromDist, toDist: this.defaultDist,
       t: 0, dur: REDUCED_MOTION ? 0.01 : 3.4, ease: easeOutCubic,
     };
@@ -804,9 +845,20 @@ export class OrbitRig {
   skipFlight() {
     const f = this.flight;
     if (!f) return;
-    this.lon = f.toLon; this.lat = f.toLat;
+    this._flightFocus(f, 1);
     this.dist = f.toDist; this.targetDist = f.toDist;
     this.flight = null;
+  }
+
+  _flightFocus(f, t) {
+    // Great-circle travel has no longitude seam or detour around a pole.
+    // Always transport from the flight's initial frame, so the result does
+    // not depend on frame count or whether the player skips the intro.
+    focusAt(f.fromLon, f.fromLat, _flightFrom); focusAt(f.toLon, f.toLat, _flightTo);
+    _frameQ.setFromUnitVectors(_flightFrom, _flightTo);
+    _q.identity().slerp(_frameQ, t); _flightFrom.applyQuaternion(_q);
+    this.lon = f.fromLon; this.lat = f.fromLat; this.viewYaw = f.fromYaw;
+    this._setFocus(_flightFrom);
   }
 
   addTrauma(amount) {
@@ -832,16 +884,21 @@ export class OrbitRig {
       const f = this.flight;
       f.t = Math.min(1, f.t + dt / f.dur);
       const e = f.ease(f.t);
-      this.lon = lerp(f.fromLon, f.toLon, e);
-      this.lat = lerp(f.fromLat, f.toLat, e);
+      this._flightFocus(f, e);
       this.dist = lerp(f.fromDist, f.toDist, e);
       this.targetDist = this.dist;
       if (f.t >= 1) this.flight = null;
     } else {
       if (!this.dragging) {
-        this.lon += this.velLon * dt + this.autoOrbit * dt;
-        this.lat = clamp(this.lat + this.velLat * dt, -c.latClamp, c.latClamp);
         const damp = Math.exp(-c.inertia * dt);
+        if (this.velLon || this.velLat) {
+          focusAt(this.lon, this.lat, _aimDir); frameAt(this.lon, this.lat, _frameNorth, _frameWest);
+          _motion.copy(_frameNorth).multiplyScalar(this.velLat).addScaledVector(_frameWest, -this.velLon);
+          const speed = _motion.length(), arc = speed * (1 - damp) / c.inertia;
+          _motion.multiplyScalar(Math.sin(arc) / speed);
+          _aimDir.multiplyScalar(Math.cos(arc)).add(_motion).normalize(); this._setFocus(_aimDir);
+        }
+        if (this.autoOrbit) this._setFocus(focusAt(this.lon + this.autoOrbit * dt, this.lat, _aimDir));
         this.velLon *= damp;
         this.velLat *= damp;
         if (Math.abs(this.velLon) < 1e-5) this.velLon = 0;
@@ -859,13 +916,11 @@ export class OrbitRig {
       const cc = this.confine.center;
       const ang = Math.acos(clamp(_aim.dot(cc), -1, 1));
       if (ang > this.confine.maxAng) {
-        const t = this.confine.maxAng / ang;
-        const s = Math.sin(ang);
-        _aim.multiplyScalar(Math.sin(t * ang) / s)
-          .addScaledVector(cc, Math.sin((1 - t) * ang) / s)
-          .normalize();
-        this.lat = Math.asin(clamp(_aim.y, -1, 1));
-        this.lon = Math.atan2(_aim.x, _aim.z);
+        // Quaternion interpolation stays finite even if an interrupted flight
+        // or external focus starts exactly opposite the battlefield center.
+        _frameQ.setFromUnitVectors(cc, _aim);
+        _q.identity().slerp(_frameQ, this.confine.maxAng / ang);
+        _aim.copy(cc).applyQuaternion(_q).normalize(); this._setFocus(_aim);
         this.velLon *= 0.5;
         this.velLat *= 0.5;
         this.confineHits++;
