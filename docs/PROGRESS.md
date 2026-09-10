@@ -17,6 +17,19 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
+Locally verified, publication pending 2026-09-09: Codex on `feature/modular-landform-recipes`, based on preview
+`ffb1831`, owns U31: grouped reusable mountain/canyon/hill/basin recipes,
+independent biome styling and connected inland valley routes. Work covers the
+campaign field, catalogue, shape/route inspection and generator acceptance.
+Verified: 251 tests, 25 formation/route checks, 36 shape comparisons, 15,147
+isolated arrivals across all 99 planets, four profiles, all five maps, placement
+and commander route oracles, plus a legal 15-wave victory and planet-2 arrival.
+Native performance passes; reduced-CPU p99 remains open at 53.1ms. Measured
+startup is 6.14s native / 14.52s throttled. Public V2 identity/behavior remains
+to verify. [Evidence and failures](qa/implementation/MODULAR-LANDFORMS.md),
+[recipe authoring](TERRAIN-RECIPES.md). Prior batches below are published;
+their wider acceptance gates remain open. Usage unmeasured.
+
 Published and live-verified 2026-09-09: Codex on `feature/nest-waves-and-high-ground`, based on
 preview `4ce4f94`, is addressing ordinary nests appearing on mountain slow
 zones, terrain/biome route legibility, elevation-based tower range, and new

@@ -1,6 +1,8 @@
 # Owner brief: current alignment and remaining acceptance
 
-Updated 2026-09-09. Current owner: Codex, `feature/nest-waves-and-high-ground`.
+Updated 2026-09-09. Current owner: Codex, `feature/modular-landform-recipes`.
+The [modular landform ledger](MODULAR-LANDFORMS.md) tracks the U31 follow-up:
+reusable formation groups, independent biomes and connected inland paths.
 The [nest-wave/high-ground ledger](NEST-WAVES-HIGH-GROUND.md) records U28-U30,
 capacity and overlap repairs, all-99 source routes and a fresh legal victory.
 The [terrain/routes/arsenal ledger](TERRAIN-ROUTES-ARSENAL.md) adds the latest
@@ -44,8 +46,14 @@ request identity. Functional verification does not substitute for owner feel.
 | U28 Safe nests and biome routes | Dry clearing and bounded floor approach; generation certifies the full nest schedule; eroded meadow passes and preserved tall crests; 15,147 isolated all-99 arrivals | More seeds, crowded-route balance and optional terrain-affinity species |
 | U29 Elevation range | Shared effective sphere covers the vertical drop plus bounded horizontal reach; UI explains the bonus; previews/upgrades/target boundaries verified | Owner high-ground balance at extreme height |
 | U30 Timed nest waves | Every wave adds sources; survivors add packs; combat countdown, ordered rewards and draft freeze; legal planet-1 victory/extraction | Wider tactics, later planets and full natural campaign |
+| U31 Modular terrain and inland paths | Five reusable formation groups, configurable dimensions/mixes/anchors, independent biome dressing, shared valley joins and an inland cap scout; 25 real-graph checks and 15,147 isolated arrivals | Publication verification in progress; owner landscape composition, broader seeds and tactical balance |
 
 ## Adversarial additions now addressed
+
+- U31 is implemented and awaiting complete integration/public verification.
+  The new generator audit measures dry-floor connectivity and inland approaches,
+  which earlier source-arrival checks did not establish. Larger campaign,
+  device, visual and tactical acceptance remains open.
 
 - Corrected the earlier tree-body claim: removing visible decor left the
   separate forest-density mask intact. Current movement probes cross that mask.

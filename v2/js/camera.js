@@ -533,7 +533,7 @@ export class OrbitRig {
       if (Rc >= floor) break;
       // Re-solve the orbit when clearance raises the eye. Moving just the
       // finished camera changed the view angle and caused a zoom dip.
-      Rc = attempt < 7 ? floor + 0.05 : CONFIG.planetRadius + CONFIG.terrain.range + CONFIG.terrain.canyon + 22;
+      Rc = attempt < 7 ? floor + 0.05 : CONFIG.planetRadius + (this.terrainTop ?? CONFIG.terrain.range + CONFIG.terrain.canyon) + 22;
     }
 
     out.copy(_camDir).multiplyScalar(Rc);return Rc;

@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
+import { createFormationField } from './terrain/formations.js';
+import { formationHeightLimit } from './terrain/recipes.js';
 import {
   makeNoise3D, fbm3, ridged3, mulberry32,
   clamp, lerp, smoothstep,
@@ -26,6 +28,8 @@ const F_WARP = 1.2 * FQ;
 const F_ROLL = 4.3 * FA;
 const F_MOIST = 4.6 * (1 + (FA - 1) * 0.8);
 const F_RIDGE = 2.35 * FQ;
+// The band/rim constants below retain the classic field. Campaign group
+// geometry and authoring settings now live in terrain/recipes.js.
 // The landscape features that shape the war: mountain RANGES that wall a
 // region off except at their passes, and CANYONS, dry corridors between two
 // rim walls that a march is funnelled into. Both are low-frequency so a
@@ -70,7 +74,7 @@ const CANYON_FLOOR = 0.55;
 const CANYON_REACH = CANYON_HALF + CANYON_WALL + RAMP_RUN + RIM_CREST + RIM_FADE;
 const F_FINE = Math.pow(2, CONFIG.terrainDetail) / 3.048;
 const F_FINE2 = F_FINE * 2.476;
-export const TERRAIN_TOP = RANGE_HEIGHT + RIM_LIFT + 8;
+export const TERRAIN_TOP = CONFIG.terrain ? formationHeightLimit(CONFIG.terrain) : RANGE_HEIGHT + RIM_LIFT + 8;
 export const FLIGHT_CEILING = CONFIG.terrain?.flightCeiling ?? Infinity;
 export const FLIGHT_CLEARANCE = 2.6;
 
@@ -89,6 +93,7 @@ export function inBattlefield(dx, dy, dz, margin = 0) {
 }
 
 let nWarp, nBase, nDetail, nRidge, nMoist, nRange, nCanyon, nGap;
+export let FORMATIONS = null;
 
 // Space Battlefield layout: predetermined, balanced platform positions of
 // varying size, regenerated deterministically per seed. Null on ground maps.
@@ -176,53 +181,24 @@ export function initTerrainField(seed) {
   nRange = makeNoise3D(seed ^ 0x3c6ef372);
   nCanyon = makeNoise3D(seed ^ 0x1b873593);
   nGap = makeNoise3D(seed ^ 0x85ebca6b);
+  FORMATIONS = CONFIG.terrain ? createFormationField(seed, R, CONFIG.terrain, CONFIG.terrainKey, CONFIG.terrain.formations) : null;
   if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
-// Campaign relief comes from broad continental, upland and erosion regions.
-// Multiplying a 96m peak by the old warped coast mask and narrow pass bands
-// produced vertical needles. Regions now carry the large shape; small noise
-// only textures it. The smooth shoulders remain the same authoritative field
-// for rendering, movement, placement and flight.
+// Continents carry reusable formation groups, with connected meadow valleys
+// between them. Geometry is independent of the climate/foliage layer below.
+// Fine noise never changes route eligibility. All consumers query this field.
+export function continentalityAt(dx, dy, dz) {
+  return fbm3(nBase, dx * F_CONT, dy * F_CONT, dz * F_CONT, 2) + .12;
+}
 function regionalHeight(dx,dy,dz,includeFine) {
   const profile=CONFIG.terrain;
-  const c=fbm3(nBase,dx*F_CONT,dy*F_CONT,dz*F_CONT,2);
+  const c=continentalityAt(dx,dy,dz);
   const land=smoothstep(-.2+profile.ocean,.18+profile.ocean,c);
-  const inland=smoothstep(-.2+profile.ocean,.8+profile.ocean,c);
+  const inland=smoothstep(-.04+profile.ocean,.5+profile.ocean,c);
   const rolling=fbm3(nDetail,dx*F_ROLL,dy*F_ROLL,dz*F_ROLL,3);
   let h=lerp(-1.65+.5*c,.55,land)+land*rolling*.32;
-  const region=nRange(dx*F_RANGE+23,dy*F_RANGE,dz*F_RANGE);
-  const upland=smoothstep(-.3,.65,region);
-  const erosion=nGap(dx*FQ*1.1+41,dy*FQ*1.1,dz*FQ*1.1);
-  // Broad erosion channels meet the meadow floor; rock crests remain tall
-  // between them. The old 94% reduction left even the deepest alpine passes
-  // several metres above floor routing, creating long hidden detours.
-  const saddle=smoothstep(-.12,.48,erosion);
-  // Broad shoulders carry both weathered hills and rugged ranges. Ridge
-  // detail fades out at the foot and at passes, so a crag cannot turn a
-  // meadow into an isolated pillar or close the floor corridor.
-  const rugged=smoothstep(-.1,.55,nMoist(dx*F_RANGE*.65+71,dy*F_RANGE*.65,dz*F_RANGE*.65));
-  const ridge=1-Math.abs(nRidge(dx*F_RANGE*2.2+11,dy*F_RANGE*2.2,dz*F_RANGE*2.2));
-  const shape=.15*upland+.85*upland*upland;
-  const crags=shape*shape*rugged*(Math.pow(ridge,3)*.65-.12)*(1-saddle);
-  h+=inland*profile.range*(shape+crags)*(1-saddle);
-
-  // A canyon's shoulders grow with its depth. Use a stable regional distance
-  // coordinate, rather than dividing by a rapidly changing local gradient:
-  // that quotient made narrow isolated rims even beside a broad valley.
-  // These are nominal widths; transect QA measures the actual world-space
-  // result instead of treating noise thresholds as measured metres.
-  const cn=nCanyon(dx*F_CANYON+5.5,dy*F_CANYON,dz*F_CANYON);
-  const dist=Math.abs(cn)*R/(F_CANYON*1.65);
-  const half=Math.max(3,profile.canyon*.16);
-  const wall=Math.max(9,profile.canyon*.85);
-  const fade=Math.max(18,profile.canyon*1.6);
-  const ramp=smoothstep(.15,.7,nGap(dx*FQ*1.25+9,dy*FQ*1.25,dz*FQ*1.25));
-  const run=wall*(1+ramp*.7),shoulder=smoothstep(half,half+run,dist);
-  const rim=shoulder*(1-smoothstep(half+run,half+run+fade,dist))*(1-ramp*.75);
-  const uncut=h;
-  h=lerp(h,Math.max(CANYON_FLOOR+rolling*.08,uncut-profile.canyon),(1-shoulder)*inland);
-  h+=inland*rim*profile.canyon;
+  h+=inland*FORMATIONS.height(dx,dy,dz);
   if(includeFine){
     const fine=fbm3(nDetail,dx*F_FINE+53,dy*F_FINE,dz*F_FINE,2);
     const fine2=nDetail(dx*F_FINE2+17,dy*F_FINE2,dz*F_FINE2);
