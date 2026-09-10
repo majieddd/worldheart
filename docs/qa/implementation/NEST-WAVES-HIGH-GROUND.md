@@ -3,7 +3,11 @@
 Updated 2026-09-09. Owner: Codex on `feature/nest-waves-and-high-ground`, based
 on preview `4ce4f94`. This continues [PR #25](https://github.com/majieddd/worldheart/pull/25)
 and the [shared tracker](https://github.com/majieddd/worldheart/issues/1).
-Publication is pending final checks. No main merge; usage unmeasured.
+[PR #26](https://github.com/majieddd/worldheart/pull/26) is published and
+live-verified at [V2](https://majieddd.github.io/worldheart/v2/) from gameplay
+source `8ca222c`, through [deployment 34427910396](https://github.com/majieddd/worldheart/actions/runs/34427910396).
+Documentation-only follow-ups preserve the verified runtime. No main merge;
+usage unmeasured.
 
 ## Implemented
 
@@ -68,6 +72,18 @@ not human feel, continuous rendered performance or all-99 combat completion.
 4. A source retry could otherwise pay repeated early-call bounty. The blocked
    state disables that payout. Queue ownership also preserves owed enemies
    when the pool is full and carries boss/split descendants through rewards.
+
+## Public verification
+
+The deployed game passes 74 behavior/save checks: 19 nest-wave/high-ground/HUD,
+22 native pointer-lock and build comfort, 16 real nest attacks/destruction,
+and 17 deployment/save-isolation checks. All 56 preview and 37 root asset hashes
+match. Main remains `1374122`; the original root game has not changed.
+[Public wave/range](NEST-WAVES-HIGH-GROUND/public-browser.json),
+[comfort](NEST-WAVES-HIGH-GROUND/public-comfort.json),
+[nest attacks](NEST-WAVES-HIGH-GROUND/public-targets.json),
+[save/deployment](NEST-WAVES-HIGH-GROUND/public-preview.json),
+[asset identity](NEST-WAVES-HIGH-GROUND/public-identity.json).
 
 ## Remaining acceptance
 

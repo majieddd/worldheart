@@ -378,7 +378,9 @@ broader meadow passes, height-based range and timed overlapping nest waves.
 All 99 source-route fixtures pass, totaling 15,147 isolated arrivals. A fresh
 legal 15-wave run wins and extracts to planet 2. [Current ledger](qa/implementation/NEST-WAVES-HIGH-GROUND.md)
 retains the intermediate capacity stall and HUD overlap failures, plus the
-corrected checks. Public V2 verification is pending; reduced-CPU, full natural
+corrected checks. [PR #26](https://github.com/majieddd/worldheart/pull/26) is live
+at V2 from gameplay source `8ca222c`; 74 public behavior/save checks and all 93
+preview/root hashes pass. Main stays `1374122`. Reduced-CPU, full natural
 campaign and owner feel acceptance stay open.
 
 Previous 2026-09-09 continuation: Codex on `feature/terrain-routes-and-arsenal`
