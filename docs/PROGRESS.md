@@ -4,9 +4,9 @@ Updated 2026-09-09. This is the collaborator entry point for the owner's new dir
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
-Latest review slices: [99 destinations, PR #16](https://github.com/majieddd/worldheart/pull/16)
-and [terrain camera visibility, PR #17](https://github.com/majieddd/worldheart/pull/17).
-Both are stacked drafts. The production site has not been changed by these PRs.
+Current review: [modular terrain, PR #27](https://github.com/majieddd/worldheart/pull/27),
+stacked on [nest waves/high ground, PR #26](https://github.com/majieddd/worldheart/pull/26).
+Both are drafts. Earlier review slices and their evidence remain below.
 
 **Live development:** [Play V2](https://majieddd.github.io/worldheart/v2/).
 The full implementation stack is now published there from `preview/v2`, while
@@ -17,16 +17,21 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
-Locally verified, publication pending 2026-09-09: Codex on `feature/modular-landform-recipes`, based on preview
+Published and live-verified 2026-09-09: Codex on `feature/modular-landform-recipes`, based on preview
 `ffb1831`, owns U31: grouped reusable mountain/canyon/hill/basin recipes,
 independent biome styling and connected inland valley routes. Work covers the
 campaign field, catalogue, shape/route inspection and generator acceptance.
 Verified: 251 tests, 25 formation/route checks, 36 shape comparisons, 15,147
 isolated arrivals across all 99 planets, four profiles, all five maps, placement
-and commander route oracles, plus a legal 15-wave victory and planet-2 arrival.
+and commander route oracles, plus four linked legal 15-wave victories and a
+planet-5 arrival with 13 weapons. The continuation used earned talents and a
+cautious action policy, not injected resources or skipped waves.
 Native performance passes; reduced-CPU p99 remains open at 53.1ms. Measured
-startup is 6.14s native / 14.52s throttled. Public V2 identity/behavior remains
-to verify. [Evidence and failures](qa/implementation/MODULAR-LANDFORMS.md),
+startup is 6.14s native / 14.52s throttled. [PR #27](https://github.com/majieddd/worldheart/pull/27)
+is live from gameplay source `4e1eaf3` through [deployment 34432028998](https://github.com/majieddd/worldheart/actions/runs/34432028998).
+Public checks pass 74 behavior/save cases, movement and four rendered profiles;
+all 95 preview/original hashes match. Main remains `1374122`; documentation-only
+follow-ups retain this runtime. [Evidence and failures](qa/implementation/MODULAR-LANDFORMS.md),
 [recipe authoring](TERRAIN-RECIPES.md). Prior batches below are published;
 their wider acceptance gates remain open. Usage unmeasured.
 

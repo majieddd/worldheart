@@ -26,8 +26,8 @@ request identity. Functional verification does not substitute for owner feel.
 | U08 Inventory and drops | Four families, seeded drops, two slots and twelve backpack spaces; compare/equip/salvage/full bag; 15 keyboard checks | Continued natural loot frequency and long-session clutter review |
 | U09 Weapon diversity/customization | Head/barrel, grip/stock, cores, rarity and affix tradeoffs; deterministic distribution and live effect checks | More authored mechanical choices only after current family/era balance; not a production-size loot library |
 | U10 Ancient/scifi/empowered arc | Twelve authored family/era assemblies now share connected geometry across first person, commander and loot models; era data, infusion and retention remain | Owner silhouette/animation review and balance of the prototype library |
-| U11 Major peaks | Broad regions retain rounded foothills, with regional craggy upper ridges for mixed ruggedness; 36 shape assertions, four profiles and 99 isolated routes | Owner scale/spectacle approval, broader seeds and startup cost |
-| U12 Canyons | Rounded depth-scaled canyon shoulders, stable regional distance and preserved connected routes; fresh actual planet-2 arrival on revised terrain | Wider strategy/balance on deep routes; a controller loss is not proof of impossibility |
+| U11 Major peaks | Versioned ridge-chain groups retain rounded feet and folded crests; Giant-peaks caps require a major peak inside the battlefield; shape/route checks and a legal alpine victory | Owner scale/spectacle approval, broader seeds and startup/device cost |
+| U12 Canyons | Grouped canyon banks, a meandering dry floor and shared valley outlets; independent biome dressing; legal canyon victory and extraction on the new terrain | Wider strategy/balance on deep routes; a controller loss is not proof of impossibility |
 | U13 Oceans/swimming | Shore hysteresis and shared swim slowdown/route cost; cautious earned-checkpoint run won wave 15 and extracted to planet 5 | Wider strategy/seed balance and owner swim feel; one win does not accept the whole profile |
 | U14 Spherical tower ranges | Reusable translucent veil and restrained orbits use the 3D targeting origin and mortar exclusion; isolated previews follow floor-first routes | Owner readability at extreme height/zoom, clutter and reduced-CPU detour cost |
 | U15 Raised/elemental placement | Stable high ground, restricted hot/cold families, bounded bonuses, clear denial reasons | Broader seed/material-footprint review and balance of strong locations |
@@ -46,11 +46,11 @@ request identity. Functional verification does not substitute for owner feel.
 | U28 Safe nests and biome routes | Dry clearing and bounded floor approach; generation certifies the full nest schedule; eroded meadow passes and preserved tall crests; 15,147 isolated all-99 arrivals | More seeds, crowded-route balance and optional terrain-affinity species |
 | U29 Elevation range | Shared effective sphere covers the vertical drop plus bounded horizontal reach; UI explains the bonus; previews/upgrades/target boundaries verified | Owner high-ground balance at extreme height |
 | U30 Timed nest waves | Every wave adds sources; survivors add packs; combat countdown, ordered rewards and draft freeze; legal planet-1 victory/extraction | Wider tactics, later planets and full natural campaign |
-| U31 Modular terrain and inland paths | Five reusable formation groups, configurable dimensions/mixes/anchors, independent biome dressing, shared valley joins and an inland cap scout; 25 real-graph checks and 15,147 isolated arrivals | Publication verification in progress; owner landscape composition, broader seeds and tactical balance |
+| U31 Modular terrain and inland paths | Five reusable formation groups, configurable dimensions/mixes/anchors, independent biome dressing, shared valley joins and an inland cap scout; 25 real-graph checks, 15,147 isolated arrivals and public V2 verification | Owner landscape composition, broader seeds and tactical balance |
 
 ## Adversarial additions now addressed
 
-- U31 is implemented and awaiting complete integration/public verification.
+- U31 is implemented, published and live-verified at V2 through PR #27.
   The new generator audit measures dry-floor connectivity and inland approaches,
   which earlier source-arrival checks did not establish. Larger campaign,
   device, visual and tactical acceptance remains open.
@@ -86,8 +86,9 @@ request identity. Functional verification does not substitute for owner feel.
 1. Read the current acceptance ledger and latest V2 build identity before editing.
 2. Continue reduced-capability profiling with reproducible workloads; retain
    camera visibility, movement, damage and source-route contracts.
-3. Continue varied legal tactics from the earned planet-5 checkpoint; the ocean
-   now has a win and prior defeats. Separate policy mistakes from balance defects
+3. Continue varied legal tactics from the new modular-terrain earned planet-5
+   checkpoint. Four linked opening victories cover the new terrain cycle.
+   Separate policy mistakes from balance defects
    and retain defeats, stalls and extraction state.
 4. Review the twelve implemented weapon-era silhouettes in first person,
    third person and loot preview; refine owner feedback before expanding content.

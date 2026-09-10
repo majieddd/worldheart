@@ -1,7 +1,11 @@
 # Modular landforms: implementation and acceptance
 
 September 9, 2026. Owner: Codex, `feature/modular-landform-recipes`, based on
-preview `ffb1831`. Status: locally verified; V2 publication pending.
+preview `ffb1831`. Status: published and live-verified at
+[V2](https://majieddd.github.io/worldheart/v2/), gameplay source `4e1eaf3`,
+[PR #27](https://github.com/majieddd/worldheart/pull/27).
+[Deployment 34432028998](https://github.com/majieddd/worldheart/actions/runs/34432028998)
+succeeded. Main remains `1374122`; documentation follow-ups retain this runtime.
 U31 adds grouped reusable formations, separate biome dressing and connected
 inland paths. [Recipe architecture and authoring](../../TERRAIN-RECIPES.md).
 
@@ -38,6 +42,13 @@ owner art/feel, the full natural campaign, device coverage or multiplayer.
   action policy with deterministic time advance and sparse rendering, not blind
   play or an FPS test. The subsequent alpine-only cap guard does not change
   that played Highlands terrain; the all-99 and camera suites include it.
+- Legal continuation on published gameplay source wins planets 2, 3 and 4,
+  then extracts into planet 5 with 13 weapons. The cautious policy bought
+  talents using earned coins and kept normal movement, combat and wave rules.
+  Canyon ends with 20 heart health / 524 kills / 13 nests destroyed; alpine
+  with 22 / 554 / 12; ocean with 20 / 609 / 12. Alpine logs 2.3 seconds of
+  recoverable controller stalls; all three finish with no runtime faults.
+  These four linked victories cover the opening terrain cycle, not all 99.
 - Native 720p stress with 100 enemies, 30 towers and continuous camera motion
   passes: median 67.1 FPS, p99 16.6ms. At 4x CPU, median is 63.3 FPS but p99 is
   53.1ms, so the tail-frame budget remains open. Measured startup is 6.14s native
@@ -45,7 +56,10 @@ owner art/feel, the full natural campaign, device coverage or multiplayer.
   battlefield, not lower-end hardware certification or a controlled FPS A/B.
 - Moving placement passes 64 legal positions and 280 route validations with
   two retained range geometries. Frame p99 is 8.6ms native / 16.2ms at 4x CPU.
-  Public V2 verification is pending.
+  [Public verification](MODULAR-LANDFORMS/public/results.json) passes 74
+  behavior/save checks, 24 spawn headings, twelve forest crossings and four
+  rendered profiles matching local seeds, meshes and peak heights. All 95
+  preview/original asset hashes match the expected builds.
 
 ## Evidence index
 
@@ -56,6 +70,9 @@ owner art/feel, the full natural campaign, device coverage or multiplayer.
 [terrain/flight/placement](MODULAR-LANDFORMS/terrain.json),
 [legal run](MODULAR-LANDFORMS/legal/run.json) and
 [earned planet-2 checkpoint](MODULAR-LANDFORMS/legal/planet-2-checkpoint.json).
+The [continued runs](MODULAR-LANDFORMS/continuation/results.json) and
+[earned planet-5 checkpoint](MODULAR-LANDFORMS/continuation/planet-5-checkpoint.json)
+provide the next collaborator's legal starting point.
 
 Actual rendered inspection views use injected reveal gold and camera placement:
 [Highlands](MODULAR-LANDFORMS/gallery/varied-overview.png),
@@ -94,7 +111,21 @@ They establish visible shapes, not earned upgrades or natural play.
 
 ## Resume / handoff
 
-Start with `docs/PROGRESS.md`, tracker #1 and M3 #5. Run the commands in the
-recipe guide and existing full-run/preview workflow. Publish only a coherent
-verified checkpoint to V2, retaining a stacked draft PR. No main merge.
+Start with `docs/PROGRESS.md`, tracker #1 and M3 #5. The next open engineering
+item is reduced-CPU tail-frame profiling; retain the recorded native/throttled
+workload and distinguish sampling-profiler overhead from budget measurements.
+Owner composition/scale/animation review, broader seeds, later tactics, wider
+devices and full natural campaign acceptance remain open. Resume legal QA with:
+
+```powershell
+$env:WH_NODE_MODULES='C:\Users\Majied LaFleur\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
+# Reuse port 8139 if the dev server is already running; otherwise start it:
+node tools/serve.mjs 8139
+# In another terminal, with the same WH_NODE_MODULES:
+node tools/self-play.mjs 12345 artifacts/modular-next --campaign --planets=1 --weapons --strategy=assault --cautious --talents --sparse-render --checkpoint=docs/qa/implementation/MODULAR-LANDFORMS/continuation/planet-5-checkpoint.json
+```
+
+The saved checkpoint is earned; do not replace it with a later forged state.
+The main rename/release and M6 multiplayer/ports remain later readiness work.
+Follow the standing V2 workflow for subsequent verified checkpoints. No main merge.
 Usage unmeasured.
