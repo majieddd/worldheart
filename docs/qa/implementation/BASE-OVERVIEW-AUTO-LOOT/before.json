@@ -1,0 +1,534 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "scope": "Injected frontier upgrades and loot; actual renderer/projection and normal update transactions",
+  "checks": [
+    {
+      "name": "Level 0 1280x720 heart overview",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 0,
+        "maxNdc": 0.7234871346895734,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 zoom ceiling grows",
+      "ok": true,
+      "actual": {
+        "previous": 0,
+        "next": 46.8
+      }
+    },
+    {
+      "name": "Level 0 1280x720 edge overview",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 0,
+        "maxNdc": 0.905955778659635,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 720x1280 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 45,
+        "maxNdc": 1.3085090656667624,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 720x1280 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 216,
+        "maxNdc": 2.6187373119559223,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 1920x720 heart overview",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 0,
+        "maxNdc": 0.7234871346895734,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 1920x720 edge overview",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 0,
+        "maxNdc": 0.905955778659635,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 1280x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 39,
+        "maxNdc": 1.5211994939341285,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 zoom ceiling grows",
+      "ok": true,
+      "actual": {
+        "previous": 46.8,
+        "next": 112.8
+      }
+    },
+    {
+      "name": "Level 1 1280x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 98,
+        "maxNdc": 1.8625295886452362,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 720x1280 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 129,
+        "maxNdc": 4.012018968268294,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 720x1280 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 266,
+        "maxNdc": 4.313280939169618,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 1920x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 32,
+        "maxNdc": 1.5211994939341285,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 1920x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 54,
+        "maxNdc": 1.8625295886452362,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 1280x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 86,
+        "maxNdc": 3.5733224364015914,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 zoom ceiling grows",
+      "ok": false,
+      "actual": {
+        "previous": 112.8,
+        "next": 112.8
+      }
+    },
+    {
+      "name": "Level 2 1280x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 228,
+        "maxNdc": 2.655780597187419,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 720x1280 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 168,
+        "maxNdc": 11.293463502701327,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 720x1280 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 271,
+        "maxNdc": 5.044003483869728,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 1920x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 74,
+        "maxNdc": 2.3822149576010605,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 1920x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 99,
+        "maxNdc": 2.655780597187419,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 1280x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 121,
+        "maxNdc": 4.619797343199907,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 zoom ceiling grows",
+      "ok": false,
+      "actual": {
+        "previous": 112.8,
+        "next": 112.8
+      }
+    },
+    {
+      "name": "Level 3 1280x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 252,
+        "maxNdc": 6.5164846661632,
+        "behind": 17
+      }
+    },
+    {
+      "name": "Level 3 720x1280 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 176,
+        "maxNdc": 14.600840985915756,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 720x1280 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 274,
+        "maxNdc": 6.5164846661632,
+        "behind": 17
+      }
+    },
+    {
+      "name": "Level 3 1920x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 94,
+        "maxNdc": 3.0798648954666046,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 1920x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 124,
+        "maxNdc": 6.5164846661632,
+        "behind": 17
+      }
+    },
+    {
+      "name": "Level 4 1280x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 144,
+        "maxNdc": 4.574504813527384,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 4 zoom ceiling grows",
+      "ok": false,
+      "actual": {
+        "previous": 112.8,
+        "next": 112.8
+      }
+    },
+    {
+      "name": "Level 4 1280x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 261,
+        "maxNdc": 9.344071693398538,
+        "behind": 34
+      }
+    },
+    {
+      "name": "Level 4 720x1280 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 190,
+        "maxNdc": 14.457694225469265,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 4 720x1280 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 276,
+        "maxNdc": 9.344071693398538,
+        "behind": 34
+      }
+    },
+    {
+      "name": "Level 4 1920x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 117,
+        "maxNdc": 3.5175645200416206,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 4 1920x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 132,
+        "maxNdc": 9.344071693398538,
+        "behind": 34
+      }
+    },
+    {
+      "name": "Level 5 1280x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 147,
+        "maxNdc": 3.9038483046134336,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 5 zoom ceiling grows",
+      "ok": false,
+      "actual": {
+        "previous": 112.8,
+        "next": 112.8
+      }
+    },
+    {
+      "name": "Level 5 1280x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 262,
+        "maxNdc": 6.334612358733703,
+        "behind": 38
+      }
+    },
+    {
+      "name": "Level 5 720x1280 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 192,
+        "maxNdc": 12.338088468901718,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 5 720x1280 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 276,
+        "maxNdc": 7.667511554888659,
+        "behind": 38
+      }
+    },
+    {
+      "name": "Level 5 1920x720 heart overview",
+      "ok": false,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 125,
+        "maxNdc": 3.6518184218153342,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 5 1920x720 edge overview",
+      "ok": false,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 112.8,
+        "dist": 112.8,
+        "outside": 231,
+        "maxNdc": 6.334612358733703,
+        "behind": 38
+      }
+    },
+    {
+      "name": "Nearby weapon enters inventory automatically without equipping",
+      "ok": false,
+      "actual": {
+        "picked": false,
+        "ground": true,
+        "slotsUnchanged": true,
+        "activeUnchanged": true
+      }
+    }
+  ],
+  "faults": [],
+  "pass": false
+}

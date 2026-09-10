@@ -69,6 +69,13 @@ heart can center an exact pole; overhead framing still respects view rotation.
 Configured zoom, lens and pitch defaults remain the player's settings. Regression
 inputs and evidence are in the [polar camera ledger](qa/implementation/POLAR-CAMERA.md).
 
+The next September 10 follow-up (U33) requires the furthest zoom to contain the
+entire unlocked base at every heart level. Fit both viewport axes, elevated
+terrain and the far rim from any allowed focus; prevent the globe from hiding
+that rim at the overview. Keep the close starting altitude and carry an already
+fully zoomed-out view into the new ceiling after an upgrade. Evidence is in the
+[base overview and loot ledger](qa/implementation/BASE-OVERVIEW-AUTO-LOOT.md).
+
 The 2026-09-06 follow-up requires clickable tower controls anchored to the
 selected, hovered or looked-at tower, including first-person possession.
 Checkpoint status cannot cover Upgrade/Sell. Keep a clear keyboard interaction,
@@ -162,8 +169,14 @@ Failure: leave a full-inventory drop visible with a replace/salvage action; neve
 Start with four families: sword, spear, projectile carbine and lobber. Support both melee and ranged loadouts without making every commander use every animation immediately: define compatibility and show it. Commander identities become handling/specialty traits as weapon choice expands. Two equipment slots and twelve carried items are the prototype. Weapon data contains family, era, tier, rarity, seed, compatible part IDs and affixes; keep rendering out of it. Start customization with a striking head/barrel, grip/stock and power core. Parts change reach, arc, cadence, recoil, projectile behavior or resource use with visible costs, not only additive DPS.
 
 Before pickup, hovered or looked-at ground loot should show its actual weapon
-model, comparison stats and compatibility. Pickup and equip are deliberate
-choices; a full bag must retain the drop with actionable feedback.
+model, comparison stats and compatibility. The September 10 follow-up (U34)
+supersedes deliberate pickup: a living campaign commander automatically collects
+weapons within 2.8 world units into the backpack while play is active, in orbit,
+first person or third person. Equip remains deliberate. A full bag retains drops
+with replace/salvage controls; collection cannot interrupt an attack or duplicate
+an item. Pause, draft, defeat and transition states suspend collection. Victory
+salvage uses the existing saved checkpoint and extraction transaction. Crystals
+retain their automatic collection, three-item cargo limit and explicit deposit.
 
 Use ancient, technological and empowered-relic art/behavior sets. The first content pilot shows all three in three representative planets; the provisional full campaign uses planets 1-33, 34-66, 67-99 for the era arcs. At a new era, preserve and upgrade favorite weapons through a bounded infusion path, so a lucky sword does not become instantly disposable. Keep rarity distinct from tier and era. No armor, trading or crafting economy in the first weapon slice.
 

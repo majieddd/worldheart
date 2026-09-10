@@ -97,6 +97,7 @@ export class OrbitRig {
     this.inputBlocked = null;
     this.interactionAge = 10;
     this.frontierTheta = null;   // live cap angle when a mode drives one
+    this.frontierRelief = 0;     // maximum unlocked terrain height, refreshed on expansion
     this.confine = null;         // {center: Vector3, maxAng} battlefield bounds
     this.onWheelOverride = null; // (e) => true to consume the wheel elsewhere
     this.dragClaim = null;       // (e) => true to take this drag for a mode
@@ -309,7 +310,13 @@ export class OrbitRig {
   // A third of the way out: close enough to read the ground, far enough to see
   // the shape of the fight.
   get defaultDist() {
-    return lerp(this.distMin, this.distMax, 0.33);
+    // Expanding the overview ceiling must not push the initial close view
+    // away from the foothold. Retain its previous starting altitude.
+    const ceiling = this.frontierTheta != null
+      ? Math.max(Math.min(CONFIG.planetRadius * this.frontierTheta * FRONTIER_FRAME,
+        CONFIG.planetRadius * CAM_TUNE.maxAlt), this.distMin + 2, this.distMin * 1.6)
+      : this.distMax;
+    return lerp(this.distMin, ceiling, 0.33);
   }
 
   // What the height sliders are multiples of: the size of the thing being
@@ -362,16 +369,15 @@ export class OrbitRig {
   get distMax() {
     const d = this.distMin;
     const planetCeiling = CONFIG.planetRadius * CAM_TUNE.maxAlt;
-    if (this.frontierTheta !== null) {
-      // A growing frontier bounds the ceiling by the TERRITORY, so pulling back
-      // is limited by what you hold and expands as you take ground. The factor
-      // is the measured height at which the default lens and pitch frame a cap
-      // edge to edge, so max zoom always shows the circle and no more. It still
-      // tops out at the planet-relative ceiling: once the whole cap is in frame
-      // extra height buys nothing.
-      const capArc = CONFIG.planetRadius * this.frontierTheta;
-      const framed = Math.min(capArc * FRONTIER_FRAME, planetCeiling);
-      return Math.max(framed, d + 2, d * 1.6);
+    if (this.frontierTheta != null) {
+      // Fit the unlocked cap even while focused at its opposite edge. The
+      // enclosing sphere fits both frustum axes with room around the rim.
+      // The former planet ceiling stopped expansion from increasing zoom.
+      const R = CONFIG.planetRadius, relief = Math.max(0, this.frontierRelief) + 6;
+      const extent = Math.min(Math.PI, this.frontierTheta + (this.confine?.maxAng ?? this.frontierTheta));
+      const bound = Math.hypot(relief, 2 * (R + relief) * Math.sin(extent / 2));
+      const half = Math.atan(Math.tan(CAM_TUNE.fovFar * Math.PI / 360) * Math.min(1, this.camera.aspect) * .88);
+      return Math.max(bound / Math.sin(half), d + 2, d * 1.6);
     }
     // Always leave a usable zoom band, however the two height sliders are set.
     return Math.max(planetCeiling, d + 2, d * 1.15);
@@ -388,6 +394,21 @@ export class OrbitRig {
   // strategic-scale presentation (model swell, icon layer) from this.
   get zoomT() {
     return clamp((this.dist - this.distMin) / Math.max(this.distMax - this.distMin, 1), 0, 1);
+  }
+
+  _viewAngle(zoom = this.zoomT) {
+    const t = zoom * zoom * (3 - 2 * zoom);
+    let overviewFloor = .06;
+    if (this.frontierTheta != null) {
+      // A low far-edge view can frame the base while the planet hides its
+      // far rim. Open the overview above that horizon as it pulls back.
+      const extent = this.frontierTheta + (this.confine?.maxAng ?? this.frontierTheta);
+      const horizon = Math.acos(CONFIG.planetRadius / (CONFIG.planetRadius + this.distMax));
+      overviewFloor = clamp(extent + Math.PI / 2 - horizon + .025, .06, 1.5);
+    }
+    const far = Math.max(CAM_TUNE.viewFar * Math.PI / 180, overviewFloor);
+    return clamp(lerp(CAM_TUNE.viewNear * Math.PI / 180, far, t) - this.tiltOffset,
+      lerp(.06, overviewFloor, t), 1.5);
   }
 
   // Wheel steps are geometric in altitude but normalised to the zoom band, so
@@ -530,7 +551,7 @@ export class OrbitRig {
     // the framing, and its margin stays small enough not to bend a low view.
     _axis.crossVectors(_focusDir, _head).normalize();
     const z = this.zoomT;
-    const requestedView = clamp(lerp(CAM_TUNE.viewNear, CAM_TUNE.viewFar, z * z * (3 - 2 * z)) * Math.PI / 180 - this.tiltOffset, 0.06, 1.5);
+    const requestedView = this._viewAngle(z);
     if(this.heightProbe&&this.surfaceProbe&&!this.dragging){
       const key=[this.lon,this.lat,this.viewYaw,R0,h,requestedView].join('/');
       if(key!==this._visibilityKey){
@@ -555,6 +576,9 @@ export class OrbitRig {
     }
     const view=Math.min(Math.PI/2,requestedView+(this.heightProbe?this.visibilityLift:0));
     this._orbitAt(view,R0,h,this.camera.position);
+
+    const far = Math.max(CONFIG.camera.far, this.camera.position.length() + 2 * (CONFIG.planetRadius + (this.terrainTop || 0)));
+    if (Math.abs(this.camera.far - far) > .1) { this.camera.far = far; this.camera.updateProjectionMatrix(); }
 
     this.camera.position.x += shakeX;
     this.camera.position.y += shakeY;
@@ -943,13 +967,9 @@ export class OrbitRig {
     // or under asin(R/Rc), the horizon, for any world and any height, so the
     // old fraction-of-horizon juggling is no longer needed.
     const zt = this.zoomT;
-    const viewNear = CAM_TUNE.viewNear * (Math.PI / 180);
-    const viewFar = CAM_TUNE.viewFar * (Math.PI / 180);
     // A manual pitch nudge lowers the view toward the horizon, keeping the
     // drag direction it had when it fed the pitch directly.
-    const view = clamp(
-      lerp(viewNear, viewFar, zt * zt * (3 - 2 * zt)) - this.tiltOffset, 0.06, 1.5,
-    );
+    const view = this._viewAngle(zt);
     const groundRadius = this.focusRadius;
     const Rc = groundRadius + Math.max(this.dist, 0.2);
     const tiltTarget = Math.asin(clamp((groundRadius / Rc) * Math.cos(view), -1, 1));

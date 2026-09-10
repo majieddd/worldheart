@@ -71,6 +71,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   let frontierTheta = 0;
 
   function applyFrontier(theta) {
+    const changed = theta !== frontierTheta;
+    const overview = rig.frontierTheta != null && Math.abs(rig.targetDist - rig.distMax) < .01;
     frontierTheta = theta;
     game.frontier = centre ? { centre, theta } : null;
     world.setFieldWallTheta(theta);
@@ -80,6 +82,16 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // pull back grows with the territory they hold.
     rig.frontierTheta = theta;
     if (rig.confine) rig.confine.maxAng = theta * 1.02;
+    if (changed) {
+      // Sample fixed graph heights only on expansion, never during a pan.
+      const edge = Math.cos(theta * 1.02 + .005), dirs = nav.dirs;
+      let peak = 0;
+      for (let i = 0; i < nav.n; i++) {
+        if (dirs[i * 3] * centre.x + dirs[i * 3 + 1] * centre.y + dirs[i * 3 + 2] * centre.z >= edge) peak = Math.max(peak, nav.height[i]);
+      }
+      rig.frontierRelief = peak + 2;
+      if (overview) rig.targetDist = rig.distMax;
+    }
     // Possession reads this to fog the view once a unit walks out past it.
     if (possession) possession.frontier = game.frontier;
     // Keep the walk in roughly constant as the circle grows. Halving the
@@ -451,6 +463,19 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     planet:CONFIG.planetIndex,
     campaign:!!campaign,
   };
+  function collectNearbyWeapons() {
+    if (game.paused || !weaponApi.canInteract()) return;
+    let count = 0;
+    for (const item of nearbyLoot()) {
+      // A full bag leaves the model and identity intact for later salvage.
+      // Automatic collection never chooses equipment or replaces an item.
+      if (!inventory.pickup(item.id)) break;
+      loot.remove(item.id); count++;
+    }
+    if (!count) return;
+    persistSalvage(); ui.audio?.play('coin');
+    ui.toast(`${count === 1 ? 'Weapon' : `${count} weapons`} collected. I to compare and equip.`, 'info');
+  }
   const weaponPanel = new WeaponPanel({game,possession,ui,api:weaponApi,rules:{
     name:weaponName,stats:item=>weaponStats(item,commander.typeKey),inspectStats:item=>weaponStats(item,commander.typeKey,true),parts:PARTS,
     compatible:family=>compatible(commander.typeKey,family),validPart,trait:COMPATIBILITY[commander.typeKey].label,
@@ -808,6 +833,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
       if(inventory.settle(busyWeapon()))persistSalvage(); syncWeapon();
+      collectNearbyWeapons();
       updateCrystals();
       const draft = run.getDraft();
       if (draft) {

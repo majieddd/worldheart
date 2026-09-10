@@ -1,0 +1,33 @@
+[
+  {
+    "attempt": "expanded",
+    "accepted": false,
+    "exitCode": 1,
+    "declaredPass": true,
+    "completedChecks": 55,
+    "faults": [],
+    "reason": "Pending pointer lock blocked post-fixture inventory mouse capture; initial harness omitted thrown error from pass flag"
+  },
+  {
+    "attempt": "final",
+    "accepted": false,
+    "exitCode": 1,
+    "declaredPass": false,
+    "completedChecks": 55,
+    "faults": [
+      "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded."
+    ],
+    "reason": "Frozen animation frame polling could not observe the victory CSS transition"
+  },
+  {
+    "attempt": "retry",
+    "accepted": false,
+    "exitCode": 1,
+    "declaredPass": false,
+    "completedChecks": 55,
+    "faults": [
+      "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded."
+    ],
+    "reason": "Frozen animation frame polling could not observe the victory CSS transition"
+  }
+]

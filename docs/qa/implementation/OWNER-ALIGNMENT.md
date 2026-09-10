@@ -1,6 +1,8 @@
 # Owner brief: current alignment and remaining acceptance
 
-Updated 2026-09-10. Current owner: Codex, `fix/polar-camera-navigation`.
+Updated 2026-09-10. Current owner: Codex, `feature/base-overview-auto-loot`.
+The [base overview and loot ledger](BASE-OVERVIEW-AUTO-LOOT.md) tracks U33-U34:
+zoom that fits each base level and automatic nearby weapon collection.
 The [polar camera ledger](POLAR-CAMERA.md) tracks U32: continuous pan, drag,
 inertia, flights and heading across both poles, with actual frontier limits.
 The [modular landform ledger](MODULAR-LANDFORMS.md) tracks the U31 follow-up:
@@ -42,7 +44,7 @@ request identity. Functional verification does not substitute for owner feel.
 | U22 Tower hover/look UI | Anchored Upgrade/Sell, F/Escape pointer handoff, range checks and checkpoint overlap fixtures | Owner interaction feel and more live combat contexts |
 | U23 Fuller arm/third-person swing | Blocky arm, connected grip-space weapon assembly and torso-led lateral cuts; contact velocity and anatomy checks | Owner full-motion approval |
 | U24 Forgiving commander hitbox | Actual hidden forest-density body mask removed after twelve near-spawn reproductions; nearby-node movement, swept steps and sliding preserve terrain/tower barriers | Wider current-layout obstacle and crowd density feel; older mesh-only controls missed the body mask |
-| U25 Loot hover/inspect/model | Actual cached model preview, comparison, deliberate pickup/equip and full-bag retention | Owner inspection readability and richer weapon silhouettes |
+| U25 Loot hover/inspect/model | Actual cached model preview, comparison and full-bag retention; U34 supersedes deliberate pickup with proximity collection, while equip stays deliberate | Owner inspection readability and richer weapon silhouettes |
 | U26 Physical nest-only spawns | Waves/raids/guardian escorts/splits originate at physical nests; offensive towers now damage established vulnerable nests and pay destruction rewards once | Nest pressure/boss balance, remote-route pacing and natural full campaign |
 | U27 Unit route lines | Actual remaining route shown and removed/recomputed on lifecycle/nav changes | Owner large-squad legibility and performance |
 | U28 Safe nests and biome routes | Dry clearing and bounded floor approach; generation certifies the full nest schedule; eroded meadow passes and preserved tall crests; 15,147 isolated all-99 arrivals | More seeds, crowded-route balance and optional terrain-affinity species |
@@ -50,6 +52,8 @@ request identity. Functional verification does not substitute for owner feel.
 | U30 Timed nest waves | Every wave adds sources; survivors add packs; combat countdown, ordered rewards and draft freeze; legal planet-1 victory/extraction | Wider tactics, later planets and full natural campaign |
 | U31 Modular terrain and inland paths | Five reusable formation groups, configurable dimensions/mixes/anchors, independent biome dressing, shared valley joins and an inland cap scout; 25 real-graph checks, 15,147 isolated arrivals and public V2 verification | Owner landscape composition, broader seeds and tactical balance |
 | U32 Polar camera jumps and blocked pole views | Carried heading, tangent pan/drag/inertia, exact polar flights, stable overhead view and pole-safe confinement; six tests, 16 public browser cases, all five map harnesses and a legal 15-wave victory; live through PR #28 | Owner continuous-input feel and broader device coverage |
+| U33 Base-level overview zoom | Viewport/terrain-aware ceiling grows through all six heart levels and keeps the complete frontier in view from heart or edge; close starting altitude retained; 64 public cases, all five maps, polar cases and legal planet pass; live through PR #29 | Broader owner feel/device coverage |
+| U34 Automatic nearby item collection | Nearby weapons enter the backpack without changing equipment; full bag leaves drops; public pause/death/draft guards and victory reload/extraction pass; legal victory carries 13 weapons to planet 2; crystals retain their existing cargo/deposit rules; live through PR #29 | Broader natural loot-frequency review |
 
 ## Adversarial additions now addressed
 
