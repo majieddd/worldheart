@@ -3,7 +3,11 @@
 Owner: Codex on `fix/polar-camera-navigation`, based on preview `bdd7c81`.
 U32 / [tracker #1](https://github.com/majieddd/worldheart/issues/1) /
 [M1 #3](https://github.com/majieddd/worldheart/issues/3).
-Status: implemented and locally verified, including a full legal planet; publication pending.
+Status: implemented, published and live-verified at [V2](https://majieddd.github.io/worldheart/v2/).
+[PR #28](https://github.com/majieddd/worldheart/pull/28) is stacked on PR #27.
+Gameplay source `95f838f37ed61e900e3e7a34cb828baa806d7b60` was published by
+[deployment 34447445692](https://github.com/majieddd/worldheart/actions/runs/34447445692).
+Documentation-only follow-ups preserve this tested runtime. Main remains `1374122`.
 
 ## Report and reproduction
 
@@ -79,6 +83,13 @@ Durable records are in [POLAR-CAMERA/](POLAR-CAMERA/).
 Browser frames are deterministic and sparsely rendered. Screenshots were inspected
 alongside pose/error traces; these are not human feel or performance-budget claims.
 
+Public V2 passes the same 16 polar/input cases with no browser faults. The public
+record is [public/results.json](POLAR-CAMERA/public/results.json).
+[Public identity](POLAR-CAMERA/public/identity.json) verifies all 95 preview/original
+asset hashes plus direct source comparisons for camera/config, 97 checks total.
+CI source checks, Pages build and deployment passed. Original main source and
+root game bytes are preserved; no gameplay PR was merged.
+
 ## Corrections and limits
 
 The first polar screenshots showed the real exploration cloud cover instead of
@@ -92,8 +103,7 @@ test now allows half of its separately bounded step and proves the meridian was
 crossed; exact pole focusing has its own zero-error assertion. No movement limit
 was relaxed to make the test pass.
 
-Remaining: public V2 verification for this checkpoint.
-Broader owner camera feel, CPU frame spikes, device coverage and full natural
+This bounded camera repair is complete. Broader owner camera feel, CPU frame spikes, device coverage and full natural
 campaign acceptance remain in the original tracker. No main merge. Usage unmeasured.
 
 ## Resume commands

@@ -49,7 +49,7 @@ request identity. Functional verification does not substitute for owner feel.
 | U29 Elevation range | Shared effective sphere covers the vertical drop plus bounded horizontal reach; UI explains the bonus; previews/upgrades/target boundaries verified | Owner high-ground balance at extreme height |
 | U30 Timed nest waves | Every wave adds sources; survivors add packs; combat countdown, ordered rewards and draft freeze; legal planet-1 victory/extraction | Wider tactics, later planets and full natural campaign |
 | U31 Modular terrain and inland paths | Five reusable formation groups, configurable dimensions/mixes/anchors, independent biome dressing, shared valley joins and an inland cap scout; 25 real-graph checks, 15,147 isolated arrivals and public V2 verification | Owner landscape composition, broader seeds and tactical balance |
-| U32 Polar camera jumps and blocked pole views | Carried heading, tangent pan/drag/inertia, exact polar flights, stable overhead view and pole-safe confinement; six tests, 16 browser cases, all five map harnesses and a legal 15-wave victory pass locally | Public verification pending; owner continuous-input feel |
+| U32 Polar camera jumps and blocked pole views | Carried heading, tangent pan/drag/inertia, exact polar flights, stable overhead view and pole-safe confinement; six tests, 16 public browser cases, all five map harnesses and a legal 15-wave victory; live through PR #28 | Owner continuous-input feel and broader device coverage |
 
 ## Adversarial additions now addressed
 
