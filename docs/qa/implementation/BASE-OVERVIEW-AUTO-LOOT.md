@@ -4,7 +4,11 @@ Owner: Codex on `feature/base-overview-auto-loot`, based on preview `036c57c`.
 U33-U34 / [tracker #1](https://github.com/majieddd/worldheart/issues/1) /
 [M1 #3](https://github.com/majieddd/worldheart/issues/3) /
 [M4 #6](https://github.com/majieddd/worldheart/issues/6).
-Status: implemented and locally verified; public verification in progress.
+Status: implemented, published and live-verified at [V2](https://majieddd.github.io/worldheart/v2/).
+[PR #29](https://github.com/majieddd/worldheart/pull/29) is stacked on PR #28.
+Gameplay source `c9057b381c69beb6e49f59cc99675b1328baee47` was published by
+[deployment 34450317178](https://github.com/majieddd/worldheart/actions/runs/34450317178).
+Documentation-only follow-ups retain this runtime. Main remains `1374122`.
 
 ## Behavior and boundaries
 
@@ -45,6 +49,7 @@ Records are in [BASE-OVERVIEW-AUTO-LOOT/](BASE-OVERVIEW-AUTO-LOOT/).
 - `local.json`: 64 checks pass. Actual rendered terrain projections at heart
   levels 0-5, from heart and edge, in 1280x720, 720x1280 and 1920x720. Each pose
   samples 288 points. All samples fit with margin and clear the globe horizon.
+  Five additional cases retain the fully zoomed-out target after an upgrade.
   The same driver covers pickup in three control views, pause, death, draft,
   vertical/distant drops, busy attacks, full bag and later collection, duplicate
   rejection, keyboard inventory and saved victory/reload/extraction to planet 2.
@@ -69,6 +74,13 @@ Framing, loot and terminal-state cases inject bounded fixtures and advance
 deterministic frames. They are source-informed QA, not blind or natural campaign
 completion. Screenshot inspection supports the pose/transaction measurements.
 No frame-budget, human camera-feel or full 99-planet acceptance claim is made.
+
+Public V2 passes the same 64 cases with no browser faults; see
+[public/results.json](BASE-OVERVIEW-AUTO-LOOT/public/results.json).
+[Public identity](BASE-OVERVIEW-AUTO-LOOT/public/identity.json) verifies 95
+preview/original asset hashes plus direct camera, mode and weapon-UI source
+comparisons, 98 checks total. Review CI, Pages build and deployment pass.
+No gameplay PR was merged into main and the original root bytes are preserved.
 
 ## Retained test corrections
 

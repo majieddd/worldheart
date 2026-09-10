@@ -4,8 +4,8 @@ Updated 2026-09-10. This is the collaborator entry point for the owner's new dir
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
-Current review: [polar camera, PR #28](https://github.com/majieddd/worldheart/pull/28),
-stacked on [modular terrain, PR #27](https://github.com/majieddd/worldheart/pull/27).
+Current review: [base overview and automatic loot, PR #29](https://github.com/majieddd/worldheart/pull/29),
+stacked on [polar camera, PR #28](https://github.com/majieddd/worldheart/pull/28).
 Both are drafts. Earlier review slices and their evidence remain below.
 
 **Live development:** [Play V2](https://majieddd.github.io/worldheart/v2/).
@@ -17,7 +17,7 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
-Implemented and locally verified 2026-09-10: Codex on
+Published and live-verified 2026-09-10: Codex on
 `feature/base-overview-auto-loot`, based on preview `036c57c`, owns U33-U34.
 The furthest zoom now fits all six base levels using viewport shape, unlocked
 terrain and the allowed focus area. Living commanders automatically collect
@@ -27,7 +27,10 @@ Local checks pass 64 framing/pickup/save cases, all five map camera harnesses,
 16 pole/input cases, 29 weapon checks, 16 crystal checks and all 260 tests.
 A legal 15-wave victory retained 24 heart health, destroyed 12 nests and extracted
 13 weapons to planet 2 with no runtime faults or controller stalls. Generated
-builds match all 58 source files. Public V2 verification remains in progress.
+builds match all 58 source files. [PR #29](https://github.com/majieddd/worldheart/pull/29)
+is live from gameplay source `c9057b3` through [deployment 34450317178](https://github.com/majieddd/worldheart/actions/runs/34450317178).
+All 64 public behavior cases and 98 public identity/source comparisons pass.
+Main remains `1374122`; documentation-only follow-ups retain this tested runtime.
 [Evidence and handoff](qa/implementation/BASE-OVERVIEW-AUTO-LOOT.md).
 
 Published and live-verified 2026-09-10: Codex on `fix/polar-camera-navigation`,
