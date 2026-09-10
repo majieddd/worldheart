@@ -1,6 +1,8 @@
 # Owner brief: current alignment and remaining acceptance
 
-Updated 2026-09-09. Current owner: Codex, `feature/modular-landform-recipes`.
+Updated 2026-09-10. Current owner: Codex, `fix/polar-camera-navigation`.
+The [polar camera ledger](POLAR-CAMERA.md) tracks U32: continuous pan, drag,
+inertia, flights and heading across both poles, with actual frontier limits.
 The [modular landform ledger](MODULAR-LANDFORMS.md) tracks the U31 follow-up:
 reusable formation groups, independent biomes and connected inland paths.
 The [nest-wave/high-ground ledger](NEST-WAVES-HIGH-GROUND.md) records U28-U30,
@@ -47,6 +49,7 @@ request identity. Functional verification does not substitute for owner feel.
 | U29 Elevation range | Shared effective sphere covers the vertical drop plus bounded horizontal reach; UI explains the bonus; previews/upgrades/target boundaries verified | Owner high-ground balance at extreme height |
 | U30 Timed nest waves | Every wave adds sources; survivors add packs; combat countdown, ordered rewards and draft freeze; legal planet-1 victory/extraction | Wider tactics, later planets and full natural campaign |
 | U31 Modular terrain and inland paths | Five reusable formation groups, configurable dimensions/mixes/anchors, independent biome dressing, shared valley joins and an inland cap scout; 25 real-graph checks, 15,147 isolated arrivals and public V2 verification | Owner landscape composition, broader seeds and tactical balance |
+| U32 Polar camera jumps and blocked pole views | Carried heading, tangent pan/drag/inertia, exact polar flights, stable overhead view and pole-safe confinement; six tests, 16 public browser cases, all five map harnesses and a legal 15-wave victory; live through PR #28 | Owner continuous-input feel and broader device coverage |
 
 ## Adversarial additions now addressed
 

@@ -61,6 +61,14 @@ Outputs: presentation camera pose, context-specific hints and selection focus; n
 Edge cases: paused zoom, interrupted portal flight, extreme peak, canopy, 180-degree turn, pointer-lock refusal, overlapping unit/tower, UI focus.
 Failure: retain a valid collision-safe pose and restore input ownership. Add a distinct Return to heart action; R remains explicitly labelled Reset rotation. Prefer a breach ping over forced flight during active targeting. Provide separate bob, shake and automatic-focus controls.
 
+The September 10 polar navigation report (U32) requires continuous screen-relative
+pan across both poles and the longitude seam. Carry the camera heading with its
+surface focus, use tangent displacement for drag/inertia, and apply the actual
+battlefield boundary without a separate latitude fence. Flights and Return to
+heart can center an exact pole; overhead framing still respects view rotation.
+Configured zoom, lens and pitch defaults remain the player's settings. Regression
+inputs and evidence are in the [polar camera ledger](qa/implementation/POLAR-CAMERA.md).
+
 The 2026-09-06 follow-up requires clickable tower controls anchored to the
 selected, hovered or looked-at tower, including first-person possession.
 Checkpoint status cannot cover Upgrade/Sell. Keep a clear keyboard interaction,

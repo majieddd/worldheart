@@ -147,7 +147,6 @@ export const CONFIG = {
     // keep the full planet in frame at 30 degrees.
     distMax: Math.min(R0 * 4.6, 620),
     distStart: R0 * 2.15,
-    latClamp: 1.42,      // radians, keeps the orbit off the exact poles
     rotSpeed: 0.0052,
     inertia: 6.5,        // exponential damping rate for released drags
     zoomDamp: 5.5,       // lower glides further; the wheel should feel eased
