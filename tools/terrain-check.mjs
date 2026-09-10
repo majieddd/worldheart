@@ -31,7 +31,10 @@ try {
         const h = n.height[i];
         if (h > high) { high = h; peak = i; }
         low = Math.min(low, h);
-        if (h < -0.7) { water++; if (n.walk[i]) wetNode = i; }
+        if (h < -0.7) water++;
+        // Fine relief can put a visually wet sample on the swim hysteresis
+        // boundary. Compare both inputs from the same deep gameplay surface.
+        if (n.baseHeight[i] < -.85 && n.walk[i]) wetNode = i;
         if (!n.airWalk[i]) blockedAir++;
         if (n.walk[i] && h > 2.05) raised++;
         if (i % 11 !== 0 || h < 1.5) continue;
@@ -60,10 +63,11 @@ try {
       const a = W.allies.active.find(a => a.type.commander);
       if (wetNode >= 0) {
         n.nodeDir(wetNode, a.dir); a.fwd.addScaledVector(a.dir, -a.fwd.dot(a.dir)).normalize();
-        W.allies._ground(a);
+        a.swimming = false; a.moveNode = -1; W.allies._ground(a);
         const start = a.dir.clone(), heading = a.fwd.clone();
         W.allies.driveUnit(a, 1, 0, 0.05, 1); const ordinary = start.angleTo(a.dir);
-        a.dir.copy(start); a.fwd.copy(heading); W.allies.driveUnit(a, 1, 0, 0.05, 1.45);
+        a.dir.copy(start); a.fwd.copy(heading); a.swimming = false; a.moveNode = -1; W.allies._ground(a);
+        W.allies.driveUnit(a, 1, 0, 0.05, 1.45);
         const sprint = start.angleTo(a.dir);
         const probe=a.dir.clone().addScaledVector(a.fwd,.05/world.R).normalize();
         check('Water enters swimming and refuses sprint speed', a.swimming && ordinary > 0 && Math.abs(sprint / ordinary - 1) < 0.001, { ordinary, sprint, swimming: a.swimming, boundary: a.dir.angleTo(world.BATTLEFIELD.center), cap: world.BATTLEFIELD.theta, height: world.terrainHeight(a.dir.x,a.dir.y,a.dir.z,false), factor: world.surfaceTravel(a,a.fwd), masked: n._buildGraph.toString().includes('stitching'), to:world.terrainHeight(probe.x,probe.y,probe.z,false), probe:world.inBattlefield(probe.x,probe.y,probe.z), bearing:a.fwd.toArray() });

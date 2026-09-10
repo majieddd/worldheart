@@ -1,0 +1,806 @@
+[
+  {
+    "profile": "varied",
+    "seed": 36102,
+    "attempts": 4,
+    "high": 30.761737823486328,
+    "low": -1.9850399494171143,
+    "water": 51594,
+    "raised": 23335,
+    "sites": {
+      "cold": {
+        "node": 616,
+        "type": "cryo",
+        "height": 4.240110874176025
+      },
+      "neutral": {
+        "node": 660,
+        "type": "bolt",
+        "height": 1.575804591178894
+      },
+      "hot": {
+        "node": 2805,
+        "type": "mortar",
+        "height": 2.326810598373413
+      }
+    },
+    "checks": [
+      {
+        "name": "Begin remains visible at 720p",
+        "ok": true,
+        "actual": {
+          "bottom": 686.1875
+        }
+      },
+      {
+        "name": "Highest peak can be picked",
+        "ok": true,
+        "actual": {
+          "high": 30.761737823486328,
+          "hitHeight": 30.761736924552906,
+          "shell": 42.3088
+        }
+      },
+      {
+        "name": "Orbit focus and camera clearance follow the highest mountain",
+        "ok": true,
+        "actual": {
+          "focus": 30.761737024702768,
+          "clearance": 12.363460928243576
+        }
+      },
+      {
+        "name": "Ground can be traversed above the former height cutoff",
+        "ok": true,
+        "actual": 23335
+      },
+      {
+        "name": "All ground portals reach the base",
+        "ok": true,
+        "actual": [
+          171.8325958251953,
+          138.9585418701172,
+          147.01011657714844,
+          74.76133728027344,
+          145.96417236328125
+        ]
+      },
+      {
+        "name": "All flyer portals reach the base on their own graph",
+        "ok": true,
+        "actual": [
+          129.18446350097656,
+          132.8101348876953,
+          145.36798095703125,
+          72.24716186523438,
+          129.7868194580078
+        ]
+      },
+      {
+        "name": "Some extreme mountains exclude flyers",
+        "ok": true,
+        "actual": {
+          "blockedAir": 19781,
+          "ceiling": 22
+        }
+      },
+      {
+        "name": "cold stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 616,
+          "type": "cryo",
+          "height": 4.240110874176025
+        }
+      },
+      {
+        "name": "cold refuses a Bolt footprint",
+        "ok": true
+      },
+      {
+        "name": "neutral stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 660,
+          "type": "bolt",
+          "height": 1.575804591178894
+        }
+      },
+      {
+        "name": "hot stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 2805,
+          "type": "mortar",
+          "height": 2.326810598373413
+        }
+      },
+      {
+        "name": "hot refuses a Bolt footprint",
+        "ok": true
+      },
+      {
+        "name": "Water enters swimming and refuses sprint speed",
+        "ok": true,
+        "actual": {
+          "ordinary": 0.0004061992249522274,
+          "sprint": 0.0004061992249522274,
+          "swimming": true,
+          "boundary": 0.2521343058008149,
+          "cap": 0.52,
+          "height": -0.8649945059060844,
+          "factor": 0.5999250093738283,
+          "masked": true,
+          "to": -0.8676518538570777,
+          "probe": true,
+          "bearing": [
+            -0.06508334139412586,
+            -0.07238173516009272,
+            0.9952512462128293
+          ]
+        }
+      },
+      {
+        "name": "Commander route reaches a portal without overwriting enemy flow",
+        "ok": true,
+        "actual": 271
+      },
+      {
+        "name": "Tower footprints cannot rewrite flyer routes",
+        "ok": true
+      },
+      {
+        "name": "Placed Mortar consumes the elemental bonus",
+        "ok": true,
+        "actual": 44.96499999999999
+      },
+      {
+        "name": "Range orbit and minimum exclusion match actual stats",
+        "ok": true
+      },
+      {
+        "name": "Depth-clipped range veil follows the actual range boundary",
+        "ok": true,
+        "actual": {
+          "radius": 9.996584629873057,
+          "vertices": 1225,
+          "error": 3.3492478301866413e-7
+        }
+      },
+      {
+        "name": "Depth-clipped range veil follows the actual range boundary",
+        "ok": true,
+        "actual": {
+          "radius": 2.3,
+          "vertices": 1225,
+          "error": 7.705902804744369e-8
+        }
+      },
+      {
+        "name": "Sphere acquires at the true vertical range",
+        "ok": true
+      },
+      {
+        "name": "Existing target has the documented retention margin",
+        "ok": true
+      },
+      {
+        "name": "A new target outside the sphere is refused",
+        "ok": true
+      },
+      {
+        "name": "Retention cannot extend beyond 4.9 percent",
+        "ok": true
+      },
+      {
+        "name": "Mortar refuses its visible inner exclusion",
+        "ok": true
+      }
+    ],
+    "bootMs": 8795,
+    "faults": []
+  },
+  {
+    "profile": "alpine",
+    "seed": 44021,
+    "attempts": 5,
+    "high": 97.87068176269531,
+    "low": -1.895733118057251,
+    "water": 35223,
+    "raised": 32897,
+    "sites": {
+      "cold": {
+        "node": 22,
+        "type": "cryo",
+        "height": 2.798771381378174
+      },
+      "neutral": {
+        "node": 176,
+        "type": "bolt",
+        "height": 26.99909210205078
+      },
+      "hot": {
+        "node": 1980,
+        "type": "mortar",
+        "height": 1.7916637659072876
+      }
+    },
+    "checks": [
+      {
+        "name": "Begin remains visible at 720p",
+        "ok": true,
+        "actual": {
+          "bottom": 686.1875
+        }
+      },
+      {
+        "name": "Highest peak can be picked",
+        "ok": true,
+        "actual": {
+          "high": 97.87068176269531,
+          "hitHeight": 97.87067901049909,
+          "shell": 140.20159999999998
+        }
+      },
+      {
+        "name": "Orbit focus and camera clearance follow the highest mountain",
+        "ok": true,
+        "actual": {
+          "focus": 97.87067902857387,
+          "clearance": 7.36678115586669
+        }
+      },
+      {
+        "name": "Ground can be traversed above the former height cutoff",
+        "ok": true,
+        "actual": 32897
+      },
+      {
+        "name": "All ground portals reach the base",
+        "ok": true,
+        "actual": [
+          162.1074981689453,
+          158.9147491455078,
+          151.58851623535156,
+          145.22769165039062,
+          143.01495361328125
+        ]
+      },
+      {
+        "name": "All flyer portals reach the base on their own graph",
+        "ok": true,
+        "actual": [
+          131.12803649902344,
+          128.25448608398438,
+          138.874267578125,
+          132.7936248779297,
+          134.17181396484375
+        ]
+      },
+      {
+        "name": "Some extreme mountains exclude flyers",
+        "ok": true,
+        "actual": {
+          "blockedAir": 26945,
+          "ceiling": 38
+        }
+      },
+      {
+        "name": "cold stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 22,
+          "type": "cryo",
+          "height": 2.798771381378174
+        }
+      },
+      {
+        "name": "cold refuses a Bolt footprint",
+        "ok": true
+      },
+      {
+        "name": "neutral stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 176,
+          "type": "bolt",
+          "height": 26.99909210205078
+        }
+      },
+      {
+        "name": "hot stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 1980,
+          "type": "mortar",
+          "height": 1.7916637659072876
+        }
+      },
+      {
+        "name": "hot refuses a Bolt footprint",
+        "ok": true
+      },
+      {
+        "name": "Water enters swimming and refuses sprint speed",
+        "ok": true,
+        "actual": {
+          "ordinary": 0.00040619922440558775,
+          "sprint": 0.00040619922440558775,
+          "swimming": true,
+          "boundary": 0.4288735682482426,
+          "cap": 0.52,
+          "height": -0.9180118409186566,
+          "factor": 0.5999250093738283,
+          "masked": true,
+          "to": -0.910540339505905,
+          "probe": true,
+          "bearing": [
+            0.07437018943770946,
+            -0.06280940894019074,
+            0.9952507488425132
+          ]
+        }
+      },
+      {
+        "name": "Commander route reaches a portal without overwriting enemy flow",
+        "ok": true,
+        "actual": 248
+      },
+      {
+        "name": "Tower footprints cannot rewrite flyer routes",
+        "ok": true
+      },
+      {
+        "name": "Placed Mortar consumes the elemental bonus",
+        "ok": true,
+        "actual": 44.96499999999999
+      },
+      {
+        "name": "Range orbit and minimum exclusion match actual stats",
+        "ok": true
+      },
+      {
+        "name": "Depth-clipped range veil follows the actual range boundary",
+        "ok": true,
+        "actual": {
+          "radius": 10.027887734478067,
+          "vertices": 1225,
+          "error": 3.359735565311439e-7
+        }
+      },
+      {
+        "name": "Depth-clipped range veil follows the actual range boundary",
+        "ok": true,
+        "actual": {
+          "radius": 2.3,
+          "vertices": 1225,
+          "error": 7.705902760335448e-8
+        }
+      },
+      {
+        "name": "Sphere acquires at the true vertical range",
+        "ok": true
+      },
+      {
+        "name": "Existing target has the documented retention margin",
+        "ok": true
+      },
+      {
+        "name": "A new target outside the sphere is refused",
+        "ok": true
+      },
+      {
+        "name": "Retention cannot extend beyond 4.9 percent",
+        "ok": true
+      },
+      {
+        "name": "Mortar refuses its visible inner exclusion",
+        "ok": true
+      }
+    ],
+    "bootMs": 6425,
+    "faults": []
+  },
+  {
+    "profile": "canyon",
+    "seed": 36102,
+    "attempts": 4,
+    "high": 29.076087951660156,
+    "low": -1.9330519437789917,
+    "water": 50265,
+    "raised": 27898,
+    "sites": {
+      "cold": {
+        "node": 143,
+        "type": "cryo",
+        "height": 3.3454067707061768
+      },
+      "neutral": {
+        "node": 341,
+        "type": "bolt",
+        "height": 2.572075128555298
+      },
+      "hot": {
+        "node": 440,
+        "type": "mortar",
+        "height": 4.6425299644470215
+      }
+    },
+    "checks": [
+      {
+        "name": "Begin remains visible at 720p",
+        "ok": true,
+        "actual": {
+          "bottom": 686.1875
+        }
+      },
+      {
+        "name": "Highest peak can be picked",
+        "ok": true,
+        "actual": {
+          "high": 29.076087951660156,
+          "hitHeight": 29.076090198790553,
+          "shell": 78.494
+        }
+      },
+      {
+        "name": "Orbit focus and camera clearance follow the highest mountain",
+        "ok": true,
+        "actual": {
+          "focus": 29.076090268663847,
+          "clearance": 9.488708931243604
+        }
+      },
+      {
+        "name": "Ground can be traversed above the former height cutoff",
+        "ok": true,
+        "actual": 27898
+      },
+      {
+        "name": "All ground portals reach the base",
+        "ok": true,
+        "actual": [
+          199.88668823242188,
+          146.41539001464844,
+          145.59165954589844,
+          134.75035095214844,
+          145.72633361816406
+        ]
+      },
+      {
+        "name": "All flyer portals reach the base on their own graph",
+        "ok": true,
+        "actual": [
+          139.14328002929688,
+          142.507568359375,
+          127.37700653076172,
+          130.0775909423828,
+          138.83383178710938
+        ]
+      },
+      {
+        "name": "Some extreme mountains exclude flyers",
+        "ok": true,
+        "actual": {
+          "blockedAir": 17405,
+          "ceiling": 26
+        }
+      },
+      {
+        "name": "cold stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 143,
+          "type": "cryo",
+          "height": 3.3454067707061768
+        }
+      },
+      {
+        "name": "cold refuses a Bolt footprint",
+        "ok": true
+      },
+      {
+        "name": "neutral stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 341,
+          "type": "bolt",
+          "height": 2.572075128555298
+        }
+      },
+      {
+        "name": "hot stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 440,
+          "type": "mortar",
+          "height": 4.6425299644470215
+        }
+      },
+      {
+        "name": "hot refuses a Bolt footprint",
+        "ok": true
+      },
+      {
+        "name": "Water enters swimming and refuses sprint speed",
+        "ok": true,
+        "actual": {
+          "ordinary": 0.0004061992252255473,
+          "sprint": 0.0004061992252255473,
+          "swimming": true,
+          "boundary": 0.5156586659970416,
+          "cap": 0.52,
+          "height": -1.7728185926305169,
+          "factor": 0.5999250093738283,
+          "masked": true,
+          "to": -1.7728562558874028,
+          "probe": true,
+          "bearing": [
+            -0.4700298039322792,
+            0.053924812985077286,
+            0.8810017582047766
+          ]
+        }
+      },
+      {
+        "name": "Commander route reaches a portal without overwriting enemy flow",
+        "ok": true,
+        "actual": 256
+      },
+      {
+        "name": "Tower footprints cannot rewrite flyer routes",
+        "ok": true
+      },
+      {
+        "name": "Placed Mortar consumes the elemental bonus",
+        "ok": true,
+        "actual": 44.96499999999999
+      },
+      {
+        "name": "Range orbit and minimum exclusion match actual stats",
+        "ok": true
+      },
+      {
+        "name": "Depth-clipped range veil follows the actual range boundary",
+        "ok": true,
+        "actual": {
+          "radius": 10.126649401084414,
+          "vertices": 1225,
+          "error": 3.392824599046662e-7
+        }
+      },
+      {
+        "name": "Depth-clipped range veil follows the actual range boundary",
+        "ok": true,
+        "actual": {
+          "radius": 2.3,
+          "vertices": 1225,
+          "error": 7.705902982380053e-8
+        }
+      },
+      {
+        "name": "Sphere acquires at the true vertical range",
+        "ok": true
+      },
+      {
+        "name": "Existing target has the documented retention margin",
+        "ok": true
+      },
+      {
+        "name": "A new target outside the sphere is refused",
+        "ok": true
+      },
+      {
+        "name": "Retention cannot extend beyond 4.9 percent",
+        "ok": true
+      },
+      {
+        "name": "Mortar refuses its visible inner exclusion",
+        "ok": true
+      }
+    ],
+    "bootMs": 6312,
+    "faults": []
+  },
+  {
+    "profile": "ocean",
+    "seed": 59859,
+    "attempts": 7,
+    "high": 5.367208957672119,
+    "low": -1.9530940055847168,
+    "water": 57541,
+    "raised": 9604,
+    "sites": {
+      "hot": {
+        "node": 176,
+        "type": "mortar",
+        "height": 3.699639081954956
+      },
+      "neutral": {
+        "node": 297,
+        "type": "bolt",
+        "height": 2.0699548721313477
+      },
+      "cold": {
+        "node": 5225,
+        "type": "cryo",
+        "height": 2.0059962272644043
+      }
+    },
+    "checks": [
+      {
+        "name": "Begin remains visible at 720p",
+        "ok": true,
+        "actual": {
+          "bottom": 686.1875
+        }
+      },
+      {
+        "name": "Highest peak can be picked",
+        "ok": true,
+        "actual": {
+          "high": 5.367208957672119,
+          "hitHeight": 5.367209413488268,
+          "shell": 25.0336
+        }
+      },
+      {
+        "name": "Orbit focus and camera clearance follow the highest mountain",
+        "ok": true,
+        "actual": {
+          "focus": 5.367209472100768,
+          "clearance": 6.434271714471016
+        }
+      },
+      {
+        "name": "Ground can be traversed above the former height cutoff",
+        "ok": true,
+        "actual": 9604
+      },
+      {
+        "name": "All ground portals reach the base",
+        "ok": true,
+        "actual": [
+          172.9547119140625,
+          141.66281127929688,
+          120.28520202636719,
+          99.5396728515625,
+          146.65863037109375
+        ]
+      },
+      {
+        "name": "All flyer portals reach the base on their own graph",
+        "ok": true,
+        "actual": [
+          125.50240325927734,
+          135.65309143066406,
+          116.51294708251953,
+          94.61984252929688,
+          141.36288452148438
+        ]
+      },
+      {
+        "name": "Some extreme mountains exclude flyers",
+        "ok": true,
+        "actual": {
+          "blockedAir": 16572,
+          "ceiling": 20
+        }
+      },
+      {
+        "name": "hot stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 176,
+          "type": "mortar",
+          "height": 3.699639081954956
+        }
+      },
+      {
+        "name": "hot refuses a Bolt footprint",
+        "ok": true
+      },
+      {
+        "name": "neutral stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 297,
+          "type": "bolt",
+          "height": 2.0699548721313477
+        }
+      },
+      {
+        "name": "cold stable raised terrain accepts its tower",
+        "ok": true,
+        "actual": {
+          "node": 5225,
+          "type": "cryo",
+          "height": 2.0059962272644043
+        }
+      },
+      {
+        "name": "cold refuses a Bolt footprint",
+        "ok": true
+      },
+      {
+        "name": "Water enters swimming and refuses sprint speed",
+        "ok": true,
+        "actual": {
+          "ordinary": 0.0004061992249522274,
+          "sprint": 0.0004061992249522274,
+          "swimming": true,
+          "boundary": 0.5099673138812598,
+          "cap": 0.52,
+          "height": -0.9095503430510468,
+          "factor": 0.5999250093738283,
+          "masked": true,
+          "to": -0.9170157502742616,
+          "probe": true,
+          "bearing": [
+            -0.40524944097411797,
+            0.10683902851193042,
+            0.9079418002145248
+          ]
+        }
+      },
+      {
+        "name": "Commander route reaches a portal without overwriting enemy flow",
+        "ok": true,
+        "actual": 299
+      },
+      {
+        "name": "Tower footprints cannot rewrite flyer routes",
+        "ok": true
+      },
+      {
+        "name": "Placed Mortar consumes the elemental bonus",
+        "ok": true,
+        "actual": 44.96499999999999
+      },
+      {
+        "name": "Range orbit and minimum exclusion match actual stats",
+        "ok": true
+      },
+      {
+        "name": "Depth-clipped range veil follows the actual range boundary",
+        "ok": true,
+        "actual": {
+          "radius": 10.006179543901384,
+          "vertices": 1225,
+          "error": 3.3524625386860407e-7
+        }
+      },
+      {
+        "name": "Depth-clipped range veil follows the actual range boundary",
+        "ok": true,
+        "actual": {
+          "radius": 2.3,
+          "vertices": 1225,
+          "error": 7.70590284915329e-8
+        }
+      },
+      {
+        "name": "Sphere acquires at the true vertical range",
+        "ok": true
+      },
+      {
+        "name": "Existing target has the documented retention margin",
+        "ok": true
+      },
+      {
+        "name": "A new target outside the sphere is refused",
+        "ok": true
+      },
+      {
+        "name": "Retention cannot extend beyond 4.9 percent",
+        "ok": true
+      },
+      {
+        "name": "Mortar refuses its visible inner exclusion",
+        "ok": true
+      }
+    ],
+    "bootMs": 6233,
+    "faults": []
+  }
+]

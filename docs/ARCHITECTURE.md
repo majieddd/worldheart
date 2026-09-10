@@ -27,8 +27,10 @@ reason the mode can be ported to Luau later, and it is enforced by
 | Module | Owns |
 |---|---|
 | `js/config.js` | `MAPS`, `PALETTE`, camera tuning, economy, limits. Reads the URL. |
-| `js/noise.js` | The terrain height field and `SIM_RANDOM`, the seeded sim RNG. |
-| `js/world.js` | Terrain mesh, biomes, water, sky, clouds, the heart, breaches, the frontier fog veil. |
+| `js/noise.js` | Seeded noise and `SIM_RANDOM`, the seeded sim RNG. |
+| `js/terrain/recipes.js` | Versioned formation vocabulary, relief mixes, dimensions and validated authored overrides. |
+| `js/terrain/formations.js` | Seeded spherical formation groups, shared inland valley joins and exact spatial shortlists. |
+| `js/world.js` | Authoritative composed height field, terrain mesh, biomes, water, sky, clouds, the heart, breaches and frontier fog. |
 | `js/nav.js` | The geodesic nav graph, the Dijkstra flow field, field scouting, walkability. |
 | `js/towers.js` | 6 tower types: stats, models, firing. `MODS.current` holds run modifiers. |
 | `js/enemies.js` | 5 enemy types, evolution tiers, melee, instanced rendering. |

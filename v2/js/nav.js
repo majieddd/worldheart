@@ -212,7 +212,8 @@ export class NavGraph {
       // Anchor on dry ground before paying for the full cap survey.
       const anchorHeight = terrainHeight(v.x, v.y, v.z, false);
       if (anchorHeight < 0.15) continue;
-      if (CONFIG.terrain && (anchorHeight > WORLD.FLIGHT_CEILING * 0.5 || !WORLD.isBuildableDir(v) || !isWalkableDir(v) || WORLD.climateAt(v, anchorHeight) !== 'neutral')) continue;
+      if (CONFIG.terrain && (anchorHeight > 1.3 || !WORLD.isBuildableDir(v) || !isWalkableDir(v) || WORLD.climateAt(v, anchorHeight) !== 'neutral')) continue;
+      if (CONFIG.terrain && WORLD.continentalityAt(v.x, v.y, v.z) - CONFIG.terrain.ocean < .22) continue;
 
       if (Math.abs(v.y) < 0.93) e1.set(0, 1, 0); else e1.set(1, 0, 0);
       e2.crossVectors(v, e1).normalize();
@@ -241,7 +242,7 @@ export class NavGraph {
       // and picks the best lit one available.
       if (minRim < -0.12) continue;
 
-      let land = 0, traversable = 0;
+      let land = 0, traversable = 0, inlandFloor = 0, sampledPeak = 0;
       for (let s = 0; s < SAMPLES; s++) {
         // sunflower spiral: even coverage of the cap with few samples
         const ang = theta * Math.sqrt((s + 0.5) / SAMPLES);
@@ -250,15 +251,23 @@ export class NavGraph {
           .addScaledVector(e1, Math.sin(ang) * Math.cos(az))
           .addScaledVector(e2, Math.sin(ang) * Math.sin(az))
           .normalize();
-        if (terrainHeight(probe.x, probe.y, probe.z, false) >= 0.05) land++;
-        if (CONFIG.terrain && isWalkableDir(probe)) traversable++;
+        const h = terrainHeight(probe.x, probe.y, probe.z, false);
+        sampledPeak = Math.max(sampledPeak, h);
+        if (h >= 0.05) land++;
+        if (CONFIG.terrain && h >= .18 && isWalkableDir(probe)) {
+          traversable++;
+          if (h <= 1.5 && WORLD.continentalityAt(probe.x, probe.y, probe.z) - CONFIG.terrain.ocean > .25) inlandFloor++;
+        }
       }
       const frac = land / SAMPLES;
+      // A globally tall alpine seed is not enough if its playable cap only
+      // contains foothills. Survey a real major peak inside this battlefield.
+      if (CONFIG.terrainKey === 'alpine' && CONFIG.terrain && sampledPeak < CONFIG.terrain.range * .65) continue;
       // Land is still what matters most - a field in the sea is unplayable
       // where a dim one is merely moody - so rim light is a modest bonus that
       // breaks ties between otherwise equal caps.
       const walkFraction = traversable / SAMPLES;
-      const score = frac + 0.35 * Math.max(0, Math.min(0.6, minRim)) + (CONFIG.terrain ? walkFraction * 0.4 : 0);
+      const score = frac + 0.35 * Math.max(0, Math.min(0.6, minRim)) + (CONFIG.terrain ? walkFraction * 0.4 + inlandFloor / SAMPLES * .8 : 0);
       if (score > bestLand) { bestLand = score; bestFrac = frac; best = v.clone(); }
       if (bestFrac >= 0.86 && minRim > 0.25 && (!CONFIG.terrain || walkFraction > 0.65)) break;
     }

@@ -99,6 +99,14 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 ### Terrain traversal and flight
 
+The owner's U31 follow-up separates [modular formation recipes](TERRAIN-RECIPES.md)
+from biome dressing. Seeded ridge chains, canyons, basins, hills and tablelands
+share connected inland valley boundaries, with configurable size, mix and
+authored group overrides. The campaign scout prefers inland floor and the
+actual graph still certifies nests, paths, placement and flight. See the
+[current acceptance ledger](qa/implementation/MODULAR-LANDFORMS.md); classic
+terrain retains its original field. Height alone must not conceal route cost.
+
 Purpose: create large-scale spectacle and strategic route tradeoffs.
 Experience: easy hills, imposing peaks, deep navigable canyons and slower ocean crossings.
 Inputs: shared height/material field, slope, water depth, movement class, destination and flight envelope.

@@ -1,0 +1,68 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { createFormationField } from '../../js/terrain/formations.js';
+import { LANDFORM_RECIPES, landformSettings, formationHeightLimit } from '../../js/terrain/recipes.js';
+import { mulberry32 } from '../../js/noise.js';
+const profile = { range: 96, canyon: 38 }, R = 240;
+const field = createFormationField(12345, R, profile, 'alpine');
+function directions(count, seed = 8) {
+  const rng = mulberry32(seed);
+  return Array.from({ length: count }, () => { const y = rng() * 2 - 1, az = rng() * 2 * Math.PI, r = Math.sqrt(1 - y * y); return [r * Math.cos(az), y, r * Math.sin(az)]; });
+}
+test('recipe manifest and query results replay independently of query order', () => {
+  const repeat = createFormationField(12345, R, profile, 'alpine'), dirs = directions(500);
+  assert.deepEqual(field.manifest(), repeat.manifest());
+  const before = dirs.map(d => field.height(...d));
+  dirs.slice().reverse().forEach(d => repeat.height(...d));
+  assert.deepEqual(before, dirs.map(d => repeat.height(...d)));
+  assert.notDeepEqual(field.manifest().modules, createFormationField(12346, R, profile, 'alpine').manifest().modules);
+});
+test('spatial index matches a full nearest-site oracle including cube boundaries and poles', () => {
+  const points = directions(6000);
+  for (let x = -1; x <= 1.00001; x += .1) for (let y = -1; y <= 1.00001; y += .1) {
+    const z2 = 1 - x * x - y * y;
+    if (z2 >= 0) { points.push([x, y, Math.sqrt(z2)], [x, y, -Math.sqrt(z2)]); }
+  }
+  points.push([0, 1, 0], [0, -1, 0], [-1, 0, 0], [1, 0, 0]);
+  for (const p of points) {
+    const a = field.inspect(...p), b = field.inspect(...p, true);
+    assert.equal(a.id, b.id); assert.ok(Math.abs(a.relief - b.relief) < 1e-9); assert.ok(Math.abs(a.edge - b.edge) < 1e-9);
+  }
+});
+test('all group types work at different scales and relief without a biome dependency', () => {
+  for (const type of Object.keys(LANDFORM_RECIPES)) {
+    const weights = Object.fromEntries(Object.keys(LANDFORM_RECIPES).map(k => [k, k === type ? 1 : 0]));
+    const a = createFormationField(91, R, profile, 'varied', { weights, spacing: 80 });
+    const b = createFormationField(91, R, { ...profile, snow: 0, ocean: 1 }, 'varied', { weights, spacing: 80 });
+    const large = createFormationField(91, R, profile, 'varied', { weights, spacing: 160 });
+    assert.ok(a.modules.every(m => m.type === type)); assert.ok(a.modules.length > large.modules.length * 3);
+    for (const d of directions(300)) assert.equal(a.height(...d), b.height(...d), 'climate cannot reshape a formation');
+  }
+});
+test('shared valley joins stay at the floor and all relief fits its picking shell', () => {
+  let floor = 0, high = 0;
+  for (const p of directions(8000)) {
+    const s = field.inspect(...p);
+    assert.ok(Number.isFinite(s.relief) && s.relief >= 0 && s.relief < formationHeightLimit(profile));
+    if (s.edge <= s.valley) { floor++; assert.equal(s.relief, 0); }
+    if (s.relief > 85) high++;
+  }
+  assert.ok(floor > 1000, 'connected borders retain a substantial floor area');
+  assert.ok(high > 20, 'tall mountains are retained');
+});
+test('bad authoring parameters fail explicitly rather than silently breaking generation', () => {
+  for (const input of [{ spacing: 0 }, { spacing: Infinity }, { valley: 0 }, { typo: 1 }, { weights: { mountainn: 1 } }, { weights: { range: -1 } }]) assert.throws(() => landformSettings('varied', input));
+  assert.throws(() => landformSettings('missing'));
+  assert.throws(() => createFormationField(NaN, R, profile));
+  assert.throws(() => createFormationField(1, R, { range: Infinity, canyon: 2 }));
+  assert.throws(() => landformSettings('varied', { weights: Object.fromEntries(Object.keys(LANDFORM_RECIPES).map(k => [k, 0])) }));
+});
+test('authored anchors and exclusions are replayable without consuming the shared random stream', () => {
+  const base = createFormationField(42, R, profile);
+  const edited = createFormationField(42, R, profile, 'varied', { groups: [{ id: 0, disabled: true }, { id: 1, type: 'canyon', height: 63, size: 1.25 }] });
+  assert.deepEqual(base.modules.slice(2), edited.modules.slice(2));
+  assert.equal(edited.modules[0].height, 0); assert.equal(edited.modules[1].height, 63); assert.equal(edited.modules[1].type, 'canyon');
+  assert.equal(edited.modules[1].size, 1.25);
+  assert.throws(() => createFormationField(42, R, profile, 'varied', { groups: [{ id: 0, dir: base.modules[1].dir }] }), /overlap/);
+  for (const groups of [[{ id: 9999 }], [{ id: 1 }, { id: 1 }], [{ id: 1, dir: [NaN, 1, 0] }], [{ id: 1, height: -2 }], [{ id: 1, unknown: 1 }]]) assert.throws(() => createFormationField(42, R, profile, 'varied', { groups }));
+});

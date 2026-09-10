@@ -362,8 +362,12 @@ half the world.
 The title selector and `?terrain=varied|alpine|canyon|ocean` choose Highlands,
 Giant peaks, Deep canyons or Ocean islands. Their range/canyon amplitudes are
 28/10, 96/24, 18/38 and 16/5 world units. These are inputs to the composed
-height field, not maximum heights. Canyon width and ramps scale with depth.
-Picking and fog use the same conservative terrain envelope and surface.
+height field, not maximum heights. Versioned [formation recipes](TERRAIN-RECIPES.md)
+mix ridge chains, winding canyons, basins, hills and tablelands independently
+of biome dressing. Shared valleys connect their boundaries; group dimensions,
+weights and authored anchors are configurable. Canyon banks use a 1.65 relief
+gain and ridge chains use 1.18 before seeded variation and continental blending.
+Picking, camera clearance and fog use the conservative recipe height envelope.
 
 Ground route costs include actual 3D distance and a bounded uphill penalty.
 Swimming enters at 0.65 water depth and exits at 0.45, runs at 60% speed and
@@ -383,7 +387,7 @@ power and upgrade modifiers, once per stat read. Minimum range and secondary
 chain hops stay fixed. Warden gets the horizontal multiplier on its labelled
 surface leash. Placement, selection and targeting share these stats.
 
-Regional erosion channels now reach the meadow floor, while uncut crests retain
+Connected group valleys reach the meadow floor, while uncut crests retain
 their tall, rugged silhouette. The meadow-to-stone blend meets the same 1.75 m
 height and 0.62 grade boundary used by floor routing. Ground enemies prefer
 connected floor routes; emergency mountain travel remains at 8% speed. Ordinary
