@@ -1043,6 +1043,7 @@ export class HUD {
       if (st.aoe) rows.push(['Blast', st.aoe.toFixed(1)]);
       if (st.chains) rows.push(['Chains', st.chains]);
       if (!t.def.summoner) rows.push([st.slow ? 'Aura sphere' : 'Acquisition sphere', st.range.toFixed(1)]);
+      if (t.elevation > .1) rows.push(['High ground', `${t.elevation.toFixed(1)}m / +${Math.round(Math.min(.6, t.elevation * .02) * 100)}% ground reach`]);
       if (st.minRange) rows.push(['Inner exclusion', st.minRange.toFixed(1)]);
       if (!t.def.summoner && !st.slow) rows.push(['Tracked target', '+4.9% retention']);
       if (t.terrain === 'hot') rows.push(['Hot stone', '+15% damage']);
@@ -1074,8 +1075,16 @@ export class HUD {
     const e = this.el;
     let label = 'STANDBY', sub = 'the breach stirs';
     let showCall = false;
+    let live = 0;
+    for (const enemy of this.game.enemies.active) if (!enemy.dead) live++;
     if (this.game.state === 'playing' || this.game.state === 'defeat') {
-      if (w.state === 'countdown') {
+      if (w.timedNests) {
+        label = `WAVE ${Math.max(1, w.wave)}/${CONFIG.waves.count}`;
+        const drafting = document.getElementById('draft-overlay').classList.contains('show');
+        sub = drafting ? 'draft: timer paused' : w.siteBlocked ? 'nest route blocked' : w.wave < CONFIG.waves.count ? `nests in ${Math.max(0, Math.ceil(w.countdown))}s` : 'final nests';
+        showCall = !drafting && !w.siteBlocked && w.state !== 'idle' && w.wave < CONFIG.waves.count;
+        e['call-bonus'].textContent = String(Math.max(0, Math.floor(w.countdown)) * CONFIG.waves.earlyBonusPerSec);
+      } else if (w.state === 'countdown') {
         const next = w.wave + 1;
         label = next > CONFIG.waves.count ? `ENDLESS ${next}` : `WAVE ${next}/${CONFIG.waves.count}`;
         sub = `breach in ${Math.max(0, Math.ceil(w.countdown))}s`;
@@ -1086,8 +1095,6 @@ export class HUD {
         // A body in its death collapse is still in the active list for
         // under half a second so it can be drawn falling; it is not a body
         // the player still has to deal with.
-        let live = 0;
-        for (const e of this.game.enemies.active) if (!e.dead) live++;
         const left = live + w.pendingSpawns;
         sub = `${left} remaining`;
       }
@@ -1098,11 +1105,13 @@ export class HUD {
     // Beside the wave readout because they are the wave's other half, and
     // hidden entirely at zero so the classic maps never grow a stray divider.
     const nests = w.liveNestCount || 0;
-    const nestText = nests ? `${nests} ${nests === 1 ? 'nest' : 'nests'}` : '';
+    const showNests = nests || (w.timedNests && w.wave > 0);
+    const bodies = live + w.pendingSpawns;
+    const nestText = showNests ? `${nests} ${nests === 1 ? 'nest' : 'nests'}${w.timedNests ? ` / ${bodies} ${bodies === 1 ? 'mob' : 'mobs'}` : ''}` : '';
     if (e['nest-count'].textContent !== nestText) {
       e['nest-count'].textContent = nestText;
-      e['nest-count'].style.display = nests ? '' : 'none';
-      e['nest-sep'].style.display = nests ? '' : 'none';
+      e['nest-count'].style.display = showNests ? '' : 'none';
+      e['nest-sep'].style.display = showNests ? '' : 'none';
     }
     const callVisible = e['btn-call'].style.display !== 'none';
     if (showCall !== callVisible) e['btn-call'].style.display = showCall ? '' : 'none';

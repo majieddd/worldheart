@@ -3,9 +3,9 @@ import { CONFIG } from './config.js';
 import { SIM_RANDOM } from './noise.js';
 import { planetGroups } from './encounters.js';
 
-// Wave direction: 30 authored waves, then endless scaling. Portals wake at
-// waves 1, 4, 9, 14. Bosses at 10, 20, 30. Early calls pay the remaining
-// countdown as bounty.
+// Classic maps keep their authored waves and breach schedule. 99 Planets
+// opts into timed, overlapping nest waves with per-assault completion.
+// Early calls pay the remaining countdown as bounty.
 
 const ATK_SCALE_SLOPE = 0.35;
 const ATK_SCALE_CAP = 4;
@@ -66,6 +66,11 @@ export function portalCount(wave) {
 export function waveReward(wave) {
   return 70 + wave * 9;
 }
+
+// A campaign wave adds sources on a clock even if earlier enemies survive.
+// Breathing room grows with the size of the assault, not with enemy transit.
+export function nestWaveInterval(wave) { return Math.min(75, 45 + (wave - 1) * 2); }
+export function newNestCount(wave) { return wave < CONFIG.waves.count && wave % 5 === 0 ? 2 : 1; }
 
 // Returns spawn groups: { type, count, gap, portal: 'all' | index-within-active }
 export function waveComp(wave) {
@@ -159,16 +164,27 @@ export class WaveDirector {
     this.canRaid = null;      // () => bool, set by the mode; null means always
     this.onNestWake = null;   // (liveCount) => void
     this.onRaid = null;       // (node, wave) => void
+    this.timedNests = false;
+    this.clock = 0;
+    this.clearedWaves = 0;
+    this.assaultIds = new Map();
+    this.siteBlocked = false;
   }
 
   begin() {
     this.wave = 0;
+    this.clearedWaves = 0;
+    this.clock = 0;
+    this.assaultIds.clear();
+    this.siteBlocked = false;
+    this.queues = []; this.pendingSpawns = 0; this.victoryFired = false;
     this.state = 'countdown';
     this.countdown = CONFIG.waves.firstPrep * this.paceMul;
   }
 
   callEarly() {
-    if (this.state !== 'countdown') return 0;
+    if (this.siteBlocked) return 0;
+    if (this.state !== 'countdown' && !(this.timedNests && this.state !== 'idle' && this.wave < CONFIG.waves.count)) return 0;
     const bonus = Math.floor(this.countdown) * CONFIG.waves.earlyBonusPerSec;
     this.game.gold += bonus;
     this.countdown = 0;
@@ -187,10 +203,17 @@ export class WaveDirector {
   }
 
   _startWave() {
-    this.wave++;
+    if (this.timedNests && this.wave >= CONFIG.waves.count) return false;
+    const survivors = this.nestOnly ? this.activePortals() : [];
     // Campaign sources are physical structures prepared before any unit is
     // queued. An empty list means the player prevented this assault.
-    if (this.nestOnly) this.nestSources = this.prepareNests(this.wave);
+    if (this.nestOnly) {
+      const sources = this.prepareNests(this.wave + 1);
+      if (sources === null) { this.siteBlocked = true; this.countdown = 5; return false; }
+      this.siteBlocked = false;
+      this.nestSources = sources;
+    }
+    this.wave++;
     const prevPortals = portalCount(Math.max(this.wave - 1, 1));
     const nowPortals = portalCount(this.wave);
     if (!this.nestOnly && nowPortals > prevPortals && this.wave > 1 && this.onPortalWake) {
@@ -203,8 +226,7 @@ export class WaveDirector {
     // late swarm is dangerous rather than a one-shot on every body.
     this.enemies.atkScale = Math.min(1 + (scale - 1) * ATK_SCALE_SLOPE, ATK_SCALE_CAP);
     const active = this.activePortals();
-    this.queues = [];
-    this.pendingSpawns = 0;
+    if (!this.timedNests) { this.queues = []; this.clock = 0; }
 
     for (const g of comp) {
       if (!active.length) continue;
@@ -215,16 +237,56 @@ export class WaveDirector {
       for (let i = 0; i < g.count; i++) {
         const portal = portals[i % portals.length];
         this.queues.push({
-          t: (1.2 + i * g.gap + SIM_RANDOM.next() * 0.3) * this.paceMul + (this.nestOnly ? 3 : 0),
-          type: g.type, portal, scale,
+          t: this.clock + (1.2 + i * g.gap + SIM_RANDOM.next() * 0.3) * this.paceMul + (this.nestOnly ? 3 : 0),
+          type: g.type, portal, scale, wave: this.wave,
         });
-        this.pendingSpawns++;
       }
     }
+    // Keeping old nests alive adds enemies instead of merely dividing the
+    // same authored total among more locations. Every survivor contributes.
+    if (this.timedNests) for (const portal of survivors) {
+      let i = 0;
+      for (const g of raidComp(this.wave)) for (let k = 0; k < g.count; k++) {
+        this.queues.push({ t: this.clock + 3 + i++ * RAID_GAP, type: g.type, portal, scale, wave: this.wave });
+      }
+    }
+    this.pendingSpawns = this.queues.length;
     this.queues.sort((a, b) => a.t - b.t);
-    this.clock = 0;
+    if (this.timedNests) this.countdown = this.wave < CONFIG.waves.count ? nestWaveInterval(this.wave) : 0;
     this.state = 'spawning';
+    this.refreshNests();
     if (this.onWaveStart) this.onWaveStart(this.wave, waveComp(this.wave));
+    return true;
+  }
+
+  inheritAssault(child, parent) {
+    const wave = this.assaultIds.get(parent.id);
+    if (wave !== undefined) this.assaultIds.set(child.id, wave);
+  }
+
+  _clearTimedWave() {
+    // Award in sequence even if a later wave dies first. Queue identity and
+    // reinforcement ancestry keep a crowded pool or boss split from silently
+    // paying a victory while the original assault is still on the board.
+    const owed = new Set(this.queues.map(q => q.wave));
+    const active = new Set();
+    for (const e of this.enemies.active) {
+      active.add(e.id);
+      const wave = this.assaultIds.get(e.id);
+      if (wave !== undefined) owed.add(wave);
+    }
+    for (const id of this.assaultIds.keys()) if (!active.has(id)) this.assaultIds.delete(id);
+    const next = this.clearedWaves + 1;
+    if (next > this.wave || owed.has(next)) return;
+    this.clearedWaves = next;
+    const reward = waveReward(next);
+    this.game.gold += reward;
+    this.onWaveClear?.(next, reward);
+    if (next === CONFIG.waves.count && !this.victoryFired) {
+      this.victoryFired = true;
+      this.state = 'idle';
+      this.onVictory?.();
+    }
   }
 
   // ---- nests -------------------------------------------------------------
@@ -322,7 +384,7 @@ export class WaveDirector {
   // mode say so explicitly as well, and freezes the clocks rather than
   // letting them all fire the instant the overlay closes.
   _updateNests(dt) {
-    if (!this.nestMode || this.state === 'idle' || this.wave < RAID_START_WAVE) return;
+    if (this.timedNests || !this.nestMode || this.state === 'idle' || this.wave < RAID_START_WAVE) return;
     this.refreshNests();
     if (this.canRaid && !this.canRaid()) return;
     for (const [n, t] of this.nestClocks) {
@@ -341,6 +403,7 @@ export class WaveDirector {
   }
 
   update(dt) {
+    if (this.timedNests && (this.state === 'idle' || (this.canRaid && !this.canRaid()))) return;
     this._updateNests(dt);
     if (this.state === 'countdown') {
       this.countdown -= dt;
@@ -349,6 +412,10 @@ export class WaveDirector {
       return;
     }
     if (this.state === 'spawning' || this.state === 'combat') {
+      if (this.timedNests && this.wave < CONFIG.waves.count) {
+        this.countdown -= dt;
+        if (this.countdown <= 0) this._startWave();
+      }
       if (this.nestOnly) {
         // Cancellation is earned by destroying the visible source. Existing
         // enemies remain owed; the protected guardian queue cannot vanish.
@@ -363,11 +430,13 @@ export class WaveDirector {
         const enemy = this.enemies.spawn(q.type,q.portal,q.scale);
         if(!enemy)break;
         if (this.nestOnly) { enemy.sourceNest = q.portal; this.onNestSpawn?.(q, enemy); }
+        if (this.timedNests) this.assaultIds.set(enemy.id, q.wave);
         this.queues.shift();
         this.pendingSpawns--;
         if (this.onSpawnPortal) this.onSpawnPortal(q.portal);
       }
       if (!this.queues.length) this.state = 'combat';
+      if (this.timedNests) { this._clearTimedWave(); return; }
       if (this.state === 'combat' && this._waveEnemiesLeft() === 0) {
         const reward = waveReward(this.wave);
         this.game.gold += reward;

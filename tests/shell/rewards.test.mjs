@@ -18,8 +18,9 @@ const { createRewardConsumer } = await import('../../js/rewards.js');
 const { foldModifiers } = await import('../../js/run/modifiers.js');
 const { POWER_BY_ID } = await import('../../js/run/powers.js');
 const { createRun } = await import('../../js/run/run.js');
+const { CONFIG } = await import('../../js/config.js');
 const mods = (...ids) => foldModifiers(ids.map(id => POWER_BY_ID[id]));
-const tower = (type) => Object.assign(Object.create(Tower.prototype), {typeKey:type,tier:0,shotCount:0});
+const tower = (type) => Object.assign(Object.create(Tower.prototype), {typeKey:type,tier:0,shotCount:0,pos:new THREE.Vector3(0,CONFIG.planetRadius,0)});
 afterEach(() => { MODS.current = null; });
 
 for (const type of Object.keys(TOWER_TYPES)) test(`${type}: actual stats never manufacture NaN fields`, () => {

@@ -17,6 +17,19 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
+Implemented, verification in progress 2026-09-09: Codex on `feature/nest-waves-and-high-ground`, based on
+preview `4ce4f94`, is addressing ordinary nests appearing on mountain slow
+zones, terrain/biome route legibility, elevation-based tower range, and new
+nest waves with surviving-source pressure and a visible countdown. Owned:
+nest sites, wave director/bridge, terrain classification, tower stats/previews
+and existing wave HUD. Verify site exits, wave/source lifecycle, true range
+boundaries, map/terrain regressions, legal play and public V2 identity.
+[Current evidence and retained failures](qa/implementation/NEST-WAVES-HIGH-GROUND.md):
+245 tests, 15,147 isolated source arrivals across all 99 planets, 36 shape checks,
+four terrain profiles, five maps, 96 placement oracles and a legal 15-wave victory
+with extraction to planet 2. Public V2 verification is pending. Full-campaign,
+reduced-CPU/device and owner art acceptance remain separate. Usage unmeasured.
+
 Published and live-verified 2026-09-09: Codex on `feature/terrain-routes-and-arsenal`, based on
 `79d6050` from preview/v2, has addressed the next owner feedback: invisible
 spawn barriers, tower attacks on nests, varied rugged mountain regions,

@@ -1,6 +1,8 @@
 # Owner brief: current alignment and remaining acceptance
 
-Updated 2026-09-09. Current owner: Codex, `feature/terrain-routes-and-arsenal`.
+Updated 2026-09-09. Current owner: Codex, `feature/nest-waves-and-high-ground`.
+The [nest-wave/high-ground ledger](NEST-WAVES-HIGH-GROUND.md) records U28-U30,
+capacity and overlap repairs, all-99 source routes and a fresh legal victory.
 The [terrain/routes/arsenal ledger](TERRAIN-ROUTES-ARSENAL.md) adds the latest
 reports and authored era sets to the [natural-terrain ledger](NATURAL-TERRAIN-FEEL.md)
 and prior [PR #22](https://github.com/majieddd/worldheart/pull/22) audit.
@@ -39,6 +41,9 @@ request identity. Functional verification does not substitute for owner feel.
 | U25 Loot hover/inspect/model | Actual cached model preview, comparison, deliberate pickup/equip and full-bag retention | Owner inspection readability and richer weapon silhouettes |
 | U26 Physical nest-only spawns | Waves/raids/guardian escorts/splits originate at physical nests; offensive towers now damage established vulnerable nests and pay destruction rewards once | Nest pressure/boss balance, remote-route pacing and natural full campaign |
 | U27 Unit route lines | Actual remaining route shown and removed/recomputed on lifecycle/nav changes | Owner large-squad legibility and performance |
+| U28 Safe nests and biome routes | Dry clearing and bounded floor approach; generation certifies the full nest schedule; eroded meadow passes and preserved tall crests; 15,147 isolated all-99 arrivals | More seeds, crowded-route balance and optional terrain-affinity species |
+| U29 Elevation range | Shared effective sphere covers the vertical drop plus bounded horizontal reach; UI explains the bonus; previews/upgrades/target boundaries verified | Owner high-ground balance at extreme height |
+| U30 Timed nest waves | Every wave adds sources; survivors add packs; combat countdown, ordered rewards and draft freeze; legal planet-1 victory/extraction | Wider tactics, later planets and full natural campaign |
 
 ## Adversarial additions now addressed
 

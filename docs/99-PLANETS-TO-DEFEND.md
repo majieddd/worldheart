@@ -253,6 +253,25 @@ Preserve the current contracts: pure injected-RNG/dt `js/run/`, only the mode br
 
 ## Decided
 
+2026-09-09 nest-wave follow-up: ordinary nests require broad dry floor-connected
+clearings and bounded approach costs. Certify a full schedule during world
+generation; never force a source onto a mountain slow zone. Broader erosion
+channels meet the meadow floor, while uncut crests remain tall and rugged.
+Terrain-affinity species remain a possible later content addition, not a
+compensation for broken ordinary source placement.
+
+One new nest appears each wave, with two on waves 5 and 10 when space permits;
+the final source is the guardian nest. Surviving sources add mobs next wave.
+A 45-to-71-second combat countdown allows overlapping assaults; draft choices
+pause all combat and preserve the timer. Queue and reinforcement ancestry must
+prevent premature rewards. Existing enemies still matter after a nest dies.
+
+Elevated towers gain up to 60% horizontal reach across 30 m of height. Their
+sphere also covers the vertical drop to the valley. Use the same calculation
+for preview, targeting and upgrades; show height and reach on the tower card.
+The summoner leash gets only the horizontal part. Preserve elemental rules,
+Mortar exclusion and fixed secondary chain hops.
+
 2026-09-09 traversal/arsenal follow-up: decorative tree regions must not create
 body collision masks. Campaign ground enemies use floor-only routes whenever
 one exists; mountains are an emergency passage at 8% speed, with existing slope
@@ -353,7 +372,16 @@ Continue in dependency order and keep each behavior reviewable. A task closes on
 
 ## Where we are
 
-Current 2026-09-09 continuation: Codex on `feature/terrain-routes-and-arsenal`
+Current 2026-09-09 continuation: `feature/nest-waves-and-high-ground` implements
+dry floor-connected nest clearings, full-schedule world-generation capacity,
+broader meadow passes, height-based range and timed overlapping nest waves.
+All 99 source-route fixtures pass, totaling 15,147 isolated arrivals. A fresh
+legal 15-wave run wins and extracts to planet 2. [Current ledger](qa/implementation/NEST-WAVES-HIGH-GROUND.md)
+retains the intermediate capacity stall and HUD overlap failures, plus the
+corrected checks. Public V2 verification is pending; reduced-CPU, full natural
+campaign and owner feel acceptance stay open.
+
+Previous 2026-09-09 continuation: Codex on `feature/terrain-routes-and-arsenal`
 has implemented the six latest reports: hidden forest collision masks,
 tower attacks on nests, mixed ruggedness, floor-first ground routes with slow
 fallbacks, connected weapons and lateral sword cuts. This also supplies the

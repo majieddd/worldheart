@@ -146,6 +146,7 @@ html, body {
   display: flex; align-items: center; gap: var(--sp-2);
 }
 .pill .sep { color: var(--text-faint); }
+#wave-pill { white-space: nowrap; }
 
 .kbd {
   font-family: var(--font-display); font-size: var(--fs-11); font-weight: 600;
@@ -411,6 +412,12 @@ input[type="range"].cam-slider::-moz-range-thumb {
   #tower-panel { width: 228px; }
   .overlay-card { padding: var(--sp-5) var(--sp-5); margin: var(--sp-4); }
   .overlay-card .o-mark { font-size: var(--fs-48); }
+}
+
+@media (max-width: 900px) {
+  .hud-top-center { top: 56px; width: calc(100% - 16px); }
+  .hud-top-left { top: 136px; }
+  #wave-pill { padding: var(--sp-2); gap: var(--sp-1); letter-spacing: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

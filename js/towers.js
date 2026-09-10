@@ -493,8 +493,9 @@ export class Tower {
   // range or crit power lands everywhere at once.
   get stats() {
     const stats = modifiedTowerStats(tierStats(this.typeKey, this.tier), MODS.current);
-    return CONFIG.terrain ? terrainTowerStats(stats, this.typeKey, this.terrain) : stats;
+    return CONFIG.terrain ? terrainTowerStats(stats, this.typeKey, this.terrain, this.elevation) : stats;
   }
+  get elevation() { return CONFIG.terrain ? Math.max(0, this.pos.length() - CONFIG.planetRadius) : 0; }
   get range() { return this.stats.range; }
 
   // Advances the shot counter and reports the damage multiplier for THIS
