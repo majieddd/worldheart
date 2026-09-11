@@ -6,6 +6,7 @@ import { promisify } from 'node:util';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { surveyBattlefield } from '../js/terrain/acceptance.js';
 const option = key => process.argv.find(x => x.startsWith(`--${key}=`))?.slice(key.length + 3);
 const profile = option('profile'), source = resolve(option('source-dir') || '.'), seed = Number(option('seed') || 12345);
 if (profile) {
@@ -74,9 +75,11 @@ if (profile) {
     { name: 'Connected valley samples include inland terrain away from shore', ok: inlandValleys >= 20 },
     { name: 'Most remote approach samples are inland, not coastal ribbons', ok: routes.reduce((s, r) => s + r.inlandFraction, 0) / routes.length >= .5 },
   );
+  const certificate=W.FORMATIONS?surveyBattlefield(nav,W.FORMATIONS,W.terrainHeight,W.R,nav.fieldCenter,CONFIG.map.fieldTheta):null;
+  if(certificate)checks.push({name:'Accepted field exposes three substantial families and connected terrain corridors',ok:certificate.pass});
   console.log(JSON.stringify({ profile, seed, effectiveSeed: CONFIG.seed, buildMs, attempts: nav.attempts, nodes: nav.n,
     peak, dryFloorConnected: connected / dry, groups: groups.size, types: [...types], biomes: Object.fromEntries(Object.entries(biomes).map(([k, v]) => [k, [...v]])),
-    valleys, inlandValleys, routes, checks, exposed, ecology, climate:W.ECOLOGY?.manifest(), manifest: W.FORMATIONS?.manifest(), pass: checks.every(c => c.ok) }));
+    valleys, inlandValleys, routes, checks, exposed, ecology, certificate, climate:W.ECOLOGY?.manifest(), manifest: W.FORMATIONS?.manifest(), pass: checks.every(c => c.ok) }));
   if (checks.some(c => !c.ok)) process.exitCode = 1;
 } else {
   const out = resolve(process.argv[2] || 'artifacts/formations'); mkdirSync(out, { recursive: true });

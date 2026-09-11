@@ -1,0 +1,114 @@
+{
+  "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#tp-upgrade')\u001b[22m\n\u001b[2m    - locator resolved to <button disabled id=\"tp-upgrade\" class=\"btn primary\" title=\"Upgrade the Worldheart (B) to raise the tier cap\">Raise Worldheart</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    57 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+  "checks": [
+    {
+      "name": "A contextual tower fixture can be legally placed",
+      "ok": true
+    },
+    {
+      "name": "An actual move order has an authoritative path",
+      "ok": true,
+      "actual": 267
+    },
+    {
+      "name": "Selected ordered unit draws its actual remaining route",
+      "ok": true,
+      "actual": 1068
+    },
+    {
+      "name": "A new order replaces the line route",
+      "ok": true
+    },
+    {
+      "name": "Unselection clears the route line",
+      "ok": true
+    },
+    {
+      "name": "Cancellation clears the route line",
+      "ok": true
+    },
+    {
+      "name": "Both sword active frames point through the forward strike volume",
+      "ok": true,
+      "actual": [
+        [
+          0.12654896937888938,
+          0.0050574682716760105,
+          -0.9919474685505387
+        ],
+        [
+          0.12654896937888938,
+          0.0050574682716760105,
+          -0.9919474685505387
+        ]
+      ]
+    },
+    {
+      "name": "Wave1 establishes a visible reachable source",
+      "ok": true,
+      "actual": {
+        "node": 155035,
+        "ground": 16.18523597717285,
+        "air": 15.188562393188477
+      }
+    },
+    {
+      "name": "Every queued wave unit uses the visible source with a warning",
+      "ok": true
+    },
+    {
+      "name": "Actual spawns begin within the visible nest footprint before movement",
+      "ok": true,
+      "actual": [
+        {
+          "source": 155035,
+          "node": 155035,
+          "offset": 0.10314985760566234,
+          "dir": [
+            0.8039654090955094,
+            0.5721204037608368,
+            -0.16222781690704968
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Destroying the source cancels its pending buildup",
+      "ok": true,
+      "actual": 0
+    },
+    {
+      "name": "Final wave introduces a protected visible guardian source",
+      "ok": true
+    },
+    {
+      "name": "Destroying a source cannot cancel the owed boss",
+      "ok": true
+    },
+    {
+      "name": "Boss actually emerges before its nest becomes vulnerable",
+      "ok": true
+    },
+    {
+      "name": "Actual boss shedding summons escorts inside living nests, away from the mobile boss",
+      "ok": true
+    },
+    {
+      "name": "An actual evolved mite split emerges at a living nest and remains bounded",
+      "ok": true
+    },
+    {
+      "name": "Destroyed nests prevent new boss escorts without erasing the live guardian",
+      "ok": true
+    },
+    {
+      "name": "World-anchored Upgrade remains a real clickable action",
+      "ok": true
+    },
+    {
+      "name": "F lends pointer ownership without jumping or leaving the commander",
+      "ok": true
+    }
+  ],
+  "faults": []
+}

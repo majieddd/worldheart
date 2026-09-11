@@ -1,7 +1,7 @@
 // Authored geometry vocabulary, independent of temperature, material and foliage.
 // A planet mixes these groups; any group can carry any biome's surface rules.
 // Dimensions are world metres. Change the version when the seeded layout changes.
-export const LANDFORM_VERSION = 3;
+export const LANDFORM_VERSION = 4;
 export const LANDFORM_RECIPES = Object.freeze({
   range: Object.freeze({ label: 'Ridge chain', relief: 'range', gain: 1.18, roughness: .28 }),
   canyon: Object.freeze({ label: 'Winding canyon', relief: 'canyon', gain: 1.65, roughness: .1 }),
@@ -11,6 +11,10 @@ export const LANDFORM_RECIPES = Object.freeze({
   plateau: Object.freeze({ label: 'Terraced plateau', relief: 'canyon', gain: .8, roughness: .06 }),
   ravine: Object.freeze({ label: 'Branching ravine', relief: 'canyon', gain: .95, roughness: .14 }),
   crevice: Object.freeze({ label: 'Fault crevices', relief: 'canyon', gain: .65, roughness: .18 }),
+  buttes: Object.freeze({ label: 'Eroded butte cluster', relief: 'canyon', gain: 1.15, roughness: .12 }),
+  caldera: Object.freeze({ label: 'Breached caldera', relief: 'range', gain: .7, roughness: .14 }),
+  dunes: Object.freeze({ label: 'Dune field', relief: 'range', gain: .085, roughness: .1 }),
+  valley: Object.freeze({ label: 'Glacial trough', relief: 'range', gain: .48, roughness: .14 }),
 });
 
 export function formationHeightLimit(profile) {
@@ -23,10 +27,10 @@ export function formationDepthLimit(profile) {
     ...(profile.formations?.groups || []).map(g => g.height || 0)) * .14 + 2;
 }
 export const LANDFORM_MIXES = Object.freeze({
-  varied: Object.freeze({ spacing: 104, valley: 6, weights: { range: 4, canyon: 3, basin: 1, hills: 4, mesa: 1, plateau: 2, ravine: 3, crevice: 2 } }),
-  alpine: Object.freeze({ spacing: 142, valley: 8, weights: { range: 7, canyon: 3, basin: 1, hills: 2, mesa: 1, plateau: 2, ravine: 2, crevice: 2 } }),
-  canyon: Object.freeze({ spacing: 112, valley: 6, weights: { range: 4, canyon: 5, basin: 1, hills: 3, mesa: 2, plateau: 3, ravine: 4, crevice: 3 } }),
-  ocean: Object.freeze({ spacing: 96, valley: 6, weights: { range: 4, canyon: 2, basin: 2, hills: 4, mesa: 1, plateau: 2, ravine: 2, crevice: 2 } }),
+  varied: Object.freeze({ spacing: 104, valley: 6, weights: { range: 5, canyon: 3, basin: 1, hills: 4, mesa: 1, plateau: 3, ravine: 3, crevice: 2, buttes: 3, caldera: 2, dunes: 2, valley: 3 } }),
+  alpine: Object.freeze({ spacing: 128, valley: 8, weights: { range: 8, canyon: 3, basin: 1, hills: 2, mesa: 1, plateau: 2, ravine: 2, crevice: 2, buttes: 2, caldera: 2, dunes: 1, valley: 4 } }),
+  canyon: Object.freeze({ spacing: 108, valley: 6, weights: { range: 4, canyon: 5, basin: 1, hills: 3, mesa: 2, plateau: 3, ravine: 4, crevice: 3, buttes: 4, caldera: 1, dunes: 3, valley: 2 } }),
+  ocean: Object.freeze({ spacing: 96, valley: 6, weights: { range: 4, canyon: 2, basin: 2, hills: 4, mesa: 1, plateau: 2, ravine: 2, crevice: 2, buttes: 2, caldera: 3, dunes: 1, valley: 3 } }),
 });
 
 export function landformSettings(key = 'varied', overrides = {}) {

@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { CONFIG, CAM_TUNE, TERRAIN_PROFILES, PALETTE } from './config.js';
+import { CONFIG, CAM_TUNE, TERRAIN_PROFILES } from './config.js';
 import { browserStorage } from './storage.js';
 import { worldgenUrl, rememberWorld } from './worldgen.js';
-import { surfacePoint, FORMATIONS, ECOLOGY, terrainHeight, biomeAt } from './world.js';
-import { nestSite } from './nest-sites.js';
+import { FORMATIONS, ECOLOGY, terrainHeight, biomeAt } from './world.js';
+import { NestAtlasView } from './nest-atlas-view.js';
 import { LANDFORM_RECIPES } from './terrain/recipes.js';
 import { surveyLandmarks } from './terrain/landmarks.js';
 
@@ -37,7 +37,8 @@ export class WorldgenPanel {
         <label>Recent worlds<select id="worldgen-history">${this.history.map((x, i) => `<option value="${i}">${x.seed} · ${labels[x.terrain]}</option>`).join('')}</select></label>
         <div class="worldgen-actions"><button class="btn" id="worldgen-home">Base area</button><button class="btn" id="worldgen-peak">Highest peak</button><button class="btn" id="worldgen-globe">Whole planet</button></div>
         <label id="worldgen-formation-label">Explore a formation<select id="worldgen-formation"><option value="">Choose a landform</option></select></label>
-        <label class="worldgen-toggle"><input type="checkbox" id="worldgen-paths"> Show valid nest approaches</label>
+        <label class="worldgen-toggle"><input type="checkbox" id="worldgen-paths"> Show nest habitat and routes</label>
+        <p id="worldgen-atlas" hidden>Cyan outlines: valid battlefield areas and approaches. Pale outlines: potential habitat across the globe. Moving dots follow shared routes toward the base.</p>
         <div class="worldgen-actions"><button class="btn" id="worldgen-copy">Copy seed link</button><a class="btn" id="worldgen-play" target="_blank" rel="noopener">Play this seed</a></div>
         <input id="worldgen-link" aria-label="Seed link" readonly hidden>
         <p id="worldgen-info"></p><p id="worldgen-status" role="status"></p>
@@ -85,7 +86,7 @@ export class WorldgenPanel {
       this.status.textContent=`${LANDFORM_RECIPES[site.type].label}. ${site.inside?'Inside this battlefield.':'Elsewhere on this planet.'} ${site.depth>1?`${site.depth.toFixed(1)}m cut into the surrounding upland.`:'Look around the shoulders and nearby routes.'}`;
     };
     el('paths').disabled = !CONFIG.terrain;
-    el('paths').onchange = () => { if (!this.paths) this.buildRoutes(); if (this.paths) this.paths.visible = el('paths').checked; };
+    el('paths').onchange = () => { if (!this.paths) this.buildRoutes(); this.paths.visible = el('paths').checked; el('atlas').hidden = !el('paths').checked; };
     el('info').textContent = `Seed ${CONFIG.requestedSeed} · generated ${CONFIG.seed} · ${FORMATIONS ? 'landforms v' + FORMATIONS.version : 'classic terrain'} · peak ${nav.height[peak].toFixed(1)}m${ECOLOGY?' · '+ECOLOGY.manifest().regime+' climate':''}`;
     this.status.textContent = saved ? 'Campaign and rewards are separate from this sandbox.' : 'History could not be saved. Copy a seed link to keep this world.';
     this.focus(home, 115);
@@ -108,24 +109,15 @@ export class WorldgenPanel {
   }
 
   buildRoutes() {
-    const {nav} = this, used = new Set(), vertices = [], p = new THREE.Vector3(), q = new THREE.Vector3();
-    let arrived = 0;
-    for (let k = 0; k < 17; k++) {
-      const start = nestSite(nav, nav.portalNodes[k % nav.portalNodes.length], nav.fieldCenter, .5, used, p);
-      if (start < 0) continue;
-      used.add(start); let node = start, count = 0;
-      while (node !== nav.heartNode && node >= 0 && count++ < nav.n) {
-        const next = nav.march.next[node]; if (next < 0 || next === node) break;
-        nav.nodeDir(node, p); surfacePoint(p, q); q.addScaledVector(p, .4); vertices.push(q.x, q.y, q.z);
-        nav.nodeDir(next, p); surfacePoint(p, q); q.addScaledVector(p, .4); vertices.push(q.x, q.y, q.z);
-        node = next;
-      }
-      if (node === nav.heartNode) arrived++;
-    }
-    this.paths = new THREE.LineSegments(new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)),
-      new THREE.LineBasicMaterial({color: PALETTE.energy, transparent: true, opacity: .85}));
-    this.scene.add(this.paths);
-    this.status.textContent = `${arrived} / 17 valid nest approaches reach the base. Lines follow the ground route field.`;
-    this.routeCount = arrived;
+    this.routeView = new NestAtlasView(this.scene,this.nav); this.paths=this.routeView.group;
+    this.routeCount=this.routeView.routeCount;
+    this.status.textContent='Checking battlefield approaches and surveying the whole planet…';
+    this.routeView.routesReady.then(()=>{this.routeCount=this.routeView.routeCount;},()=>{});
+    this.atlasReady=this.routeView.build().then(stats=>{
+      this.panel.querySelector('#worldgen-atlas').textContent=`Cyan outlines enclose ${stats.exact.toLocaleString()} individually valid battlefield sites, with ${this.routeCount} example approaches. Pale outlines enclose ${stats.potential.toLocaleString()} potential habitat samples across the whole planet; moving dots show shared routes toward the base. ${stats.disconnected.toLocaleString()} samples lack a surveyed route to this base. Global lines are a coarse terrain survey; distance limits and combat placement still apply.`;
+      this.status.textContent='Planet survey ready. Rotate the globe to inspect the other hemisphere.';
+      return stats;
+    }).catch(error=>{this.status.textContent='Terrain survey could not finish. Reload this world to retry.';console.error(error);return null;});
   }
+  update(dt){this.routeView?.update(dt);}
 }

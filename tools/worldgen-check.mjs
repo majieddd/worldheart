@@ -40,7 +40,7 @@ try{
   return !r.keys.has('ArrowLeft')&&Math.abs(r.velLat)+Math.abs(r.velLon)<.00001&&
    [Math.sin(r.lon)*c,Math.sin(r.lat),Math.cos(r.lon)*c].reduce((sum,n,k)=>sum+n*site.dir[k],0)>.99999;
  }));
- await lab.locator('#worldgen-paths').check();check('Real nest approach overlay reaches the heart from all seventeen sources',await lab.evaluate(()=>WH.worldgen.routeCount===17&&WH.worldgen.paths.visible));
+ await lab.locator('#worldgen-paths').check();await lab.evaluate(()=>WH.worldgen.routeView.routesReady);check('Real nest approach overlay reaches the heart from all seventeen sources',await lab.evaluate(()=>WH.worldgen.routeCount===17&&WH.worldgen.paths.visible));
  await lab.locator('#worldgen-peak').click();await lab.evaluate(()=>WH.step(1));await lab.screenshot({path:resolve(out,'peak-and-routes.png')});
  check('Peak camera stays finite and above the planet',await lab.evaluate(()=>WH.rig.camera.matrixWorld.elements.every(Number.isFinite)&&WH.rig.camera.position.length()>WH.CONFIG.planetRadius));
  await lab.locator('#worldgen-globe').click();await lab.evaluate(()=>WH.step(1));check('Whole-planet inspection has a separate wide zoom',await lab.evaluate(()=>WH.rig.dist>WH.CONFIG.planetRadius*2.7));

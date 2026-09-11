@@ -7,7 +7,7 @@ keep their original terrain formula.
 
 ## Authoring boundaries
 
-`js/terrain/recipes.js` holds version 3, eight group recipes and four relief
+`js/terrain/recipes.js` holds version 4, twelve group recipes and four relief
 mixes. `js/terrain/formations.js` lays out and samples those groups. `world.js`
 composes their relief with continents and small surface detail, then applies
 elemental stone rules and the independent `terrain/ecology.js` climate fields.
@@ -21,14 +21,18 @@ resulting surface, rather than drawing hidden routes through blocked mountains.
 | Open basin | Bowl, surrounding shoulders, two outlets | A clearing with multiple entrances |
 | Rolling foothills | Small irregular ridges and saddles inspired by the classic field | Broad traversable approaches and modest high ground |
 | Eroded tableland | Flat bench, softened perimeter, side pass | Stable tower locations above a lower approach |
-| Terraced plateau | Two broad benches, softened escarpments and an off-centre outlet | High tower shelves with an open route alongside them |
-| Branching ravine | A main incision and a tributary through an uplifted shelf | Intersecting lower routes between enclosing banks |
+| Terraced plateau | Asymmetric tiers, scalloped flanks, a ramp and side outlet | Wide tower shelves above an open lower approach |
+| Branching ravine | Variable width, unequal banks and one to three tributaries | Intersecting lower routes between enclosing banks |
 | Fault crevices | Narrow, bending fractures with smaller branches | Deep cuts; submerged bottoms fill with water and use swimming rules |
+| Eroded butte cluster | Three to five separate flat-topped remnants | Irregular gaps through a cluster of elevated positions |
+| Breached caldera | Undulating ring around a low interior, with an open breach | A sheltered floor that connects to exterior valleys |
+| Dune field | Parallel low crests with a long windward side and shorter slip face | Low rolling obstacles beside larger formations |
+| Glacial trough | Broad U-shaped floor between unequal shoulders | A wide corridor distinct from narrow ravines |
 
 Mixed landscapes, Giant peaks, Deep canyons and Ocean islands are **relief mixes**,
 not exclusive biome assignments. Any group can have neutral, hot or cold
 surfaces. All four mixes include hills, tall ranges and incised uplands, with
-different proportions and scales. No individual battlefield guarantees all eight
+different proportions and scales. No individual battlefield guarantees all twelve
 families. Low-frequency geology biases neighbouring family choices and peak
 amplitudes, rather than distributing every recipe with identical probability.
 Temperature, altitude snow, water and foliage remain separate fields.
@@ -74,6 +78,14 @@ regions have fewer trees; mild plateau benches can support them below treeline.
    Nest placement also penalizes wet distance along the complete existing route.
    A dry clearing across a long swim no longer beats a nearby dry approach just
    because its compass bearing is closer. Water remains an allowed fallback.
+8. Version 4 additionally certifies the actual battlefield, excluding the graph's
+   outer margin: at least three exposed families (four sampled points each,
+   height above 2m and recipe relief above 1m), 95% connected dry floor, and at
+   least eight sampled reachable floor positions with raised terrain on opposite
+   sides. A minimum 16m peak prevents the mixed front becoming a flat plain.
+   This acceptance is not relaxed during the bounded 32-seed search. The higher
+   Giant-peaks requirement remains. The geometry itself supplies the passages;
+   navigation does not carve invisible shortcuts.
 
 This is a gameplay-oriented geometric generator, not a geological erosion
 simulation or a claim that every seed has been proven. Site boundaries form a
@@ -109,6 +121,17 @@ labelling examples elsewhere on the globe. Incisions need visible banks on both
 sides; an isolated sea cliff cannot qualify. It does not edit individual group
 parameters. `ECOLOGY.manifest()` exposes the accepted seed's climate regime.
 
+The nest overlay outlines all individually valid battlefield clearings in cyan,
+using the same clearance and route predicates as physical spawning. It also
+surveys the entire globe on an independent 40,962-node inspection graph. Pale
+outlines show potential habitat, including disconnected regions; dotted shared
+routes flow toward the base. Every coarse edge is sampled at 1.2m or less to
+avoid bridging mountain barriers. Global habitat is approximate and does not
+grant spawn legality outside the fine combat graph or its 160m route budget.
+The survey yields between chunks, is built once on demand, and never rebuilds
+combat navigation. Animation changes a GPU uniform; reduced motion holds it
+still. Outlines replace the first pass's dense point carpet after visual review.
+
 Inspect `FORMATIONS.manifest()` from `js/world.js` for the version, effective
 seed, settings and actual groups. `FORMATIONS.inspect(x,y,z)` identifies the
 group, neighbour, valley distance and relief at a unit direction. The manifest
@@ -137,10 +160,15 @@ bound also controls the picking shell and camera clearance fallback.
   route node itself is above water. It is a sampled spatial measure.
 - Existing shape, terrain, placement, all-99 physical-source, legal-run,
   camera and performance tools remain required integration evidence.
+- `node tools/terrain-atlas-check.mjs artifacts/terrain-atlas`: whole-globe
+  coverage, exact battlefield eligibility, animation/reduced motion, buffer
+  reuse, graph immutability, hidden-during-build lifecycle and rendered views.
 
 The [implementation ledger](qa/implementation/MODULAR-LANDFORMS.md) records
 results and retained failures. Whole-campaign, broader seed/device and owner
 visual/balance acceptance remain separate from these fixtures.
+The v4 [research and adversarial ledger](qa/implementation/TERRAIN-ATLAS.md)
+records the bounded second pass and its integration evidence.
 
 ## Research translated into this implementation
 

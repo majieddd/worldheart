@@ -42,6 +42,9 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
       height: profile[recipe.relief] * recipe.gain * (.78 + rng() * .44), phase: rng() * TAU,
       size: .78 + rng() * .44, roughness: recipe.roughness * (.85 + rng() * .3), province });
     const m = modules.at(-1);
+    // Shape parameters derive from the existing phase, not new random draws.
+    // Adding a silhouette detail does not reroll every subsequent region.
+    m.variant = (Math.floor(m.phase * 1000) % 3);
     if (type === 'range') m.height *= mix === 'alpine' ? .87 + .13 * province : .75 + .25 * province;
     if (authored?.height !== undefined) m.height = authored.height;
     if (authored?.size !== undefined) m.size = authored.size;
@@ -157,7 +160,10 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         const first = modules[chain.members[0]], last = modules[chain.members.at(-1)];
         const along = (x * (last.dir[0] - first.dir[0]) + y * (last.dir[1] - first.dir[1]) + z * (last.dir[2] - first.dir[2])) * radius;
         const fold = .5 + .5 * Math.cos(along / chain.extent * 13 + first.phase + warp(x * 9, y * 9, z * 9));
-        h = chain.height * shoulder * (.25 + .75 * spine) * (1 - chain.roughness + chain.roughness * fold * fold);
+        // A third territory can narrow the middle of a long ridge. Give its
+        // connecting saddle a firmer shoulder without closing the outer floor.
+        const chainShoulder = smoothstep(0, .3, rise) * rise;
+        h = chain.height * chainShoulder * (.25 + .75 * spine) * (1 - chain.roughness + chain.roughness * fold * fold);
       } else if (m.type === 'range') {
         const spine = Math.pow(clamp(1 - channel / (extent * .88), 0, 1), 1.4);
         h = m.height * shoulder * (.38 + .62 * spine) * (1 - m.roughness + m.roughness * folds * folds);
@@ -175,18 +181,31 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         entrance = smoothstep(valley, valley + extent * .24, Math.abs(v + extent * .27));
         h = m.height * smoothstep(0, .66, shoulder) * entrance;
       } else if (m.type === 'plateau') {
-        // Two wide, buildable benches with rounded escarpments. An off-center
-        // outlet cuts through one flank without splitting every top in half.
-        const upland = m.height * (.48 * smoothstep(.08, .4, rise) + .52 * smoothstep(.48, .78, rise));
-        const outlet = 1 - smoothstep(valley * .8, valley + extent * .21, Math.abs(v + bend - extent * .43));
+        // Asymmetric two/three-tier shelves, scalloped flanks and one broad
+        // ramp. Bench interiors stay flat enough to support emplacements.
+        const scallop = Math.sin(u / extent * 7 + m.phase) * Math.sin(v / extent * 5) * .055;
+        const shelf = rise + scallop * smoothstep(0, .2, rise);
+        const upper = m.variant === 0 ? .69 : .79;
+        const tiers = .46 * smoothstep(.04, .25, shelf) + .34 * smoothstep(.43, .58, shelf)
+          + .2 * smoothstep(upper, upper + .1, shelf);
+        const ramp = (1 - smoothstep(.14, .38, Math.abs(v / extent + .2))) * smoothstep(-.2, .4, u / extent);
+        const upland = m.height * (tiers * (1 - ramp) + rise * ramp);
+        const outlet = 1 - smoothstep(valley * .65, valley + extent * .12, Math.abs(v + bend - extent * .57));
         incision = upland * outlet; h = upland - incision;
       } else if (m.type === 'ravine') {
-        // A branching cut incised into an uplifted shelf. The tributary joins
-        // downstream rather than making a repeated cross through every cell.
-        const tributary = Math.abs(v - u * .58 + bend * .6) + Math.max(0, -u) * .9;
-        const drain = Math.min(channel, tributary);
-        const upland = m.height * smoothstep(0, .67, shoulder) * (1 - m.roughness + m.roughness * folds);
-        const cut = 1 - smoothstep(valley * .65, valley + extent * .3, drain);
+        // Variable-width, asymmetric erosion with one to three tributaries.
+        // All bottoms connect to an outlet instead of ending in a sealed pit.
+        let drain = channel;
+        for (let branch = 0; branch <= m.variant; branch++) {
+          const sign = branch % 2 ? -1 : 1, join = (branch - .8) * extent * .32;
+          const tributary = Math.abs(v - sign * (u - join) * (.4 + .17 * branch) + bend * .6)
+            + Math.max(0, join - u) * .85;
+          drain = Math.min(drain, tributary);
+        }
+        const bank = 1 - m.roughness + m.roughness * (.5 + .5 * Math.sin(u / extent * 4 + v / extent + m.phase));
+        const upland = m.height * smoothstep(0, .6, shoulder) * bank;
+        const width = valley * .62 + extent * (.025 + .025 * Math.sin(u / extent * 5 + m.phase));
+        const cut = 1 - smoothstep(width, width + extent * (.14 + .06 * smoothstep(-extent, extent, v)), drain);
         incision = upland * cut; h = upland - incision;
       } else if (m.type === 'crevice') {
         // Narrow angular faults descend below their enclosing rock. Where a
@@ -198,6 +217,41 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         const upland = m.height * smoothstep(0, .62, shoulder);
         incision = (upland + m.height * .14 * smoothstep(.25, .7, rise)) * cut;
         h = upland - incision;
+      } else if (m.type === 'buttes') {
+        // Several independent remnants, not a single mesa with a new name.
+        // Irregular gaps between them are real ground, usable by every mover.
+        let cluster = 0;
+        for (let k = 0; k < 3 + m.variant; k++) {
+          const angle = k * 2.39996323 + m.phase, offset = extent * (.27 + .05 * (k % 2));
+          const width = extent * (.2 + .025 * ((k + m.variant) % 3));
+          const d = Math.hypot(u - Math.cos(angle) * offset, v - Math.sin(angle) * offset);
+          const remnant = 1 - smoothstep(width * .34, width, d);
+          cluster = Math.max(cluster, remnant * (.64 + .12 * (k % 3)));
+        }
+        h = m.height * smoothstep(0, .28, rise) * cluster;
+      } else if (m.type === 'caldera') {
+        // Irregular rim around a broad floor. A permanent breach connects the
+        // interior to the exterior, including on dry volcanic planets.
+        const radial = Math.hypot(u, v), angle = Math.atan2(v, u);
+        const rim = extent * (.48 + .055 * Math.sin(angle * 3 + m.phase));
+        const wall = Math.pow(Math.max(0, 1 - Math.abs(radial - rim) / (extent * .31)), 1.15);
+        const breach = smoothstep(valley * .75, valley + extent * .13, Math.abs(v + bend * .35));
+        h = m.height * smoothstep(0, .33, rise) * wall * (u > 0 ? breach : 1);
+        incision = m.height * Math.max(0,1-radial/(rim*.7)) * smoothstep(0,.25,rise);
+      } else if (m.type === 'dunes') {
+        // Parallel wind-shaped crests, with a long windward slope and short
+        // slip face. Low relief remains distinct from rocky mountain spines.
+        const cycle = u / extent * (2.6 + m.variant * .3) + .18 * Math.sin(v / extent * 3 + m.phase) + m.phase;
+        const t = cycle - Math.floor(cycle);
+        const crest = t < .76 ? smoothstep(0, .76, t) : 1 - smoothstep(.76, 1, t);
+        h = m.height * smoothstep(0, .4, rise) * crest;
+      } else if (m.type === 'valley') {
+        // A broad U-shaped trough between unequal glacial shoulders, wider
+        // and smoother at its floor than the narrow V-shaped ravine family.
+        const width = extent * (.25 + .035 * Math.sin(u / extent * 3 + m.phase));
+        const wall = smoothstep(width, width + extent * .4, channel);
+        const upland = m.height * smoothstep(0, .56, shoulder) * (.88 + .12 * Math.sin(u / extent * 4 + m.phase));
+        incision = upland * (1 - wall); h = upland - incision;
       } else {
         // The classic field's ridged-noise hills create irregular low walls
         // and saddles. Keep that smaller scale beside the major peaks.

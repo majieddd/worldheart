@@ -9,21 +9,22 @@ export function surveyLandmarks(field, heightAt, center, theta) {
       const p=m.dir.map((n,k)=>n+m.axis[k]*u+m.side[k]*v),length=Math.hypot(...p),dir=p.map(n=>n/length);
       const sample=field.inspect(...dir);if(sample.id!==m.id)continue;
       const height=heightAt(...dir,false);
-      const cut=['ravine','crevice','canyon'].includes(sample.type);
+      const crater=sample.type==='caldera';
+      const cut=['ravine','crevice','canyon','valley','caldera'].includes(sample.type);
       let depth=0;
       if(cut&&sample.incision>1){
         // Measure the visible banks too: a large theoretical cut beneath an
         // ocean must not win a camera jump to an empty patch of water.
-        const banks=[-1,1].map(sign=>{
+        const banks=(crater?Array.from({length:8},(_,i)=>i*Math.PI/4):[-Math.PI/2,Math.PI/2]).map(angle=>{
           let raised=0;
-          for(const distance of [12,20,28]){
-            const bank=dir.map((n,k)=>n+m.side[k]*sign*distance/field.radius),l=Math.hypot(...bank),p=bank.map(n=>n/l);
+          for(const distance of (crater?[.35,.5,.65].map(v=>v*m.extent):[12,20,28])){
+            const bank=dir.map((n,k)=>n+(m.side[k]*Math.sin(angle)+m.axis[k]*Math.cos(angle))*distance/field.radius),l=Math.hypot(...bank),p=bank.map(n=>n/l);
             if(field.inspect(...p).id===m.id)raised=Math.max(raised,heightAt(...p,false)-Math.max(.03,height));
           }
           return raised;
         });
         // A lone sea cliff is not an exposed incision through an upland.
-        depth=Math.min(...banks);
+        depth=crater?banks.sort((a,b)=>a-b)[2]:Math.min(...banks);
       }
       const score=cut?depth:(height>.2?height:0);
       if(score<2)continue;

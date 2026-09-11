@@ -123,6 +123,17 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 ### Terrain traversal and flight
 
+U41-U43 is implemented in landforms v4: a whole-planet habitat atlas with
+moving dotted area outlines and shared routes, distinguished from exact current
+battlefield spawn legality. Accepted fronts require substantial exposed shape
+diversity, connected dry floor and passages between raised terrain. Researched
+plateau/ravine refinements and new buttes, calderas, dunes and glacial troughs
+went through two measured passes. Functional, route and legal-play evidence
+passes; atlas frame pacing and broader performance remain M0 acceptance work.
+Published in V2 through draft PR #32 with 50 public behavior checks and 208
+asset/source checks. Stable main is unchanged.
+[Terrain atlas ledger and evidence](qa/implementation/TERRAIN-ATLAS.md).
+
 The September 11 follow-up (U38-U40), implemented in landforms v3, combines classic-inspired hills,
 Giant-peaks scale and Deep-canyon pathways within individual planets. Terrain
 mixes set emphasis, not exclusive landform families. It adds plateaus, ravines and

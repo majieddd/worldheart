@@ -4,9 +4,10 @@ Updated 2026-09-11. This is the collaborator entry point for the owner's new dir
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
-Current review: [diverse landscapes and biomes, PR #31](https://github.com/majieddd/worldheart/pull/31),
-stacked on [modest zoom, world generator and ridges, PR #30](https://github.com/majieddd/worldheart/pull/30).
-Both are drafts. Earlier review slices and their evidence remain below.
+Current review: [terrain corridors and global habitat atlas, PR #32](https://github.com/majieddd/worldheart/pull/32),
+stacked on [diverse landscapes and biomes, PR #31](https://github.com/majieddd/worldheart/pull/31),
+then [modest zoom, world generator and ridges, PR #30](https://github.com/majieddd/worldheart/pull/30).
+These are drafts. Earlier review slices and their evidence remain below.
 
 **Live development:** [Play V2](https://majieddd.github.io/worldheart/v2/).
 The full implementation stack is now published there from `preview/v2`, while
@@ -16,6 +17,21 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 [first deployment](https://github.com/majieddd/worldheart/actions/runs/34044866229)
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
+
+Published and publicly verified September 11: Codex on `feature/terrain-routes-and-atlas`, based on
+`525a220`, owns U41-U43: animated dotted approaches and a global habitat atlas,
+stronger visible-route/formation acceptance, researched terrain refinements and
+new landforms. Landforms v4 adds buttes, calderas, dunes and glacial troughs,
+distinct shelves/cuts and strict actual-battlefield variety/connectivity gates.
+The atlas outlines valid areas and shows dotted shared routes over the globe.
+271 tests, 116 fixed-field assertions, 15,147 isolated arrivals, 96 terrain,
+96 placement and a legal 15-wave victory pass. The final gameplay stress probe
+passes, but atlas p99 frame pacing and broader device performance remain open
+under M0. Functional build `0c48fe6` deployed through
+[Pages 34626737595](https://github.com/majieddd/worldheart/actions/runs/34626737595):
+50 public behavior cases and 208 live asset/source identity checks pass; main
+remains `1374122`. The documentation handoff preserves those runtime bytes.
+[Terrain atlas ledger and retained failures](qa/implementation/TERRAIN-ATLAS.md).
 
 Published and publicly verified September 11: Codex on `feature/diverse-planet-landscapes`, based on
 preview `3a60ac1`, owns U38-U40: combined hills/major peaks/canyons per planet,

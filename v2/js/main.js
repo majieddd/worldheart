@@ -603,6 +603,7 @@ function stepFrame(dt, render) {
   // a scripted verification run has to see the same shadows a player does.
   updateShadowCamera();
   world.update(dt, rig.camera.position);
+  window.WH?.worldgen?.update(dt);
   // Drives the draft timer. Outside the simDt gate on purpose: the draft must
   // keep counting while the director is held idle between waves.
   if (mode99 && game && game.state === 'playing' && !game.paused) mode99.update(dt);
