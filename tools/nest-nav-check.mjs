@@ -83,7 +83,7 @@ if (index) {
     }
   }
   await Promise.all([worker(), worker()]); results.sort((a, b) => a.index - b.index);
-  const report = { scope: 'Sampled real-worldgen physical nest sites and isolated enemy traversal; not combat or all99 coverage', source, seed, requested, results,
+  const report = { scope: 'Requested real-worldgen planet definitions, physical nest sites and isolated enemy traversal; not combat or full-campaign completion', source, seed, requested, results,
     pass: results.length === requested.length && results.every(r => r.pass) };
   writeFileSync(resolve(out, 'results.json'), JSON.stringify(report, null, 2) + '\n'); if (!report.pass) process.exitCode = 1;
 }

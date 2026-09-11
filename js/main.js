@@ -504,6 +504,10 @@ async function boot() {
   rig.introFlight(heartPos.clone().normalize());
   rig.autoOrbit = rig.confine ? 0 : 0.045;
   ui.showTitle();
+  if (CONFIG.worldgen) {
+    const { WorldgenPanel } = await import('./ui-worldgen.js');
+    window.WH.worldgen = new WorldgenPanel({ui, game, world, nav, rig, possession, scene});
+  }
 
   let prev = performance.now();
   let frameFaults = 0;

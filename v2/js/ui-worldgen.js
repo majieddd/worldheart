@@ -1,0 +1,115 @@
+import * as THREE from 'three';
+import { CONFIG, CAM_TUNE, TERRAIN_PROFILES, PALETTE } from './config.js';
+import { browserStorage } from './storage.js';
+import { worldgenUrl, rememberWorld } from './worldgen.js';
+import { surfacePoint, FORMATIONS } from './world.js';
+import { nestSite } from './nest-sites.js';
+
+// One inspector component uses the actual generated scene and navigation field.
+// A new seed reloads their entire lifecycle instead of leaving old pooled units,
+// paths or GPU buffers attached to a different planet.
+export class WorldgenPanel {
+  constructor({ui, game, world, nav, rig, possession, scene}) {
+    Object.assign(this, {ui, game, world, nav, rig, scene});
+    this.terrain = CONFIG.terrain ? CONFIG.terrainKey : 'classic';
+    const labels = Object.fromEntries(Object.entries(TERRAIN_PROFILES).map(([key, value]) => [key, value.name]));
+    labels.classic = 'Classic whole planet';
+    let history = [];
+    try { history = JSON.parse(browserStorage.getItem('worldHistory') || '[]'); }
+    catch { /* A denied or invalid local history cannot prevent inspection. */ }
+    this.history = rememberWorld(history, {seed: CONFIG.requestedSeed, terrain: this.terrain});
+    let saved = true;
+    try { browserStorage.setItem('worldHistory', JSON.stringify(this.history)); } catch { saved = false; }
+
+    const panel = this.panel = document.createElement('details');
+    panel.id = 'worldgen-panel'; panel.className = 'panel'; panel.open = true;
+    panel.innerHTML = `<summary>World generator <small>Inspection sandbox</small></summary>
+      <div class="worldgen-controls">
+        <p>Roll a world, explore its terrain, then play the seed in a new tab.</p>
+        <form id="worldgen-form">
+          <label>Terrain<select id="worldgen-terrain">${Object.entries(labels).map(([key, label]) => `<option value="${key}">${label}</option>`).join('')}</select></label>
+          <button class="btn primary" type="button" id="worldgen-new">Generate world</button>
+          <label>Seed<input id="worldgen-seed" inputmode="numeric" pattern="[0-9]+" required aria-describedby="worldgen-status"></label>
+          <button class="btn" type="submit">Load seed</button>
+        </form>
+        <label>Recent worlds<select id="worldgen-history">${this.history.map((x, i) => `<option value="${i}">${x.seed} · ${labels[x.terrain]}</option>`).join('')}</select></label>
+        <div class="worldgen-actions"><button class="btn" id="worldgen-home">Base area</button><button class="btn" id="worldgen-peak">Highest peak</button><button class="btn" id="worldgen-globe">Whole planet</button></div>
+        <label class="worldgen-toggle"><input type="checkbox" id="worldgen-paths"> Show valid nest approaches</label>
+        <div class="worldgen-actions"><button class="btn" id="worldgen-copy">Copy seed link</button><a class="btn" id="worldgen-play" target="_blank" rel="noopener">Play this seed</a></div>
+        <input id="worldgen-link" aria-label="Seed link" readonly hidden>
+        <p id="worldgen-info"></p><p id="worldgen-status" role="status"></p>
+        <p>Drag terrain or use WASD / arrows. Wheel to zoom. Collapse this panel for a clear view.</p>
+      </div>`;
+    document.body.append(panel); document.body.classList.add('worldgen');
+    const el = id => panel.querySelector('#worldgen-' + id);
+    this.status = el('status'); el('seed').value = CONFIG.requestedSeed; el('terrain').value = this.terrain;
+    el('play').href = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain, false);
+    el('form').onsubmit = event => { event.preventDefault(); this.generate(el('seed').value, el('terrain').value); };
+    el('new').onclick = () => {
+      const data = new Uint32Array(1); crypto.getRandomValues(data);
+      this.generate((data[0] || 1) === CONFIG.requestedSeed ? (data[0] % 0xfffffffe) + 1 : data[0] || 1, el('terrain').value);
+    };
+    el('history').onchange = () => { const selected = this.history[Number(el('history').value)]; this.generate(selected.seed, selected.terrain); };
+    el('copy').onclick = async () => {
+      const link = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain);
+      try { await navigator.clipboard.writeText(link); this.status.textContent = 'Seed link copied.'; }
+      catch { el('link').hidden = false; el('link').value = link; el('link').focus(); el('link').select(); this.status.textContent = 'Copy the selected seed link.'; }
+    };
+    // Keep the game in its non-simulating title state with the overlay hidden.
+    // Inspection cannot earn currency, release a wave or enter possession.
+    game.paused = true; possession?.suspend(true); ui.el['title-overlay'].classList.remove('show');
+    rig.cancelFlight(); rig.keys.clear(); rig.velLon = rig.velLat = 0; rig.autoOrbit = 0;
+    rig.confine = null; rig.frontierTheta = null; CAM_TUNE.maxAlt = 3.2;
+    for (const part of [world.fogVeil, world.cloudDeck, world.fieldWall]) if (part) part.mesh.visible = false;
+    const home = world.heart.group.position.clone().normalize();
+    let peak = nav.heartNode;
+    for (let i = 0; i < nav.n; i++) if (nav.height[i] > nav.height[peak]) peak = i;
+    const peakDir = nav.nodeDir(peak, new THREE.Vector3());
+    el('home').onclick = () => this.focus(home, 115);
+    el('peak').onclick = () => this.focus(peakDir, Math.max(65, CONFIG.terrain?.range || 40));
+    el('globe').onclick = () => this.focus(home, CONFIG.planetRadius * 2.8);
+    el('paths').disabled = !CONFIG.terrain;
+    el('paths').onchange = () => { if (!this.paths) this.buildRoutes(); if (this.paths) this.paths.visible = el('paths').checked; };
+    el('info').textContent = `Seed ${CONFIG.requestedSeed} · generated ${CONFIG.seed} · ${FORMATIONS ? 'landforms v' + FORMATIONS.version : 'classic terrain'} · peak ${nav.height[peak].toFixed(1)}m`;
+    this.status.textContent = saved ? 'Campaign and rewards are separate from this sandbox.' : 'History could not be saved. Copy a seed link to keep this world.';
+    this.focus(home, 115);
+  }
+
+  focus(dir, height) {
+    this.rig.keys.clear(); this.rig.velLon = this.rig.velLat = 0;
+    this.rig.tiltOffset = 0; this.rig.flyTo(dir, height, .6);
+  }
+
+  generate(input, terrain) {
+    try {
+      if (!/^\d+$/.test(String(input).trim())) throw Error('Enter a whole-number seed.');
+      const url = worldgenUrl(location.href, Number(input), terrain);
+      this.status.textContent = 'Generating terrain and checking routes…';
+      this.panel.setAttribute('aria-busy', 'true');
+      for (const el of this.panel.querySelectorAll('button,input,select')) el.disabled = true;
+      location.href = url;
+    } catch (error) { this.status.textContent = error.message; }
+  }
+
+  buildRoutes() {
+    const {nav} = this, used = new Set(), vertices = [], p = new THREE.Vector3(), q = new THREE.Vector3();
+    let arrived = 0;
+    for (let k = 0; k < 17; k++) {
+      const start = nestSite(nav, nav.portalNodes[k % nav.portalNodes.length], nav.fieldCenter, .5, used, p);
+      if (start < 0) continue;
+      used.add(start); let node = start, count = 0;
+      while (node !== nav.heartNode && node >= 0 && count++ < nav.n) {
+        const next = nav.march.next[node]; if (next < 0 || next === node) break;
+        nav.nodeDir(node, p); surfacePoint(p, q); q.addScaledVector(p, .4); vertices.push(q.x, q.y, q.z);
+        nav.nodeDir(next, p); surfacePoint(p, q); q.addScaledVector(p, .4); vertices.push(q.x, q.y, q.z);
+        node = next;
+      }
+      if (node === nav.heartNode) arrived++;
+    }
+    this.paths = new THREE.LineSegments(new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)),
+      new THREE.LineBasicMaterial({color: PALETTE.energy, transparent: true, opacity: .85}));
+    this.scene.add(this.paths);
+    this.status.textContent = `${arrived} / 17 valid nest approaches reach the base. Lines follow the ground route field.`;
+    this.routeCount = arrived;
+  }
+}

@@ -1,0 +1,824 @@
+{
+  "scope": "Real graph, source approach and recipe inspection; not combat",
+  "source": "C:\\Users\\Majied LaFleur\\Documents\\GPTProjects\\worldheart",
+  "seed": 12345,
+  "results": [
+    {
+      "profile": "varied",
+      "seed": 12345,
+      "effectiveSeed": 36102,
+      "buildMs": 4739.9781,
+      "attempts": 4,
+      "nodes": 186407,
+      "peak": 31.47077178955078,
+      "dryFloorConnected": 0.9999882624975058,
+      "groups": 9,
+      "types": [
+        "hills",
+        "canyon",
+        "range",
+        "mesa"
+      ],
+      "biomes": {
+        "hills": [
+          "neutral",
+          "cold",
+          "hot"
+        ],
+        "canyon": [
+          "neutral",
+          "hot",
+          "cold"
+        ],
+        "range": [
+          "neutral",
+          "cold",
+          "hot"
+        ],
+        "mesa": [
+          "neutral",
+          "hot"
+        ]
+      },
+      "valleys": 658,
+      "inlandValleys": 510,
+      "routes": [
+        {
+          "node": 24993,
+          "steps": 265,
+          "samples": 23,
+          "dryFraction": 0.8695652173913043,
+          "inlandFraction": 0.5652173913043478,
+          "arrived": true
+        },
+        {
+          "node": 51239,
+          "steps": 232,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 24331,
+          "steps": 228,
+          "samples": 19,
+          "dryFraction": 1,
+          "inlandFraction": 0.8421052631578947,
+          "arrived": true
+        },
+        {
+          "node": 151679,
+          "steps": 237,
+          "samples": 20,
+          "dryFraction": 0.8,
+          "inlandFraction": 0.6,
+          "arrived": true
+        },
+        {
+          "node": 89043,
+          "steps": 233,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 101022,
+          "steps": 281,
+          "samples": 24,
+          "dryFraction": 0.6666666666666666,
+          "inlandFraction": 0.5,
+          "arrived": true
+        },
+        {
+          "node": 49562,
+          "steps": 234,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 6265,
+          "steps": 252,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 0.8095238095238095,
+          "arrived": true
+        },
+        {
+          "node": 151890,
+          "steps": 234,
+          "samples": 20,
+          "dryFraction": 0.75,
+          "inlandFraction": 0.55,
+          "arrived": true
+        },
+        {
+          "node": 5417,
+          "steps": 231,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 100835,
+          "steps": 273,
+          "samples": 23,
+          "dryFraction": 0.782608695652174,
+          "inlandFraction": 0.5217391304347826,
+          "arrived": true
+        },
+        {
+          "node": 50643,
+          "steps": 236,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 97604,
+          "steps": 233,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 0.85,
+          "arrived": true
+        },
+        {
+          "node": 158946,
+          "steps": 239,
+          "samples": 20,
+          "dryFraction": 0.75,
+          "inlandFraction": 0.55,
+          "arrived": true
+        },
+        {
+          "node": 85614,
+          "steps": 237,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 0.85,
+          "arrived": true
+        },
+        {
+          "node": 74519,
+          "steps": 262,
+          "samples": 22,
+          "dryFraction": 0.8636363636363636,
+          "inlandFraction": 0.6363636363636364,
+          "arrived": true
+        },
+        {
+          "node": 47568,
+          "steps": 244,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 0.7142857142857143,
+          "arrived": true
+        }
+      ],
+      "checks": [
+        {
+          "name": "All seventeen remote physical sources trace to the heart",
+          "ok": true
+        },
+        {
+          "name": "Every sampled field height fits the terrain picking shell",
+          "ok": true
+        },
+        {
+          "name": "At least 95 percent of dry floor belongs to the heart floor network",
+          "ok": true
+        },
+        {
+          "name": "Active front contains multiple formation groups and types",
+          "ok": true
+        },
+        {
+          "name": "Connected valley samples include inland terrain away from shore",
+          "ok": true
+        },
+        {
+          "name": "Most remote approach samples are inland, not coastal ribbons",
+          "ok": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "profile": "alpine",
+      "seed": 12345,
+      "effectiveSeed": 44021,
+      "buildMs": 4390.8363,
+      "attempts": 5,
+      "nodes": 186513,
+      "peak": 96.71395111083984,
+      "dryFloorConnected": 0.9823238139106403,
+      "groups": 5,
+      "types": [
+        "canyon",
+        "mesa",
+        "range"
+      ],
+      "biomes": {
+        "canyon": [
+          "cold",
+          "neutral",
+          "hot"
+        ],
+        "mesa": [
+          "neutral",
+          "cold",
+          "hot"
+        ],
+        "range": [
+          "neutral",
+          "cold",
+          "hot"
+        ]
+      },
+      "valleys": 658,
+      "inlandValleys": 530,
+      "routes": [
+        {
+          "node": 560,
+          "steps": 250,
+          "samples": 21,
+          "dryFraction": 0.9047619047619048,
+          "inlandFraction": 0.7142857142857143,
+          "arrived": true
+        },
+        {
+          "node": 12796,
+          "steps": 269,
+          "samples": 23,
+          "dryFraction": 0.782608695652174,
+          "inlandFraction": 0.5217391304347826,
+          "arrived": true
+        },
+        {
+          "node": 78172,
+          "steps": 232,
+          "samples": 20,
+          "dryFraction": 0.85,
+          "inlandFraction": 0.55,
+          "arrived": true
+        },
+        {
+          "node": 185749,
+          "steps": 226,
+          "samples": 19,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 10233,
+          "steps": 272,
+          "samples": 23,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 137722,
+          "steps": 248,
+          "samples": 21,
+          "dryFraction": 0.9047619047619048,
+          "inlandFraction": 0.7142857142857143,
+          "arrived": true
+        },
+        {
+          "node": 50069,
+          "steps": 276,
+          "samples": 23,
+          "dryFraction": 0.8260869565217391,
+          "inlandFraction": 0.5652173913043478,
+          "arrived": true
+        },
+        {
+          "node": 76882,
+          "steps": 238,
+          "samples": 20,
+          "dryFraction": 0.75,
+          "inlandFraction": 0.55,
+          "arrived": true
+        },
+        {
+          "node": 185651,
+          "steps": 230,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 164596,
+          "steps": 262,
+          "samples": 22,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 135634,
+          "steps": 245,
+          "samples": 21,
+          "dryFraction": 0.8571428571428571,
+          "inlandFraction": 0.6666666666666666,
+          "arrived": true
+        },
+        {
+          "node": 49879,
+          "steps": 282,
+          "samples": 24,
+          "dryFraction": 0.7916666666666666,
+          "inlandFraction": 0.5416666666666666,
+          "arrived": true
+        },
+        {
+          "node": 77498,
+          "steps": 244,
+          "samples": 21,
+          "dryFraction": 0.7619047619047619,
+          "inlandFraction": 0.47619047619047616,
+          "arrived": true
+        },
+        {
+          "node": 185469,
+          "steps": 221,
+          "samples": 19,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 40694,
+          "steps": 243,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 135461,
+          "steps": 241,
+          "samples": 21,
+          "dryFraction": 0.8571428571428571,
+          "inlandFraction": 0.6666666666666666,
+          "arrived": true
+        },
+        {
+          "node": 50268,
+          "steps": 282,
+          "samples": 24,
+          "dryFraction": 0.7916666666666666,
+          "inlandFraction": 0.5416666666666666,
+          "arrived": true
+        }
+      ],
+      "checks": [
+        {
+          "name": "All seventeen remote physical sources trace to the heart",
+          "ok": true
+        },
+        {
+          "name": "Every sampled field height fits the terrain picking shell",
+          "ok": true
+        },
+        {
+          "name": "At least 95 percent of dry floor belongs to the heart floor network",
+          "ok": true
+        },
+        {
+          "name": "Giant-peaks battlefield contains a real major peak",
+          "ok": true
+        },
+        {
+          "name": "Active front contains multiple formation groups and types",
+          "ok": true
+        },
+        {
+          "name": "Connected valley samples include inland terrain away from shore",
+          "ok": true
+        },
+        {
+          "name": "Most remote approach samples are inland, not coastal ribbons",
+          "ok": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "profile": "canyon",
+      "seed": 12345,
+      "effectiveSeed": 44021,
+      "buildMs": 4716.8368,
+      "attempts": 5,
+      "nodes": 185612,
+      "peak": 49.59886932373047,
+      "dryFloorConnected": 0.999968694236609,
+      "groups": 10,
+      "types": [
+        "canyon",
+        "range",
+        "mesa"
+      ],
+      "biomes": {
+        "canyon": [
+          "neutral",
+          "cold",
+          "hot"
+        ],
+        "range": [
+          "neutral",
+          "cold",
+          "hot"
+        ],
+        "mesa": [
+          "hot",
+          "neutral",
+          "cold"
+        ]
+      },
+      "valleys": 532,
+      "inlandValleys": 461,
+      "routes": [
+        {
+          "node": 7325,
+          "steps": 232,
+          "samples": 20,
+          "dryFraction": 0.75,
+          "inlandFraction": 0.55,
+          "arrived": true
+        },
+        {
+          "node": 109181,
+          "steps": 233,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 50964,
+          "steps": 263,
+          "samples": 22,
+          "dryFraction": 0.13636363636363635,
+          "inlandFraction": 0,
+          "arrived": true
+        },
+        {
+          "node": 128316,
+          "steps": 235,
+          "samples": 20,
+          "dryFraction": 0.75,
+          "inlandFraction": 0.5,
+          "arrived": true
+        },
+        {
+          "node": 64877,
+          "steps": 243,
+          "samples": 21,
+          "dryFraction": 0.47619047619047616,
+          "inlandFraction": 0,
+          "arrived": true
+        },
+        {
+          "node": 118706,
+          "steps": 233,
+          "samples": 20,
+          "dryFraction": 0.75,
+          "inlandFraction": 0.55,
+          "arrived": true
+        },
+        {
+          "node": 90590,
+          "steps": 239,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 3192,
+          "steps": 262,
+          "samples": 22,
+          "dryFraction": 0.36363636363636365,
+          "inlandFraction": 0,
+          "arrived": true
+        },
+        {
+          "node": 40624,
+          "steps": 232,
+          "samples": 20,
+          "dryFraction": 0.7,
+          "inlandFraction": 0.45,
+          "arrived": true
+        },
+        {
+          "node": 64688,
+          "steps": 242,
+          "samples": 21,
+          "dryFraction": 0.42857142857142855,
+          "inlandFraction": 0,
+          "arrived": true
+        },
+        {
+          "node": 119394,
+          "steps": 233,
+          "samples": 20,
+          "dryFraction": 0.75,
+          "inlandFraction": 0.5,
+          "arrived": true
+        },
+        {
+          "node": 97431,
+          "steps": 245,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 50487,
+          "steps": 249,
+          "samples": 21,
+          "dryFraction": 0.6190476190476191,
+          "inlandFraction": 0.42857142857142855,
+          "arrived": true
+        },
+        {
+          "node": 162119,
+          "steps": 229,
+          "samples": 20,
+          "dryFraction": 0.75,
+          "inlandFraction": 0.45,
+          "arrived": true
+        },
+        {
+          "node": 63458,
+          "steps": 231,
+          "samples": 20,
+          "dryFraction": 0.45,
+          "inlandFraction": 0,
+          "arrived": true
+        },
+        {
+          "node": 29785,
+          "steps": 234,
+          "samples": 20,
+          "dryFraction": 0.75,
+          "inlandFraction": 0.55,
+          "arrived": true
+        },
+        {
+          "node": 24696,
+          "steps": 250,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        }
+      ],
+      "checks": [
+        {
+          "name": "All seventeen remote physical sources trace to the heart",
+          "ok": true
+        },
+        {
+          "name": "Every sampled field height fits the terrain picking shell",
+          "ok": true
+        },
+        {
+          "name": "At least 95 percent of dry floor belongs to the heart floor network",
+          "ok": true
+        },
+        {
+          "name": "Active front contains multiple formation groups and types",
+          "ok": true
+        },
+        {
+          "name": "Connected valley samples include inland terrain away from shore",
+          "ok": true
+        },
+        {
+          "name": "Most remote approach samples are inland, not coastal ribbons",
+          "ok": false
+        }
+      ],
+      "pass": false
+    },
+    {
+      "profile": "ocean",
+      "seed": 12345,
+      "effectiveSeed": 59859,
+      "buildMs": 4499.3576,
+      "attempts": 7,
+      "nodes": 187073,
+      "peak": 5.367208957672119,
+      "dryFloorConnected": 1,
+      "groups": 12,
+      "types": [
+        "hills",
+        "range",
+        "mesa",
+        "canyon",
+        "basin"
+      ],
+      "biomes": {
+        "hills": [
+          "neutral",
+          "hot"
+        ],
+        "range": [
+          "neutral"
+        ],
+        "mesa": [
+          "neutral",
+          "hot",
+          "cold"
+        ],
+        "canyon": [
+          "neutral"
+        ],
+        "basin": [
+          "neutral",
+          "hot",
+          "cold"
+        ]
+      },
+      "valleys": 706,
+      "inlandValleys": 519,
+      "routes": [
+        {
+          "node": 41422,
+          "steps": 271,
+          "samples": 23,
+          "dryFraction": 0.30434782608695654,
+          "inlandFraction": 0.08695652173913043,
+          "arrived": true
+        },
+        {
+          "node": 119501,
+          "steps": 241,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 128921,
+          "steps": 222,
+          "samples": 19,
+          "dryFraction": 1,
+          "inlandFraction": 0.8947368421052632,
+          "arrived": true
+        },
+        {
+          "node": 186362,
+          "steps": 256,
+          "samples": 22,
+          "dryFraction": 0.7727272727272727,
+          "inlandFraction": 0.6363636363636364,
+          "arrived": true
+        },
+        {
+          "node": 43526,
+          "steps": 246,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 0.8571428571428571,
+          "arrived": true
+        },
+        {
+          "node": 173621,
+          "steps": 249,
+          "samples": 21,
+          "dryFraction": 0.5238095238095238,
+          "inlandFraction": 0.23809523809523808,
+          "arrived": true
+        },
+        {
+          "node": 86342,
+          "steps": 242,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 128835,
+          "steps": 227,
+          "samples": 19,
+          "dryFraction": 1,
+          "inlandFraction": 0.8947368421052632,
+          "arrived": true
+        },
+        {
+          "node": 185503,
+          "steps": 264,
+          "samples": 22,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 174096,
+          "steps": 247,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 0.8095238095238095,
+          "arrived": true
+        },
+        {
+          "node": 172725,
+          "steps": 262,
+          "samples": 22,
+          "dryFraction": 0.4090909090909091,
+          "inlandFraction": 0.13636363636363635,
+          "arrived": true
+        },
+        {
+          "node": 86482,
+          "steps": 243,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 126486,
+          "steps": 231,
+          "samples": 20,
+          "dryFraction": 1,
+          "inlandFraction": 0.95,
+          "arrived": true
+        },
+        {
+          "node": 186824,
+          "steps": 261,
+          "samples": 22,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        },
+        {
+          "node": 43515,
+          "steps": 247,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 0.8571428571428571,
+          "arrived": true
+        },
+        {
+          "node": 173050,
+          "steps": 242,
+          "samples": 21,
+          "dryFraction": 0.5238095238095238,
+          "inlandFraction": 0.3333333333333333,
+          "arrived": true
+        },
+        {
+          "node": 87035,
+          "steps": 243,
+          "samples": 21,
+          "dryFraction": 1,
+          "inlandFraction": 1,
+          "arrived": true
+        }
+      ],
+      "checks": [
+        {
+          "name": "All seventeen remote physical sources trace to the heart",
+          "ok": true
+        },
+        {
+          "name": "Every sampled field height fits the terrain picking shell",
+          "ok": true
+        },
+        {
+          "name": "At least 95 percent of dry floor belongs to the heart floor network",
+          "ok": true
+        },
+        {
+          "name": "Active front contains multiple formation groups and types",
+          "ok": true
+        },
+        {
+          "name": "Connected valley samples include inland terrain away from shore",
+          "ok": true
+        },
+        {
+          "name": "Most remote approach samples are inland, not coastal ribbons",
+          "ok": true
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "pass": false
+}

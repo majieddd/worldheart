@@ -393,6 +393,28 @@ height and 0.62 grade boundary used by floor routing. Ground enemies prefer
 connected floor routes; emergency mountain travel remains at 8% speed. Ordinary
 nest placement never depends on that emergency passage.
 
+Landforms v2 joins selected adjacent ranges into open chains of at most three
+cells, keeping a continuous spine across their internal seams. Their outer
+valleys remain low. Isolated mountains, foothills and explicit authored groups
+keep separate footprints. Nest scoring adds twice the wet route distance to
+its existing distance/bearing score, preferring an inland approach when one
+fits without forbidding water crossings on islands.
+
+The title and Settings offer **World generator**. It opens an isolated,
+non-simulating inspection tab with new seeds, a 12-world history, reproducible
+links, four terrain mixes and the unchanged classic whole-planet formula.
+Base/peak/globe focus and the valid-nest approach overlay use the actual world
+and route field. **Play this seed** opens a normal single-planet sandbox.
+Generation reloads the scene lifecycle; it never replaces a live campaign.
+Inspector storage adds `whWorldgen:` before the normal route namespace.
+Requested and accepted seeds are shown because deterministic site validation
+can retry the requested layout. Links replay with the current generator version.
+
+Campaign strategic zoom retains the old band plus up to 10% extra maximum
+height as the base grows. At default settings its ceiling starts at 46.8m and
+ends at 124.08m. The earlier full-cap framing target is superseded by owner
+feedback. The inspection tab alone permits a distant whole-planet view.
+
 ## Weapon and strike prototype
 
 Campaign commanders have two equipment slots and twelve backpack spaces.
