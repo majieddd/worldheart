@@ -1,7 +1,8 @@
 # Terrain routes and planet atlas, September 11
 
 Owner: Codex, `feature/terrain-routes-and-atlas`, based on V2 `525a220`.
-U41-U43, tracker #1 and terrain #5. Status: implemented, integration verification underway.
+U41-U43, tracker #1 and terrain #5. Status: published and functionally verified;
+atlas frame pacing and broader M0 acceptance remain open.
 
 The owner wants defined routes produced by terrain on every planet, an animated
 dotted nest overlay covering the globe, and more distinct formations based on
@@ -124,3 +125,30 @@ inspection checkpoint, not full performance or game release acceptance.
 Raw results, selected rendered views and rejected experiments are in
 [TERRAIN-ATLAS/](TERRAIN-ATLAS/). Publication and public checks are recorded
 below after deployment. Usage unmeasured.
+
+## Publication and collaborator handoff
+
+Functional runtime `0c48fe69ea4ccf0620a30938e3c8d4588d8c9dac` is published at
+[V2](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=0&seed=12345&terrain=varied&worldgen=1)
+through [Pages 34626737595](https://github.com/majieddd/worldheart/actions/runs/34626737595).
+[Draft PR #32](https://github.com/majieddd/worldheart/pull/32) stacks on #31.
+Its CI checks, build and deployment pass. No gameplay was merged to main.
+
+The public site passes 38 generator/navigation/save-isolation cases and 12
+atlas cases, plus 208 asset checks against both deployed hashes and exact Git
+source bytes. Stable main remains `1374122d1109919a5fab10b69fefdfb80308eb6e`.
+The local single-file bundle passes three dynamic inspector/atlas/reseed checks;
+64 modules are bundled and 67 generated mirror files match source.
+[Public evidence](TERRAIN-ATLAS/public/).
+
+This documentation-only handoff can advance the preview commit while retaining
+the tested runtime asset hashes. The current commit is always available in
+[build.json](https://majieddd.github.io/worldheart/v2/build.json). A page already
+open keeps its loaded build until refreshed. Existing seeds regenerate under
+landforms v4; saved inventories and campaign state retain their existing schema.
+
+Next collaborator: address atlas p99 frame pacing under measured, documented
+device/load conditions before closing M0 performance. Preserve the current
+global habitat/legality distinction and strict battlefield acceptance. Do not
+restart terrain design to chase an unmeasured aesthetic preference; gather an
+owner seed/view and a concrete counterexample for the next bounded refinement.

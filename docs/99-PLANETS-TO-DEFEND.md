@@ -130,6 +130,8 @@ diversity, connected dry floor and passages between raised terrain. Researched
 plateau/ravine refinements and new buttes, calderas, dunes and glacial troughs
 went through two measured passes. Functional, route and legal-play evidence
 passes; atlas frame pacing and broader performance remain M0 acceptance work.
+Published in V2 through draft PR #32 with 50 public behavior checks and 208
+asset/source checks. Stable main is unchanged.
 [Terrain atlas ledger and evidence](qa/implementation/TERRAIN-ATLAS.md).
 
 The September 11 follow-up (U38-U40), implemented in landforms v3, combines classic-inspired hills,
