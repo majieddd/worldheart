@@ -4,8 +4,8 @@ Updated 2026-09-11. This is the collaborator entry point for the owner's new dir
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
-Current review: [base overview and automatic loot, PR #29](https://github.com/majieddd/worldheart/pull/29),
-stacked on [polar camera, PR #28](https://github.com/majieddd/worldheart/pull/28).
+Current review: [modest zoom, world generator and ridges, PR #30](https://github.com/majieddd/worldheart/pull/30),
+stacked on [base overview and automatic loot, PR #29](https://github.com/majieddd/worldheart/pull/29).
 Both are drafts. Earlier review slices and their evidence remain below.
 
 **Live development:** [Play V2](https://majieddd.github.io/worldheart/v2/).
@@ -17,7 +17,7 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
-Verified locally September 11: Codex on `feature/worldgen-lab-and-ridges`, based on
+Published and live-verified September 11: Codex on `feature/worldgen-lab-and-ridges`, based on
 preview `08e8050`, owns U35-U37: undo excessive overview zoom, add an isolated
 world-generation tester, and restore distinct ridges, foothills and passes with
 verified nest routes and useful tower elevations. U35 supersedes U33's full-cap
@@ -25,13 +25,17 @@ framing target after owner playtesting. The inspector has 24 passing UI/save
 cases; 265 tests, 75 terrain/route assertions, 15,147 isolated arrivals across
 all 99 planets, 96 terrain checks and 96 placement cases pass. A legal 15-wave
 victory keeps 24 heart health and extracts 13 weapons. The native 60-second
-stress fixture passes at p99 14ms. V2 publication/public checks are pending.
+stress fixture passes at p99 14ms. [PR #30](https://github.com/majieddd/worldheart/pull/30)
+is live from gameplay `476e8dd` through [deployment 34582998911](https://github.com/majieddd/worldheart/actions/runs/34582998911).
+All 104 public behavior cases and 109 live identity/source checks pass. Main
+remains `1374122`; documentation-only handoffs retain the tested runtime.
 [Current ledger and retained failures](qa/implementation/WORLDGEN-RIDGES.md).
 
 Published and live-verified 2026-09-10: Codex on
 `feature/base-overview-auto-loot`, based on preview `036c57c`, owns U33-U34.
-The furthest zoom now fits all six base levels using viewport shape, unlocked
-terrain and the allowed focus area. Living commanders automatically collect
+That checkpoint fitted all six base levels using viewport shape, unlocked
+terrain and the allowed focus area; U35 subsequently superseded this zoom.
+Living commanders automatically collect
 nearby weapons into their backpack; equipment stays deliberate and full bags
 leave drops on the ground. The existing crystal cargo/deposit rules remain.
 Local checks pass 64 framing/pickup/save cases, all five map camera harnesses,

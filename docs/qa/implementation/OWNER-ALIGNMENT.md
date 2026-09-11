@@ -57,9 +57,9 @@ request identity. Functional verification does not substitute for owner feel.
 | U32 Polar camera jumps and blocked pole views | Carried heading, tangent pan/drag/inertia, exact polar flights, stable overhead view and pole-safe confinement; six tests, 16 public browser cases, all five map harnesses and a legal 15-wave victory; live through PR #28 | Owner continuous-input feel and broader device coverage |
 | U33 Base-level overview zoom | Technical full-cap fit was verified and published through PR #29; owner playtesting rejected its excessive distance | Superseded by U35 |
 | U34 Automatic nearby item collection | Nearby weapons enter the backpack without changing equipment; full bag leaves drops; public pause/death/draft guards and victory reload/extraction pass; legal victory carries 13 weapons to planet 2; crystals retain their existing cargo/deposit rules; live through PR #29 | Broader natural loot-frequency review |
-| U35 Modest zoom | Previous ceiling restored with 0-10% growth, starting at 46.8m and capped at 124.08m with default settings; retains polar controls and close starting view | Final publication and owner feel review |
-| U36 World generator | Separate inspection tab, new/replayable seeds, four mixes plus classic, peak/base/globe focus, real approach overlay, copy/play links; campaign data stays separate | Final publication and wider device review |
-| U37 Distinct ridges and routes | Short open mountain chains cross internal seams; outer valleys, isolated peaks and foothills remain; nests penalize wet approach distance | Final moving-body/legal/performance checks and publication |
+| U35 Modest zoom | Previous ceiling restored with 0-10% growth, starting at 46.8m and capped at 124.08m with default settings; public zoom/loot and pole cases pass; live through PR #30 | Owner feel and wider device review |
+| U36 World generator | Separate inspection tab, new/replayable seeds, four mixes plus classic, peak/base/globe focus, real approach overlay, copy/play links; 24 public UI/save cases pass; live through PR #30 | Wider device and accessibility review |
+| U37 Distinct ridges and routes | Short open mountain chains cross internal seams; outer valleys, isolated peaks and foothills remain; nests penalize wet approach distance; 15,147 all-99 isolated arrivals, legal 15-wave victory, placement and native stress pass; live through PR #30 | Owner terrain feel, broader worldgen samples, ocean balance and reduced-CPU/device review |
 
 ## Adversarial additions now addressed
 

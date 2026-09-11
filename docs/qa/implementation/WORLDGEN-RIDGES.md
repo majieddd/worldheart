@@ -1,8 +1,9 @@
 # Zoom comfort and world generation, September 11
 
 Owner: Codex on `feature/worldgen-lab-and-ridges`, based on preview `08e8050`.
-U35-U37 / tracker #1, camera #3 and terrain #5. Status: verified locally;
-preview publication and public checks pending. Main stays unchanged.
+U35-U37 / tracker #1, camera #3 and terrain #5. Status: published and publicly
+verified through [PR #30](https://github.com/majieddd/worldheart/pull/30).
+Main stays unchanged.
 
 The owner's playtest rejects the excessive overview from U33. That check proved
 the cap fit, but did not establish acceptable camera feel. Restore the previous
@@ -96,6 +97,22 @@ its targeted authoring test passes separately.
    preserves their contract. A new nest fallback fixture initially put its two
    clearings inside the existing six-metre separation radius; blocking the
    alternate clearing tests the intended water fallback without violating it.
+
+## Public checkpoint
+
+Gameplay source `476e8dd40bdd0cfb5002081ac18771d91b5fb0df` is live at
+[V2](https://majieddd.github.io/worldheart/v2/) through
+[deployment 34582998911](https://github.com/majieddd/worldheart/actions/runs/34582998911).
+Review CI, Pages build and deployment passed. [Open the generator directly](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=0&seed=12345&terrain=varied&worldgen=1).
+
+All 104 public behavior cases pass with no runtime faults: [24 generator](WORLDGEN-RIDGES/public/generator.json),
+[64 zoom/loot](WORLDGEN-RIDGES/public/zoom-loot.json) and [16 pole/input](WORLDGEN-RIDGES/public/poles.json).
+[109 identity/source checks](WORLDGEN-RIDGES/public/identity.json) match the live
+preview and original assets plus twelve changed runtime sources. Main remains
+`1374122d1109919a5fab10b69fefdfb80308eb6e`. Documentation-only handoff commits
+retain this tested runtime; the current deployment SHA is in `/v2/build.json`.
+No gameplay PR was merged into main. The review remains a draft because wider
+milestone acceptance is still open.
 
 ## Reproduce and continue
 
