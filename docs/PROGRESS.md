@@ -1,6 +1,6 @@
 # 99 Planets development progress
 
-Updated 2026-09-10. This is the collaborator entry point for the owner's new direction.
+Updated 2026-09-11. This is the collaborator entry point for the owner's new direction.
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
@@ -16,6 +16,17 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 [first deployment](https://github.com/majieddd/worldheart/actions/runs/34044866229)
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
+
+Verified locally September 11: Codex on `feature/worldgen-lab-and-ridges`, based on
+preview `08e8050`, owns U35-U37: undo excessive overview zoom, add an isolated
+world-generation tester, and restore distinct ridges, foothills and passes with
+verified nest routes and useful tower elevations. U35 supersedes U33's full-cap
+framing target after owner playtesting. The inspector has 24 passing UI/save
+cases; 265 tests, 75 terrain/route assertions, 15,147 isolated arrivals across
+all 99 planets, 96 terrain checks and 96 placement cases pass. A legal 15-wave
+victory keeps 24 heart health and extracts 13 weapons. The native 60-second
+stress fixture passes at p99 14ms. V2 publication/public checks are pending.
+[Current ledger and retained failures](qa/implementation/WORLDGEN-RIDGES.md).
 
 Published and live-verified 2026-09-10: Codex on
 `feature/base-overview-auto-loot`, based on preview `036c57c`, owns U33-U34.

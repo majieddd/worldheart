@@ -82,16 +82,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // pull back grows with the territory they hold.
     rig.frontierTheta = theta;
     if (rig.confine) rig.confine.maxAng = theta * 1.02;
-    if (changed) {
-      // Sample fixed graph heights only on expansion, never during a pan.
-      const edge = Math.cos(theta * 1.02 + .005), dirs = nav.dirs;
-      let peak = 0;
-      for (let i = 0; i < nav.n; i++) {
-        if (dirs[i * 3] * centre.x + dirs[i * 3 + 1] * centre.y + dirs[i * 3 + 2] * centre.z >= edge) peak = Math.max(peak, nav.height[i]);
-      }
-      rig.frontierRelief = peak + 2;
-      if (overview) rig.targetDist = rig.distMax;
-    }
+    if (changed && overview) rig.targetDist = rig.distMax;
     // Possession reads this to fog the view once a unit walks out past it.
     if (possession) possession.frontier = game.frontier;
     // Keep the walk in roughly constant as the circle grows. Halving the

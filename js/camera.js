@@ -97,7 +97,6 @@ export class OrbitRig {
     this.inputBlocked = null;
     this.interactionAge = 10;
     this.frontierTheta = null;   // live cap angle when a mode drives one
-    this.frontierRelief = 0;     // maximum unlocked terrain height, refreshed on expansion
     this.confine = null;         // {center: Vector3, maxAng} battlefield bounds
     this.onWheelOverride = null; // (e) => true to consume the wheel elsewhere
     this.dragClaim = null;       // (e) => true to take this drag for a mode
@@ -370,14 +369,12 @@ export class OrbitRig {
     const d = this.distMin;
     const planetCeiling = CONFIG.planetRadius * CAM_TUNE.maxAlt;
     if (this.frontierTheta != null) {
-      // Fit the unlocked cap even while focused at its opposite edge. The
-      // enclosing sphere fits both frustum axes with room around the rim.
-      // The former planet ceiling stopped expansion from increasing zoom.
-      const R = CONFIG.planetRadius, relief = Math.max(0, this.frontierRelief) + 6;
-      const extent = Math.min(Math.PI, this.frontierTheta + (this.confine?.maxAng ?? this.frontierTheta));
-      const bound = Math.hypot(relief, 2 * (R + relief) * Math.sin(extent / 2));
-      const half = Math.atan(Math.tan(CAM_TUNE.fovFar * Math.PI / 360) * Math.min(1, this.camera.aspect) * .88);
-      return Math.max(bound / Math.sin(half), d + 2, d * 1.6);
+      // Fitting every far rim from every focus pulled the camera more than
+      // eleven times too far out. Owner playtesting favors the original band
+      // with only ten percent extra room at the final base level.
+      const growth = clamp((this.frontierTheta - .05) / (.52 - .05), 0, 1);
+      const previous = Math.min(CONFIG.planetRadius * this.frontierTheta * FRONTIER_FRAME, planetCeiling);
+      return Math.max(previous * (1 + .1 * growth), d + 2, d * 1.6);
     }
     // Always leave a usable zoom band, however the two height sliders are set.
     return Math.max(planetCeiling, d + 2, d * 1.15);
@@ -398,17 +395,7 @@ export class OrbitRig {
 
   _viewAngle(zoom = this.zoomT) {
     const t = zoom * zoom * (3 - 2 * zoom);
-    let overviewFloor = .06;
-    if (this.frontierTheta != null) {
-      // A low far-edge view can frame the base while the planet hides its
-      // far rim. Open the overview above that horizon as it pulls back.
-      const extent = this.frontierTheta + (this.confine?.maxAng ?? this.frontierTheta);
-      const horizon = Math.acos(CONFIG.planetRadius / (CONFIG.planetRadius + this.distMax));
-      overviewFloor = clamp(extent + Math.PI / 2 - horizon + .025, .06, 1.5);
-    }
-    const far = Math.max(CAM_TUNE.viewFar * Math.PI / 180, overviewFloor);
-    return clamp(lerp(CAM_TUNE.viewNear * Math.PI / 180, far, t) - this.tiltOffset,
-      lerp(.06, overviewFloor, t), 1.5);
+    return clamp(lerp(CAM_TUNE.viewNear, CAM_TUNE.viewFar, t) * Math.PI / 180 - this.tiltOffset, .06, 1.5);
   }
 
   // Wheel steps are geometric in altitude but normalised to the zoom band, so

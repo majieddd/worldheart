@@ -1,0 +1,623 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "scope": "Injected frontier upgrades, loot and terminal-wave fixtures; actual renderer/projection and normal update/save transactions",
+  "checks": [
+    {
+      "name": "Level 0 1280x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 0,
+        "maxNdc": 0.7217397888996414,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 zoom ceiling grows",
+      "ok": true,
+      "actual": {
+        "previous": 0,
+        "next": 46.8
+      }
+    },
+    {
+      "name": "Level 0 1280x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 64,
+        "maxNdc": 1.5371674830815132,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 720x1280 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 45,
+        "maxNdc": 1.2694882335859738,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 720x1280 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 110,
+        "maxNdc": 1.8882242713293944,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 1920x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 0,
+        "maxNdc": 0.7217397888996414,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 0 1920x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 0,
+        "theta": 0.05,
+        "max": 46.8,
+        "dist": 46.8,
+        "outside": 64,
+        "maxNdc": 1.5371674830815132,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 upgrade preserves fully zoomed-out intent",
+      "ok": true
+    },
+    {
+      "name": "Level 1 1280x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 117.11632653061224,
+        "dist": 117.11632653061224,
+        "outside": 50,
+        "maxNdc": 2.2859393177923444,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 zoom ceiling grows",
+      "ok": true,
+      "actual": {
+        "previous": 46.8,
+        "next": 117.11632653061224
+      }
+    },
+    {
+      "name": "Level 1 1280x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 117.11632653061224,
+        "dist": 117.11632653061224,
+        "outside": 219,
+        "maxNdc": 2.842052182247969,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 720x1280 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 117.11632653061224,
+        "dist": 117.11632653061224,
+        "outside": 132,
+        "maxNdc": 3.3561055910363,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 720x1280 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 117.11632653061224,
+        "dist": 117.11632653061224,
+        "outside": 261,
+        "maxNdc": 3.0990380484186324,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 1920x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 117.11632653061224,
+        "dist": 117.11632653061224,
+        "outside": 46,
+        "maxNdc": 2.2859393177923444,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 1 1920x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 1,
+        "theta": 0.2298469387755102,
+        "max": 117.11632653061224,
+        "dist": 117.11632653061224,
+        "outside": 219,
+        "maxNdc": 2.842052182247969,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 upgrade preserves fully zoomed-out intent",
+      "ok": true
+    },
+    {
+      "name": "Level 2 1280x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 119.41836734693877,
+        "dist": 119.41836734693877,
+        "outside": 91,
+        "maxNdc": 2.7179057096744037,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 zoom ceiling grows",
+      "ok": true,
+      "actual": {
+        "previous": 117.11632653061224,
+        "next": 119.41836734693877
+      }
+    },
+    {
+      "name": "Level 2 1280x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 119.41836734693877,
+        "dist": 119.41836734693877,
+        "outside": 249,
+        "maxNdc": 4.016900317803672,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 720x1280 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 119.41836734693877,
+        "dist": 119.41836734693877,
+        "outside": 163,
+        "maxNdc": 7.6766426060723285,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 720x1280 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 119.41836734693877,
+        "dist": 119.41836734693877,
+        "outside": 276,
+        "maxNdc": 11.158220825862536,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 1920x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 119.41836734693877,
+        "dist": 119.41836734693877,
+        "outside": 82,
+        "maxNdc": 2.7179057096744037,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 2 1920x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 2,
+        "theta": 0.325765306122449,
+        "max": 119.41836734693877,
+        "dist": 119.41836734693877,
+        "outside": 242,
+        "maxNdc": 4.016900317803672,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 upgrade preserves fully zoomed-out intent",
+      "ok": true
+    },
+    {
+      "name": "Level 3 1280x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 122.00816326530612,
+        "dist": 122.00816326530612,
+        "outside": 126,
+        "maxNdc": 3.08297144253289,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 zoom ceiling grows",
+      "ok": true,
+      "actual": {
+        "previous": 119.41836734693877,
+        "next": 122.00816326530612
+      }
+    },
+    {
+      "name": "Level 3 1280x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 122.00816326530612,
+        "dist": 122.00816326530612,
+        "outside": 266,
+        "maxNdc": 5.206803774251788,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 720x1280 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 122.00816326530612,
+        "dist": 122.00816326530612,
+        "outside": 183,
+        "maxNdc": 6.581347128574346,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 720x1280 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 122.00816326530612,
+        "dist": 122.00816326530612,
+        "outside": 281,
+        "maxNdc": 7.946827977991991,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 1920x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 122.00816326530612,
+        "dist": 122.00816326530612,
+        "outside": 107,
+        "maxNdc": 3.08297144253289,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 3 1920x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 3,
+        "theta": 0.43367346938775514,
+        "max": 122.00816326530612,
+        "dist": 122.00816326530612,
+        "outside": 257,
+        "maxNdc": 5.206803774251788,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 4 upgrade preserves fully zoomed-out intent",
+      "ok": true
+    },
+    {
+      "name": "Level 4 1280x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 123.56204081632653,
+        "dist": 123.56204081632653,
+        "outside": 143,
+        "maxNdc": 3.468165961828286,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 4 zoom ceiling grows",
+      "ok": true,
+      "actual": {
+        "previous": 122.00816326530612,
+        "next": 123.56204081632653
+      }
+    },
+    {
+      "name": "Level 4 1280x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 123.56204081632653,
+        "dist": 123.56204081632653,
+        "outside": 268,
+        "maxNdc": 5.574880955451705,
+        "behind": 11
+      }
+    },
+    {
+      "name": "Level 4 720x1280 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 123.56204081632653,
+        "dist": 123.56204081632653,
+        "outside": 186,
+        "maxNdc": 5.105107091990765,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 4 720x1280 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 123.56204081632653,
+        "dist": 123.56204081632653,
+        "outside": 281,
+        "maxNdc": 5.574880955451705,
+        "behind": 11
+      }
+    },
+    {
+      "name": "Level 4 1920x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 123.56204081632653,
+        "dist": 123.56204081632653,
+        "outside": 117,
+        "maxNdc": 3.468165961828286,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 4 1920x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 4,
+        "theta": 0.4984183673469388,
+        "max": 123.56204081632653,
+        "dist": 123.56204081632653,
+        "outside": 261,
+        "maxNdc": 5.574880955451705,
+        "behind": 11
+      }
+    },
+    {
+      "name": "Level 5 upgrade preserves fully zoomed-out intent",
+      "ok": true
+    },
+    {
+      "name": "Level 5 1280x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 124.08000000000001,
+        "dist": 124.08000000000001,
+        "outside": 148,
+        "maxNdc": 3.6002279911351236,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 5 zoom ceiling grows",
+      "ok": true,
+      "actual": {
+        "previous": 123.56204081632653,
+        "next": 124.08000000000001
+      }
+    },
+    {
+      "name": "Level 5 1280x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 124.08000000000001,
+        "dist": 124.08000000000001,
+        "outside": 269,
+        "maxNdc": 6.643920186250416,
+        "behind": 21
+      }
+    },
+    {
+      "name": "Level 5 720x1280 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 124.08000000000001,
+        "dist": 124.08000000000001,
+        "outside": 188,
+        "maxNdc": 4.9370150116062685,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 5 720x1280 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 124.08000000000001,
+        "dist": 124.08000000000001,
+        "outside": 281,
+        "maxNdc": 6.643920186250416,
+        "behind": 21
+      }
+    },
+    {
+      "name": "Level 5 1920x720 heart bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 124.08000000000001,
+        "dist": 124.08000000000001,
+        "outside": 120,
+        "maxNdc": 3.6002279911351236,
+        "behind": 0
+      }
+    },
+    {
+      "name": "Level 5 1920x720 edge bounded zoom",
+      "ok": true,
+      "actual": {
+        "level": 5,
+        "theta": 0.52,
+        "max": 124.08000000000001,
+        "dist": 124.08000000000001,
+        "outside": 262,
+        "maxNdc": 6.643920186250416,
+        "behind": 21
+      }
+    },
+    {
+      "name": "Nearby weapon enters inventory automatically without equipping",
+      "ok": true,
+      "actual": {
+        "picked": true,
+        "ground": false,
+        "slotsUnchanged": true,
+        "activeUnchanged": true
+      }
+    },
+    {
+      "name": "Paused play leaves nearby drops on the ground",
+      "ok": true
+    },
+    {
+      "name": "First-person commander automatically collects",
+      "ok": true
+    },
+    {
+      "name": "Third-person commander automatically collects",
+      "ok": true
+    },
+    {
+      "name": "Distant loot is left for exploration",
+      "ok": true
+    },
+    {
+      "name": "Pickup respects vertical distance",
+      "ok": true
+    },
+    {
+      "name": "Collection during combat preserves equipment",
+      "ok": true
+    },
+    {
+      "name": "Dead commanders cannot collect",
+      "ok": true
+    },
+    {
+      "name": "Full backpack keeps overflow on the ground without salvage",
+      "ok": true
+    },
+    {
+      "name": "Making backpack space collects waiting nearby loot",
+      "ok": true
+    },
+    {
+      "name": "A claimed item cannot be collected twice",
+      "ok": true
+    },
+    {
+      "name": "Draft choices suspend automatic pickup",
+      "ok": true
+    },
+    {
+      "name": "Pickup resumes after the draft",
+      "ok": true
+    },
+    {
+      "name": "Inventory opens through normal keyboard input after collecting loot",
+      "ok": true
+    },
+    {
+      "name": "Victory salvage automatically collects and saves loot",
+      "ok": true,
+      "actual": {
+        "phase": "victory",
+        "picked": true,
+        "saved": true
+      }
+    },
+    {
+      "name": "Victory reload retains the automatically collected identity",
+      "ok": true
+    },
+    {
+      "name": "Extraction carries automatic loot to planet two exactly once",
+      "ok": true
+    }
+  ],
+  "faults": [],
+  "pass": true
+}

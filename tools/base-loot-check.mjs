@@ -1,4 +1,5 @@
-// Injected frontier/loot fixtures, separate from the legal planet run.
+// Injected frontier/loot fixtures, separate from the legal planet run. U35
+// supersedes U33's full-cap framing: retain projection data, enforce modest zoom.
 import {createRequire} from 'node:module';
 import {resolve} from 'node:path';
 import {mkdirSync,writeFileSync} from 'node:fs';
@@ -38,7 +39,7 @@ try{
      }
      return {level:W.mode99.run.getHeartLevel(),theta,max:r.distMax,dist:r.dist,outside,maxNdc,behind};
     },{offset,width,height});
-    check(`Level ${level} ${width}x${height} ${offset?'edge':'heart'} overview`,result.level===level&&result.outside===0&&result.behind===0,result);
+    check(`Level ${level} ${width}x${height} ${offset?'edge':'heart'} bounded zoom`,result.level===level&&result.max<=124.080001&&result.max>=46.8&&Number.isFinite(result.maxNdc),result);
     if(width===1280&&!offset){check(`Level ${level} zoom ceiling grows`,result.max>previous,{previous,next:result.max});previous=result.max;}
    }
   }

@@ -69,12 +69,21 @@ heart can center an exact pole; overhead framing still respects view rotation.
 Configured zoom, lens and pitch defaults remain the player's settings. Regression
 inputs and evidence are in the [polar camera ledger](qa/implementation/POLAR-CAMERA.md).
 
-The next September 10 follow-up (U33) requires the furthest zoom to contain the
-entire unlocked base at every heart level. Fit both viewport axes, elevated
-terrain and the far rim from any allowed focus; prevent the globe from hiding
-that rim at the overview. Keep the close starting altitude and carry an already
-fully zoomed-out view into the new ceiling after an upgrade. Evidence is in the
-[base overview and loot ledger](qa/implementation/BASE-OVERVIEW-AUTO-LOOT.md).
+The September 11 playtest (U35) supersedes U33's full-base framing target: its
+technically complete overview pulled far too much away from the action. Restore
+the earlier zoom band with only a small increase as the base grows, up to 10%
+at maximum level. Keep the close starting altitude, configured pitch and polar
+heading fixes. An already fully zoomed-out view follows the modest new ceiling
+after an upgrade. The original [U33 evidence](qa/implementation/BASE-OVERVIEW-AUTO-LOOT.md)
+remains historical; it did not prove acceptable feel.
+
+U36-U37 add an isolated World generator from the title or Settings: generate a
+new seed, replay recent seeds, copy a reproducible link, select a relief mix or
+classic terrain, inspect peaks and real nest approaches, then play the seed.
+Inspection preserves campaign saves and grants no rewards. Distinct connected
+ridge chains, pointed crests, foothills and outer valleys must survive without
+forcing nests into mountains or making coastlines the only practical approach.
+See the [current ledger](qa/implementation/WORLDGEN-RIDGES.md).
 
 The 2026-09-06 follow-up requires clickable tower controls anchored to the
 selected, hovered or looked-at tower, including first-person possession.

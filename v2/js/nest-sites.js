@@ -18,7 +18,7 @@ export function nestSite(nav, original, centre, theta, used, scratch) {
   if (!field) return -1;
   let cache = nav._nestSites;
   if (!cache || cache.revision !== nav.revision) {
-    cache = nav._nestSites = { revision: nav.revision, candidates: [], clear: new Map() };
+    cache = nav._nestSites = { revision: nav.revision, candidates: [], clear: new Map(), wetDistance: new Float64Array(nav.n).fill(-1) };
     for (let i = 0; i < nav.n; i++) {
       if (!dryFloor(nav, i)) continue;
       let safe = true;
@@ -26,6 +26,23 @@ export function nestSite(nav, original, centre, theta, used, scratch) {
         if (!dryFloor(nav, nav.adj[e]) || !Number.isFinite(nav.cost[e])) { safe = false; break; }
       }
       if (safe) cache.candidates.push(i);
+    }
+    // Score the whole approach, not just its dry clearing. Otherwise a nest
+    // on an offshore meadow can win while its creatures spend most of their
+    // journey swimming. Memoize the existing acyclic flow once per revision;
+    // shared tails are measured once, without another navigation solve.
+    const wet = cache.wetDistance, trail = [];
+    wet[nav.heartNode] = 0;
+    for (const start of cache.candidates) {
+      trail.length = 0; let node = start;
+      while (node >= 0 && wet[node] < 0 && trail.length < nav.n) {
+        trail.push(node); node = field.next[node];
+      }
+      for (let k = trail.length - 1; k >= 0; k--) {
+        const a = trail[k], b = field.next[a];
+        wet[a] = b < 0 || wet[b] < 0 ? Infinity : wet[b] +
+          (nav.baseHeight[a] < .18 || nav.baseHeight[b] < .18 ? Math.max(0, field.dist[a] - field.dist[b]) : 0);
+      }
     }
   }
   nav.nodeDir(original, scratch);
@@ -43,7 +60,7 @@ export function nestSite(nav, original, centre, theta, used, scratch) {
     // Prefer the requested azimuth near the frontier, but a shorter healthy
     // approach inside expanded territory beats a remote ocean detour.
     const bearing = Math.acos(Math.max(-1, Math.min(1, scratch.x * ox + scratch.y * oy + scratch.z * oz)));
-    const score = Math.abs(arc - target) + bearing * radius * .08 + field.dist[i] * .1;
+    const score = Math.abs(arc - target) + bearing * radius * .08 + field.dist[i] * .1 + cache.wetDistance[i] * 2;
     if (score >= best) continue;
     nav.nodePos(i, scratch);
     let separate = true;

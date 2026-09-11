@@ -33,22 +33,29 @@ Mortar/Cryo placement restrictions and bonuses still use the actual footprint.
 2. Each site receives a weighted recipe, orientation, scale, height and fold
    phase. Explicit group anchors and exclusions override that seeded choice
    without advancing other groups' random streams.
-3. A shared low-frequency bend makes the boundaries meander. The continuous
-   difference between the two nearest site distances defines broad connecting
-   valleys. All recipes reach zero relief before crossing a shared boundary.
+3. In version 2, adjacent automatic range cells can join into short open chains
+   of two or three members. A shared spine crosses the internal borders without
+   dropping to the floor. Isolated ranges and explicit authored groups retain
+   their own footprints. Chains cannot form closed rings.
+4. A shared low-frequency bend makes the boundaries meander. The continuous
+   distance difference between the nearest two DIFFERENT territories defines
+   broad outer valleys. Recipes reach zero relief at these outer borders.
    Junctions widen naturally. Canyon and basin outlets join that same network.
-4. Measured neighbour spacing sets the shoulders. Feet ease into the floor;
+5. Measured neighbour spacing sets the shoulders. Feet ease into the floor;
    high crests retain a pointed profile. Mesa tops deliberately stay flat.
    Canyon depth is measured relative to its raised banks, with a dry floor
    above sea level. This height field does not represent caves or overhangs.
-5. Continental blending creates coasts and islands. Climate and decor dress
+6. Continental blending creates coasts and islands. Climate and decor dress
    the result. Fine facet noise is cosmetic and cannot close a route.
-6. The cap scout prefers dry inland floor, not water counted as traversable
+7. The cap scout prefers dry inland floor, not water counted as traversable
    ground. The full graph still certifies the base, flight lanes and all 17
    separated nest clearings. Ground enemies use the existing floor-first field
    and slow emergency crossings only when their floor component has no route.
    Giant-peaks fronts must also contain a surveyed peak at least 65% of the
    profile's 96m range scale; a tall peak elsewhere on the globe is insufficient.
+   Nest placement also penalizes wet distance along the complete existing route.
+   A dry clearing across a long swim no longer beats a nearby dry approach just
+   because its compass bearing is closer. Water remains an allowed fallback.
 
 This is a gameplay-oriented geometric generator, not a geological erosion
 simulation or a claim that every seed has been proven. Site boundaries form a
@@ -77,8 +84,9 @@ Weights of zero disable a recipe. `spacing` changes region footprint sizes;
 `height` sets a group's maximum relief before continental blending. An optional
 `dir: [x,y,z]` pins a site on the sphere. Invalid, overlapping or duplicate
 anchors fail explicitly. An override can still fail gameplay site acceptance;
-run the graph checks before publishing it. These are collaborator controls,
-not a new in-game terrain editor.
+run the graph checks before publishing it. These are collaborator controls.
+The in-game World generator selects published mixes and seeds; it does not edit
+individual group parameters.
 
 Inspect `FORMATIONS.manifest()` from `js/world.js` for the version, effective
 seed, settings and actual groups. `FORMATIONS.inspect(x,y,z)` identifies the

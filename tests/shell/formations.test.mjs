@@ -50,6 +50,33 @@ test('shared valley joins stay at the floor and all relief fits its picking shel
   assert.ok(floor > 1000, 'connected borders retain a substantial floor area');
   assert.ok(high > 20, 'tall mountains are retained');
 });
+
+test('mountain spines bridge internal cell borders continuously above the floor', () => {
+  const {chains, modules} = field.manifest();
+  assert.ok(chains.length > 3);
+  let seamCrossings = 0;
+  for (const chain of chains) {
+    // Short open chains leave valleys around their perimeter, rather than
+    // closing a ring of mountains around a trapped floor pocket.
+    assert.ok(chain.members.length <= 3);
+    assert.equal(chain.links.length, chain.members.length - 1);
+    for (const [a, b] of chain.links) {
+      const at = t => {
+        const d = modules[a].dir.map((v, k) => v * (1 - t) + modules[b].dir[k] * t), length = Math.hypot(...d);
+        return field.inspect(...d.map(v => v / length));
+      };
+      let prev = at(.1);
+      for (let step = 101; step <= 900; step++) {
+        const next = at(step / 1000);
+        assert.ok(next.relief > 12, 'a range spine cannot fall into a valley at a member boundary');
+        assert.ok(Math.abs(next.relief - prev.relief) < 3, 'a member switch cannot create a height seam');
+        if (next.id !== prev.id) seamCrossings++;
+        prev = next;
+      }
+    }
+  }
+  assert.ok(seamCrossings >= chains.length, 'the probe crosses actual ownership boundaries');
+});
 test('bad authoring parameters fail explicitly rather than silently breaking generation', () => {
   for (const input of [{ spacing: 0 }, { spacing: Infinity }, { valley: 0 }, { typo: 1 }, { weights: { mountainn: 1 } }, { weights: { range: -1 } }]) assert.throws(() => landformSettings('varied', input));
   assert.throws(() => landformSettings('missing'));
@@ -63,6 +90,8 @@ test('authored anchors and exclusions are replayable without consuming the share
   assert.deepEqual(base.modules.slice(2), edited.modules.slice(2));
   assert.equal(edited.modules[0].height, 0); assert.equal(edited.modules[1].height, 63); assert.equal(edited.modules[1].type, 'canyon');
   assert.equal(edited.modules[1].size, 1.25);
+  const pinned = createFormationField(42, R, profile, 'varied', {groups:[{id:1,type:'range',height:2,size:.6}]});
+  assert.ok(pinned.manifest().chains.every(c=>!c.members.includes(1)), 'explicit heights and sizes are not enlarged by an automatic chain');
   assert.throws(() => createFormationField(42, R, profile, 'varied', { groups: [{ id: 0, dir: base.modules[1].dir }] }), /overlap/);
   for (const groups of [[{ id: 9999 }], [{ id: 1 }, { id: 1 }], [{ id: 1, dir: [NaN, 1, 0] }], [{ id: 1, height: -2 }], [{ id: 1, unknown: 1 }]]) assert.throws(() => createFormationField(42, R, profile, 'varied', { groups }));
 });

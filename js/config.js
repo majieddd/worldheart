@@ -4,6 +4,7 @@
 import { campaignLaunch } from './modes/campaign-launch.js';
 import { browserStorage, isPreviewPath } from './storage.js';
 const url = new URLSearchParams(location.search);
+const worldgen = url.get('worldgen') === '1';
 const preview = isPreviewPath(location.pathname);
 
 function stored(key) {
@@ -117,11 +118,14 @@ export const TERRAIN_PROFILES = {
   canyon: { name: 'Deep canyons', range: 18, canyon: 38, snow: 32, ocean: 0, flightCeiling: 26 },
   ocean: { name: 'Ocean islands', range: 16, canyon: 5, snow: 10, ocean: 0.12, flightCeiling: 20 },
 };
-const requestedSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
-const campaign=campaignLaunch(mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':preview),requestedSeed);
+const rawSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
+const requestedSeed=worldgen&&(!Number.isInteger(rawSeed)||rawSeed<1||rawSeed>0xffffffff)?20260830:rawSeed;
+const campaign=campaignLaunch(!worldgen&&mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':preview),requestedSeed);
 const terrainKey = campaign?.terrain || url.get('terrain') || stored('whTerrain') || 'varied';
 
 export const CONFIG = {
+  worldgen,
+  requestedSeed,
   seed: campaign?.seed || requestedSeed,
   campaign,
   planetIndex:campaign?.index || 1,

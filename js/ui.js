@@ -3,6 +3,7 @@ import { CONFIG, MAPS, TERRAIN_PROFILES, PALETTE, storeLocal, CAM_RANGES, CAM_TU
 import { TOWER_TYPES, tierCost, buildTowerVisual, TOWER_SCALE, MAT } from './towers.js';
 import { powerSigil } from './ui-icons.js';
 import { TALENTS, loadProfile, buyTalent, isOwned, isReachable, persistProfile } from './modes/progress.js';
+import { worldgenUrl } from './worldgen.js';
 
 // DOM HUD. All chrome lives here; the scene renders beneath it. Per the
 // design contract: per-shot and per-kill readouts update with zero animation,
@@ -128,6 +129,7 @@ export class HUD {
         <div class="set-row"><span>Damage numbers</span><button class="btn" id="set-numbers">${PRESENTATION.numbers ? 'On' : 'Off'}</button></div>
         <div class="set-row"><span>Film grain</span><button class="btn" id="set-grain">${PRESENTATION.grain ? 'On' : 'Off'}</button></div>
         <div class="set-row"><span>Seed</span><span class="marker" id="set-seed" style="color:var(--text)">0</span></div>
+        <button class="btn worldgen-launch">World generator</button>
         <div class="marker" style="margin-top:var(--sp-2)">camera feel</div>
         <div id="cam-sliders"></div>
         <button class="btn" id="cam-reset" style="width:100%;font-size:var(--fs-12)">Reset camera feel</button>
@@ -200,6 +202,7 @@ export class HUD {
           <div class="o-actions">
             <button class="btn primary" id="btn-begin" style="font-family:var(--font-display)">Begin the defense</button>
             <button class="btn" id="btn-talents">Talents</button>
+            <button class="btn worldgen-launch">World generator</button>
           </div>
         </div>
       </div>
@@ -295,6 +298,13 @@ export class HUD {
   }
 
   _buildMapCards() {
+    for (const button of document.querySelectorAll('.worldgen-launch')) button.onclick = () => {
+      // Open in the click activation so the current campaign stays here.
+      const requested = CONFIG.campaign?.seed ?? CONFIG.requestedSeed;
+      const seed = Number.isInteger(requested) && requested > 0 && requested <= 0xffffffff ? requested : 20260830;
+      window.open(worldgenUrl(location.href, seed, CONFIG.terrainKey), '_blank', 'noopener');
+      if (this.game.state === 'playing') { this.game.paused = true; this.reflectPause(); }
+    };
     if(CONFIG.campaign)document.getElementById('terrain-profile').disabled=true;
     if (CONFIG.terrain && !CONFIG.campaign) {
       storeLocal('whTerrain', CONFIG.terrainKey);
