@@ -1,8 +1,9 @@
 # Diverse planet landscapes, September 11
 
 Owner: Codex, `feature/diverse-planet-landscapes`, based on preview `3a60ac1`.
-U38-U40 / tracker #1 and terrain #5. Status: implemented, locally verified;
-V2 publication and public verification pending.
+U38-U40 / tracker #1 and terrain #5. Status: published and publicly verified
+through [draft PR #31](https://github.com/majieddd/worldheart/pull/31), stacked
+on #30. Main stays unchanged.
 
 The owner likes the classic hills, Giant peaks and Deep canyons, and wants those
 qualities within the same planets. Add plateau benches, ravines and crevices,
@@ -103,8 +104,20 @@ or a matched-camera before/after comparison.
 
 ## Handoff
 
-Publish through a draft PR stacked on #30, preserve main, verify live identity
-and behavior, and update this ledger plus #1/#5. Owner landscape feel, broad
+Gameplay source `26d956362f0eaeced5132c4bed15070a4b1e22b7` is live at
+[V2](https://majieddd.github.io/worldheart/v2/) through
+[deployment 34619009127](https://github.com/majieddd/worldheart/actions/runs/34619009127).
+Review checks, Pages build and deploy pass. [Try Mixed landscapes in the generator](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=0&seed=12345&terrain=varied&worldgen=1).
+
+All 115 public browser cases pass with no runtime faults: [35 generator](DIVERSE-LANDSCAPES/public/generator.json),
+[64 zoom/loot](DIVERSE-LANDSCAPES/public/zoom-loot.json), [16 polar/input](DIVERSE-LANDSCAPES/public/poles.json).
+[198 identity checks](DIVERSE-LANDSCAPES/public/identity.json) compare every
+manifest-listed live original/preview asset and its corresponding git source.
+Main remains `1374122d1109919a5fab10b69fefdfb80308eb6e`. Documentation-only
+handoffs retain these tested runtime bytes; current deployment identity is in
+`/v2/build.json`. Tracker #1 and terrain #5 retain the active integration context.
+
+Owner landscape feel, broad
 tactical balance, later legal campaign play, reduced-CPU/device coverage and
 full 99-planet acceptance remain open. Rename/default migration, multiplayer
 and ports retain their separate gates. Usage unmeasured.
