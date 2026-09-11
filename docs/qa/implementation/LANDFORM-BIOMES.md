@@ -2,7 +2,7 @@
 
 September 11, 2026. Owner-directed U44-U47, Codex on
 `feature/landform-biome-refinement`, based on preview `9fae91d`.
-Status: locally verified; V2 deployment and public identity checks pending.
+Status: published and publicly verified in V2 through draft [PR #33](https://github.com/majieddd/worldheart/pull/33).
 
 ## Outcomes
 
@@ -82,7 +82,17 @@ The native performance fixture ran after this task's heavy verification jobs
 finished. No unrelated user processes were stopped. The separate native 10-second atlas fixture passes: median 6.9ms, p99 7.1ms,
 maximum construction long task 55ms. This one-device result does not erase the
 retained v4 timing failures or close broader M0 performance acceptance.
-Public publication identity remains pending. Runtime fixtures, pure geometry checks, controlled captures and legal
+Functional build `d2d7a2f8aa30c9746f1f60047f3228f58f36d76a` deployed successfully
+through [Pages 34634297774](https://github.com/majieddd/worldheart/actions/runs/34634297774).
+Public browser verification passes 40 climate/sub-sea, 40 generator and 12 atlas
+cases. All 208 public asset/source identity comparisons pass. Stable main stays
+`1374122d1109919a5fab10b69fefdfb80308eb6e`. Review CI passes as well.
+The documentation handoff adds these results without changing runtime bytes.
+
+[Play V2](https://majieddd.github.io/worldheart/v2/) or
+[inspect Mixed Landscapes](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=0&seed=771&terrain=varied&worldgen=1).
+Reload an existing tab to load this build. Tracker #1 and terrain issue #5 keep
+this batch separate from the remaining milestone acceptance work. Runtime fixtures, pure geometry checks, controlled captures and legal
 instrumented play are separate evidence types. None is blind full-campaign QA.
 
 Broader M0 device/frame-pacing acceptance, unforced full-99 combat balance,

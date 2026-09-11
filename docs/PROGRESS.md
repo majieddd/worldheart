@@ -4,7 +4,8 @@ Updated 2026-09-11. This is the collaborator entry point for the owner's new dir
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
-Current review: [terrain corridors and global habitat atlas, PR #32](https://github.com/majieddd/worldheart/pull/32),
+Current review: [mixed landforms, dry canyon routes and biomes, PR #33](https://github.com/majieddd/worldheart/pull/33),
+stacked on [terrain corridors and global habitat atlas, PR #32](https://github.com/majieddd/worldheart/pull/32),
 stacked on [diverse landscapes and biomes, PR #31](https://github.com/majieddd/worldheart/pull/31),
 then [modest zoom, world generator and ridges, PR #30](https://github.com/majieddd/worldheart/pull/30).
 These are drafts. Earlier review slices and their evidence remain below.
@@ -18,14 +19,18 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
-Locally verified September 11: Codex on `feature/landform-biome-refinement`, based on
+Published and publicly verified September 11: Codex on `feature/landform-biome-refinement`, based on
 preview `9fae91d`, owns U44-U47. Landforms v5 makes Mixed Landscapes the campaign
 default, refines favorite groups, adds inward Winding Canyon and Staircase
 escarpment, separates inland cuts from ocean water, and adds independent climate
 selection plus biome dressing. 276 tests, 116 fixed-field assertions, 15,147
 all-99 isolated arrivals, 96 terrain, 96 placement and a legal 15-wave victory
 pass. The native 60-second gameplay stress fixture passes (p99 20.9ms).
-Publication/public identity checks remain pending. The adversarial pass
+Functional build `d2d7a2f` deployed through
+[Pages 34634297774](https://github.com/majieddd/worldheart/actions/runs/34634297774).
+92 public browser cases and 208 asset/source identity comparisons pass. Native
+atlas p99 is 7.1ms in its separate fixture; broader M0/device acceptance stays
+open. Stable main remains `1374122`; the handoff changes documentation only. The adversarial pass
 caught and repaired a stale commander swimming assignment and trapped deep-cut
 floors; retained controls and final acceptance belong in the
 [landform/biome ledger](qa/implementation/LANDFORM-BIOMES.md).
