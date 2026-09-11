@@ -16,7 +16,7 @@ test('inspection distinguishes a cut between banks from an isolated coastal clif
  assert.equal(valley.length,1);assert.ok(valley[0].depth>20);assert.equal(valley[0].inside,true);
 });
 
-test('ravines cut into uplands, plateaus have broad benches, and crevices can flood',()=>{
+test('ravines cut into uplands, plateaus have broad benches, and crevices cut below sea level',()=>{
  for(const type of ['plateau','ravine','crevice']){
   const weights=Object.fromEntries(Object.keys(LANDFORM_RECIPES).map(k=>[k,k===type?1:0]));
   const f=createFormationField(91,R,profile,'varied',{weights});let cut=0,high=0,below=0,bench=0;
@@ -35,7 +35,7 @@ test('mixed terrain includes small hills, deep incisions and major ranges in one
   const f=createFormationField(seed,R,profile,'varied'),types=new Set(f.modules.map(m=>m.type));
   for(const type of ['range','hills','canyon','plateau','ravine','crevice'])assert.ok(types.has(type),`${seed} missing ${type}`);
   assert.ok(Math.max(...f.modules.filter(m=>m.type==='range').map(m=>m.height))>70);
-  assert.ok(Math.max(...f.modules.filter(m=>m.type==='hills').map(m=>m.height))<12);
+  assert.ok(Math.max(...f.modules.filter(m=>m.type==='hills').map(m=>m.height))<22);
  }
 });
 

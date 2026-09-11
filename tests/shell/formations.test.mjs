@@ -44,7 +44,7 @@ test('shared valley joins stay at the floor and all relief fits its picking shel
   for (const p of directions(8000)) {
     const s = field.inspect(...p);
     assert.ok(Number.isFinite(s.relief) && s.relief > -formationDepthLimit(profile) && s.relief < formationHeightLimit(profile));
-    if(s.relief<0)assert.equal(s.type,'crevice','only submerged fault cuts may descend below the enclosing floor');
+    if(s.relief<0)assert.ok(['crevice','gorge'].includes(s.type),'only authored incisions descend below the enclosing floor');
     if (s.edge <= s.valley) { floor++; assert.equal(s.relief, 0); }
     if (s.relief > 85) high++;
   }

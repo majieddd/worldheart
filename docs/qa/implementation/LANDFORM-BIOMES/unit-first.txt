@@ -1,0 +1,410 @@
+âœ” strike volume includes boundaries but rejects rear, height and range escapes (2.1874ms)
+âœ” authored enemy shapes and release phases are finite and ordered (0.7719ms)
+âœ” pressure changes only the advertised groups without mutating authored waves (3.9694ms)
+âœ” boss variants preserve shared templates and offer distinct readable tells (0.8109ms)
+âœ” legacy counters migrate as lifetime history without skipping campaign nodes (8.7397ms)
+âœ” wave rewards, terminal outcomes and extraction settle once (4.1962ms)
+âœ” later defeat preserves banked weapons and loses current assault changes (2.0222ms)
+âœ” refresh resumes the same assault receipt and victory salvage is validated (1.3295ms)
+âœ” campaign completion is distinct and never creates planet 100 (42.6752ms)
+âœ” malformed saves cannot silently grant inventory or campaign completion (2.1679ms)
+âœ” extending a completed pilot preserves receipts and resumes at the next planet (1.7661ms)
+âœ” only registered crystals can be picked up once, with capacity three (2.0903ms)
+âœ” a return deposits once and cannot expand the frontier or create tower gold (2.3173ms)
+âœ” mixed payment conserves credit and refuses partial unaffordable purchases (0.5957ms)
+âœ” credit-only purchase retains surplus, and invalid amounts cannot mint credit (0.8689ms)
+âœ” death loses cargo once without duplicating previously claimed identities (0.534ms)
+âœ” a fresh draft is unresolved and holds the full timer (3.5397ms)
+âœ” a solo draft resolves immediately once the only player votes (0.6896ms)
+âœ” it does not resolve while a player has not voted (0.2965ms)
+âœ” it resolves early once every player has voted (0.4562ms)
+âœ” plurality wins (0.3894ms)
+âœ” a player may change their vote before resolution (0.561ms)
+âœ” an unknown player cannot vote (0.4647ms)
+âœ” an out-of-range option is rejected (0.4307ms)
+âœ” the timer expiring resolves the draft (0.3704ms)
+âœ” nobody voting still yields a winner on timeout (0.5235ms)
+âœ” a tie breaks on the seeded rng, identically for the same seed (0.3878ms)
+âœ” resolving twice does not change the outcome (0.2497ms)
+âœ” angleBetween is zero for identical directions (3.4014ms)
+âœ” angleBetween is a right angle for perpendicular directions (0.4586ms)
+âœ” a direction at the centre is inside any frontier (0.4222ms)
+âœ” a direction beyond theta is outside (2.3302ms)
+âœ” the boundary is inclusive within a small epsilon (0.3012ms)
+âœ” unnormalised input still works (0.2359ms)
+âœ” a null centre means unbounded, for planetary maps (0.6212ms)
+âœ” a run opens with exactly one card, the loadout tower (5.6193ms)
+âœ” the loadout chooses the opening card (0.741ms)
+âœ” a loadout the profile does not own falls back rather than granting it (0.5871ms)
+âœ” a profile unlock is available from wave one (0.3932ms)
+âœ” the opening hand can only hold the starting tower (0.4472ms)
+âœ” playing a card spends it (0.7975ms)
+âœ” an out-of-range or stale index plays nothing (0.3144ms)
+âœ” a card arrives on the odd waves only (2.638ms)
+âœ” a power arrives on the even waves only (1.9942ms)
+âœ” unplayed cards are kept but never past the cap (0.8776ms)
+âœ” a spent hand refills one card at a time (0.2706ms)
+âœ” the quartermaster bonus raises the cap by one (1.1188ms)
+âœ” a cleared wave pays coins, and the boss pays a bonus (0.3803ms)
+âœ” unlocked towers can appear in later hands (1.1499ms)
+âœ” a hand never contains a locked tower (10.5787ms)
+âœ” the hand is part of serialised state (0.6691ms)
+âœ” the same seed draws the same hands (0.4294ms)
+âœ” a wave clear emits handDrawn (0.248ms)
+âœ” a new run opens at heart level 0 with the first price and the base cap (3.9801ms)
+âœ” each upgrade raises the level, quotes the next price and adds a mark to the cap (1.6365ms)
+âœ” the heart cannot be raised past its ceiling (3.1533ms)
+âœ” wave settlement does not grant or bank territory (2.4077ms)
+âœ” even the first wave leaves the original foothold unchanged (0.4397ms)
+âœ” an early upgrade grants its full territory without requiring a wave (0.3984ms)
+âœ” the frontier at every level matches the rings table (7.2215ms)
+âœ” only a fully raised heart reaches the final frontier (1.3724ms)
+âœ” the boss wave still grants no expansion, even under a full heart (11.1686ms)
+âœ” an ended run refuses a heart upgrade (4.2763ms)
+âœ” the heart survives serialisation (0.6507ms)
+âœ” base modifiers are neutral (3.6914ms)
+âœ” base modifiers are a fresh object each call (6.6806ms)
+âœ” folding no powers leaves the base untouched (13.4935ms)
+âœ” a single numeric power applies its delta (0.7205ms)
+âœ” duplicate powers stack additively, not multiplicatively (0.4066ms)
+âœ” boolean powers latch true (0.2644ms)
+âœ” fold order does not change the result (0.4189ms)
+âœ” cost multiplier is floored so towers can never be free (0.2995ms)
+âœ– 99 route nodes are legal, distinct and have bounded difficulty (5.3207ms)
+âœ” era and final-planet boundaries remain explicit (1.7993ms)
+âœ– the proven opening and authored milestone tells remain identifiable (4.9736ms)
+âœ” the catalog has twenty powers with unique ids (2.7399ms)
+âœ” every power has a name, description, known rarity and an apply function (0.4547ms)
+âœ” every power actually changes the modifiers (0.8942ms)
+âœ” POWER_BY_ID resolves every catalog entry (0.2229ms)
+âœ” rollOffers returns three distinct powers (0.6238ms)
+âœ” rollOffers is deterministic for a seed (1.4106ms)
+âœ” rollOffers never offers an already-maxed unique power (0.3823ms)
+âœ” rollOffers still returns three when most of the pool is excluded (0.3181ms)
+âœ” common powers are offered more often than rare ones (13.7654ms)
+âœ” the core has files to check (2.976ms)
+âœ” campaign.js obeys the portability contract (1.0553ms)
+âœ” crystals.js obeys the portability contract (0.546ms)
+âœ” draft.js obeys the portability contract (0.4921ms)
+âœ” frontier.js obeys the portability contract (0.4761ms)
+âœ” modifiers.js obeys the portability contract (0.3941ms)
+âœ” planets.js obeys the portability contract (0.4587ms)
+âœ” powers.js obeys the portability contract (0.4589ms)
+âœ” rng.js obeys the portability contract (2.0403ms)
+âœ” run.js obeys the portability contract (0.7439ms)
+âœ” schedule.js obeys the portability contract (0.699ms)
+âœ” state.js obeys the portability contract (0.3628ms)
+âœ” weapons.js obeys the portability contract (0.556ms)
+âœ” the core only imports from within js/run (3.9387ms)
+âœ” the guard still catches a real violation (0.2244ms)
+âœ” same seed produces the same sequence (2.5366ms)
+âœ” different seeds diverge (0.3164ms)
+âœ” values stay in [0, 1) (4.6395ms)
+âœ” pick returns a member of the list and is deterministic (0.5356ms)
+âœ” pick on a single-item list returns that item (0.3695ms)
+âœ” weightedPick respects weight zero (2.2558ms)
+âœ” weightedPick favours the heavier item (7.4948ms)
+âœ” a new run opens at the starting frontier with one tower (5.4731ms)
+âœ” an EVEN wave opens a draft of three, an odd wave does not (4.2588ms)
+âœ” a wave does not advance until its draft resolves (2.4824ms)
+âœ” the drafted power is added to the run and reaches the modifiers (1.0424ms)
+âœ” the frontier never grows on an unraised heart (0.9142ms)
+âœ” raising the heart grants its territory independently of waves (0.9849ms)
+âœ” towers unlock on waves 2, 4, 6, 8 and 10 (2.5751ms)
+âœ” every tower is owned once wave 10 clears, with no duplicates (0.4958ms)
+âœ” the tier cap follows the heart, never the wave (0.6138ms)
+âœ” the evolution tier reaches 4 by wave 12 (0.7165ms)
+âœ” a full run reaches the boss and then victory (0.8412ms)
+âœ” completeWave emits the beats the shell needs (0.3328ms)
+âœ” losing the run ends it (0.2337ms)
+âœ” a restored victory permits no repeated reward or late defeat (0.2047ms)
+âœ” the same seed replays identically (0.3849ms)
+âœ” different seeds give different power sequences (0.4961ms)
+âœ” run state serialises at any point (0.546ms)
+âœ” the run is 15 waves and the boss is the last (3.5223ms)
+âœ” frontier starts at THETA_START before any wave clears (0.3481ms)
+âœ” frontier reaches THETA_END after wave 14 clears (0.2464ms)
+âœ” frontier never shrinks and never exceeds the end (0.316ms)
+âœ” the boss wave adds no expansion (0.3869ms)
+âœ” expansion eases out: the first step is larger than the last (0.3232ms)
+âœ” towers unlock on waves 2, 4, 6, 8, 10 only (2.1849ms)
+âœ” every unlockable tower gets a wave (0.2528ms)
+âœ” the schedule gates tower upgrades by the heart, not by the wave (0.5559ms)
+âœ” the heart tables agree with the number of expansions (0.6863ms)
+âœ” evolution tier increments on waves 3, 6, 9, 12 (0.5462ms)
+âœ” a new run starts before wave 1 with only the starting tower (2.8745ms)
+âœ” players are always a list, even solo (0.3514ms)
+âœ” gold is per player (0.2293ms)
+âœ” powers belong to the run, not to a player (1.4719ms)
+âœ” state survives a serialise and deserialise round trip (0.4977ms)
+âœ” serialise produces a plain JSON string with no functions (0.4871ms)
+âœ” owner U35 restores the original close altitude and permits only ten percent extra maximum height (3.1349ms)
+âœ” viewport and polar focus cannot inflate the owner-approved zoom band (51.7254ms)
+âœ” narrow lenses keep the bounded zoom and player height tuning remains effective (3.1926ms)
+âœ” arrow navigation crosses both poles without an orientation jump or latitude barrier (57.9704ms)
+âœ” released drag traverses a pole with bounded inertia and frame-rate-independent decay (4.3091ms)
+âœ” focus flights reach exact poles and take the short route across the date line (2.627ms)
+âœ” polar confinement stays continuous and handles an exactly antipodal focus (22.3271ms)
+âœ” exact overhead framing retains yaw at the equator and both poles (7.302ms)
+âœ” skipping and completing an intro land on the same polar heading (6.5022ms)
+âœ” atomic migration preserves the legacy source and persists reloadable account changes (8.1668ms)
+âœ” quota failure keeps pending state available for export and exact retry (0.8671ms)
+âœ” a stale tab cannot overwrite a newer checkpoint (0.8221ms)
+âœ” corrupt and future saves survive automatic writes and support explicit recovery (0.7424ms)
+âœ” a floor detour wins even when a mountain shortcut would be much faster (2.4586ms)
+âœ” blocking the only valley enables a slow emergency crossing; selling restores the valley (0.6855ms)
+âœ” directed impassable edges and temporary placement do not invent a mountain exit (2.9226ms)
+âœ” recipe manifest and query results replay independently of query order (55.7498ms)
+âœ” spatial index matches a full nearest-site oracle including cube boundaries and poles (172.782ms)
+âœ” all group types work at different scales and relief without a biome dependency (830.4601ms)
+âœ– shared valley joins stay at the floor and all relief fits its picking shell (9.9332ms)
+âœ” mountain spines bridge internal cell borders continuously above the floor (15.3011ms)
+âœ” bad authoring parameters fail explicitly rather than silently breaking generation (1.6565ms)
+âœ” authored anchors and exclusions are replayable without consuming the shared random stream (34.0638ms)
+âœ” open terrain retains the full knockback and transports its tracked body state (6.0981ms)
+âœ” a narrow tower footprint stops a shove before its otherwise legal endpoint (4.0792ms)
+âœ” knockback cannot shove a floor-connected enemy onto a mountain shortcut (1.1372ms)
+âœ” a non-traversable edge cannot be crossed even when both nodes can reach the heart (1.1346ms)
+âœ” unwalkable and disconnected destinations retain the last legal position (0.8801ms)
+âœ” flyer shoves use their own route layer while ignoring ground tower footprints (1.381ms)
+âœ” dead bodies and nonpositive shoves cannot change position or identity (2.6026ms)
+âœ” classic maps keep the original angular shove without terrain navigation (6.2906ms)
+âœ” inspection distinguishes a cut between banks from an isolated coastal cliff (7.7301ms)
+âœ” ravines cut into uplands, plateaus have broad benches, and crevices can flood (571.8014ms)
+âœ– mixed terrain includes small hills, deep incisions and major ranges in one seeded globe (12.0964ms)
+âœ– climate is repeatable, locally continuous and gives planets distinct biome regions (3.3103ms)
+âœ” placement protects a dynamic nest or occupied pocket when original entrances can reroute (3.6183ms)
+âœ” a footprint cannot cover a physical nest or occupied ground node (0.539ms)
+âœ” preview detours honor outgoing directed costs and leave the live field unchanged (0.6135ms)
+âœ” a detour for an upstream node cannot certify a stranded downstream pocket (0.7034ms)
+âœ” a dry nest clearing also prefers a dry approach over a shorter swim (4.1407ms)
+âœ” bolt: actual stats never manufacture NaN fields (9.9249ms)
+âœ” cryo: actual stats never manufacture NaN fields (0.5226ms)
+âœ” mortar: actual stats never manufacture NaN fields (0.4595ms)
+âœ” tesla: actual stats never manufacture NaN fields (0.4508ms)
+âœ” helios: actual stats never manufacture NaN fields (0.5813ms)
+âœ” warden: actual stats never manufacture NaN fields (0.5366ms)
+âœ” keen-rails reaches bolt.dmg (0.5814ms)
+âœ” twin-rails reaches mortar.dmg (0.3214ms)
+âœ” keen-rails reaches tesla.dmg (0.2485ms)
+âœ” keen-rails reaches helios.dps (0.3308ms)
+âœ” overclock reaches bolt.rate (0.2178ms)
+âœ” flywheel reaches mortar.rate (0.2622ms)
+âœ” overclock reaches tesla.charge (0.1717ms)
+âœ” flywheel reaches helios.ramp (0.2857ms)
+âœ” overclock reaches warden.summonTime (0.7787ms)
+âœ” long-lens reaches bolt.range (0.3725ms)
+âœ” long-lens reaches cryo.range (0.2203ms)
+âœ” long-lens reaches mortar.range (0.2259ms)
+âœ” long-lens reaches tesla.range (0.221ms)
+âœ” long-lens reaches helios.range (0.2875ms)
+âœ” long-lens reaches warden.range (0.1439ms)
+âœ” Chain Coil reaches Arc chains while preserving other tower fields (0.3188ms)
+âœ” critical chance affects discrete towers and deterministic beam output (0.2476ms)
+âœ” Fifth Volley counts actual volleys and resets per tower (1.3596ms)
+âœ” Thrift discounts actual upgrade prices and respects minimum cost (0.4477ms)
+âœ” Counting House pays live gold once and ordinary profiles remain unchanged (0.5989ms)
+âœ” Hardened Heart increases current and maximum health once per acquired stack (0.256ms)
+âœ” Mending heals on wave settlement, caps at max, and cannot revive defeat (0.323ms)
+âœ” Compound Interest settles against spendable shell gold (0.2634ms)
+âœ” Cryo Field installs a bounded live aura and a healthy control has none (0.295ms)
+âœ” Veterancy reaches real spawned bodies and pooled ownership resets (3.1439ms)
+âœ” Warden damage and kill attribution survives AI/player shared path (0.4972ms)
+âœ” Scout starts one ring wider without granting a base level (1.1301ms)
+âœ” Quartermaster is a healthy existing effect: fourth card is retained (12.7379ms)
+âœ” untimed solo draft waits indefinitely, then resolves with zero simulation time (0.7109ms)
+âœ” Salvage uses the real sale fraction and cannot make a refund loop profitable (0.3352ms)
+âœ” Pierce hits only a second body in the corridor beyond the first target (0.7385ms)
+âœ” Scorched Earth damages ground bodies, expires, and credits its originating tower (1.4256ms)
+âœ” Deep Freeze has a real recovery interval even under overlapping auras (0.9464ms)
+âœ” all 13 talents buy, persist, reject duplicate charging, and reach the next run (5.1997ms)
+âœ” global habitat covers both hemispheres without routing through a separating mountain belt (1157.5179ms)
+âœ” buttes, dunes, calderas and glacial troughs retain distinct relief and open region borders (330.767ms)
+âœ” campaign destruction cancels only unspawned buildup and never revives a source (3.8107ms)
+âœ” an entirely prevented campaign assault clears once without an invisible fallback (0.4706ms)
+âœ” a protected guardian nest cannot erase an owed guardian launch (0.3129ms)
+âœ” classic portals retain their authored all-destroyed fallback (0.3734ms)
+âœ” boss shedding and evolved splitting use living campaign nests instead of a mobile parent (0.7767ms)
+âœ” a full enemy pool delays an owed wave spawn without paying its clear (0.4094ms)
+âœ” every timed wave creates a source and every surviving source adds a pack (2.4182ms)
+âœ” timer overlaps a live assault, pauses for drafts and does not reset owed queues (3.2878ms)
+âœ” out of order kills, pool pressure and split ancestry cannot advance rewards early (0.9055ms)
+âœ” no safe site defers the wave without phantom enemies, rewards or a mountain fallback (0.6749ms)
+âœ” a full pool retains both overlapping assaults and cannot pay either early (0.4983ms)
+âœ” final timed assault fires victory once only after every earlier wave and boss child (0.7575ms)
+âœ” separate weapon solids form a connected assembly of touching bounds around the grip (79.7783ms)
+âœ” all twelve family-era assemblies have finite geometry and distinct silhouettes (31.724ms)
+âœ” both sword cuts carry the edge sideways through contact without an elbow thrust or pause (13.0056ms)
+âœ” moduleKey strips the extension and normalises separators (43.5967ms)
+âœ” a same-directory specifier resolves beside its importer (0.4598ms)
+âœ” a parent specifier climbs out of the importer directory (0.4965ms)
+âœ” nested descent resolves (0.8107ms)
+âœ” rewrite maps a core import to its bundled key (3.743ms)
+âœ” rewrite handles the shell reaching into the core (5.6401ms)
+âœ” rewrite handles double quotes and side-effect imports (0.8432ms)
+âœ” bare specifiers are left alone so three keeps resolving (0.2392ms)
+âœ” a quote mismatch is not rewritten (0.2879ms)
+âœ” the real core rewrites to keys that exist in the bundle (0.9388ms)
+âœ” a DYNAMIC import is rewritten too (0.7166ms)
+âœ” the real main.js has no unrewritten relative specifier left (6.4721ms)
+Pages: 5 production files preserved, 4 preview assets verified
+âœ” Pages preserves production bytes and replaces only the v2 game with preview assets (1687.9494ms)
+âœ” Pages refuses stale output or a destination that would contain source (1150.1151ms)
+âœ” Pages fails when either checkout cannot supply a playable app (1358.78ms)
+âœ” Preview campaign and preferences never read or overwrite production saves (2.665ms)
+âœ” Preview tabs retain conflict protection and denied-storage recovery (0.7688ms)
+âœ” Only a v2 path segment changes the storage namespace (0.3571ms)
+âœ” generator URLs retain the deployed path and explicitly separate inspection from campaign play (8.8829ms)
+âœ” world history deduplicates seed and terrain together and bounds local growth (6.8503ms)
+âœ” inspector preferences, history and rewards never read or overwrite normal V2 or production saves (1.3821ms)
+âœ” shoreline hysteresis prevents repeated state changes and swimming has no downhill boost (5.9886ms)
+âœ” route costs penalize uphill and water and exclude cliffs (1.5507ms)
+âœ” whole footprints obey exclusive climate rules, including a mixed boundary (1.0688ms)
+âœ” element bonuses cannot mutate templates, stack on repeated reads or exceed slow cap (15.6453ms)
+âœ” high-ground spheres reach the valley, grow monotonically and cap horizontal advantage (4.7152ms)
+âœ” elevation composes with elements without changing minimum distance or secondary hops (1.7751ms)
+âœ” incompatible inspection exposes item stats without granting an equip contract (15.969ms)
+âœ” generation replays, families differ and tier/era/rarity remain separate (2.7645ms)
+âœ” drop boundaries are exact and bosses do not consume the chance stream (0.3915ms)
+âœ” full backpack retains drops, replacement and salvage are idempotent (1.4208ms)
+âœ” equip and customization commit between attacks without mutating templates (0.9232ms)
+âœ” checkpoint rejects duplicate identities and malformed equipment; infusion is bounded (4.7189ms)
+âœ” full loadouts swap slots without overflow and unequipping requires space (2.4675ms)
+â„¹ tests 271
+â„¹ suites 0
+â„¹ pass 266
+â„¹ fail 5
+â„¹ cancelled 0
+â„¹ skipped 0
+â„¹ todo 0
+â„¹ duration_ms 5458.595
+
+âœ– failing tests:
+
+test at tests\run\planets.test.mjs:3:1
+âœ– 99 route nodes are legal, distinct and have bounded difficulty (5.3207ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  5 !== 20
+
+      at TestContext.<anonymous> (file:///C:/Users/Majied%20LaFleur/Documents/GPTProjects/worldheart/tests/run/planets.test.mjs:3:268)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 5,
+    expected: 20,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\run\planets.test.mjs:5:1
+âœ– the proven opening and authored milestone tells remain identifiable (4.9736ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      [
+        'Hearthwild',
+        'varied',
+        12345,
+  ...
+        'Riftshore',
+  +     'varied',
+  +     117074,
+  -     'canyon',
+  -     12345,
+        1
+      ],
+      [
+        'Crownfall',
+  +     'varied',
+  +     221803,
+  -     'alpine',
+  -     12345,
+        1.04
+      ]
+    ]
+
+      at TestContext.<anonymous> (file:///C:/Users/Majied%20LaFleur/Documents/GPTProjects/worldheart/tests/run/planets.test.mjs:5:121)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 'Hearthwild', 'varied', 12345, 1 ], [ 'Riftshore', 'varied', 117074, 1 ], [ 'Crownfall', 'varied', 221803, 1.04 ] ],
+    expected: [ [ 'Hearthwild', 'varied', 12345, 1 ], [ 'Riftshore', 'canyon', 12345, 1 ], [ 'Crownfall', 'alpine', 12345, 1.04 ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\shell\formations.test.mjs:42:1
+âœ– shared valley joins stay at the floor and all relief fits its picking shell (9.9332ms)
+  AssertionError [ERR_ASSERTION]: only submerged fault cuts may descend below the enclosing floor
+
+  'gorge' !== 'crevice'
+
+      at TestContext.<anonymous> (file:///C:/Users/Majied%20LaFleur/Documents/GPTProjects/worldheart/tests/shell/formations.test.mjs:47:26)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'gorge',
+    expected: 'crevice',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\shell\landscapes.test.mjs:33:1
+âœ– mixed terrain includes small hills, deep incisions and major ranges in one seeded globe (12.0964ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+    assert.ok(Math.max(...f.modules.filter(m=>m.type==='hills').map(m=>m.height))<12)
+
+      at TestContext.<anonymous> (file:///C:/Users/Majied%20LaFleur/Documents/GPTProjects/worldheart/tests/shell/landscapes.test.mjs:38:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests\shell\landscapes.test.mjs:42:1
+âœ– climate is repeatable, locally continuous and gives planets distinct biome regions (3.3103ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'volcanic'
+  - 'alpine'
+
+      at TestContext.<anonymous> (file:///C:/Users/Majied%20LaFleur/Documents/GPTProjects/worldheart/tests/shell/landscapes.test.mjs:51:58)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'volcanic',
+    expected: 'alpine',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

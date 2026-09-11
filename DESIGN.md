@@ -32,6 +32,10 @@ Campaign biomes blend this scene palette across continuous climate regions:
 sand/soil for dry land, cliff/meadow for tundra, moss for forest and visible
 strata for incised walls. Keep the faceted diorama geometry. Tall ranges, low
 hills, flat benches and cuts must have distinct silhouettes within one planet.
+Desert cacti and broad jungle canopies use the same faceted meshes and passable
+scenery contract. Volcanic basalt uses muted charcoal; warm orange fissures mark
+raised hot crust, keeping the Mortar restriction visible. Climate is independent
+of geometry, including dry inland canyon floors below sea level.
 The World generator's formation selector reuses its existing native select,
 panel and camera focus behavior; it adds no decorative animation or UI accent.
 

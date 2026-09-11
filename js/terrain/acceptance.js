@@ -5,12 +5,12 @@ export function surveyBattlefield(nav, field, heightAt, radius, center=null, the
   for(let i=0;i<nav.n;i++){
     if(center&&nav.dirs[i*3]*center.x+nav.dirs[i*3+1]*center.y+nav.dirs[i*3+2]*center.z<Math.cos(theta))continue;
     const h=nav.baseHeight[i];peak=Math.max(peak,h);
-    if(nav.floorWalk[i]&&h>=.18){dry++;if(nav.march.floorReach[i])connected++;}
+    if(nav.floorWalk[i]&&(nav.waterDepth?nav.waterDepth[i]===0:h>=.18)){dry++;if(nav.march.floorReach[i])connected++;}
     if(i%53)continue;
     for(let k=0;k<3;k++)p[k]=nav.dirs[i*3+k];
     const shape=field.inspect(...p);
     if(h>2&&shape.relief>1){const f=exposed[shape.type]||={samples:0,peak:0};f.samples++;f.peak=Math.max(f.peak,h);}
-    if(h<.18||h>1.5||!nav.march.floorReach[i])continue;
+    if((nav.waterDepth?nav.waterDepth[i]>0:h<.18)||h>1.5||!nav.march.floorReach[i])continue;
     const axis=Math.abs(p[1])<.93?[-p[2],0,p[0]]:[0,p[2],-p[1]],l=Math.hypot(...axis);
     for(let k=0;k<3;k++)axis[k]/=l;
     const side=[p[1]*axis[2]-p[2]*axis[1],p[2]*axis[0]-p[0]*axis[2],p[0]*axis[1]-p[1]*axis[0]];

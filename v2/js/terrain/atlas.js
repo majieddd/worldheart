@@ -9,21 +9,21 @@ const norm = v => {const l=Math.hypot(...v);return v.map(n=>n/l);};
 // Sample every edge between nodes, so a coarse line cannot bridge a ridge.
 // Coarse habitat is deliberately labelled potential; only the battle graph
 // certifies current spawn clearance, air access and the 160 m route budget.
-export async function createTerrainAtlas({radius, heightAt, slopeAt, heart, pause = async()=>{}}) {
+export async function createTerrainAtlas({radius, heightAt, slopeAt, heart, waterAt=(x,y,z,h)=>Math.max(0,-h), pause = async()=>{}}) {
   let yielded=performance.now();
   const cooperate=async()=>{if(performance.now()-yielded>=5){await pause();yielded=performance.now();}};
   const {verts,faces}=buildIcosphere(6),n=verts.length;
   const heights=new Float32Array(n),floor=new Uint8Array(n),habitat=new Uint8Array(n),adj=Array.from({length:n},()=>[]);
   for(let i=0;i<n;i++){
-    const p=verts[i],h=heightAt(...p);heights[i]=h;floor[i]=isFloorTerrain(h,slopeAt(...p))?1:0;
-    if(floor[i]&&h>=.18&&h<=1.5){
+    const p=verts[i],h=heightAt(...p);heights[i]=h;floor[i]=isFloorTerrain(h,slopeAt(...p),waterAt(...p,h))?1:0;
+    if(floor[i]&&waterAt(...p,h)===0&&h<=1.5){
       const axis=norm(Math.abs(p[1])<.93?[-p[2],0,p[0]]:[0,p[2],-p[1]]);
       const side=[p[1]*axis[2]-p[2]*axis[1],p[2]*axis[0]-p[0]*axis[2],p[0]*axis[1]-p[1]*axis[0]];
       let clear=true;
       for(let k=0;k<8;k++){
         const a=k*Math.PI/4,q=norm(p.map((v,j)=>v+(axis[j]*Math.cos(a)+side[j]*Math.sin(a))*NEST_CLEARANCE/radius));
         const hq=heightAt(...q);
-        if(hq<.18||hq>1.5||!isFloorTerrain(hq,slopeAt(...q))){clear=false;break;}
+        if(waterAt(...q,hq)>0||hq>1.5||!isFloorTerrain(hq,slopeAt(...q),waterAt(...q,hq))){clear=false;break;}
       }
       habitat[i]=clear?1:0;
     }
@@ -31,11 +31,11 @@ export async function createTerrainAtlas({radius, heightAt, slopeAt, heart, paus
   }
   function edge(a,b){
     const length=Math.acos(Math.max(-1,Math.min(1,dot(a,b))))*radius,steps=Math.max(1,Math.ceil(length/1.2));
-    let previous=heightAt(...a);
+    let previous=heightAt(...a),depth=waterAt(...a,previous);
     for(let k=1;k<=steps;k++){
       const p=norm(a.map((v,j)=>v+(b[j]-v)*k/steps)),h=heightAt(...p);
-      if(!isFloorTerrain(h,slopeAt(...p))||!Number.isFinite(travelCost(previous,h,length/steps)))return false;
-      previous=h;
+      if(!isFloorTerrain(h,slopeAt(...p),waterAt(...p,h))||!Number.isFinite(travelCost(previous,h,length/steps,depth,waterAt(...p,h))))return false;
+      previous=h;depth=waterAt(...p,h);
     }
     return true;
   }

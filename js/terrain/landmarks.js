@@ -1,7 +1,7 @@
 // Build a small inspection catalogue once, not during the frame loop. Probe
 // actual exposed relief, since a recipe anchor can be submerged or its cut
 // displaced by domain warping. Prefer representatives inside the playfield.
-export function surveyLandmarks(field, heightAt, center, theta) {
+export function surveyLandmarks(field, heightAt, center, theta, waterAt=()=>false) {
   const best=new Map(),all=new Map();
   for(const m of field.modules) {
     for(let a=-3;a<=3;a++)for(let b=-3;b<=3;b++){
@@ -10,7 +10,7 @@ export function surveyLandmarks(field, heightAt, center, theta) {
       const sample=field.inspect(...dir);if(sample.id!==m.id)continue;
       const height=heightAt(...dir,false);
       const crater=sample.type==='caldera';
-      const cut=['ravine','crevice','canyon','valley','caldera'].includes(sample.type);
+      const cut=['ravine','crevice','canyon','gorge','valley','caldera'].includes(sample.type);
       let depth=0;
       if(cut&&sample.incision>1){
         // Measure the visible banks too: a large theoretical cut beneath an
@@ -19,7 +19,7 @@ export function surveyLandmarks(field, heightAt, center, theta) {
           let raised=0;
           for(const distance of (crater?[.35,.5,.65].map(v=>v*m.extent):[12,20,28])){
             const bank=dir.map((n,k)=>n+(m.side[k]*Math.sin(angle)+m.axis[k]*Math.cos(angle))*distance/field.radius),l=Math.hypot(...bank),p=bank.map(n=>n/l);
-            if(field.inspect(...p).id===m.id)raised=Math.max(raised,heightAt(...p,false)-Math.max(.03,height));
+            if(field.inspect(...p).id===m.id)raised=Math.max(raised,heightAt(...p,false)-(waterAt(...dir,height)?Math.max(.03,height):height));
           }
           return raised;
         });
@@ -27,7 +27,7 @@ export function surveyLandmarks(field, heightAt, center, theta) {
         depth=crater?banks.sort((a,b)=>a-b)[2]:Math.min(...banks);
       }
       const score=cut?depth:(height>.2?height:0);
-      if(score<2)continue;
+      if(score<2||waterAt(...dir,height))continue;
       const inside=dir[0]*center.x+dir[1]*center.y+dir[2]*center.z>=Math.cos(theta);
       const record={type:sample.type,dir,height,relief:sample.relief,depth,score,inside,scale:m.height};
       if(!all.has(sample.type)||all.get(sample.type).score<score)all.set(sample.type,record);

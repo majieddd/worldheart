@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { R, terrainHeight, surfaceTravel } from './world.js';
+import { waterDepthAt, surfaceElevation, R, terrainHeight, surfaceTravel } from './world.js';
 import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
 import { uploadInstances } from './rig.js';
@@ -324,7 +324,7 @@ class Ally {
     this._renderDir.copy(this.dir);
     this.weaponM.identity();
     this.height = terrainHeight(this.dir.x, this.dir.y, this.dir.z);
-    this._renderHeight = Math.max(0.03,this.height);
+    this._renderHeight = surfaceElevation(this.dir,this.height);
     _tmp.set(0, 1, 0);
     if (Math.abs(this.dir.y) > 0.9) _tmp.set(1, 0, 0);
     this.fwd.crossVectors(this.dir, _tmp).normalize();
@@ -466,11 +466,11 @@ export class AllyManager {
     // jump mean something to every system at once: enemy melee acquisition, the
     // landing re-check that lets you dodge a telegraphed swing, the enemy's blow, the instanced renderer and the strike origin all read this.
     return out.copy(a.dir).multiplyScalar(
-      R + Math.max(a.height, 0.03) + (a.hop || 0) + a.type.radius * 0.9 - swimOffset(a));
+      R + surfaceElevation(a.dir,a.height) + (a.hop || 0) + a.type.radius * 0.9 - swimOffset(a));
   }
 
   enemyPos(e, out) {
-    const h = Math.max(e.height, 0.03) - swimOffset(e);
+    const h = surfaceElevation(e.dir,e.height) - swimOffset(e);
     return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
   }
 
@@ -758,7 +758,7 @@ export class AllyManager {
 
   _ground(a) {
     a.height = terrainHeight(a.dir.x, a.dir.y, a.dir.z);
-    if (CONFIG.terrain) a.swimming = isSwimming(a.swimming, -terrainHeight(a.dir.x, a.dir.y, a.dir.z, false));
+    if (CONFIG.terrain) a.swimming = isSwimming(a.swimming, waterDepthAt(a.dir));
   }
 
   _movementNode(a) {
@@ -1058,7 +1058,7 @@ export class AllyManager {
       for (let i = 0; i <= samples; i++) {
         const d = step * i / samples;
         _tmp.copy(b.previous).addScaledVector(_aimV, d); _tmp2.copy(_tmp).normalize();
-        const floor = R + Math.max(0.03, terrainHeight(_tmp2.x, _tmp2.y, _tmp2.z));
+        const floor = R + surfaceElevation(_tmp2);
         if (_tmp.length() <= floor) { terrainAt = d; break; }
       }
       if (structure && nearest <= terrainAt) {
@@ -1144,7 +1144,7 @@ export class AllyManager {
       sh.vel.addScaledVector(_tmp, -sh.spec.gravity * dt);
       sh.pos.addScaledVector(sh.vel, dt);
       _tmp2.copy(sh.pos).normalize();
-      const ground = R + Math.max(terrainHeight(_tmp2.x, _tmp2.y, _tmp2.z), 0);
+      const ground = R + surfaceElevation(_tmp2);
       if (sh.pos.length() <= ground + 0.2 || sh.t > sh.spec.fuse) this._burst(sh);
     }
   }
@@ -1305,7 +1305,7 @@ export class AllyManager {
         // last frame drawn, whatever moved it: the AI, an order, a party
         // leash, or the player. Measured here rather than in each mover so
         // no mover can forget to report.
-        const h = Math.max(0.03,a.height)-swimOffset(a);
+        const h = surfaceElevation(a.dir,a.height)-swimOffset(a);
         const horizontal = Math.acos(clamp(a._renderDir.dot(a.dir), -1, 1)) * (R+(h+a._renderHeight)*.5);
         const moved = CONFIG.terrain ? Math.hypot(horizontal,h-a._renderHeight) : Math.acos(clamp(a._renderDir.dot(a.dir),-1,1))*R;
         a._renderHeight = h;

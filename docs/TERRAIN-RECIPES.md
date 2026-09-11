@@ -7,7 +7,7 @@ keep their original terrain formula.
 
 ## Authoring boundaries
 
-`js/terrain/recipes.js` holds version 4, twelve group recipes and four relief
+`js/terrain/recipes.js` holds version 5, fourteen group recipes and four relief
 mixes. `js/terrain/formations.js` lays out and samples those groups. `world.js`
 composes their relief with continents and small surface detail, then applies
 elemental stone rules and the independent `terrain/ecology.js` climate fields.
@@ -17,34 +17,46 @@ resulting surface, rather than drawing hidden routes through blocked mountains.
 | Group | Internal shapes | Route opportunities |
 |---|---|---|
 | Ridge chain | Shared spine, several folded crests, rounded feet | Valleys around the chain; ground creatures cannot shortcut over its crests |
-| Winding canyon | Paired banks around a meandering dry floor | A continuous cut connects to the surrounding valley network |
+| Winding Valley | Paired banks around a meandering dry floor | A continuous cut connects to the surrounding valley network |
 | Open basin | Bowl, surrounding shoulders, two outlets | A clearing with multiple entrances |
-| Rolling foothills | Small irregular ridges and saddles inspired by the classic field | Broad traversable approaches and modest high ground |
-| Eroded tableland | Flat bench, softened perimeter, side pass | Stable tower locations above a lower approach |
+| Rolling foothills | Broader, exaggerated irregular ridges and saddles | Traversable approaches and mid-height positions |
+| Plateau | Flat bench, softened perimeter, side pass | Stable tower locations above a lower approach |
 | Terraced plateau | Asymmetric tiers, scalloped flanks, a ramp and side outlet | Wide tower shelves above an open lower approach |
-| Branching ravine | Variable width, unequal banks and one to three tributaries | Intersecting lower routes between enclosing banks |
-| Fault crevices | Narrow, bending fractures with smaller branches | Deep cuts; submerged bottoms fill with water and use swimming rules |
-| Eroded butte cluster | Three to five separate flat-topped remnants | Irregular gaps through a cluster of elevated positions |
+| Branching ravine | Variable width, unequal banks and three to five tributaries | Intersecting lower routes between enclosing banks |
+| Fault crevices | Longer bending fractures with broader dry bottoms | Walkable inland passages below their enclosing rock |
+| Eroded butte cluster | Seven to twelve separate flat-topped remnants with at least 5.5m between their analytic feet | Irregular gaps through a cluster of elevated positions |
 | Breached caldera | Undulating ring around a low interior, with an open breach | A sheltered floor that connects to exterior valleys |
-| Dune field | Parallel low crests with a long windward side and shorter slip face | Low rolling obstacles beside larger formations |
+| Hill Fields | More widely spaced parallel low crests with a long windward side and shorter slip face | Low rolling obstacles beside larger formations |
+| Winding Canyon | Negative incision with winding stepped walls and long end ramps | Dry sub-sea passage, with depth bounded by available exit length |
+| Staircase escarpment | Three lateral benches crossed by a diagonal ramp | Multiple connected positions beside a steep flank |
 | Glacial trough | Broad U-shaped floor between unequal shoulders | A wide corridor distinct from narrow ravines |
 
 Mixed landscapes, Giant peaks, Deep canyons and Ocean islands are **relief mixes**,
 not exclusive biome assignments. Any group can have neutral, hot or cold
 surfaces. All four mixes include hills, tall ranges and incised uplands, with
-different proportions and scales. No individual battlefield guarantees all twelve
+different proportions and scales. No individual battlefield guarantees all fourteen
 families. Low-frequency geology biases neighbouring family choices and peak
 amplitudes, rather than distributing every recipe with identical probability.
 Temperature, altitude snow, water and foliage remain separate fields.
 Mortar/Cryo placement restrictions and bonuses still use the actual footprint.
 
-Each accepted planet seed also selects a Temperate, Arid, Boreal or Lush climate
-bias. Continuous latitude, temperature and moisture fields produce meadow,
-woodland, wetland, savanna, desert and tundra regions across multiple formation
-families. The existing hot stone and altitude/cold rules take precedence as
-volcanic/alpine surface biomes. Biome dressing blends the existing palette and
-vegetation; it does not add a new tower restriction or movement penalty. Dry
-regions have fewer trees; mild plateau benches can support them below treeline.
+Mixed Landscapes is the default across all 99 campaign definitions. Other
+relief mixes remain explicit sandbox/inspector options. Distinct per-planet seeds
+and climate preserve variety, including distinct opening-planet seeds.
+
+Each accepted planet seed selects a Temperate, Desert, Boreal, Jungle, Volcanic
+or Wetlands climate bias. Continuous latitude, temperature and moisture fields produce meadow,
+woodland, jungle, wetland, savanna, desert and tundra regions across multiple formation
+families. Tectonic activity independently creates volcanic regions. Hot stone and
+altitude/cold rules take precedence as volcanic/alpine surface biomes. Biome dressing blends the existing palette and
+vegetation; it does not add a new tower restriction or movement penalty. Deserts have sparse cacti; jungles have larger broadleaf canopies. Volcanic
+regions show basalt and warm fissures on raised hot crust. This is solid rock,
+not a liquid lava simulation or added damage hazard. Hot volcanic highlands use
+the existing Mortar-only restriction/bonus; snowy ground retains Cryo rules.
+Trees and cacti remain passable scenery. Mild benches can support vegetation.
+The inspector Climate selector independently dresses the same layout and is
+preserved by Load seed, recent history, share links and Play this seed. Campaign
+climates remain seeded; inspector choices do not overwrite campaign saves.
 
 ## Generation order
 
@@ -63,12 +75,17 @@ regions have fewer trees; mild plateau benches can support them below treeline.
    Junctions widen naturally. Canyon and basin outlets join that same network.
 5. Measured neighbour spacing sets the shoulders. Feet ease into the floor;
    high crests retain a pointed profile. Mesa tops deliberately stay flat.
-   Canyon/ravine depth is measured relative to raised banks; crevice relief
-   alone may become negative, up to 14% of that group's height. Ocean water
-   fills any final surface below sea level. Broad outer joins stay at zero
-   relief. This height field does not represent caves or overhangs.
-6. Continental blending creates coasts and islands. Climate and decor dress
-   the result. Fine facet noise is cosmetic and cannot close a route.
+   Winding Valley/ravines cut between raised banks. Fault relief can descend
+   below sea level by up to 25% of group height. Winding Canyon is a true
+   negative incision, with depth limited to 24% of its available cell extent
+   so the exit ramps remain traversable. Broad outer joins stay at zero relief.
+   This height field does not represent caves or overhangs.
+6. Continental blending creates coasts and islands. Negative incisions begin
+   beyond the shoreline band; inland depressions stay dry even below sea level.
+   A shared continental water mask controls the water shader, unit/weapon
+   grounding, swimming, placement, ray picking, camera and navigation costs.
+   Dry cliff faces never inherit the water shortcut. Climate/decor dress the
+   result; fine facet noise is cosmetic and cannot close a route.
 7. The cap scout prefers dry inland floor, not water counted as traversable
    ground. The full graph still certifies the base, flight lanes and all 17
    separated nest clearings. Ground enemies use the existing floor-first field
@@ -115,7 +132,7 @@ Weights of zero disable a recipe. `spacing` changes region footprint sizes;
 `dir: [x,y,z]` pins a site on the sphere. Invalid, overlapping or duplicate
 anchors fail explicitly. An override can still fail gameplay site acceptance;
 run the graph checks before publishing it. These are collaborator controls.
-The in-game World generator selects published mixes and seeds. Its formation
+The in-game World generator selects published mixes, climates and seeds. Its formation
 selector surveys exposed representatives, preferring the active battlefield and
 labelling examples elsewhere on the globe. Incisions need visible banks on both
 sides; an isolated sea cliff cannot qualify. It does not edit individual group
@@ -167,7 +184,8 @@ bound also controls the picking shell and camera clearance fallback.
 The [implementation ledger](qa/implementation/MODULAR-LANDFORMS.md) records
 results and retained failures. Whole-campaign, broader seed/device and owner
 visual/balance acceptance remain separate from these fixtures.
-The v4 [research and adversarial ledger](qa/implementation/TERRAIN-ATLAS.md)
+The v5 [owner refinement and adversarial ledger](qa/implementation/LANDFORM-BIOMES.md)
+records the current batch. The v4 [research and adversarial ledger](qa/implementation/TERRAIN-ATLAS.md)
 records the bounded second pass and its integration evidence.
 
 ## Research translated into this implementation

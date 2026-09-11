@@ -1,0 +1,1478 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "scope": "Targeted sub-sea movement/placement and normal climate controls with instrumented frame advance",
+  "checks": [
+    {
+      "name": "Seed 12345 varied: Dry sub-sea floors exist and mostly connect to the heart",
+      "ok": false,
+      "actual": {
+        "total": 0,
+        "reached": 0,
+        "low": null
+      }
+    },
+    {
+      "name": "Seed 12345 varied: Flat dry sub-sea ground permits a normal tower footprint",
+      "ok": false,
+      "actual": {
+        "place": -1
+      }
+    },
+    {
+      "name": "Seed 12345 varied: Ocean swimming surface remains above the seabed",
+      "ok": true
+    },
+    {
+      "name": "Seed 4306234 varied: Dry sub-sea floors exist and mostly connect to the heart",
+      "ok": true,
+      "actual": {
+        "total": 1132,
+        "reached": 1132,
+        "low": -5.366841793060303
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Ray picks the actual negative canyon floor",
+      "ok": true,
+      "actual": {
+        "expected": -5.3099936864332,
+        "actual": -5.30999373222582
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Water mesh mask leaves dry canyon open",
+      "ok": true
+    },
+    {
+      "name": "Seed 4306234 varied: Commander walks below sea level without swimming",
+      "ok": true,
+      "actual": {
+        "distance": 1.2979473978707028,
+        "height": -4.799555090869853,
+        "swimming": false
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Commander aiming origin stays below sea level with the body",
+      "ok": true,
+      "actual": {
+        "height": -4.2055550908698365
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: A real ground enemy exits the sub-sea passage and reaches base",
+      "ok": true,
+      "actual": {
+        "remaining": 0
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: First-person camera stays finite inside the canyon",
+      "ok": true
+    },
+    {
+      "name": "Seed 4306234 varied: Flat dry sub-sea ground permits a normal tower footprint",
+      "ok": true,
+      "actual": {
+        "place": 427
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Placed tower stands at negative ground height",
+      "ok": true,
+      "actual": {
+        "height": -4.733469576600186
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Ocean swimming surface remains above the seabed",
+      "ok": true
+    },
+    {
+      "name": "temperate: climate does not reroll terrain geometry",
+      "ok": true,
+      "actual": {
+        "seed": 36102
+      }
+    },
+    {
+      "name": "temperate: inspector reflects the requested climate",
+      "ok": true
+    },
+    {
+      "name": "temperate: play link preserves climate",
+      "ok": true
+    },
+    {
+      "name": "desert: climate does not reroll terrain geometry",
+      "ok": true,
+      "actual": {
+        "seed": 36102
+      }
+    },
+    {
+      "name": "desert: inspector reflects the requested climate",
+      "ok": true
+    },
+    {
+      "name": "desert: play link preserves climate",
+      "ok": true
+    },
+    {
+      "name": "jungle: climate does not reroll terrain geometry",
+      "ok": true,
+      "actual": {
+        "seed": 36102
+      }
+    },
+    {
+      "name": "jungle: inspector reflects the requested climate",
+      "ok": true
+    },
+    {
+      "name": "jungle: play link preserves climate",
+      "ok": true
+    },
+    {
+      "name": "volcanic: climate does not reroll terrain geometry",
+      "ok": true,
+      "actual": {
+        "seed": 36102
+      }
+    },
+    {
+      "name": "volcanic: inspector reflects the requested climate",
+      "ok": true
+    },
+    {
+      "name": "volcanic: play link preserves climate",
+      "ok": true
+    },
+    {
+      "name": "boreal: climate does not reroll terrain geometry",
+      "ok": true,
+      "actual": {
+        "seed": 36102
+      }
+    },
+    {
+      "name": "boreal: inspector reflects the requested climate",
+      "ok": true
+    },
+    {
+      "name": "boreal: play link preserves climate",
+      "ok": true
+    },
+    {
+      "name": "wetland: climate does not reroll terrain geometry",
+      "ok": true,
+      "actual": {
+        "seed": 36102
+      }
+    },
+    {
+      "name": "wetland: inspector reflects the requested climate",
+      "ok": true
+    },
+    {
+      "name": "wetland: play link preserves climate",
+      "ok": true
+    },
+    {
+      "name": "Climate control fits a narrow viewport without horizontal scroll",
+      "ok": true
+    },
+    {
+      "name": "Normal Load seed interaction applies the selected climate",
+      "ok": true
+    }
+  ],
+  "records": [
+    {
+      "seed": 36102,
+      "checks": [
+        {
+          "name": "Dry sub-sea floors exist and mostly connect to the heart",
+          "ok": false,
+          "actual": {
+            "total": 0,
+            "reached": 0,
+            "low": null
+          }
+        },
+        {
+          "name": "Flat dry sub-sea ground permits a normal tower footprint",
+          "ok": false,
+          "actual": {
+            "place": -1
+          }
+        },
+        {
+          "name": "Ocean swimming surface remains above the seabed",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "seed": 4306234,
+      "checks": [
+        {
+          "name": "Dry sub-sea floors exist and mostly connect to the heart",
+          "ok": true,
+          "actual": {
+            "total": 1132,
+            "reached": 1132,
+            "low": -5.366841793060303
+          }
+        },
+        {
+          "name": "Ray picks the actual negative canyon floor",
+          "ok": true,
+          "actual": {
+            "expected": -5.3099936864332,
+            "actual": -5.30999373222582
+          }
+        },
+        {
+          "name": "Water mesh mask leaves dry canyon open",
+          "ok": true
+        },
+        {
+          "name": "Commander walks below sea level without swimming",
+          "ok": true,
+          "actual": {
+            "distance": 1.2979473978707028,
+            "height": -4.799555090869853,
+            "swimming": false
+          }
+        },
+        {
+          "name": "Commander aiming origin stays below sea level with the body",
+          "ok": true,
+          "actual": {
+            "height": -4.2055550908698365
+          }
+        },
+        {
+          "name": "A real ground enemy exits the sub-sea passage and reaches base",
+          "ok": true,
+          "actual": {
+            "remaining": 0
+          }
+        },
+        {
+          "name": "First-person camera stays finite inside the canyon",
+          "ok": true
+        },
+        {
+          "name": "Flat dry sub-sea ground permits a normal tower footprint",
+          "ok": true,
+          "actual": {
+            "place": 427
+          }
+        },
+        {
+          "name": "Placed tower stands at negative ground height",
+          "ok": true,
+          "actual": {
+            "height": -4.733469576600186
+          }
+        },
+        {
+          "name": "Ocean swimming surface remains above the seabed",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "biome": "temperate",
+      "seed": 36102,
+      "terrain": "varied",
+      "key": "temperate",
+      "decor": [
+        206,
+        84,
+        418,
+        54,
+        241,
+        74
+      ],
+      "catalog": [
+        {
+          "type": "buttes",
+          "dir": [
+            0.2505300254880395,
+            -0.9440518377804394,
+            0.21447804995462122
+          ],
+          "height": 34.188596432795926,
+          "relief": 33.641904729733675,
+          "depth": 0,
+          "score": 34.188596432795926,
+          "inside": false,
+          "scale": 42.309416129395366
+        },
+        {
+          "type": "caldera",
+          "dir": [
+            0.9798257773713156,
+            0.150705111131999,
+            0.13126086803533235
+          ],
+          "height": 0.6564787288497702,
+          "relief": 0,
+          "depth": 19.43155853666963,
+          "score": 19.43155853666963,
+          "inside": true,
+          "scale": 52.133211294924834
+        },
+        {
+          "type": "canyon",
+          "dir": [
+            0.8490146493508937,
+            0.5087120166156628,
+            0.14278028343719104
+          ],
+          "height": 0.5676789930872218,
+          "relief": 0,
+          "depth": 4.818778682795323,
+          "score": 4.818778682795323,
+          "inside": true,
+          "scale": 64.1245277184695
+        },
+        {
+          "type": "crevice",
+          "dir": [
+            0.4399296604866574,
+            -0.8621437552451934,
+            -0.2513365057364535
+          ],
+          "height": 0.026402659811504192,
+          "relief": -2.9142984131160183,
+          "depth": 18.536861104369567,
+          "score": 18.536861104369567,
+          "inside": false,
+          "scale": 19.426842089936137
+        },
+        {
+          "type": "dunes",
+          "dir": [
+            0.923211935884574,
+            -0.14545049548057426,
+            -0.3557019465854982
+          ],
+          "height": 6.9911619770454445,
+          "relief": 6.476761325522719,
+          "depth": 0,
+          "score": 6.9911619770454445,
+          "inside": true,
+          "scale": 6.5218026298284535
+        },
+        {
+          "type": "escarpment",
+          "dir": [
+            -0.05812666547461296,
+            0.7165393186633711,
+            0.6951206338256939
+          ],
+          "height": 33.032421870503036,
+          "relief": 32.60252414117754,
+          "depth": 0,
+          "score": 33.032421870503036,
+          "inside": false,
+          "scale": 32.60252414117754
+        },
+        {
+          "type": "gorge",
+          "dir": [
+            -0.28081755236826533,
+            -0.8822216696245695,
+            -0.3779238387912746
+          ],
+          "height": -10.898343677113294,
+          "relief": -11.473941678485309,
+          "depth": 11.340486226033235,
+          "score": 11.340486226033235,
+          "inside": false,
+          "scale": 18.101118829250336
+        },
+        {
+          "type": "hills",
+          "dir": [
+            0.8871240370022682,
+            0.3064485818662046,
+            -0.3451089822722535
+          ],
+          "height": 2.8906654081286747,
+          "relief": 4.704673596085486,
+          "depth": 0,
+          "score": 2.8906654081286747,
+          "inside": true,
+          "scale": 17.610260843429714
+        },
+        {
+          "type": "mesa",
+          "dir": [
+            0.8109678061196127,
+            0.5182384335679219,
+            -0.2715881871705921
+          ],
+          "height": 31.120200782876175,
+          "relief": 30.771266382932666,
+          "depth": 0,
+          "score": 31.120200782876175,
+          "inside": true,
+          "scale": 30.771266382932666
+        },
+        {
+          "type": "plateau",
+          "dir": [
+            -0.6302556836306624,
+            -0.4806842312850253,
+            -0.6096888083647022
+          ],
+          "height": 30.53567112713686,
+          "relief": 30.000820227384565,
+          "depth": 0,
+          "score": 30.53567112713686,
+          "inside": false,
+          "scale": 30.000820227384565
+        },
+        {
+          "type": "range",
+          "dir": [
+            0.5011769747920508,
+            -0.5582026923231886,
+            0.661234749708023
+          ],
+          "height": 71.82761697349122,
+          "relief": 72.41696102711764,
+          "depth": 0,
+          "score": 71.82761697349122,
+          "inside": false,
+          "scale": 86.95201622221043
+        },
+        {
+          "type": "ravine",
+          "dir": [
+            0.22205124880145038,
+            -0.7495804201885441,
+            0.6235562818027593
+          ],
+          "height": 0.5212063754552791,
+          "relief": 0,
+          "depth": 19.95606748646372,
+          "score": 19.95606748646372,
+          "inside": false,
+          "scale": 43.19885503792762
+        },
+        {
+          "type": "valley",
+          "dir": [
+            0.21565541382424927,
+            0.9676715797032821,
+            0.13078400637251605
+          ],
+          "height": 0.3561318554442856,
+          "relief": 0,
+          "depth": 10.905281665183866,
+          "score": 10.905281665183866,
+          "inside": false,
+          "scale": 37.86462306569516
+        }
+      ]
+    },
+    {
+      "biome": "desert",
+      "seed": 36102,
+      "terrain": "varied",
+      "key": "desert",
+      "decor": [
+        78,
+        126,
+        20,
+        21,
+        241,
+        74
+      ],
+      "catalog": [
+        {
+          "type": "buttes",
+          "dir": [
+            0.2505300254880395,
+            -0.9440518377804394,
+            0.21447804995462122
+          ],
+          "height": 34.188596432795926,
+          "relief": 33.641904729733675,
+          "depth": 0,
+          "score": 34.188596432795926,
+          "inside": false,
+          "scale": 42.309416129395366
+        },
+        {
+          "type": "caldera",
+          "dir": [
+            0.9798257773713156,
+            0.150705111131999,
+            0.13126086803533235
+          ],
+          "height": 0.6564787288497702,
+          "relief": 0,
+          "depth": 19.43155853666963,
+          "score": 19.43155853666963,
+          "inside": true,
+          "scale": 52.133211294924834
+        },
+        {
+          "type": "canyon",
+          "dir": [
+            0.8490146493508937,
+            0.5087120166156628,
+            0.14278028343719104
+          ],
+          "height": 0.5676789930872218,
+          "relief": 0,
+          "depth": 4.818778682795323,
+          "score": 4.818778682795323,
+          "inside": true,
+          "scale": 64.1245277184695
+        },
+        {
+          "type": "crevice",
+          "dir": [
+            0.4399296604866574,
+            -0.8621437552451934,
+            -0.2513365057364535
+          ],
+          "height": 0.026402659811504192,
+          "relief": -2.9142984131160183,
+          "depth": 18.536861104369567,
+          "score": 18.536861104369567,
+          "inside": false,
+          "scale": 19.426842089936137
+        },
+        {
+          "type": "dunes",
+          "dir": [
+            0.923211935884574,
+            -0.14545049548057426,
+            -0.3557019465854982
+          ],
+          "height": 6.9911619770454445,
+          "relief": 6.476761325522719,
+          "depth": 0,
+          "score": 6.9911619770454445,
+          "inside": true,
+          "scale": 6.5218026298284535
+        },
+        {
+          "type": "escarpment",
+          "dir": [
+            -0.05812666547461296,
+            0.7165393186633711,
+            0.6951206338256939
+          ],
+          "height": 33.032421870503036,
+          "relief": 32.60252414117754,
+          "depth": 0,
+          "score": 33.032421870503036,
+          "inside": false,
+          "scale": 32.60252414117754
+        },
+        {
+          "type": "gorge",
+          "dir": [
+            -0.28081755236826533,
+            -0.8822216696245695,
+            -0.3779238387912746
+          ],
+          "height": -10.898343677113294,
+          "relief": -11.473941678485309,
+          "depth": 11.340486226033235,
+          "score": 11.340486226033235,
+          "inside": false,
+          "scale": 18.101118829250336
+        },
+        {
+          "type": "hills",
+          "dir": [
+            0.8871240370022682,
+            0.3064485818662046,
+            -0.3451089822722535
+          ],
+          "height": 2.8906654081286747,
+          "relief": 4.704673596085486,
+          "depth": 0,
+          "score": 2.8906654081286747,
+          "inside": true,
+          "scale": 17.610260843429714
+        },
+        {
+          "type": "mesa",
+          "dir": [
+            0.8109678061196127,
+            0.5182384335679219,
+            -0.2715881871705921
+          ],
+          "height": 31.120200782876175,
+          "relief": 30.771266382932666,
+          "depth": 0,
+          "score": 31.120200782876175,
+          "inside": true,
+          "scale": 30.771266382932666
+        },
+        {
+          "type": "plateau",
+          "dir": [
+            -0.6302556836306624,
+            -0.4806842312850253,
+            -0.6096888083647022
+          ],
+          "height": 30.53567112713686,
+          "relief": 30.000820227384565,
+          "depth": 0,
+          "score": 30.53567112713686,
+          "inside": false,
+          "scale": 30.000820227384565
+        },
+        {
+          "type": "range",
+          "dir": [
+            0.5011769747920508,
+            -0.5582026923231886,
+            0.661234749708023
+          ],
+          "height": 71.82761697349122,
+          "relief": 72.41696102711764,
+          "depth": 0,
+          "score": 71.82761697349122,
+          "inside": false,
+          "scale": 86.95201622221043
+        },
+        {
+          "type": "ravine",
+          "dir": [
+            0.22205124880145038,
+            -0.7495804201885441,
+            0.6235562818027593
+          ],
+          "height": 0.5212063754552791,
+          "relief": 0,
+          "depth": 19.95606748646372,
+          "score": 19.95606748646372,
+          "inside": false,
+          "scale": 43.19885503792762
+        },
+        {
+          "type": "valley",
+          "dir": [
+            0.21565541382424927,
+            0.9676715797032821,
+            0.13078400637251605
+          ],
+          "height": 0.3561318554442856,
+          "relief": 0,
+          "depth": 10.905281665183866,
+          "score": 10.905281665183866,
+          "inside": false,
+          "scale": 37.86462306569516
+        }
+      ]
+    },
+    {
+      "biome": "jungle",
+      "seed": 36102,
+      "terrain": "varied",
+      "key": "jungle",
+      "decor": [
+        345,
+        37,
+        346,
+        83,
+        241,
+        74
+      ],
+      "catalog": [
+        {
+          "type": "buttes",
+          "dir": [
+            0.2505300254880395,
+            -0.9440518377804394,
+            0.21447804995462122
+          ],
+          "height": 34.188596432795926,
+          "relief": 33.641904729733675,
+          "depth": 0,
+          "score": 34.188596432795926,
+          "inside": false,
+          "scale": 42.309416129395366
+        },
+        {
+          "type": "caldera",
+          "dir": [
+            0.9798257773713156,
+            0.150705111131999,
+            0.13126086803533235
+          ],
+          "height": 0.6564787288497702,
+          "relief": 0,
+          "depth": 19.43155853666963,
+          "score": 19.43155853666963,
+          "inside": true,
+          "scale": 52.133211294924834
+        },
+        {
+          "type": "canyon",
+          "dir": [
+            0.8490146493508937,
+            0.5087120166156628,
+            0.14278028343719104
+          ],
+          "height": 0.5676789930872218,
+          "relief": 0,
+          "depth": 4.818778682795323,
+          "score": 4.818778682795323,
+          "inside": true,
+          "scale": 64.1245277184695
+        },
+        {
+          "type": "crevice",
+          "dir": [
+            0.4399296604866574,
+            -0.8621437552451934,
+            -0.2513365057364535
+          ],
+          "height": 0.026402659811504192,
+          "relief": -2.9142984131160183,
+          "depth": 18.536861104369567,
+          "score": 18.536861104369567,
+          "inside": false,
+          "scale": 19.426842089936137
+        },
+        {
+          "type": "dunes",
+          "dir": [
+            0.923211935884574,
+            -0.14545049548057426,
+            -0.3557019465854982
+          ],
+          "height": 6.9911619770454445,
+          "relief": 6.476761325522719,
+          "depth": 0,
+          "score": 6.9911619770454445,
+          "inside": true,
+          "scale": 6.5218026298284535
+        },
+        {
+          "type": "escarpment",
+          "dir": [
+            -0.05812666547461296,
+            0.7165393186633711,
+            0.6951206338256939
+          ],
+          "height": 33.032421870503036,
+          "relief": 32.60252414117754,
+          "depth": 0,
+          "score": 33.032421870503036,
+          "inside": false,
+          "scale": 32.60252414117754
+        },
+        {
+          "type": "gorge",
+          "dir": [
+            -0.28081755236826533,
+            -0.8822216696245695,
+            -0.3779238387912746
+          ],
+          "height": -10.898343677113294,
+          "relief": -11.473941678485309,
+          "depth": 11.340486226033235,
+          "score": 11.340486226033235,
+          "inside": false,
+          "scale": 18.101118829250336
+        },
+        {
+          "type": "hills",
+          "dir": [
+            0.8871240370022682,
+            0.3064485818662046,
+            -0.3451089822722535
+          ],
+          "height": 2.8906654081286747,
+          "relief": 4.704673596085486,
+          "depth": 0,
+          "score": 2.8906654081286747,
+          "inside": true,
+          "scale": 17.610260843429714
+        },
+        {
+          "type": "mesa",
+          "dir": [
+            0.8109678061196127,
+            0.5182384335679219,
+            -0.2715881871705921
+          ],
+          "height": 31.120200782876175,
+          "relief": 30.771266382932666,
+          "depth": 0,
+          "score": 31.120200782876175,
+          "inside": true,
+          "scale": 30.771266382932666
+        },
+        {
+          "type": "plateau",
+          "dir": [
+            -0.6302556836306624,
+            -0.4806842312850253,
+            -0.6096888083647022
+          ],
+          "height": 30.53567112713686,
+          "relief": 30.000820227384565,
+          "depth": 0,
+          "score": 30.53567112713686,
+          "inside": false,
+          "scale": 30.000820227384565
+        },
+        {
+          "type": "range",
+          "dir": [
+            0.5011769747920508,
+            -0.5582026923231886,
+            0.661234749708023
+          ],
+          "height": 71.82761697349122,
+          "relief": 72.41696102711764,
+          "depth": 0,
+          "score": 71.82761697349122,
+          "inside": false,
+          "scale": 86.95201622221043
+        },
+        {
+          "type": "ravine",
+          "dir": [
+            0.22205124880145038,
+            -0.7495804201885441,
+            0.6235562818027593
+          ],
+          "height": 0.5212063754552791,
+          "relief": 0,
+          "depth": 19.95606748646372,
+          "score": 19.95606748646372,
+          "inside": false,
+          "scale": 43.19885503792762
+        },
+        {
+          "type": "valley",
+          "dir": [
+            0.21565541382424927,
+            0.9676715797032821,
+            0.13078400637251605
+          ],
+          "height": 0.3561318554442856,
+          "relief": 0,
+          "depth": 10.905281665183866,
+          "score": 10.905281665183866,
+          "inside": false,
+          "scale": 37.86462306569516
+        }
+      ]
+    },
+    {
+      "biome": "volcanic",
+      "seed": 36102,
+      "terrain": "varied",
+      "key": "volcanic",
+      "decor": [
+        105,
+        67,
+        74,
+        18,
+        241,
+        74
+      ],
+      "catalog": [
+        {
+          "type": "buttes",
+          "dir": [
+            0.2505300254880395,
+            -0.9440518377804394,
+            0.21447804995462122
+          ],
+          "height": 34.188596432795926,
+          "relief": 33.641904729733675,
+          "depth": 0,
+          "score": 34.188596432795926,
+          "inside": false,
+          "scale": 42.309416129395366
+        },
+        {
+          "type": "caldera",
+          "dir": [
+            0.9798257773713156,
+            0.150705111131999,
+            0.13126086803533235
+          ],
+          "height": 0.6564787288497702,
+          "relief": 0,
+          "depth": 19.43155853666963,
+          "score": 19.43155853666963,
+          "inside": true,
+          "scale": 52.133211294924834
+        },
+        {
+          "type": "canyon",
+          "dir": [
+            0.8490146493508937,
+            0.5087120166156628,
+            0.14278028343719104
+          ],
+          "height": 0.5676789930872218,
+          "relief": 0,
+          "depth": 4.818778682795323,
+          "score": 4.818778682795323,
+          "inside": true,
+          "scale": 64.1245277184695
+        },
+        {
+          "type": "crevice",
+          "dir": [
+            0.4399296604866574,
+            -0.8621437552451934,
+            -0.2513365057364535
+          ],
+          "height": 0.026402659811504192,
+          "relief": -2.9142984131160183,
+          "depth": 18.536861104369567,
+          "score": 18.536861104369567,
+          "inside": false,
+          "scale": 19.426842089936137
+        },
+        {
+          "type": "dunes",
+          "dir": [
+            0.923211935884574,
+            -0.14545049548057426,
+            -0.3557019465854982
+          ],
+          "height": 6.9911619770454445,
+          "relief": 6.476761325522719,
+          "depth": 0,
+          "score": 6.9911619770454445,
+          "inside": true,
+          "scale": 6.5218026298284535
+        },
+        {
+          "type": "escarpment",
+          "dir": [
+            -0.05812666547461296,
+            0.7165393186633711,
+            0.6951206338256939
+          ],
+          "height": 33.032421870503036,
+          "relief": 32.60252414117754,
+          "depth": 0,
+          "score": 33.032421870503036,
+          "inside": false,
+          "scale": 32.60252414117754
+        },
+        {
+          "type": "gorge",
+          "dir": [
+            -0.28081755236826533,
+            -0.8822216696245695,
+            -0.3779238387912746
+          ],
+          "height": -10.898343677113294,
+          "relief": -11.473941678485309,
+          "depth": 11.340486226033235,
+          "score": 11.340486226033235,
+          "inside": false,
+          "scale": 18.101118829250336
+        },
+        {
+          "type": "hills",
+          "dir": [
+            0.8871240370022682,
+            0.3064485818662046,
+            -0.3451089822722535
+          ],
+          "height": 2.8906654081286747,
+          "relief": 4.704673596085486,
+          "depth": 0,
+          "score": 2.8906654081286747,
+          "inside": true,
+          "scale": 17.610260843429714
+        },
+        {
+          "type": "mesa",
+          "dir": [
+            0.8109678061196127,
+            0.5182384335679219,
+            -0.2715881871705921
+          ],
+          "height": 31.120200782876175,
+          "relief": 30.771266382932666,
+          "depth": 0,
+          "score": 31.120200782876175,
+          "inside": true,
+          "scale": 30.771266382932666
+        },
+        {
+          "type": "plateau",
+          "dir": [
+            -0.6302556836306624,
+            -0.4806842312850253,
+            -0.6096888083647022
+          ],
+          "height": 30.53567112713686,
+          "relief": 30.000820227384565,
+          "depth": 0,
+          "score": 30.53567112713686,
+          "inside": false,
+          "scale": 30.000820227384565
+        },
+        {
+          "type": "range",
+          "dir": [
+            0.5011769747920508,
+            -0.5582026923231886,
+            0.661234749708023
+          ],
+          "height": 71.82761697349122,
+          "relief": 72.41696102711764,
+          "depth": 0,
+          "score": 71.82761697349122,
+          "inside": false,
+          "scale": 86.95201622221043
+        },
+        {
+          "type": "ravine",
+          "dir": [
+            0.22205124880145038,
+            -0.7495804201885441,
+            0.6235562818027593
+          ],
+          "height": 0.5212063754552791,
+          "relief": 0,
+          "depth": 19.95606748646372,
+          "score": 19.95606748646372,
+          "inside": false,
+          "scale": 43.19885503792762
+        },
+        {
+          "type": "valley",
+          "dir": [
+            0.21565541382424927,
+            0.9676715797032821,
+            0.13078400637251605
+          ],
+          "height": 0.3561318554442856,
+          "relief": 0,
+          "depth": 10.905281665183866,
+          "score": 10.905281665183866,
+          "inside": false,
+          "scale": 37.86462306569516
+        }
+      ]
+    },
+    {
+      "biome": "boreal",
+      "seed": 36102,
+      "terrain": "varied",
+      "key": "boreal",
+      "decor": [
+        74,
+        50,
+        943,
+        67,
+        241,
+        74
+      ],
+      "catalog": [
+        {
+          "type": "buttes",
+          "dir": [
+            0.2505300254880395,
+            -0.9440518377804394,
+            0.21447804995462122
+          ],
+          "height": 34.188596432795926,
+          "relief": 33.641904729733675,
+          "depth": 0,
+          "score": 34.188596432795926,
+          "inside": false,
+          "scale": 42.309416129395366
+        },
+        {
+          "type": "caldera",
+          "dir": [
+            0.9798257773713156,
+            0.150705111131999,
+            0.13126086803533235
+          ],
+          "height": 0.6564787288497702,
+          "relief": 0,
+          "depth": 19.43155853666963,
+          "score": 19.43155853666963,
+          "inside": true,
+          "scale": 52.133211294924834
+        },
+        {
+          "type": "canyon",
+          "dir": [
+            0.8490146493508937,
+            0.5087120166156628,
+            0.14278028343719104
+          ],
+          "height": 0.5676789930872218,
+          "relief": 0,
+          "depth": 4.818778682795323,
+          "score": 4.818778682795323,
+          "inside": true,
+          "scale": 64.1245277184695
+        },
+        {
+          "type": "crevice",
+          "dir": [
+            0.4399296604866574,
+            -0.8621437552451934,
+            -0.2513365057364535
+          ],
+          "height": 0.026402659811504192,
+          "relief": -2.9142984131160183,
+          "depth": 18.536861104369567,
+          "score": 18.536861104369567,
+          "inside": false,
+          "scale": 19.426842089936137
+        },
+        {
+          "type": "dunes",
+          "dir": [
+            0.923211935884574,
+            -0.14545049548057426,
+            -0.3557019465854982
+          ],
+          "height": 6.9911619770454445,
+          "relief": 6.476761325522719,
+          "depth": 0,
+          "score": 6.9911619770454445,
+          "inside": true,
+          "scale": 6.5218026298284535
+        },
+        {
+          "type": "escarpment",
+          "dir": [
+            -0.05812666547461296,
+            0.7165393186633711,
+            0.6951206338256939
+          ],
+          "height": 33.032421870503036,
+          "relief": 32.60252414117754,
+          "depth": 0,
+          "score": 33.032421870503036,
+          "inside": false,
+          "scale": 32.60252414117754
+        },
+        {
+          "type": "gorge",
+          "dir": [
+            -0.28081755236826533,
+            -0.8822216696245695,
+            -0.3779238387912746
+          ],
+          "height": -10.898343677113294,
+          "relief": -11.473941678485309,
+          "depth": 11.340486226033235,
+          "score": 11.340486226033235,
+          "inside": false,
+          "scale": 18.101118829250336
+        },
+        {
+          "type": "hills",
+          "dir": [
+            0.8871240370022682,
+            0.3064485818662046,
+            -0.3451089822722535
+          ],
+          "height": 2.8906654081286747,
+          "relief": 4.704673596085486,
+          "depth": 0,
+          "score": 2.8906654081286747,
+          "inside": true,
+          "scale": 17.610260843429714
+        },
+        {
+          "type": "mesa",
+          "dir": [
+            0.8109678061196127,
+            0.5182384335679219,
+            -0.2715881871705921
+          ],
+          "height": 31.120200782876175,
+          "relief": 30.771266382932666,
+          "depth": 0,
+          "score": 31.120200782876175,
+          "inside": true,
+          "scale": 30.771266382932666
+        },
+        {
+          "type": "plateau",
+          "dir": [
+            -0.6302556836306624,
+            -0.4806842312850253,
+            -0.6096888083647022
+          ],
+          "height": 30.53567112713686,
+          "relief": 30.000820227384565,
+          "depth": 0,
+          "score": 30.53567112713686,
+          "inside": false,
+          "scale": 30.000820227384565
+        },
+        {
+          "type": "range",
+          "dir": [
+            0.5011769747920508,
+            -0.5582026923231886,
+            0.661234749708023
+          ],
+          "height": 71.82761697349122,
+          "relief": 72.41696102711764,
+          "depth": 0,
+          "score": 71.82761697349122,
+          "inside": false,
+          "scale": 86.95201622221043
+        },
+        {
+          "type": "ravine",
+          "dir": [
+            0.22205124880145038,
+            -0.7495804201885441,
+            0.6235562818027593
+          ],
+          "height": 0.5212063754552791,
+          "relief": 0,
+          "depth": 19.95606748646372,
+          "score": 19.95606748646372,
+          "inside": false,
+          "scale": 43.19885503792762
+        },
+        {
+          "type": "valley",
+          "dir": [
+            0.21565541382424927,
+            0.9676715797032821,
+            0.13078400637251605
+          ],
+          "height": 0.3561318554442856,
+          "relief": 0,
+          "depth": 10.905281665183866,
+          "score": 10.905281665183866,
+          "inside": false,
+          "scale": 37.86462306569516
+        }
+      ]
+    },
+    {
+      "biome": "wetland",
+      "seed": 36102,
+      "terrain": "varied",
+      "key": "wetland",
+      "decor": [
+        345,
+        59,
+        689,
+        80,
+        241,
+        74
+      ],
+      "catalog": [
+        {
+          "type": "buttes",
+          "dir": [
+            0.2505300254880395,
+            -0.9440518377804394,
+            0.21447804995462122
+          ],
+          "height": 34.188596432795926,
+          "relief": 33.641904729733675,
+          "depth": 0,
+          "score": 34.188596432795926,
+          "inside": false,
+          "scale": 42.309416129395366
+        },
+        {
+          "type": "caldera",
+          "dir": [
+            0.9798257773713156,
+            0.150705111131999,
+            0.13126086803533235
+          ],
+          "height": 0.6564787288497702,
+          "relief": 0,
+          "depth": 19.43155853666963,
+          "score": 19.43155853666963,
+          "inside": true,
+          "scale": 52.133211294924834
+        },
+        {
+          "type": "canyon",
+          "dir": [
+            0.8490146493508937,
+            0.5087120166156628,
+            0.14278028343719104
+          ],
+          "height": 0.5676789930872218,
+          "relief": 0,
+          "depth": 4.818778682795323,
+          "score": 4.818778682795323,
+          "inside": true,
+          "scale": 64.1245277184695
+        },
+        {
+          "type": "crevice",
+          "dir": [
+            0.4399296604866574,
+            -0.8621437552451934,
+            -0.2513365057364535
+          ],
+          "height": 0.026402659811504192,
+          "relief": -2.9142984131160183,
+          "depth": 18.536861104369567,
+          "score": 18.536861104369567,
+          "inside": false,
+          "scale": 19.426842089936137
+        },
+        {
+          "type": "dunes",
+          "dir": [
+            0.923211935884574,
+            -0.14545049548057426,
+            -0.3557019465854982
+          ],
+          "height": 6.9911619770454445,
+          "relief": 6.476761325522719,
+          "depth": 0,
+          "score": 6.9911619770454445,
+          "inside": true,
+          "scale": 6.5218026298284535
+        },
+        {
+          "type": "escarpment",
+          "dir": [
+            -0.05812666547461296,
+            0.7165393186633711,
+            0.6951206338256939
+          ],
+          "height": 33.032421870503036,
+          "relief": 32.60252414117754,
+          "depth": 0,
+          "score": 33.032421870503036,
+          "inside": false,
+          "scale": 32.60252414117754
+        },
+        {
+          "type": "gorge",
+          "dir": [
+            -0.28081755236826533,
+            -0.8822216696245695,
+            -0.3779238387912746
+          ],
+          "height": -10.898343677113294,
+          "relief": -11.473941678485309,
+          "depth": 11.340486226033235,
+          "score": 11.340486226033235,
+          "inside": false,
+          "scale": 18.101118829250336
+        },
+        {
+          "type": "hills",
+          "dir": [
+            0.8871240370022682,
+            0.3064485818662046,
+            -0.3451089822722535
+          ],
+          "height": 2.8906654081286747,
+          "relief": 4.704673596085486,
+          "depth": 0,
+          "score": 2.8906654081286747,
+          "inside": true,
+          "scale": 17.610260843429714
+        },
+        {
+          "type": "mesa",
+          "dir": [
+            0.8109678061196127,
+            0.5182384335679219,
+            -0.2715881871705921
+          ],
+          "height": 31.120200782876175,
+          "relief": 30.771266382932666,
+          "depth": 0,
+          "score": 31.120200782876175,
+          "inside": true,
+          "scale": 30.771266382932666
+        },
+        {
+          "type": "plateau",
+          "dir": [
+            -0.6302556836306624,
+            -0.4806842312850253,
+            -0.6096888083647022
+          ],
+          "height": 30.53567112713686,
+          "relief": 30.000820227384565,
+          "depth": 0,
+          "score": 30.53567112713686,
+          "inside": false,
+          "scale": 30.000820227384565
+        },
+        {
+          "type": "range",
+          "dir": [
+            0.5011769747920508,
+            -0.5582026923231886,
+            0.661234749708023
+          ],
+          "height": 71.82761697349122,
+          "relief": 72.41696102711764,
+          "depth": 0,
+          "score": 71.82761697349122,
+          "inside": false,
+          "scale": 86.95201622221043
+        },
+        {
+          "type": "ravine",
+          "dir": [
+            0.22205124880145038,
+            -0.7495804201885441,
+            0.6235562818027593
+          ],
+          "height": 0.5212063754552791,
+          "relief": 0,
+          "depth": 19.95606748646372,
+          "score": 19.95606748646372,
+          "inside": false,
+          "scale": 43.19885503792762
+        },
+        {
+          "type": "valley",
+          "dir": [
+            0.21565541382424927,
+            0.9676715797032821,
+            0.13078400637251605
+          ],
+          "height": 0.3561318554442856,
+          "relief": 0,
+          "depth": 10.905281665183866,
+          "score": 10.905281665183866,
+          "inside": false,
+          "scale": 37.86462306569516
+        }
+      ]
+    }
+  ],
+  "faults": [],
+  "pass": false
+}
