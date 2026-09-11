@@ -4,8 +4,8 @@ Updated 2026-09-11. This is the collaborator entry point for the owner's new dir
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
-Current review: [modest zoom, world generator and ridges, PR #30](https://github.com/majieddd/worldheart/pull/30),
-stacked on [base overview and automatic loot, PR #29](https://github.com/majieddd/worldheart/pull/29).
+Current review: [diverse landscapes and biomes, PR #31](https://github.com/majieddd/worldheart/pull/31),
+stacked on [modest zoom, world generator and ridges, PR #30](https://github.com/majieddd/worldheart/pull/30).
 Both are drafts. Earlier review slices and their evidence remain below.
 
 **Live development:** [Play V2](https://majieddd.github.io/worldheart/v2/).
@@ -16,6 +16,19 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 [first deployment](https://github.com/majieddd/worldheart/actions/runs/34044866229)
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
+
+Published and publicly verified September 11: Codex on `feature/diverse-planet-landscapes`, based on
+preview `3a60ac1`, owns U38-U40: combined hills/major peaks/canyons per planet,
+plateaus/ravines/crevices, coherent biomes and generator/campaign integration.
+Landforms v3 has eight relief families and independent climate regions. 269
+tests, 100 real-field assertions, 15,147 all-99 isolated arrivals, placement,
+camera and inspector checks pass. A legal 15-wave victory retains 7 heart
+health and carries 12 weapons into planet 2. Native 60-second stress passes
+with p99 20.8ms. [PR #31](https://github.com/majieddd/worldheart/pull/31) is live
+from gameplay `26d9563` through [deployment 34619009127](https://github.com/majieddd/worldheart/actions/runs/34619009127).
+All 115 public behavior cases and 198 public asset/source checks pass. Main
+remains `1374122`; documentation-only handoffs retain the tested runtime.
+[Current landscape ledger](qa/implementation/DIVERSE-LANDSCAPES.md).
 
 Published and live-verified September 11: Codex on `feature/worldgen-lab-and-ridges`, based on
 preview `08e8050`, owns U35-U37: undo excessive overview zoom, add an isolated

@@ -18,7 +18,7 @@ if (profile) {
   const start = performance.now(); W.initTerrainField(CONFIG.seed); const nav = new NavGraph(); nav.build();
   const buildMs = performance.now() - start, p = new T.Vector3(), q = new T.Vector3(), a = new T.Vector3(), b = new T.Vector3();
   let dry = 0, connected = 0, peak = 0, valleys = 0, inlandValleys = 0;
-  const groups = new Set(), types = new Set(), biomes = {}, routes = [];
+  const groups = new Set(), types = new Set(), biomes = {}, routes = [], exposed = {}, ecology = {};
   function inland(dir) {
     a.set(0, Math.abs(dir.y) < .93 ? 1 : 0, Math.abs(dir.y) < .93 ? 0 : 1);
     b.crossVectors(dir, a).normalize(); a.crossVectors(b, dir).normalize();
@@ -36,6 +36,11 @@ if (profile) {
     nav.nodeDir(i, p);
     if (W.FORMATIONS) {
       const m = W.FORMATIONS.inspect(p.x, p.y, p.z); groups.add(m.id); types.add(m.type);
+      const h=nav.baseHeight[i];
+      if(h>.18&&m.relief>.25){
+        const f=exposed[m.type]||={samples:0,peak:0};f.samples++;f.peak=Math.max(f.peak,h);
+      }
+      const biome=W.biomeAt?.(p,h);if(biome)ecology[biome]=(ecology[biome]||0)+1;
       const climate = W.climateAt(p, nav.baseHeight[i]); (biomes[m.type] ||= new Set()).add(climate);
       if (m.relief === 0 && nav.floorWalk[i] && nav.baseHeight[i] >= .18) { valleys++; if (inland(p)) inlandValleys++; }
     }
@@ -71,7 +76,7 @@ if (profile) {
   );
   console.log(JSON.stringify({ profile, seed, effectiveSeed: CONFIG.seed, buildMs, attempts: nav.attempts, nodes: nav.n,
     peak, dryFloorConnected: connected / dry, groups: groups.size, types: [...types], biomes: Object.fromEntries(Object.entries(biomes).map(([k, v]) => [k, [...v]])),
-    valleys, inlandValleys, routes, checks, manifest: W.FORMATIONS?.manifest(), pass: checks.every(c => c.ok) }));
+    valleys, inlandValleys, routes, checks, exposed, ecology, climate:W.ECOLOGY?.manifest(), manifest: W.FORMATIONS?.manifest(), pass: checks.every(c => c.ok) }));
   if (checks.some(c => !c.ok)) process.exitCode = 1;
 } else {
   const out = resolve(process.argv[2] || 'artifacts/formations'); mkdirSync(out, { recursive: true });

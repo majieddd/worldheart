@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createFormationField } from '../../js/terrain/formations.js';
-import { LANDFORM_RECIPES, landformSettings, formationHeightLimit } from '../../js/terrain/recipes.js';
+import { LANDFORM_RECIPES, landformSettings, formationHeightLimit, formationDepthLimit } from '../../js/terrain/recipes.js';
 import { mulberry32 } from '../../js/noise.js';
 const profile = { range: 96, canyon: 38 }, R = 240;
 const field = createFormationField(12345, R, profile, 'alpine');
@@ -43,7 +43,8 @@ test('shared valley joins stay at the floor and all relief fits its picking shel
   let floor = 0, high = 0;
   for (const p of directions(8000)) {
     const s = field.inspect(...p);
-    assert.ok(Number.isFinite(s.relief) && s.relief >= 0 && s.relief < formationHeightLimit(profile));
+    assert.ok(Number.isFinite(s.relief) && s.relief > -formationDepthLimit(profile) && s.relief < formationHeightLimit(profile));
+    if(s.relief<0)assert.equal(s.type,'crevice','only submerged fault cuts may descend below the enclosing floor');
     if (s.edge <= s.valley) { floor++; assert.equal(s.relief, 0); }
     if (s.relief > 85) high++;
   }

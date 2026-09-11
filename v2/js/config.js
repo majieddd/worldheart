@@ -113,10 +113,10 @@ const MAP = MAPS[mapKey];
 const R0 = MAP.radius;
 
 export const TERRAIN_PROFILES = {
-  varied: { name: 'Highlands', range: 28, canyon: 10, snow: 16, ocean: 0, flightCeiling: 22 },
-  alpine: { name: 'Giant peaks', range: 96, canyon: 24, snow: 42, ocean: 0, flightCeiling: 38 },
-  canyon: { name: 'Deep canyons', range: 18, canyon: 38, snow: 32, ocean: 0, flightCeiling: 26 },
-  ocean: { name: 'Ocean islands', range: 16, canyon: 5, snow: 10, ocean: 0.12, flightCeiling: 20 },
+  varied: { name: 'Mixed landscapes', range: 90, canyon: 32, snow: 44, ocean: 0, flightCeiling: 28 },
+  alpine: { name: 'Giant peaks', range: 96, canyon: 32, snow: 42, ocean: 0, flightCeiling: 38 },
+  canyon: { name: 'Deep canyons', range: 84, canyon: 38, snow: 40, ocean: 0, flightCeiling: 30 },
+  ocean: { name: 'Ocean islands', range: 76, canyon: 22, snow: 36, ocean: 0.12, flightCeiling: 28 },
 };
 const rawSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
 const requestedSeed=worldgen&&(!Number.isInteger(rawSeed)||rawSeed<1||rawSeed>0xffffffff)?20260830:rawSeed;

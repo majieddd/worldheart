@@ -28,6 +28,13 @@ HUD tokens are CSS custom properties in `css/style.css :root` (canonical for DOM
 
 Scene palette (config.js `PALETTE`): space #0a0e21 to horizon #2a3670, sun #ffe9c4, meadow #4ec98a / #7fdd9e, forest #2e8f6a, cliff #6b7a8f to #93a3ba, snow #e9f1fb, sand #e8d29a, water shore #37c9c0 to deep #17578f, tech gunmetal #3d4757 + trim #cdd8e6, energy cyan #59f2ff, void body #241a38, void emissive #d84dff / #ff3fa6, gold #ffc857.
 
+Campaign biomes blend this scene palette across continuous climate regions:
+sand/soil for dry land, cliff/meadow for tundra, moss for forest and visible
+strata for incised walls. Keep the faceted diorama geometry. Tall ranges, low
+hills, flat benches and cuts must have distinct silhouettes within one planet.
+The World generator's formation selector reuses its existing native select,
+panel and camera focus behavior; it adds no decorative animation or UI accent.
+
 Rules: no pure #000 or #fff anywhere. One UI accent (cyan); gold and danger are semantic, never decorative. Magenta belongs to the enemy faction in the scene and never appears in HUD chrome. No purple gradients in UI.
 
 ## Type

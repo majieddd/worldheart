@@ -1,0 +1,287 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "scope": "Normal UI navigation and deterministic render frames; forced clipboard denial only",
+  "checks": [
+    {
+      "name": "Title opens an independent inspector tab",
+      "ok": true
+    },
+    {
+      "name": "Inspector cannot launch campaign, waves or rewards",
+      "ok": true
+    },
+    {
+      "name": "Opening inspector leaves all normal saved data unchanged",
+      "ok": true
+    },
+    {
+      "name": "Mixed landscape inspector catalogs exposed hills, peaks and cuts together",
+      "ok": true,
+      "actual": [
+        {
+          "type": "basin",
+          "dir": [
+            -0.8776144471073047,
+            0.40499038816493194,
+            0.2564676738354325
+          ],
+          "height": 21.48470606199655,
+          "relief": 32.217140093240694,
+          "depth": 0,
+          "score": 21.48470606199655,
+          "inside": false,
+          "scale": 41.66823252604902
+        },
+        {
+          "type": "canyon",
+          "dir": [
+            0.663289915586346,
+            -0.2880724673544121,
+            0.6906958385814985
+          ],
+          "height": 0.4858910526121464,
+          "relief": 0.08946326443869879,
+          "depth": 13.049294629100359,
+          "score": 13.049294629100359,
+          "inside": true,
+          "scale": 47.58741087886691
+        },
+        {
+          "type": "crevice",
+          "dir": [
+            -0.848318233423969,
+            -0.4506219065946571,
+            0.27802171162956424
+          ],
+          "height": -2.6305571390624416,
+          "relief": -3.2198288657677168,
+          "depth": 20.82912005134322,
+          "score": 20.82912005134322,
+          "inside": false,
+          "scale": 22.998777612626554
+        },
+        {
+          "type": "hills",
+          "dir": [
+            0.9449058628935604,
+            -0.13136766415129117,
+            0.2998256945040062
+          ],
+          "height": 4.339850586277155,
+          "relief": 5.40756925779912,
+          "depth": 0,
+          "score": 4.339850586277155,
+          "inside": true,
+          "scale": 9.315076230978592
+        },
+        {
+          "type": "mesa",
+          "dir": [
+            -0.4002542644441644,
+            -0.1963276596153394,
+            0.8951267920603341
+          ],
+          "height": 35.01862921144819,
+          "relief": 34.51235281378522,
+          "depth": 0,
+          "score": 35.01862921144819,
+          "inside": false,
+          "scale": 36.4130180311203
+        },
+        {
+          "type": "plateau",
+          "dir": [
+            0.3125252694765965,
+            0.9239026789881734,
+            0.22075279318064656
+          ],
+          "height": 30.64060339930445,
+          "relief": 30.22656427383423,
+          "depth": 0,
+          "score": 30.64060339930445,
+          "inside": false,
+          "scale": 30.22656427383423
+        },
+        {
+          "type": "range",
+          "dir": [
+            0.838534471252648,
+            -0.5440460197723359,
+            0.02956127349964689
+          ],
+          "height": 67.54782100811826,
+          "relief": 66.91868747252026,
+          "depth": 0,
+          "score": 67.54782100811826,
+          "inside": true,
+          "scale": 80.59744024575282
+        },
+        {
+          "type": "ravine",
+          "dir": [
+            0.3641337363175195,
+            -0.08562371281969572,
+            0.9274023947987269
+          ],
+          "height": 1.1802074244013032,
+          "relief": 0.6237474195088453,
+          "depth": 24.727578704366255,
+          "score": 24.727578704366255,
+          "inside": false,
+          "scale": 30.762814305350183
+        }
+      ]
+    },
+    {
+      "name": "Formation selector focuses the actual basin",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual canyon",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual crevice",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual hills",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual mesa",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual plateau",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual range",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual ravine",
+      "ok": true
+    },
+    {
+      "name": "Formation selector arrows focus its selection without leaking pan input",
+      "ok": true
+    },
+    {
+      "name": "Real nest approach overlay reaches the heart from all seventeen sources",
+      "ok": true
+    },
+    {
+      "name": "Peak camera stays finite and above the planet",
+      "ok": true
+    },
+    {
+      "name": "Whole-planet inspection has a separate wide zoom",
+      "ok": true
+    },
+    {
+      "name": "Paused inspector accepts real arrow navigation",
+      "ok": true
+    },
+    {
+      "name": "Keyboard focus enters the generator with a visible outline",
+      "ok": true
+    },
+    {
+      "name": "Inspector text contrast exceeds 4.5 to one",
+      "ok": true,
+      "actual": [
+        16.20214253305593,
+        7.726546710231671
+      ]
+    },
+    {
+      "name": "Collapsing the inspector clears the terrain view",
+      "ok": true
+    },
+    {
+      "name": "Editing a seed does not pan the world",
+      "ok": true
+    },
+    {
+      "name": "Generator fits 390px viewport",
+      "ok": true,
+      "actual": {
+        "right": 374,
+        "bottom": 784,
+        "scroll": 356,
+        "width": 356,
+        "body": 390
+      }
+    },
+    {
+      "name": "Generator fits 768px viewport",
+      "ok": true,
+      "actual": {
+        "right": 376,
+        "bottom": 784,
+        "scroll": 358,
+        "width": 358,
+        "body": 768
+      }
+    },
+    {
+      "name": "Generator fits 1280px viewport",
+      "ok": true,
+      "actual": {
+        "right": 376,
+        "bottom": 784,
+        "scroll": 358,
+        "width": 358,
+        "body": 1280
+      }
+    },
+    {
+      "name": "Invalid seed gives an actionable error without losing the scene",
+      "ok": true
+    },
+    {
+      "name": "Generate world loads a new deterministic world",
+      "ok": true
+    },
+    {
+      "name": "Previous seed remains in recent history",
+      "ok": true
+    },
+    {
+      "name": "Recent history exactly replays accepted seed, base and heights",
+      "ok": true
+    },
+    {
+      "name": "Denied clipboard exposes a selectable reproducible link",
+      "ok": true
+    },
+    {
+      "name": "Terrain selector loads Giant peaks and retains sandbox isolation",
+      "ok": true
+    },
+    {
+      "name": "Play this seed opens the normal sandbox with the same world",
+      "ok": true
+    },
+    {
+      "name": "Classic whole-planet comparison uses the original terrain formula",
+      "ok": true
+    },
+    {
+      "name": "Classic comparison hides the procedural formation catalog",
+      "ok": true
+    },
+    {
+      "name": "Regeneration and play handoff preserve saved campaign bytes",
+      "ok": true
+    },
+    {
+      "name": "In-game generator entry pauses the original battle",
+      "ok": true
+    }
+  ],
+  "faults": [],
+  "pass": true
+}

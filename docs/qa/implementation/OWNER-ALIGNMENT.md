@@ -1,7 +1,9 @@
 # Owner brief: current alignment and remaining acceptance
 
-Updated 2026-09-11. Current owner: Codex, `feature/worldgen-lab-and-ridges`.
-The [worldgen and ridges ledger](WORLDGEN-RIDGES.md) tracks U35-U37: modest zoom,
+Updated 2026-09-11. Current owner: Codex, `feature/diverse-planet-landscapes`.
+The [diverse landscape ledger](DIVERSE-LANDSCAPES.md) tracks U38-U40: combined
+relief families, plateau/ravine/crevice forms, coherent biomes and inspection.
+The preceding [worldgen and ridges ledger](WORLDGEN-RIDGES.md) tracks U35-U37: modest zoom,
 an isolated generation inspector, distinct ridges and dry nest approaches.
 U35 supersedes the excessive full-base overview in U33. The previous
 [base overview and loot ledger](BASE-OVERVIEW-AUTO-LOOT.md) retains that historical
@@ -60,6 +62,9 @@ request identity. Functional verification does not substitute for owner feel.
 | U35 Modest zoom | Previous ceiling restored with 0-10% growth, starting at 46.8m and capped at 124.08m with default settings; public zoom/loot and pole cases pass; live through PR #30 | Owner feel and wider device review |
 | U36 World generator | Separate inspection tab, new/replayable seeds, four mixes plus classic, peak/base/globe focus, real approach overlay, copy/play links; 24 public UI/save cases pass; live through PR #30 | Wider device and accessibility review |
 | U37 Distinct ridges and routes | Short open mountain chains cross internal seams; outer valleys, isolated peaks and foothills remain; nests penalize wet approach distance; 15,147 all-99 isolated arrivals, legal 15-wave victory, placement and native stress pass; live through PR #30 | Owner terrain feel, broader worldgen samples, ocean balance and reduced-CPU/device review |
+| U38 Combined landscapes | Landforms v3 mixes small hills, major peaks and carved uplands on individual planets; four mixes and sixteen real generated playfields checked; live through PR #31 | Owner terrain composition and broader tactical balance |
+| U39 Plateaus, ravines and crevices | Terraced benches, branching incisions and narrow faults with flooded bottoms; open outer joins; shape and real placement/route checks pass; live through PR #31 | Owner scale/shape review and more natural tactics |
+| U40 Biomes and inspection | Independent seeded climate regions dress all families; campaign profiles updated; formation selector verifies banks and labels remote examples; classic field equality and 35 public inspector cases pass; live through PR #31 | Owner biome/art review and wider devices |
 
 ## Adversarial additions now addressed
 
@@ -99,8 +104,9 @@ request identity. Functional verification does not substitute for owner feel.
 1. Read the current acceptance ledger and latest V2 build identity before editing.
 2. Continue reduced-capability profiling with reproducible workloads; retain
    camera visibility, movement, damage and source-route contracts.
-3. Continue varied legal tactics from the new modular-terrain earned planet-5
-   checkpoint. Four linked opening victories cover the new terrain cycle.
+3. Continue varied legal tactics from the landforms-v3 earned planet-2 arrival.
+   The prior modular-terrain planet-5 checkpoint remains historical evidence;
+   its four linked opening victories predate the latest terrain composition.
    Separate policy mistakes from balance defects
    and retain defeats, stalls and extraction state.
 4. Review the twelve implemented weapon-era silhouettes in first person,
