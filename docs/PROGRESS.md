@@ -17,6 +17,16 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
+Implemented and locally verified September 11: Codex on `feature/diverse-planet-landscapes`, based on
+preview `3a60ac1`, owns U38-U40: combined hills/major peaks/canyons per planet,
+plateaus/ravines/crevices, coherent biomes and generator/campaign integration.
+Landforms v3 has eight relief families and independent climate regions. 269
+tests, 100 real-field assertions, 15,147 all-99 isolated arrivals, placement,
+camera and inspector checks pass. A legal 15-wave victory retains 7 heart
+health and carries 12 weapons into planet 2. Native 60-second stress passes
+with p99 20.8ms. V2 publication/public verification is next.
+[Current landscape ledger](qa/implementation/DIVERSE-LANDSCAPES.md).
+
 Published and live-verified September 11: Codex on `feature/worldgen-lab-and-ridges`, based on
 preview `08e8050`, owns U35-U37: undo excessive overview zoom, add an isolated
 world-generation tester, and restore distinct ridges, foothills and passes with

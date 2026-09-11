@@ -359,11 +359,12 @@ half the world.
 
 ### Campaign terrain profiles
 
-The title selector and `?terrain=varied|alpine|canyon|ocean` choose Highlands,
+The title selector and `?terrain=varied|alpine|canyon|ocean` choose Mixed landscapes,
 Giant peaks, Deep canyons or Ocean islands. Their range/canyon amplitudes are
-28/10, 96/24, 18/38 and 16/5 world units. These are inputs to the composed
+90/32, 96/32, 84/38 and 76/22 world units. These are inputs to the composed
 height field, not maximum heights. Versioned [formation recipes](TERRAIN-RECIPES.md)
-mix ridge chains, winding canyons, basins, hills and tablelands independently
+mix ridge chains, winding canyons, basins, hills, tablelands, terraced plateaus,
+branching ravines and fault crevices independently
 of biome dressing. Shared valleys connect their boundaries; group dimensions,
 weights and authored anchors are configurable. Canyon banks use a 1.65 relief
 gain and ridge chains use 1.18 before seeded variation and continental blending.
@@ -373,7 +374,7 @@ Ground route costs include actual 3D distance and a bounded uphill penalty.
 Swimming enters at 0.65 water depth and exits at 0.45, runs at 60% speed and
 disables sprint. Cargo multiplies traversal speed. Route graphs own blocking;
 commander orders and enemies share costs. Flyers use a fixed, separate graph
-and radial clearance ceilings of 22/38/26/20 units for the four profiles.
+and radial clearance ceilings of 28/38/30/28 units for the four profiles.
 
 Stable, dry footprints can hold towers at elevation. Hot black stone accepts
 only Mortars with 15% extra damage; cold blue-white stone accepts only Cryo
@@ -393,22 +394,32 @@ height and 0.62 grade boundary used by floor routing. Ground enemies prefer
 connected floor routes; emergency mountain travel remains at 8% speed. Ordinary
 nest placement never depends on that emergency passage.
 
-Landforms v2 joins selected adjacent ranges into open chains of at most three
+Landforms v3 retains the v2 joins of selected adjacent ranges into open chains of at most three
 cells, keeping a continuous spine across their internal seams. Their outer
 valleys remain low. Isolated mountains, foothills and explicit authored groups
 keep separate footprints. Nest scoring adds twice the wet route distance to
 its existing distance/bearing score, preferring an inland approach when one
 fits without forbidding water crossings on islands.
 
+All four mixes combine large and small formations, with different weights.
+Geology provinces vary recipe selection and peak amplitudes. Plateau benches
+retain flat high ground; ravines and crevices cut down into uplands, and crevices
+can flood below sea level. Outer valley joins remain open. Seeded Temperate,
+Arid, Boreal and Lush climate biases combine with latitude/moisture/altitude for
+coherent biome colours and vegetation. Existing hot/cold tower rules remain
+authoritative; climate dressing adds no new movement or placement restriction.
+
 The title and Settings offer **World generator**. It opens an isolated,
 non-simulating inspection tab with new seeds, a 12-world history, reproducible
 links, four terrain mixes and the unchanged classic whole-planet formula.
-Base/peak/globe focus and the valid-nest approach overlay use the actual world
+Base/peak/globe and named formation focus, plus the valid-nest approach overlay, use the actual world
 and route field. **Play this seed** opens a normal single-planet sandbox.
 Generation reloads the scene lifecycle; it never replaces a live campaign.
 Inspector storage adds `whWorldgen:` before the normal route namespace.
 Requested and accepted seeds are shown because deterministic site validation
 can retry the requested layout. Links replay with the current generator version.
+The inspector reports the climate regime and labels formation examples beyond
+the battlefield. Incision shortcuts require exposed banks on both sides.
 
 Campaign strategic zoom retains the old band plus up to 10% extra maximum
 height as the base grows. At default settings its ceiling starts at 46.8m and

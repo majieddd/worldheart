@@ -33,9 +33,9 @@ export function planetDefinition(index,seed) {
     enemyHealth:1+(index-1)/98*.35,pressure,brief:BRIEFS[pressure],boss:MILESTONES[index]?{...MILESTONES[index]}:null};
   // Keep the naturally verified opening stable as the route grows.
   if(index<=3)Object.assign(planet,[
-    {name:'Hearthwild',terrain:'varied',seed,enemyHealth:1,pressure:'mixed',brief:'Carry crystals home and build a lasting defense.'},
-    {name:'Riftshore',terrain:'canyon',seed,enemyHealth:1,pressure:'wings',brief:'Deep cuts reward safe crossings. Prepare for more flying creatures.'},
-    {name:'Crownfall',terrain:'alpine',seed,enemyHealth:1.04,pressure:'armor',brief:'Giant peaks divide the front. Cryo can claim ice; Mortars can claim hot stone. Expect heavy armor.'},
+    {name:'Hearthwild',terrain:'varied',seed,enemyHealth:1,pressure:'mixed',brief:'Defend the meadows between peaks and carved uplands. Carry crystals home to claim the high ground.'},
+    {name:'Riftshore',terrain:'canyon',seed,enemyHealth:1,pressure:'wings',brief:'Ravines, plateaus and mountain passes reward safe crossings. Prepare for more flying creatures.'},
+    {name:'Crownfall',terrain:'alpine',seed,enemyHealth:1.04,pressure:'armor',brief:'Giant peaks rise above lower hills and canyon routes. Cryo claims ice; Mortars claim hot stone. Expect heavy armor.'},
   ][index-1]);
   return planet;
 }

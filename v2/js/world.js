@@ -3,6 +3,7 @@ import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import { createFormationField } from './terrain/formations.js';
 import { formationHeightLimit } from './terrain/recipes.js';
+import { createEcology } from './terrain/ecology.js';
 import {
   makeNoise3D, fbm3, ridged3, mulberry32,
   clamp, lerp, smoothstep,
@@ -94,6 +95,7 @@ export function inBattlefield(dx, dy, dz, margin = 0) {
 
 let nWarp, nBase, nDetail, nRidge, nMoist, nRange, nCanyon, nGap;
 export let FORMATIONS = null;
+export let ECOLOGY = null;
 
 // Space Battlefield layout: predetermined, balanced platform positions of
 // varying size, regenerated deterministically per seed. Null on ground maps.
@@ -182,6 +184,7 @@ export function initTerrainField(seed) {
   nCanyon = makeNoise3D(seed ^ 0x1b873593);
   nGap = makeNoise3D(seed ^ 0x85ebca6b);
   FORMATIONS = CONFIG.terrain ? createFormationField(seed, R, CONFIG.terrain, CONFIG.terrainKey, CONFIG.terrain.formations) : null;
+  ECOLOGY = CONFIG.terrain ? createEcology(seed) : null;
   if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
@@ -322,6 +325,7 @@ export function moistureAt(dx, dy, dz) {
 }
 
 export function forestAt(dx, dy, dz) {
+  if(ECOLOGY)return ECOLOGY.forest(dx,dy,dz)*(.82+.18*smoothstep(-.2,.3,moistureAt(dx,dy,dz)));
   return smoothstep(0.16, 0.30, moistureAt(dx, dy, dz));
 }
 
@@ -402,6 +406,10 @@ export function climateAt(dir, height = terrainHeight(dir.x, dir.y, dir.z, false
   if (height > 1.4 && temperature > 0.3) return 'hot';
   if (height > 1.4 && temperature < -0.3) return 'cold';
   return 'neutral';
+}
+
+export function biomeAt(dir, height = terrainHeight(dir.x,dir.y,dir.z,false)) {
+  return ECOLOGY ? ECOLOGY.biome(dir.x,dir.y,dir.z,height,climateAt(dir,height)) : 'classic';
 }
 
 const _footDir = new THREE.Vector3(), _footA = new THREE.Vector3(), _footB = new THREE.Vector3();
@@ -558,19 +566,28 @@ function faceColor(dir, h, slope, jrand, out) {
     const forest = forestAt(dir.x, dir.y, dir.z);
     const roll = fbm3(nDetail, dir.x * 6.5, dir.y * 6.5, dir.z * 6.5, 2);
     out.copy(C.meadowLow).lerp(C.meadowHigh, clamp(0.5 + roll * 0.9, 0, 1));
+    const dry=ECOLOGY?smoothstep(.06,-.25,ECOLOGY.moisture(dir.x,dir.y,dir.z))*smoothstep(-.12,.18,ECOLOGY.temperature(dir.x,dir.y,dir.z,h)):0;
+    const tundra=ECOLOGY?smoothstep(.05,-.24,ECOLOGY.temperature(dir.x,dir.y,dir.z,h)):0;
+    if(dry>0)out.lerp(C.soil,dry*.4).lerp(C.sand,dry*.7);
+    if(tundra>0)out.lerp(C.cliffHigh,tundra*.65).lerp(C.meadowHigh,tundra*.18);
     if (forest > 0.55) out.lerp(MOSS, smoothstep(0.55, 0.75, forest) * 0.75);
     const cliff = smoothstep(0.5, 0.7, slope) * smoothstep(0.24, 0.5, h) + smoothstep(1.4, 1.8, h);
     if (cliff > 0) {
       _cliffCol.copy(C.cliffLow).lerp(C.cliffHigh, smoothstep(1.2, 3.2, h));
+      if(ECOLOGY)_cliffCol.lerp(C.soil,dry*.65);
       // Steep faces below the snow line are canyon walls and range flanks:
       // banded stone, warmer than the grey of a high crag, with strata
       // every half unit of height so a wall reads as carved rather than as
       // a green slope that happens to be steep.
-      if (h < 3.4 && slope > 0.7) {
-        const strata = 0.5 + 0.5 * Math.sin(h * 12.6 + jrand * 1.5);
+      if (h < (ECOLOGY?38:3.4) && slope > 0.7) {
+        const strata = 0.5 + 0.5 * Math.sin(h * (ECOLOGY?1.7:12.6) + jrand * 1.5);
         _cliffCol.lerp(C.soil, 0.22 + 0.28 * strata);
       }
       out.lerp(_cliffCol, clamp(cliff, 0, 1));
+      if(ECOLOGY&&h>2&&h<CONFIG.terrain.snow*.65&&slope<.2){
+        _cliffCol.copy(C.soil).lerp(C.meadowHigh,(1-dry)*.6);
+        out.lerp(_cliffCol,(1-smoothstep(.08,.2,slope))*.65);
+      }
     }
     const snowLine = CONFIG.terrain?.snow ?? 2.45;
     const snow = smoothstep(snowLine, snowLine + 0.5, h + jrand * 0.25) +
@@ -587,7 +604,7 @@ function faceColor(dir, h, slope, jrand, out) {
   // Beyond the battlefield wall the world fades toward pale atmospheric haze.
   // It must LIFT, never darken: darkening plus the night side reads as a
   // black moat around the lit battlefield.
-  if (BATTLEFIELD.center) {
+  if (BATTLEFIELD.center && !CONFIG.worldgen) {
     const c = BATTLEFIELD.center;
     const ang = Math.acos(clamp(dir.x * c.x + dir.y * c.y + dir.z * c.z, -1, 1));
     const outside = smoothstep(BATTLEFIELD.theta + 0.01, BATTLEFIELD.theta + 0.2, ang);
@@ -1387,9 +1404,11 @@ function scatterDecor(rng) {
     if (h < 0.12) continue;
     const forest = forestAt(dir.x, dir.y, dir.z);
     const slope = slopeAt(dir);
-    if (!SPACE && forest > 0.78 && h > 0.24 && h < 2.0 && slope < 0.9 && spots.pine.length < caps.pine) {
+    const biome=biomeAt(dir,h),vegetated=!ECOLOGY||!['desert','volcanic','alpine'].includes(biome);
+    const treeLine=ECOLOGY?CONFIG.terrain.snow*.45:2;
+    if (!SPACE && vegetated && forest > 0.78 && h > 0.24 && h < treeLine && slope < (ECOLOGY ? .4 : .9) && spots.pine.length < caps.pine) {
       spots.pine.push({ dir: dir.clone(), h, s: 0.85 + rng() * 0.75 });
-    } else if (!SPACE && forest > 0.34 && forest < 0.55 && h > 0.2 && h < 1.6 && slope < 0.4 && rng() < 0.05 && spots.leaf.length < caps.leaf) {
+    } else if (!SPACE && vegetated && forest > 0.34 && forest < 0.55 && h > 0.2 && h < (ECOLOGY?treeLine:1.6) && slope < 0.4 && rng() < (ECOLOGY ? .12 : .05) && spots.leaf.length < caps.leaf) {
       spots.leaf.push({ dir: dir.clone(), h, s: 0.8 + rng() * 0.6 });
     } else if (h > 0.14 && h < 2.7 && slope > 0.18 && rng() < 0.16 && spots.rock.length < caps.rock) {
       spots.rock.push({ dir: dir.clone(), h: h - 0.1, s: 0.5 + rng() * 1.1 });

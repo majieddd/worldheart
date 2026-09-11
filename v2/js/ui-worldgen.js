@@ -2,8 +2,10 @@ import * as THREE from 'three';
 import { CONFIG, CAM_TUNE, TERRAIN_PROFILES, PALETTE } from './config.js';
 import { browserStorage } from './storage.js';
 import { worldgenUrl, rememberWorld } from './worldgen.js';
-import { surfacePoint, FORMATIONS } from './world.js';
+import { surfacePoint, FORMATIONS, ECOLOGY, terrainHeight, biomeAt } from './world.js';
 import { nestSite } from './nest-sites.js';
+import { LANDFORM_RECIPES } from './terrain/recipes.js';
+import { surveyLandmarks } from './terrain/landmarks.js';
 
 // One inspector component uses the actual generated scene and navigation field.
 // A new seed reloads their entire lifecycle instead of leaving old pooled units,
@@ -34,6 +36,7 @@ export class WorldgenPanel {
         </form>
         <label>Recent worlds<select id="worldgen-history">${this.history.map((x, i) => `<option value="${i}">${x.seed} · ${labels[x.terrain]}</option>`).join('')}</select></label>
         <div class="worldgen-actions"><button class="btn" id="worldgen-home">Base area</button><button class="btn" id="worldgen-peak">Highest peak</button><button class="btn" id="worldgen-globe">Whole planet</button></div>
+        <label id="worldgen-formation-label">Explore a formation<select id="worldgen-formation"><option value="">Choose a landform</option></select></label>
         <label class="worldgen-toggle"><input type="checkbox" id="worldgen-paths"> Show valid nest approaches</label>
         <div class="worldgen-actions"><button class="btn" id="worldgen-copy">Copy seed link</button><a class="btn" id="worldgen-play" target="_blank" rel="noopener">Play this seed</a></div>
         <input id="worldgen-link" aria-label="Seed link" readonly hidden>
@@ -68,9 +71,22 @@ export class WorldgenPanel {
     el('home').onclick = () => this.focus(home, 115);
     el('peak').onclick = () => this.focus(peakDir, Math.max(65, CONFIG.terrain?.range || 40));
     el('globe').onclick = () => this.focus(home, CONFIG.planetRadius * 2.8);
+    this.landmarks = FORMATIONS ? surveyLandmarks(FORMATIONS,terrainHeight,nav.fieldCenter,CONFIG.map.fieldTheta) : [];
+    el('formation-label').hidden = !FORMATIONS;
+    for(const [i,site]of this.landmarks.entries()){
+      const option=document.createElement('option');option.value=String(i);
+      const d=new THREE.Vector3(...site.dir);
+      option.textContent=`${LANDFORM_RECIPES[site.type].label} · ${biomeAt(d,site.height)}${site.inside?'':' · beyond battlefield'}`;
+      el('formation').append(option);
+    }
+    el('formation').onchange=()=>{
+      const site=this.landmarks[Number(el('formation').value)];if(el('formation').value===''||!site)return;
+      this.focus(new THREE.Vector3(...site.dir),Math.max(65,site.scale*1.4));
+      this.status.textContent=`${LANDFORM_RECIPES[site.type].label}. ${site.inside?'Inside this battlefield.':'Elsewhere on this planet.'} ${site.depth>1?`${site.depth.toFixed(1)}m cut into the surrounding upland.`:'Look around the shoulders and nearby routes.'}`;
+    };
     el('paths').disabled = !CONFIG.terrain;
     el('paths').onchange = () => { if (!this.paths) this.buildRoutes(); if (this.paths) this.paths.visible = el('paths').checked; };
-    el('info').textContent = `Seed ${CONFIG.requestedSeed} · generated ${CONFIG.seed} · ${FORMATIONS ? 'landforms v' + FORMATIONS.version : 'classic terrain'} · peak ${nav.height[peak].toFixed(1)}m`;
+    el('info').textContent = `Seed ${CONFIG.requestedSeed} · generated ${CONFIG.seed} · ${FORMATIONS ? 'landforms v' + FORMATIONS.version : 'classic terrain'} · peak ${nav.height[peak].toFixed(1)}m${ECOLOGY?' · '+ECOLOGY.manifest().regime+' climate':''}`;
     this.status.textContent = saved ? 'Campaign and rewards are separate from this sandbox.' : 'History could not be saved. Copy a seed link to keep this world.';
     this.focus(home, 115);
   }

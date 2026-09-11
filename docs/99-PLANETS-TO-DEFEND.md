@@ -123,6 +123,14 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 ### Terrain traversal and flight
 
+The next September 11 follow-up (U38-U40) combines classic-inspired hills,
+Giant-peaks scale and Deep-canyon pathways within individual planets. Terrain
+mixes set emphasis, not exclusive landform families. Add plateaus, ravines and
+crevices incised into surrounding uplands, coherent regional biomes and varied
+scale. Use connected natural outlets and safe physical nest clearings. The
+campaign and World generator must both use this expanded palette, while classic
+terrain stays unchanged. [Active landscape ledger](qa/implementation/DIVERSE-LANDSCAPES.md).
+
 The owner's U31 follow-up separates [modular formation recipes](TERRAIN-RECIPES.md)
 from biome dressing. Seeded ridge chains, canyons, basins, hills and tablelands
 share connected inland valley boundaries, with configurable size, mix and

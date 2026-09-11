@@ -20,6 +20,26 @@ try{
  check('Inspector cannot launch campaign, waves or rewards',await lab.evaluate(()=>!WH.CONFIG.campaign&&WH.game.state==='title'&&WH.game.paused&&WH.waves.wave===0));
  check('Opening inspector leaves all normal saved data unchanged',JSON.stringify(await snapshot(page))===JSON.stringify(saved));
  const first=await fingerprint(lab);
+ const landmarks=await lab.evaluate(()=>WH.worldgen.landmarks);
+ check('Mixed landscape inspector catalogs exposed hills, peaks and cuts together',
+  ['hills','range'].every(type=>landmarks.some(s=>s.type===type))&&landmarks.some(s=>s.depth>5),landmarks);
+ for(const site of landmarks){
+  await lab.locator('#worldgen-formation').selectOption(String(landmarks.indexOf(site)));await lab.evaluate(()=>WH.step(1));
+  check(`Formation selector focuses the actual ${site.type}`,await lab.evaluate(dir=>{
+   const r=WH.rig,c=Math.cos(r.lat),target=[Math.sin(r.lon)*c,Math.sin(r.lat),Math.cos(r.lon)*c];
+   return target.reduce((sum,n,k)=>sum+n*dir[k],0)>.99999&&r.camera.matrixWorld.elements.every(Number.isFinite);
+  },site.dir));
+  await lab.screenshot({path:resolve(out,`formation-${site.type}.png`)});
+ }
+ await lab.locator('#worldgen-formation').focus();
+ await lab.keyboard.down('ArrowLeft');await lab.evaluate(()=>WH.step(1));await lab.keyboard.up('ArrowLeft');
+ // Native select arrows can change the selected landmark and intentionally
+ // fly there. Check against that selection, not the previous camera position.
+ check('Formation selector arrows focus its selection without leaking pan input',await lab.evaluate(()=>{
+  const r=WH.rig,site=WH.worldgen.landmarks[Number(document.getElementById('worldgen-formation').value)],c=Math.cos(r.lat);
+  return !r.keys.has('ArrowLeft')&&Math.abs(r.velLat)+Math.abs(r.velLon)<.00001&&
+   [Math.sin(r.lon)*c,Math.sin(r.lat),Math.cos(r.lon)*c].reduce((sum,n,k)=>sum+n*site.dir[k],0)>.99999;
+ }));
  await lab.locator('#worldgen-paths').check();check('Real nest approach overlay reaches the heart from all seventeen sources',await lab.evaluate(()=>WH.worldgen.routeCount===17&&WH.worldgen.paths.visible));
  await lab.locator('#worldgen-peak').click();await lab.evaluate(()=>WH.step(1));await lab.screenshot({path:resolve(out,'peak-and-routes.png')});
  check('Peak camera stays finite and above the planet',await lab.evaluate(()=>WH.rig.camera.matrixWorld.elements.every(Number.isFinite)&&WH.rig.camera.position.length()>WH.CONFIG.planetRadius));
@@ -58,6 +78,7 @@ try{
  check('Play this seed opens the normal sandbox with the same world',await play.evaluate(seed=>!WH.CONFIG.worldgen&&!WH.CONFIG.campaign&&WH.CONFIG.requestedSeed===seed,12345)&&JSON.stringify(await fingerprint(play))===JSON.stringify(alpine));await play.close();
  await lab.locator('#worldgen-terrain').selectOption('classic');await lab.getByRole('button',{name:'Load seed',exact:true}).click();await lab.waitForURL(url=>url.searchParams.get('map')==='giant',{timeout:180000});await labReady(lab);await lab.evaluate(()=>{__qaFramesEnabled=false;WH.step(1);});
  check('Classic whole-planet comparison uses the original terrain formula',await lab.evaluate(()=>WH.CONFIG.mapKey==='giant'&&!WH.CONFIG.terrain&&document.getElementById('worldgen-paths').disabled));
+ check('Classic comparison hides the procedural formation catalog',await lab.locator('#worldgen-formation-label').isHidden()&&await lab.evaluate(()=>WH.worldgen.landmarks.length===0));
  await lab.screenshot({path:resolve(out,'classic-comparison.png')});
  // Playing a normal sandbox can write ordinary map preferences, so compare
  // campaign data specifically after that deliberate handoff.

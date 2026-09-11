@@ -7,10 +7,11 @@ keep their original terrain formula.
 
 ## Authoring boundaries
 
-`js/terrain/recipes.js` holds the version, five group recipes and four relief
+`js/terrain/recipes.js` holds version 3, eight group recipes and four relief
 mixes. `js/terrain/formations.js` lays out and samples those groups. `world.js`
 composes their relief with continents and small surface detail, then applies
-the existing climate, stone, snow and foliage rules. `nav.js` validates the
+elemental stone rules and the independent `terrain/ecology.js` climate fields.
+`nav.js` validates the
 resulting surface, rather than drawing hidden routes through blocked mountains.
 
 | Group | Internal shapes | Route opportunities |
@@ -18,13 +19,28 @@ resulting surface, rather than drawing hidden routes through blocked mountains.
 | Ridge chain | Shared spine, several folded crests, rounded feet | Valleys around the chain; ground creatures cannot shortcut over its crests |
 | Winding canyon | Paired banks around a meandering dry floor | A continuous cut connects to the surrounding valley network |
 | Open basin | Bowl, surrounding shoulders, two outlets | A clearing with multiple entrances |
-| Rolling foothills | Several low overlapping rises | Broad traversable approaches and modest high ground |
+| Rolling foothills | Small irregular ridges and saddles inspired by the classic field | Broad traversable approaches and modest high ground |
 | Eroded tableland | Flat bench, softened perimeter, side pass | Stable tower locations above a lower approach |
+| Terraced plateau | Two broad benches, softened escarpments and an off-centre outlet | High tower shelves with an open route alongside them |
+| Branching ravine | A main incision and a tributary through an uplifted shelf | Intersecting lower routes between enclosing banks |
+| Fault crevices | Narrow, bending fractures with smaller branches | Deep cuts; submerged bottoms fill with water and use swimming rules |
 
-Highlands, Giant peaks, Deep canyons and Ocean islands are **relief mixes**,
+Mixed landscapes, Giant peaks, Deep canyons and Ocean islands are **relief mixes**,
 not exclusive biome assignments. Any group can have neutral, hot or cold
-surfaces. Temperature, altitude snow, water and foliage remain separate fields.
+surfaces. All four mixes include hills, tall ranges and incised uplands, with
+different proportions and scales. No individual battlefield guarantees all eight
+families. Low-frequency geology biases neighbouring family choices and peak
+amplitudes, rather than distributing every recipe with identical probability.
+Temperature, altitude snow, water and foliage remain separate fields.
 Mortar/Cryo placement restrictions and bonuses still use the actual footprint.
+
+Each accepted planet seed also selects a Temperate, Arid, Boreal or Lush climate
+bias. Continuous latitude, temperature and moisture fields produce meadow,
+woodland, wetland, savanna, desert and tundra regions across multiple formation
+families. The existing hot stone and altitude/cold rules take precedence as
+volcanic/alpine surface biomes. Biome dressing blends the existing palette and
+vegetation; it does not add a new tower restriction or movement penalty. Dry
+regions have fewer trees; mild plateau benches can support them below treeline.
 
 ## Generation order
 
@@ -43,8 +59,10 @@ Mortar/Cryo placement restrictions and bonuses still use the actual footprint.
    Junctions widen naturally. Canyon and basin outlets join that same network.
 5. Measured neighbour spacing sets the shoulders. Feet ease into the floor;
    high crests retain a pointed profile. Mesa tops deliberately stay flat.
-   Canyon depth is measured relative to its raised banks, with a dry floor
-   above sea level. This height field does not represent caves or overhangs.
+   Canyon/ravine depth is measured relative to raised banks; crevice relief
+   alone may become negative, up to 14% of that group's height. Ocean water
+   fills any final surface below sea level. Broad outer joins stay at zero
+   relief. This height field does not represent caves or overhangs.
 6. Continental blending creates coasts and islands. Climate and decor dress
    the result. Fine facet noise is cosmetic and cannot close a route.
 7. The cap scout prefers dry inland floor, not water counted as traversable
@@ -71,7 +89,7 @@ The four default mixes live in `LANDFORM_MIXES`. A terrain profile in
 formations: {
   spacing: 120, // Typical group spacing in metres, supported range 64..200.
   valley: 7, // Shared valley half-width. Keep enough room for nests and traffic.
-  weights: { range: 3, canyon: 5, basin: 2, hills: 1, mesa: 1 },
+  weights: { range: 3, canyon: 5, basin: 2, hills: 1, mesa: 1, plateau: 2, ravine: 2, crevice: 1 },
   groups: [
     { id: 4, type: 'canyon', height: 50, size: 1.2 },
     { id: 7, disabled: true }, // Reserve a low clearing; retain its valley joins.
@@ -85,8 +103,11 @@ Weights of zero disable a recipe. `spacing` changes region footprint sizes;
 `dir: [x,y,z]` pins a site on the sphere. Invalid, overlapping or duplicate
 anchors fail explicitly. An override can still fail gameplay site acceptance;
 run the graph checks before publishing it. These are collaborator controls.
-The in-game World generator selects published mixes and seeds; it does not edit
-individual group parameters.
+The in-game World generator selects published mixes and seeds. Its formation
+selector surveys exposed representatives, preferring the active battlefield and
+labelling examples elsewhere on the globe. Incisions need visible banks on both
+sides; an isolated sea cliff cannot qualify. It does not edit individual group
+parameters. `ECOLOGY.manifest()` exposes the accepted seed's climate regime.
 
 Inspect `FORMATIONS.manifest()` from `js/world.js` for the version, effective
 seed, settings and actual groups. `FORMATIONS.inspect(x,y,z)` identifies the

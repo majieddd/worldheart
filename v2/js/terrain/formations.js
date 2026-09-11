@@ -20,22 +20,29 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
   const count = Math.max(12, Math.round(4 * Math.PI * radius * radius / settings.spacing ** 2));
   if (settings.groups.some(g => g.id >= count)) throw new Error('Authored group id is outside this layout');
   const overridesById = new Map(settings.groups.map(g => [g.id, g]));
-  const entries = Object.entries(settings.weights), total = entries.reduce((s, [, w]) => s + w, 0);
+  const entries = Object.entries(settings.weights), geology = makeNoise3D(seed ^ 0x42aef103);
   const modules = [], rotate = rng() * TAU, tilt = rng() * TAU, ct = Math.cos(tilt), st = Math.sin(tilt);
   for (let i = 0; i < count; i++) {
     const y = 1 - 2 * (i + .5) / count, r = Math.sqrt(1 - y * y), az = i * 2.399963229728653 + rotate;
     const jitter = settings.spacing / radius * .18;
     const v = norm([Math.cos(az) * r + (rng() - .5) * jitter, y + (rng() - .5) * jitter, Math.sin(az) * r + (rng() - .5) * jitter]);
     const authored = overridesById.get(i), dir = authored?.dir ? norm(authored.dir) : [v[0], v[1] * ct - v[2] * st, v[1] * st + v[2] * ct];
+    // Broad geological provinces bias neighboring sites toward related forms.
+    // They still contain contrasting families, rather than one global recipe.
+    const province = geology(dir[0] * 2.4 + 17, dir[1] * 2.4, dir[2] * 2.4);
+    const weightAt = (key, weight) => weight * (key === 'range' ? 1 + province * .7
+      : key === 'hills' || key === 'basin' ? 1 - province * .5 : 1 + Math.abs(province) * .2);
+    const total = entries.reduce((sum, [key, weight]) => sum + weightAt(key, weight), 0);
     let pick = rng() * total, type = entries.at(-1)[0];
-    for (const [key, weight] of entries) { pick -= weight; if (pick < 0) { type = key; break; } }
+    for (const [key, weight] of entries) { pick -= weightAt(key, weight); if (pick < 0) { type = key; break; } }
     if (authored?.type) type = authored.type;
     const a = norm(cross(dir, Math.abs(dir[1]) < .93 ? [0, 1, 0] : [1, 0, 0])), b = cross(dir, a);
     const angle = rng() * TAU, ca = Math.cos(angle), sa = Math.sin(angle), recipe = LANDFORM_RECIPES[type];
     modules.push({ id: i, type, dir, axis: a.map((v, k) => v * ca + b[k] * sa), side: a.map((v, k) => b[k] * ca - v * sa),
       height: profile[recipe.relief] * recipe.gain * (.78 + rng() * .44), phase: rng() * TAU,
-      size: .78 + rng() * .44, roughness: recipe.roughness * (.85 + rng() * .3) });
+      size: .78 + rng() * .44, roughness: recipe.roughness * (.85 + rng() * .3), province });
     const m = modules.at(-1);
+    if (type === 'range') m.height *= mix === 'alpine' ? .87 + .13 * province : .75 + .25 * province;
     if (authored?.height !== undefined) m.height = authored.height;
     if (authored?.size !== undefined) m.size = authored.size;
     if (authored?.disabled) m.height = 0;
@@ -130,7 +137,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     // Rounded feet meet a pointed crest. A cubic easing all the way to one
     // flattened tall summits into blunt pillars, even with broad footprints.
     const shoulder = smoothstep(0, .3, rise) * Math.pow(rise, 1.35);
-    let h = 0, entrance = 1;
+    let h = 0, entrance = 1, incision = 0;
     if (shoulder > 0) {
       const u = (x * m.axis[0] + y * m.axis[1] + z * m.axis[2]) * radius;
       const v = (x * m.side[0] + y * m.side[1] + z * m.side[2]) * radius;
@@ -156,7 +163,8 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         h = m.height * shoulder * (.38 + .62 * spine) * (1 - m.roughness + m.roughness * folds * folds);
       } else if (m.type === 'canyon') {
         entrance = smoothstep(valley * .8, Math.max(valley + 8, extent * .55), channel);
-        h = m.height * shoulder * entrance * (1 - m.roughness + m.roughness * folds);
+        const upland = m.height * shoulder * (1 - m.roughness + m.roughness * folds);
+        incision = upland * (1 - entrance); h = upland - incision;
       } else if (m.type === 'basin') {
         // A bowl with two open, gently turning outlets to the shared valleys.
         const bowl = smoothstep(extent * .2, extent * .65, Math.hypot(u, v));
@@ -166,12 +174,39 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         // Broad buildable benches, eroded shoulders, a pass through one flank.
         entrance = smoothstep(valley, valley + extent * .24, Math.abs(v + extent * .27));
         h = m.height * smoothstep(0, .66, shoulder) * entrance;
+      } else if (m.type === 'plateau') {
+        // Two wide, buildable benches with rounded escarpments. An off-center
+        // outlet cuts through one flank without splitting every top in half.
+        const upland = m.height * (.48 * smoothstep(.08, .4, rise) + .52 * smoothstep(.48, .78, rise));
+        const outlet = 1 - smoothstep(valley * .8, valley + extent * .21, Math.abs(v + bend - extent * .43));
+        incision = upland * outlet; h = upland - incision;
+      } else if (m.type === 'ravine') {
+        // A branching cut incised into an uplifted shelf. The tributary joins
+        // downstream rather than making a repeated cross through every cell.
+        const tributary = Math.abs(v - u * .58 + bend * .6) + Math.max(0, -u) * .9;
+        const drain = Math.min(channel, tributary);
+        const upland = m.height * smoothstep(0, .67, shoulder) * (1 - m.roughness + m.roughness * folds);
+        const cut = 1 - smoothstep(valley * .65, valley + extent * .3, drain);
+        incision = upland * cut; h = upland - incision;
+      } else if (m.type === 'crevice') {
+        // Narrow angular faults descend below their enclosing rock. Where a
+        // fracture reaches below sea level the existing ocean fills it; dry
+        // rims and outer valleys remain usable approaches around the cut.
+        const fault = Math.abs(v + Math.sin(u / extent * 4 + m.phase) * extent * .13);
+        const branch = Math.abs(v + u * .38 - extent * .18) + Math.max(0, -u) * .7;
+        const cut = 1 - smoothstep(1.25, Math.max(7, extent * .26), Math.min(fault, branch));
+        const upland = m.height * smoothstep(0, .62, shoulder);
+        incision = (upland + m.height * .14 * smoothstep(.25, .7, rise)) * cut;
+        h = upland - incision;
       } else {
-        h = m.height * shoulder * (.45 + .55 * folds);
+        // The classic field's ridged-noise hills create irregular low walls
+        // and saddles. Keep that smaller scale beside the major peaks.
+        const roll = 1 - Math.abs(geology(x * 15 + 11, y * 15, z * 15));
+        h = m.height * shoulder * (.25 + .75 * roll * roll * roll);
       }
     }
     if (out) Object.assign(out, { id: m.id, group: groupOf[m.id], type: m.type, neighbour: neighbour.id, edge, valley, relief: h,
-      candidates: list.length, version: LANDFORM_VERSION });
+      incision, province: m.province, candidates: list.length, version: LANDFORM_VERSION });
     return h;
   }
   return {
