@@ -364,7 +364,8 @@ Giant peaks, Deep canyons or Ocean islands. Their range/canyon amplitudes are
 90/32, 96/32, 84/38 and 76/22 world units. These are inputs to the composed
 height field, not maximum heights. Versioned [formation recipes](TERRAIN-RECIPES.md)
 mix ridge chains, winding canyons, basins, hills, tablelands, terraced plateaus,
-branching ravines and fault crevices independently
+branching ravines, fault crevices, butte clusters, breached calderas, dune fields
+and broad glacial troughs independently
 of biome dressing. Shared valleys connect their boundaries; group dimensions,
 weights and authored anchors are configurable. Canyon banks use a 1.65 relief
 gain and ridge chains use 1.18 before seeded variation and continental blending.
@@ -394,7 +395,7 @@ height and 0.62 grade boundary used by floor routing. Ground enemies prefer
 connected floor routes; emergency mountain travel remains at 8% speed. Ordinary
 nest placement never depends on that emergency passage.
 
-Landforms v3 retains the v2 joins of selected adjacent ranges into open chains of at most three
+Landforms v4 retains the v2 joins of selected adjacent ranges into open chains of at most three
 cells, keeping a continuous spine across their internal seams. Their outer
 valleys remain low. Isolated mountains, foothills and explicit authored groups
 keep separate footprints. Nest scoring adds twice the wet route distance to

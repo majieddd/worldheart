@@ -17,6 +17,17 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
+Implemented and functionally verified September 11: Codex on `feature/terrain-routes-and-atlas`, based on
+`525a220`, owns U41-U43: animated dotted approaches and a global habitat atlas,
+stronger visible-route/formation acceptance, researched terrain refinements and
+new landforms. Landforms v4 adds buttes, calderas, dunes and glacial troughs,
+distinct shelves/cuts and strict actual-battlefield variety/connectivity gates.
+The atlas outlines valid areas and shows dotted shared routes over the globe.
+271 tests, 116 fixed-field assertions, 15,147 isolated arrivals, 96 terrain,
+96 placement and a legal 15-wave victory pass. The final gameplay stress probe
+passes, but atlas p99 frame pacing and broader device performance remain open
+under M0. Publication pending. [Terrain atlas ledger and retained failures](qa/implementation/TERRAIN-ATLAS.md).
+
 Published and publicly verified September 11: Codex on `feature/diverse-planet-landscapes`, based on
 preview `3a60ac1`, owns U38-U40: combined hills/major peaks/canyons per planet,
 plateaus/ravines/crevices, coherent biomes and generator/campaign integration.

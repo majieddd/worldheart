@@ -13,9 +13,9 @@ function dryFloor(nav, i) {
     && nav.march.floorReach[i] && Number.isFinite(nav.airDist[i]);
 }
 
-export function nestSite(nav, original, centre, theta, used, scratch) {
+function siteCache(nav) {
   const field = nav.march;
-  if (!field) return -1;
+  if (!field) return null;
   let cache = nav._nestSites;
   if (!cache || cache.revision !== nav.revision) {
     cache = nav._nestSites = { revision: nav.revision, candidates: [], clear: new Map(), wetDistance: new Float64Array(nav.n).fill(-1) };
@@ -45,6 +45,33 @@ export function nestSite(nav, original, centre, theta, used, scratch) {
       }
     }
   }
+  return cache;
+}
+
+function clearing(nav, cache, i, scratch) {
+  nav.nodePos(i, scratch);
+  if (!cache.clear.has(i)) cache.clear.set(i, nav.nodesInRadius(scratch, NEST_CLEARANCE).every(n => dryFloor(nav, n)));
+  return cache.clear.get(i);
+}
+
+// Inspector enumerates individually legal sites using the same predicates as
+// spawning. Separation is a constraint between occupied nests, not habitat.
+// A generator lets the inspector yield between chunks without another solve.
+export function* availableNestSites(nav, centre, scratch) {
+  const cache = siteCache(nav); if (!cache) return;
+  nav.nodePos(nav.heartNode, scratch);
+  const radius = scratch.length() - nav.height[nav.heartNode];
+  for (const i of cache.candidates) {
+    if (nav.march.dist[i] > NEST_ROUTE_LIMIT) continue;
+    nav.nodeDir(i, scratch);
+    if (Math.acos(Math.max(-1, Math.min(1, scratch.dot(centre)))) * radius < 10) continue;
+    if (clearing(nav, cache, i, scratch)) yield i;
+  }
+}
+
+export function nestSite(nav, original, centre, theta, used, scratch) {
+  const field = nav.march, cache = siteCache(nav);
+  if (!cache) return -1;
   nav.nodeDir(original, scratch);
   const ox = scratch.x, oy = scratch.y, oz = scratch.z;
   nav.nodePos(nav.heartNode, scratch);
@@ -69,8 +96,7 @@ export function nestSite(nav, original, centre, theta, used, scratch) {
       if (x * x + y * y + z * z < NEST_SEPARATION ** 2) { separate = false; break; }
     }
     if (!separate) continue;
-    if (!cache.clear.has(i)) cache.clear.set(i, nav.nodesInRadius(scratch, NEST_CLEARANCE).every(n => dryFloor(nav, n)));
-    if (!cache.clear.get(i)) continue;
+    if (!clearing(nav, cache, i, scratch)) continue;
     chosen = i; best = score;
   }
   // Never force a mountain fallback. The director delays this wave if player

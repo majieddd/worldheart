@@ -817,7 +817,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     weapons: weaponApi,
     weaponPanel,
     campaign:campaignApi,
-    renderEffects(dt) { loot.update(dt); unitRoutes.update(); threats.update(); weaponPanel.update(); if(campaignPanel){campaignPanel.badge.hidden=game.state==='title';} },
+    renderEffects(dt) { loot.update(dt); unitRoutes.update(dt); threats.update(); weaponPanel.update(); if(campaignPanel){campaignPanel.badge.hidden=game.state==='title';} },
     // The same path the panel and the B key use, exposed so a scripted run
     // can buy a level without synthesising a click.
     upgradeHeart: tryUpgradeHeart,

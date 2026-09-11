@@ -32,7 +32,11 @@ try {
   check('Boundary glides never enter a tower footprint',movement.every(r=>!r.blocked));
   }else window.__legacyMovement={status:'not-comparable',archivedSeed:baseline.effectiveSeed,currentSeed:W.CONFIG.seed,replacement:'tools/commander-surface-check.mjs'};
   a.dir.copy(oldDir);a.fwd.copy(oldFwd);W.allies._ground(a);
-  W.game.gold=100000;W.game.tierCap=10;
+  W.game.gold=100000;
+  // Upgrade the authoritative run. A shell-only tierCap assignment is reset
+  // by wave events and incorrectly makes the later click test hit a lock.
+  for(let i=0;i<3;i++)m.upgradeHeart();
+  check('Upgrade fixture has paid base levels for both tower actions',W.game.tierCap>=3);
   for(let n=0;n<nav.n;n++){
    if(!nav.walk[n]||nav.dist[n]<4||nav.dist[n]>13)continue;
    nav.nodeDir(n,W.game.cursorDir);surfacePoint(W.game.cursorDir,W.game.cursorPos);W.game.cursorValid=true;W.game.buildType='bolt';
@@ -44,6 +48,9 @@ try {
   const target=nav.nodeDir(nav.portalNodes[0],new Vector3());a.selected=true;
   check('An actual move order has an authoritative path',W.allies.orderMove(a,target)&&a.route.length>1,a.route?.length);
   m.unitRoutes.update();check('Selected ordered unit draws its actual remaining route',m.unitRoutes.visibleUnitIds.includes(a.id)&&m.unitRoutes.geometry.drawRange.count>0,m.unitRoutes.geometry.drawRange.count);
+  const phase=m.unitRoutes.line.material.uniforms.phase.value;m.unitRoutes.update(.2);
+  check('Selected route has finite distance dots flowing toward the order',m.unitRoutes.line.material.uniforms.phase.value!==phase&&
+   m.unitRoutes.geometry.attributes.routeDistance.array.slice(0,m.unitRoutes.geometry.drawRange.count).every(Number.isFinite));
   const oldRoute=a.route;W.allies.orderMove(a,oldDir);m.unitRoutes.update();check('A new order replaces the line route',a.route!==oldRoute);
   a.selected=false;m.unitRoutes.update();check('Unselection clears the route line',m.unitRoutes.geometry.drawRange.count===0);
   a.selected=true;W.allies.clearOrder(a);m.unitRoutes.update();check('Cancellation clears the route line',m.unitRoutes.geometry.drawRange.count===0);
