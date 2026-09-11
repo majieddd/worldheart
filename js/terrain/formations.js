@@ -58,6 +58,21 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     if (m.extent < settings.valley + 8) throw new Error('Authored groups overlap or leave no shoulder space');
   }
 
+  // Place 7-12 remnants before sampling. Pairwise measured footprints leave
+  // at least 5.5 m between feet, so extra pillars cannot close their paths.
+  for (const m of modules) if (m.type === 'buttes') {
+    const count = 7 + Math.floor(m.phase * 997) % 6, extent = m.extent * Math.min(m.size, 1);
+    m.pillars = Array.from({length:count}, (_,k) => {
+      const inner = k < 3, n = inner ? 3 : count - 3, index = inner ? k : k - 3;
+      const angle = index * TAU / n + m.phase + (inner ? .45 : 0), offset = extent * (inner ? .17 : .58);
+      return {u:Math.cos(angle)*offset, v:Math.sin(angle)*offset, gain:.7+.1*(k%3)};
+    });
+    for (const p of m.pillars) {
+      const separation = Math.min(...m.pillars.filter(q=>p!==q).map(q=>Math.hypot(p.u-q.u,p.v-q.v)));
+      p.width = Math.max(.5, Math.min(extent*.14, (separation-5.5)/2));
+    }
+  }
+
   // Separate cells made every range taper into an isolated mound. Join a few
   // adjacent range cells into one long territory. Its OUTER border remains a
   // connected valley, while a shared spine crosses its internal cell seams.
@@ -196,37 +211,53 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         // Variable-width, asymmetric erosion with one to three tributaries.
         // All bottoms connect to an outlet instead of ending in a sealed pit.
         let drain = channel;
-        for (let branch = 0; branch <= m.variant; branch++) {
-          const sign = branch % 2 ? -1 : 1, join = (branch - .8) * extent * .32;
-          const tributary = Math.abs(v - sign * (u - join) * (.4 + .17 * branch) + bend * .6)
-            + Math.max(0, join - u) * .85;
+        for (let branch = 0; branch < 3 + m.variant; branch++) {
+          const sign = branch % 2 ? -1 : 1, join = (branch - 1.5) * extent * .32;
+          const tributary = Math.abs(v - sign * (u - join) * (.65 + .08 * branch) + bend * .6)
+            + Math.max(0, join - u) * 1.2;
           drain = Math.min(drain, tributary);
         }
         const bank = 1 - m.roughness + m.roughness * (.5 + .5 * Math.sin(u / extent * 4 + v / extent + m.phase));
-        const upland = m.height * smoothstep(0, .6, shoulder) * bank;
-        const width = valley * .62 + extent * (.025 + .025 * Math.sin(u / extent * 5 + m.phase));
+        const upland = m.height * smoothstep(0, .3, rise) * bank;
+        const width = valley * .75 + extent * (.025 + .025 * Math.sin(u / extent * 5 + m.phase));
         const cut = 1 - smoothstep(width, width + extent * (.14 + .06 * smoothstep(-extent, extent, v)), drain);
         incision = upland * cut; h = upland - incision;
+      } else if (m.type === 'gorge') {
+        // A negative incision through the planet, with stepped inner walls
+        // and two long ramps to the shared floor. Water is a separate field.
+        const width = 4.5 + extent * .035;
+        const winding = Math.abs(v + Math.sin(u/extent*4.4+m.phase)*extent*.28);
+        const cut = 1 - smoothstep(width, width + extent * .3, winding);
+        const strata = .68 * cut + .32 * smoothstep(.32,.68,cut);
+        // Depth follows available ramp length. An arbitrarily deep small cell
+        // makes a sealed pit whose exits exceed the floor traversal grade.
+        const depth = Math.min(m.height, m.extent * .24);
+        incision = depth * smoothstep(0,.95,rise) * strata;
+        h = -incision;
+      } else if (m.type === 'escarpment') {
+        // Three long lateral benches form a staircase across one flank.
+        // A diagonal ramp links them; the other side is an eroded scarp.
+        const across = clamp(.5 + v / (extent * 1.6),0,1);
+        const tiers = .3 + .33*smoothstep(.27,.36,across) + .37*smoothstep(.6,.7,across);
+        const ramp = 1-smoothstep(.08,.25,Math.abs(u/extent-v/extent*.65));
+        h = m.height * smoothstep(0,.38,rise) * (tiers*(1-ramp)+(.25+.75*across)*ramp);
       } else if (m.type === 'crevice') {
-        // Narrow angular faults descend below their enclosing rock. Where a
-        // fracture reaches below sea level the existing ocean fills it; dry
-        // rims and outer valleys remain usable approaches around the cut.
-        const fault = Math.abs(v + Math.sin(u / extent * 4 + m.phase) * extent * .13);
+        // A long fault crosses the whole cell, including its outer lowlands.
+        // The wider dry bottom is a passage, not a decorative flooded crack.
+        const fault = Math.abs(v + Math.sin(u / extent * 2 + m.phase) * extent * .13);
         const branch = Math.abs(v + u * .38 - extent * .18) + Math.max(0, -u) * .7;
-        const cut = 1 - smoothstep(1.25, Math.max(7, extent * .26), Math.min(fault, branch));
+        const cut = 1 - smoothstep(3.2, Math.max(9, extent * .28), Math.min(fault, branch));
         const upland = m.height * smoothstep(0, .62, shoulder);
-        incision = (upland + m.height * .14 * smoothstep(.25, .7, rise)) * cut;
+        incision = (upland + m.height * .25 * smoothstep(0, .95, rise)) * cut;
         h = upland - incision;
       } else if (m.type === 'buttes') {
         // Several independent remnants, not a single mesa with a new name.
         // Irregular gaps between them are real ground, usable by every mover.
         let cluster = 0;
-        for (let k = 0; k < 3 + m.variant; k++) {
-          const angle = k * 2.39996323 + m.phase, offset = extent * (.27 + .05 * (k % 2));
-          const width = extent * (.2 + .025 * ((k + m.variant) % 3));
-          const d = Math.hypot(u - Math.cos(angle) * offset, v - Math.sin(angle) * offset);
-          const remnant = 1 - smoothstep(width * .34, width, d);
-          cluster = Math.max(cluster, remnant * (.64 + .12 * (k % 3)));
+        for (const p of m.pillars) {
+          const d = Math.hypot(u-p.u,v-p.v);
+          const remnant = 1-smoothstep(p.width*.38,p.width,d);
+          cluster = Math.max(cluster,remnant*p.gain);
         }
         h = m.height * smoothstep(0, .28, rise) * cluster;
       } else if (m.type === 'caldera') {
@@ -241,7 +272,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
       } else if (m.type === 'dunes') {
         // Parallel wind-shaped crests, with a long windward slope and short
         // slip face. Low relief remains distinct from rocky mountain spines.
-        const cycle = u / extent * (2.6 + m.variant * .3) + .18 * Math.sin(v / extent * 3 + m.phase) + m.phase;
+        const cycle = u / extent * (2 + m.variant * .22) + .18 * Math.sin(v / extent * 3 + m.phase) + m.phase;
         const t = cycle - Math.floor(cycle);
         const crest = t < .76 ? smoothstep(0, .76, t) : 1 - smoothstep(.76, 1, t);
         h = m.height * smoothstep(0, .4, rise) * crest;
@@ -255,7 +286,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
       } else {
         // The classic field's ridged-noise hills create irregular low walls
         // and saddles. Keep that smaller scale beside the major peaks.
-        const roll = 1 - Math.abs(geology(x * 15 + 11, y * 15, z * 15));
+        const roll = 1 - Math.abs(geology(x * 11 + 11, y * 11, z * 11));
         h = m.height * shoulder * (.25 + .75 * roll * roll * roll);
       }
     }

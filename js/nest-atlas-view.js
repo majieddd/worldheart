@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { R, terrainHeight, slopeAt, surfacePoint } from './world.js';
+import { R, terrainHeight, slopeAt, surfacePoint, waterDepthAt } from './world.js';
 import { nestSite, availableNestSites } from './nest-sites.js';
 import { createTerrainAtlas } from './terrain/atlas.js';
 import { dottedPathMaterial, advanceDots } from './dotted-path.js';
@@ -54,7 +54,7 @@ export class NestAtlasView {
     this.group.add(new THREE.LineSegments(geometry(exact,exactDistances),this.material));await yieldTask();
     const started=performance.now();
     this.atlas=await createTerrainAtlas({radius:R,heart:nav.nodeDir(nav.heartNode,p).toArray(),
-      heightAt:(x,y,z)=>terrainHeight(x,y,z,false),slopeAt:(x,y,z)=>slopeAt(p.set(x,y,z)),pause:yieldTask});
+      waterAt:(x,y,z,h)=>waterDepthAt(p.set(x,y,z),h),heightAt:(x,y,z)=>terrainHeight(x,y,z,false),slopeAt:(x,y,z)=>slopeAt(p.set(x,y,z)),pause:yieldTask});
     const {atlas}=this,points=[],distances=[];
     const sample=(dir,d)=>{p.set(...dir);surfacePoint(p,q).addScaledVector(p,.45);points.push(q.x,q.y,q.z);distances.push(d);};
     for(let i=0;i<atlas.verts.length;i++){

@@ -123,6 +123,16 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 ### Terrain traversal and flight
 
+U44-U47 implements the owner's next refinement in landforms v5. Mixed Landscapes
+is the campaign default. Hill Fields, larger foothills and 7-12 separated buttes
+sit beside preserved calderas and terraced plateaus. Winding Valley names the
+paired-bank formation; the new Winding Canyon cuts inward. Dry inland canyon
+and fault floors use real height, slopes and ground placement; ocean swimming
+remains separate. Depth follows available ramp length. A Staircase escarpment
+adds long benches, and independent Desert/Jungle/Volcanic/Boreal/Wetlands climate
+choices dress any formation. Verification and V2 publication are tracked in the
+[owner refinement ledger](qa/implementation/LANDFORM-BIOMES.md).
+
 U41-U43 is implemented in landforms v4: a whole-planet habitat atlas with
 moving dotted area outlines and shared routes, distinguished from exact current
 battlefield spawn legality. Accepted fronts require substantial exposed shape

@@ -34,7 +34,7 @@ try {
         if (h < -0.7) water++;
         // Fine relief can put a visually wet sample on the swim hysteresis
         // boundary. Compare both inputs from the same deep gameplay surface.
-        if (n.baseHeight[i] < -.85 && n.walk[i]) wetNode = i;
+        if (n.waterDepth[i] > .85 && n.walk[i]) wetNode = i;
         if (!n.airWalk[i]) blockedAir++;
         if (n.walk[i] && h > 2.05) raised++;
         if (i % 11 !== 0 || h < 1.5) continue;

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, REDUCED_MOTION, PRESENTATION } from './config.js';
 import { clamp } from './noise.js';
-import { R, groundNormal, orientOnSurface } from './world.js';
+import { surfaceElevation, R, groundNormal, orientOnSurface } from './world.js';
 import { uploadInstances } from './rig.js';
 
 // Pooled visual effects. Nothing here allocates in the frame loop: every
@@ -466,7 +466,7 @@ class BlobShadows {
   updateFrom(enemyList) {
     let n = 0;
     for (const e of enemyList) {
-      const hRaw = Math.max(e.height, 0.03);
+      const hRaw = surfaceElevation(e.dir,e.height);
       _v.copy(e.dir).multiplyScalar(R + hRaw + 0.06);
       groundNormal(e.dir, _n);
       _q.setFromUnitVectors(Y_AXIS, _n);

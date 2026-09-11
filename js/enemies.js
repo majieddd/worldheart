@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { R, terrainHeight, surfaceTravel, canFlyAt } from './world.js';
+import { surfaceElevation, R, terrainHeight, surfaceTravel, canFlyAt } from './world.js';
 import { MAX_SLOW, swimOffset, MOUNTAIN_MARCH } from './traversal.js';
 import { enemyStrike, insideStrike } from './attacks.js';
 import { planetBoss } from './encounters.js';
@@ -223,7 +223,7 @@ class Enemy {
     this.fwd.crossVectors(this.dir, _tmp).normalize();
     this.prevFwd.copy(this.fwd);
     this.height = terrainHeight(this.dir.x, this.dir.y, this.dir.z);
-    this.renderDir.copy(this.dir); this.renderHeight = Math.max(0.03,this.height);
+    this.renderDir.copy(this.dir); this.renderHeight = surfaceElevation(this.dir,this.height);
   }
 }
 
@@ -1201,7 +1201,7 @@ export class EnemyManager {
   }
 
   enemyPos(e, out) {
-    const h = Math.max(e.height, 0.03) - swimOffset(e);
+    const h = surfaceElevation(e.dir,e.height) - swimOffset(e);
     return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
   }
 
@@ -1598,7 +1598,7 @@ export class EnemyManager {
           this._release(e);
         }
       } else {
-        _tmp.copy(e.dir).multiplyScalar(R + Math.max(e.height, 0.03) + e.alt);
+        _tmp.copy(e.dir).multiplyScalar(R + surfaceElevation(e.dir,e.height) + e.alt);
         if (_tmp.distanceToSquared(this.heartPos) < heartR2 + e.alt * e.alt) {
           e.reached = true;
           if (this.onLeak) this.onLeak(e);
@@ -1647,7 +1647,7 @@ export class EnemyManager {
       const e = this.active[i];
       const type = e.type;
       const rig = this._rigs[e.typeKey];
-      const hRaw = Math.max(e.height, 0.03) - swimOffset(e);
+      const hRaw = surfaceElevation(e.dir,e.height) - swimOffset(e);
       if (CONFIG.terrain && !type.flying && dt > 0) {
         const horizontal = Math.acos(clamp(e.dir.dot(e.renderDir),-1,1)) * (R+(hRaw+e.renderHeight)*.5);
         e.moveV = Math.hypot(horizontal,hRaw-e.renderHeight)/dt;

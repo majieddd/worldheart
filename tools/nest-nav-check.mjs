@@ -41,7 +41,7 @@ if (index) {
       const valid = node >= 0 && !used.has(node) && nav.walk[node] && !nav.block[node]
         && nav.airWalk[node] && nav.march.floorReach[node] && nav.march.dist[node]<=NEST_ROUTE_LIMIT
         && Number.isFinite(nav.airDist[node])
-        && nav.nodesInRadius(nav.nodePos(node,scratch),NEST_CLEARANCE).every(i=>!nav.block[i]&&nav.march.floorReach[i]&&nav.baseHeight[i]>=.18&&nav.baseHeight[i]<=1.5)
+        && nav.nodesInRadius(nav.nodePos(node,scratch),NEST_CLEARANCE).every(i=>!nav.block[i]&&nav.march.floorReach[i]&&(nav.waterDepth?nav.waterDepth[i]===0:nav.baseHeight[i]>=.18)&&nav.baseHeight[i]<=1.5)
         && [...used].every(i=>nav.nodePos(i,scratch).distanceTo(nav.nodePos(node,new THREE.Vector3()))>=NEST_SEPARATION);
       sites.push({ node, valid: !!valid, height:nav.baseHeight[node], routeCost:nav.march.dist[node] }); if (node >= 0) used.add(node);
     }

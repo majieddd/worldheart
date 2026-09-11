@@ -1,0 +1,114 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "scope": "Normal inspector interaction and controlled render-frame progression, not combat",
+  "checks": [
+    {
+      "name": "Unchecking during construction hides the whole overlay",
+      "ok": true
+    },
+    {
+      "name": "Bounded global graph surveys every hemisphere",
+      "ok": true,
+      "actual": {
+        "nodes": 40962,
+        "edgeCount": 87039,
+        "potential": 11090,
+        "connected": 11071,
+        "disconnected": 19,
+        "floor": 30682,
+        "reached": 30604,
+        "exact": 53967,
+        "buildMs": 6409.600000008941,
+        "vertices": 88020
+      }
+    },
+    {
+      "name": "Survey finishes without silently reviving a hidden overlay",
+      "ok": true
+    },
+    {
+      "name": "Survey leaves the authoritative game graph and waves unchanged",
+      "ok": true,
+      "actual": {
+        "before": {
+          "n": 186646,
+          "revision": 1,
+          "seed": 36102,
+          "wave": 0,
+          "next": 13101497878
+        },
+        "after": {
+          "n": 186646,
+          "revision": 1,
+          "seed": 36102,
+          "wave": 0,
+          "next": 13101497878
+        }
+      }
+    },
+    {
+      "name": "Every legal battlefield clearing is included",
+      "ok": true,
+      "actual": {
+        "exactEqual": true,
+        "octants": [
+          "100",
+          "110",
+          "011",
+          "010",
+          "111",
+          "000",
+          "001",
+          "101"
+        ],
+        "beyond": 10152,
+        "validEdges": true
+      }
+    },
+    {
+      "name": "Potential habitat extends beyond the cap into all eight globe octants",
+      "ok": true,
+      "actual": {
+        "exactEqual": true,
+        "octants": [
+          "100",
+          "110",
+          "011",
+          "010",
+          "111",
+          "000",
+          "001",
+          "101"
+        ],
+        "beyond": 10152,
+        "validEdges": true
+      }
+    },
+    {
+      "name": "Global routes make strictly decreasing progress without loops",
+      "ok": true
+    },
+    {
+      "name": "Legend distinguishes legal battlefield sites from coarse global habitat",
+      "ok": true
+    },
+    {
+      "name": "Dots move while inspector simulation remains paused",
+      "ok": true
+    },
+    {
+      "name": "Animation reuses every position buffer",
+      "ok": true
+    },
+    {
+      "name": "Geometry and camera remain finite over the opposite hemisphere",
+      "ok": true
+    },
+    {
+      "name": "Reduced motion keeps path dots static",
+      "ok": true
+    }
+  ],
+  "faults": [],
+  "pass": true
+}

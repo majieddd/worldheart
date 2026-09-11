@@ -1,0 +1,27 @@
+âœ– winding canyon floors have dry exits instead of trapping a low isolated pocket (59.3744ms)
+â„¹ tests 1
+â„¹ suites 0
+â„¹ pass 0
+â„¹ fail 1
+â„¹ cancelled 0
+â„¹ skipped 0
+â„¹ todo 0
+â„¹ duration_ms 252.1895
+
+âœ– failing tests:
+
+test at artifacts\landform-biomes\uncapped-test.mjs:57:1
+âœ– winding canyon floors have dry exits instead of trapping a low isolated pocket (59.3744ms)
+  AssertionError [ERR_ASSERTION]: seed 771 group 0 has trapped floor
+      at TestContext.<anonymous> (file:///C:/Users/Majied%20LaFleur/Documents/GPTProjects/worldheart/artifacts/landform-biomes/uncapped-test.mjs:74:36)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

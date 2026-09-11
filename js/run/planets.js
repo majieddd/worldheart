@@ -4,7 +4,7 @@ export const CAMPAIGN_LENGTH=99;
 export const CONTENT_VERSION=1;
 const REGIONS=['Verdant Reach','Ember Chain','Glass March','Copper Halo','Signal Sea','Iron Meridian','Luminous Rift','Ashen Crown','Memory Wilds','Celestial Scar','Firstlight'];
 const PLACES=['Haven','Crossing','Crown','Shoals','Bastion','Hollow','Spire','Drift','Threshold'];
-const TERRAINS=['varied','canyon','alpine','ocean'];
+// Mixed geometry is the campaign default. Seeds and climate carry planet diversity.
 const PRESSURES=['mixed','wings','armor','swarm','raids'];
 const BRIEFS={mixed:'Balance your defense against a mixed assault.',wings:'More flying creatures cross ordinary ridges. Cover the sky.',armor:'Extra Aegis shield the advance. Prepare piercing damage and area control.',swarm:'Larger, faster-arriving Mite packs test coverage and splash damage.',raids:'Nests raid more often. Expand or venture out to silence them.'};
 // Milestones reuse the faceted Colossus rig with authored attack tells and
@@ -27,15 +27,15 @@ export const MILESTONES={
 export function planetDefinition(index,seed) {
   if(!Number.isInteger(index)||index<1||index>CAMPAIGN_LENGTH||!Number.isInteger(seed)||seed<1||seed>0xffffffff)return null;
   const region=Math.floor((index-1)/9),place=(index-1)%9;
-  const terrain=TERRAINS[(index-1+region)%4],pressure=PRESSURES[(index-1+region*2)%5];
+  const terrain='varied',pressure=PRESSURES[(index-1+region*2)%5];
   const planet={index,region:REGIONS[region],name:`${REGIONS[region]} ${PLACES[place]}`,terrain,
     seed:((seed+Math.imul(index-1,104729))>>>0)||1,era:eraForPlanet(index),
     enemyHealth:1+(index-1)/98*.35,pressure,brief:BRIEFS[pressure],boss:MILESTONES[index]?{...MILESTONES[index]}:null};
   // Keep the naturally verified opening stable as the route grows.
   if(index<=3)Object.assign(planet,[
     {name:'Hearthwild',terrain:'varied',seed,enemyHealth:1,pressure:'mixed',brief:'Defend the meadows between peaks and carved uplands. Carry crystals home to claim the high ground.'},
-    {name:'Riftshore',terrain:'canyon',seed,enemyHealth:1,pressure:'wings',brief:'Ravines, plateaus and mountain passes reward safe crossings. Prepare for more flying creatures.'},
-    {name:'Crownfall',terrain:'alpine',seed,enemyHealth:1.04,pressure:'armor',brief:'Giant peaks rise above lower hills and canyon routes. Cryo claims ice; Mortars claim hot stone. Expect heavy armor.'},
+    {name:'Riftshore',terrain:'varied',seed:((seed+104729)>>>0)||1,enemyHealth:1,pressure:'wings',brief:'Ravines, plateaus and mountain passes reward safe crossings. Prepare for more flying creatures.'},
+    {name:'Crownfall',terrain:'varied',seed:((seed+209458)>>>0)||1,enemyHealth:1.04,pressure:'armor',brief:'Giant peaks rise above lower hills and canyon routes. Cryo claims ice; Mortars claim hot stone. Expect heavy armor.'},
   ][index-1]);
   return planet;
 }

@@ -1,0 +1,3591 @@
+{
+  "state": "playing",
+  "phase": "victory",
+  "wave": 15,
+  "lives": 24,
+  "gold": 228,
+  "kills": 514,
+  "score": 9900,
+  "towers": 8,
+  "commander": [
+    {
+      "hp": 1327.5044999999993,
+      "hpMax": 1400,
+      "state": "roam",
+      "dir": [
+        0.9605215900327086,
+        0.24332153659749442,
+        -0.1348810769117421
+      ]
+    }
+  ],
+  "seed": 36102,
+  "talentPurchases": [],
+  "rendering": "60Hz simulation; one rendered frame per two simulation seconds, plus captures",
+  "trace": [
+    {
+      "action": "build",
+      "wave": 1,
+      "lives": 20,
+      "gold": 300,
+      "type": "bolt",
+      "pos": [
+        233.63560898935472,
+        50.58721778935691,
+        -27.002988477697613
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "start",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "stage": "outbound",
+      "nodes": 29
+    },
+    {
+      "action": "crystal-picked-up",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "id": "crystal-36102-1",
+      "theta": 0.05
+    },
+    {
+      "action": "expedition-route",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "stage": "return",
+      "nodes": 24
+    },
+    {
+      "action": "crystal-deposited",
+      "wave": 1,
+      "lives": 20,
+      "gold": 180,
+      "ledger": {
+        "version": 1,
+        "carried": [],
+        "claimed": [
+          "crystal-36102-1"
+        ],
+        "deposited": [
+          "crystal-36102-1"
+        ],
+        "credit": 100
+      },
+      "theta": 0.05
+    },
+    {
+      "action": "crystal-funded-upgrade",
+      "wave": 1,
+      "lives": 20,
+      "gold": 30,
+      "creditBefore": 100,
+      "creditAfter": 0,
+      "level": 1,
+      "theta": 0.2298469387755102
+    },
+    {
+      "action": "assault-goal",
+      "wave": 1,
+      "lives": 20,
+      "gold": 30,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 7,
+      "cost": 3.6226940155029297
+    },
+    {
+      "action": "assault-goal",
+      "wave": 1,
+      "lives": 20,
+      "gold": 30,
+      "id": "nest-4587",
+      "kind": "nest",
+      "nodes": 112,
+      "cost": 66.97724151611328
+    },
+    {
+      "action": "assault-weapon",
+      "wave": 1,
+      "lives": 20,
+      "gold": 30,
+      "id": "starter-36102",
+      "family": "sword"
+    },
+    {
+      "action": "build",
+      "wave": 2,
+      "lives": 20,
+      "gold": 43,
+      "type": "bolt",
+      "pos": [
+        234.1090360550214,
+        50.62341612133565,
+        -24.22620697446164
+      ]
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 2,
+      "lives": 20,
+      "gold": 223,
+      "total": 1
+    },
+    {
+      "action": "assault-goal",
+      "wave": 2,
+      "lives": 20,
+      "gold": 223,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 106,
+      "cost": 63.557430267333984
+    },
+    {
+      "action": "upgrade",
+      "wave": 2,
+      "lives": 20,
+      "gold": 103,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "assault-goal",
+      "wave": 2,
+      "lives": 20,
+      "gold": 103,
+      "id": "nest-134373",
+      "kind": "nest",
+      "nodes": 150,
+      "cost": 88.26213836669922
+    },
+    {
+      "action": "draft",
+      "wave": 2,
+      "lives": 20,
+      "gold": 275,
+      "power": "deep-crit"
+    },
+    {
+      "action": "upgrade",
+      "wave": 3,
+      "lives": 20,
+      "gold": 80,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 3,
+      "lives": 20,
+      "gold": 260,
+      "total": 2
+    },
+    {
+      "action": "assault-goal",
+      "wave": 3,
+      "lives": 20,
+      "gold": 260,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 114,
+      "cost": 66.49828338623047
+    },
+    {
+      "action": "upgrade",
+      "wave": 3,
+      "lives": 20,
+      "gold": 65,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "assault-goal",
+      "wave": 3,
+      "lives": 20,
+      "gold": 65,
+      "id": "nest-76128",
+      "kind": "nest",
+      "nodes": 160,
+      "cost": 91.5769271850586
+    },
+    {
+      "action": "build",
+      "wave": 4,
+      "lives": 20,
+      "gold": 100,
+      "type": "cryo",
+      "pos": [
+        233.90231142105907,
+        52.376819663007936,
+        -22.036470248221175
+      ]
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 4,
+      "lives": 20,
+      "gold": 280,
+      "total": 3
+    },
+    {
+      "action": "assault-goal",
+      "wave": 4,
+      "lives": 20,
+      "gold": 280,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 110,
+      "cost": 61.647945404052734
+    },
+    {
+      "action": "upgrade",
+      "wave": 4,
+      "lives": 20,
+      "gold": 120,
+      "type": "cryo",
+      "tier": 1
+    },
+    {
+      "action": "assault-goal",
+      "wave": 4,
+      "lives": 20,
+      "gold": 120,
+      "id": "nest-183551",
+      "kind": "nest",
+      "nodes": 158,
+      "cost": 95.98414611816406
+    },
+    {
+      "action": "draft",
+      "wave": 4,
+      "lives": 20,
+      "gold": 386,
+      "power": "thrift"
+    },
+    {
+      "action": "upgrade",
+      "wave": 5,
+      "lives": 20,
+      "gold": 152,
+      "type": "cryo",
+      "tier": 2
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 5,
+      "lives": 20,
+      "gold": 332,
+      "total": 4
+    },
+    {
+      "action": "assault-goal",
+      "wave": 5,
+      "lives": 20,
+      "gold": 332,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 103,
+      "cost": 64.08512878417969
+    },
+    {
+      "action": "assault-goal",
+      "wave": 5,
+      "lives": 20,
+      "gold": 332,
+      "id": "nest-182876",
+      "kind": "nest",
+      "nodes": 31,
+      "cost": 19.087385177612305
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 5,
+      "lives": 20,
+      "gold": 576,
+      "total": 5
+    },
+    {
+      "action": "assault-goal",
+      "wave": 5,
+      "lives": 20,
+      "gold": 576,
+      "id": "nest-73231",
+      "kind": "nest",
+      "nodes": 215,
+      "cost": 130.16835021972656
+    },
+    {
+      "action": "base",
+      "wave": 5,
+      "lives": 20,
+      "gold": 144,
+      "level": 2
+    },
+    {
+      "action": "build",
+      "wave": 6,
+      "lives": 20,
+      "gold": 176,
+      "type": "bolt",
+      "pos": [
+        231.91439818956167,
+        56.90426144138799,
+        -28.566294638349504
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 6,
+      "lives": 20,
+      "gold": 68,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 6,
+      "lives": 20,
+      "gold": 248,
+      "total": 6
+    },
+    {
+      "action": "assault-goal",
+      "wave": 6,
+      "lives": 20,
+      "gold": 248,
+      "id": "nest-59550",
+      "kind": "nest",
+      "nodes": 251,
+      "cost": 149.6982879638672
+    },
+    {
+      "action": "upgrade",
+      "wave": 6,
+      "lives": 20,
+      "gold": 84,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "draft",
+      "wave": 6,
+      "lives": 20,
+      "gold": 316,
+      "power": "flywheel"
+    },
+    {
+      "action": "upgrade",
+      "wave": 7,
+      "lives": 20,
+      "gold": 53,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 7,
+      "lives": 20,
+      "gold": 233,
+      "total": 7
+    },
+    {
+      "action": "assault-goal",
+      "wave": 7,
+      "lives": 20,
+      "gold": 233,
+      "id": "nest-20190",
+      "kind": "nest",
+      "nodes": 274,
+      "cost": 161.80453491210938
+    },
+    {
+      "action": "upgrade",
+      "wave": 7,
+      "lives": 20,
+      "gold": 12,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "build",
+      "wave": 8,
+      "lives": 20,
+      "gold": 40,
+      "type": "bolt",
+      "pos": [
+        232.92993065892065,
+        52.332547131906445,
+        -29.090777327544796
+      ]
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 8,
+      "lives": 20,
+      "gold": 220,
+      "total": 8
+    },
+    {
+      "action": "assault-goal",
+      "wave": 8,
+      "lives": 20,
+      "gold": 220,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 166,
+      "cost": 94.55986022949219
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 20,
+      "gold": 112,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "assault-goal",
+      "wave": 8,
+      "lives": 20,
+      "gold": 112,
+      "id": "nest-154995",
+      "kind": "nest",
+      "nodes": 307,
+      "cost": 182.02027893066406
+    },
+    {
+      "action": "upgrade",
+      "wave": 8,
+      "lives": 20,
+      "gold": 6,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "draft",
+      "wave": 8,
+      "lives": 20,
+      "gold": 318,
+      "power": "long-lens"
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 20,
+      "gold": 55,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 9,
+      "lives": 20,
+      "gold": 235,
+      "total": 9
+    },
+    {
+      "action": "assault-goal",
+      "wave": 9,
+      "lives": 20,
+      "gold": 235,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 156,
+      "cost": 95.6197280883789
+    },
+    {
+      "action": "assault-goal",
+      "wave": 9,
+      "lives": 20,
+      "gold": 235,
+      "id": "nest-94525",
+      "kind": "nest",
+      "nodes": 305,
+      "cost": 184.65113830566406
+    },
+    {
+      "action": "upgrade",
+      "wave": 9,
+      "lives": 20,
+      "gold": 32,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "build",
+      "wave": 10,
+      "lives": 20,
+      "gold": 240,
+      "type": "bolt",
+      "pos": [
+        234.7067674062057,
+        48.258753763775246,
+        -22.077070738901106
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 20,
+      "gold": 132,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 10,
+      "lives": 20,
+      "gold": 312,
+      "total": 10
+    },
+    {
+      "action": "assault-goal",
+      "wave": 10,
+      "lives": 20,
+      "gold": 312,
+      "id": "nest-87073",
+      "kind": "nest",
+      "nodes": 21,
+      "cost": 12.171563148498535
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 20,
+      "gold": 136,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 10,
+      "lives": 20,
+      "gold": 410,
+      "total": 11
+    },
+    {
+      "action": "assault-goal",
+      "wave": 10,
+      "lives": 20,
+      "gold": 410,
+      "id": "nest-55888",
+      "kind": "nest",
+      "nodes": 309,
+      "cost": 184.3957061767578
+    },
+    {
+      "action": "upgrade",
+      "wave": 10,
+      "lives": 20,
+      "gold": 159,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "draft",
+      "wave": 10,
+      "lives": 20,
+      "gold": 399,
+      "power": "mending"
+    },
+    {
+      "action": "upgrade",
+      "wave": 11,
+      "lives": 20,
+      "gold": 48,
+      "type": "cryo",
+      "tier": 3
+    },
+    {
+      "action": "assault-rest-start",
+      "wave": 11,
+      "lives": 20,
+      "gold": 102,
+      "hp": 896.5699999999997
+    },
+    {
+      "action": "assault-goal",
+      "wave": 11,
+      "lives": 20,
+      "gold": 102,
+      "id": "recover-away-from-assault",
+      "kind": "recover",
+      "nodes": 137,
+      "cost": 81.09861755371094
+    },
+    {
+      "action": "assault-rest-end",
+      "wave": 11,
+      "lives": 20,
+      "gold": 422,
+      "hp": 1333.036666666653
+    },
+    {
+      "action": "assault-goal",
+      "wave": 11,
+      "lives": 20,
+      "gold": 422,
+      "id": "nest-55888",
+      "kind": "nest",
+      "nodes": 151,
+      "cost": 88.705810546875
+    },
+    {
+      "action": "build",
+      "wave": 12,
+      "lives": 20,
+      "gold": 345,
+      "type": "tesla",
+      "pos": [
+        234.4367670196613,
+        47.38216106621779,
+        -24.417545701471656
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 20,
+      "gold": 129,
+      "type": "tesla",
+      "tier": 1
+    },
+    {
+      "action": "assault-nest-destroyed",
+      "wave": 12,
+      "lives": 20,
+      "gold": 309,
+      "total": 12
+    },
+    {
+      "action": "assault-goal",
+      "wave": 12,
+      "lives": 20,
+      "gold": 309,
+      "id": "nest-155035",
+      "kind": "nest",
+      "nodes": 174,
+      "cost": 104.74156188964844
+    },
+    {
+      "action": "upgrade",
+      "wave": 12,
+      "lives": 20,
+      "gold": 6,
+      "type": "tesla",
+      "tier": 2
+    },
+    {
+      "action": "draft",
+      "wave": 12,
+      "lives": 20,
+      "gold": 450,
+      "power": "hardened-heart"
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 450,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 117,
+      "cost": 71.85983276367188
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 450,
+      "id": "enemy-217",
+      "kind": "enemy",
+      "nodes": 64,
+      "cost": 39.25233459472656
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 450,
+      "id": "enemy-218",
+      "kind": "enemy",
+      "nodes": 65,
+      "cost": 36.42865753173828
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 450,
+      "id": "enemy-217",
+      "kind": "enemy",
+      "nodes": 49,
+      "cost": 29.827075958251953
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 450,
+      "id": "enemy-218",
+      "kind": "enemy",
+      "nodes": 58,
+      "cost": 32.49094772338867
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 450,
+      "id": "enemy-217",
+      "kind": "enemy",
+      "nodes": 46,
+      "cost": 27.972362518310547
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 462,
+      "id": "enemy-219",
+      "kind": "enemy",
+      "nodes": 12,
+      "cost": 6.793560028076172
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 474,
+      "id": "enemy-221",
+      "kind": "enemy",
+      "nodes": 58,
+      "cost": 34.460670471191406
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 488,
+      "id": "enemy-226",
+      "kind": "enemy",
+      "nodes": 47,
+      "cost": 26.95684814453125
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 502,
+      "id": "enemy-230",
+      "kind": "enemy",
+      "nodes": 33,
+      "cost": 19.77756118774414
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 530,
+      "id": "enemy-234",
+      "kind": "enemy",
+      "nodes": 43,
+      "cost": 25.191221237182617
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 544,
+      "id": "enemy-222",
+      "kind": "enemy",
+      "nodes": 54,
+      "cost": 31.976951599121094
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 544,
+      "id": "enemy-236",
+      "kind": "enemy",
+      "nodes": 23,
+      "cost": 13.45652961730957
+    },
+    {
+      "action": "upgrade",
+      "wave": 13,
+      "lives": 22,
+      "gold": 17,
+      "type": "tesla",
+      "tier": 3
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 57,
+      "id": "enemy-223",
+      "kind": "enemy",
+      "nodes": 13,
+      "cost": 7.373281478881836
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 95,
+      "id": "enemy-225",
+      "kind": "enemy",
+      "nodes": 38,
+      "cost": 21.995546340942383
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 107,
+      "id": "enemy-229",
+      "kind": "enemy",
+      "nodes": 16,
+      "cost": 9.264399528503418
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 119,
+      "id": "enemy-243",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.579899787902832
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 133,
+      "id": "enemy-229",
+      "kind": "enemy",
+      "nodes": 5,
+      "cost": 2.4494075775146484
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 163,
+      "id": "enemy-250",
+      "kind": "enemy",
+      "nodes": 40,
+      "cost": 23.205108642578125
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 169,
+      "id": "enemy-254",
+      "kind": "enemy",
+      "nodes": 37,
+      "cost": 21.44504165649414
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 187,
+      "id": "enemy-251",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.8572471141815186
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 187,
+      "id": "enemy-252",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.8200411796569824
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 205,
+      "id": "enemy-251",
+      "kind": "enemy",
+      "nodes": 2,
+      "cost": 0.5874345898628235
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 211,
+      "id": "enemy-252",
+      "kind": "enemy",
+      "nodes": 1,
+      "cost": 0
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 217,
+      "id": "enemy-257",
+      "kind": "enemy",
+      "nodes": 3,
+      "cost": 1.2241902351379395
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 235,
+      "id": "enemy-256",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.8153040409088135
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 241,
+      "id": "enemy-240",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 4.887482643127441
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 265,
+      "id": "enemy-244",
+      "kind": "enemy",
+      "nodes": 45,
+      "cost": 25.968053817749023
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 277,
+      "id": "enemy-245",
+      "kind": "enemy",
+      "nodes": 15,
+      "cost": 8.676421165466309
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 301,
+      "id": "enemy-247",
+      "kind": "enemy",
+      "nodes": 43,
+      "cost": 24.800094604492188
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 313,
+      "id": "enemy-248",
+      "kind": "enemy",
+      "nodes": 19,
+      "cost": 11.17477798461914
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 337,
+      "id": "enemy-258",
+      "kind": "enemy",
+      "nodes": 45,
+      "cost": 25.874845504760742
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 349,
+      "id": "enemy-259",
+      "kind": "enemy",
+      "nodes": 18,
+      "cost": 10.51854133605957
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 361,
+      "id": "enemy-228",
+      "kind": "enemy",
+      "nodes": 40,
+      "cost": 23.223804473876953
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 393,
+      "id": "enemy-227",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 4.981447219848633
+    },
+    {
+      "action": "assault-goal",
+      "wave": 13,
+      "lives": 22,
+      "gold": 425,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 18,
+      "cost": 10.31987476348877
+    },
+    {
+      "action": "build",
+      "wave": 14,
+      "lives": 22,
+      "gold": 477,
+      "type": "bolt",
+      "pos": [
+        234.5103887924625,
+        49.81865460179109,
+        -20.125418098428003
+      ]
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 22,
+      "gold": 369,
+      "type": "bolt",
+      "tier": 1
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 22,
+      "gold": 193,
+      "type": "bolt",
+      "tier": 2
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 193,
+      "id": "enemy-262",
+      "kind": "enemy",
+      "nodes": 65,
+      "cost": 39.83208465576172
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 193,
+      "id": "enemy-261",
+      "kind": "enemy",
+      "nodes": 66,
+      "cost": 36.97970962524414
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 193,
+      "id": "enemy-262",
+      "kind": "enemy",
+      "nodes": 48,
+      "cost": 29.25299072265625
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 217,
+      "id": "enemy-265",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.479586601257324
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 229,
+      "id": "enemy-269",
+      "kind": "enemy",
+      "nodes": 31,
+      "cost": 18.047082901000977
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 235,
+      "id": "enemy-273",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.479586601257324
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 259,
+      "id": "enemy-284",
+      "kind": "enemy",
+      "nodes": 42,
+      "cost": 25.127891540527344
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 265,
+      "id": "enemy-282",
+      "kind": "enemy",
+      "nodes": 14,
+      "cost": 7.991843223571777
+    },
+    {
+      "action": "upgrade",
+      "wave": 14,
+      "lives": 22,
+      "gold": 8,
+      "type": "bolt",
+      "tier": 3
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 14,
+      "id": "enemy-287",
+      "kind": "enemy",
+      "nodes": 35,
+      "cost": 20.272075653076172
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 26,
+      "id": "enemy-289",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.489795684814453
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 38,
+      "id": "enemy-294",
+      "kind": "enemy",
+      "nodes": 44,
+      "cost": 25.798200607299805
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 50,
+      "id": "enemy-270",
+      "kind": "enemy",
+      "nodes": 66,
+      "cost": 39.65805435180664
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 62,
+      "id": "enemy-274",
+      "kind": "enemy",
+      "nodes": 38,
+      "cost": 21.888248443603516
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 74,
+      "id": "enemy-280",
+      "kind": "enemy",
+      "nodes": 36,
+      "cost": 21.517475128173828
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 134,
+      "id": "enemy-307",
+      "kind": "enemy",
+      "nodes": 36,
+      "cost": 21.44615364074707
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 140,
+      "id": "enemy-291",
+      "kind": "enemy",
+      "nodes": 41,
+      "cost": 23.653491973876953
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 140,
+      "id": "enemy-308",
+      "kind": "enemy",
+      "nodes": 36,
+      "cost": 20.672103881835938
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 176,
+      "id": "enemy-313",
+      "kind": "enemy",
+      "nodes": 18,
+      "cost": 10.526630401611328
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 182,
+      "id": "enemy-309",
+      "kind": "enemy",
+      "nodes": 25,
+      "cost": 14.42398452758789
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 194,
+      "id": "enemy-314",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 9.693013191223145
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 212,
+      "id": "enemy-319",
+      "kind": "enemy",
+      "nodes": 12,
+      "cost": 6.755211353302002
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 218,
+      "id": "enemy-318",
+      "kind": "enemy",
+      "nodes": 12,
+      "cost": 6.905535697937012
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 254,
+      "id": "enemy-326",
+      "kind": "enemy",
+      "nodes": 6,
+      "cost": 2.958427906036377
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 272,
+      "id": "enemy-327",
+      "kind": "enemy",
+      "nodes": 8,
+      "cost": 4.236480712890625
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 284,
+      "id": "enemy-322",
+      "kind": "enemy",
+      "nodes": 26,
+      "cost": 15.31676959991455
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 284,
+      "id": "enemy-328",
+      "kind": "enemy",
+      "nodes": 21,
+      "cost": 12.150429725646973
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 284,
+      "id": "enemy-322",
+      "kind": "enemy",
+      "nodes": 25,
+      "cost": 14.72929859161377
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 290,
+      "id": "enemy-335",
+      "kind": "enemy",
+      "nodes": 6,
+      "cost": 2.964118719100952
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 302,
+      "id": "enemy-322",
+      "kind": "enemy",
+      "nodes": 22,
+      "cost": 12.914570808410645
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 314,
+      "id": "enemy-330",
+      "kind": "enemy",
+      "nodes": 23,
+      "cost": 13.490100860595703
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 326,
+      "id": "enemy-343",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.477832317352295
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 350,
+      "id": "enemy-342",
+      "kind": "enemy",
+      "nodes": 7,
+      "cost": 3.6609737873077393
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 356,
+      "id": "enemy-331",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 9.848231315612793
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 356,
+      "id": "enemy-324",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.435189723968506
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 374,
+      "id": "enemy-346",
+      "kind": "enemy",
+      "nodes": 16,
+      "cost": 9.241804122924805
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 380,
+      "id": "enemy-325",
+      "kind": "enemy",
+      "nodes": 8,
+      "cost": 4.262513637542725
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 392,
+      "id": "enemy-347",
+      "kind": "enemy",
+      "nodes": 13,
+      "cost": 7.451264381408691
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 398,
+      "id": "enemy-340",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.633270740509033
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 404,
+      "id": "enemy-332",
+      "kind": "enemy",
+      "nodes": 7,
+      "cost": 3.664397954940796
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 410,
+      "id": "enemy-333",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.633270740509033
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 416,
+      "id": "enemy-304",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 4.915219783782959
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 434,
+      "id": "enemy-303",
+      "kind": "enemy",
+      "nodes": 14,
+      "cost": 8.048622131347656
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 446,
+      "id": "enemy-301",
+      "kind": "enemy",
+      "nodes": 18,
+      "cost": 10.585996627807617
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 458,
+      "id": "enemy-344",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 10.058652877807617
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 500,
+      "id": "enemy-337",
+      "kind": "enemy",
+      "nodes": 14,
+      "cost": 8.137618064880371
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 506,
+      "id": "enemy-305",
+      "kind": "enemy",
+      "nodes": 15,
+      "cost": 8.813312530517578
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 530,
+      "id": "enemy-310",
+      "kind": "enemy",
+      "nodes": 16,
+      "cost": 9.114850044250488
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 542,
+      "id": "enemy-277",
+      "kind": "enemy",
+      "nodes": 16,
+      "cost": 9.298871040344238
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 542,
+      "id": "enemy-278",
+      "kind": "enemy",
+      "nodes": 27,
+      "cost": 15.864130020141602
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 638,
+      "id": "enemy-276",
+      "kind": "enemy",
+      "nodes": 14,
+      "cost": 7.895555019378662
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 670,
+      "id": "enemy-293",
+      "kind": "enemy",
+      "nodes": 24,
+      "cost": 13.942365646362305
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 734,
+      "id": "enemy-298",
+      "kind": "enemy",
+      "nodes": 24,
+      "cost": 14.184491157531738
+    },
+    {
+      "action": "assault-goal",
+      "wave": 14,
+      "lives": 22,
+      "gold": 766,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 6,
+      "cost": 3.02337908744812
+    },
+    {
+      "action": "base",
+      "wave": 14,
+      "lives": 22,
+      "gold": 66,
+      "level": 3
+    },
+    {
+      "action": "draft",
+      "wave": 14,
+      "lives": 22,
+      "gold": 262,
+      "power": "hardened-heart"
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 262,
+      "id": "enemy-350",
+      "kind": "enemy",
+      "nodes": 71,
+      "cost": 43.57785415649414
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 262,
+      "id": "enemy-349",
+      "kind": "enemy",
+      "nodes": 67,
+      "cost": 37.8156623840332
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 262,
+      "id": "enemy-351",
+      "kind": "enemy",
+      "nodes": 55,
+      "cost": 32.98689270019531
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 262,
+      "id": "enemy-350",
+      "kind": "enemy",
+      "nodes": 46,
+      "cost": 27.91413688659668
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 262,
+      "id": "enemy-351",
+      "kind": "enemy",
+      "nodes": 46,
+      "cost": 27.644973754882812
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 262,
+      "id": "enemy-350",
+      "kind": "enemy",
+      "nodes": 42,
+      "cost": 25.37513542175293
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 286,
+      "id": "enemy-354",
+      "kind": "enemy",
+      "nodes": 16,
+      "cost": 9.073546409606934
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 310,
+      "id": "enemy-362",
+      "kind": "enemy",
+      "nodes": 18,
+      "cost": 10.378985404968262
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 328,
+      "id": "enemy-381",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 9.854623794555664
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 352,
+      "id": "enemy-388",
+      "kind": "enemy",
+      "nodes": 41,
+      "cost": 23.64120101928711
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 378,
+      "id": "enemy-392",
+      "kind": "enemy",
+      "nodes": 40,
+      "cost": 23.95941162109375
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 384,
+      "id": "enemy-391",
+      "kind": "enemy",
+      "nodes": 11,
+      "cost": 6.2438130378723145
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 410,
+      "id": "enemy-377",
+      "kind": "enemy",
+      "nodes": 13,
+      "cost": 7.3444437980651855
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 430,
+      "id": "enemy-400",
+      "kind": "enemy",
+      "nodes": 5,
+      "cost": 2.602154493331909
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 456,
+      "id": "enemy-359",
+      "kind": "enemy",
+      "nodes": 14,
+      "cost": 8.195055961608887
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 24,
+      "gold": 67,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 73,
+      "id": "enemy-409",
+      "kind": "enemy",
+      "nodes": 6,
+      "cost": 3.2902095317840576
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 85,
+      "id": "enemy-376",
+      "kind": "enemy",
+      "nodes": 13,
+      "cost": 7.527271747589111
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 97,
+      "id": "enemy-399",
+      "kind": "enemy",
+      "nodes": 30,
+      "cost": 17.724416732788086
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 111,
+      "id": "enemy-386",
+      "kind": "enemy",
+      "nodes": 18,
+      "cost": 10.618382453918457
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 131,
+      "id": "enemy-405",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.611051082611084
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 171,
+      "id": "enemy-357",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 5.045673370361328
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 197,
+      "id": "enemy-396",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.8644349575042725
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 203,
+      "id": "enemy-365",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 2.1242213249206543
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 239,
+      "id": "enemy-371",
+      "kind": "enemy",
+      "nodes": 6,
+      "cost": 3.3104894161224365
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 263,
+      "id": "enemy-406",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.8416979312896729
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 269,
+      "id": "enemy-393",
+      "kind": "enemy",
+      "nodes": 38,
+      "cost": 22.186431884765625
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 269,
+      "id": "enemy-422",
+      "kind": "enemy",
+      "nodes": 39,
+      "cost": 23.303659439086914
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 275,
+      "id": "enemy-421",
+      "kind": "enemy",
+      "nodes": 35,
+      "cost": 20.85342025756836
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 313,
+      "id": "enemy-426",
+      "kind": "enemy",
+      "nodes": 30,
+      "cost": 17.750516891479492
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 331,
+      "id": "enemy-397",
+      "kind": "enemy",
+      "nodes": 15,
+      "cost": 8.833377838134766
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 343,
+      "id": "enemy-428",
+      "kind": "enemy",
+      "nodes": 13,
+      "cost": 7.6053361892700195
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 355,
+      "id": "enemy-427",
+      "kind": "enemy",
+      "nodes": 12,
+      "cost": 6.827203750610352
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 367,
+      "id": "enemy-436",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.529942035675049
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 373,
+      "id": "enemy-435",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.821200370788574
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 385,
+      "id": "enemy-441",
+      "kind": "enemy",
+      "nodes": 8,
+      "cost": 4.378663063049316
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 409,
+      "id": "enemy-442",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 4.935502052307129
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 24,
+      "gold": 26,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 26,
+      "id": "enemy-440",
+      "kind": "enemy",
+      "nodes": 21,
+      "cost": 12.265286445617676
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 44,
+      "id": "enemy-403",
+      "kind": "enemy",
+      "nodes": 26,
+      "cost": 15.36872386932373
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 44,
+      "id": "enemy-446",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 9.785634994506836
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 50,
+      "id": "enemy-448",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 4.97866153717041
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 74,
+      "id": "enemy-443",
+      "kind": "enemy",
+      "nodes": 27,
+      "cost": 16.02391815185547
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 92,
+      "id": "enemy-430",
+      "kind": "enemy",
+      "nodes": 22,
+      "cost": 13.002164840698242
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 92,
+      "id": "enemy-443",
+      "kind": "enemy",
+      "nodes": 26,
+      "cost": 15.802576065063477
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 98,
+      "id": "enemy-403",
+      "kind": "enemy",
+      "nodes": 24,
+      "cost": 14.205781936645508
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 98,
+      "id": "enemy-430",
+      "kind": "enemy",
+      "nodes": 21,
+      "cost": 12.390734672546387
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 110,
+      "id": "enemy-438",
+      "kind": "enemy",
+      "nodes": 26,
+      "cost": 15.802576065063477
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 116,
+      "id": "enemy-459",
+      "kind": "enemy",
+      "nodes": 5,
+      "cost": 2.5214638710021973
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 128,
+      "id": "enemy-437",
+      "kind": "enemy",
+      "nodes": 26,
+      "cost": 15.802576065063477
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 128,
+      "id": "enemy-460",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 4.9869208335876465
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 140,
+      "id": "enemy-403",
+      "kind": "enemy",
+      "nodes": 25,
+      "cost": 14.818392753601074
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 146,
+      "id": "enemy-466",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.9186983108520508
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 152,
+      "id": "enemy-465",
+      "kind": "enemy",
+      "nodes": 7,
+      "cost": 3.8038487434387207
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 164,
+      "id": "enemy-403",
+      "kind": "enemy",
+      "nodes": 27,
+      "cost": 16.058618545532227
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 176,
+      "id": "enemy-455",
+      "kind": "enemy",
+      "nodes": 27,
+      "cost": 16.058618545532227
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 182,
+      "id": "enemy-474",
+      "kind": "enemy",
+      "nodes": 5,
+      "cost": 2.5344371795654297
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 194,
+      "id": "enemy-444",
+      "kind": "enemy",
+      "nodes": 27,
+      "cost": 16.058618545532227
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 194,
+      "id": "enemy-473",
+      "kind": "enemy",
+      "nodes": 5,
+      "cost": 2.5344371795654297
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 206,
+      "id": "enemy-389",
+      "kind": "enemy",
+      "nodes": 7,
+      "cost": 3.8591954708099365
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 218,
+      "id": "enemy-403",
+      "kind": "enemy",
+      "nodes": 27,
+      "cost": 16.50088882446289
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 236,
+      "id": "enemy-451",
+      "kind": "enemy",
+      "nodes": 27,
+      "cost": 16.441129684448242
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 254,
+      "id": "enemy-462",
+      "kind": "enemy",
+      "nodes": 24,
+      "cost": 14.605463027954102
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 254,
+      "id": "enemy-464",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 9.984670639038086
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 260,
+      "id": "enemy-462",
+      "kind": "enemy",
+      "nodes": 23,
+      "cost": 13.996981620788574
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 266,
+      "id": "enemy-475",
+      "kind": "enemy",
+      "nodes": 25,
+      "cost": 15.288962364196777
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 266,
+      "id": "enemy-467",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 9.984670639038086
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 278,
+      "id": "enemy-468",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 9.984670639038086
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 284,
+      "id": "enemy-444",
+      "kind": "enemy",
+      "nodes": 25,
+      "cost": 15.277831077575684
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 284,
+      "id": "enemy-411",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.620420932769775
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 296,
+      "id": "enemy-471",
+      "kind": "enemy",
+      "nodes": 11,
+      "cost": 6.284393310546875
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 302,
+      "id": "enemy-411",
+      "kind": "enemy",
+      "nodes": 11,
+      "cost": 6.284393310546875
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 314,
+      "id": "enemy-416",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 10.250239372253418
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 314,
+      "id": "enemy-469",
+      "kind": "enemy",
+      "nodes": 11,
+      "cost": 6.3432207107543945
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 326,
+      "id": "enemy-470",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.694345474243164
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 338,
+      "id": "enemy-475",
+      "kind": "enemy",
+      "nodes": 17,
+      "cost": 10.27108097076416
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 350,
+      "id": "enemy-476",
+      "kind": "enemy",
+      "nodes": 16,
+      "cost": 9.65273666381836
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 362,
+      "id": "enemy-417",
+      "kind": "enemy",
+      "nodes": 14,
+      "cost": 8.264764785766602
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 374,
+      "id": "enemy-480",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 5.034327507019043
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 380,
+      "id": "enemy-451",
+      "kind": "enemy",
+      "nodes": 14,
+      "cost": 8.429105758666992
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 386,
+      "id": "enemy-479",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.6383161544799805
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 392,
+      "id": "enemy-463",
+      "kind": "enemy",
+      "nodes": 15,
+      "cost": 9.054245948791504
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 398,
+      "id": "enemy-418",
+      "kind": "enemy",
+      "nodes": 2,
+      "cost": 0.6058958768844604
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 398,
+      "id": "enemy-482",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.661269664764404
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 416,
+      "id": "enemy-481",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 5.040579319000244
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 422,
+      "id": "enemy-462",
+      "kind": "enemy",
+      "nodes": 14,
+      "cost": 8.429105758666992
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 428,
+      "id": "enemy-379",
+      "kind": "enemy",
+      "nodes": 11,
+      "cost": 6.237057685852051
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 428,
+      "id": "enemy-444",
+      "kind": "enemy",
+      "nodes": 15,
+      "cost": 9.054245948791504
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 24,
+      "gold": 33,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 71,
+      "id": "enemy-452",
+      "kind": "enemy",
+      "nodes": 14,
+      "cost": 8.429105758666992
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 77,
+      "id": "enemy-374",
+      "kind": "enemy",
+      "nodes": 6,
+      "cost": 3.301081895828247
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 77,
+      "id": "enemy-484",
+      "kind": "enemy",
+      "nodes": 9,
+      "cost": 5.040579319000244
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 115,
+      "id": "enemy-483",
+      "kind": "enemy",
+      "nodes": 3,
+      "cost": 1.2684378623962402
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 121,
+      "id": "enemy-387",
+      "kind": "enemy",
+      "nodes": 7,
+      "cost": 3.8929028511047363
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 153,
+      "id": "enemy-373",
+      "kind": "enemy",
+      "nodes": 21,
+      "cost": 12.681976318359375
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 153,
+      "id": "enemy-375",
+      "kind": "enemy",
+      "nodes": 24,
+      "cost": 14.598493576049805
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 217,
+      "id": "enemy-401",
+      "kind": "enemy",
+      "nodes": 23,
+      "cost": 13.874862670898438
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 281,
+      "id": "enemy-360",
+      "kind": "enemy",
+      "nodes": 33,
+      "cost": 19.87472915649414
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 313,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 8,
+      "cost": 4.2560038566589355
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 313,
+      "id": "enemy-358",
+      "kind": "enemy",
+      "nodes": 67,
+      "cost": 40.052303314208984
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 24,
+      "gold": 238,
+      "type": "bolt",
+      "tier": 4
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 238,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 28,
+      "cost": 16.429332733154297
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 238,
+      "id": "enemy-486",
+      "kind": "enemy",
+      "nodes": 63,
+      "cost": 37.911529541015625
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 244,
+      "id": "enemy-485",
+      "kind": "enemy",
+      "nodes": 8,
+      "cost": 4.333002090454102
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 250,
+      "id": "enemy-488",
+      "kind": "enemy",
+      "nodes": 20,
+      "cost": 11.849971771240234
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 256,
+      "id": "enemy-487",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.838144302368164
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 262,
+      "id": "enemy-490",
+      "kind": "enemy",
+      "nodes": 13,
+      "cost": 7.45041036605835
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 268,
+      "id": "enemy-489",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.838144302368164
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 274,
+      "id": "enemy-492",
+      "kind": "enemy",
+      "nodes": 3,
+      "cost": 1.2448740005493164
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 280,
+      "id": "enemy-491",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.8533716201782227
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 286,
+      "id": "enemy-493",
+      "kind": "enemy",
+      "nodes": 3,
+      "cost": 1.2479228973388672
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 286,
+      "id": "enemy-494",
+      "kind": "enemy",
+      "nodes": 3,
+      "cost": 1.2572855949401855
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 298,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 23,
+      "cost": 13.34720516204834
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 298,
+      "id": "enemy-495",
+      "kind": "enemy",
+      "nodes": 63,
+      "cost": 37.85758590698242
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 304,
+      "id": "enemy-496",
+      "kind": "enemy",
+      "nodes": 8,
+      "cost": 4.333002090454102
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 310,
+      "id": "enemy-498",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.503971576690674
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 316,
+      "id": "enemy-497",
+      "kind": "enemy",
+      "nodes": 3,
+      "cost": 1.2122843265533447
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 322,
+      "id": "enemy-500",
+      "kind": "enemy",
+      "nodes": 12,
+      "cost": 6.790530204772949
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 328,
+      "id": "enemy-499",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.8644157648086548
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 334,
+      "id": "enemy-501",
+      "kind": "enemy",
+      "nodes": 5,
+      "cost": 2.481765031814575
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 340,
+      "id": "enemy-502",
+      "kind": "enemy",
+      "nodes": 3,
+      "cost": 1.1978857517242432
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 346,
+      "id": "enemy-503",
+      "kind": "enemy",
+      "nodes": 5,
+      "cost": 2.4645023345947266
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 352,
+      "id": "enemy-504",
+      "kind": "enemy",
+      "nodes": 3,
+      "cost": 1.2534254789352417
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 358,
+      "id": "enemy-505",
+      "kind": "enemy",
+      "nodes": 2,
+      "cost": 0.6068927645683289
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 364,
+      "id": "enemy-506",
+      "kind": "enemy",
+      "nodes": 2,
+      "cost": 0.5881632566452026
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 370,
+      "id": "enemy-507",
+      "kind": "enemy",
+      "nodes": 2,
+      "cost": 0.6068927645683289
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 376,
+      "id": "enemy-510",
+      "kind": "enemy",
+      "nodes": 3,
+      "cost": 1.2258360385894775
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 382,
+      "id": "enemy-508",
+      "kind": "enemy",
+      "nodes": 6,
+      "cost": 3.0239150524139404
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 388,
+      "id": "enemy-509",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.8659675121307373
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 394,
+      "id": "enemy-514",
+      "kind": "enemy",
+      "nodes": 4,
+      "cost": 1.8551757335662842
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 400,
+      "id": "enemy-512",
+      "kind": "enemy",
+      "nodes": 6,
+      "cost": 2.967710018157959
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 406,
+      "id": "enemy-511",
+      "kind": "enemy",
+      "nodes": 11,
+      "cost": 5.987730503082275
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 412,
+      "id": "enemy-513",
+      "kind": "enemy",
+      "nodes": 10,
+      "cost": 5.363590717315674
+    },
+    {
+      "action": "assault-goal",
+      "wave": 15,
+      "lives": 24,
+      "gold": 418,
+      "id": "guard-heart",
+      "kind": "guard",
+      "nodes": 19,
+      "cost": 10.975387573242188
+    },
+    {
+      "action": "upgrade",
+      "wave": 15,
+      "lives": 24,
+      "gold": 23,
+      "type": "bolt",
+      "tier": 4
+    }
+  ],
+  "faults": [],
+  "policy": {
+    "strategy": "assault",
+    "towerPriority": [
+      "bolt",
+      "tesla",
+      "helios",
+      "warden",
+      "mortar",
+      "cryo"
+    ],
+    "towerLimit": 8,
+    "cautious": false
+  },
+  "assault": {
+    "portalKills": 12,
+    "attacks": 172,
+    "distance": 1877.6733685501495,
+    "stalledSeconds": 0,
+    "replanCount": 388,
+    "commanderDamage": 6041.0199999999995,
+    "evasions": 0,
+    "cautious": false
+  },
+  "towerStats": [
+    {
+      "type": "bolt",
+      "tier": 4,
+      "damage": 11073.55549619922,
+      "kills": 78
+    },
+    {
+      "type": "bolt",
+      "tier": 4,
+      "damage": 14513.614805567775,
+      "kills": 87
+    },
+    {
+      "type": "cryo",
+      "tier": 3,
+      "damage": 0,
+      "kills": 0
+    },
+    {
+      "type": "bolt",
+      "tier": 4,
+      "damage": 23547.518271116434,
+      "kills": 108
+    },
+    {
+      "type": "bolt",
+      "tier": 4,
+      "damage": 10484.01483990212,
+      "kills": 65
+    },
+    {
+      "type": "bolt",
+      "tier": 4,
+      "damage": 11246.28697075936,
+      "kills": 72
+    },
+    {
+      "type": "tesla",
+      "tier": 3,
+      "damage": 2169.8771967025814,
+      "kills": 11
+    },
+    {
+      "type": "bolt",
+      "tier": 3,
+      "damage": 5611.236730943489,
+      "kills": 32
+    }
+  ],
+  "scope": "Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile",
+  "runtimeHashes": {
+    "/": "dd653ed1e4372bb5cd050f67dd5de94019f7777322f9e719c284951f637198ac",
+    "/css/style.css": "9d4ecec2ed866b9bee13b9a03828719f3ed2cbb53e070dbb813b70acf6c5894b",
+    "/js/main.js": "9409ea422ff56bf0f61004505c81ca86d2c16cc5adab82c16d8cea6d5970f390",
+    "/js/config.js": "bc5fcc8063b04534d180d9df52fc19cc4c71ab883438f261d669aaf66ad68bd6",
+    "/js/camera.js": "54bc26b0ec1702cc7e4dba56725ef9ea874f5d9aa88bcc86f9e8961d797c1ab3",
+    "/js/postfx.js": "eb4802e336f83d2aef63cff21bc40a370925d484f2ed62a461763819dfaf3b84",
+    "/js/world.js": "c2e0fcc58c0f0caa566e72855bdc9aece51440bdccd4c6193373d6585a7eb29d",
+    "/js/nav.js": "337fb7d266692afd2dfca53aa13b038d5aad0c03ca302c840f64b57fa75b3faa",
+    "/js/noise.js": "f59d0548bdd9f359ec6667e521ccf49ba1aa61ddfb81069ad460555d2a5ea435",
+    "/js/run/rng.js": "0d483c3fa2a21d2e282b0ecd99667b9e8ad01702de1d40c4e6c9994d21b0e862",
+    "/js/allies.js": "64a35e047f32ec77f79c6bf17050391f23fbc40c1fd14b773d1e0f6bd72c46cc",
+    "/js/enemies.js": "e02595c9e8e23ab141c7b8294ad49d4f37bb5609de212a107a70d2517adc81a8",
+    "/js/possess.js": "07e24c95f918f0dd74e5aa716d37a79ef549cea5d1cb71f5be2e967e48b3146c",
+    "/js/viewmodel.js": "337c3f61becc7289f20a02641474f82b117415c325df0aca0de4be0459269b24",
+    "/js/effects.js": "c97b3626cb455dc63a1f4ce6014676e2930bd4b2c6798a929f6969a8d39f2e99",
+    "/js/combatfx.js": "79d9353f06e36bf4088973c3d4f6498a646ccdf3b188a0bc44280f72de7a706c",
+    "/js/game.js": "4cbe5223c09c720948c1551095144c5883d3aaddf75af56c0944684333368c5b",
+    "/js/waves.js": "540b2ef0213084b6007be17dbbd2380ff54f6eb409926f032d55688e6280f17b",
+    "/js/audio.js": "0b9586817664b3192d72995e7d20bc7b2cf94389170163e023c0c8df554645ee",
+    "/js/towers.js": "d4e7c2627134c5e6372d9e050d2a92929589137c10263827008b7208689145e9",
+    "/js/ui.js": "46522e7f9fe036c4b746e16a1d96f6ea510b96e428efbd839e979ff45cbd168b",
+    "/lib/three.module.min.js": "852c06b9fe936cf8ebc2870c86370d1015c310b04de98cdfc07f4efaf6afd2af",
+    "/js/world-context.js": "469029c66aa76b422aa390af9fcd736d5bdbfeab07c8f794850088e1b7789b04",
+    "/js/terrain/ecology.js": "4eec28d5375269062585535b446a7d24c8a057a3856aa18b30845b94b957af85",
+    "/js/modes/campaign-launch.js": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+    "/js/storage.js": "0cc403eac97601df4e6741bba3f4ad8bd2b54816c28f2fd8ecf9abad2e7e5dda",
+    "/js/traversal.js": "3683bb413958e90c9d52dd9fb1dce87c60b874b2db7d7b7ad484d5b573aa9c8b",
+    "/js/geodesic.js": "b0381804aaf6a27d64c117069534238f83e1ad0836197a8efaed329e56a91021",
+    "/js/terrain/acceptance.js": "ac97e27984ccf9215a3baf1c6be9ace5fdee94bee878a8a6840e094fa46ace2d",
+    "/js/terrain/recipes.js": "786816a47d027bfb516026c62d6a9ef7a239a768949eb56ab8ef8dcf9b809fc7",
+    "/js/terrain/formations.js": "74d5429c5bf137f434310cb976f199dbbc8b0e37b90760e19ba22582b05d99ef",
+    "/js/nest-sites.js": "663cee7b4f007af72295d256443b611a47897225d3d8fc13c6fd0e3d8f6e8a43",
+    "/js/encounters.js": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+    "/js/weapon-model.js": "3e71931429665ba1b296e56531a5874865c4894a61860b147b85259bf5d04416",
+    "/js/run/frontier.js": "2eb79cf668687ec1971b85f6940aee8e821b79934a20608ae85e6c33a3c7326f",
+    "/js/range-guide.js": "fe8e9045832161b2a50a30ab0446d166f300a88ca2401872306daea82881e444",
+    "/js/rig.js": "0362e7c2c1075a8f8581cae8d52bed7fcd4f3e9c1e980a5d4283fad4c82b98f2",
+    "/js/rewards.js": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+    "/js/ui-icons.js": "fc391ee3a21bce7a65b7eecaebbb5ad62b64451b85796037f49e7aba1bc9f0b3",
+    "/js/soldier.js": "f88e3bf5d0d69571566ab33bf625458654c11860426b16e17b250bf9bc3abbe2",
+    "/js/modes/progress.js": "18a842c013711e7466eee6f7654a5f95850642044a55e814405fd3d791716962",
+    "/js/worldgen.js": "8918d4bff25f80cea281e4a81d59cb5b107ce12448f363c1c424deb91361f17b",
+    "/js/modes/campaign-store.js": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+    "/js/run/planets.js": "07241a56922e786315c1a94bd8677a8fdb5ed627e8b0fd14c4929fa4115d6044",
+    "/js/run/campaign.js": "10668ba911e11448876dd587ad5f6abe96d79260672630d21e9fab91920f7ee8",
+    "/js/attacks.js": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+    "/lib/three.core.min.js": "4183cee05f0aa093682fdf551363a16bb20bd92b68e14f7576905f45c461ba82",
+    "/js/run/weapons.js": "56aa0a95c80b89a42be771debc64dea0902218ae975a6af9ffeac25706d70950",
+    "/js/modes/ninetynine.js": "10b190c20311615480f41ee49296888ed8ff8907e609b616ae90e3216b704025",
+    "/js/run/run.js": "aad6a255f3af44281429c8c1dfee0c5591dc0660cb7e94c90806451d4fdf25b0",
+    "/js/run/schedule.js": "4b5be25bb1a28b89ca7299cdbaad74806ac2a4597b4443a794c1fb9b7b3e9520",
+    "/js/run/crystals.js": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+    "/js/loot-field.js": "53fc8c7ca1d9b64862178911c9623509baa35205f5721300efdb0e75045ec536",
+    "/js/unit-routes.js": "8a454e3c68b85e90a81e078892826461ca813ebe13ac60ca590d25744d9c8f71",
+    "/js/threat-guides.js": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+    "/js/ui-campaign.js": "e4b28e567b846049ca6403d69aa19d294b32386b7610a0c753d86b387630a1ca",
+    "/js/ui-weapons.js": "58f4ca5a59eee00b2df4fe93602a36b894aea5b597598e029ae762785f567df3",
+    "/js/run/modifiers.js": "0f7fc001625d5e54e0051c54e08cc6962354ac005c125478603598b18590cd44",
+    "/js/run/state.js": "7bd46fdc2b1bcca4a0126c23035e7d30234fd64964c4f2f053427a90aeacaa90",
+    "/js/run/draft.js": "3d38483829fae8a29b3786d49453041abb536d372776ac2ddf3f9bb63d9e1310",
+    "/js/dotted-path.js": "b88492b61f1045cce0c9f56765d2445ed544da3875fd43b33d4df608bd54b8d4",
+    "/js/run/powers.js": "314493afbfe65425784095045b70272e5591c32e8b961802e88695265090c9b3"
+  },
+  "policySourceHash": "4bd377d42270496e7202d255b8a4250e29f85567ca2a28580d9e81e1396bf5be",
+  "navigation": {
+    "heartNode": 164047,
+    "towers": [
+      {
+        "type": "bolt",
+        "pos": [
+          233.63560898935472,
+          50.58721778935691,
+          -27.002988477697613
+        ]
+      },
+      {
+        "type": "bolt",
+        "pos": [
+          234.1090360550214,
+          50.62341612133565,
+          -24.22620697446164
+        ]
+      },
+      {
+        "type": "cryo",
+        "pos": [
+          233.90231142105907,
+          52.376819663007936,
+          -22.036470248221175
+        ]
+      },
+      {
+        "type": "bolt",
+        "pos": [
+          231.91439818956167,
+          56.90426144138799,
+          -28.566294638349504
+        ]
+      },
+      {
+        "type": "bolt",
+        "pos": [
+          232.92993065892065,
+          52.332547131906445,
+          -29.090777327544796
+        ]
+      },
+      {
+        "type": "bolt",
+        "pos": [
+          234.7067674062057,
+          48.258753763775246,
+          -22.077070738901106
+        ]
+      },
+      {
+        "type": "tesla",
+        "pos": [
+          234.4367670196613,
+          47.38216106621779,
+          -24.417545701471656
+        ]
+      },
+      {
+        "type": "bolt",
+        "pos": [
+          234.5103887924625,
+          49.81865460179109,
+          -20.125418098428003
+        ]
+      }
+    ],
+    "nests": [
+      {
+        "node": 4587,
+        "destroyed": true,
+        "next": 72830,
+        "airNext": 72830,
+        "blocked": false,
+        "pos": [
+          240.65963745117188,
+          -2.0098721981048584,
+          -1.2421692609786987
+        ]
+      },
+      {
+        "node": 134373,
+        "destroyed": true,
+        "next": 134360,
+        "airNext": 134371,
+        "blocked": false,
+        "pos": [
+          212.18365478515625,
+          84.18350219726562,
+          -75.44181060791016
+        ]
+      },
+      {
+        "node": 76128,
+        "destroyed": true,
+        "next": 76122,
+        "airNext": 76125,
+        "blocked": false,
+        "pos": [
+          234.68429565429688,
+          -1.0017883777618408,
+          -52.74610900878906
+        ]
+      },
+      {
+        "node": 183551,
+        "destroyed": true,
+        "next": 183552,
+        "airNext": 183552,
+        "blocked": false,
+        "pos": [
+          214.1493682861328,
+          109.36151885986328,
+          -4.658494472503662
+        ]
+      },
+      {
+        "node": 73231,
+        "destroyed": true,
+        "next": 4616,
+        "airNext": 4616,
+        "blocked": false,
+        "pos": [
+          240.3704833984375,
+          -4.519862174987793,
+          -8.515835762023926
+        ]
+      },
+      {
+        "node": 182876,
+        "destroyed": true,
+        "next": 182877,
+        "airNext": 182877,
+        "blocked": false,
+        "pos": [
+          217.11456298828125,
+          102.55116271972656,
+          9.606386184692383
+        ]
+      },
+      {
+        "node": 59550,
+        "destroyed": true,
+        "next": 59535,
+        "airNext": 59535,
+        "blocked": false,
+        "pos": [
+          199.34190368652344,
+          95.17141723632812,
+          -94.90538787841797
+        ]
+      },
+      {
+        "node": 20190,
+        "destroyed": true,
+        "next": 80963,
+        "airNext": 80960,
+        "blocked": false,
+        "pos": [
+          228.00088500976562,
+          -16.91474723815918,
+          -75.91964721679688
+        ]
+      },
+      {
+        "node": 154995,
+        "destroyed": true,
+        "next": 154993,
+        "airNext": 154993,
+        "blocked": false,
+        "pos": [
+          200.6767578125,
+          132.8807830810547,
+          -5.205260753631592
+        ]
+      },
+      {
+        "node": 94525,
+        "destroyed": true,
+        "next": 5960,
+        "airNext": 5960,
+        "blocked": false,
+        "pos": [
+          238.9460906982422,
+          -26.6014347076416,
+          6.507324695587158
+        ]
+      },
+      {
+        "node": 87073,
+        "destroyed": true,
+        "next": 5493,
+        "airNext": 86929,
+        "blocked": false,
+        "pos": [
+          238.87518310546875,
+          -22.04587745666504,
+          16.225341796875
+        ]
+      },
+      {
+        "node": 55888,
+        "destroyed": true,
+        "next": 14009,
+        "airNext": 14009,
+        "blocked": false,
+        "pos": [
+          198.65548706054688,
+          100.43081665039062,
+          -91.2399673461914
+        ]
+      },
+      {
+        "node": 80058,
+        "destroyed": false,
+        "next": 80060,
+        "airNext": 80060,
+        "blocked": false,
+        "pos": [
+          232.89956665039062,
+          -27.540908813476562,
+          -56.007568359375
+        ]
+      },
+      {
+        "node": 155035,
+        "destroyed": false,
+        "next": 155049,
+        "airNext": 155051,
+        "blocked": false,
+        "pos": [
+          199.5707244873047,
+          133.7498779296875,
+          -11.429488182067871
+        ]
+      },
+      {
+        "node": 95274,
+        "destroyed": false,
+        "next": 6007,
+        "airNext": 6007,
+        "blocked": false,
+        "pos": [
+          238.5803985595703,
+          -28.58839988708496,
+          0.3100531995296478
+        ]
+      },
+      {
+        "node": 22788,
+        "destroyed": false,
+        "next": 90793,
+        "airNext": 90793,
+        "blocked": false,
+        "pos": [
+          238.4869384765625,
+          -14.046552658081055,
+          28.439510345458984
+        ]
+      },
+      {
+        "node": 65891,
+        "destroyed": false,
+        "next": 65892,
+        "airNext": 65892,
+        "blocked": false,
+        "pos": [
+          180.88331604003906,
+          114.27568817138672,
+          -109.57732391357422
+        ]
+      }
+    ],
+    "enemies": []
+  },
+  "inventory": {
+    "version": 1,
+    "items": [
+      {
+        "id": "starter-36102",
+        "seed": 36102,
+        "tier": 1,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "balanced",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-1",
+        "seed": 2690661315,
+        "tier": 1,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "long",
+          "grip": "balanced",
+          "core": "ember"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-2",
+        "seed": 945372618,
+        "tier": 1,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "long",
+          "grip": "weighted",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-3",
+        "seed": 1287322961,
+        "tier": 1,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "steady",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-4",
+        "seed": 192736594,
+        "tier": 1,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "uncommon",
+        "parts": {
+          "head": "long",
+          "grip": "quick",
+          "core": "frost"
+        },
+        "affixes": [
+          "farseeing"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-10",
+        "seed": 923114429,
+        "tier": 1,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "rare",
+        "parts": {
+          "head": "keen",
+          "grip": "steady",
+          "core": "frost"
+        },
+        "affixes": [
+          "forceful"
+        ],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-12",
+        "seed": 3180350193,
+        "tier": 1,
+        "family": "sword",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "broad",
+          "grip": "weighted",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-15",
+        "seed": 385668251,
+        "tier": 1,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "broad",
+          "grip": "steady",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-17",
+        "seed": 3617936512,
+        "tier": 1,
+        "family": "lobber",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "broad",
+          "grip": "balanced",
+          "core": "frost"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-16",
+        "seed": 523619921,
+        "tier": 1,
+        "family": "spear",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "balanced",
+          "grip": "balanced",
+          "core": "ember"
+        },
+        "affixes": [],
+        "infusions": 0
+      },
+      {
+        "id": "weapon-expedition-1-1-1-18",
+        "seed": 2865660627,
+        "tier": 1,
+        "family": "lobber",
+        "era": "ancient",
+        "rarity": "common",
+        "parts": {
+          "head": "long",
+          "grip": "balanced",
+          "core": "tempered"
+        },
+        "affixes": [],
+        "infusions": 0
+      }
+    ],
+    "slots": [
+      "starter-36102",
+      null
+    ],
+    "active": 0,
+    "scrap": 0
+  },
+  "weaponLoop": false
+}

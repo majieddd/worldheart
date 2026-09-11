@@ -1,6 +1,7 @@
 // WORLDHEART: single source of tuning. Scene palette here is canonical for WebGL;
 // css/style.css :root is canonical for the DOM HUD. Keep the two in sync with DESIGN.md.
 
+import { BIOME_REGIMES } from './terrain/ecology.js';
 import { campaignLaunch } from './modes/campaign-launch.js';
 import { browserStorage, isPreviewPath } from './storage.js';
 const url = new URLSearchParams(location.search);
@@ -121,11 +122,12 @@ export const TERRAIN_PROFILES = {
 const rawSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
 const requestedSeed=worldgen&&(!Number.isInteger(rawSeed)||rawSeed<1||rawSeed>0xffffffff)?20260830:rawSeed;
 const campaign=campaignLaunch(!worldgen&&mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':preview),requestedSeed);
-const terrainKey = campaign?.terrain || url.get('terrain') || stored('whTerrain') || 'varied';
+const terrainKey = campaign?.terrain || url.get('terrain') || 'varied';
 
 export const CONFIG = {
   worldgen,
   requestedSeed,
+  biomeKey: !campaign && Object.hasOwn(BIOME_REGIMES,url.get('biome')) ? url.get('biome') : 'auto',
   seed: campaign?.seed || requestedSeed,
   campaign,
   planetIndex:campaign?.index || 1,

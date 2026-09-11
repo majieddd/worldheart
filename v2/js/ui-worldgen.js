@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import { CONFIG, CAM_TUNE, TERRAIN_PROFILES } from './config.js';
 import { browserStorage } from './storage.js';
 import { worldgenUrl, rememberWorld } from './worldgen.js';
-import { FORMATIONS, ECOLOGY, terrainHeight, biomeAt } from './world.js';
+import { FORMATIONS, ECOLOGY, terrainHeight, biomeAt, waterDepthAt } from './world.js';
 import { NestAtlasView } from './nest-atlas-view.js';
+import { BIOME_REGIMES } from './terrain/ecology.js';
 import { LANDFORM_RECIPES } from './terrain/recipes.js';
 import { surveyLandmarks } from './terrain/landmarks.js';
 
@@ -19,7 +20,7 @@ export class WorldgenPanel {
     let history = [];
     try { history = JSON.parse(browserStorage.getItem('worldHistory') || '[]'); }
     catch { /* A denied or invalid local history cannot prevent inspection. */ }
-    this.history = rememberWorld(history, {seed: CONFIG.requestedSeed, terrain: this.terrain});
+    this.history = rememberWorld(history, {seed: CONFIG.requestedSeed, terrain: this.terrain, biome: CONFIG.biomeKey});
     let saved = true;
     try { browserStorage.setItem('worldHistory', JSON.stringify(this.history)); } catch { saved = false; }
 
@@ -30,11 +31,12 @@ export class WorldgenPanel {
         <p>Roll a world, explore its terrain, then play the seed in a new tab.</p>
         <form id="worldgen-form">
           <label>Terrain<select id="worldgen-terrain">${Object.entries(labels).map(([key, label]) => `<option value="${key}">${label}</option>`).join('')}</select></label>
+          <label>Climate<select id="worldgen-biome">${Object.entries(BIOME_REGIMES).map(([key,value])=>`<option value="${key}">${value.name}</option>`).join('')}</select></label>
           <button class="btn primary" type="button" id="worldgen-new">Generate world</button>
           <label>Seed<input id="worldgen-seed" inputmode="numeric" pattern="[0-9]+" required aria-describedby="worldgen-status"></label>
           <button class="btn" type="submit">Load seed</button>
         </form>
-        <label>Recent worlds<select id="worldgen-history">${this.history.map((x, i) => `<option value="${i}">${x.seed} · ${labels[x.terrain]}</option>`).join('')}</select></label>
+        <label>Recent worlds<select id="worldgen-history">${this.history.map((x, i) => `<option value="${i}">${x.seed} · ${labels[x.terrain]} · ${BIOME_REGIMES[x.biome||'auto']?.name||'Planet mix'}</option>`).join('')}</select></label>
         <div class="worldgen-actions"><button class="btn" id="worldgen-home">Base area</button><button class="btn" id="worldgen-peak">Highest peak</button><button class="btn" id="worldgen-globe">Whole planet</button></div>
         <label id="worldgen-formation-label">Explore a formation<select id="worldgen-formation"><option value="">Choose a landform</option></select></label>
         <label class="worldgen-toggle"><input type="checkbox" id="worldgen-paths"> Show nest habitat and routes</label>
@@ -46,16 +48,16 @@ export class WorldgenPanel {
       </div>`;
     document.body.append(panel); document.body.classList.add('worldgen');
     const el = id => panel.querySelector('#worldgen-' + id);
-    this.status = el('status'); el('seed').value = CONFIG.requestedSeed; el('terrain').value = this.terrain;
-    el('play').href = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain, false);
+    this.status = el('status'); el('seed').value = CONFIG.requestedSeed; el('terrain').value = this.terrain; el('biome').value = ECOLOGY?.manifest().key || 'auto';
+    el('play').href = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain, false, CONFIG.biomeKey);
     el('form').onsubmit = event => { event.preventDefault(); this.generate(el('seed').value, el('terrain').value); };
     el('new').onclick = () => {
       const data = new Uint32Array(1); crypto.getRandomValues(data);
       this.generate((data[0] || 1) === CONFIG.requestedSeed ? (data[0] % 0xfffffffe) + 1 : data[0] || 1, el('terrain').value);
     };
-    el('history').onchange = () => { const selected = this.history[Number(el('history').value)]; this.generate(selected.seed, selected.terrain); };
+    el('history').onchange = () => { const selected = this.history[Number(el('history').value)]; this.generate(selected.seed, selected.terrain, selected.biome||'auto'); };
     el('copy').onclick = async () => {
-      const link = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain);
+      const link = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain, true, CONFIG.biomeKey);
       try { await navigator.clipboard.writeText(link); this.status.textContent = 'Seed link copied.'; }
       catch { el('link').hidden = false; el('link').value = link; el('link').focus(); el('link').select(); this.status.textContent = 'Copy the selected seed link.'; }
     };
@@ -72,7 +74,7 @@ export class WorldgenPanel {
     el('home').onclick = () => this.focus(home, 115);
     el('peak').onclick = () => this.focus(peakDir, Math.max(65, CONFIG.terrain?.range || 40));
     el('globe').onclick = () => this.focus(home, CONFIG.planetRadius * 2.8);
-    this.landmarks = FORMATIONS ? surveyLandmarks(FORMATIONS,terrainHeight,nav.fieldCenter,CONFIG.map.fieldTheta) : [];
+    this.landmarks = FORMATIONS ? surveyLandmarks(FORMATIONS,terrainHeight,nav.fieldCenter,CONFIG.map.fieldTheta,(x,y,z,h)=>waterDepthAt(new THREE.Vector3(x,y,z),h)>0) : [];
     el('formation-label').hidden = !FORMATIONS;
     for(const [i,site]of this.landmarks.entries()){
       const option=document.createElement('option');option.value=String(i);
@@ -97,10 +99,10 @@ export class WorldgenPanel {
     this.rig.tiltOffset = 0; this.rig.flyTo(dir, height, .6);
   }
 
-  generate(input, terrain) {
+  generate(input, terrain, biome=this.panel.querySelector('#worldgen-biome').value) {
     try {
       if (!/^\d+$/.test(String(input).trim())) throw Error('Enter a whole-number seed.');
-      const url = worldgenUrl(location.href, Number(input), terrain);
+      const url = worldgenUrl(location.href, Number(input), terrain, true, biome);
       this.status.textContent = 'Generating terrain and checking routes…';
       this.panel.setAttribute('aria-busy', 'true');
       for (const el of this.panel.querySelectorAll('button,input,select')) el.disabled = true;

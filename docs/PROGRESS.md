@@ -18,6 +18,18 @@ root preservation. Codex on `feature/v2-preview-workflow` verified the
 and [17 live browser/hash/save checks](qa/implementation/V2-PREVIEW.md).
 Preview availability does not close the remaining milestone acceptance gates.
 
+Locally verified September 11: Codex on `feature/landform-biome-refinement`, based on
+preview `9fae91d`, owns U44-U47. Landforms v5 makes Mixed Landscapes the campaign
+default, refines favorite groups, adds inward Winding Canyon and Staircase
+escarpment, separates inland cuts from ocean water, and adds independent climate
+selection plus biome dressing. 276 tests, 116 fixed-field assertions, 15,147
+all-99 isolated arrivals, 96 terrain, 96 placement and a legal 15-wave victory
+pass. The native 60-second gameplay stress fixture passes (p99 20.9ms).
+Publication/public identity checks remain pending. The adversarial pass
+caught and repaired a stale commander swimming assignment and trapped deep-cut
+floors; retained controls and final acceptance belong in the
+[landform/biome ledger](qa/implementation/LANDFORM-BIOMES.md).
+
 Published and publicly verified September 11: Codex on `feature/terrain-routes-and-atlas`, based on
 `525a220`, owns U41-U43: animated dotted approaches and a global habitat atlas,
 stronger visible-route/formation acceptance, researched terrain refinements and

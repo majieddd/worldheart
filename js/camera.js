@@ -587,7 +587,7 @@ export class OrbitRig {
       const alpha = Math.asin(clamp((Rc / R0) * Math.sin(tilt), -1, 1)) - tilt;
       _camDir.copy(_focusDir).applyAxisAngle(_axis, -alpha).normalize();
       if (!this.heightProbe) break;
-      const floor = CONFIG.planetRadius + Math.max(0, this.heightProbe(_camDir)) + Math.max(2, this.camera.near * 2);
+      const floor = CONFIG.planetRadius + this.heightProbe(_camDir) + Math.max(2, this.camera.near * 2);
       if (Rc >= floor) break;
       // Re-solve the orbit when clearance raises the eye. Moving just the
       // finished camera changed the view angle and caused a zoom dip.
@@ -629,7 +629,7 @@ export class OrbitRig {
     if (this.dragging && !this.rotating && this.dragFocusRadius !== null) return this.dragFocusRadius;
     const c = Math.cos(this.lat);
     _terrainDir.set(Math.sin(this.lon) * c, Math.sin(this.lat), Math.cos(this.lon) * c);
-    const ground = CONFIG.planetRadius + Math.max(0, this.heightProbe(_terrainDir));
+    const ground = CONFIG.planetRadius + this.heightProbe(_terrainDir);
     const settle = this.terrainSettle;
     if (!settle) return ground;
     const t = Math.min(1, settle.t / 0.45);

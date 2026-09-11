@@ -1,0 +1,288 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "scope": "Targeted sub-sea movement/placement and normal climate controls with instrumented frame advance",
+  "checks": [
+    {
+      "name": "Seed 771 varied: Dry sub-sea floors exist and mostly connect to the heart",
+      "ok": true,
+      "actual": {
+        "total": 470,
+        "reached": 470,
+        "low": -3.196265935897827,
+        "type": "gorge"
+      }
+    },
+    {
+      "name": "Seed 771 varied: Ray picks the actual negative canyon floor",
+      "ok": true,
+      "actual": {
+        "expected": -3.1362049444628264,
+        "actual": -3.1362049664790277
+      }
+    },
+    {
+      "name": "Seed 771 varied: Water mesh mask leaves dry canyon open",
+      "ok": true
+    },
+    {
+      "name": "Seed 771 varied: Commander walks below sea level without swimming",
+      "ok": true,
+      "actual": {
+        "distance": 2.8130380851475705,
+        "height": -2.860026290414955,
+        "swimming": false
+      }
+    },
+    {
+      "name": "Seed 771 varied: Commander aiming origin stays below sea level with the body",
+      "ok": true,
+      "actual": {
+        "height": -2.2660262904149135
+      }
+    },
+    {
+      "name": "Seed 771 varied: A real ground enemy exits the sub-sea passage and reaches base",
+      "ok": true,
+      "actual": {
+        "remaining": 0
+      }
+    },
+    {
+      "name": "Seed 771 varied: First-person camera stays finite inside the canyon",
+      "ok": true
+    },
+    {
+      "name": "Seed 771 varied: Flat dry sub-sea ground permits a normal tower footprint",
+      "ok": true,
+      "actual": {
+        "place": 604
+      }
+    },
+    {
+      "name": "Seed 771 varied: Placed tower stands at negative ground height",
+      "ok": true,
+      "actual": {
+        "height": -2.594777943366779
+      }
+    },
+    {
+      "name": "Seed 771 varied: Ocean swimming surface remains above the seabed",
+      "ok": true
+    },
+    {
+      "name": "Seed 4306234 varied: Dry sub-sea floors exist and mostly connect to the heart",
+      "ok": true,
+      "actual": {
+        "total": 1132,
+        "reached": 1132,
+        "low": -5.366841793060303,
+        "type": "crevice"
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Ray picks the actual negative canyon floor",
+      "ok": true,
+      "actual": {
+        "expected": -5.3099936864332,
+        "actual": -5.30999373222582
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Water mesh mask leaves dry canyon open",
+      "ok": true
+    },
+    {
+      "name": "Seed 4306234 varied: Commander walks below sea level without swimming",
+      "ok": true,
+      "actual": {
+        "distance": 1.2979473978707028,
+        "height": -4.799555090869853,
+        "swimming": false
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Commander aiming origin stays below sea level with the body",
+      "ok": true,
+      "actual": {
+        "height": -4.2055550908698365
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: A real ground enemy exits the sub-sea passage and reaches base",
+      "ok": true,
+      "actual": {
+        "remaining": 0
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: First-person camera stays finite inside the canyon",
+      "ok": true
+    },
+    {
+      "name": "Seed 4306234 varied: Flat dry sub-sea ground permits a normal tower footprint",
+      "ok": true,
+      "actual": {
+        "place": 427
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Placed tower stands at negative ground height",
+      "ok": true,
+      "actual": {
+        "height": -4.733469576600186
+      }
+    },
+    {
+      "name": "Seed 4306234 varied: Ocean swimming surface remains above the seabed",
+      "ok": true
+    }
+  ],
+  "records": [
+    {
+      "seed": 771,
+      "checks": [
+        {
+          "name": "Dry sub-sea floors exist and mostly connect to the heart",
+          "ok": true,
+          "actual": {
+            "total": 470,
+            "reached": 470,
+            "low": -3.196265935897827,
+            "type": "gorge"
+          }
+        },
+        {
+          "name": "Ray picks the actual negative canyon floor",
+          "ok": true,
+          "actual": {
+            "expected": -3.1362049444628264,
+            "actual": -3.1362049664790277
+          }
+        },
+        {
+          "name": "Water mesh mask leaves dry canyon open",
+          "ok": true
+        },
+        {
+          "name": "Commander walks below sea level without swimming",
+          "ok": true,
+          "actual": {
+            "distance": 2.8130380851475705,
+            "height": -2.860026290414955,
+            "swimming": false
+          }
+        },
+        {
+          "name": "Commander aiming origin stays below sea level with the body",
+          "ok": true,
+          "actual": {
+            "height": -2.2660262904149135
+          }
+        },
+        {
+          "name": "A real ground enemy exits the sub-sea passage and reaches base",
+          "ok": true,
+          "actual": {
+            "remaining": 0
+          }
+        },
+        {
+          "name": "First-person camera stays finite inside the canyon",
+          "ok": true
+        },
+        {
+          "name": "Flat dry sub-sea ground permits a normal tower footprint",
+          "ok": true,
+          "actual": {
+            "place": 604
+          }
+        },
+        {
+          "name": "Placed tower stands at negative ground height",
+          "ok": true,
+          "actual": {
+            "height": -2.594777943366779
+          }
+        },
+        {
+          "name": "Ocean swimming surface remains above the seabed",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "seed": 4306234,
+      "checks": [
+        {
+          "name": "Dry sub-sea floors exist and mostly connect to the heart",
+          "ok": true,
+          "actual": {
+            "total": 1132,
+            "reached": 1132,
+            "low": -5.366841793060303,
+            "type": "crevice"
+          }
+        },
+        {
+          "name": "Ray picks the actual negative canyon floor",
+          "ok": true,
+          "actual": {
+            "expected": -5.3099936864332,
+            "actual": -5.30999373222582
+          }
+        },
+        {
+          "name": "Water mesh mask leaves dry canyon open",
+          "ok": true
+        },
+        {
+          "name": "Commander walks below sea level without swimming",
+          "ok": true,
+          "actual": {
+            "distance": 1.2979473978707028,
+            "height": -4.799555090869853,
+            "swimming": false
+          }
+        },
+        {
+          "name": "Commander aiming origin stays below sea level with the body",
+          "ok": true,
+          "actual": {
+            "height": -4.2055550908698365
+          }
+        },
+        {
+          "name": "A real ground enemy exits the sub-sea passage and reaches base",
+          "ok": true,
+          "actual": {
+            "remaining": 0
+          }
+        },
+        {
+          "name": "First-person camera stays finite inside the canyon",
+          "ok": true
+        },
+        {
+          "name": "Flat dry sub-sea ground permits a normal tower footprint",
+          "ok": true,
+          "actual": {
+            "place": 427
+          }
+        },
+        {
+          "name": "Placed tower stands at negative ground height",
+          "ok": true,
+          "actual": {
+            "height": -4.733469576600186
+          }
+        },
+        {
+          "name": "Ocean swimming surface remains above the seabed",
+          "ok": true
+        }
+      ]
+    }
+  ],
+  "faults": [],
+  "pass": true
+}

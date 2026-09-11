@@ -1,0 +1,309 @@
+{
+  "scope": "Instrumented fixtures and real DOM/mouse/keyboard interactions, not a natural campaign victory",
+  "legacyMovement": {
+    "status": "not-comparable",
+    "archivedSeed": 28183,
+    "currentSeed": 36102,
+    "replacement": "tools/commander-surface-check.mjs"
+  },
+  "checks": [
+    {
+      "name": "Upgrade fixture has paid base levels for both tower actions",
+      "ok": true
+    },
+    {
+      "name": "A contextual tower fixture can be legally placed",
+      "ok": true
+    },
+    {
+      "name": "An actual move order has an authoritative path",
+      "ok": true,
+      "actual": 363
+    },
+    {
+      "name": "Selected ordered unit draws its actual remaining route",
+      "ok": true,
+      "actual": 1452
+    },
+    {
+      "name": "Selected route has finite distance dots flowing toward the order",
+      "ok": true
+    },
+    {
+      "name": "A new order replaces the line route",
+      "ok": true
+    },
+    {
+      "name": "Unselection clears the route line",
+      "ok": true
+    },
+    {
+      "name": "Cancellation clears the route line",
+      "ok": true
+    },
+    {
+      "name": "Both sword active frames point through the forward strike volume",
+      "ok": true,
+      "actual": [
+        [
+          0.12654896937888938,
+          0.0050574682716760105,
+          -0.9919474685505387
+        ],
+        [
+          0.12654896937888938,
+          0.0050574682716760105,
+          -0.9919474685505387
+        ]
+      ]
+    },
+    {
+      "name": "Wave1 establishes a visible reachable source",
+      "ok": true,
+      "actual": {
+        "node": 89631,
+        "ground": 124.27824401855469,
+        "air": 119.01638793945312
+      }
+    },
+    {
+      "name": "Every queued wave unit uses the visible source with a warning",
+      "ok": true
+    },
+    {
+      "name": "Actual spawns begin within the visible nest footprint before movement",
+      "ok": true,
+      "actual": [
+        {
+          "source": 89631,
+          "node": 89631,
+          "offset": 0.14438700518053554,
+          "dir": [
+            0.9726446557355468,
+            -0.19694593009722777,
+            0.123185527913052
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Destroying the source cancels its pending buildup",
+      "ok": true,
+      "actual": 0
+    },
+    {
+      "name": "Final wave introduces a protected visible guardian source",
+      "ok": true
+    },
+    {
+      "name": "Destroying a source cannot cancel the owed boss",
+      "ok": true
+    },
+    {
+      "name": "Boss actually emerges before its nest becomes vulnerable",
+      "ok": true
+    },
+    {
+      "name": "Actual boss shedding summons escorts inside living nests, away from the mobile boss",
+      "ok": true
+    },
+    {
+      "name": "An actual evolved mite split emerges at a living nest and remains bounded",
+      "ok": true
+    },
+    {
+      "name": "Destroyed nests prevent new boss escorts without erasing the live guardian",
+      "ok": true
+    },
+    {
+      "name": "World-anchored Upgrade remains a real clickable action",
+      "ok": true
+    },
+    {
+      "name": "F lends pointer ownership without jumping or leaving the commander",
+      "ok": true
+    },
+    {
+      "name": "Commander can click Upgrade while inspecting a nearby tower",
+      "ok": true
+    },
+    {
+      "name": "Successful commander upgrade automatically resumes control",
+      "ok": true
+    },
+    {
+      "name": "Escape closes a reopened inspection and resumes the same commander",
+      "ok": true
+    },
+    {
+      "name": "Aimed loot is selected by the actual world ray before pickup",
+      "ok": true,
+      "actual": {
+        "id": "inspect-actual-sword",
+        "kind": "loot",
+        "hover": false,
+        "editing": false,
+        "position": [
+          233.405929380349,
+          47.740383045717834,
+          -32.79020512794503
+        ],
+        "camera": [
+          234.76899923968648,
+          48.05737734040738,
+          -34.712881673655396
+        ],
+        "ray": [
+          -0.30670194802249623,
+          -0.08270161590915702,
+          0.9482058625663629
+        ],
+        "hit": [
+          233.6292245031318,
+          47.75003918004268,
+          -31.189131354577228
+        ],
+        "near": [
+          "inspect-actual-sword"
+        ]
+      }
+    },
+    {
+      "name": "Ground model and inspection preview exist before pickup",
+      "ok": true
+    },
+    {
+      "name": "Pick up + equip transfers one identity into the active loadout",
+      "ok": true
+    },
+    {
+      "name": "No page overflow at desktop",
+      "ok": true
+    },
+    {
+      "name": "Context avoids checkpoint chrome and page overflow at narrow width",
+      "ok": true
+    },
+    {
+      "name": "Campaign camera contract remains green",
+      "ok": true,
+      "actual": {
+        "map": "ninetynine",
+        "pass": true,
+        "checks": [
+          {
+            "name": "grabbed point stays under cursor under rotation",
+            "ok": true,
+            "worstErrorPx": 0.01,
+            "meanErrorPx": 0,
+            "dragLengthPx": 71,
+            "worstCase": {
+              "yaw": 180,
+              "drag": [
+                -71,
+                0
+              ]
+            },
+            "samples": 64,
+            "skippedAtBoundary": 0
+          },
+          {
+            "name": "cursor tracking holds across zoom",
+            "ok": true,
+            "errorPxByZoom": [
+              0.02,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "name": "dragging past the horizon stays bounded",
+            "ok": true,
+            "largestSingleStepRad": 0.0686
+          },
+          {
+            "name": "view stays centred through a full zoom",
+            "ok": true,
+            "worstDriftPx": 0
+          },
+          {
+            "name": "view angle opens steadily through the zoom",
+            "ok": true,
+            "worstSagDeg": 0,
+            "flattestDeg": 48
+          },
+          {
+            "name": "zoom clamps to tuned height limits",
+            "ok": true,
+            "reachedMin": 16.4,
+            "reachedMax": 119.3,
+            "limits": [
+              9.2,
+              122
+            ]
+          },
+          {
+            "name": "lens and view angle match the tuned endpoints",
+            "ok": true,
+            "fov": [
+              82.8,
+              37.2
+            ],
+            "viewDeg": [
+              48,
+              66
+            ],
+            "tuned": {
+              "fov": [
+                83,
+                37
+              ],
+              "view": [
+                48,
+                66
+              ]
+            }
+          },
+          {
+            "name": "keyboard pan moves and releases without drift",
+            "ok": true,
+            "movedRad": 0.10356,
+            "residualVelocity": 0
+          },
+          {
+            "name": "view rotation applies and click-resets",
+            "ok": true,
+            "yawAfterDrag": -0.78,
+            "tiltAfterDrag": 0.252
+          },
+          {
+            "name": "flick inertia settles",
+            "ok": true,
+            "launchVelocity": 2.3689,
+            "after2s": 0
+          },
+          {
+            "name": "camera stays inside the battlefield",
+            "ok": true,
+            "aimAngle": 0.442,
+            "limit": 0.442
+          },
+          {
+            "name": "camera state finite",
+            "ok": true
+          },
+          {
+            "name": "sim + camera step under 6ms",
+            "ok": true,
+            "msNear": 0.367,
+            "msFar": 0.993
+          }
+        ],
+        "failed": []
+      }
+    }
+  ],
+  "faults": []
+}

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { PALETTE, REDUCED_MOTION, PRESENTATION } from './config.js';
 import { clamp } from './noise.js';
-import { R } from './world.js';
+import { surfaceElevation, R } from './world.js';
 import { swimOffset } from './traversal.js';
 
 // Combat feedback for the things the simulation reports and nothing drew.
@@ -260,7 +260,7 @@ export class CombatFx {
     _fwd.normalize();
     _aim.copy(a.aim || _fwd);
     if (a.hidden) {
-      const alt = Math.max(a.height, 0.03) + (a.hop || 0) - swimOffset(a);
+      const alt = surfaceElevation(a.dir,a.height) + (a.hop || 0) - swimOffset(a);
       out.copy(_up).multiplyScalar(R + alt + EYE_HEIGHT * sc);
       _side.crossVectors(_fwd, _up).normalize();
       return out.addScaledVector(_side, 0.34).addScaledVector(_up, -0.22).addScaledVector(_aim, 0.95);
@@ -415,7 +415,7 @@ export class CombatFx {
     // garrison would otherwise cycle the twenty-slot ring pool every second and
     // erase the explosion rings the towers are drawing.
     if (!e.attackPlan && (player || _v.distanceTo(this.fx.camera.position) < 45)) {
-      _v2.copy(e.dir).multiplyScalar(R + Math.max(e.height, 0.03) + 0.04);
+      _v2.copy(e.dir).multiplyScalar(R + surfaceElevation(e.dir,e.height) + 0.04);
       this.fx.rings.spawn(_v2, PALETTE.voidEmissive, (e.type.reach || 1.2) * 1.15, (e.type.wind || 0.3) + 0.15);
     }
     this.fx.burstGlow(_v, PALETTE.voidHot, player ? 8 : 5, 1.5, 0.3, 0.5, 2.2);
@@ -448,7 +448,7 @@ export class CombatFx {
     const vert = Math.abs((a.cos && a.cos.lastVert) || 0);
     const sc = a.type.scale || 1;
     const r = 0.85 * sc * (1 + 0.5 * clamp(vert / 7, 0, 1));
-    _v.copy(a.dir).multiplyScalar(R + Math.max(a.height, 0.03) + 0.04);
+    _v.copy(a.dir).multiplyScalar(R + surfaceElevation(a.dir,a.height) + 0.04);
     this.fx.rings.spawn(_v, DUST, r, 0.42);
     this.fx.burstGlow(_v, DUST, 6, 1.4, 0.38, 0.7, 0.55);
   }

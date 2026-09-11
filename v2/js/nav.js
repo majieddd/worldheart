@@ -270,6 +270,7 @@ export class NavGraph {
     this.pos = new Float32Array(n * 3);
     this.height = new Float32Array(n);
     this.baseHeight = new Float32Array(n);
+    this.waterDepth = new Float32Array(n);
     this.walk = new Uint8Array(n);
     this.floorWalk = CONFIG.terrain ? new Uint8Array(n) : null;
     this.march = null;
@@ -292,14 +293,15 @@ export class NavGraph {
       const h = terrainHeight(x, y, z);
       this.height[idx] = h;
       this.baseHeight[idx] = CONFIG.terrain ? terrainHeight(x, y, z, false) : h;
+      this.waterDepth[idx] = WORLD.waterDepthAt(_v,this.baseHeight[idx]);
       if (this.airWalk) this.airWalk[idx] = WORLD.canFlyAt(_v, WORLD.FLIGHT_CLEARANCE + 2) ? 1 : 0;
-      const p = Math.max(h, 0.03) + R;
+      const p = (CONFIG.terrain ? WORLD.surfaceElevation(_v,h) : Math.max(h,.03)) + R;
       this.pos[idx * 3] = x * p; this.pos[idx * 3 + 1] = y * p; this.pos[idx * 3 + 2] = z * p;
       // Space flight lanes: the void is pathable, the rocks are not, so the
       // flow field bends every lane around the platforms.
       this.walk[idx] = walkAll ? (h < 0.55 ? 1 : 0)
         : (coarse ? (isLandDir(_v) ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0));
-      if(this.floorWalk)this.floorWalk[idx]=this.walk[idx]&&isFloorTerrain(this.baseHeight[idx],WORLD.slopeAt(_v))?1:0;
+      if(this.floorWalk)this.floorWalk[idx]=this.walk[idx]&&isFloorTerrain(this.baseHeight[idx],WORLD.slopeAt(_v),this.waterDepth[idx])?1:0;
       // The retained mesh includes a stitching margin outside the wall.
       // It must never become a route that the movement boundary refuses.
       if (CONFIG.terrain && capCenter && _v.dot(capCenter) < Math.cos(capTheta - 0.8 / R)) {
@@ -373,10 +375,10 @@ export class NavGraph {
         if (CONFIG.terrain) {
           const dot = this.dirs[i * 3] * this.dirs[j * 3] + this.dirs[i * 3 + 1] * this.dirs[j * 3 + 1] + this.dirs[i * 3 + 2] * this.dirs[j * 3 + 2];
           const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
-          const horizontal = angle * (R + Math.max(0.03, (this.baseHeight[i] + this.baseHeight[j]) * 0.5));
+          const horizontal = angle * (R + ((this.waterDepth[i]>0?.03:this.baseHeight[i]) + (this.waterDepth[j]>0?.03:this.baseHeight[j]))*.5);
           // Dijkstra expands OUT from the destination. Store the incoming
           // j -> i travel cost, so a route uphill really costs more time.
-          this.cost[e] = travelCost(this.baseHeight[j], this.baseHeight[i], horizontal);
+          this.cost[e] = travelCost(this.baseHeight[j], this.baseHeight[i], horizontal, this.waterDepth[j], this.waterDepth[i]);
           _v.set(this.dirs[i * 3] + this.dirs[j * 3], this.dirs[i * 3 + 1] + this.dirs[j * 3 + 1], this.dirs[i * 3 + 2] + this.dirs[j * 3 + 2]).normalize();
           this.airCost[e] = this.airWalk[i] && this.airWalk[j] && WORLD.canFlyAt(_v, WORLD.FLIGHT_CLEARANCE + 2) ? angle * R : Infinity;
           // A conservative lower cost per unit chord, measured from every

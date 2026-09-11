@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, CAM_TUNE, PALETTE, LIGHTING, PRESENTATION } from './config.js';
 import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
-import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight, TERRAIN_TOP } from './world.js';
+import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight, TERRAIN_TOP, surfaceElevation } from './world.js';
 import { NavGraph } from './nav.js';
 import { SIM_RANDOM } from './noise.js';
 import { makeRng } from './run/rng.js';
@@ -263,7 +263,7 @@ async function boot() {
   await progress(BOOT_LABELS[1]);
   nav.build();
   if (CONFIG.terrain) {
-    rig.heightProbe = dir => terrainHeight(dir.x, dir.y, dir.z);
+    rig.heightProbe = dir => surfaceElevation(dir);
     rig.terrainTop = TERRAIN_TOP;
   }
   // Capped maps must register the battlefield before any mesh building so

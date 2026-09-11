@@ -395,7 +395,7 @@ height and 0.62 grade boundary used by floor routing. Ground enemies prefer
 connected floor routes; emergency mountain travel remains at 8% speed. Ordinary
 nest placement never depends on that emergency passage.
 
-Landforms v4 retains the v2 joins of selected adjacent ranges into open chains of at most three
+Landforms v5 retains the v2 joins of selected adjacent ranges into open chains of at most three
 cells, keeping a continuous spine across their internal seams. Their outer
 valleys remain low. Isolated mountains, foothills and explicit authored groups
 keep separate footprints. Nest scoring adds twice the wet route distance to
@@ -404,15 +404,25 @@ fits without forbidding water crossings on islands.
 
 All four mixes combine large and small formations, with different weights.
 Geology provinces vary recipe selection and peak amplitudes. Plateau benches
-retain flat high ground; ravines and crevices cut down into uplands, and crevices
-can flood below sea level. Outer valley joins remain open. Seeded Temperate,
-Arid, Boreal and Lush climate biases combine with latitude/moisture/altitude for
-coherent biome colours and vegetation. Existing hot/cold tower rules remain
-authoritative; climate dressing adds no new movement or placement restriction.
+retain flat high ground. Winding Valley is the paired-bank formation; Winding
+Canyon cuts inward below sea level. Inland canyon/fault bottoms stay dry, with
+real descent/ascent costs, grounded units and valid tower placement on stable
+floors. Ocean regions retain swimming. Depth follows available ramp length to
+avoid sealed pits. Outer valley joins remain open. Butte groups contain 7-12
+remnants with measured gaps; Hill Fields replaces Dune field, Plateau replaces
+Eroded tableland, and a Staircase escarpment adds long connected benches.
+
+Mixed Landscapes is the default for all campaign planets. Independent Temperate,
+Desert, Boreal, Jungle, Volcanic and Wetlands climate biases combine with
+latitude/moisture/altitude. Deserts add cacti; jungles add large canopies; basalt
+and warm fissures mark volcanic ground. Fissures are solid decorative crust,
+not a liquid/damage hazard. Existing hot/cold tower rules remain authoritative,
+including Mortar-only raised volcanic stone. No additional biome slowdown is added.
 
 The title and Settings offer **World generator**. It opens an isolated,
 non-simulating inspection tab with new seeds, a 12-world history, reproducible
-links, four terrain mixes and the unchanged classic whole-planet formula.
+links, four terrain mixes, independent climate choices and the unchanged classic
+whole-planet formula. Recent history and Play this seed preserve climate too.
 Base/peak/globe and named formation focus, plus the valid-nest approach overlay, use the actual world
 and route field. **Play this seed** opens a normal single-planet sandbox.
 Generation reloads the scene lifecycle; it never replaces a live campaign.

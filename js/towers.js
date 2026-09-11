@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { terrainTowerStats, swimOffset } from './traversal.js';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { clamp, lerp, SIM_RANDOM } from './noise.js';
-import { R, orientOnSurface } from './world.js';
+import { surfaceElevation, R, orientOnSurface } from './world.js';
 import { modifiedTowerStats } from './rewards.js';
 
 // The run's modifier object, installed by the 99 Planets shell and null in
@@ -910,7 +910,7 @@ export class TowerManager {
 
   enemyWorldPos(e, out) {
     if(e.nest){out.copy(e.nest.group.position);return out.multiplyScalar(1+1.2/out.length());}
-    const h = Math.max(e.height, 0.03) - swimOffset(e);
+    const h = surfaceElevation(e.dir,e.height) - swimOffset(e);
     return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
   }
 

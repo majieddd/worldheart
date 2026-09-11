@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { R, terrainHeight, surfacePoint } from './world.js';
+import { surfaceElevation, R, terrainHeight, surfacePoint } from './world.js';
 import { PALETTE, CAM_TUNE, PRESENTATION } from './config.js';
 import { SIM_RANDOM } from './noise.js';
 import { BladeTrail } from './viewmodel.js';
@@ -831,7 +831,7 @@ export class Possession {
     this.roll += (wantRoll - this.roll) * (1-Math.exp(-dtShake*12));
     if(!motion)this.roll=0;
 
-    const alt = Math.max(u.height, 0.03) + (u.hop || 0) - swimOffset(u);
+    const alt = surfaceElevation(u.dir,u.height) + (u.hop || 0) - swimOffset(u);
     _right.crossVectors(u.fwd, u.dir).normalize();
     _eye.copy(u.dir).multiplyScalar(
       R + alt + EYE_HEIGHT * u.type.scale + bobY + this.springY * 0.11 * motion - this.kick * 0.06 * motion);
@@ -870,7 +870,7 @@ export class Possession {
         .addScaledVector(this._tpAim, -this.boom)
         .addScaledVector(_right, TP_SHOULDER * Math.min(1, this.boom / 2));
       _gn.copy(_tp).normalize();
-      const ground = R + Math.max(terrainHeight(_gn.x, _gn.y, _gn.z), 0) + TP_CLEAR;
+      const ground = R + surfaceElevation(_gn) + TP_CLEAR;
       if (_tp.length() < ground) _tp.setLength(ground);
       // Solid rocks can shorten the boom, but trees never do: walking
       // through foliage must not feel like the commander hit a wall.

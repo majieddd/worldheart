@@ -9,7 +9,7 @@ export const NEST_SCHEDULE_CAPACITY = 17;
 
 function dryFloor(nav, i) {
   return nav.walk[i] && !nav.block[i] && nav.airWalk[i]
-    && nav.baseHeight[i] >= .18 && nav.baseHeight[i] <= 1.5
+    && (nav.waterDepth ? nav.waterDepth[i] === 0 : nav.baseHeight[i] >= .18) && nav.baseHeight[i] <= 1.5
     && nav.march.floorReach[i] && Number.isFinite(nav.airDist[i]);
 }
 
@@ -41,7 +41,7 @@ function siteCache(nav) {
       for (let k = trail.length - 1; k >= 0; k--) {
         const a = trail[k], b = field.next[a];
         wet[a] = b < 0 || wet[b] < 0 ? Infinity : wet[b] +
-          (nav.baseHeight[a] < .18 || nav.baseHeight[b] < .18 ? Math.max(0, field.dist[a] - field.dist[b]) : 0);
+          ((nav.waterDepth ? nav.waterDepth[a] > 0 || nav.waterDepth[b] > 0 : nav.baseHeight[a] < .18 || nav.baseHeight[b] < .18) ? Math.max(0, field.dist[a] - field.dist[b]) : 0);
       }
     }
   }
