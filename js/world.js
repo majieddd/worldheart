@@ -569,7 +569,7 @@ const SPACE_ROCK = new THREE.Color(0x8b8f9c);
 const SPACE_RUST = new THREE.Color(0xa08d76);
 const SPACE_UNDER = new THREE.Color(0x474c5c);
 
-function faceColor(dir, h, slope, jrand, out) {
+export function faceColor(dir, h, slope, jrand, out) {
   if (SPACE) {
     const roll = fbm3(nDetail, dir.x * 7 + 5, dir.y * 7, dir.z * 7, 2);
     if (h < 0.75) {
@@ -661,6 +661,17 @@ const _lavaStone = new THREE.Color(0xf28a3c);
 const _hotStone = new THREE.Color(0xa35038);
 const _cliffCol = new THREE.Color();
 const _outsideCol = new THREE.Color();
+
+export function terrainThermal(dir,h){
+  if(!CONFIG.terrain)return null;
+  let thermal=h>1.4&&FORMATIONS.volcanic(dir.x,dir.y,dir.z)?FORMATIONS.inspect(dir.x,dir.y,dir.z):null;
+  if(CONFIG.biomeKey==='auto'&&CONFIG.environment?.theme==='volcanic'){
+    const vein=Math.abs(nDetail(dir.x*8+11,dir.y*8,dir.z*8));
+    const heat=(1-smoothstep(.02,.07,vein))*(h>1.4?1:.5);
+    if(heat>(thermal?.lava||0))thermal={lava:heat,flow:dir.y*170+dir.x*75};
+  }
+  return thermal;
+}
 
 // Recursive icosphere with true 4^detail subdivision. THREE's
 // IcosahedronGeometry treats detail as edge segments (20*(d+1)^2 faces),
@@ -755,12 +766,7 @@ function buildTerrainMesh() {
     cen.divideScalar(len);
     const slope = 1 - Math.abs(n.dot(cen));
     faceColor(cen, h, slope * 3.2, rng(), col);
-    let thermal=lava&&h>1.4&&FORMATIONS.volcanic(cen.x,cen.y,cen.z)?FORMATIONS.inspect(cen.x,cen.y,cen.z):null;
-    if(lava&&CONFIG.biomeKey==='auto'&&CONFIG.environment?.theme==='volcanic'){
-      const vein=Math.abs(nDetail(cen.x*8+11,cen.y*8,cen.z*8));
-      const heat=(1-smoothstep(.02,.07,vein))*(h>1.4?1:.5);
-      if(heat>(thermal?.lava||0))thermal={lava:heat,flow:cen.y*170+cen.x*75};
-    }
+    const thermal=terrainThermal(cen,h);
     for (let k = 0; k < 3; k++) {
       colors[(i + k) * 3] = col.r;
       colors[(i + k) * 3 + 1] = col.g;

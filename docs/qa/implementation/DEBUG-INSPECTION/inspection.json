@@ -1,0 +1,1944 @@
+{
+  "checks": [
+    {
+      "name": "full gallery starts within fifteen seconds",
+      "ok": true,
+      "actual": {
+        "ms": 7247
+      }
+    },
+    {
+      "name": "default motion loops all animations",
+      "ok": true
+    },
+    {
+      "name": "warden: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "commander: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "duelist: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "marksman: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "bombardier: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "oracle: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "mite: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "husk: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "aegis: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "wisp: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "colossus: continues animating in overview",
+      "ok": true
+    },
+    {
+      "name": "manual pause stops all rigs and timeline",
+      "ok": true
+    },
+    {
+      "name": "reduced motion stops every rig",
+      "ok": true
+    },
+    {
+      "name": "right grab follows pointer at yaw 0.00, pitch 0.3",
+      "ok": true,
+      "actual": {
+        "a": [
+          -1.7525778020893076e-16,
+          0
+        ],
+        "b": [
+          0.12668124260517782,
+          -0.1519535107006551
+        ]
+      }
+    },
+    {
+      "name": "right grab follows pointer at yaw 0.00, pitch 1.1",
+      "ok": true,
+      "actual": {
+        "a": [
+          -1.7525778020893076e-16,
+          4.036239786629921e-15
+        ],
+        "b": [
+          0.10814177018495003,
+          -0.12971550716628277
+        ]
+      }
+    },
+    {
+      "name": "right grab follows pointer at yaw 1.57, pitch 0.3",
+      "ok": true,
+      "actual": {
+        "a": [
+          2.804124483342891e-15,
+          3.1533123333046246e-17
+        ],
+        "b": [
+          0.1266812426051811,
+          -0.1519535107006556
+        ]
+      }
+    },
+    {
+      "name": "right grab follows pointer at yaw 1.57, pitch 1.1",
+      "ok": true,
+      "actual": {
+        "a": [
+          0,
+          -5.045299733287401e-16
+        ],
+        "b": [
+          0.10814177018495294,
+          -0.12971550716629168
+        ]
+      }
+    },
+    {
+      "name": "right grab follows pointer at yaw -1.57, pitch 0.3",
+      "ok": true,
+      "actual": {
+        "a": [
+          -2.804124483342891e-15,
+          3.7839747999655495e-16
+        ],
+        "b": [
+          0.12668124260517438,
+          -0.15195351070065546
+        ]
+      }
+    },
+    {
+      "name": "right grab follows pointer at yaw -1.57, pitch 1.1",
+      "ok": true,
+      "actual": {
+        "a": [
+          0,
+          0
+        ],
+        "b": [
+          0.10814177018495007,
+          -0.1297155071662914
+        ]
+      }
+    },
+    {
+      "name": "right arrow moves viewpoint right",
+      "ok": true
+    },
+    {
+      "name": "up arrow moves viewpoint forward",
+      "ok": true
+    },
+    {
+      "name": "wheel up zooms in",
+      "ok": true
+    },
+    {
+      "name": "wheel down zooms out",
+      "ok": true
+    },
+    {
+      "name": "warden: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "warden",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "warden: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "warden",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "warden: sprint follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "warden",
+        "name": "sprint",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "warden: strafe follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "warden",
+        "name": "strafe",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "warden: jump follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "warden",
+        "name": "jump",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "warden: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "warden",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "warden: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "warden",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "warden: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "warden",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "commander: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "commander",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "commander: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "commander",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "commander: sprint follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "commander",
+        "name": "sprint",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "commander: strafe follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "commander",
+        "name": "strafe",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "commander: jump follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "commander",
+        "name": "jump",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "commander: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "commander",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "commander: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "commander",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "commander: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "commander",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "duelist: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "duelist",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "duelist: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "duelist",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "duelist: sprint follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "duelist",
+        "name": "sprint",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "duelist: strafe follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "duelist",
+        "name": "strafe",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "duelist: jump follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "duelist",
+        "name": "jump",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "duelist: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "duelist",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "duelist: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "duelist",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "duelist: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "duelist",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "marksman: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "marksman",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "marksman: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "marksman",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "marksman: sprint follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "marksman",
+        "name": "sprint",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "marksman: strafe follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "marksman",
+        "name": "strafe",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "marksman: jump follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "marksman",
+        "name": "jump",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "marksman: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "marksman",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "marksman: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "marksman",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "marksman: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "marksman",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "bombardier: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "bombardier",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "bombardier: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "bombardier",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "bombardier: sprint follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "bombardier",
+        "name": "sprint",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "bombardier: strafe follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "bombardier",
+        "name": "strafe",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "bombardier: jump follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "bombardier",
+        "name": "jump",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "bombardier: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "bombardier",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "bombardier: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "bombardier",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "bombardier: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "bombardier",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "oracle: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "oracle",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "oracle: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "oracle",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "oracle: sprint follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "oracle",
+        "name": "sprint",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "oracle: strafe follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "oracle",
+        "name": "strafe",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "oracle: jump follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "oracle",
+        "name": "jump",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "oracle: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "oracle",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "oracle: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "oracle",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "oracle: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "oracle",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "mite: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "mite",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "mite: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "mite",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "mite: turn follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "mite",
+        "name": "turn",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "mite: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "mite",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "mite: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "mite",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "mite: stun follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "mite",
+        "name": "stun",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "mite: shield follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "mite",
+        "name": "shield",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "mite: collapse follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "mite",
+        "name": "collapse",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "mite: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "mite",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "husk: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "husk",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "husk: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "husk",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "husk: turn follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "husk",
+        "name": "turn",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "husk: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "husk",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "husk: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "husk",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "husk: stun follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "husk",
+        "name": "stun",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "husk: shield follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "husk",
+        "name": "shield",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "husk: collapse follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "husk",
+        "name": "collapse",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "husk: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "husk",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "aegis: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "aegis",
+        "name": "idle",
+        "bad": 0,
+        "states": 1
+      }
+    },
+    {
+      "name": "aegis: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "aegis",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "aegis: turn follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "aegis",
+        "name": "turn",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "aegis: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "aegis",
+        "name": "attack",
+        "bad": 0,
+        "states": 4
+      }
+    },
+    {
+      "name": "aegis: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "aegis",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "aegis: stun follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "aegis",
+        "name": "stun",
+        "bad": 0,
+        "states": 3
+      }
+    },
+    {
+      "name": "aegis: shield follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "aegis",
+        "name": "shield",
+        "bad": 0,
+        "states": 3
+      }
+    },
+    {
+      "name": "aegis: collapse follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "aegis",
+        "name": "collapse",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "aegis: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "aegis",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "wisp: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "wisp",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "wisp: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "wisp",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "wisp: turn follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "wisp",
+        "name": "turn",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "wisp: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "wisp",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "wisp: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "wisp",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "wisp: stun follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "wisp",
+        "name": "stun",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "wisp: shield follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "wisp",
+        "name": "shield",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "wisp: collapse follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "wisp",
+        "name": "collapse",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "wisp: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "wisp",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "colossus: idle follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "colossus",
+        "name": "idle",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "colossus: walk follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "colossus",
+        "name": "walk",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "colossus: turn follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "colossus",
+        "name": "turn",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "colossus: attack follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "colossus",
+        "name": "attack",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "colossus: hurt follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "colossus",
+        "name": "hurt",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "colossus: stun follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "colossus",
+        "name": "stun",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "colossus: shield follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "colossus",
+        "name": "shield",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "colossus: collapse follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "colossus",
+        "name": "collapse",
+        "bad": 0,
+        "states": 5
+      }
+    },
+    {
+      "name": "colossus: loop restarts follows its production pose",
+      "ok": true,
+      "actual": {
+        "key": "colossus",
+        "name": "loop restarts",
+        "bad": 0,
+        "states": 2
+      }
+    },
+    {
+      "name": "sword-ancient: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 3.404696029996476,
+        "outside": 0,
+        "center": [
+          9,
+          2.027348014998238,
+          180
+        ],
+        "target": [
+          9,
+          2.027348014998238,
+          180
+        ]
+      }
+    },
+    {
+      "name": "sword-technological: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 3.37831017262961,
+        "outside": 0,
+        "center": [
+          35,
+          2.0141550863148048,
+          180
+        ],
+        "target": [
+          35,
+          2.014155086314805,
+          180
+        ]
+      }
+    },
+    {
+      "name": "sword-empowered: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 3.6333734561406477,
+        "outside": 0,
+        "center": [
+          61,
+          2.141686728070324,
+          180
+        ],
+        "target": [
+          61,
+          2.141686728070324,
+          180
+        ]
+      }
+    },
+    {
+      "name": "spear-ancient: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 4.0446868580323905,
+        "outside": 0,
+        "center": [
+          87,
+          2.3473434290161954,
+          180
+        ],
+        "target": [
+          87,
+          2.347343429016195,
+          180
+        ]
+      }
+    },
+    {
+      "name": "spear-technological: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 4.027096290823145,
+        "outside": 0,
+        "center": [
+          113,
+          2.338548145411573,
+          180
+        ],
+        "target": [
+          113,
+          2.3385481454115724,
+          180
+        ]
+      }
+    },
+    {
+      "name": "spear-empowered: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 4.0446868580323905,
+        "outside": 0,
+        "center": [
+          139,
+          2.3473434290161954,
+          180
+        ],
+        "target": [
+          139,
+          2.347343429016195,
+          180
+        ]
+      }
+    },
+    {
+      "name": "carbine-ancient: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 3.770008519663324,
+        "outside": 0,
+        "center": [
+          165,
+          2.210004259831662,
+          180
+        ],
+        "target": [
+          165,
+          2.210004259831662,
+          180
+        ]
+      }
+    },
+    {
+      "name": "carbine-technological: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 5.1040279280135445,
+        "outside": 0,
+        "center": [
+          191,
+          2.877013964006772,
+          180
+        ],
+        "target": [
+          191,
+          2.877013964006772,
+          180
+        ]
+      }
+    },
+    {
+      "name": "carbine-empowered: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 3.9828807465154354,
+        "outside": 0,
+        "center": [
+          217,
+          2.3164403732577177,
+          180
+        ],
+        "target": [
+          217,
+          2.3164403732577177,
+          180
+        ]
+      }
+    },
+    {
+      "name": "lobber-ancient: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6500000000000001,
+        "maxY": 4.147931517345064,
+        "outside": 0,
+        "center": [
+          243,
+          2.3989657586725324,
+          180
+        ],
+        "target": [
+          243,
+          2.398965758672532,
+          180
+        ]
+      }
+    },
+    {
+      "name": "lobber-technological: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 5.089295550628288,
+        "outside": 0,
+        "center": [
+          269,
+          2.869647775314144,
+          180
+        ],
+        "target": [
+          269,
+          2.8696477753141436,
+          180
+        ]
+      }
+    },
+    {
+      "name": "lobber-empowered: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6500000000000001,
+        "maxY": 4.2633032334151615,
+        "outside": 0,
+        "center": [
+          295,
+          2.456651616707581,
+          180
+        ],
+        "target": [
+          295,
+          2.456651616707581,
+          180
+        ]
+      }
+    },
+    {
+      "name": "native-duelist: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.6499999999999999,
+        "maxY": 1.558284202030865,
+        "outside": 0,
+        "center": [
+          321,
+          1.1041421010154324,
+          180
+        ],
+        "target": [
+          321,
+          1.1041421010154324,
+          180
+        ]
+      }
+    },
+    {
+      "name": "native-oracle: entire weapon clears plinth and fits view",
+      "ok": true,
+      "actual": {
+        "minY": 0.65,
+        "maxY": 3.5757234089074497,
+        "outside": 0,
+        "center": [
+          347,
+          2.112861704453725,
+          180
+        ],
+        "target": [
+          347,
+          2.112861704453725,
+          180
+        ]
+      }
+    },
+    {
+      "name": "temperate: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "temperate",
+        "seed": 4206018157,
+        "biomes": {
+          "tundra": 14141,
+          "volcanic": 9363,
+          "meadow": 10101,
+          "ocean": 35836,
+          "jungle": 4654,
+          "wetland": 1118,
+          "woodland": 328,
+          "desert": 2593,
+          "savanna": 2142,
+          "alpine": 1644
+        },
+        "formations": [
+          "volcano",
+          "dunes",
+          "forest",
+          "valley",
+          "impact",
+          "yardangs",
+          "buttes",
+          "drumlins",
+          "gorge",
+          "fan",
+          "spider",
+          "karst",
+          "spiral",
+          "plateau",
+          "blades",
+          "range",
+          "cells",
+          "stripes",
+          "escarpment",
+          "canyon",
+          "basin",
+          "spine",
+          "hills",
+          "mesa",
+          "ravine",
+          "crevice",
+          "chaos",
+          "caldera",
+          "grand",
+          "labyrinth"
+        ],
+        "min": -11.347467768097113,
+        "max": 91.94112558339499,
+        "waterFaces": 36897,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "temperate: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "monsoon: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "monsoon",
+        "seed": 4206018157,
+        "biomes": {
+          "jungle": 37715,
+          "ocean": 43101,
+          "alpine": 415,
+          "woodland": 271,
+          "volcanic": 418
+        },
+        "formations": [
+          "volcano",
+          "valley",
+          "forest",
+          "impact",
+          "yardangs",
+          "caldera",
+          "drumlins",
+          "gorge",
+          "fan",
+          "spider",
+          "karst",
+          "spiral",
+          "ravine",
+          "blades",
+          "range",
+          "cells",
+          "stripes",
+          "labyrinth",
+          "canyon",
+          "basin",
+          "hills",
+          "dunes",
+          "mesa",
+          "plateau",
+          "escarpment",
+          "crevice",
+          "buttes",
+          "grand",
+          "chaos",
+          "spine"
+        ],
+        "min": -7.570083812755966,
+        "max": 72.9981849676379,
+        "waterFaces": 44202,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "monsoon: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "arid: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "arid",
+        "seed": 4206018157,
+        "biomes": {
+          "desert": 58041,
+          "ocean": 22026,
+          "volcanic": 1192,
+          "alpine": 661
+        },
+        "formations": [
+          "volcano",
+          "dunes",
+          "forest",
+          "impact",
+          "yardangs",
+          "spine",
+          "buttes",
+          "drumlins",
+          "gorge",
+          "fan",
+          "spider",
+          "karst",
+          "spiral",
+          "plateau",
+          "blades",
+          "range",
+          "cells",
+          "stripes",
+          "valley",
+          "escarpment",
+          "canyon",
+          "basin",
+          "chaos",
+          "hills",
+          "caldera",
+          "mesa",
+          "ravine",
+          "crevice",
+          "labyrinth",
+          "grand"
+        ],
+        "min": -13.33105316149093,
+        "max": 97.90307097053865,
+        "waterFaces": 23278,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "arid: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "frozen: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "frozen",
+        "seed": 4206018157,
+        "biomes": {
+          "tundra": 41185,
+          "alpine": 5009,
+          "ocean": 34997,
+          "volcanic": 729
+        },
+        "formations": [
+          "volcano",
+          "valley",
+          "forest",
+          "impact",
+          "yardangs",
+          "spine",
+          "caldera",
+          "drumlins",
+          "gorge",
+          "fan",
+          "spider",
+          "karst",
+          "spiral",
+          "ravine",
+          "blades",
+          "range",
+          "cells",
+          "dunes",
+          "stripes",
+          "grand",
+          "canyon",
+          "basin",
+          "chaos",
+          "hills",
+          "mesa",
+          "plateau",
+          "escarpment",
+          "crevice",
+          "buttes",
+          "labyrinth"
+        ],
+        "min": -12.43689848359971,
+        "max": 91.94112558339499,
+        "waterFaces": 36102,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "frozen: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "volcanic: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "volcanic",
+        "seed": 4206018157,
+        "biomes": {
+          "volcanic": 55606,
+          "ocean": 26314
+        },
+        "formations": [
+          "volcano",
+          "dunes",
+          "forest",
+          "valley",
+          "impact",
+          "yardangs",
+          "caldera",
+          "drumlins",
+          "gorge",
+          "fan",
+          "spider",
+          "karst",
+          "spiral",
+          "ravine",
+          "blades",
+          "range",
+          "cells",
+          "stripes",
+          "grand",
+          "canyon",
+          "basin",
+          "spine",
+          "hills",
+          "mesa",
+          "plateau",
+          "escarpment",
+          "crevice",
+          "buttes",
+          "labyrinth",
+          "chaos"
+        ],
+        "min": -14.003067436390227,
+        "max": 97.39160502085429,
+        "waterFaces": 27669,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "volcanic: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "crystalline: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "crystalline",
+        "seed": 4206018157,
+        "biomes": {
+          "crystalline": 40208,
+          "tundra": 3973,
+          "ocean": 34099,
+          "alpine": 3207,
+          "volcanic": 433
+        },
+        "formations": [
+          "volcano",
+          "gorge",
+          "forest",
+          "impact",
+          "karst",
+          "yardangs",
+          "dunes",
+          "drumlins",
+          "grand",
+          "fan",
+          "blades",
+          "spiral",
+          "ravine",
+          "range",
+          "spider",
+          "cells",
+          "stripes",
+          "escarpment",
+          "spine",
+          "canyon",
+          "basin",
+          "hills",
+          "valley",
+          "mesa",
+          "crevice",
+          "plateau",
+          "labyrinth",
+          "buttes",
+          "caldera",
+          "chaos"
+        ],
+        "min": -12.43689848359971,
+        "max": 85.81598569557993,
+        "waterFaces": 35245,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "crystalline: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "fungal: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "fungal",
+        "seed": 4206018157,
+        "biomes": {
+          "fungal": 34468,
+          "tundra": 3156,
+          "ocean": 42071,
+          "alpine": 1445,
+          "volcanic": 780
+        },
+        "formations": [
+          "volcano",
+          "dunes",
+          "forest",
+          "valley",
+          "impact",
+          "fan",
+          "yardangs",
+          "buttes",
+          "drumlins",
+          "gorge",
+          "spider",
+          "karst",
+          "spiral",
+          "blades",
+          "mesa",
+          "range",
+          "plateau",
+          "cells",
+          "stripes",
+          "grand",
+          "canyon",
+          "basin",
+          "hills",
+          "ravine",
+          "escarpment",
+          "crevice",
+          "caldera",
+          "labyrinth",
+          "chaos",
+          "spine"
+        ],
+        "min": -7.570083812755966,
+        "max": 72.9981849676379,
+        "waterFaces": 43194,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "fungal: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "oceanic: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "oceanic",
+        "seed": 4206018157,
+        "biomes": {
+          "wetland": 23523,
+          "tundra": 2637,
+          "ocean": 49222,
+          "jungle": 4578,
+          "alpine": 1260,
+          "volcanic": 700
+        },
+        "formations": [
+          "volcano",
+          "caldera",
+          "forest",
+          "dunes",
+          "impact",
+          "drumlins",
+          "yardangs",
+          "valley",
+          "fan",
+          "spider",
+          "karst",
+          "spiral",
+          "plateau",
+          "blades",
+          "range",
+          "ravine",
+          "cells",
+          "stripes",
+          "escarpment",
+          "canyon",
+          "basin",
+          "spine",
+          "hills",
+          "mesa",
+          "gorge",
+          "crevice",
+          "buttes",
+          "grand",
+          "labyrinth",
+          "chaos"
+        ],
+        "min": -5.788709756653169,
+        "max": 72.88034399012419,
+        "waterFaces": 50299,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "oceanic: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "ferrous: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "ferrous",
+        "seed": 4206018157,
+        "biomes": {
+          "ferrous": 54338,
+          "tundra": 2205,
+          "ocean": 22525,
+          "alpine": 2419,
+          "volcanic": 433
+        },
+        "formations": [
+          "volcano",
+          "valley",
+          "forest",
+          "gorge",
+          "impact",
+          "drumlins",
+          "yardangs",
+          "caldera",
+          "escarpment",
+          "fan",
+          "spider",
+          "karst",
+          "spiral",
+          "ravine",
+          "blades",
+          "range",
+          "cells",
+          "stripes",
+          "chaos",
+          "canyon",
+          "basin",
+          "hills",
+          "dunes",
+          "mesa",
+          "crevice",
+          "plateau",
+          "grand",
+          "buttes",
+          "labyrinth",
+          "spine"
+        ],
+        "min": -13.33105316149093,
+        "max": 97.90307097053865,
+        "waterFaces": 23741,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "ferrous: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "twilight: full spherical relief, biomes and formations",
+      "ok": true,
+      "actual": {
+        "theme": "twilight",
+        "seed": 4206018157,
+        "biomes": {
+          "twilight": 34739,
+          "tundra": 4207,
+          "ocean": 40403,
+          "alpine": 2147,
+          "volcanic": 424
+        },
+        "formations": [
+          "volcano",
+          "gorge",
+          "forest",
+          "impact",
+          "spiral",
+          "yardangs",
+          "fan",
+          "dunes",
+          "drumlins",
+          "grand",
+          "cells",
+          "karst",
+          "ravine",
+          "blades",
+          "range",
+          "spider",
+          "crevice",
+          "valley",
+          "stripes",
+          "escarpment",
+          "canyon",
+          "basin",
+          "hills",
+          "mesa",
+          "plateau",
+          "chaos",
+          "buttes",
+          "caldera",
+          "spine",
+          "labyrinth"
+        ],
+        "min": -7.570083812755966,
+        "max": 72.9981849676379,
+        "waterFaces": 41559,
+        "vertices": 40962,
+        "outside": 0
+      }
+    },
+    {
+      "name": "twilight: distant labels do not cover the planet",
+      "ok": true
+    },
+    {
+      "name": "miniature focus fits the narrow phone viewport",
+      "ok": true,
+      "actual": 0
+    },
+    {
+      "name": "miniature construction restores configuration and production field",
+      "ok": true,
+      "actual": {
+        "config": true,
+        "field": true,
+        "radius": 240
+      }
+    },
+    {
+      "name": "no runtime or console faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "faults": []
+}

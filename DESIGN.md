@@ -8,8 +8,12 @@ DESIGN_VARIANCE: 7/10 (memorable showcase, not a daily tool)
 MOTION_INTENSITY: 5/10 (scene carries the motion; HUD stays at 3 and obeys the frequency gate)
 VISUAL_DENSITY: 4/10 (rich scene, lean HUD)
 
-Debug World: owner-selected flat exhibition lanes, with dials 3/1/6. Static
-presentation by default, explicit model-motion controls, cyan navigation and
+Debug World: owner-selected flat exhibition lanes, with dials 3/3/6. Unit
+animation sequences loop by default, alongside slowly rotating miniature
+planets. Still/manual controls and OS reduced motion pause the scene. Rig
+clips use their authored game cadence; frame deltas clamp at 1/30 second,
+and the clip readout swaps text instantly. Grab-style panning follows the
+pointer on both axes. Retain cyan navigation and
 opaque navy panels. Biome colors belong to the scene exhibits. Shared production
 model builders, materials and terrain fields are the source of each sample.
 Ten extreme themes intentionally extend scene palettes beyond the Garden world's

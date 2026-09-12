@@ -16,11 +16,12 @@
       <div class="actions"><button id="previous">Previous</button><button id="next">Next</button></div>
       <h2 id="name">Preparing exhibits</h2><p id="description">Building production models and terrain samples.</p>
       <dl id="metrics"></dl>
-      <label>Model motion<select id="motion"><option value="still">Still pose</option><option value="idle">Idle</option><option value="walk">Walk</option><option value="attack">Attack</option></select></label>
+      <label>Model motion<select id="motion"><option value="cycle">Loop all animations</option><option value="still">Still pose</option><option value="idle">Idle</option><option value="walk">Walk</option><option value="attack">Attack</option></select></label>
+      <p id="clip" class="help"></p>
       <label>Weapon energy core<select id="core"><option value="tempered">Tempered</option><option value="ember">Ember</option><option value="frost">Frost</option><option value="pulse">Pulse (ranged)</option></select></label>
       <div class="actions"><button id="focus">Focus exhibit</button><button id="row">See whole lane</button></div>
       <button id="overview">See all lanes</button>
-      <p class="help">Drag to orbit. Shift-drag or right-drag to pan. Wheel to zoom. Arrow keys pan when the view has focus.</p>
+      <p class="help">Drag to orbit. Right-drag, middle-drag or Shift-drag to grab and move the scene. Wheel up zooms in; wheel down zooms out. Arrow keys move the view.</p>
       <p class="help">Terrain samples use one display scale. Larger continental cuts occupy wider plots. Model lanes use 4x display scale.</p>
       <p id="status" role="status">Loading</p>
     </aside>
