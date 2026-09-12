@@ -1,0 +1,316 @@
+{
+  "scope": "Instrumented economy, input, real unit damage, ability lifecycle and rendered camera. Not a full campaign.",
+  "checks": [
+    {
+      "name": "Orange relic field is removed",
+      "ok": true
+    },
+    {
+      "name": "First real tower forge consumes 3 scraps",
+      "ok": true
+    },
+    {
+      "name": "Second real forge consumes 5 scraps",
+      "ok": true
+    },
+    {
+      "name": "Failed craft preserves price and balance",
+      "ok": true
+    },
+    {
+      "name": "Scepter emits a beam into empty sky",
+      "ok": true
+    },
+    {
+      "name": "Scepter damages a visible nest",
+      "ok": true,
+      "actual": 985.96
+    },
+    {
+      "name": "Commander frame follows its live body",
+      "ok": true
+    },
+    {
+      "name": "Held right mouse aims in first person",
+      "ok": true
+    },
+    {
+      "name": "Releasing aim restores the lens",
+      "ok": true
+    },
+    {
+      "name": "Beam starts at the visible first-person tip",
+      "ok": true
+    },
+    {
+      "name": "An interaction menu cancels held aim and firing",
+      "ok": true
+    },
+    {
+      "name": "commander ability activates once",
+      "ok": true
+    },
+    {
+      "name": "commander ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 675,
+        "enemy": 10000,
+        "moved": 0
+      }
+    },
+    {
+      "name": "commander temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "duelist ability activates once",
+      "ok": true
+    },
+    {
+      "name": "duelist ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 525,
+        "enemy": 10000,
+        "moved": 8.011559533838382
+      }
+    },
+    {
+      "name": "duelist temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "marksman ability activates once",
+      "ok": true
+    },
+    {
+      "name": "marksman ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 450,
+        "enemy": 10000,
+        "moved": 0
+      }
+    },
+    {
+      "name": "marksman temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "bombardier ability activates once",
+      "ok": true
+    },
+    {
+      "name": "bombardier ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 575,
+        "enemy": 9904,
+        "moved": 0
+      }
+    },
+    {
+      "name": "bombardier temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "oracle ability activates once",
+      "ok": true
+    },
+    {
+      "name": "oracle ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 570,
+        "enemy": 9964,
+        "moved": 0
+      }
+    },
+    {
+      "name": "oracle temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "twinblade weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "twinblade special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 10000,
+        "dance": true
+      }
+    },
+    {
+      "name": "scepter weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "scepter special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 9870.399999999998,
+        "dance": false
+      }
+    },
+    {
+      "name": "sword weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "sword special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 9928,
+        "dance": false
+      }
+    },
+    {
+      "name": "spear weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "spear special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 9907.6,
+        "dance": false
+      }
+    },
+    {
+      "name": "carbine weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "carbine special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 9913,
+        "dance": false
+      }
+    },
+    {
+      "name": "lobber weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "lobber special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 9940.022933359489,
+        "dance": false
+      }
+    },
+    {
+      "name": "Wave 1 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Wave 2 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Wave 3 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Wave 4 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Wave 5 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Wave 6 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Wave 7 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Wave 8 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Wave 9 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Wave 10 still has real connected nest sources",
+      "ok": true
+    },
+    {
+      "name": "Later nests move outward while the base stays small",
+      "ok": true,
+      "actual": {
+        "early": 19.467893840547646,
+        "late": 68.03785919461991,
+        "nests": [
+          {
+            "wave": 1,
+            "arc": 13.4560683640919
+          },
+          {
+            "wave": 2,
+            "arc": 18.971557414396973
+          },
+          {
+            "wave": 3,
+            "arc": 25.976055743154067
+          },
+          {
+            "wave": 4,
+            "arc": 32.99163320469847
+          },
+          {
+            "wave": 5,
+            "arc": 39.958826412856766
+          },
+          {
+            "wave": 5,
+            "arc": 39.9542749272142
+          },
+          {
+            "wave": 6,
+            "arc": 47.021952155803326
+          },
+          {
+            "wave": 7,
+            "arc": 54.002256729523864
+          },
+          {
+            "wave": 8,
+            "arc": 61.01378741312741
+          },
+          {
+            "wave": 9,
+            "arc": 68.00377812608676
+          },
+          {
+            "wave": 10,
+            "arc": 75.09601204464558
+          }
+        ]
+      }
+    },
+    {
+      "name": "Global base zoom centres and frames the complete planet",
+      "ok": true,
+      "actual": {
+        "center": [
+          3.813982936401191e-17,
+          1.910957077369942e-16,
+          0.9931244414477426
+        ],
+        "angular": 0.29804061899707157,
+        "half": 0.3995485333936334,
+        "distance": 1408.8933711244263
+      }
+    }
+  ],
+  "errors": []
+}

@@ -7,7 +7,7 @@ checkpoints to V2 only; preserve main and prior evidence.
 
 | Item | State | Acceptance |
 |---|---|---|
-| U89 Wood and gold identity | Verified locally | Worn dark wood with visible wear; polished reflective gold across all families and views |
+| U89 Wood and gold identity | Published + verified | Worn dark wood with visible wear; polished reflective gold across all families and views |
 | U90 Natural glacial underpass | Planned | A coherent low hill bridge with usable top and open trough beneath |
 | U91 Cell mosaic | Planned | More numerous, narrower cells with usable passages |
 | U92 Integrated grotto | Planned | Continuous matching rock roof and banks, natural entries and upper surface |
@@ -24,15 +24,17 @@ checkpoints to V2 only; preserve main and prior evidence.
 | U103 Sky Archipelago | Planned | Dominant detached floating land, natural bridges and useful traversal, not ordinary hills |
 | U104 All Planet | Planned | Oversized showcase world with the full compatible biome/terrain/feature vocabulary |
 | U105 Solar system worlds | Planned | Earth, Moon, Mars, Venus, Mercury, Jupiter, Saturn, Neptune, Uranus, Titan, Europa, Ganymede, Triton, Io, Callisto and Pluto, researched and visually checked |
-| U106 Commander frame | Verified locally | Clickable health/identity frame focuses the commander anywhere, including recovery state |
-| U107 Ember scepter | Verified locally | Reproduce attack and fire rendering; fix real damage/beam/animation consumers |
-| U108 Growing overview zoom | Verified locally | Early view remains useful; full-planet base permits full-planet framing |
-| U109 Faster, expanding nest waves | Verified locally | Half inter-wave delay; later nests progressively farther from the base regardless of base size |
-| U110 Scrap forging | Verified locally | Remove amber pickups; weapon salvage supplies the existing scrap balance used to forge towers; crystals preserved |
-| U111 First-person aiming | Verified locally | Smooth held aim input, coherent weapon alignment/FOV and predictable release/pause/UI behavior |
-| U112 Earthquake performance | Verified locally | Reproduce native hitch, bound preparation and terrain refresh work, preserve forecasts and routes |
-| U113 Commander abilities | Verified locally | Five distinct activated abilities with readable cooldowns, real effects and clean lifecycle |
-| U114 Weapon abilities | Verified locally | Six family-specific activated abilities with readable cooldowns, real effects and equipment lifecycle |
+| U106 Commander frame | Published + verified | Clickable health/identity frame focuses the commander anywhere, including recovery state |
+| U107 Ember scepter | Published + verified | Reproduce attack and fire rendering; fix real damage/beam/animation consumers |
+| U108 Growing overview zoom | Published + verified | Early view remains useful; full-planet base permits full-planet framing |
+| U109 Faster, expanding nest waves | Published + verified | Half inter-wave delay; later nests progressively farther from the base regardless of base size |
+| U110 Scrap forging | Published + verified | Remove amber pickups; weapon salvage supplies the existing scrap balance used to forge towers; crystals preserved |
+| U111 First-person aiming | Published + verified | Smooth held aim input, coherent weapon alignment/FOV and predictable release/pause/UI behavior |
+| U112 Earthquake performance | Published + verified | Reproduce native hitch, bound preparation and terrain refresh work, preserve forecasts and routes |
+| U113 Commander abilities | Published + verified | Five distinct activated abilities with readable cooldowns, real effects and clean lifecycle |
+| U114 Weapon abilities | Published + verified | Six family-specific activated abilities with readable cooldowns, real effects and equipment lifecycle |
+
+First checkpoint published as `574d6f4`: [Pages run](https://github.com/majieddd/worldheart/actions/runs/34718977246). `262` public identity checks and `50` public combat checks passed. [Evidence](ACTIVE-WORLDS/COMBAT.md). U90-U105 remain open.
 
 ## Sequence and boundaries
 
