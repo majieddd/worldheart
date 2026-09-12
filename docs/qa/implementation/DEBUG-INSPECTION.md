@@ -66,7 +66,7 @@ species, while the full-cycle test preserves the authored held idle.
   enemies or waves are injected. This advances simulation at 60Hz with sparse
   rendering, rather than constituting a real-time manual run.
 - All 78 generated mirror files match source. The single-file game bundles
-  73 modules. Publication identity is recorded below once complete.
+  73 modules. Publication identity is recorded below.
 
 ## Evidence
 
@@ -94,4 +94,19 @@ on the existing campaign tracker.
 
 ## Publication
 
-Implemented and locally verified; V2 publication and public verification pending.
+Implemented, verified and published on V2. Functional commit
+`a1d3a381c7facf83d4d2f11362d5e62c20416037` deployed through
+[Pages 34688819328](https://github.com/majieddd/worldheart/actions/runs/34688819328).
+[PR #36](https://github.com/majieddd/worldheart/pull/36) is a draft stacked on
+PR #35. No main merge was performed.
+
+All 273 public browser cases pass: [155 inspection cases](DEBUG-INSPECTION/public-inspection.json)
+and [118 catalogue cases](DEBUG-INSPECTION/public-catalogue.json). The deployed
+[sword](DEBUG-INSPECTION/public-sword.png) and [miniature molten planet](DEBUG-INSPECTION/public-molten.png)
+were opened and visually inspected. All [230 public asset/source comparisons](DEBUG-INSPECTION/public-identity.json)
+pass, including stable main `1374122d1109919a5fab10b69fefdfb80308eb6e`.
+The documentation handoff preserves the tested functional assets.
+
+[Open Debug World](https://majieddd.github.io/worldheart/v2/debug.html).
+Refresh an already open page to load the update. U56-U59 is complete within
+this inspection scope; the broader campaign gates above remain open.

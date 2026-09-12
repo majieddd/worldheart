@@ -125,8 +125,9 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 U56-U59 follow-up: Debug World now uses grab-style right-drag, centered weapons
 above their plinths, automatic full animation sequences on every unit, and
-ten miniature spheres from the production terrain/biome field. Local
-verification passes; publication is in progress. The
+ten miniature spheres from the production terrain/biome field. PR #36 is
+published and verified on V2 through functional build `a1d3a38`: 273 public
+browser cases and 230 asset/source checks pass. The
 [inspection record](qa/implementation/DEBUG-INSPECTION.md) preserves the
 weapon occlusion missed by the older finite-geometry check and the expanded
 acceptance. Full campaign/device/balance gates remain separate.
