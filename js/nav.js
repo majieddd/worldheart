@@ -127,7 +127,8 @@ export class NavGraph {
         for (let c = 0; c < 5; c++) {
           const center = this._pickCapCenter(rng, relax, theta);
           // A front that is mostly sea is not a battlefield; try another seed.
-          if (this.capLandFrac < 0.76 - relax * 0.3) break;
+          const islands=CONFIG.terrainKey==='ocean'||CONFIG.environment?.pack==='ocean'&&CONFIG.environment.coverage>=.95;
+          if (this.capLandFrac < (islands?.28-relax*.1:.76-relax*.3)) break;
           this._buildGraph(center, theta);
           if (this._chooseSites(relax, center, theta)) {
             this.fieldCenter = CONFIG.terrain ? this.nodeDir(this.heartNode, new THREE.Vector3()) : center;
@@ -200,7 +201,7 @@ export class NavGraph {
       // and picks the best lit one available.
       if (minRim < -0.12) continue;
 
-      let land = 0, traversable = 0, inlandFloor = 0, sampledPeak = 0;
+      let land = 0, traversable = 0, inlandFloor = 0, sampledPeak = 0, sampledDepth=0;
       const exposedFamilies = new Set();
       for (let s = 0; s < SAMPLES; s++) {
         // sunflower spiral: even coverage of the cap with few samples
@@ -212,9 +213,11 @@ export class NavGraph {
           .normalize();
         const h = terrainHeight(probe.x, probe.y, probe.z, false);
         sampledPeak = Math.max(sampledPeak, h);
-        if (CONFIG.terrain && h > 2) exposedFamilies.add(WORLD.FORMATIONS.inspect(probe.x, probe.y, probe.z).type);
-        if (h >= 0.05) land++;
-        if (CONFIG.terrain && h >= .18 && isWalkableDir(probe)) {
+        sampledDepth=Math.max(sampledDepth,-h);
+        if (CONFIG.terrain && Math.abs(h) > 2) exposedFamilies.add(WORLD.FORMATIONS.inspect(probe.x, probe.y, probe.z).type);
+        const dry=CONFIG.terrain?WORLD.waterDepthAt(probe,h)===0:h>=.05;
+        if (dry) land++;
+        if (CONFIG.terrain && dry && isWalkableDir(probe)) {
           traversable++;
           if (h <= 1.5 && WORLD.continentalityAt(probe.x, probe.y, probe.z) - CONFIG.terrain.ocean > .25) inlandFloor++;
         }
@@ -223,7 +226,9 @@ export class NavGraph {
       // A globally tall alpine seed is not enough if its playable cap only
       // contains foothills. Survey a real major peak inside this battlefield.
       if (CONFIG.terrainKey === 'alpine' && CONFIG.terrain && sampledPeak < CONFIG.terrain.range * .65) continue;
-      if (CONFIG.terrain && (exposedFamilies.size < 3 || sampledPeak < 16)) continue;
+      const islands=CONFIG.terrainKey==='ocean'||CONFIG.environment?.pack==='ocean'&&CONFIG.environment.coverage>=.95;
+      const required=CONFIG.terrain?Math.min(islands?2:3,new Set(WORLD.FORMATIONS.modules.filter(m=>m.height>0).map(m=>m.type)).size):0;
+      if (CONFIG.terrain && (exposedFamilies.size < required || Math.max(sampledPeak,sampledDepth) < (islands?8:16))) continue;
       // Land is still what matters most - a field in the sea is unplayable
       // where a dim one is merely moody - so rim light is a modest bonus that
       // breaks ties between otherwise equal caps.
@@ -761,7 +766,7 @@ export class NavGraph {
       const h=terrainHeight(_v.x,_v.y,_v.z)+delta,base=terrainHeight(_v.x,_v.y,_v.z,false)+delta;
       this.height[i]=h;this.baseHeight[i]=base;this.waterDepth[i]=WORLD.waterDepthAt(_v,base);
       const slope=WORLD.slopeAt(_v,predicted?fault:null);
-      this.walk[i]=predicted?(WORLD.inBattlefield(_v.x,_v.y,_v.z)&&(this.waterDepth[i]>0||slope<=CONFIG.walkMaxSlope)?1:0):(isWalkableDir(_v)?1:0);
+      this.walk[i]=predicted?(WORLD.inBattlefield(_v.x,_v.y,_v.z)&&!WORLD.solidTerrainAt(_v,WORLD.surfaceElevation(_v,base),1.7)&&(this.waterDepth[i]>0||slope<=CONFIG.walkMaxSlope)?1:0):(isWalkableDir(_v)?1:0);
       this.floorWalk[i]=this.walk[i]&&isFloorTerrain(base,slope,this.waterDepth[i])?1:0;
       this.airWalk[i]=predicted?(base+WORLD.FLIGHT_CLEARANCE+3<=WORLD.FLIGHT_CEILING?1:0):(WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+3)?1:0);
       const radius=R+WORLD.surfaceElevation(_v,h);this.pos[i*3]=_v.x*radius;this.pos[i*3+1]=_v.y*radius;this.pos[i*3+2]=_v.z*radius;
@@ -892,7 +897,7 @@ export class NavGraph {
   canDrive(fromDir,toDir,footHeight,airborne=false,radius=.45) {
     if(!CONFIG.terrain)return true;
     if(!WORLD.inBattlefield(toDir.x,toDir.y,toDir.z))return false;
-    const ground=WORLD.surfaceElevation(toDir),from=WORLD.surfaceElevation(fromDir);
+    const ground=WORLD.surfaceElevation(toDir,WORLD.supportHeight(toDir,footHeight)),from=WORLD.surfaceElevation(fromDir,WORLD.supportHeight(fromDir,footHeight));
     const distance=Math.max(.001,fromDir.distanceTo(toDir)*R);
     // A ground flow edge describes walking in both directions. A commander
     // may leave that graph and fall off a ledge, but cannot walk up its wall.

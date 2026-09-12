@@ -4,6 +4,7 @@ import {createFormationField} from '../../js/terrain/formations.js';
 import {LANDFORM_RECIPES} from '../../js/terrain/recipes.js';
 import {createEcology} from '../../js/terrain/ecology.js';
 import {surveyLandmarks} from '../../js/terrain/landmarks.js';
+import {NEW_PLANET_THEMES} from '../../js/run/world-catalogue.js';
 const R=240,profile={range:90,canyon:38};
 const sphere=Array.from({length:12000},(_,i)=>{const y=1-2*(i+.5)/12000,r=Math.sqrt(1-y*y),a=i*2.39996323;return [r*Math.cos(a),y,r*Math.sin(a)];});
 
@@ -33,7 +34,8 @@ test('ravines cut into uplands, plateaus have broad benches, and crevices cut be
 test('mixed terrain includes small hills, deep incisions and major ranges in one seeded globe',()=>{
  for(const seed of [12345,771,92741,2387895531]){
   const f=createFormationField(seed,R,profile,'varied'),types=new Set(f.modules.map(m=>m.type));
-  for(const type of ['range','hills','canyon','plateau','ravine','crevice'])assert.ok(types.has(type),`${seed} missing ${type}`);
+  for(const type of ['range','hills','plateau','gorge','caldera'])assert.ok(types.has(type),`${seed} missing ${type}`);
+  assert.ok(types.size>=15,'mixed worlds combine a broad subset rather than identical catalogues');
   assert.ok(Math.max(...f.modules.filter(m=>m.type==='range').map(m=>m.height))>70);
   assert.ok(Math.max(...f.modules.filter(m=>m.type==='hills').map(m=>m.height))<22);
  }
@@ -48,7 +50,7 @@ test('climate is repeatable, locally continuous and gives planets distinct biome
    assert.equal(t,b.temperature(...p));assert.equal(m,b.moisture(...p));biomes.add(a.biome(...p,.6));
    assert.ok(Math.abs(a.temperature(p[0]+.0001,p[1],p[2])-t)<.01);
    assert.ok(a.forest(...p)>=0&&a.forest(...p)<=1);
-   assert.equal(a.biome(...p,4,'hot'),'volcanic');assert.equal(a.biome(...p,45,'cold'),'alpine');
+   if(!NEW_PLANET_THEMES[a.manifest().environment.theme]){assert.equal(a.biome(...p,4,'hot'),'volcanic');assert.equal(a.biome(...p,45,'cold'),'alpine');}
   }
   // Owner U53 deliberately permits almost single-biome extreme worlds.
   // Garden worlds still carry the full latitude-driven climate vocabulary.

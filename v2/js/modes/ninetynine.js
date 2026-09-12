@@ -1,3 +1,4 @@
+import {GeyserField} from '../terrain/geysers.js';
 // The 99 Planets shell. The ONLY file that knows both the pure run core and
 // Three.js. The core decides WHAT happened; this file decides what it looks
 // like. Nothing here leaks back into js/run.
@@ -857,6 +858,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     const events=run.finishEndless();if(!events.length)return false;
     handle(events);return true;
   }
+  const geysers=new GeyserField(world,allies,enemies);
   const weather=new PlanetWeather({scene:game.scene,nav,world,allies,enemies,game,commander:()=>commander,centre,ui,oreField});
   const started=waves.onWaveStart;waves.onWaveStart=(n,comp)=>{started?.(n,comp);weather.wave(n);};
   const expeditionUi=expeditionControls({ui,game,lockedCommander:expedition?.commander,api:{commander:()=>commander,run,respawn,mounts,ore,weather,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun}});
@@ -869,7 +871,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     run,
     get commander() { return commander; },
     respawn,
-    mounts,ore,oreField,weather,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
+    mounts,ore,oreField,weather,geysers,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
     crystals,
     depositCrystals,
     inventory,
@@ -888,6 +890,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       const activeDt=run.getPhase()==='building'?dt*game.speed:0;
       mounts.update(activeDt);oreField.update(activeDt);weather.update(activeDt);
       if(game.terrainBusy)return;
+      geysers.update(activeDt);
       if (run.getPhase() !== 'drafting' && respawn.tick(dt * game.speed)) {
         const old = commander; commander = allies.spawn(fallenKey,centre,centre,12);
         if (!commander) { commander = old; respawn.die(true); }

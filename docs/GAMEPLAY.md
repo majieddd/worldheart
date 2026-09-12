@@ -14,8 +14,9 @@ section lists the places where the code disagrees with itself.
 The active integration adds `?map=ninetynine&campaign=1`. This is a saved
 99-destination campaign; the plain mode URL is a single-planet sandbox.
 `js/run/planets.js` owns region, terrain, pressure, era and milestone definitions.
-Four terrain profiles and five pressure patterns produce twenty combinations;
-health scaling is bounded at 1.35x. `js/encounters.js` applies flyer, armor and
+Mixed Landscapes is the default; twenty planet themes compose ten geological
+packs with five pressure patterns. Health scaling is bounded at 1.35x.
+`js/encounters.js` applies flyer, armor and
 swarm composition changes and three milestone attack patterns without mutating
 global enemy templates. Raider pressure uses a 0.85 interval multiplier.
 
@@ -27,16 +28,17 @@ envelope. Title purchases require Apply upgrades to save and rebuild that same
 planet with the new account profile. See [M5B](qa/implementation/M5B.md) for exact
 implementation/evidence scope and the remaining release gates.
 
-The landforms v7 preview assigns a deterministic stellar class, luminosity,
+The landforms v8 preview assigns a deterministic stellar class, luminosity,
 orbital distance, water inventory and tectonic activity to every campaign
 planet. Flux is luminosity divided by distance squared. These stylized inputs
-select ten themes (Garden, Canopy, Dune, Cryosphere, Molten, Crystal, Spore,
-Pelagic, Iron desert and Luminous twilight) and bias biome bands,
-ocean coverage and formation families. Mixed Landscapes remains the default.
+select twenty themes and bias thirty biome identities, ocean coverage and fifty
+formation families. Each theme selects geological pack coverage from regional
+to global. The shared catalogue lives in `js/run/world-catalogue.js` and
+`js/run/planet-environments.js`. Mixed Landscapes remains the default.
 The inspector selects a theme that owns its climate and biome distribution;
 saved campaign definitions retain their generated environment. See
 [terrain recipes](TERRAIN-RECIPES.md) and the
-[extreme worlds evidence](qa/implementation/EXTREME-WORLDS.md). Solid land,
+[living worlds evidence](qa/implementation/LIVING-WORLDS.md). Solid land,
 sea and scenery palettes are shared with the flat `debug.html` exhibition.
 
 ## Towers
@@ -270,7 +272,7 @@ cannot pay repeated early-call gold. Nests remain fixed after expansion.
 | `pocket` | Pocket World | planetary | 30 | 5 | 4 | 400 | whole globe |
 | `giant` | Giant World | planetary | 240 | 7 | 5 | 500 | whole globe |
 | `titan` | Titan's Brow | battlefield | 240 | 9 | 5 | 450 | 0.28 rad cap |
-| `ninetynine` | 99 Planets | ninetynine | 240 | 9 | up to 17 nests | 450 | 0.52 rad cap |
+| `ninetynine` | 99 Planets | ninetynine | 240 | 9 | 11 certified nest sites | 450 | 0.52 rad cap |
 | `reach` | Shattered Reach | space | 70 | 7 | 5 | 450 | 0.5 rad cap |
 
 A URL with no `?map=` and no stored choice loads **Pocket World**, where none of
@@ -441,23 +443,36 @@ half the world.
 
 ### Campaign terrain profiles
 
-The title selector and `?terrain=varied|alpine|canyon|ocean` choose Mixed landscapes,
-Giant peaks, Deep canyons or Ocean islands. Their range/canyon amplitudes are
-90/32, 96/32, 84/38 and 76/22 world units. These are inputs to the composed
-height field, not maximum heights. Versioned [formation recipes](TERRAIN-RECIPES.md)
-mix ridge chains, winding canyons, basins, hills, tablelands, terraced plateaus,
-branching ravines, fault crevices, butte clusters, breached calderas, dune fields
-and broad glacial troughs independently
-of biome dressing. Shared valleys connect their boundaries; group dimensions,
-weights and authored anchors are configurable. Canyon banks use a 1.65 relief
-gain and ridge chains use 1.18 before seeded variation and continental blending.
-Picking, camera clearance and fog use the conservative recipe height envelope.
+The title selector and `?terrain=` select ten packs. Each sets formation weights,
+amplitudes, spacing and fine-noise strength. Themes can apply another pack to
+some, most or all geological provinces on Mixed Landscapes. Explicit inspector
+packs retain their intended families. These amplitudes are inputs to the
+composed field, not maximum heights:
+
+| Key | Pack | Range / cut amplitude | Spacing | Flight ceiling |
+|---|---|---|---|---|
+| varied | Mixed Landscapes | 100 / 54 | 116 | 32 |
+| alpine | Giant Peaks | 150 / 65 | 194 | 65 |
+| canyon | Deep Canyons | 45 / 118 | 150 | 32 |
+| ocean | Ocean World | 90 / 40 | 118 | 36 |
+| badlands | Badlands | 82 / 70 | 126 | 38 |
+| karst | Karst Labyrinth | 70 / 88 | 124 | 38 |
+| geothermal | Geothermal Fields | 118 / 56 | 140 | 50 |
+| glacial | Glacial Frontiers | 100 / 75 | 142 | 48 |
+| aeolian | Windlands | 92 / 38 | 128 | 38 |
+| sky | Sky Reaches | 104 / 60 | 138 | 55 |
+
+Versioned [formation recipes](TERRAIN-RECIPES.md) describe all fifty families and
+their route opportunities. Shared valleys connect group boundaries; dimensions,
+weights and anchors are configurable. Canyon banks use a 1.65 relief gain and
+ridge chains use 1.18 before seeded variation and continental blending. Picking,
+camera clearance and fog use the conservative recipe envelope, including upper decks.
 
 Ground route costs include actual 3D distance and a bounded uphill penalty.
 Swimming enters at 0.65 water depth and exits at 0.45, runs at 60% speed and
 disables sprint. Cargo multiplies traversal speed. Route graphs own blocking;
 commander orders and enemies share costs. Flyers use a fixed, separate graph
-and radial clearance ceilings of 28/38/30/28 units for the four profiles.
+and the pack's radial clearance ceiling shown above.
 
 Stable, dry footprints can hold towers at elevation. Hot black stone accepts
 only Mortars with 15% extra damage; cold blue-white stone accepts only Cryo
@@ -477,34 +492,45 @@ height and 0.62 grade boundary used by floor routing. Ground enemies prefer
 connected floor routes; emergency mountain travel remains at 8% speed. Ordinary
 nest placement never depends on that emergency passage.
 
-Landforms v6 retains the v2 joins of selected adjacent ranges into open chains of at most three
+Landforms v8 retains the v2 joins of selected adjacent ranges into open chains of at most three
 cells, keeping a continuous spine across their internal seams. Their outer
 valleys remain low. Isolated mountains, foothills and explicit authored groups
 keep separate footprints. Nest scoring adds twice the wet route distance to
 its existing distance/bearing score, preferring an inland approach when one
 fits without forbidding water crossings on islands.
 
-All four mixes combine large and small formations, with different weights.
-Geology provinces vary recipe selection and peak amplitudes. Plateau benches
+Mixed Landscapes combines large and small formations. Specialized packs focus
+on their geology: Giant Peaks contains only ridges, Deep Canyons favors long
+inward cuts, and Ocean World puts formations on islands and archipelagos.
+Geology provinces vary recipe selection, amplitudes and detail noise. Plateau benches
 retain flat high ground. Winding Valley is the paired-bank formation; Winding
 Canyon cuts inward below sea level. Inland canyon/fault bottoms stay dry, with
 real descent/ascent costs, grounded units and valid tower placement on stable
-floors. Ocean regions retain swimming. Depth follows available ramp length to
-avoid sealed pits. Outer valley joins remain open. Butte groups contain 7-12
+floors. Ocean regions and atoll lagoons retain swimming. Ordinary channel depth
+follows available ramp length; karst sinkholes and kettle pits are deliberate
+traps and never valid nest clearings. Outer valley joins remain open. Butte groups contain 7-12
 remnants with measured gaps; Hill Fields replaces Dune field, Plateau replaces
 Eroded tableland, and a Staircase escarpment adds long connected benches.
 
-Mixed Landscapes is the default for all campaign planets. Independent Temperate,
-Desert, Boreal, Jungle, Volcanic and Wetlands climate biases combine with
-latitude/moisture/altitude. Deserts add cacti; jungles add large canopies; basalt
+Mixed Landscapes is the default for all campaign planets. The planet theme owns
+climate, combining latitude, moisture and altitude with its biome vocabulary.
+Deserts add cacti; jungles add large canopies; basalt
 and warm fissures mark volcanic ground. Fissures are solid decorative crust,
 not a liquid/damage hazard. Existing hot/cold tower rules remain authoritative,
 including Mortar-only raised volcanic stone. No additional biome slowdown is added.
 
+Grotto roofs, glacial bridges, floating mesas, pedestal caps and fossil logs use
+shared rendered and physical upper surfaces. Commanders can land on them,
+walk off and jump, while AI follows the lower terrain floor. Solid roofs stop
+ascending heads and mounts. Geyser stairways erupt for 2.8 seconds every twelve
+seconds, launching nearby ground units on both teams once per cycle. Their
+steam and impulse use the same simulation clock. These fixtures add traversal
+without granting extra hidden biome damage or upper-deck tower placement.
+
 The title and Settings offer **World generator**. It opens an isolated,
 non-simulating inspection tab with new seeds, a 12-world history, reproducible
-links, four terrain mixes, independent climate choices and the unchanged classic
-whole-planet formula. Recent history and Play this seed preserve climate too.
+links, ten terrain packs, twenty planet themes and the unchanged classic
+whole-planet formula. Recent history and Play this seed preserve the theme too.
 Base/peak/globe and named formation focus, plus the valid-nest approach overlay, use the actual world
 and route field. **Play this seed** opens a normal single-planet sandbox.
 Generation reloads the scene lifecycle; it never replaces a live campaign.
@@ -528,11 +554,12 @@ equipment unchanged and respects vertical distance, pause and campaign phase.
 I opens a paused inventory, R remains a manual pickup shortcut, and X cycles
 equipped/native attacks. Full backpacks preserve drops and require explicit replacement or
 salvage. Native techniques and a basic sword remain available. Compatible sword,
-spear, carbine and lobber families have head/grip/core tradeoffs. Pending changes
+spear, carbine, lobber, twinblade and scepter families have head/grip/core tradeoffs. Pending changes
 settle after recovery; launched projectiles retain their release stats.
 
 Drop chances are 2% ordinary, 10% Aegis and one guaranteed Colossus weapon.
-Rarities are 68% common, 22% uncommon, 8.5% rare and 1.5% relic. Tiers 1-33 use
+Rarities are 68% common, 22% uncommon, 7.5% rare, 2% epic and 0.5% relic,
+mapped to wood, iron, gold, diamond and onyx respectively. Tiers 1-33 use
 ancient presentation, 34-66 technological and 67-99 empowered. These numbers
 remain balance prototypes. The saved expedition pilot below supports persistence;
 the single-planet sandbox does not retain weapon loot.

@@ -1,3 +1,4 @@
+import {TERRAIN_PACKS} from './run/world-catalogue.js';
 // WORLDHEART: single source of tuning. Scene palette here is canonical for WebGL;
 // css/style.css :root is canonical for the DOM HUD. Keep the two in sync with DESIGN.md.
 
@@ -114,18 +115,14 @@ const mapKey = (() => {
 const MAP = MAPS[mapKey];
 const R0 = MAP.radius;
 
-export const TERRAIN_PROFILES = {
-  varied: { name: 'Mixed landscapes', range: 90, canyon: 32, snow: 44, ocean: 0, flightCeiling: 28 },
-  alpine: { name: 'Giant peaks', range: 96, canyon: 32, snow: 42, ocean: 0, flightCeiling: 38 },
-  canyon: { name: 'Deep canyons', range: 84, canyon: 38, snow: 40, ocean: 0, flightCeiling: 30 },
-  ocean: { name: 'Ocean islands', range: 76, canyon: 22, snow: 36, ocean: 0.12, flightCeiling: 28 },
-};
+export const TERRAIN_PROFILES = Object.fromEntries(Object.entries(TERRAIN_PACKS).map(([key,p])=>[key,{name:p.name,range:p.range,canyon:p.canyon,snow:p.snow,ocean:p.ocean,flightCeiling:p.flight,noise:p.noise}]));
 const rawSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
 const requestedSeed=worldgen&&(!Number.isInteger(rawSeed)||rawSeed<1||rawSeed>0xffffffff)?20260830:rawSeed;
 const campaign=campaignLaunch(!worldgen&&mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':preview),requestedSeed);
 const terrainKey = campaign?.terrain || url.get('terrain') || 'varied';
 const planetKey=!campaign&&Object.hasOwn(PLANET_THEMES,url.get('planet'))?url.get('planet'):'auto';
-const environment=MAP.mode==='ninetynine'?campaign?.environment||planetEnvironment((requestedSeed>>>0)||1,planetKey):null;
+let environment=MAP.mode==='ninetynine'?campaign?.environment||planetEnvironment((requestedSeed>>>0)||1,planetKey):null;
+if(environment&&!environment.pack){const recipe=planetEnvironment(environment.seed,environment.theme);environment={...environment,pack:recipe.pack,coverage:recipe.coverage,biomes:recipe.biomes};}
 const terrainProfile=TERRAIN_PROFILES[terrainKey]||TERRAIN_PROFILES.varied;
 
 export const CONFIG = {

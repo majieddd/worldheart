@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { MOUNTS } from './run/expedition.js';
-import { R, surfaceElevation } from './world.js';
+import { R, surfaceElevation, overheadHeight, supportHeight } from './world.js';
 
 export function buildMount(key){
   const group=new THREE.Group(),moving=[],m=MOUNTS[key]||MOUNTS.strider;
@@ -45,8 +45,8 @@ export class MountController {
     const key=a.mountKey||'none',m=MOUNTS[key]||MOUNTS.none;a.mountOffset=m.height;a.mountSpeed=m.speed;a.mountWater=m.water;
     if(key==='skyray'){
       const wants=this.possession.unit===a&&!this.possession.suspended&&this.possession.keys.has('Space');
-      if(wants&&this.energy>0){this.energy=Math.max(0,this.energy-dt);a.mountFlight=Math.min(8,a.mountFlight+dt*5);}
-      else a.mountFlight=Math.max(0,a.mountFlight-dt*5);
+      if(wants&&this.energy>0){this.energy=Math.max(0,this.energy-dt);const feet=surfaceElevation(a.dir,a.height)+(a.hop||0);a.mountFlight=Math.max(0,Math.min(8,a.mountFlight+dt*5,overheadHeight(a.dir,feet+a.mountFlight)-feet-a.mountOffset-1.7));}
+      else {const feet=surfaceElevation(a.dir,a.height)+(a.hop||0)+a.mountFlight,h=supportHeight(a.dir,feet);a.mountFlight=Math.max(0,a.mountFlight-dt*5);if(h>a.height+.1&&surfaceElevation(a.dir,a.height)+(a.hop||0)+a.mountFlight<=surfaceElevation(a.dir,h)){a.height=h;a.mountFlight=0;a.hop=0;a.airT=0;a.vertVel=0;}}
       if(!wants&&a.mountFlight===0)this.energy=Math.min(12,this.energy+dt*2);
       a.mountFlying=a.mountFlight>.65;
     }else{a.mountFlight=0;a.mountFlying=false;}

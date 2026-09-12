@@ -1,7 +1,7 @@
 // Build a small inspection catalogue once, not during the frame loop. Probe
 // actual exposed relief, since a recipe anchor can be submerged or its cut
 // displaced by domain warping. Prefer representatives inside the playfield.
-export function surveyLandmarks(field, heightAt, center, theta, waterAt=()=>false, biomeAt=()=>null) {
+export function surveyLandmarks(field, heightAt, center, theta, waterAt=()=>false, biomeAt=()=>null,features=null) {
   const best=new Map(),all=new Map();
   for(const m of field.modules) {
     const continental=['grand','labyrinth'].includes(m.type);
@@ -39,6 +39,7 @@ export function surveyLandmarks(field, heightAt, center, theta, waterAt=()=>fals
       if(inside&&(!best.has(sample.type)||best.get(sample.type).score<score))best.set(sample.type,record);
     }
   }
+  for(const s of features?.surfaces||[]){const dir=s.dir,height=s.top(0,0),inside=dir[0]*center.x+dir[1]*center.y+dir[2]*center.z>=Math.cos(theta),record={type:s.m.type,dir,height,relief:height,depth:0,score:Math.max(3,height),inside,scale:s.m.extent*1.6};if(!all.has(s.m.type)||all.get(s.m.type).score<record.score)all.set(s.m.type,record);if(inside&&(!best.has(s.m.type)||best.get(s.m.type).score<record.score))best.set(s.m.type,record);}
   // Do not choose a shallow local fragment over a much clearer complete
   // formation elsewhere. The selector already labels out-of-field examples.
   for(const [key,value]of all)if(!best.has(key)||best.get(key).score<value.score*.65)best.set(key,value);

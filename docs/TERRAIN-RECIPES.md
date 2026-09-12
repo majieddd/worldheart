@@ -7,8 +7,9 @@ keep their original terrain formula.
 
 ## Authoring boundaries
 
-`js/terrain/recipes.js` holds version 7, thirty group recipes and four relief
-mixes. `js/terrain/formations.js` lays out and samples those groups. `world.js`
+`js/terrain/recipes.js` holds version 8 and fifty group recipes. The ten terrain
+packs in `js/run/world-catalogue.js` set family weights, amplitudes, spacing and
+detail noise. `js/terrain/formations.js` lays out and samples those groups. `world.js`
 composes their relief with continents and small surface detail, then applies
 elemental stone rules and the independent `terrain/ecology.js` climate fields.
 `nav.js` validates the
@@ -29,30 +30,52 @@ resulting surface, rather than drawing hidden routes through blocked mountains.
 | Hill Fields | More widely spaced parallel low crests with a long windward side and shorter slip face | Low rolling obstacles beside larger formations |
 | Winding Canyon | Negative incision with winding stepped walls and long end ramps | Dry sub-sea passage, with depth bounded by available exit length |
 | Staircase escarpment | Three lateral benches crossed by a diagonal ramp | Multiple connected positions beside a steep flank |
-| Glacial trough | Sunken U-shaped bed, unequal walls and hanging side valleys | Broad below-floor route with graded ends, distinct from the raised Winding Valley |
-| Great continental rift | Long negative trunk with a side branch and extended end ramps | A deep route crosses several ordinary formation regions |
+| Glacial trough | Sunken U-shaped bed, unequal walls and an actual overhead land bridge | Walk below the bridge or land on its upper surface |
+| Great continental rift | Long deep trunk with ten striating tributaries and extended end ramps | A deep route crosses several ordinary formation regions |
 | Noctis labyrinth | Offset crossing faults and surviving upland islands | Multiple intersecting channels, inspired by Mars |
 | Rafted crust blocks | Broad tilted angular slabs | Gaps through broken crust, inspired by Europa |
 | Razorback ridge | Narrow toothed wall with a pass | A strong linear barrier, inspired by Iapetus |
 | Lava spill volcano | Crater lake, breached rim and downhill lava channel | Hot elevated positions around an active flow |
 | Canopy highlands | Broad lobed shelves and bounded forest clusters | Wooded highlands with stepped flanks |
-| Concentric impact rings | Two gated rims and a central rebound | Linked concentric shelves and radial approaches |
+| Meteor impact zone | One breached crater, displaced rim and scattered ejecta | A traversable impact floor with a clear exit |
 | Wind-carved yardangs | Tall parallel fins with staggered ends and a crosswind gap | Several long corridors connected laterally |
 | Drumlin shoal | Rounded asymmetric teardrops with long tails | Gaps between staggered low remnants |
 | Alluvial fan | One apex spreading into a scalloped apron | Diverging radial approaches across an open flank |
-| Joined karst sinkholes | Rounded depressions connected by surface throats | Linked dry doline floors; no simulated caves |
-| Spiral polar troughs | Two winding negative cuts | Curving inward routes with graded exits |
-| Penitente blade field | Dense pointed narrow blades | Many small paths between elevated obstructions |
+| Joined karst sinkholes | Very deep rounded depressions connected by surface throats | Deliberate trapping pits, excluded from nest clearings |
+| Spiral polar troughs | One continuous two-turn negative spiral | A connected floor and upper route around the spiral |
+| Penitente blade field | Spaced pointed narrow blades | Open paths between elevated obstructions |
 | Araneiform star channels | Radial channels converging on a low center | Several inward routes rather than a single ravine trunk |
 | Convection cell mosaic | Polygonal plates and a depressed connected network | Branch choices around multiple adjacent cells |
 | Tiger-stripe fractures | Four long parallel negative grooves | Separate narrow tracks with open ends |
+| Vaulted grotto | Raised banks and a separate rough stone roof | A medium-sized open passage below a usable upper surface |
+| Sky mesa | Three irregular floating slabs above a low basin | Flying commanders can land, walk and jump off the decks |
+| Geyser staircase | Four ascending mineral terraces and a vent | Timed steam eruptions launch nearby units on both teams |
+| Braided delta | Five diverging sinuous channels | Parallel low routes spread from a common upstream approach |
+| Horseshoe amphitheatre | Open curved wall enclosing an inner court | Sheltered open floor with a wide mouth |
+| Tilted cuesta comb | Three asymmetric tilted benches | Broad dip slopes beside steep faces |
+| Crescent dune caravan | Three unequal crescent dunes | Curved horns enclose pockets, with gaps between dunes |
+| Whaleback dome | One elongated smooth dome split by a cleft | Rounded high ground with a distinct transverse cut |
+| Pedestal orchard | Separate mushroom rock caps on narrow stems | Pass under caps or land on their upper surfaces |
+| Honeycomb hoodoos | Broad hexagonal walls interrupted by gates | Linked polygon rooms and flat wall tops |
+| Folded wave rock | One sinuous asymmetric folded wall | A long corridor along its steep face |
+| Flood scablands | Scoured lowland around streamlined remnants | Branch around elongated elevated islands |
+| Box canyon | Rectangular inward cut with one open end | Deep enclosed court entered through a broad mouth |
+| Kame staircase | Five staggered ascending mounds | Stepping positions and gaps beside the sequence |
+| Reef atoll | Broken annular reef and shallow wet lagoon | Swim through its breaches or follow the island rim |
+| Petrified trunk maze | Three large grained fallen trunks at different angles | Pass under or traverse the physical logs |
+| Oxbow terraces | Meandering incision and paired offset benches | Connected curved lower route and upper shelves |
+| Pancake lava shields | Broad low circular lava domes | Overlapping gentle volcanic rises |
+| Kettle chain | Unequal linked deep round pits | Deliberate depressions with separate safe perimeter routes |
+| Fulgurite crown | Angular forked lightning-like ridges | Wide interlocking spaces between branches |
 
-Mixed landscapes, Giant peaks, Deep canyons and Ocean islands are **relief mixes**,
-not exclusive biome assignments. Any group can have neutral, hot or cold
-surfaces. All four mixes include hills, tall ranges and incised uplands, with
-different proportions and scales. No individual battlefield guarantees all thirty
-families. Low-frequency geology biases neighbouring family choices and peak
-amplitudes, rather than distributing every recipe with identical probability.
+Terrain packs are geological recipes, separate from biome assignments. Mixed
+Landscapes uses the full vocabulary. Giant Peaks uses only extreme ridge chains
+and razorbacks; Deep Canyons emphasizes negative incisions; Ocean World builds
+formation-bearing islands, connected archipelagos and peninsulas. Badlands,
+Karst Labyrinth, Geothermal Fields, Glacial Frontiers, Windlands and Sky Reaches
+complete the ten packs. No individual battlefield guarantees all fifty families.
+Themes can apply a pack regionally, across most provinces, or globally. They
+control the pack's weight, amplitude and detail-noise biases in those provinces.
 Temperature, altitude snow, water and foliage remain separate fields.
 Mortar/Cryo placement restrictions and bonuses still use the actual footprint.
 
@@ -62,14 +85,15 @@ and climate preserve variety, including distinct opening-planet seeds.
 
 Each requested planet seed selects an M/K/G/F star and an orbital distance.
 Flux L/a^2 shifts temperature; water inventory and tectonic activity separately
-produce ten extreme themes, described below. Planet Mix has
+produce twenty themes, described below. Planet Mix has
 wet equatorial, dry subtropical, wetter temperate and cold polar belts, with
 smaller longitude noise and an altitude cooling term. The Planet theme owns
 this climate; there is no second climate dropdown to contradict the theme.
 The climate fields produce meadow,
 woodland, jungle, wetland, savanna, desert and tundra regions across multiple formation
-families. Tectonic activity independently creates volcanic regions. Hot stone and
-altitude/cold rules take precedence as volcanic/alpine surface biomes. Biome dressing blends the existing palette and
+families. Tectonic activity creates volcanic regions where the theme allows them.
+Hot/cold tinting preserves the new biomes' authored identity while retaining
+the same tower restrictions. Biome dressing blends the existing palette and
 vegetation; it does not add a new tower restriction or movement penalty. Deserts have sparse cacti; jungles have larger broadleaf canopies. Volcanic
 regions show basalt and warm fissures on raised hot crust. This is solid rock,
 not a liquid lava simulation or added damage hazard. Hot volcanic highlands use
@@ -81,7 +105,7 @@ climates remain seeded; inspector choices do not overwrite campaign saves.
 
 ## Extreme worlds and exhibition
 
-The environment catalogue is independent of the thirty formation recipes.
+The environment catalogue composes fifty formation recipes into twenty themes.
 Each theme biases suitable shapes and changes land, water and dressing through
 the shared `js/biome-visuals.js` registry. Garden retains varied latitude belts.
 Canopy favors dense jungle; Dune favors dry sandstone and cacti; Cryosphere
@@ -92,14 +116,22 @@ desert uses rust-red crust and dark blades; Luminous twilight uses cobalt and
 branching luminous flora. Their major visual identity dominates ordinary land.
 Explicit hot formations and altitude ice can remain as minority contrasts.
 
+The ten additional themes are Titan Forest, Bloom Sanctuary, Sulfur Furnace,
+Salt Mirror, Reef Ocean, Sky Archipelago, Fossil World, Copper Harvest,
+Carnivorous Fen and Stormglass. Each has its own pack coverage, formation
+weights, biome palette and climate distribution. Thirty biomes include distinct
+redwood, bamboo, blossom, baobab, cloud forest, mineral, reef, kelp, lichen,
+sponge, pitcher and luminous-frond dressing. See the
+[catalogue audit and research](qa/implementation/LIVING-WORLDS-RESEARCH.md).
+
 Gameplay variety follows real water coverage, terrain biases and the existing
 hot/cold tower affinities. Molten seas currently use swimming slowdown; they do
 not add an unannounced damage rule. Scenery remains passable. Neither a theme
 nor a color change grants a hidden movement or tower modifier.
 
-`debug.html` provides eight flat lanes: 11 unit rigs, 3 mounts, 18 authored tower
-marks, 14 weapon family/era or native silhouettes, 30 isolated formations,
-4 combined Terrain collections, 15 biomes and 10 theme globes. The Terrain lane
+`debug.html` provides eight flat lanes and 186 exhibits: 11 unit rigs, 3 mounts,
+30 tower marks, 32 weapon appearances, 50 isolated formations,
+10 combined Terrain collections, 30 biomes and 20 theme globes. The Terrain lane
 is between formations and biomes. Each approximately 300m production patch
 shows the multiple formation groups selected by that relief mix. Mangrove
 adds stilt-rooted trees to wet lowland Canopy and Pelagic planets.
@@ -130,21 +162,24 @@ preference storage. [Research, visual comparisons and checks](qa/implementation/
    Winding Canyon is a negative incision capped at 32% of its cell extent.
    The longer continental rift and labyrinth overlays cross cell joins;
    other outer joins stay at zero relief.
-   This height field does not represent caves or overhangs.
+   The height field represents the lower floor. `terrain/features.js` adds
+   shared rendered and physical upper surfaces for caves, bridges, floating
+   islands, rock caps and fallen logs. AI routes follow the lower height field;
+   commander support, falling, head clearance and flight use those extra surfaces.
 6. Continental blending creates coasts and islands. Negative incisions begin
    beyond the shoreline band; inland depressions stay dry even below sea level.
-   A spherical coast-distance field limits negative depth to 0.4 times safe
-   distance from shore, avoiding steep dams from noisy coastal blending.
+   A spherical coast-distance field limits negative depth to 0.45 times safe
+   distance from shore, avoiding steep dams from coastal blending.
    A shared continental water mask controls the water shader, unit/weapon
    grounding, swimming, placement, ray picking, camera and navigation costs.
    Dry cliff faces never inherit the water shortcut. Climate/decor dress the
    result; fine facet noise is cosmetic and cannot close a route.
 7. The cap scout prefers dry inland floor, not water counted as traversable
-   ground. The full graph still certifies the base, flight lanes and all 17
+   ground. The full graph still certifies the base, flight lanes and all eleven
    separated nest clearings. Ground enemies use the existing floor-first field
    and slow emergency crossings only when their floor component has no route.
    Giant-peaks fronts must also contain a surveyed peak at least 65% of the
-   profile's 96m range scale; a tall peak elsewhere on the globe is insufficient.
+   profile's 150m range scale; a tall peak elsewhere on the globe is insufficient.
    Nest placement also penalizes wet distance along the complete existing route.
    A dry clearing across a long swim no longer beats a nearby dry approach just
    because its compass bearing is closer. Water remains an allowed fallback.
@@ -155,6 +190,11 @@ preference storage. [Research, visual comparisons and checks](qa/implementation/
    sides. A minimum 16m peak prevents the mixed front becoming a flat plain.
    Version 6 separately requires 95% of dry walkable floor below -1m to connect,
    so a large connected surface cannot conceal isolated deep canyon floors.
+   V8 counts absolute negative relief too, accepts two families for the two-family
+   Giant Peaks pack, and uses two families with 8m relief for island worlds.
+   Ocean fronts may contain less land but still require the same dry base and
+   eleven separated nest sites. Intentional karst/kettle traps are reported
+   separately, never counted as connected passages or nest clearings.
    This acceptance is not relaxed during the bounded 32-seed search. The higher
    Giant-peaks requirement remains. The geometry itself supplies the passages;
    navigation does not carve invisible shortcuts.
@@ -166,7 +206,7 @@ still require real graph validation. Construction never rebuilds that graph.
 
 ## Change a mix or pin a group
 
-The four default mixes live in `LANDFORM_MIXES`. A terrain profile in
+The ten packs in `js/run/world-catalogue.js` supply `LANDFORM_MIXES`. A terrain profile in
 `TERRAIN_PROFILES` can supply a `formations` override:
 
 ```js
@@ -187,7 +227,7 @@ Weights of zero disable a recipe. `spacing` changes region footprint sizes;
 `dir: [x,y,z]` pins a site on the sphere. Invalid, overlapping or duplicate
 anchors fail explicitly. An override can still fail gameplay site acceptance;
 run the graph checks before publishing it. These are collaborator controls.
-The in-game World generator selects published mixes, climates and seeds. Its formation
+The in-game World generator selects terrain packs, planet themes and seeds. Its formation
 selector surveys exposed representatives, preferring the active battlefield and
 labelling examples elsewhere on the globe. Incisions need visible banks on both
 sides; an isolated sea cliff cannot qualify. It does not edit individual group
@@ -199,10 +239,19 @@ surveys the entire globe on an independent 40,962-node inspection graph. Pale
 outlines show potential habitat, including disconnected regions; dotted shared
 routes flow toward the base. Every coarse edge is sampled at 1.2m or less to
 avoid bridging mountain barriers. Global habitat is approximate and does not
-grant spawn legality outside the fine combat graph or its 160m route budget.
+grant spawn legality. Physical nests use the actual combat graph and footprint
+checks; 160m is now a route-scoring preference rather than a hard cutoff.
 The survey yields between chunks, is built once on demand, and never rebuilds
 combat navigation. Animation changes a GPU uniform; reduced motion holds it
 still. Outlines replace the first pass's dense point carpet after visual review.
+
+Geysers share the displayed vent and a twelve-second cycle with 2.8 seconds of
+eruption. Nearby ground units on either team receive one upward impulse per
+cycle. Flying units high above the vent are excluded. Geysers pause with the
+simulation and earthquake preparation; vents follow altered terrain heights.
+Existing upper decks remain stable during faults. Towers and AI still use the
+ordinary terrain floor; upper-deck tower placement and layered AI routes are
+not part of this surface implementation.
 
 Inspect `FORMATIONS.manifest()` from `js/world.js` for the version, effective
 seed, settings and actual groups. `FORMATIONS.inspect(x,y,z)` identifies the
@@ -239,8 +288,9 @@ bound also controls the picking shell and camera clearance fallback.
 The [implementation ledger](qa/implementation/MODULAR-LANDFORMS.md) records
 results and retained failures. Whole-campaign, broader seed/device and owner
 visual/balance acceptance remain separate from these fixtures.
-The v6 [cosmic landforms ledger](qa/implementation/COSMIC-LANDFORMS.md)
-records the current batch. The v5 [owner refinement ledger](qa/implementation/LANDFORM-BIOMES.md)
+The v8 [living worlds ledger](qa/implementation/LIVING-WORLDS.md) records the
+current batch. The v6 [cosmic landforms ledger](qa/implementation/COSMIC-LANDFORMS.md)
+and v5 [owner refinement ledger](qa/implementation/LANDFORM-BIOMES.md)
 and v4 [research and adversarial ledger](qa/implementation/TERRAIN-ATLAS.md)
 records the bounded second pass and its integration evidence.
 

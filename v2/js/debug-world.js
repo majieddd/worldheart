@@ -1,3 +1,4 @@
+import {createTerrainFeatures} from './terrain/features.js';
 import * as THREE from 'three';
 import {buildMount} from './mounts.js';
 import {MOUNTS} from './run/expedition.js';
@@ -73,7 +74,7 @@ function weaponExhibit(assembly){
 }
 
 function terrainTile(type,seed){
-  const sample=formationSample(type,seed),n=type==='grand'||type==='labyrinth'?100:64,half=sample.half;
+  const sample=formationSample(type,seed),n=type==='grand'||type==='labyrinth'?128:96,half=sample.half;
   const geo=new THREE.PlaneGeometry(half*2*SCALE,half*2*SCALE,n,n);geo.rotateX(-Math.PI/2);
   const p=geo.attributes.position;let low=0,high=0;
   for(let i=0;i<p.count;i++){const h=sample.height(p.getX(i)/SCALE,p.getZ(i)/SCALE);p.setY(i,h*SCALE);low=Math.min(low,h);high=Math.max(high,h);}
@@ -98,24 +99,28 @@ function terrainTile(type,seed){
       b[0]*SCALE,by,b[1]*SCALE,b[0]*SCALE,bottom,b[1]*SCALE,a[0]*SCALE,bottom,a[1]*SCALE);
   }
   const wg=new THREE.BufferGeometry();wg.setAttribute('position',new THREE.Float32BufferAttribute(wall,3));wg.computeVertexNormals();group.add(new THREE.Mesh(wg,mat(0x4c4e55,{side:THREE.DoubleSide})));
-  return {group,low,high,width:half*2*SCALE,seed};
+  const features=createTerrainFeatures(sample.field,240,(x,y,z)=>sample.field.height(x,y,z)),a=sample.anchor;
+  const point=(dir,h)=>{const dot=dir.reduce((sum,v,k)=>sum+v*a.dir[k],0),u=240*dir.reduce((sum,v,k)=>sum+v*a.axis[k],0)/dot,v=240*dir.reduce((sum,v,k)=>sum+v*a.side[k],0)/dot;return new THREE.Vector3(u*SCALE,h*SCALE,v*SCALE);};
+  const art=features.build({point,scale:SCALE,spherical:false,include:dir=>dir.reduce((s,v,k)=>s+v*a.dir[k],0)>.7});group.add(art);
+  art.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(art);if(!bounds.isEmpty())high=Math.max(high,bounds.max.y/SCALE);
+  return {group,low,high,width:half*2*SCALE,seed,update:art.userData.update};
 }
 
 function biomeTile(key,theme=null){
   const group=new THREE.Group(),v=BIOME_VISUALS[key],color=new THREE.Color();
   const geo=new THREE.PlaneGeometry(24,24,20,20);geo.rotateX(-Math.PI/2);const p=geo.attributes.position;
-  for(let i=0;i<p.count;i++)p.setY(i,key==='ocean'?-1.2:.45*Math.sin(p.getX(i)*.3)*Math.cos(p.getZ(i)*.4));
+  for(let i=0;i<p.count;i++)p.setY(i,['ocean','coralreef','kelp'].includes(key)?-1.2:.45*Math.sin(p.getX(i)*.3)*Math.cos(p.getZ(i)*.4));
   geo.computeVertexNormals();const g=geo.toNonIndexed();geo.dispose();const colors=[];
   for(let i=0;i<g.attributes.position.count;i++){paintBiome(color,key,0,0,.5);colors.push(color.r,color.g,color.b);}
   g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));group.add(new THREE.Mesh(g,mat(0xdce8e8,{vertexColors:true})));
   let kind=v.decor;
   if(theme==='oceanic')kind='coral';
   const make=kind==='pine'?makePineGeometry:kind==='leaf'||kind==='jungle'?makeBroadleafGeometry:kind==='cactus'?makeCactusGeometry:()=>biomeDressingGeometry(kind);
-  const dressing=make(),material=mat(0xdce8e8,{vertexColors:true,emissive:key==='twilight'?0x497a6a:0x18232b,emissiveIntensity:.2});
+  const dressing=make(),material=mat(0xdce8e8,{side:THREE.DoubleSide,vertexColors:true,emissive:key==='twilight'?0x497a6a:0x18232b,emissiveIntensity:.2});
   const count=kind==='jungle'?25:kind==='leaf'?8:12;
   for(let i=0;i<count;i++){const prop=new THREE.Mesh(dressing,material),a=i*2.39996,r=2+Math.sqrt(i/count)*7;
     prop.position.set(Math.cos(a)*r,.2,Math.sin(a)*r);prop.rotation.y=a;prop.scale.setScalar(kind==='jungle'?3.2:1.2+(i%3)*.2);group.add(prop);}
-  if(key==='ocean'||theme){
+  if(['ocean','coralreef','kelp'].includes(key)||theme){
     const w=new THREE.Mesh(new THREE.PlaneGeometry(theme?5:24,24),mat(theme?THEME_SURFACES[theme].shore:BIOME_VISUALS.ocean.color,{transparent:true,opacity:.76,roughness:.22}));
     w.rotation.x=-Math.PI/2;w.position.set(theme?9.5:0,.5,0);group.add(w);
   }
@@ -125,10 +130,10 @@ function biomeTile(key,theme=null){
 export async function startDebugWorld(){
   const el=id=>document.getElementById(id),viewport=el('viewport'),labels=el('labels');
   const renderer=new THREE.WebGLRenderer({antialias:true});renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setClearColor(0x152334);viewport.prepend(renderer.domElement);
-  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,2500);
+  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,10000);
   scene.add(new THREE.HemisphereLight(0xdbecff,0x566276,2.4));
   const sun=new THREE.DirectionalLight(0xffedcf,3);sun.position.set(100,180,70);scene.add(sun);
-  const floor=new THREE.Mesh(new THREE.PlaneGeometry(2300,900),mat(0x1d3040));floor.rotation.x=-Math.PI/2;floor.position.set(700,-12,315);scene.add(floor);
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(3300,900),mat(0x1d3040));floor.rotation.x=-Math.PI/2;floor.position.set(1100,-12,315);scene.add(floor);
   const lanes=[['units','Units'],['mounts','Mounts'],['towers','Towers'],['weapons','Weapons'],['formations','Land formations'],['terrain','Terrain'],['biomes','Biomes'],['themes','Planet themes']].map(([key,name],i)=>({key,name,z:i*90,items:[],width:0}));
   const exhibits=[],animated=[],target=new THREE.Vector3(),view={yaw:.65,pitch:.65,distance:40},reduced=matchMedia('(prefers-reduced-motion: reduce)');let selected=null,time=0,last=performance.now(),disposed=false;
   function add(lane,key,name,group,description,metrics={},width=30,update=null){
@@ -169,19 +174,19 @@ export async function startDebugWorld(){
       group.scale.setScalar(4);add(lane,`native-${key}`,name,weaponExhibit(group),'Native commander equipment from the shared soldier builder. Loot variations appear beside it.',{Source:ALLY_TYPES[key].name,Scale:'4x'},18);
     }
     if(lane.key==='formations')for(const [key,recipe]of Object.entries(LANDFORM_RECIPES)){
-      const sample=terrainTile(key,771);add(lane,key,recipe.label,sample.group,'An isolated sample of the real spherical formation field. Terrain dimensions retain a common 1:5 display scale. Inward cuts are dry in this exhibit.',{Peak:`${sample.high.toFixed(1)} m`,Depth:`${(-sample.low).toFixed(1)} m`,Width:`${(sample.width/SCALE).toFixed(0)} m`,Seed:sample.seed},sample.width+4);
+      const sample=terrainTile(key,771);add(lane,key,recipe.label,sample.group,'Production formation at 1:5 scale. Bridges, cave roofs and floating decks use the same additional surfaces as gameplay. Inward cuts are dry in this exhibit.',{Peak:`${sample.high.toFixed(1)} m`,Depth:`${(-sample.low).toFixed(1)} m`,Width:`${(sample.width/SCALE).toFixed(0)} m`,Seed:sample.seed},sample.width+4,sample.update);
       await waitFrame();
     }
     if(lane.key==='terrain')for(const [key,profile]of Object.entries(TERRAIN_PROFILES)){
       const group=terrainCollection(key),data=group.userData.terrain;
-      add(lane,key,profile.name,group,'A 300 metre production terrain patch showing how landforms combine into routes. The terrain recipe sets formation grouping; the planet theme supplies its climate and biomes.',{Area:'300 x 300 m',Formations:data.formations.map(k=>LANDFORM_RECIPES[k].label).join(', '),Peak:data.max.toFixed(1)+' m',Depth:(-data.min).toFixed(1)+' m',Seed:data.seed},66);await waitFrame();
+      add(lane,key,profile.name,group,'A 300 metre production terrain patch showing how landforms combine into routes. The terrain recipe sets formation grouping; the planet theme supplies its climate and biomes.',{Area:'300 x 300 m',Formations:data.formations.map(k=>LANDFORM_RECIPES[k].label).join(', '),Peak:data.max.toFixed(1)+' m',Depth:(-data.min).toFixed(1)+' m',Seed:data.seed},66,group.userData.update);await waitFrame();
     }
-    if(lane.key==='biomes')for(const [key,b]of Object.entries(BIOME_VISUALS))add(lane,key,b.name,biomeTile(key),'Production biome palette and scenery geometry on a flat sample plot.',{Dressing:b.decor},28);
+    if(lane.key==='biomes')for(const [key,b]of Object.entries(BIOME_VISUALS))add(lane,key,b.name,biomeTile(key),b.note||'Production biome palette and scenery geometry on a flat sample plot.',{Dressing:b.decor},28);
     if(lane.key==='themes')for(const [key,theme]of Object.entries(PLANET_THEMES))if(key!=='auto'){
       const s=THEME_SURFACES[key],group=miniaturePlanet(key),sample=group.userData.miniature;
       const item=add(lane,key,theme.name,group,`${s.note} A miniature of the production terrain field with its biome belts, formations and scenery.`,{Biomes:Object.keys(sample.biomes).length,Formations:sample.formations.length,Peak:`${sample.max.toFixed(0)} m`,Depth:`${(-sample.min).toFixed(0)} m`,Seed:sample.seed},32);
       item.planet=key;
-      animated.push({item,update:t=>{group.children[0].rotation.y=t*.09;}});await waitFrame();
+      animated.push({item,update:t=>{group.children[0].rotation.y=t*.09;group.userData.update?.(t);}});await waitFrame();
     }
     const strip=new THREE.Mesh(new THREE.PlaneGeometry(lane.width,2),mat(0x4e7588));strip.rotation.x=-Math.PI/2;strip.position.set(lane.width/2,-.5,lane.z+22);scene.add(strip);
     lane.label=document.createElement('div');lane.label.className='label lane-title';lane.label.textContent=`${lane.name} / ${lane.items.length}`;labels.append(lane.label);

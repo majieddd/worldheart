@@ -3,6 +3,7 @@ import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './b
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import { createFormationField } from './terrain/formations.js';
+import {createTerrainFeatures} from './terrain/features.js';
 import { formationHeightLimit, formationDepthLimit } from './terrain/recipes.js';
 import { createEcology } from './terrain/ecology.js';
 import { createCoastClearance } from './terrain/coast-clearance.js';
@@ -18,6 +19,7 @@ import {
 // contract and shares its slope/water costs; these agreements need tests.
 
 export const R = CONFIG.planetRadius;
+export let FEATURES=null;
 export const SUN_DIR = new THREE.Vector3(0.62, 0.46, 0.58).normalize();
 
 // Frequency plan per map: continental features scale with the map's freqMul,
@@ -77,7 +79,7 @@ const CANYON_FLOOR = 0.55;
 const CANYON_REACH = CANYON_HALF + CANYON_WALL + RAMP_RUN + RIM_CREST + RIM_FADE;
 const F_FINE = Math.pow(2, CONFIG.terrainDetail) / 3.048;
 const F_FINE2 = F_FINE * 2.476;
-export const TERRAIN_TOP = CONFIG.terrain ? formationHeightLimit(CONFIG.terrain) : RANGE_HEIGHT + RIM_LIFT + 8;
+export const TERRAIN_TOP = CONFIG.terrain ? formationHeightLimit(CONFIG.terrain,CONFIG.terrainKey==='varied'?CONFIG.environment:null) : RANGE_HEIGHT + RIM_LIFT + 8;
 export const FLIGHT_CEILING = CONFIG.terrain?.flightCeiling ?? Infinity;
 export const FLIGHT_CLEARANCE = 2.6;
 
@@ -210,11 +212,12 @@ export function initTerrainField(seed) {
   nRange = makeNoise3D(seed ^ 0x3c6ef372);
   nCanyon = makeNoise3D(seed ^ 0x1b873593);
   nGap = makeNoise3D(seed ^ 0x85ebca6b);
-  coastClearance=CONFIG.terrain?createCoastClearance(R,(x,y,z)=>continentalityAt(x,y,z)<.37+CONFIG.terrain.ocean):null;
   const authored=CONFIG.terrain?.formations;
   FORMATIONS = CONFIG.terrain ? createFormationField(seed,R,CONFIG.terrain,CONFIG.terrainKey,
-    {...authored,weights:{...CONFIG.environment?.weights,...authored?.weights}}) : null;
+    {...authored,...(CONFIG.terrainKey==='varied'?{composition:CONFIG.environment}:{}),weights:{...authored?.weights}}) : null;
+  coastClearance=CONFIG.terrain?createCoastClearance(R,(x,y,z)=>continentalityAt(x,y,z)<.37+CONFIG.terrain.ocean):null;
   ECOLOGY = CONFIG.terrain ? createEcology(seed,CONFIG.biomeKey,CONFIG.environment) : null;
+  FEATURES=FORMATIONS?createTerrainFeatures(FORMATIONS,R,(x,y,z)=>terrainHeight(x,y,z,false)):null;
   if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
@@ -222,19 +225,21 @@ export function initTerrainField(seed) {
 // between them. Geometry is independent of the climate/foliage layer below.
 // Fine noise never changes route eligibility. All consumers query this field.
 export function continentalityAt(dx, dy, dz) {
+  if(FORMATIONS&&(CONFIG.terrainKey==='ocean'||CONFIG.terrainKey==='varied'&&CONFIG.environment?.pack==='ocean'&&CONFIG.environment.coverage>=.95))return FORMATIONS.landmass(dx,dy,dz);
   return fbm3(nBase, dx * F_CONT, dy * F_CONT, dz * F_CONT, 2) + .12;
 }
+const regionalDetail={detailOnly:true,noise:1};
 function regionalHeight(dx,dy,dz,includeFine) {
   const profile=CONFIG.terrain;
   const c=continentalityAt(dx,dy,dz);
   const land=smoothstep(-.2+profile.ocean,.18+profile.ocean,c);
   const inland=smoothstep(-.04+profile.ocean,.5+profile.ocean,c);
   const rolling=fbm3(nDetail,dx*F_ROLL,dy*F_ROLL,dz*F_ROLL,3);
-  let h=lerp(-1.65+.5*c,.55,land)+land*rolling*.32;
-  const relief=FORMATIONS.height(dx,dy,dz);
+  const relief=FORMATIONS.height(dx,dy,dz,regionalDetail);
+  let h=lerp(-1.65+.5*c,.55,land)+land*rolling*.32*regionalDetail.noise;
   // Below-sea incisions begin beyond the shoreline mask. The land between
   // ocean and dry cuts stays above sea level, preventing an exposed water wall.
-  h+=relief<0?(c>.3+profile.ocean?Math.max(relief,-coastClearance.sample(dx,dy,dz)*.4):0):inland*relief;
+  h+=relief<0?(c>.3+profile.ocean?Math.max(relief,-coastClearance.sample(dx,dy,dz)*.45):0):inland*relief;
   if(includeFine){
     const fine=fbm3(nDetail,dx*F_FINE+53,dy*F_FINE,dz*F_FINE,2);
     const fine2=nDetail(dx*F_FINE2+17,dy*F_FINE2,dz*F_FINE2);
@@ -246,7 +251,7 @@ function regionalHeight(dx,dy,dz,includeFine) {
 // Sea level is not a land classification: inland gorges can lie below it.
 // The same continental mask drives water rendering, movement and placement.
 export function oceanAt(dx,dy,dz) {
-  return !CONFIG.terrain || continentalityAt(dx,dy,dz)<=.3+CONFIG.terrain.ocean;
+  return !CONFIG.terrain || continentalityAt(dx,dy,dz)<=.3+CONFIG.terrain.ocean || FORMATIONS.lagoonAt(dx,dy,dz);
 }
 export function waterDepthAt(dir,height=terrainHeight(dir.x,dir.y,dir.z,false)) {
   return oceanAt(dir.x,dir.y,dir.z)?Math.max(0,-height):0;
@@ -254,6 +259,13 @@ export function waterDepthAt(dir,height=terrainHeight(dir.x,dir.y,dir.z,false)) 
 export function surfaceElevation(dir,height=terrainHeight(dir.x,dir.y,dir.z)) {
   return oceanAt(dir.x,dir.y,dir.z)?Math.max(.03,height):height;
 }
+
+export function supportHeight(dir,ceiling){
+  const floor=terrainHeight(dir.x,dir.y,dir.z);
+  return FEATURES?.surfaces.length?FEATURES.support(dir.toArray(),ceiling,floor):floor;
+}
+export function overheadHeight(dir,feet){return FEATURES?.surfaces.length?FEATURES.ceiling(dir.toArray(),feet):Infinity;}
+export function solidTerrainAt(dir,feet,height){return FEATURES?.intersects(dir.toArray(),feet,height)||false;}
 
 // includeFine=false gives the gameplay surface: the same terrain minus the
 // cosmetic facet relief, so walkability never fractures on visual noise.
@@ -407,6 +419,7 @@ export function slopeAt(dir, predictedFault=null) {
 export function isWalkableDir(dir) {
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
   const h = terrainHeight(dir.x, dir.y, dir.z, false);
+  if(CONFIG.terrain&&solidTerrainAt(dir,surfaceElevation(dir,h),1.7))return false;
   if (CONFIG.terrain && h < 0.05 && waterDepthAt(dir,h)>0) return true; // water is a slower route
   if (!CONFIG.terrain && (h < 0.05 || h > CONFIG.walkMaxHeight)) return false;
   if (slopeAt(dir) > CONFIG.walkMaxSlope) return false;
@@ -486,13 +499,14 @@ const _travelProbe = new THREE.Vector3();
 export function surfaceTravel(unit, bearing, distance = 0.05) {
   if (!CONFIG.terrain) return 1;
   const d = unit.dir;
-  const from = terrainHeight(d.x, d.y, d.z, false);
+  const raw = terrainHeight(d.x, d.y, d.z, false),onDeck=FEATURES?.surfaces.length&&unit.height>raw+.2;
+  const from=onDeck?unit.height:raw;
   unit.swimming = isSwimming(unit.swimming, waterDepthAt(d,from));
   const probe = Math.max(0.005, Math.min(0.8, distance));
   const radius = R + surfaceElevation(d,from);
   _travelProbe.copy(d).addScaledVector(bearing, probe / radius).normalize();
   if (!inBattlefield(_travelProbe.x, _travelProbe.y, _travelProbe.z)) return 0;
-  const to = terrainHeight(_travelProbe.x, _travelProbe.y, _travelProbe.z, false);
+  const to = onDeck?supportHeight(_travelProbe,surfaceElevation(d,from)+(unit.hop||0)+(unit.mountFlight||0)):terrainHeight(_travelProbe.x, _travelProbe.y, _travelProbe.z, false);
   const grade = (surfaceElevation(_travelProbe,to) - surfaceElevation(d,from)) / probe;
   // Blocking belongs to the same sampled graph that routes the unit. A
   // second analytic cutoff here can strand a body on a certified edge.
@@ -512,7 +526,7 @@ const _rp = new THREE.Vector3();
 export function raycastTerrain(origin, dir, out) {
   const isSpace = !!SPACE;
   const rMax = R + (isSpace ? 13 : TERRAIN_TOP);
-  const rMin = R - (isSpace ? 13 : CONFIG.terrain ? formationDepthLimit(CONFIG.terrain) : .5);
+  const rMin = Math.max(2,R - (isSpace ? 13 : CONFIG.terrain ? formationDepthLimit(CONFIG.terrain,CONFIG.terrainKey==='varied'?CONFIG.environment:null) : .5));
   const floor = isSpace ? -1e9 : 0.03;
 
   const b = origin.dot(dir);
@@ -656,8 +670,8 @@ export function faceColor(dir, h, slope, jrand, out) {
       if(h>1.4&&vein<.035&&slope<.7)out.lerp(_lavaStone,1-vein/.035);
     }
     const climate = climateAt(dir, h);
-    if (climate === 'hot' && biome !== 'volcanic') out.setHex(0x33303b).lerp(_hotStone, jrand * 0.2);
-    if (climate === 'cold') out.setHex(0xc6e5f4).lerp(C.snow, jrand * 0.45);
+    if (climate === 'hot' && !['volcanic','sulfur','obsidian'].includes(biome)) out.lerp(_hotStone,.45);
+    if (climate === 'cold') out.lerp(_cliffCol.setHex(0xc6e5f4).lerp(C.snow,jrand*.45),['alpine','tundra'].includes(biome)?1:.4);
   }
   const j = 1 + (jrand - 0.5) * 0.17;
   out.r = clamp(out.r * j, 0, 1);
@@ -1481,7 +1495,7 @@ function scatterDecor(rng) {
   });
 
   const spots = { pine: [], leaf: [], jungle: [], cactus: [], rock: [], crys: [] };
-  const exoticSpots=Object.fromEntries(['crystalline','fungal','ferrous','twilight','ice','vent','coral','mangrove','reed'].map(k=>[k,[]]));
+  const exoticSpots=Object.fromEntries([...new Set(Object.values(BIOME_VISUALS).map(b=>b.decor).filter(k=>!['pine','leaf','jungle','cactus'].includes(k)))].map(k=>[k,[]]));
   const dir = new THREE.Vector3();
   const mul = CONFIG.map.decorMul;
   const caps = {
@@ -1510,10 +1524,13 @@ function scatterDecor(rng) {
     }
     dir.normalize();
     const h = terrainHeight(dir.x, dir.y, dir.z);
-    if (ECOLOGY ? waterDepthAt(dir,h)>0 : h<.12) continue;
+    if (ECOLOGY ? waterDepthAt(dir,h)>0 : h<.12){
+      if(ECOLOGY){const kind=BIOME_VISUALS[biomeAt(dir,h)]?.decor,list=exoticSpots[kind];if(['coralreef','kelp','coral'].includes(kind)&&list&&list.length<240&&rng()<.12)list.push({dir:dir.clone(),h,s:.7+rng()*.5});}
+      continue;
+    }
     const forest = forestAt(dir.x, dir.y, dir.z);
     const slope = slopeAt(dir);
-    const biome=biomeAt(dir,h),vegetated=!ECOLOGY||!['desert','volcanic','alpine','tundra','crystalline','fungal','ferrous','twilight'].includes(biome);
+    const biome=biomeAt(dir,h),vegetated=!ECOLOGY||['meadow','woodland','jungle','savanna','wetland','mangrove'].includes(biome);
     const treeLine=ECOLOGY?CONFIG.terrain.snow*(biome==='jungle'?.85:.45):2;
     const dressing=BIOME_VISUALS[biome]?.decor;
     if(ECOLOGY&&exoticSpots[dressing]&&exoticSpots[dressing].length<300*mul&&slope<.5&&rng()<.15){
@@ -1578,13 +1595,12 @@ function scatterDecor(rng) {
   }
   // Global, bounded scenery makes distant hemispheres carry the same theme.
   if(ECOLOGY&&CONFIG.biomeKey==='auto'){
-    const theme=CONFIG.environment.theme,kind=theme==='frozen'?'ice':theme==='volcanic'?'vent':theme==='oceanic'?'coral':theme;
-    const list=exoticSpots[kind];
-    if(list)for(let k=0;k<3600&&list.length<650;k++){
-      const y=1-2*(k+.5)/3600,a=k*2.3999632297,r=Math.sqrt(1-y*y);dir.set(r*Math.cos(a),y,r*Math.sin(a));
-      const h=terrainHeight(dir.x,dir.y,dir.z),water=waterDepthAt(dir,h);
-      if(water>(kind==='coral'?1.4:0)||slopeAt(dir)>.5)continue;
-      list.push({dir:dir.clone(),h,s:1.1+rng()*1.6});
+    let total=0;
+    for(let k=0;k<4800&&total<1200;k++){
+      const y=1-2*(k+.5)/4800,a=k*2.3999632297,r=Math.sqrt(1-y*y);dir.set(r*Math.cos(a),y,r*Math.sin(a));
+      const h=terrainHeight(dir.x,dir.y,dir.z),water=waterDepthAt(dir,h),kind=BIOME_VISUALS[biomeAt(dir,h)]?.decor,list=exoticSpots[kind];
+      if(!list||list.length>=500||water>0&&!['coral','coralreef','kelp'].includes(kind)||slopeAt(dir)>.6)continue;
+      list.push({dir:dir.clone(),h,s:kind==='kelp'?.65+rng()*.35:1+rng()*.8});total++;
     }
   }
   const pines = makeInstanced(pineGeo, treeMat, spots.pine, 0.72, 0.16);
@@ -1599,7 +1615,7 @@ function scatterDecor(rng) {
   ] : [];
   if(regional.length)regional[0].mesh.customDepthMaterial=treeDepth;
   for(const [kind,list]of Object.entries(exoticSpots))if(list.length){
-    const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:kind==='crystalline'?.3:.8,metalness:kind==='ferrous'?.65:0,
+    const mat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,roughness:['crystalline','obsidian'].includes(kind)?.25:.8,metalness:kind==='ferrous'?.65:0,
       emissive:kind==='twilight'?0x416768:kind==='fungal'?0x563754:0x182028,emissiveIntensity:.24});
     regional.push({mesh:makeInstanced(biomeDressingGeometry(kind),mat,list,.9,.1),list,crushable:true,cameraObstacle:false});
   }
@@ -1995,6 +2011,7 @@ export class World {
       }
       case 4: {
         this.decor = scatterDecor(this.rng);
+        if(FEATURES){this.featureArt=FEATURES.build({color:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),terrainHeight(...d))]?.rock||0x9b927f,topColor:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),terrainHeight(...d))]?.color||0x859e63});this.scene.add(this.featureArt);}
         // Decor is instanced, so casting costs one shadow draw per set rather
         // than one per tree. This is most of what sells the diorama read.
         for (const s of this.decor.sets) {
@@ -2094,6 +2111,7 @@ export class World {
       if(mesh.geometry.boundingSphere)mesh.geometry.boundingSphere.radius+=14*fault.strength;
       else mesh.geometry.computeBoundingSphere();
     }
+    for(const vent of FEATURES?.vents||[])if(vent.dir.dot(fault.dir)>=fault.limit)vent.height=terrainHeight(...vent.dir.toArray(),false);
     // Scenery follows the changed ground; its cached inverse is refreshed.
     if(this.decor)for(const set of this.decor.sets)for(let i=0;i<set.list.length;i++){
       const item=set.list[i];if(!item.alive||item.dir.dot(fault.dir)<fault.limit)continue;

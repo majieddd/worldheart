@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { waterDepthAt, surfaceElevation, R, terrainHeight, surfaceTravel } from './world.js';
+import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, R, terrainHeight, surfaceTravel } from './world.js';
 import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
 import { uploadInstances } from './rig.js';
@@ -300,6 +300,7 @@ class Ally {
     this.hop = 0;        // metres above the ground while airborne
     this.vertVel = 0;
     this.airT = 0;
+    this.geyserStamp = '';
     this.beamRamp = 0;
     this.beamOn = null;
     this.flashT = 0;
@@ -467,7 +468,7 @@ export class AllyManager {
 
   enemyPos(e, out) {
     const h = surfaceElevation(e.dir,e.height) - swimOffset(e);
-    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + (e.weatherLift || 0) + e.type.radius * 0.9);
+    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + (e.weatherLift || 0) + (e.geyserLift || 0) + e.type.radius * 0.9);
   }
 
   _release(a) {
@@ -753,8 +754,16 @@ export class AllyManager {
   }
 
   _ground(a) {
-    a.height = terrainHeight(a.dir.x, a.dir.y, a.dir.z);
-    if (CONFIG.terrain) a.swimming = isSwimming(a.swimming, waterDepthAt(a.dir));
+    const old=surfaceElevation(a.dir,a.height),feet=old+(a.hop||0)+(a.mountFlight||0),h=supportHeight(a.dir,feet);
+    const ground=surfaceElevation(a.dir,h);
+    if(h>terrainHeight(a.dir.x,a.dir.y,a.dir.z)+.1&&(a.airT>0||a.mountFlight>0))this._keepAltitude(a,feet-ground);
+    a.height = h;
+    if (CONFIG.terrain) a.swimming = isSwimming(a.swimming, waterDepthAt(a.dir,h));
+  }
+
+  _keepAltitude(a,above){
+    above=Math.max(0,above);a.mountFlight=Math.min(a.mountFlight||0,above);a.hop=Math.max(0,above-a.mountFlight);
+    if(a.hop>0)a.airT=Math.max(.0001,a.airT);
   }
 
   _movementNode(a) {
@@ -801,9 +810,13 @@ export class AllyManager {
   // untouched, so running off a slope mid-jump behaves the way it should: the
   // ground moves under you and you land on whatever is there.
   _fall(a, dt) {
+    const feet=surfaceElevation(a.dir,a.height)+a.hop+(a.mountFlight||0),ceiling=overheadHeight(a.dir,feet),head=(a.mountOffset||0)+1.7;
     const g = JUMP_GRAVITY * (a.vertVel < 0 ? JUMP_FALL_MUL : 1);
     a.vertVel -= g * dt;
     a.hop += a.vertVel * dt;
+    const landing=supportHeight(a.dir,feet),floor=surfaceElevation(a.dir,landing);
+    if(a.vertVel<=0&&surfaceElevation(a.dir,a.height)+a.hop+(a.mountFlight||0)<=floor+.001){a.height=landing;a.hop=0;a.mountFlight=0;a.vertVel=0;a.airT=0;if(this.onLand)this.onLand(a);return;}
+    if(a.vertVel>0&&surfaceElevation(a.dir,a.height)+a.hop+(a.mountFlight||0)+head>ceiling){a.hop=Math.max(0,ceiling-head-surfaceElevation(a.dir,a.height)-(a.mountFlight||0));a.vertVel=0;}
     if (a.hop <= 0) {
       a.hop = 0;
       a.vertVel = 0;
@@ -843,17 +856,18 @@ export class AllyManager {
       for (const angle of DRIVE_SLIDES) {
         _slideBearing.copy(_driveBearing).applyAxisAngle(a.dir,angle);
         _routeStep.copy(a.dir).addScaledVector(_slideBearing,distance/segments/R).normalize();
-        const previousGround=surfaceElevation(a.dir,a.height),nextGround=surfaceElevation(_routeStep);
+        const previousGround=surfaceElevation(a.dir,a.height),nextGround=surfaceElevation(_routeStep,supportHeight(_routeStep,previousGround+a.hop+(a.mountFlight||0)));
         const dropping=nextGround<previousGround-.08;
         const factor=a.mountFlying||a.airT>0||dropping ? 1 : surfaceTravel(a,_slideBearing,distance/segments) * (a.swimming ? (a.mountWater || 1) : 1);
         const step=distance/segments*factor*Math.cos(angle)/R;
         if (!(step>0)) continue;
         _axis.crossVectors(a.dir,_slideBearing).normalize();
         _routeStep.copy(a.dir).applyAxisAngle(_axis,step).normalize();
+        if(solidTerrainAt(_routeStep,previousGround+a.hop+(a.mountFlight||0),1.7+(a.mountOffset||0)))continue;
         if (a.mountFlying?!this.enemies.nav.canStep(a.dir,_routeStep,true,a.moveNode):!this.enemies.nav.canDrive(a.dir,_routeStep,previousGround+a.hop,a.airT>0,a.type.radius)) continue;
-        const targetHeight=terrainHeight(_routeStep.x,_routeStep.y,_routeStep.z),targetGround=surfaceElevation(_routeStep,targetHeight);
-        if(!a.mountFlying&&(a.airT>0||previousGround-targetGround>.08)){
-          a.hop=Math.max(0,a.hop+previousGround-targetGround);if(a.hop>0)a.airT=Math.max(.0001,a.airT);
+        const targetHeight=supportHeight(_routeStep,previousGround+a.hop+(a.mountFlight||0)),targetGround=surfaceElevation(_routeStep,targetHeight);
+        if(a.mountFlying||a.airT>0||previousGround-targetGround>.08){
+          this._keepAltitude(a,a.hop+(a.mountFlight||0)+previousGround-targetGround);
         }
         a.dir.copy(_routeStep);
         a.height=targetHeight;

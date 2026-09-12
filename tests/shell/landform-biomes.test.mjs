@@ -5,6 +5,7 @@ import {LANDFORM_RECIPES} from '../../js/terrain/recipes.js';
 import {createEcology,BIOME_REGIMES} from '../../js/terrain/ecology.js';
 import {isFloorTerrain,travelCost} from '../../js/traversal.js';
 import {worldgenUrl,rememberWorld} from '../../js/worldgen.js';
+import {planetEnvironment} from '../../js/run/planet-environments.js';
 
 test('negative dry passages keep real slope costs; flooded terrain retains swimming',()=>{
  assert.equal(isFloorTerrain(-12,1.1,0),false,'a dry canyon wall is not an ocean shortcut');
@@ -29,7 +30,7 @@ test('butte groups contain 7-12 separate pillar feet with measured traversal gap
 test('independent climate overrides expose new biomes and preserve cold tower ground',()=>{
  const counts={};
  for(const key of Object.keys(BIOME_REGIMES)){
-  const eco=createEcology(12345,key);counts[key]={};
+  const eco=createEcology(12345,key,planetEnvironment(12345,'temperate'));counts[key]={};
   for(let i=0;i<2500;i++){
    const y=1-2*(i+.5)/2500,r=Math.sqrt(1-y*y),a=i*2.39996323,p=[r*Math.cos(a),y,r*Math.sin(a)];
    const b=eco.biome(...p,.6,'neutral',false);counts[key][b]=(counts[key][b]||0)+1;

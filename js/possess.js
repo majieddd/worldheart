@@ -814,7 +814,7 @@ export class Possession {
   placeCamera() {
     const u = this.unit;
     const cam = this.rig.camera;
-    u.height = terrainHeight(u.dir.x, u.dir.y, u.dir.z);
+    this.allies._ground(u);
     // Published on the body so the third-person pose can raise the weapon to
     // where the player is looking.
     u.aimPitch = this.pitch;

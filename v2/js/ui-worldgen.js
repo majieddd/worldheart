@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, CAM_TUNE, TERRAIN_PROFILES } from './config.js';
 import { browserStorage } from './storage.js';
 import { worldgenUrl, rememberWorld } from './worldgen.js';
-import { FORMATIONS, ECOLOGY, terrainHeight, biomeAt, waterDepthAt } from './world.js';
+import { FORMATIONS, FEATURES, ECOLOGY, terrainHeight, biomeAt, waterDepthAt } from './world.js';
 import { NestAtlasView } from './nest-atlas-view.js';
 import { PLANET_THEMES } from './run/planet-environments.js';
 import { LANDFORM_RECIPES } from './terrain/recipes.js';
@@ -80,7 +80,7 @@ export class WorldgenPanel {
     el('home').onclick = () => this.focus(home, 115);
     el('peak').onclick = () => this.focus(peakDir, Math.max(65, CONFIG.terrain?.range || 40));
     el('globe').onclick = () => this.focus(home, CONFIG.planetRadius * 2.8);
-    this.landmarks = FORMATIONS ? surveyLandmarks(FORMATIONS,terrainHeight,nav.fieldCenter,CONFIG.map.fieldTheta,(x,y,z,h)=>waterDepthAt(new THREE.Vector3(x,y,z),h)>0,(x,y,z,h)=>biomeAt(new THREE.Vector3(x,y,z),h)) : [];
+    this.landmarks = FORMATIONS ? surveyLandmarks(FORMATIONS,terrainHeight,nav.fieldCenter,CONFIG.map.fieldTheta,(x,y,z,h)=>waterDepthAt(new THREE.Vector3(x,y,z),h)>0,(x,y,z,h)=>biomeAt(new THREE.Vector3(x,y,z),h),FEATURES) : [];
     el('formation-label').hidden = !FORMATIONS;
     for(const [i,site]of this.landmarks.entries()){
       const option=document.createElement('option');option.value=String(i);

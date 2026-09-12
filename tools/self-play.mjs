@@ -168,6 +168,12 @@ try{
         let best=0,rank=999;draft.offers.forEach((p,i)=>{let r=priorities.indexOf(p.id);if(r<0)r=100;if(r<rank){rank=r;best=i;}});
         trace('draft',{power:draft.offers[best].id});document.querySelectorAll('#draft-cards button')[best].click();
       }
+      // The contextual panel follows the commander's crosshair while possessed.
+      // Leave possession for remote construction/upgrades, then resume the
+      // same body before its next input step. Selecting an offscreen tower
+      // while possessed is not a valid way to target its Upgrade button.
+      const resumeBody=W.possession.active&&window.__qaTripState==='done'?W.possession.unit:null;
+      if(resumeBody)W.possession.exit();
       let changes=0;
       for(let attempt=0;attempt<10;attempt++){
         // Use cards before hoarding upgrades; first secure reliable direct
@@ -191,7 +197,9 @@ try{
         if(cost!==null&&owned.length>=2&&g.gold>=cost){document.getElementById('heart-panel').click();trace('base',{level:run.getHeartLevel()});changes++;continue;}
         break;
       }
-      g.select(null);return changes;
+      g.select(null);
+      if(resumeBody?.active&&!resumeBody.dead)W.possession.enter(resumeBody);
+      return changes;
     };
     if(window.__qaStrategy==='assault'){
       // The policy belongs to this checkout; game imports belong to the

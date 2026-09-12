@@ -17,7 +17,9 @@ test('orbital flux, themes and campaign environments are deterministic and used'
     assert.deepEqual(e,p.environment);themes.add(e.theme);stars.add(e.star.type);
     assert.ok(Math.abs(e.flux*e.orbitAU**2-e.star.luminosity)<1e-10);
   }
-  assert.equal(themes.size,Object.keys(PLANET_THEMES).length-1);assert.equal(stars.size,4);
+  assert.ok(themes.size>=15,'a campaign exposes a broad selection of themes');assert.equal(stars.size,4);
+  for(let seed=1;seed<=2000;seed++)themes.add(planetEnvironment(seed).theme);
+  assert.equal(themes.size,Object.keys(PLANET_THEMES).length-1,'every theme is reachable by procedural selection');
   assert.ok(planetEnvironment(771,'arid').warmth>planetEnvironment(771,'frozen').warmth);
   assert.notDeepEqual(planetEnvironment(771,'volcanic').weights,planetEnvironment(771,'frozen').weights);
   assert.ok(planetEnvironment(771,'arid').oceanShift<planetEnvironment(771,'temperate').oceanShift);
@@ -38,6 +40,10 @@ test('Planet Mix bands dominate longitude noise on garden and extreme worlds',()
   }
 });
 
+test('environment descriptors cannot mutate later planets through shared recipe data',()=>{
+ const first=planetEnvironment(771,'skyarchipelago'),original=planetEnvironment(771,'skyarchipelago');first.biomes.push('fake');first.weights.sky=0;assert.deepEqual(planetEnvironment(771,'skyarchipelago'),original);
+});
+
 test('rift spatial shortlist matches exhaustive sampling across cube edges and poles',()=>{
   const field=createFormationField(4206018157,240,{range:90,canyon:38},'varied',{weights:{grand:8,labyrinth:8,chaos:6}});
   const points=[[0,1,0],[0,-1,0],[1,0,0],[-1,0,0]];
@@ -49,12 +55,13 @@ test('rift spatial shortlist matches exhaustive sampling across cube edges and p
 test('continental rifts have a long deep floor and graded longitudinal entrances',()=>{
   const m={type:'grand',dir:[0,1,0],axis:[1,0,0],side:[0,0,1],extent:45,height:40,phase:0};
   const samples=[];
-  for(let u=-126;u<=126;u+=1){
-    const x=u/240,z=-Math.sin(u/126*4)*45*.3/240,y=Math.sqrt(1-x*x-z*z),s={};
+  const length=45*4.3;
+  for(let u=-length;u<=length+.01;u+=1){
+    const x=u/240,z=-Math.sin(u/length*4)*45*.3/240,y=Math.sqrt(1-x*x-z*z),s={};
     const cut=riftSample(m,x,y,z,240,s);samples.push(cut?-s.depth*s.cut:0);
   }
   assert.ok(Math.min(...samples)<-27);assert.ok(samples.filter(h=>h<-10).length>140);
-  assert.equal(samples[0],0);assert.equal(samples.at(-1),0);
+  assert.ok(Math.abs(samples[0])<.001&&Math.abs(samples.at(-1))<.001);
   assert.ok(Math.max(...samples.slice(1).map((h,i)=>Math.abs(h-samples[i])))<.5,'entrances stay within floor grade');
 });
 
@@ -81,7 +88,7 @@ test('theme survives links and history with backward-compatible defaults',()=>{
     assert.equal(url.searchParams.get('planet')||'auto',planet);
     history=rememberWorld(history,{seed:771,terrain:'varied',planet});
   }
-  assert.equal(history.length,Object.keys(PLANET_THEMES).length);
+  assert.equal(history.length,12,'recent worlds stay bounded as the catalogue grows');
   assert.equal(rememberWorld([{seed:771,terrain:'varied'}],{seed:771,terrain:'varied',planet:'auto'}).length,1);
   assert.throws(()=>worldgenUrl('https://example.com/',771,'varied',true,'auto','fake'));
 });

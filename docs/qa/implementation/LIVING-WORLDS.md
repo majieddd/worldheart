@@ -15,11 +15,11 @@ interrupted copies are superseded by this ledger. Main is not a publication targ
 | U81 Weapon families and five material tiers | Published and publicly verified | Twin blades and ember staves receive wood, iron, gold, diamond and onyx models and rarity stats alongside every weapon family |
 | U82 Tower upgrade silhouettes | Published and publicly verified | Every family retains its identity while upgrades add clear structural advancement |
 | U83 Flying saucer mount | Published and publicly verified | Replace the flying mount model with a coherent UFO, retaining flight controls and balance |
-| U84 Twenty new landforms | Active: audited and authored design | Audit existing thirty; research, author and visually compare fifty distinct formations, including useful traversal and interactive features |
-| U85 Ten terrain packs | Active: audited and authored design | Mixed default; specialized extreme peaks, deep cuts and island worlds; ten packs with theme-dependent regional coverage |
-| U86 Fifteen new biomes | Active: audited and authored design | Audit existing fifteen; thirty distinct biome palettes, vegetation and environmental dressing in planets and Debug World |
-| U87 Ten new planet themes | Active: audited and authored design | Twenty distinct combinations of terrain packs, climate and biome distribution, shown on real miniature planets |
-| U88 Existing formation revisions | Active: audited and authored design | Flat plateau siblings, broader spaced buttes, larger hills, glacial bridge, deeper branched rift, spaced crust, larger volcano, flat canopy shelves, meteor crater, spaced yardangs/drumlins/blades, flat fan apex, deep karst, continuous spiral and usable star/cell passages |
+| U84 Twenty new landforms | Implemented; local QA passed | Audit existing thirty; research, author and visually compare fifty distinct formations, including useful traversal and interactive features |
+| U85 Ten terrain packs | Implemented; local QA passed | Mixed default; specialized extreme peaks, deep cuts and island worlds; ten packs with theme-dependent regional coverage |
+| U86 Fifteen new biomes | Implemented; local QA passed | Audit existing fifteen; thirty distinct biome palettes, vegetation and environmental dressing in planets and Debug World |
+| U87 Ten new planet themes | Implemented; local QA passed | Twenty distinct combinations of terrain packs, climate and biome distribution, shown on real miniature planets |
+| U88 Existing formation revisions | Implemented; local QA passed | Flat plateau siblings, broader spaced buttes, larger hills, glacial bridge, deeper branched rift, spaced crust, larger volcano, flat canopy shelves, meteor crater, spaced yardangs/drumlins/blades, flat fan apex, deep karst, continuous spiral and usable star/cell passages |
 
 ## Execution and evidence
 
@@ -63,3 +63,49 @@ Research and new-content distinctions are recorded in
 and multiplayer work remain separate.
 
 Durable reports and selected images: [checkpoint evidence](LIVING-WORLDS/).
+
+## Generator v8 checkpoint
+
+U84-U88 are implemented and locally verified: fifty formations, thirty biomes,
+twenty themes and ten terrain packs. All requested old-shape corrections are
+included. Grotto roofs, glacial bridges, floating mesas, pedestal caps and fossil
+logs have shared physical/rendered surfaces. Geysers launch nearby ground units
+on both teams using the displayed eruption clock. Themes compose regional,
+majority or global pack coverage and their own biome vocabulary.
+
+304 tests, 84 syntax modules, 93 generated mirrors, 207 Debug World checks,
+74 world-composition/navigation assertions across all thirty pack/theme worlds,
+five camera maps, 23 critical fixtures, four physical tower-gap cases and five
+deck/geyser fixtures pass. The worst sampled connected deep-floor fraction was
+99.8%, with intentional karst/kettle traps reported separately. Each world also
+certified eleven separated physical nest approaches.
+
+All fifty formation exhibits, thirty biomes, ten terrain patches and twenty
+miniature globes were visually reviewed. The correction pass widened channel
+floors, separated rift tributaries, widened honeycomb walls and improved the
+floating-deck/log silhouettes. Ocean worlds initially failed the continental
+base scout; broader island shelves and island-specific front acceptance fixed
+this while preserving dry base placement and eleven-nest capacity. A camera
+grounding bug that pulled commanders off extra decks was reproduced with real
+keyboard movement and fixed.
+
+Native performance on this RTX 4080 laptop: Debug startup 11.97s, full-lane p99
+14ms, unit-lane p99 7.2ms. A separate 60-second moving-camera stress fixture at
+1280x720 held thirty towers and about one hundred enemies: median 72.5 fps,
+inverse p99 36.2 fps, worst frame 41.6ms, with pause/resume and no browser errors.
+These are machine-specific native fixtures, not reduced-device acceptance.
+
+Final-source legal self-play won all ten waves with 22 heart health, 262 kills
+and six towers, then extracted to Planet 2 with five earned inventory items,
+including the new scepter and twinblade families. Simulation used sparse
+rendering and no injected economy/enemies/waves. It did not equip a dropped
+weapon; that remains covered by the separate equipment fixtures. A prior legal
+wave-ten loss is retained: the policy incorrectly attempted remote upgrades
+while possessing the commander. It now uses the normal orbit construction view
+and resumes the same body. Game balance was not changed for this rerun.
+
+[Durable generator evidence and visual sheets](LIVING-WORLDS/generator/) include
+the failed first attempts and bounded acceptance limitations. Upper-deck tower
+placement and layered AI routes are not part of these physical commander
+surfaces. Full 99-planet completion and broad hardware coverage remain open.
+Public deployment verification for this generator checkpoint follows.

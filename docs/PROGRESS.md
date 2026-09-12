@@ -8,7 +8,12 @@ thirty biomes, twenty themes and the requested existing-shape revisions.
 [Current request ledger and acceptance](qa/implementation/LIVING-WORLDS.md).
 U75-U83 are published and publicly verified as e67d697 on V2, with 250 identity
 comparisons and 49 public interaction cases. PR #38 retains the review. U84-U88
-remain active: geometry, ecology and terrain-pack implementation is underway.
+are implemented and locally verified: 304 tests, 74 route/composition checks
+across thirty pack/theme worlds, 207 Debug World checks, five camera maps and
+real deck/geyser/tower-gap input. Every formation, biome and theme was visually
+reviewed. Native rendering passes; a legal ten-wave victory retained 22 heart
+health and extracted to Planet 2 with five items. Generator publication and
+public verification follow; [durable evidence](qa/implementation/LIVING-WORLDS/generator/).
 
 Published and publicly verified: Codex on `feature/expedition-lobby-and-survival`, based on `665b8f3`,
 owns U60-U74: combined terrain exhibits, theme-owned climate, fifteen biomes,

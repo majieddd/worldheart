@@ -1,8 +1,11 @@
 import * as THREE from 'three';
+import {NEW_BIOMES,NEW_PLANET_THEMES} from './run/world-catalogue.js';
+import {appendBiomeDressing} from './biome-dressing.js';
 
 // Shared visual catalogue for the battlefield and Debug World. Colors are
 // surface identities; placement still uses the visible hot/cold rules.
 export const BIOME_VISUALS = Object.freeze({
+  ...Object.fromEntries(Object.entries(NEW_BIOMES).map(([key,b])=>[key,{...b,color:b.ground}])),
   meadow:{name:'Meadow',color:0x70964e,decor:'leaf'},
   woodland:{name:'Woodland',color:0x3f6a42,decor:'pine'},
   jungle:{name:'Jungle',color:0x205236,decor:'jungle'},
@@ -20,6 +23,7 @@ export const BIOME_VISUALS = Object.freeze({
   twilight:{name:'Luminous thicket',color:0x263c79,decor:'twilight'},
 });
 export const THEME_SURFACES = Object.freeze({
+  ...Object.fromEntries(Object.entries(NEW_PLANET_THEMES).map(([key,t])=>[key,{biome:t.biomes[0],water:t.water,shore:t.shore,note:t.note}])),
   temperate:{biome:'meadow',water:0x176278,shore:0x2fb4ae,note:'Meadows, forests and latitude belts. Balanced terrain.'},
   monsoon:{biome:'jungle',water:0x154c47,shore:0x42a783,note:'Dense canopy and humid green highlands. Ravines and karst divide forest routes.'},
   arid:{biome:'desert',water:0x427e7c,shore:0x74bda2,note:'Sandstone, cactus and sparse oases. More exposed land and eroded terrain.'},
@@ -35,7 +39,7 @@ const cliff=new THREE.Color();
 export function paintBiome(out,key,height,slope,variation=.5){
   const recipe=BIOME_VISUALS[key]||BIOME_VISUALS.meadow;
   out.setHex(recipe.color);
-  cliff.setHex(key==='desert'?0x9a6243:key==='ferrous'?0x572f36:key==='crystalline'?0xcba8df:0x65787b);
+  cliff.setHex(recipe.rock??(key==='desert'?0x9a6243:key==='ferrous'?0x572f36:key==='crystalline'?0xcba8df:0x65787b));
   if(!['tundra','alpine','volcanic','twilight'].includes(key))out.lerp(cliff,Math.min(.48,Math.max(0,slope-.25)*.35));
   if(height<0&&key!=='ocean')out.multiplyScalar(.82);
   out.multiplyScalar(.92+variation*.16);
@@ -45,7 +49,8 @@ export function paintBiome(out,key,height,slope,variation=.5){
 export function biomeDressingGeometry(kind){
   const parts=[];
   const add=(g,color,x=0,y=0,z=0,rz=0)=>{g.rotateZ(rz);g.translate(x,y,z);const flat=g.index?g.toNonIndexed():g;if(flat!==g)g.dispose();parts.push([flat,color]);};
-  if(kind==='mangrove'){
+  if(appendBiomeDressing(kind,add)){/* Habitat-specific geometry added above. */}
+  else if(kind==='mangrove'){
     add(new THREE.CylinderGeometry(.22,.36,2.5,7),0x74674c,0,1.8);
     for(let k=0;k<6;k++){
       const a=k*Math.PI/3,x=Math.cos(a),z=Math.sin(a);
