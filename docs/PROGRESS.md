@@ -1,6 +1,13 @@
 # 99 Planets development progress
 
 Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
+Active: Codex on `feature/planet-ecology-and-active-worlds`, based on V2 `8f94dc6`,
+owns U89-U114. Combat, scrap forging, commander focus, aiming, abilities, wave
+pacing and earthquake performance lead the work; independent active features,
+disaster hostility, terrain refinement and astronomical worlds follow.
+[Current request ledger](qa/implementation/ACTIVE-WORLDS.md). Prior U75-U88
+remains the published baseline until each replacement checkpoint is verified.
+
 Published and publicly verified: Codex on `feature/living-worlds-and-traversal`, based on V2 `42b1ee0`,
 owns U75-U88: disaster prediction, traversal/pathfinding, forge/relic/HUD fixes,
 weapon and tower advancement, UFO mount, fifty formations, ten terrain packs,
