@@ -374,7 +374,10 @@ export class OrbitRig {
       // with only ten percent extra room at the final base level.
       const growth = clamp((this.frontierTheta - .05) / (.52 - .05), 0, 1);
       const previous = Math.min(CONFIG.planetRadius * this.frontierTheta * FRONTIER_FRAME, planetCeiling);
-      return Math.max(previous * (1 + .1 * growth), d + 2, d * 1.6);
+      const globalGrowth=clamp((this.frontierTheta-.52)/(Math.PI-.52),0,1);
+      const half=Math.atan(Math.tan(CAM_TUNE.fovFar*Math.PI/360)*Math.min(1,this.camera.aspect));
+      const globe=(CONFIG.planetRadius+110)/Math.sin(Math.max(.06,half))-CONFIG.planetRadius;
+      return Math.max(previous * (1 + .1 * growth),globalGrowth*globe,d + 2,d * 1.6);
     }
     // Always leave a usable zoom band, however the two height sliders are set.
     return Math.max(planetCeiling, d + 2, d * 1.15);

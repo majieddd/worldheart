@@ -37,6 +37,7 @@ export function validSave(s) {
   if (!a || a.id!==`${e.id}-${e.planet}-${e.attempt}` || !integer(a.paid,0,32767)
     || !integer(a.coins,0,1e9) || !integer(a.effectiveSeed,1,0xffffffff)
     || !validInventory(e.commander,a.start)) return false;
+  if(a.endlessPaid!==undefined&&!integer(a.endlessPaid,15,1e6))return false;
   if(e.status!=='victory')return a.victory===null;
   const v=a.victory;
   if(!v||!validInventory(e.commander,v.inventory)||!Array.isArray(v.drops)||v.drops.length>5000
@@ -68,9 +69,15 @@ export function beginAssault(s,{commander,inventory,effectiveSeed}) {
 }
 export function awardWave(s,id,wave,coins) {
   const e=s.expedition,a=e?.assault;
-  if(e?.status!=='assault'||a?.id!==id||!integer(wave,1,15)||!integer(coins,0,1e6))return false;
+  if(e?.status!=='assault'||a?.id!==id||!integer(wave,1,1e6)||!integer(coins,0,1e6))return false;
+  if(wave>15){if(wave<=(a.endlessPaid||15))return false;a.endlessPaid=wave;a.coins+=coins;s.account.coins+=coins;return true;}
   const bit=1<<(wave-1);if(a.paid&bit)return false;
   a.paid|=bit;a.coins+=coins;s.account.coins+=coins;return true;
+}
+export function continueEndless(s,id) {
+  const e=s.expedition;
+  if(e?.status!=='victory'||e.assault?.id!==id)return false;
+  e.status='assault';e.assault.victory=null;return true;
 }
 export function resolveAssault(s,id,outcome,victory=null) {
   const e=s.expedition;if(e?.status!=='assault'||e.assault?.id!==id||!['victory','defeat'].includes(outcome))return false;

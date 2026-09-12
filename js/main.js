@@ -269,7 +269,7 @@ async function boot() {
   // Capped maps must register the battlefield before any mesh building so
   // terrain tinting, decor scatter, and walkability all agree on the wall.
   if (nav.fieldCenter) {
-    setBattlefield(nav.fieldCenter, CONFIG.map.fieldTheta);
+    setBattlefield(nav.fieldCenter, nav.global ? Math.PI : CONFIG.map.fieldTheta);
     // The focus is what sits at screen centre, so the limit can run right out
     // to the wall: the player can now centre on the edge of the front.
     rig.confine = { center: nav.fieldCenter.clone(), maxAng: CONFIG.map.fieldTheta * 1.02 };
@@ -594,7 +594,7 @@ function stepFrame(dt, render) {
   // above the simActive gate on raw dt, so a paused player could still walk,
   // and a beam archetype - which has no swing cooldown to rate-limit it - could
   // channel a whole wave to death against a frozen board.
-  const simRunning = !!(game && game.state === 'playing' && !game.paused && mode99?.run.getPhase() !== 'drafting');
+  const simRunning = !!(game && game.state === 'playing' && !game.paused && !game.terrainBusy && mode99?.run.getPhase() !== 'drafting');
   if (possession && possession.unit) possession.update(dt, simRunning);
   if (!possession || !possession.active) rig.update(dt);
   camFill.position.copy(rig.camera.position);
@@ -606,8 +606,8 @@ function stepFrame(dt, render) {
   window.WH?.worldgen?.update(dt);
   // Drives the draft timer. Outside the simDt gate on purpose: the draft must
   // keep counting while the director is held idle between waves.
-  if (mode99 && game && game.state === 'playing' && !game.paused) mode99.update(dt);
-  const simActive = game && game.state === 'playing' && !game.paused && mode99?.run.getPhase() !== 'drafting';
+  if (mode99 && game && game.state === 'playing' && !game.paused && !game.terrainBusy) mode99.update(dt);
+  const simActive = game && game.state === 'playing' && !game.paused && !game.terrainBusy && mode99?.run.getPhase() !== 'drafting';
   let simDt = simActive ? dt * game.speed : 0;
   // Hit stop: the simulation freezes for a few frames after a landed strike
   // while the camera, the view model and the HUD keep running. Consumed on

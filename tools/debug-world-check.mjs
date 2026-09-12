@@ -10,7 +10,7 @@ await page.addInitScript(()=>{window.__storageCalls=[];for(const name of ['getIt
 try{
  const start=Date.now();await page.goto(`${base}/debug.html`);await page.waitForFunction(()=>window.DEBUG_WORLD,{},{timeout:120000});
  const counts=await page.evaluate(()=>DEBUG_WORLD.lanes.map(l=>({key:l.key,n:l.items.length})));
- check('all six registries are represented',JSON.stringify(counts.map(l=>l.n))===JSON.stringify([11,18,14,30,14,10]),counts);
+ check('all eight registries are represented',JSON.stringify(counts.map(l=>l.n))===JSON.stringify([11,3,18,14,30,4,15,10]),counts);
  check('debug route never reads or mutates browser saves',await page.evaluate(()=>__storageCalls.length===0),await page.evaluate(()=>__storageCalls));
  check('bounded exhibit startup',Date.now()-start<15000,{ms:Date.now()-start});
  const entries=await page.evaluate(()=>DEBUG_WORLD.exhibits.map(e=>({key:e.key,lane:e.lane,name:e.name})));
@@ -19,7 +19,7 @@ try{
    const result=await page.evaluate(()=>{const e=DEBUG_WORLD.selected;let vertices=0,bad=0;e.group.updateMatrixWorld(true);e.group.traverse(o=>{if(o.isMesh){const p=o.geometry.attributes.position;vertices+=p.count;for(const x of p.array)if(!Number.isFinite(x))bad++;for(const x of o.matrixWorld.elements)if(!Number.isFinite(x))bad++;}});return {vertices,bad,key:e.key};});
    check(`${e.lane}/${e.key}: selectable finite rendered model`,result.key===e.key&&result.vertices>0&&!result.bad,result);
    await page.waitForTimeout(35);
-   if(['formations','biomes','themes'].includes(e.lane)||['commander','colossus','carbine-technological','lobber-ancient','native-oracle','bolt-0','helios-2'].includes(e.key))await page.screenshot({path:resolve(out,`${e.lane}-${e.key}.png`)});
+   if(['formations','terrain','mounts','biomes','themes'].includes(e.lane)||['commander','colossus','carbine-technological','lobber-ancient','native-oracle','bolt-0','helios-2'].includes(e.key))await page.screenshot({path:resolve(out,`${e.lane}-${e.key}.png`)});
  }
  await page.locator('[data-lane="units"]').click();await page.locator('#exhibit').selectOption('commander');
  for(const motion of ['idle','walk','attack']){
@@ -41,7 +41,7 @@ try{
  check('pointer drag rotates camera',await page.evaluate(()=>DEBUG_WORLD.view.yaw)!==yaw);
  const distance=await page.evaluate(()=>DEBUG_WORLD.view.distance);await page.mouse.wheel(0,300);await page.waitForTimeout(70);check('wheel zoom changes distance',await page.evaluate(()=>DEBUG_WORLD.view.distance)>distance);
  await page.locator('#overview').click();await page.waitForTimeout(80);await page.screenshot({path:resolve(out,'all-lanes.png')});
- check('overview names all lanes',await page.locator('.lane-title:visible').count()===6);
+ check('overview names all lanes',await page.locator('.lane-title:visible').count()===8);
  await page.locator('[data-lane="themes"]').click();await page.locator('#exhibit').selectOption('fungal');
  check('theme opens the matching real planet',new URL(await page.locator('#description a').getAttribute('href'),base).searchParams.get('planet')==='fungal');
  await page.locator('[data-lane="units"]').click();await page.emulateMedia({reducedMotion:'reduce'});await page.locator('#motion').selectOption('walk');const t=await page.evaluate(()=>DEBUG_WORLD.time);await page.waitForTimeout(200);

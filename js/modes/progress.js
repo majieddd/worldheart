@@ -78,7 +78,7 @@ export function talentById(id) {
 
 export function isOwned(profile, talent) {
   if (talent.kind === 'tower') return profile.towers.includes(talent.grant);
-  if (talent.kind === 'commander') return profile.commanders.includes(talent.grant);
+  if (talent.kind === 'commander') return true; // The preparation roster is now freely selectable.
   return !!profile.bonuses[talent.grant];
 }
 
@@ -86,7 +86,9 @@ export function isOwned(profile, talent) {
 // shows one row further than the player has reached.
 export function isReachable(profile, talent) {
   if (talent.tier <= 1) return true;
-  return TALENTS.some((t) => t.tier === talent.tier - 1 && isOwned(profile, t));
+  // Free commander choices do not bypass the paid tower/bonus progression.
+  const previousTier = talent.tier === 4 ? 2 : talent.tier - 1;
+  return TALENTS.some((t) => t.tier === previousTier && isOwned(profile, t));
 }
 
 export function buyTalent(id) {

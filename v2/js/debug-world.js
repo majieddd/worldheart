@@ -1,25 +1,27 @@
 import * as THREE from 'three';
+import {buildMount} from './mounts.js';
+import {MOUNTS} from './run/expedition.js';
 import {TOWER_TYPES,AUTHORED_TIERS,buildTowerVisual,tierStats,MAT,TOWER_SCALE} from './towers.js';
 import {ALLY_TYPES} from './allies.js';
 import {ENEMY_TYPES,buildEnemyModel} from './enemies.js';
 import {buildSoldier,poseSoldier,freshSoldierState} from './soldier.js';
 import {buildWeapon,weaponAppearanceMaterial} from './weapon-model.js';
 import {FAMILIES,ERAS,PARTS,validPart} from './run/weapons.js';
-import {PALETTE} from './config.js';
+import {PALETTE,TERRAIN_PROFILES} from './config.js';
 import {LANDFORM_RECIPES} from './terrain/recipes.js';
 import {formationSample} from './terrain/samples.js';
 import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './biome-visuals.js';
 import {PLANET_THEMES} from './run/planet-environments.js';
 import {makePineGeometry,makeBroadleafGeometry,makeCactusGeometry} from './world.js';
 import {animationClip} from './debug-animation.js';
-import {miniaturePlanet,MINIATURE_SEED} from './debug-planets.js';
+import {miniaturePlanet,MINIATURE_SEED,terrainCollection} from './debug-planets.js';
 
 const SCALE=.2;
 const mat=(color,extra={})=>new THREE.MeshStandardMaterial({color,roughness:.65,flatShading:true,...extra});
 const modelMats=()=>({body:MAT.body,trim:MAT.trim,dark:MAT.dark,grip:mat(0x755744),gold:MAT.gemGold,energy:MAT.energy,cloth:mat(0x385e75)});
 const waitFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 
-function articulated(build,isEnemy,key){
+export function articulated(build,isEnemy,key){
   const group=new THREE.Group(),skeleton=isEnemy?build.skel:build.skeleton,bindings=[];
   for(const part of build.parts){
     const attachments=isEnemy?part.on.map(([name,off])=>({joint:skeleton.get(name),off})):part.at;
@@ -126,8 +128,8 @@ export async function startDebugWorld(){
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,2500);
   scene.add(new THREE.HemisphereLight(0xdbecff,0x566276,2.4));
   const sun=new THREE.DirectionalLight(0xffedcf,3);sun.position.set(100,180,70);scene.add(sun);
-  const floor=new THREE.Mesh(new THREE.PlaneGeometry(2300,700),mat(0x1d3040));floor.rotation.x=-Math.PI/2;floor.position.set(700,-12,160);scene.add(floor);
-  const lanes=[['units','Units'],['towers','Towers'],['weapons','Weapons'],['formations','Land formations'],['biomes','Biomes'],['themes','Planet themes']].map(([key,name],i)=>({key,name,z:i*90,items:[],width:0}));
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(2300,900),mat(0x1d3040));floor.rotation.x=-Math.PI/2;floor.position.set(700,-12,315);scene.add(floor);
+  const lanes=[['units','Units'],['mounts','Mounts'],['towers','Towers'],['weapons','Weapons'],['formations','Land formations'],['terrain','Terrain'],['biomes','Biomes'],['themes','Planet themes']].map(([key,name],i)=>({key,name,z:i*90,items:[],width:0}));
   const exhibits=[],animated=[],target=new THREE.Vector3(),view={yaw:.65,pitch:.65,distance:40},reduced=matchMedia('(prefers-reduced-motion: reduce)');let selected=null,time=0,last=performance.now(),disposed=false;
   function add(lane,key,name,group,description,metrics={},width=30,update=null){
     const x=lane.width+width/2;lane.width+=width+8;group.position.set(x,0,lane.z);scene.add(group);
@@ -150,6 +152,7 @@ export async function startDebugWorld(){
         const item=add(lane,key,type.name,b.group,'Production articulated enemy rig. The Colossus is also the base model for campaign boss variants.',{Scale:'4x',Movement:type.flying?'Flying':'Ground'},18,b.update);if(type.flying)item.group.position.y=4;
       }
     }
+    if(lane.key==='mounts')for(const [key,m]of Object.entries(MOUNTS))if(key!=='none'){const model=buildMount(key);model.group.scale.setScalar(4);add(lane,key,m.name,model.group,m.description,{Speed:m.speed+'x',Water:m.water+'x',Damage:m.damage+'x'},20,(t,mode)=>model.update(t,mode==='still'?0:1));}
     if(lane.key==='towers')for(const [key,type]of Object.entries(TOWER_TYPES))for(let tier=0;tier<AUTHORED_TIERS;tier++){
       const b=buildTowerVisual(key,tier);b.group.scale.setScalar(4*TOWER_SCALE);const s=tierStats(key,tier);
       add(lane,`${key}-${tier}`,`${type.name} · Mk ${tier+1}`,b.group,'Production authored tower model. Higher upgrades retain the third silhouette and continue statistical progression.',{Range:`${s.range.toFixed(2)} m`,Scale:'4x',Tier:tier+1},22);
@@ -167,6 +170,10 @@ export async function startDebugWorld(){
     if(lane.key==='formations')for(const [key,recipe]of Object.entries(LANDFORM_RECIPES)){
       const sample=terrainTile(key,771);add(lane,key,recipe.label,sample.group,'An isolated sample of the real spherical formation field. Terrain dimensions retain a common 1:5 display scale. Inward cuts are dry in this exhibit.',{Peak:`${sample.high.toFixed(1)} m`,Depth:`${(-sample.low).toFixed(1)} m`,Width:`${(sample.width/SCALE).toFixed(0)} m`,Seed:sample.seed},sample.width+4);
       await waitFrame();
+    }
+    if(lane.key==='terrain')for(const [key,profile]of Object.entries(TERRAIN_PROFILES)){
+      const group=terrainCollection(key),data=group.userData.terrain;
+      add(lane,key,profile.name,group,'A 300 metre production terrain patch showing how landforms combine into routes. The terrain recipe sets formation grouping; the planet theme supplies its climate and biomes.',{Area:'300 x 300 m',Formations:data.formations.map(k=>LANDFORM_RECIPES[k].label).join(', '),Peak:data.max.toFixed(1)+' m',Depth:(-data.min).toFixed(1)+' m',Seed:data.seed},66);await waitFrame();
     }
     if(lane.key==='biomes')for(const [key,b]of Object.entries(BIOME_VISUALS))add(lane,key,b.name,biomeTile(key),'Production biome palette and scenery geometry on a flat sample plot.',{Dressing:b.decor},28);
     if(lane.key==='themes')for(const [key,theme]of Object.entries(PLANET_THEMES))if(key!=='auto'){
@@ -207,7 +214,7 @@ export async function startDebugWorld(){
   const next=delta=>{const lane=lanes.find(l=>l.key===selected.lane),i=lane.items.indexOf(selected);select(lane.key,lane.items[(i+delta+lane.items.length)%lane.items.length].key);};
   el('previous').onclick=()=>next(-1);el('next').onclick=()=>next(1);el('focus').onclick=()=>focus(selected);
   el('row').onclick=()=>{const lane=lanes.find(l=>l.key===selected.lane);target.set(lane.width/2,0,lane.z);view.distance=lane.width*1.35;view.pitch=1.05;view.yaw=0;};
-  el('overview').onclick=()=>{const width=Math.max(...lanes.map(l=>l.width));target.set(width/2,0,225);view.distance=width*1.3;view.pitch=1.2;view.yaw=0;};
+  el('overview').onclick=()=>{const width=Math.max(...lanes.map(l=>l.width));target.set(width/2,0,(lanes[0].z+lanes.at(-1).z)/2);view.distance=width*1.3;view.pitch=1.2;view.yaw=0;};
   el('core').onchange=()=>{if(!selected.weapon)return;const w=selected.weapon,key=el('core').value;
     if(!validPart(w.family,'core',key)){el('core').value=w.core;el('status').textContent='Pulse cores fit ranged weapons only.';return;}
     w.core=key;

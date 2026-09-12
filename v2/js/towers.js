@@ -910,7 +910,7 @@ export class TowerManager {
   enemyWorldPos(e, out) {
     if(e.nest){out.copy(e.nest.group.position);return out.multiplyScalar(1+1.2/out.length());}
     const h = surfaceElevation(e.dir,e.height) - swimOffset(e);
-    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
+    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + (e.weatherLift || 0) + e.type.radius * 0.9);
   }
 
   place(typeKey, pos) {

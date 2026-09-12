@@ -39,14 +39,15 @@ export function createEcology(seed, key='auto',environment=planetEnvironment((se
     if(['crystalline','fungal','ferrous','twilight'].includes(extreme))return extreme;
     if(extreme==='frozen')return height>10?'alpine':'tundra';
     if(extreme==='arid')return 'desert';
-    if(extreme==='monsoon')return height>35?'woodland':'jungle';
-    if(extreme==='oceanic')return height<1.5?'wetland':'jungle';
+    if(extreme==='monsoon')return height<1.1?'mangrove':height>35?'woodland':'jungle';
+    if(extreme==='oceanic')return height<1.5?'mangrove':'jungle';
     if(volcanic(x,y,z))return 'volcanic';
     const t=temperature(x,y,z,height),m=moisture(x,y,z);
     if(t<-.12)return 'tundra';
     if(key==='wetland'&&m>.03&&height<1.5)return 'wetland';
     if(m<-.13&&t>.08)return 'desert';
     if(m<.03&&t>.15)return 'savanna';
+    if(m>.2&&t>.18&&height<1.1)return 'mangrove';
     if(m>.2&&t>.18)return 'jungle';
     if(m>.13&&height<.9)return 'wetland';
     if(m>.16)return 'woodland';

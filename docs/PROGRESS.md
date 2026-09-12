@@ -1,6 +1,13 @@
 # 99 Planets development progress
 
 Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
+Locally verified; publishing: Codex on `feature/expedition-lobby-and-survival`, based on `665b8f3`,
+owns U60-U74: combined terrain exhibits, theme-owned climate, fifteen biomes,
+commander choice/scaling/respawn, ten-wave and endless play, full-planet base
+growth, stronger threats, comfortable movement, tactical weather, mounts,
+an exploration crafting loop and a walkable preparation lobby.
+[Full request ledger and current acceptance](qa/implementation/EXPEDITION-LOBBY.md).
+
 Published and publicly verified: Codex on `fix/debug-world-inspection`, based on V2 `bc814c8`, owns
 U56-U59: intuitive grab pan, fully visible weapons, all-unit animation cycles
 and ten miniature themed spheres. Implementation, 155 targeted checks, 118

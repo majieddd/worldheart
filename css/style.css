@@ -664,3 +664,11 @@ body.end-open #fp-hud, body.end-open .weapon-cue, body.end-open .nest-marker { v
 .campaign-reset p { line-height:1.6; color:var(--text-muted); }
 .campaign-reset::backdrop { background:rgba(4,6,16,.7); }
 @media(max-width:600px) { .campaign-save { right:8px; bottom:55px; max-width:240px; } .campaign-badge { top:88px; max-width:48%; font-size:10px; } }
+
+/* Expedition kit stays beside the field; details collapse for a clear view. */
+.hud-top-left:has(.expedition-tools){max-height:calc(100vh - 155px);overflow:auto;pointer-events:auto;scrollbar-width:thin}
+.expedition-tools{position:relative;width:238px;z-index:24;padding:9px 12px;background:rgba(16,29,42,.94);font-size:12px;pointer-events:auto;max-height:min(360px,40vh);overflow:auto;flex-shrink:0}
+.expedition-tools summary{cursor:pointer;color:var(--accent);font-weight:700}.expedition-tools p{line-height:1.45;margin:9px 0}.expedition-tools .btn{font-size:12px;width:100%;margin:4px 0}.worldgen .expedition-tools{display:none}
+@media(max-width:700px){.expedition-tools{width:185px;font-size:11px}.hud-top-left:has(.expedition-tools){max-height:calc(100vh - 275px)}}
+
+.overlay-card .o-actions{flex-wrap:wrap}

@@ -71,17 +71,17 @@ test('even the first wave leaves the original foothold unchanged', () => {
 test('an early upgrade grants its full territory without requiring a wave', () => {
   const run = newRun();
   const events = run.upgradeHeart();
-  assert.equal(events.filter((e) => e.type === 'frontierGrew').length, 3);
-  assert.equal(run.getFrontierSteps(), 3);
+  assert.equal(events.filter((e) => e.type === 'frontierGrew').length, 1);
+  assert.equal(run.getFrontierSteps(), 1);
   clearWave(run);
-  assert.equal(run.getFrontierSteps(), 3, 'waves cannot expand the upgraded frontier');
+  assert.equal(run.getFrontierSteps(), 1, 'waves cannot expand the upgraded frontier');
 });
 
 test('the frontier at every level matches the rings table', () => {
   for (let lv = 0; lv < HEART_RINGS.length; lv++) {
     const run = newRun();
     for (let i = 0; i < lv; i++) run.upgradeHeart();
-    for (let w = 1; w <= 14; w++) clearWave(run);
+    for (let w = 1; w <= 9; w++) clearWave(run);
     assert.equal(run.getFrontierSteps(), HEART_RINGS[lv], 'level ' + lv);
     assert.ok(Math.abs(run.getFrontierTheta() - frontierTheta(HEART_RINGS[lv])) < 1e-12);
   }
@@ -90,19 +90,19 @@ test('the frontier at every level matches the rings table', () => {
 test('only a fully raised heart reaches the final frontier', () => {
   const held = newRun();
   for (let i = 0; i < HEART_COSTS.length - 1; i++) held.upgradeHeart();
-  for (let w = 1; w <= 14; w++) clearWave(held);
+  for (let w = 1; w <= 9; w++) clearWave(held);
   assert.ok(held.getFrontierTheta() < THETA_END - 1e-6, 'level 4 must stop short of the planet');
 
   const full = newRun();
   while (full.getHeartCost() !== null) full.upgradeHeart();
-  for (let w = 1; w <= 14; w++) clearWave(full);
+  for (let w = 1; w <= 9; w++) clearWave(full);
   assert.ok(Math.abs(full.getFrontierTheta() - THETA_END) < 1e-9);
 });
 
 test('the boss wave still grants no expansion, even under a full heart', () => {
   const run = newRun();
   while (run.getHeartCost() !== null) run.upgradeHeart();
-  for (let w = 1; w <= 14; w++) clearWave(run);
+  for (let w = 1; w <= 9; w++) clearWave(run);
   const before = run.getFrontierSteps();
   const events = run.completeWave();
   assert.equal(run.getPhase(), 'victory');
@@ -123,5 +123,5 @@ test('the heart survives serialisation', () => {
   for (let w = 1; w <= 4; w++) clearWave(run);
   const s = JSON.parse(run.serialise());
   assert.equal(s.heartLevel, 1);
-  assert.equal(s.frontierSteps, 3);
+  assert.equal(s.frontierSteps, 1);
 });

@@ -9,6 +9,35 @@ export const MINIATURE_SEED=4206018157;
 const stone=new THREE.Color(),sea=new THREE.Color(),v=new THREE.Vector3(),normal=new THREE.Vector3(),ab=new THREE.Vector3(),ac=new THREE.Vector3();
 const material=extra=>new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:.7,...extra});
 
+// A 300 metre patch, large enough to read a terrain recipe's grouping of
+// several landforms. Samples the exact production height and biome functions.
+export function terrainCollection(key,seed=MINIATURE_SEED){
+  if(!/\/debug\.html$/.test(location.pathname))throw Error('Terrain collections require Debug World');
+  const saved={seed:CONFIG.seed,environment:CONFIG.environment,terrain:CONFIG.terrain,terrainKey:CONFIG.terrainKey,biomeKey:CONFIG.biomeKey};
+  try{
+    const environment=planetEnvironment(seed,'temperate');
+    Object.assign(CONFIG,{seed,environment,terrain:{...TERRAIN_PROFILES[key],ocean:TERRAIN_PROFILES[key].ocean+environment.oceanShift},terrainKey:key,biomeKey:'auto'});initTerrainField(seed);
+    const modules=FORMATIONS.modules.filter(m=>m.height>0),centre=new THREE.Vector3();let chosen=modules[0],score=-1;
+    for(const candidate of modules){const c=new THREE.Vector3(...candidate.dir);if(Math.abs(c.y)>.65)continue;const nearby=modules.filter(m=>c.dot(new THREE.Vector3(...m.dir))>Math.cos(.55));const n=new Set(nearby.map(m=>m.type)).size;
+      const match=key==='alpine'?['range','caldera','forest'].includes(candidate.type):key==='canyon'?['grand','gorge','ravine'].includes(candidate.type):false;
+      const tangent=new THREE.Vector3().crossVectors(c,new THREE.Vector3(0,1,0)).normalize(),across=new THREE.Vector3().crossVectors(tangent,c).normalize();let land=0;
+      for(let x=-2;x<=2;x++)for(let z=-2;z<=2;z++){v.copy(c).addScaledVector(tangent,x*.22).addScaledVector(across,z*.22).normalize();if(!oceanAt(v.x,v.y,v.z)||terrainHeight(v.x,v.y,v.z,false)>0)land++;}
+      const rank=n*3+(match?30:0)+(key==='ocean'?-Math.abs(land-12):land*2)+Math.min(1,candidate.height*.005);
+      if(rank>score){score=rank;chosen=candidate;}}
+    centre.set(...chosen.dir);const axis=new THREE.Vector3(0,Math.abs(centre.y)<.9?1:0,Math.abs(centre.y)<.9?0:1),side=new THREE.Vector3().crossVectors(centre,axis).normalize();axis.crossVectors(side,centre).normalize();
+    const geo=new THREE.PlaneGeometry(60,60,150,150);geo.rotateX(-Math.PI/2);const p=geo.attributes.position,dirs=[],heights=[];let min=Infinity,max=-Infinity;
+    for(let i=0;i<p.count;i++){v.copy(centre).addScaledVector(axis,p.getX(i)/48).addScaledVector(side,p.getZ(i)/48).normalize();const h=terrainHeight(v.x,v.y,v.z,false);dirs.push(v.clone());heights.push(h);p.setY(i,h*.2);min=Math.min(min,h);max=Math.max(max,h);}
+    const col=[],wet=[],wetColors=[],index=geo.index.array;geo.computeVertexNormals();
+    for(let i=0;i<p.count;i++){faceColor(dirs[i],heights[i],(1-Math.abs(geo.attributes.normal.getY(i)))*3.2,.5,stone);col.push(stone.r,stone.g,stone.b);}
+    geo.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+    for(let i=0;i<index.length;i+=3){const ids=[index[i],index[i+1],index[i+2]];v.copy(dirs[ids[0]]).add(dirs[ids[1]]).add(dirs[ids[2]]).normalize();
+      if(!oceanAt(v.x,v.y,v.z)||terrainHeight(v.x,v.y,v.z,false)>.1)continue;
+      for(const j of ids){wet.push(p.getX(j),.02,p.getZ(j));sea.setHex(0x329fa6);wetColors.push(sea.r,sea.g,sea.b);}}
+    const group=new THREE.Group();group.add(new THREE.Mesh(geo,material({})));const water=new THREE.BufferGeometry();water.setAttribute('position',new THREE.Float32BufferAttribute(wet,3));water.setAttribute('color',new THREE.Float32BufferAttribute(wetColors,3));water.computeVertexNormals();group.add(new THREE.Mesh(water,material({roughness:.35})));
+    group.userData.terrain={key,seed,min,max,formations:[...new Set(modules.filter(m=>centre.dot(new THREE.Vector3(...m.dir))>Math.cos(.65)).map(m=>m.type))]};return group;
+  }finally{Object.assign(CONFIG,saved);initTerrainField(saved.seed);}
+}
+
 // The Debug route has no game or nav graph. Sample each theme synchronously,
 // restore its configuration and field before yielding, and keep only meshes.
 // This guarded adapter cannot replace a live game's terrain underneath it.

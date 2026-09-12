@@ -11,7 +11,6 @@ export function worldgenUrl(base, seed, terrain = 'varied', inspect = true, biom
   url.searchParams.set('map', terrain === 'classic' ? 'giant' : 'ninetynine');
   url.searchParams.set('campaign', '0'); url.searchParams.set('seed', String(seed));
   if (terrain !== 'classic') url.searchParams.set('terrain', terrain);
-  if (terrain !== 'classic' && biome !== 'auto') url.searchParams.set('biome',biome);
   if (terrain !== 'classic' && planet !== 'auto') url.searchParams.set('planet',planet);
   if (inspect) url.searchParams.set('worldgen', '1');
   return url.href;

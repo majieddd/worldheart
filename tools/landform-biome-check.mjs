@@ -50,23 +50,24 @@ try{
   await page.screenshot({path:resolve(out,`dry-canyon-${seed}-${profile}.png`)});
  }
  if(!hydrologyOnly){
- let fingerprint=null;
- for(const biome of ['temperate','desert','jungle','volcanic','boreal','wetland']){
-  await page.goto(`${base}/?map=ninetynine&campaign=0&seed=12345&terrain=varied&worldgen=1&biome=${biome}`);await page.waitForFunction(()=>window.WH?.worldgen,{},{timeout:180000});
+ const fingerprints=new Set();
+ for(const biome of ['temperate','arid','monsoon','volcanic','frozen','oceanic']){
+  await page.goto(`${base}/?map=ninetynine&campaign=0&seed=12345&terrain=varied&worldgen=1&biome=desert&planet=${biome}`);await page.waitForFunction(()=>window.WH?.worldgen,{},{timeout:180000});
   await page.evaluate(()=>{__qaFramesEnabled=false;WH.step(1);});
   const result=await page.evaluate(async()=>{
-   const w=await import(new URL('js/world.js',location.href)),n=WH.nav;return {seed:WH.CONFIG.seed,terrain:WH.CONFIG.terrainKey,key:w.ECOLOGY.manifest().key,field:JSON.stringify(w.FORMATIONS.manifest()),heights:Array.from(n.height.filter((_,i)=>i%101===0)),decor:WH.world.decor?.sets?.map(s=>s.list.length),catalog:WH.worldgen.landmarks};
+   const w=await import(new URL('js/world.js',location.href)),n=WH.nav;return {seed:WH.CONFIG.seed,terrain:WH.CONFIG.terrainKey,key:WH.CONFIG.environment.theme,biome:WH.CONFIG.biomeKey,field:JSON.stringify(w.FORMATIONS.manifest()),heights:Array.from(n.height.filter((_,i)=>i%101===0)),decor:WH.world.decor?.sets?.map(s=>s.list.length),catalog:WH.worldgen.landmarks};
   });
-  const fp=JSON.stringify([result.seed,result.field,result.heights]);if(!fingerprint)fingerprint=fp;
-  check(`${biome}: climate does not reroll terrain geometry`,fp===fingerprint,{seed:result.seed});
-  check(`${biome}: inspector reflects the requested climate`,await page.locator('#worldgen-biome').inputValue()===biome&&result.key===biome);
-  const play=new URL(await page.locator('#worldgen-play').getAttribute('href'));check(`${biome}: play link preserves climate`,play.searchParams.get('biome')===biome);
+  const fp=JSON.stringify([result.seed,result.field,result.heights]);fingerprints.add(fp);
+  check(`${biome}: theme retains a valid terrain field`,result.heights.every(Number.isFinite),{seed:result.seed});
+  check(`${biome}: theme owns climate and ignores legacy climate URLs`,await page.locator('#worldgen-planet').inputValue()===biome&&result.key===biome&&result.biome==='auto');
+  const play=new URL(await page.locator('#worldgen-play').getAttribute('href'));check(`${biome}: play link preserves theme`,play.searchParams.get('planet')===biome&&!play.searchParams.has('biome'));
   await page.locator('#worldgen-globe').click();await page.evaluate(()=>WH.step(1));await page.locator('#worldgen-panel summary').click();await page.screenshot({path:resolve(out,`biome-${biome}.png`)});
   records.push({biome,...result,field:undefined,heights:undefined});
  }
+ check('Themes vary terrain recipes as well as palettes',fingerprints.size>=4,{count:fingerprints.size});
  await page.locator('#worldgen-panel summary').click();await page.setViewportSize({width:390,height:844});
- check('Climate control fits a narrow viewport without horizontal scroll',await page.evaluate(()=>document.body.scrollWidth<=innerWidth&&document.getElementById('worldgen-biome').getBoundingClientRect().right<=innerWidth));
- await page.locator('#worldgen-biome').selectOption('desert');await page.locator('#worldgen-form button[type=submit]').click();await page.waitForFunction(()=>window.WH?.worldgen&&WH.CONFIG.biomeKey==='desert',{},{timeout:180000});
- check('Normal Load seed interaction applies the selected climate',new URL(page.url()).searchParams.get('biome')==='desert');
+ check('Theme control fits a narrow viewport without horizontal scroll',await page.evaluate(()=>document.body.scrollWidth<=innerWidth&&document.getElementById('worldgen-planet').getBoundingClientRect().right<=innerWidth));
+ await page.locator('#worldgen-planet').selectOption('arid');await page.locator('#worldgen-form button[type=submit]').click();await page.waitForFunction(()=>window.WH?.worldgen&&WH.CONFIG.planetKey==='arid',{},{timeout:180000});
+ check('Normal Load seed interaction applies the selected theme',new URL(page.url()).searchParams.get('planet')==='arid');
  }
-}finally{await browser.close();const result={base,scope:'Targeted sub-sea movement/placement and normal climate controls with instrumented frame advance',checks,records,faults,pass:checks.every(c=>c.ok)&&!faults.length};writeFileSync(resolve(out,'results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({checks:checks.length,failed:checks.filter(c=>!c.ok),faults,pass:result.pass}));if(!result.pass)process.exitCode=1;}
+}finally{await browser.close();const result={base,scope:'Targeted sub-sea movement/placement and normal theme controls with instrumented frame advance',checks,records,faults,pass:checks.every(c=>c.ok)&&!faults.length};writeFileSync(resolve(out,'results.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({checks:checks.length,failed:checks.filter(c=>!c.ok),faults,pass:result.pass}));if(!result.pass)process.exitCode=1;}

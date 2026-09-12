@@ -2,8 +2,8 @@
 // with no state of their own, so the shell and the tests agree by construction
 // and any of it can be queried out of order.
 
-export const TOTAL_WAVES = 15;
-export const BOSS_WAVE = 15;
+export const TOTAL_WAVES = 10;
+export const BOSS_WAVE = 10;
 
 // Frontier angle in radians. This is the half-angle of the spherical cap the
 // player owns; the shell turns it into a confine, a wall and a haze.
@@ -11,17 +11,17 @@ export const BOSS_WAVE = 15;
 // region. 0.05 rad is about 12 units of surface radius on an R240 world, so a
 // handful of towers fills it and the first expansion is dramatic.
 export const THETA_START = 0.05;
-export const THETA_END = 0.52;
+export const THETA_END = Math.PI;
 
-// Fourteen geometric steps across the complete territory. They are granted
+// Ten paid steps across the complete planet. They are granted
 // only by explicit base upgrades; no wave grants a ring.
-export const EXPANSIONS = 14;
+export const EXPANSIONS = 10;
 
 // A purchase pays its full territory immediately, independently of wave count.
 // The shell quotes a mixture of gold and deposited crystal credit. Level zero
 // is the original foothold; Forward Scout alters only the initial start.
-export const HEART_COSTS = [250, 450, 700, 1000, 1400];
-export const HEART_RINGS = [0, 3, 5, 8, 11, 14];
+export const HEART_COSTS = [180, 280, 420, 620, 880, 1200, 1600, 2100, 2700, 3400];
+export const HEART_RINGS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 export const MAX_HEART_LEVEL = HEART_COSTS.length;
 
 // Towers may climb two marks on an unraised heart, and one more per level. The
@@ -61,17 +61,16 @@ export function draftsPowerAfter(wave) {
 }
 
 export function isBossWave(wave) {
-  return wave === BOSS_WAVE;
+  return wave > 0 && wave % BOSS_WAVE === 0;
 }
 
-// Ease-out so the early expansions read as dramatic and the late ones as
-// incremental. A linear ramp made every wave feel the same. The argument is
-// the number of expansions actually APPLIED, which the run tracks separately
-// from waves cleared now that the heart can hold some back.
+// Accelerating expansion keeps the opening tactical, then makes increasingly
+// large regional purchases. The final upgrade includes the antipode. Waves
+// never grant territory; steps count paid upgrades (plus Forward Scout).
 export function frontierTheta(steps) {
   steps = Math.max(0, Math.min(steps, EXPANSIONS));
   const t = steps / EXPANSIONS;
-  const eased = 1 - (1 - t) * (1 - t);
+  const eased = t ** 2.35;
   return THETA_START + eased * (THETA_END - THETA_START);
 }
 

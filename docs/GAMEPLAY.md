@@ -33,7 +33,7 @@ planet. Flux is luminosity divided by distance squared. These stylized inputs
 select ten themes (Garden, Canopy, Dune, Cryosphere, Molten, Crystal, Spore,
 Pelagic, Iron desert and Luminous twilight) and bias biome bands,
 ocean coverage and formation families. Mixed Landscapes remains the default.
-The inspector can override the theme independently of its climate preset;
+The inspector selects a theme that owns its climate and biome distribution;
 saved campaign definitions retain their generated environment. See
 [terrain recipes](TERRAIN-RECIPES.md) and the
 [extreme worlds evidence](qa/implementation/EXTREME-WORLDS.md). Solid land,
@@ -289,22 +289,30 @@ The pure core is `js/run/`, and it imports nothing. It takes `dt` and its RNG by
 injection and reports what happened by returning events. `js/modes/ninetynine.js`
 is the only file that knows both the core and the renderer.
 
-Fifteen waves, boss on 15 (`js/run/schedule.js:5`). Rewards alternate: an odd
+Ten waves, boss on 10 (`js/run/schedule.js`). Victory offers extraction or an
+explicit Continue in Endless choice. Endless retains the assault, starts wave
+11, repeats bosses each ten waves and can end at the heart. Wave rewards beyond
+15 have monotone saved receipts, so reload cannot pay them twice. Rewards alternate: an odd
 wave hands you a tower card, an even one opens a draft of three powers, and each
 wave gives exactly one of the two (`js/run/schedule.js:61`).
 
 ### The Worldheart
 
-| Level | Cost | Rings held | Tier cap |
+| Level | Cost | Paid expansion steps | Tier cap |
 |---|---|---|---|
 | 0 | - | 0 | MK II |
-| 1 | 250 | 3 | MK III |
-| 2 | 450 | 5 | MK IV |
-| 3 | 700 | 8 | MK V |
-| 4 | 1,000 | 11 | MK VI |
-| 5 | 1,400 | 14 | MK VII |
+| 1 | 180 | 1 | MK III |
+| 2 | 280 | 2 | MK IV |
+| 3 | 420 | 3 | MK V |
+| 4 | 620 | 4 | MK VI |
+| 5 | 880 | 5 | MK VII |
+| 6 | 1,200 | 6 | MK VIII |
+| 7 | 1,600 | 7 | MK IX |
+| 8 | 2,100 | 8 | MK X |
+| 9 | 2,700 | 9 | MK XI |
+| 10 | 3,400 | 10 | MK XII |
 
-Tables at `js/run/schedule.js:29`. The full ladder costs 3,800 gold. The tier cap
+Tables at `js/run/schedule.js`. The full ladder costs 13,380 gold. The tier cap
 is `2 + level`.
 
 Only buying a base level grants territory, immediately and independently of
@@ -320,12 +328,64 @@ remainder. Deposit and pickup identities cannot pay twice.
 
 Cargo and base credit belong to the current assault. Death loses carried
 crystals; reload starts a fresh assault, just like towers and run gold. This
-is not yet the M5 versioned expedition checkpoint/inventory system.
+is separate from the saved inventory extracted between planets.
 
-The frontier angle eases out from 0.05 to 0.52 radians over 14 steps
-(`js/run/schedule.js:77`), so early expansions read as dramatic and late ones as
-incremental. It is a **mask over a world built at final size**, never a world
-that grows, because rebuilding the nav graph would destroy every tower footprint.
+The frontier angle is `0.05 + (PI - 0.05) * (steps / 10)^2.35`, so late
+purchases claim increasingly large regions and level ten covers the planet.
+A hybrid global graph is built once at boot, with finer cells near the opening
+battlefield. Expansion never replaces nodes or tower footprint ownership.
+
+### Expedition preparation and commander survival
+
+The V2 root opens a walkable solo courtyard. WASD/arrows walk, right drag turns
+the camera, wheel zooms and E opens nearby stations. Accessible station buttons
+also provide direct navigation. All five commanders are free to choose; their
+former talent nodes cannot charge again. A saved expedition retains its leader.
+The foundry spends 60 earned wave coins on an equally likely unowned tower,
+then lets the player select an owned opening card. Mount and commander choices
+persist separately from the expedition. Launch is explicit.
+
+| Commander | Health | Power | Movement multiplier |
+|---|---|---|---|
+| Bulwark | 1,400 | 1.15 | 0.92 |
+| Twinfang | 1,050 | 0.90 | 1.22 |
+| Longsight | 900 | 1.00 | 1.08 |
+| Kettle | 1,150 | 1.25 | 0.88 |
+| Emberline | 1,000 | 1.08 | 1.00 |
+
+Each base level adds 15% of initial health, 12% of initial power, 2.5% of initial
+movement and 4.5% weapon reach. Native and equipped weapon statistics share
+this calculation; health percentage is preserved on upgrade. Veteran health
+still composes. These bonuses never compound on repeated updates. Commander
+speed also multiplies mount speed. Enemy attacks have a 2.8x multiplier in
+99 Planets, on top of bounded wave attack scaling; classic attacks are unchanged.
+
+Death within the current base cap reserves that commander's identity and starts
+a 30 simulation-second recovery. Pausing and seismic transitions hold the timer.
+Respawn retains class and weapons, loses carried crystals and restores scaled
+health. Death outside the cap defeats the assault immediately.
+
+### Mounts, weather and field crafting
+
+M mounts/dismounts; N mutes in 99 Planets (classic retains M for sound). Ridge
+Strider has 1.65x land speed, 0.7x water factor and 80% weapon damage. Tideback
+has 1.2x land speed, 2.4x water factor and 90% damage. Sky Ray has 1.35x speed,
+65% damage and twelve seconds of flight; hold Space to rise, release to descend,
+land to recharge. High peaks still block its air route. On foot retains full
+damage. All three mounts have distinct production models and movement.
+
+Every third wave can announce weather with eight seconds' warning. Tornadoes
+travel for eighteen seconds, lifting and sweeping nearby bodies; bosses resist
+displacement. Quakes raise and split a local stretch of terrain, preserving
+heart access, live nest/unit routes and tower footprints. A brief seismic phase
+holds combat and placement while bounded batches update the terrain and paths;
+camera input remains live. At most eight faults accumulate per assault.
+
+Amber relic ore appears outside the base and drops from destroyed nests.
+Collect three, return within 6m of the heart and use T or Expedition kit to
+forge a random owned tower card. A free hand slot is required. Its matching
+placement consumes one free-build credit; it costs no gold and cannot be sold
+for a profit. Ordinary blue crystal deposit and weapon auto-pickup rules remain.
 
 ### Hand and draft
 

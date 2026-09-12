@@ -163,6 +163,7 @@ class Enemy {
     this.slowFrac = 0;
     this.slowT = 0;
     this.burnT = 0; this.burnDps = 0; this.burnTick = 0;
+    this.weatherLift = 0;
     this.swimming = false;
     this.stunT = 0;
     this.flashT = 0;
@@ -1207,7 +1208,7 @@ export class EnemyManager {
 
   enemyPos(e, out) {
     const h = surfaceElevation(e.dir,e.height) - swimOffset(e);
-    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
+    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + (e.weatherLift || 0) + e.type.radius * 0.9);
   }
 
   // Deep Freeze is a hold with no damage attached, so it needs the same
@@ -1659,7 +1660,7 @@ export class EnemyManager {
       }
       e.renderDir.copy(e.dir); e.renderHeight=hRaw;
       const bob = (type.flying || this.spaceMode) ? Math.sin(t * 3.1 + e.phase) * 0.2 : 0;
-      _tmp.copy(e.dir).multiplyScalar(R + hRaw + e.alt + bob);
+      _tmp.copy(e.dir).multiplyScalar(R + hRaw + e.alt + (e.weatherLift || 0) + bob);
       _up.copy(e.dir);
       _look.copy(_tmp).add(e.fwd);
       _mBasis.lookAt(_tmp, _look, _up);

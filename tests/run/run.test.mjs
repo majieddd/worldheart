@@ -85,8 +85,8 @@ test('raising the heart grants its territory independently of waves', () => {
   const events = run.upgradeHeart();
   assert.ok(events.some((e) => e.type === 'heartUpgraded'));
   // Level 1 permits three rings, so two of the four held are paid now.
-  assert.equal(events.filter((e) => e.type === 'frontierGrew').length, 3);
-  assert.equal(run.getFrontierSteps(), 3);
+  assert.equal(events.filter((e) => e.type === 'frontierGrew').length, 1);
+  assert.equal(run.getFrontierSteps(), 1);
   assert.equal(run.getHeldRings(), 0);
 });
 
@@ -115,13 +115,15 @@ test('the tier cap follows the heart, never the wave', () => {
   assert.equal(run.getTierCap(), 2);
   for (let w = 1; w <= 10; w++) clearWaveChoosingFirst(run);
   assert.equal(run.getTierCap(), 2, 'waves must not raise the cap');
+  assert.deepEqual(run.upgradeHeart(), []);
+  assert.ok(run.startEndless());
   run.upgradeHeart();
   assert.equal(run.getTierCap(), 3);
 });
 
 test('the evolution tier reaches 4 by wave 12', () => {
   const run = newRun();
-  for (let w = 1; w <= 12; w++) clearWaveChoosingFirst(run);
+  for (let w = 1; w <= 12; w++) { if(w===11)run.startEndless();clearWaveChoosingFirst(run); }
   assert.equal(run.getEvolutionTier(), 4);
 });
 
@@ -130,8 +132,8 @@ test('a full run reaches the boss and then victory', () => {
   // A heart raised to its ceiling holds every ring, so the planet is fully
   // held by the time the boss arrives. Unraised, the circle stays a foothold.
   while (run.getHeartCost() !== null) run.upgradeHeart();
-  for (let w = 1; w <= 14; w++) clearWaveChoosingFirst(run);
-  assert.equal(run.getWave(), 15);
+  for (let w = 1; w <= 9; w++) clearWaveChoosingFirst(run);
+  assert.equal(run.getWave(), 10);
   assert.ok(run.isBossWave());
   const events = run.completeWave();
   assert.equal(run.getPhase(), 'victory');
@@ -161,7 +163,7 @@ test('losing the run ends it', () => {
 
 test('a restored victory permits no repeated reward or late defeat',()=>{
   const run=createRun({seed:42,playerIds:['solo'],restoredVictory:true});
-  assert.equal(run.getPhase(),'victory');assert.equal(run.getWave(),15);
+  assert.equal(run.getPhase(),'victory');assert.equal(run.getWave(),10);
   assert.equal(run.getCoins(),0);assert.deepEqual(run.completeWave(),[]);
   assert.equal(run.loseRun(),false);assert.equal(run.getPhase(),'victory');
 });

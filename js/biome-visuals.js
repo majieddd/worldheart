@@ -9,6 +9,7 @@ export const BIOME_VISUALS = Object.freeze({
   desert:{name:'Desert',color:0xd4a45e,decor:'cactus'},
   savanna:{name:'Savanna',color:0xa4a058,decor:'leaf'},
   wetland:{name:'Wetlands',color:0x477e68,decor:'reed'},
+  mangrove:{name:'Mangrove delta',color:0x467665,decor:'mangrove'},
   tundra:{name:'Tundra',color:0xc0d9e1,decor:'ice'},
   alpine:{name:'Alpine ice',color:0xe0edf0,decor:'ice'},
   volcanic:{name:'Lava crust',color:0x38303a,decor:'vent'},
@@ -44,7 +45,15 @@ export function paintBiome(out,key,height,slope,variation=.5){
 export function biomeDressingGeometry(kind){
   const parts=[];
   const add=(g,color,x=0,y=0,z=0,rz=0)=>{g.rotateZ(rz);g.translate(x,y,z);const flat=g.index?g.toNonIndexed():g;if(flat!==g)g.dispose();parts.push([flat,color]);};
-  if(kind==='fungal'){
+  if(kind==='mangrove'){
+    add(new THREE.CylinderGeometry(.22,.36,2.5,7),0x74674c,0,1.8);
+    for(let k=0;k<6;k++){
+      const a=k*Math.PI/3,x=Math.cos(a),z=Math.sin(a);
+      const root=new THREE.CylinderGeometry(.08,.18,1.8,5);root.rotateZ(-x*.65);root.rotateX(z*.65);
+      add(root,0x807951,x*.6,.75,z*.6);
+      add(new THREE.IcosahedronGeometry(1.15,0),k%2?0x3b9360:0x5baf68,x*.7,3.1+(k%2)*.4,z*.7);
+    }
+  }else if(kind==='fungal'){
     for(const [x,z,h,r]of [[0,0,2.7,1.4],[1,.4,1.5,.85],[-.8,.5,1.1,.65]]){
       add(new THREE.CylinderGeometry(.13,.25,h,7),0xb298b6,x,h/2,z);
       add(new THREE.SphereGeometry(r,12,5,0,Math.PI*2,0,Math.PI/2),0xe883ba,x,h,z);

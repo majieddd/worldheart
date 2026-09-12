@@ -1,12 +1,11 @@
 // WORLDHEART: single source of tuning. Scene palette here is canonical for WebGL;
 // css/style.css :root is canonical for the DOM HUD. Keep the two in sync with DESIGN.md.
 
-import { BIOME_REGIMES } from './terrain/ecology.js';
 import { PLANET_THEMES, planetEnvironment } from './run/planet-environments.js';
 import { campaignLaunch } from './modes/campaign-launch.js';
 import { browserStorage, isPreviewPath } from './storage.js';
 const url = new URLSearchParams(location.search);
-const worldgen = url.get('worldgen') === '1' || /\/debug\.html$/.test(location.pathname || '');
+const worldgen = url.get('worldgen') === '1' || /\/(debug|lobby)\.html$/.test(location.pathname || '');
 const preview = isPreviewPath(location.pathname);
 
 function stored(key) {
@@ -74,8 +73,8 @@ export const MAPS = {
   ninetynine: {
     name: '99 Planets',
     mode: 'ninetynine', modeLabel: 'roguelite campaign',
-    tag: 'One tower. Fifteen waves. Raise the Worldheart to hold more ground, and clear the nests beyond it.',
-    chip: 'roguelite · 15 waves · boss',
+    tag: 'One tower. Ten waves. Raise the Worldheart to hold more ground, and clear the nests beyond it.',
+    chip: 'roguelite · 10 waves · endless',
     // Same planet class as Titan's Brow. fieldTheta is the FINAL frontier: the
     // nav graph, terrain, decor and breach sites are all authored at this angle
     // once, and the run masks a smaller area early on. Building small and
@@ -86,7 +85,7 @@ export const MAPS = {
     portalWakes: [1, 3, 7, 11, 15],
     fieldTheta: 0.52,
     startGold: 450,
-    waveCount: 15,
+    waveCount: 10,
     waterSegs: [320, 214],
     decorMul: 1.15,
   },
@@ -106,7 +105,7 @@ export const MAPS = {
 };
 
 const mapKey = (() => {
-  if (/\/debug\.html$/.test(location.pathname || '')) return 'ninetynine';
+  if (/\/(debug|lobby)\.html$/.test(location.pathname || '')) return 'ninetynine';
   const q = url.get('map');
   if (q && MAPS[q]) return q;
   const s = stored('whMap');
@@ -132,7 +131,7 @@ const terrainProfile=TERRAIN_PROFILES[terrainKey]||TERRAIN_PROFILES.varied;
 export const CONFIG = {
   worldgen,
   requestedSeed,
-  biomeKey: !campaign && Object.hasOwn(BIOME_REGIMES,url.get('biome')) ? url.get('biome') : 'auto',
+  biomeKey: 'auto',
   planetKey,
   environment,
   seed: campaign?.seed || requestedSeed,
@@ -167,8 +166,8 @@ export const CONFIG = {
   },
 
   waves: {
-    // 99 Planets is a fifteen-wave run. Everything that used to assume 30 now
-    // reads this, so the boss lands on the last wave whatever the mode.
+    // 99 Planets is a ten-wave run, with optional Endless. Shared systems
+    // read this cap; the Endless director explicitly opts out after victory.
     count: MAP.waveCount ?? 30,
     prepTime: 22,        // seconds between waves
     firstPrep: 30,

@@ -119,7 +119,7 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
   state.hand = [prof.loadout && state.unlockedTowers.includes(prof.loadout)
     ? prof.loadout : state.unlockedTowers[0]];
   // A validated campaign receipt restores a cleared field for salvage. This
-  // does not emit rewards or replay the fifteen wave-clear transactions.
+  // does not emit rewards or replay the completed wave-clear transactions.
   if(restoredVictory){state.phase='victory';state.wavesCleared=TOTAL_WAVES;state.hand=[];}
 
   return {
@@ -128,7 +128,8 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
     // the HUD must keep showing the wave just survived rather than jumping ahead.
     getWave: () => (state.phase === 'drafting'
       ? state.wavesCleared
-      : Math.min(state.wavesCleared + 1, TOTAL_WAVES)),
+      : Math.min(state.wavesCleared + 1, state.endless ? Infinity : TOTAL_WAVES)),
+    isEndless: () => state.endless,
     getPhase: () => state.phase,
     // The frontier is what has been APPLIED, not what has been cleared: the
     // two differ by however many rings the heart is holding back.
@@ -153,23 +154,24 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
     getModifiers: () => modifiers,
     getPlayers: () => state.players,
     getDraft: () => draft,
-    isBossWave: () => isBossWave(Math.min(state.wavesCleared + 1, TOTAL_WAVES)),
+    isBossWave: () => isBossWave(state.wavesCleared + 1),
     serialise: () => serialise(state),
 
     // ---- transitions ----
 
     // Called by the shell when the current wave has been survived.
     completeWave() {
-      if (state.phase === 'defeat' || state.phase === 'victory') return [];
+      if (state.phase !== 'building') return [];
 
-      const wave = Math.min(state.wavesCleared + 1, TOTAL_WAVES);
+      const wave = state.wavesCleared + 1;
       const events = [];
       state.wavesCleared += 1;
       const coins = coinsForWave(wave, isBossWave(wave));
       state.coins += coins;
       events.push({ type: 'waveCleared', wave, coins });
 
-      if (isBossWave(wave)) {
+      if (wave === TOTAL_WAVES && !state.endless) {
+        if (unlocksTowerAt(wave)) unlockRandomTower(events);
         state.phase = 'victory';
         events.push({ type: 'runWon', wave, coins: state.coins });
         return events;
@@ -194,6 +196,22 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
     // records the level and grants its territory immediately. An
     // ended run or a heart already at its ceiling changes nothing and says so
     // by returning no events, which is what lets the shell refund safely.
+    startEndless() {
+      if (state.phase !== 'victory' || state.endless) return false;
+      state.endless = true;
+      state.phase = 'building';
+      drawCard();
+      return true;
+    },
+    finishEndless() {
+      if (!state.endless || state.phase !== 'building') return [];
+      state.phase = 'victory';
+      return [{ type: 'runWon', wave: state.wavesCleared, coins: state.coins }];
+    },
+    craftTower() {
+      if (state.phase !== 'building' || state.hand.length >= handCap) return null;
+      return drawCard();
+    },
     upgradeHeart() {
       if (state.phase === 'defeat' || state.phase === 'victory') return [];
       if (state.heartLevel >= MAX_HEART_LEVEL) return [];
