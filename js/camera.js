@@ -376,7 +376,7 @@ export class OrbitRig {
       const previous = Math.min(CONFIG.planetRadius * this.frontierTheta * FRONTIER_FRAME, planetCeiling);
       const globalGrowth=clamp((this.frontierTheta-.52)/(Math.PI-.52),0,1);
       const half=Math.atan(Math.tan(CAM_TUNE.fovFar*Math.PI/360)*Math.min(1,this.camera.aspect));
-      const globe=(CONFIG.planetRadius+110)/Math.sin(Math.max(.06,half))-CONFIG.planetRadius;
+      const globe=(CONFIG.planetRadius+Math.max(110,this.terrainTop||0))*1.08/Math.sin(Math.max(.06,half))-CONFIG.planetRadius;
       return Math.max(previous * (1 + .1 * growth),globalGrowth*globe,d + 2,d * 1.6);
     }
     // Always leave a usable zoom band, however the two height sliders are set.
@@ -576,6 +576,10 @@ export class OrbitRig {
     // Radial up becomes parallel to the look ray at an overhead view. Use
     // the carried surface heading so exact top-down framing can still turn.
     this.camera.up.copy(_head);
+    // At a global frontier, far zoom becomes a globe overview. Close zoom
+    // still follows the ground, so growing the base never steals local aim.
+    const overview = clamp(((this.frontierTheta || 0) - 1.4) / (Math.PI - 1.4), 0, 1) * clamp((z - .65) / .35, 0, 1);
+    _focusPt.multiplyScalar(1 - overview * overview * (3 - 2 * overview));
     this.camera.lookAt(_focusPt);
     this.camera.updateMatrixWorld();
     this.focusDist = this.camera.position.distanceTo(_focusPt);

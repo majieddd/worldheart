@@ -669,6 +669,11 @@ body.end-open #fp-hud, body.end-open .weapon-cue, body.end-open .nest-marker { v
 .hud-top-left:has(.expedition-tools){max-height:calc(100vh - 155px);overflow:auto;pointer-events:auto;scrollbar-width:thin}
 .expedition-tools{position:relative;width:238px;z-index:24;padding:9px 12px;background:rgba(16,29,42,.94);font-size:12px;pointer-events:auto;max-height:min(360px,40vh);overflow:auto;flex-shrink:0}
 .expedition-tools summary{cursor:pointer;color:var(--accent);font-weight:700}.expedition-tools p{line-height:1.45;margin:9px 0}.expedition-tools .btn{font-size:12px;width:100%;margin:4px 0}.worldgen .expedition-tools{display:none}
+.commander-frame{width:238px;padding:8px;pointer-events:auto;flex-shrink:0;background:rgba(16,29,42,.94)}
+.commander-focus{display:grid;gap:4px;width:100%;padding:5px;text-align:left;color:var(--accent);background:transparent;border:0;cursor:pointer;font:inherit}
+.commander-focus span{font-size:11px;color:#d4dce5}.commander-focus meter{width:100%;height:9px;accent-color:#68dbbe}
+.ability-actions{display:grid;gap:4px;margin-top:6px}.ability-actions .btn{font-size:11px;padding:6px 8px;min-height:30px;text-align:left}
+.worldgen .commander-frame{display:none}@media(max-width:700px){.commander-frame{width:185px}}
 @media(max-width:700px){.expedition-tools{width:185px;font-size:11px}.hud-top-left:has(.expedition-tools){max-height:calc(100vh - 275px)}}
 
 .overlay-card .o-actions{flex-wrap:wrap}

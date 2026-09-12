@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { PALETTE, PRESENTATION } from './config.js';
 import { slab, cone, merge, shift, spin, keyed, hump } from './rig.js';
 import { STRIKE_AT } from './attacks.js';
-import { buildWeapon, MATERIAL_FINISH } from './weapon-model.js';
+import { buildWeapon, applyWeaponFinish } from './weapon-model.js';
 
 // The thing in your hands.
 //
@@ -496,6 +496,14 @@ export class ViewModel {
     this.trail.clear();
   }
 
+  muzzle(worldCamera,out){
+    if(!this.visible||!this.current)return false;
+    const staff=this.typeKey==='oracle',lob=this.typeKey==='bombardier';
+    out.set(0,staff?0:.18,staff?-1.82:lob?-1.17:-1.55).applyMatrix4(this.current.userData.weaponGroup.matrixWorld).project(this.camera);
+    out.z=.5;out.unproject(worldCamera).sub(worldCamera.position).normalize().multiplyScalar(1.6).add(worldCamera.position);
+    return true;
+  }
+
   // Called every frame while possessed, after the main camera is placed.
   update(dt, cam, unit, opts = {}) {
     if (!this.visible || !this.current) return;
@@ -519,7 +527,7 @@ export class ViewModel {
           const color={tempered:0xffd399,ember:0xff794d,frost:0x91ddff,pulse:0xa9a0ff}[unit.weaponCore];
           o.material.color.setHex(color);o.material.emissive.setHex(color);o.material.emissiveIntensity={ancient:.12,technological:1.3,empowered:2.2}[unit.weaponEra];
         }
-        if(unit.weaponEra&&o.userData.metalPart){const f=MATERIAL_FINISH[unit.weaponMaterial]||MATERIAL_FINISH.iron;o.material.color.setHex(f.color);o.material.emissive.setHex(0);o.material.metalness=f.metalness;o.material.roughness=f.roughness;}
+        if(unit.weaponEra&&o.userData.metalPart)applyWeaponFinish(o.material,unit.weaponMaterial);
       });
       this.current.userData.weaponGroup.scale.z = unit.weaponLength || 1;
       for(const prop of this.current.userData.weaponGroups||[])prop.scale.z=unit.weaponLength||1;
@@ -555,7 +563,8 @@ export class ViewModel {
     // Idle sway and walk bob, layered under whatever the swing is doing so the
     // weapon is never completely still. The bob is the eye's figure-eight,
     // counter-phased a little so the weapon lags the head.
-    const motion = opts.bob === false ? 0 : 1;
+    const aim = opts.aim || 0;
+    const motion = opts.bob === false ? 0 : 1 - .85 * aim;
     // Comfort changes also apply while paused; dt=0 must not retain a
     // weapon's old turn lag after the player disables bob and sway.
     if(!motion)this._sway.set(0,0);
@@ -614,6 +623,14 @@ export class ViewModel {
     // The landing thump, and the recoil kick from possession.
     oy -= (opts.kick || 0) * 0.10 * g;
     rx += (opts.kick || 0) * 0.30;
+    // Keep the barrel on the sight line without stretching the weapon lens.
+    if (kind !== 'melee') {
+      const sightY=kind==='beam'?-.04:-(kind==='lob'?.4:.3)*VM_SCALE;
+      ox *= 1 - aim; oy += (sightY - oy) * aim;
+      rx *= 1 - aim; ry *= 1 - aim; rz *= 1 - aim;
+      rx += (opts.kick||0)*.1*aim;
+      oz += .10 * g * aim;
+    } else { ox *= 1 - .2 * aim; }
 
     // Place it against the camera basis. Three's camera looks down -Z, so the
     // forward offset is negated.

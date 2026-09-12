@@ -5,8 +5,8 @@ import {isNestClearing,NEST_SCHEDULE_CAPACITY,NEST_SEPARATION} from './nest-site
 // A bounded simulation system. Quakes change the shared analytic field and
 // refresh existing graph costs; they never replace a live graph or footprints.
 export class PlanetWeather {
-  constructor({scene,nav,world,allies,enemies,game,commander,centre,ui,oreField}){
-    Object.assign(this,{scene,nav,world,allies,enemies,game,commander,centre,ui,oreField});
+  constructor({scene,nav,world,allies,enemies,game,commander,centre,ui}){
+    Object.assign(this,{scene,nav,world,allies,enemies,game,commander,centre,ui});
     this.phase='calm';this.remaining=0;this.clock=0;this.kind=null;this.events=[];
     this.forecast=new FaultForecast(scene);
     this.dir=new THREE.Vector3();this.axis=new THREE.Vector3();this.tmp=new THREE.Vector3();this.step=new THREE.Vector3();this.bearing=new THREE.Vector3();this.turn=new THREE.Vector3();this.position=new THREE.Vector3();
@@ -49,7 +49,7 @@ export class PlanetWeather {
       if(protectedNodes.every(n=>Number.isFinite(draft.dist[n]))&&capacity===NEST_SCHEDULE_CAPACITY)break;
       fault.strength=attempt===4?0:fault.strength*.5;
     }
-    this.forecast.show(fault);
+    yield* this.forecast.showSteps(fault);
     this.ui.toast('Earthquake in 8s. Red predicts the new ground; nests in the disruption will collapse.','danger');
   }
   *quakeSteps(){
@@ -75,7 +75,7 @@ export class PlanetWeather {
     // Presentation work is spread across frames. Combat and placement hold
     // during the short seismic transition; camera and settings stay responsive.
     const start=performance.now();let step;
-    do{step=this.shift.next();}while(!step.done&&performance.now()-start<5);
+    do{step=this.shift.next();}while(!step.done&&performance.now()-start<3);
     if(step.done){
       this.shift=null;this.game.terrainBusy=false;this.nav.terrainBusy=false;this.warnRoot.visible=false;
       if(this.phase==='forecasting'){this.phase='warning';this.remaining=8;}

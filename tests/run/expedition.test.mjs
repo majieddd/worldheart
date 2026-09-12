@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createRun} from '../../js/run/run.js';
-import {COMMANDERS,MOUNTS,commanderStats,scaleWeapon,createRespawn,createOreLedger} from '../../js/run/expedition.js';
+import {COMMANDERS,MOUNTS,commanderStats,scaleWeapon,createRespawn} from '../../js/run/expedition.js';
 import {frontierTheta,HEART_RINGS} from '../../js/run/schedule.js';
 import {buildIcosphere} from '../../js/geodesic.js';
 import {freshSave,startExpedition,beginAssault,awardWave,resolveAssault,continueEndless,validSave} from '../../js/run/campaign.js';
@@ -36,9 +36,7 @@ test('commander identity and base scaling agree for every weapon channel without
   for(const mount of Object.keys(MOUNTS)){const mounted=scaleWeapon(spec,key,10,mount);assert.equal(mounted.dmg||mounted.dps,(max.dmg||max.dps)*MOUNTS[mount].damage);}
  }
 });
-test('ore cannot duplicate pickups or spend on rejected/full-hand crafting',()=>{
- const ore=createOreLedger();assert.ok(ore.collect('a',3));assert.equal(ore.collect('a',3),false);assert.equal(ore.craft(false,()=> 'bolt'),null);assert.equal(ore.craft(true,()=>null),null);assert.equal(ore.ore,3);
- assert.equal(ore.craft(true,()=> 'bolt'),'bolt');assert.equal(ore.ore,0);assert.equal(ore.craft(true,()=> 'bolt'),null);
+test('a full hand rejects another forge card',()=>{
  const run=createRun({seed:13,playerIds:['solo']});run.craftTower();run.craftTower();assert.equal(run.craftTower(),null);assert.equal(run.getHand().length,3);
 });
 test('Endless campaign coins beyond the legacy bitmask remain idempotent after reload',()=>{

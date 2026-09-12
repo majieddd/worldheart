@@ -87,7 +87,7 @@ test('no safe site defers the wave without phantom enemies, rewards or a mountai
 });
 test('a full pool retains both overlapping assaults and cannot pay either early',()=>{
  const{waves,enemies,game}=timedFixture();enemies.spawn=()=>null;
- waves._startWave();waves._startWave();const queued=waves.queues.length;waves.update(30);
+ waves._startWave();waves._startWave();const queued=waves.queues.length;waves.update(waves.countdown-.1);
  assert.equal(waves.pendingSpawns,queued);assert.equal(waves.clearedWaves,0);assert.equal(game.gold,0);
  assert.ok(waves.queues.some(q=>q.wave===1)&&waves.queues.some(q=>q.wave===2));
 });

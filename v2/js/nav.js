@@ -760,7 +760,7 @@ export class NavGraph {
   *refreshTerrainSteps(fault,predicted=false){
     const dirty=new Uint8Array(this.n);let changed=0;
     for(let i=0;i<this.n;i++){
-      if(i%64===0)yield;
+      if(i%16===0)yield;
       this.nodeDir(i,_v);if(_v.dot(fault.dir)<Math.cos(48/R))continue;
       const delta=predicted?WORLD.terrainFaultDelta(fault,_v.x,_v.y,_v.z):0;
       const h=terrainHeight(_v.x,_v.y,_v.z)+delta,base=terrainHeight(_v.x,_v.y,_v.z,false)+delta;

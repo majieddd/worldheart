@@ -383,11 +383,35 @@ heart access, live nest/unit routes and tower footprints. A brief seismic phase
 holds combat and placement while bounded batches update the terrain and paths;
 camera input remains live. At most eight faults accumulate per assault.
 
-Amber relic ore appears outside the base and drops from destroyed nests.
-Collect three, return within 6m of the heart and use T or Expedition kit to
-forge a random owned tower card. A free hand slot is required. Its matching
+Salvaging an unwanted weapon grants one scrap. Orange relic pickups have been
+removed. Return within 6m of the heart and use T or Expedition kit to forge a
+random owned tower card for 3 scraps, then 5, 7 and so on. A free hand slot is required. Its matching
 placement consumes one free-build credit; it costs no gold and cannot be sold
 for a profit. Ordinary blue crystal deposit and weapon auto-pickup rules remain.
+
+The commander frame focuses and takes control of that body anywhere. While it
+is recovering, the frame returns to the heart and shows the respawn countdown.
+In first person, hold right mouse to aim, with a narrower lens, steadier weapon
+and 22% lower movement speed at full aim. Release, pause, a menu, or third-person
+zoom cancels aiming. Look sensitivity scales with the lens. A global base can
+zoom to a centred view of the complete planet, including its tallest formations.
+
+Z activates the commander's skill: Bulwark's 6s damage ward (24s cooldown),
+Twinfang's dash and 4s speed boost (16s), Longsight's 6s reach and armor-piercing
+boost (22s), Kettle's 9m blast and slow (28s), or Emberline's 5s healing/burning
+field (30s). V activates the equipped family's skill: sword circular cleave
+(12s), spear lunge (13s), twinblade 5s double cadence (18s), carbine railshot
+(14s), lobber siege shell (18s), or scepter heat vent and 4s fire ring (20s).
+Damage scales from the equipped weapon. Cooldowns share a family across slots,
+pause with simulation, and temporary buffs expire on death. The buttons show
+remaining cooldown and describe the effect. Ordinary scepter fire also remains
+visible on misses and can damage nests.
+
+Timed nest waves arrive every 22.5s initially, rising by 1s per wave to 37.5s,
+half their previous interval. New nest placement seeks an outward target of
+12m + 7m per completed wave (capped at 1.4 planet radii), in addition to the
+current frontier. Valid clearings and connected floor routes remain mandatory;
+surviving nests keep their original positions.
 
 ### Hand and draft
 

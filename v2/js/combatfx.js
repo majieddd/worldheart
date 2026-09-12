@@ -249,6 +249,7 @@ export class CombatFx {
   // to the screen's right of the eye, so the tracer has to start there or it
   // appears to come from somewhere behind the camera.
   _muzzle(a, out) {
+    if(a.hidden&&this.possession?.unit===a&&this.possession.viewModel?.muzzle(this.fx.camera,out))return out;
     if (typeof this.allies.weaponLine === 'function') {
       this.allies.weaponLine(a, _v2, out);
       if (Number.isFinite(out.x)) return out;
@@ -312,11 +313,13 @@ export class CombatFx {
     if (!slot) slot = this.beams[0];
     slot.a = a;
     slot.fedAt = this.frame;
+    slot.hit = !!target; slot.core = a.weaponCore || 'ember';
     const s = a.type.strike;
     slot.ramp = s && s.rampTime ? clamp(a.beamRamp / s.rampTime, 0, 1) : 0;
     slot.heat = clamp(a.heat || 0, 0, 1);
     this._muzzle(a, slot.rib.from);
-    this.enemies.enemyPos(target, slot.rib.to);
+    if (target) this.enemies.enemyPos(target, slot.rib.to);
+    else slot.rib.to.copy(origin).addScaledVector(a.aim || a.fwd, along || s.range);
   }
 
   _drawBeam(slot, dt) {
@@ -326,13 +329,14 @@ export class CombatFx {
     // Width and colour both climb with the ramp, so a beam held on one body
     // visibly thickens toward its 1.9x, and both breathe a little so a held
     // beam is not a static bar.
-    const width = 0.07 + 0.11 * slot.ramp + 0.02 * pulse;
+    const width = 0.12 + 0.11 * slot.ramp + 0.03 * pulse;
     u.uAlpha.value = 0.85 + 0.15 * pulse;
     u.uTime.value = PRESENTATION.flashes ? this.time : 0;
     u.uRamp.value = slot.ramp;
     // The muzzle end warms from energy toward ember as heat rises, which is the
     // lock warning: the sim locks the weapon at heat 1.
-    u.uCol.value.setHex(PALETTE.energy).lerp(_c2.setHex(0xffa74a), slot.heat * 0.7);
+    const coreColor={tempered:0xffbc67,ember:0xff6429,frost:0x7bdaff,pulse:0xb09bff}[slot.core]||0xff6429;
+    u.uCol.value.setHex(coreColor).lerp(_c2.setHex(0xffd58a), slot.heat * 0.4);
     rib.mesh.visible = true;
     rib.shape(this.fx.camera, width, 0.05 + slot.ramp * 0.06, this.time * 22);
 
@@ -343,10 +347,11 @@ export class CombatFx {
     slot.sputterT -= dt;
     if (slot.sputterT <= 0) {
       slot.sputterT = 0.035;
-      const hot = _c.setHex(PALETTE.energy).lerp(_c2.setHex(PALETTE.energyHot), slot.ramp).getHex();
+      const hot = _c.setHex(coreColor).lerp(_c2.setHex(PALETTE.energyHot), slot.ramp).getHex();
       for (let k = 0; k < 2; k++) {
         _v.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(2.2);
-        this.fx.glow.emit(rib.to.x, rib.to.y, rib.to.z, _v.x, _v.y, _v.z, hot, 2.2 + slot.ramp * 1.5,
+        _v2.copy(rib.from).lerp(rib.to,slot.hit?1:.12+Math.random()*.8);
+        this.fx.glow.emit(_v2.x, _v2.y, _v2.z, _v.x, _v.y, _v.z, hot, 2.2 + slot.ramp * 1.5,
           0.16 + slot.ramp * 0.08, 0.45 + slot.ramp * 0.5, 0);
       }
     }

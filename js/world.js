@@ -2101,7 +2101,7 @@ export class World {
     for(const mesh of [this.terrain,this.fogVeil?.mesh]){
       if(!mesh)continue;const p=mesh.geometry.attributes.position,colors=mesh.geometry.attributes.color;
       for(let i=0;i<p.count;i++){
-        if(i%512===0)yield;
+        if(i%64===0)yield;
         dir.fromBufferAttribute(p,i).normalize();if(dir.dot(fault.dir)<fault.limit)continue;
         const h=terrainHeight(dir.x,dir.y,dir.z);dir.multiplyScalar(R+h+(mesh===this.terrain?0:1.5));p.setXYZ(i,dir.x,dir.y,dir.z);
         if(colors){dir.normalize();faceColor(dir,h,slopeAt(dir),.5,color);colors.setXYZ(i,color.r,color.g,color.b);}changed++;

@@ -1,18 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createOreLedger} from '../../js/run/expedition.js';
-import {FAMILIES,RARITIES,WEAPON_MATERIALS,generateWeapon,materialForWeapon,weaponStats,validWeapon} from '../../js/run/weapons.js';
+import {createScrapForge} from '../../js/run/expedition.js';
+import {FAMILIES,RARITIES,WEAPON_MATERIALS,generateWeapon,materialForWeapon,weaponStats,validWeapon,createInventory} from '../../js/run/weapons.js';
 import {makeRng} from '../../js/run/rng.js';
 
 test('forging charges increasing prices only after a successful tower grant',()=>{
-  const ore=createOreLedger();ore.collect('fixture',40);
+  const inventory=createInventory('commander',{version:1,items:[],slots:[null,null],active:'native',scrap:40}),forge=createScrapForge(inventory);
   for(const cost of [3,5,7,9]){
-    assert.equal(ore.cost,cost);const before=ore.ore,forged=ore.forged;
-    assert.equal(ore.craft(false,()=> 'bolt'),null);assert.equal(ore.craft(true,()=>null),null);
-    assert.equal(ore.ore,before);assert.equal(ore.forged,forged);
-    assert.equal(ore.craft(true,()=> 'bolt'),'bolt');assert.equal(ore.ore,before-cost);
+    assert.equal(forge.cost,cost);const before=forge.balance,forged=forge.forged;
+    assert.equal(forge.craft(false,()=> 'bolt'),null);assert.equal(forge.craft(true,()=>null),null);
+    assert.equal(forge.balance,before);assert.equal(forge.forged,forged);
+    assert.equal(forge.craft(true,()=> 'bolt'),'bolt');assert.equal(forge.balance,before-cost);
   }
-  assert.equal(ore.collect('fixture',40),false);assert.equal(ore.cost,11);
+  assert.equal(forge.cost,11);
 });
 test('six weapon families have five material steps and beam damage follows the same rarity contract',()=>{
   assert.equal(Object.keys(FAMILIES).length,6);assert.equal(WEAPON_MATERIALS.length,5);

@@ -290,6 +290,7 @@ class Ally {
     this.orderUntil = 0;
     this.hidden = false;
     this.carryMul = 1;
+    this.abilityGuard = false; this.abilitySpeed = 1; this.abilityDeadeye = false; this.abilityDance = false;
     this.swimming = false;
     this.route = null;
     this.routeGoal = null;
@@ -487,6 +488,7 @@ export class AllyManager {
 
   damage(a, amount) {
     if (!a.active || a.dead) return 0;
+    if (a.abilityGuard) amount *= .25;
     a.hp -= amount;
     a.flashT = 0.1;
     a.hurtT = REGEN_DELAY;
@@ -845,7 +847,7 @@ export class AllyManager {
     _tmp2.normalize();
     _driveBearing.copy(_tmp2);
     if (a.swimming) { mul = Math.min(1, mul); a.sprint = false; }
-    const distance = a.type.speed * 1.25 * mul * mag * a.carryMul * (a.mountSpeed || 1) * Math.min(dt, 0.1);
+    const distance = a.type.speed * 1.25 * mul * mag * a.carryMul * (a.mountSpeed || 1) * (a.abilitySpeed || 1) * Math.min(dt, 0.1);
     if(CONFIG.terrain)this._movementNode(a);
     const segments = Math.max(1, Math.ceil(distance / 0.12));
     for (let segment=0; segment<segments; segment++) {
@@ -896,7 +898,7 @@ export class AllyManager {
   // own AI throughput and killed a wave-1 mite in a single tap.
   playerAttack(a, dt = 0) {
     if (!a.active || a.dead) return 0;
-    const s = a.type.strike;
+    const s = this.modifyPlayerStrike?.(a,a.type.strike) || a.type.strike;
     if (s.kind === 'beam') return this._beamStrike(a, s, dt);
     if (a.swingT > 0) return 0;
     a.swingT = s.cd;
@@ -1214,7 +1216,24 @@ export class AllyManager {
     }
     a.heat = Math.min(1, a.heat + s.heatUp * dt);
     if (a.heat >= 1) { a.heatLock = 1.8; }
-    if (!best) { a.beamRamp = 0; a.beamOn = null; return 0; }
+    // Firing is visible even when the corridor contains no enemy. Nests are
+    // structures, so they need the same aim corridor instead of enemy lookup.
+    let portal = null, portalAlong = bestAlong;
+    for (const p of this.world?.portals || []) {
+      if (!p.active || p.destroyed) continue;
+      _tmp2.copy(p.group.position).sub(_strikeOrigin);
+      const along = _tmp2.dot(_aimV);
+      if (along <= 0 || along > s.range || along >= portalAlong) continue;
+      if (_tmp2.lengthSq() - along * along <= (2.2 + s.corridor) ** 2) { portal = p; portalAlong = along; }
+    }
+    if (portal) {
+      a.beamRamp = 0; a.beamOn = null;
+      const felled = this.world.damagePortal(portal, s.dps * dt * STRUCTURE_MUL);
+      if (felled) this.onPortalDestroyed?.(portal);
+      this.onBeam?.(a, null, 0, _strikeOrigin, portalAlong);
+      return 1;
+    }
+    if (!best) { a.beamRamp = 0; a.beamOn = null; this.onBeam?.(a, null, 0, _strikeOrigin, s.range); return 1; }
     if (a.beamOn !== best) { a.beamRamp = 0; a.beamOn = best; }
     a.beamRamp = Math.min(s.rampTime, a.beamRamp + dt);
     const ramp = 1 + (s.ramp - 1) * (a.beamRamp / s.rampTime);

@@ -1,9 +1,35 @@
 import {box,slab,cone,shift,spin,merge} from './rig.js';
+import * as THREE from 'three';
 export const MATERIAL_FINISH = {
-  wood:{color:0xa67540,metalness:0,roughness:.88},iron:{color:0xb3c4cb,metalness:.62,roughness:.4},
-  gold:{color:0xe6b74c,metalness:.7,roughness:.28},diamond:{color:0x6fe7e0,metalness:.35,roughness:.15},
+  wood:{color:0x785139,metalness:0,roughness:1},iron:{color:0xb3c4cb,metalness:.62,roughness:.4},
+  gold:{color:0xffd447,metalness:.87,roughness:.17},diamond:{color:0x6fe7e0,metalness:.35,roughness:.15},
   onyx:{color:0x303142,metalness:.68,roughness:.24},
 };
+let grain, reflection;
+function finishTextures() {
+  if (grain) return;
+  const data=new Uint8Array(64*256*4);
+  for(let y=0;y<256;y++)for(let x=0;x<64;x++){
+    const knot=Math.sin(x*.95+Math.sin(y*.045)*1.6),scratch=Math.sin(x*7.17+y*.021)>.91;
+    const value=Math.round(scratch?60:155+65*knot+18*Math.sin(x*13.1+y*7.7));
+    const i=(y*64+x)*4;data[i]=data[i+1]=data[i+2]=value;data[i+3]=255;
+  }
+  grain=new THREE.DataTexture(data,64,256);grain.wrapS=grain.wrapT=THREE.RepeatWrapping;grain.needsUpdate=true;
+  const sky=new Uint8Array(128*64*4);
+  for(let y=0;y<64;y++)for(let x=0;x<128;x++){
+    const stripe=Math.exp(-(((x-24)/6)**2))+.6*Math.exp(-(((x-95)/11)**2)),v=Math.min(255,45+170*stripe+55*(1-y/64));
+    const i=(y*128+x)*4;sky[i]=v;sky[i+1]=Math.min(255,v*1.02);sky[i+2]=Math.min(255,v*1.09);sky[i+3]=255;
+  }
+  reflection=new THREE.DataTexture(sky,128,64);reflection.mapping=THREE.EquirectangularReflectionMapping;reflection.needsUpdate=true;
+}
+export function applyWeaponFinish(material,key='iron') {
+  finishTextures();const f=MATERIAL_FINISH[key]||MATERIAL_FINISH.iron;
+  material.color.setHex(f.color);material.emissive?.setHex(0);material.metalness=f.metalness;material.roughness=f.roughness;
+  material.map=key==='wood'?grain:null;material.bumpMap=key==='wood'?grain:null;material.bumpScale=.025;
+  material.envMap=key==='gold'?reflection:null;material.envMapIntensity=1.35;
+  if(material.userData.finish!==key){material.userData.finish=key;material.needsUpdate=true;}
+  return material;
+}
 
 export function weaponAppearanceMaterial(mats,source,appearance){
   if(!appearance)return source;
@@ -12,7 +38,7 @@ export function weaponAppearanceMaterial(mats,source,appearance){
     const color={tempered:0xffd399,ember:0xff794d,frost:0x91ddff,pulse:0xa9a0ff}[appearance.core];
     material.color.setHex(color);material.emissive.setHex(color);
     material.emissiveIntensity={ancient:.12,technological:1.3,empowered:2.2}[appearance.era];
-  }else if(source===mats.trim||source===mats.gold){const finish=MATERIAL_FINISH[appearance.material]||MATERIAL_FINISH.iron;material.color.setHex(finish.color);material.emissive?.setHex(0);material.metalness=finish.metalness;material.roughness=finish.roughness;}
+  }else if(source===mats.trim||source===mats.gold)applyWeaponFinish(material,appearance.material);
   return material;
 }
 
@@ -91,5 +117,16 @@ export function buildWeapon(visual,era='ancient',mats) {
     }
     support=[-.025,-.055,-.49];
   }
-  return {parts:[...groups].map(([mat,geos])=>({mat,geo:merge(geos)})),support,blade:line,paired:visual==='twin'};
+  const parts=[...groups].map(([mat,geos])=>{
+    const geo=merge(geos),p=geo.attributes.position,n=geo.attributes.normal,uv=new Float32Array(p.count*2);
+    // The shared low-poly merger drops UVs. Project grain in grip space so
+    // wood has wear on blades as well as on the stock's box primitives.
+    for(let i=0;i<p.count;i++){
+      const side=Math.abs(n.getX(i))>Math.abs(n.getY(i));
+      uv[i*2]=(side?p.getY(i):p.getX(i))*4;
+      uv[i*2+1]=Math.abs(n.getZ(i))>.7?p.getY(i)*4:p.getZ(i)*1.5;
+    }
+    geo.setAttribute('uv',new THREE.BufferAttribute(uv,2));return {mat,geo};
+  });
+  return {parts,support,blade:line,paired:visual==='twin'};
 }

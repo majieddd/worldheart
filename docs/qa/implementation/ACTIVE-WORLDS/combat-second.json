@@ -1,0 +1,45 @@
+{
+  "scope": "Instrumented economy, input, real unit damage, ability lifecycle and rendered camera. Not a full campaign.",
+  "checks": [
+    {
+      "name": "Orange relic field is removed",
+      "ok": true
+    },
+    {
+      "name": "First real tower forge consumes 3 scraps",
+      "ok": true
+    },
+    {
+      "name": "Second real forge consumes 5 scraps",
+      "ok": true
+    },
+    {
+      "name": "Failed craft preserves price and balance",
+      "ok": true
+    },
+    {
+      "name": "Scepter emits a beam into empty sky",
+      "ok": true
+    },
+    {
+      "name": "Scepter damages a visible nest",
+      "ok": true,
+      "actual": 985.96
+    },
+    {
+      "name": "Commander frame follows its live body",
+      "ok": true
+    },
+    {
+      "name": "Held right mouse aims in first person",
+      "ok": true
+    },
+    {
+      "name": "Releasing aim restores the lens",
+      "ok": true
+    }
+  ],
+  "errors": [
+    "Error: page.evaluate: TypeError: Cannot read properties of null (reading 'copy')\n    at eval (eval at evaluate (:311:30), <anonymous>:19:66)\n    at async <anonymous>:337:30"
+  ]
+}

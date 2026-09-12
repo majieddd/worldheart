@@ -8,6 +8,13 @@ disaster hostility, terrain refinement and astronomical worlds follow.
 [Current request ledger](qa/implementation/ACTIVE-WORLDS.md). Prior U75-U88
 remains the published baseline until each replacement checkpoint is verified.
 
+First checkpoint verified locally: U89 and U106-U114. [Combat evidence](qa/implementation/ACTIVE-WORLDS/COMBAT.md)
+records 50 targeted checks, 23 traversal/quake/economy regressions, 22 equipment
+checks, 12 finish comparisons, five map camera suites, 307 automated tests and
+a legal ten-wave victory/extraction. Native quake p99 fell from 13.9ms to 7.2ms;
+longest work slice fell from 17.6ms to 6ms in the bounded reference scenario.
+U90-U105 remain open. Publication and public verification follow this checkpoint.
+
 Published and publicly verified: Codex on `feature/living-worlds-and-traversal`, based on V2 `42b1ee0`,
 owns U75-U88: disaster prediction, traversal/pathfinding, forge/relic/HUD fixes,
 weapon and tower advancement, UFO mount, fifty formations, ten terrain packs,

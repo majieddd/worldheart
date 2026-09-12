@@ -22,8 +22,8 @@ supersede the older numerical prototypes: a walkable solo lobby, free starting
 commander choice, three mounts, ten-wave victory with opt-in Endless, base-scaled
 commander/equipment stats, 30-second safe-territory recovery and outside death.
 Ten accelerating base upgrades reach the entire planet. Warned tornadoes and
-terrain-changing quakes alter the battlefield. Three collected relic ore forge
-a free-placement tower at the heart. The debug catalogue adds a combined Terrain
+terrain-changing quakes alter the battlefield. Salvaged weapons supply scraps
+for increasingly priced free-placement towers at the heart. The debug catalogue adds a combined Terrain
 lane and fifteenth biome; planet themes now own climate without a second selector.
 Early zoom stays close to the action, while later regional/global territory
 unlocks enough orbit height to inspect the newly owned planet.
