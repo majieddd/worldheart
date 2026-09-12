@@ -1,0 +1,13 @@
+import {createRequire} from 'node:module';import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';import {resolve} from 'node:path';
+const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright'),base=process.env.WH_BASE_URL||'http://127.0.0.1:8139',out=resolve(process.argv[2]||'artifacts/active-worlds/finishes');mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1440,height:900}}),checks=[],errors=[];
+page.on('pageerror',e=>errors.push(String(e)));page.on('console',e=>{if(e.type()==='error')errors.push(e.text());});
+try{
+ await page.goto(base+'/debug.html');await page.waitForFunction(()=>window.DEBUG_WORLD,{},{timeout:180000});await page.locator('[data-lane="weapons"]').click();
+ for(const family of ['sword','spear','twinblade','carbine','lobber','scepter'])for(const material of ['wood','gold']){
+  const key=family+'-'+material;await page.locator('#exhibit').selectOption(key);await page.waitForTimeout(120);
+  const actual=await page.evaluate(()=>{let finish=null;DEBUG_WORLD.selected.group.traverse(o=>{if(o.material?.userData.finish)finish={key:o.material.userData.finish,roughness:o.material.roughness,metalness:o.material.metalness,map:!!o.material.map,reflection:!!o.material.envMap,uv:!!o.geometry.attributes.uv,uvVaries:new Set(o.geometry.attributes.uv?.array).size>8};});return finish;});
+  checks.push({name:key,ok:actual?.key===material&&actual.uvVaries&&(material==='wood'?actual.map&&actual.roughness>.9:actual.reflection&&actual.metalness>.8&&actual.roughness<.2),actual});await page.screenshot({path:resolve(out,key+'.png')});
+ }
+ const sheet=await browser.newPage({viewport:{width:1200,height:1170}});await sheet.setContent(`<style>body{margin:0;background:#142331;color:#edf3f4;font:18px sans-serif}main{display:grid;grid-template-columns:repeat(4,300px)}article{height:390px;overflow:hidden}p{margin:6px}div{height:355px;position:relative;overflow:hidden}img{position:absolute;width:675px;height:422px;left:-201px;top:-18px}</style><main>${checks.map(c=>`<article><p>${c.name}</p><div><img src="data:image/png;base64,${readFileSync(resolve(out,c.name+'.png')).toString('base64')}"></div></article>`).join('')}</main>`);await sheet.screenshot({path:resolve(out,'comparison.png')});
+}catch(error){errors.push(String(error));}finally{writeFileSync(resolve(out,'report.json'),JSON.stringify({checks,errors},null,2));await browser.close();}console.log(JSON.stringify({passed:checks.filter(c=>c.ok).length,total:checks.length,errors}));if(errors.length||checks.some(c=>!c.ok))process.exitCode=1;

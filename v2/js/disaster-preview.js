@@ -11,9 +11,13 @@ export class FaultForecast {
     this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;this.samples=[];
   }
   show(fault){
+    for(const _ of this.showSteps(fault)){/* Synchronous debug exhibit path. */}
+  }
+  *showSteps(fault){
     for(const child of this.group.children)child.geometry.dispose();this.group.clear();
     this.samples=[];const indices=[],base=[],next=[],stems=[],cols=32,rows=28;
     for(let j=0;j<=rows;j++)for(let i=0;i<=cols;i++){
+      if(i===0)yield;
       const dir=fault.dir.clone().addScaledVector(fault.axis,(i/cols-.5)*84/R).addScaledVector(fault.side,(j/rows-.5)*72/R).normalize();
       const h=terrainHeight(dir.x,dir.y,dir.z),delta=terrainFaultDelta(fault,dir.x,dir.y,dir.z);
       this.samples.push({dir,height:h,delta});base.push(...dir.clone().multiplyScalar(R+h+.18).toArray());next.push(...dir.clone().multiplyScalar(R+h+delta+.22).toArray());

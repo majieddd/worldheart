@@ -5,14 +5,14 @@ import {GeyserField} from '../terrain/geysers.js';
 
 import { preparation } from '../preparation.js';
 import { MountController } from '../mounts.js';
-import { OreField } from '../ore-field.js';
+import { CommanderAbilities } from '../abilities.js';
 import { PlanetWeather } from '../weather.js';
 import { expeditionControls } from '../ui-expedition.js';
 import { createRun } from '../run/run.js';
 import { makeRng } from '../run/rng.js';
 import { MAX_HEART_LEVEL, HEART_RINGS, TOTAL_WAVES } from '../run/schedule.js';
 import { ALLY_TYPES } from '../allies.js';
-import { COMMANDERS as COMMANDER_STATS, commanderStats, scaleWeapon, createRespawn, createOreLedger, MOUNTS } from '../run/expedition.js';
+import { COMMANDERS as COMMANDER_STATS, commanderStats, scaleWeapon, createRespawn, createScrapForge, MOUNTS } from '../run/expedition.js';
 import { MODS, TOWER_TYPES } from '../towers.js';
 import { EVO } from '../enemies.js';
 import { SIM_RANDOM } from '../noise.js';
@@ -302,8 +302,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // Two structures cannot share the destruction identity or crowd each
     // other's clearing, even after an earlier nest has been destroyed.
     const used = new Set(world.portals.filter(p => p.established).map(p => p.node));
-    node=nestSite(nav,original,centre,frontierTheta,used,_sdir);
-    for(const alternative of sourcePortals)if(node<0)node=nestSite(nav,alternative,centre,frontierTheta,used,_sdir);
+    node=nestSite(nav,original,centre,frontierTheta,used,_sdir,wave);
+    for(const alternative of sourcePortals)if(node<0)node=nestSite(nav,alternative,centre,frontierTheta,used,_sdir,wave);
     if(node<0)return null;
     const pos = nav.nodePos(node, new THREE.Vector3());
     const p = world.portals.find(p => !p.established) || world.addPortal(pos);
@@ -831,17 +831,14 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
 
   const requestedMount=new URLSearchParams(location.search).get('mount');
   const mounts=new MountController({scene:game.scene,allies,possession,commander:()=>commander,choice:Object.hasOwn(MOUNTS,requestedMount)?requestedMount:preparation().mount,ui});
-  const ore=createOreLedger();
-  const oreField=new OreField({scene:game.scene,nav,centre,ledger:ore,commander:()=>commander,allies,ui,rng:makeRng(CONFIG.seed^0x814ca)});
-  const destroyed=allies.onPortalDestroyed;
-  allies.onPortalDestroyed=p=>{destroyed?.(p);oreField.add(_up.copy(p.group.position).normalize());};
+  const forge=createScrapForge(inventory);
   game.freeTowerCredits=new Map();
   function craft(){
     if(game.state!=='playing'||game.paused||game.terrainBusy||run.getPhase()!=='building')return false;
-    const tower=ore.craft(homeDistance()<=6,()=>run.craftTower());
-    if(!tower){ui.toast(`Forge near the heart with ${ore.cost} relic ore and a free card slot.`, 'info');return false;}
+    const tower=forge.craft(homeDistance()<=6,()=>run.craftTower());
+    if(!tower){ui.toast(`Forge near the heart with ${forge.cost} scraps and a free card slot.`, 'info');return false;}
     const def=TOWER_TYPES[tower];game.freeTowerCredits.set(def,(game.freeTowerCredits.get(def)||0)+1);
-    syncFromRun();ui.toast(def.name+' forged. Place the next matching card for free.','info');ui.audio?.play('upgrade');return tower;
+    persistSalvage();syncFromRun();ui.toast(def.name+' forged. Place the next matching card for free.','info');ui.audio?.play('upgrade');return tower;
   }
   function startEndlessRun(){
     if(run.getPhase()!=='victory'||run.isEndless())return false;
@@ -859,9 +856,18 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     handle(events);return true;
   }
   const geysers=new GeyserField(world,allies,enemies);
-  const weather=new PlanetWeather({scene:game.scene,nav,world,allies,enemies,game,commander:()=>commander,centre,ui,oreField});
+  const weather=new PlanetWeather({scene:game.scene,nav,world,allies,enemies,game,commander:()=>commander,centre,ui});
+  const abilities=new CommanderAbilities({game,allies,enemies,commander:()=>commander,ui});
+  allies.modifyPlayerStrike=(a,s)=>abilities.modifyStrike(a,s);
+  function focusCommander(){
+    document.activeElement?.blur();
+    if(!commander.active||commander.dead){possession.exit();rig.flyTo(centre.clone().multiplyScalar(CONFIG.planetRadius),rig.defaultDist);return;}
+    // Possession can follow beyond the base's orbit boundary without moving it.
+    if(possession.unit!==commander){possession.enter(commander);possession.boomWant=4;}
+    possession._lock();
+  }
   const started=waves.onWaveStart;waves.onWaveStart=(n,comp)=>{started?.(n,comp);weather.wave(n);};
-  const expeditionUi=expeditionControls({ui,game,lockedCommander:expedition?.commander,api:{commander:()=>commander,run,respawn,mounts,ore,weather,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun}});
+  const expeditionUi=expeditionControls({ui,game,lockedCommander:expedition?.commander,api:{commander:()=>commander,run,respawn,mounts,forge,weather,abilities,focusCommander,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun}});
 
   seedCaches(run.getFrontierTheta());
   syncFromRun();
@@ -871,7 +877,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     run,
     get commander() { return commander; },
     respawn,
-    mounts,ore,oreField,weather,geysers,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
+    mounts,forge,weather,geysers,abilities,focusCommander,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
     crystals,
     depositCrystals,
     inventory,
@@ -888,8 +894,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
       const activeDt=run.getPhase()==='building'?dt*game.speed:0;
-      mounts.update(activeDt);oreField.update(activeDt);weather.update(activeDt);
+      mounts.update(activeDt);weather.update(activeDt);
       if(game.terrainBusy)return;
+      abilities.update(activeDt);
       geysers.update(activeDt);
       if (run.getPhase() !== 'drafting' && respawn.tick(dt * game.speed)) {
         const old = commander; commander = allies.spawn(fallenKey,centre,centre,12);

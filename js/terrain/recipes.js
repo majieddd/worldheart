@@ -4,7 +4,7 @@ import {ADDITIONAL_RECIPES} from './additional-formations.js';
 // A planet mixes these groups; any group can carry any biome's surface rules.
 // Dimensions are world metres. Change the version when the seeded layout changes.
 import {EXOTIC_RECIPES} from './exotic-formations.js';
-export const LANDFORM_VERSION = 8;
+export const LANDFORM_VERSION = 9;
 export const LANDFORM_RECIPES = Object.freeze({
   range: Object.freeze({ label: 'Ridge chain', relief: 'range', gain: 1.18, roughness: .28 }),
   canyon: Object.freeze({ label: 'Winding Valley', relief: 'canyon', gain: 1.65, roughness: .1 }),
@@ -19,7 +19,7 @@ export const LANDFORM_RECIPES = Object.freeze({
   dunes: Object.freeze({ label: 'Hill Fields', relief: 'range', gain: .16, roughness: .1 }),
   gorge: Object.freeze({ label: 'Winding Canyon', relief: 'canyon', gain: .6, roughness: .12 }),
   escarpment: Object.freeze({ label: 'Staircase escarpment', relief: 'canyon', gain: 1.05, roughness: .08 }),
-  valley: Object.freeze({ label: 'Glacial trough', relief: 'range', gain: .48, roughness: .14 }),
+  valley: Object.freeze({ label: 'Glacial trough', relief: 'range', gain: .27, roughness: .14 }),
   grand: Object.freeze({ label: 'Great continental rift', relief: 'canyon', gain: 1.15, roughness: .1 }),
   labyrinth: Object.freeze({ label: 'Noctis labyrinth', relief: 'canyon', gain: .95, roughness: .12 }),
   chaos: Object.freeze({ label: 'Rafted crust blocks', relief: 'canyon', gain: .85, roughness: .08 }),

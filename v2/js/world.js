@@ -4,8 +4,12 @@ import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import { createFormationField } from './terrain/formations.js';
 import {createTerrainFeatures} from './terrain/features.js';
+import {placeActiveFeatures} from './terrain/active-features.js';
 import { formationHeightLimit, formationDepthLimit } from './terrain/recipes.js';
 import { createEcology } from './terrain/ecology.js';
+import {createSolarSampler} from './run/solar-worlds.js';
+import {faultProfile} from './run/environment-catalogue.js';
+import {buildPlanetAdornment} from './planet-adornment.js';
 import { createCoastClearance } from './terrain/coast-clearance.js';
 import {
   makeNoise3D, fbm3, ridged3, mulberry32,
@@ -18,7 +22,8 @@ import {
 // mesh, the nav graph, and unit grounding. Movement uses the graph's blocking
 // contract and shares its slope/water costs; these agreements need tests.
 
-export const R = CONFIG.planetRadius;
+export let R = CONFIG.planetRadius;
+export const floatingWorld=()=>CONFIG.terrainKey==='sky'||CONFIG.environment?.theme==='skyarchipelago';
 export let FEATURES=null;
 export const SUN_DIR = new THREE.Vector3(0.62, 0.46, 0.58).normalize();
 
@@ -27,11 +32,11 @@ export const SUN_DIR = new THREE.Vector3(0.62, 0.46, 0.58).normalize();
 // relief tracks the mesh's facet size so every world reads equally crafted.
 // All formulas resolve to the original pocket-world values at R30 detail 6.
 const FQ = CONFIG.map.freqMul;
-const FA = R / 30;
+let FA = R / 30;
 const F_CONT = 0.95 * FQ;
 const F_WARP = 1.2 * FQ;
-const F_ROLL = 4.3 * FA;
-const F_MOIST = 4.6 * (1 + (FA - 1) * 0.8);
+let F_ROLL = 4.3 * FA;
+let F_MOIST = 4.6 * (1 + (FA - 1) * 0.8);
 const F_RIDGE = 2.35 * FQ;
 // The band/rim constants below retain the classic field. Campaign group
 // geometry and authoring settings now live in terrain/recipes.js.
@@ -114,9 +119,7 @@ export function terrainFaultDelta(f,x,y,z){
   const dot=x*f.dir.x+y*f.dir.y+z*f.dir.z;if(dot<f.limit)return 0;
   if(x*f.protectedDir.x+y*f.protectedDir.y+z*f.protectedDir.z>Math.cos(7/R))return 0;
   const u=(x*f.axis.x+y*f.axis.y+z*f.axis.z)*R,v=(x*f.side.x+y*f.side.y+z*f.side.z)*R;
-  const end=1-smoothstep(20,38,Math.abs(u));
-  const ridge=10*Math.exp(-(((v-6)/11)**2)),cut=4*Math.exp(-(((v+9)/7)**2));
-  return (ridge-cut)*end*f.strength;
+  return faultProfile(u,v)*f.strength;
 }
 function faultHeight(x,y,z){
   let h=0;
@@ -124,6 +127,7 @@ function faultHeight(x,y,z){
   return h;
 }
 let coastClearance=null;
+let solarSample=null;
 
 // Space Battlefield layout: predetermined, balanced platform positions of
 // varying size, regenerated deterministically per seed. Null on ground maps.
@@ -203,6 +207,9 @@ function initSpaceLayout(seed) {
 }
 
 export function initTerrainField(seed) {
+  R=CONFIG.planetRadius;FEATURES=null;
+  FA=R/30;F_ROLL=4.3*FA;F_MOIST=4.6*(1+(FA-1)*.8);
+  solarSample=CONFIG.environment?.solar?createSolarSampler(CONFIG.environment.theme):null;
   TERRAIN_FAULTS.length=0;
   nWarp = makeNoise3D(seed ^ 0x9e3779b9);
   nBase = makeNoise3D(seed);
@@ -216,8 +223,12 @@ export function initTerrainField(seed) {
   FORMATIONS = CONFIG.terrain ? createFormationField(seed,R,CONFIG.terrain,CONFIG.terrainKey,
     {...authored,...(CONFIG.terrainKey==='varied'?{composition:CONFIG.environment}:{}),weights:{...authored?.weights}}) : null;
   coastClearance=CONFIG.terrain?createCoastClearance(R,(x,y,z)=>continentalityAt(x,y,z)<.37+CONFIG.terrain.ocean):null;
-  ECOLOGY = CONFIG.terrain ? createEcology(seed,CONFIG.biomeKey,CONFIG.environment) : null;
-  FEATURES=FORMATIONS?createTerrainFeatures(FORMATIONS,R,(x,y,z)=>terrainHeight(x,y,z,false)):null;
+  ECOLOGY = CONFIG.terrain ? createEcology(seed,CONFIG.biomeKey,CONFIG.environment,FORMATIONS,solarSample) : null;
+  FEATURES=FORMATIONS?createTerrainFeatures(FORMATIONS,R,(x,y,z)=>terrainHeight(x,y,z,false),{seed,biome:biomeAt,water:oceanAt,floating:floatingWorld()}):null;
+  if(FEATURES&&floatingWorld()){
+    FEATURES.active.splice(0,FEATURES.active.length,...placeActiveFeatures(FORMATIONS,R,(x,y,z)=>navigationHeight(x,y,z,false),biomeAt,oceanAt,seed).filter(s=>s.key!=='trunks'));
+    FEATURES.vents.splice(0,FEATURES.vents.length,...FEATURES.active.filter(s=>s.key==='geyser'));
+  }
   if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
@@ -225,6 +236,8 @@ export function initTerrainField(seed) {
 // between them. Geometry is independent of the climate/foliage layer below.
 // Fine noise never changes route eligibility. All consumers query this field.
 export function continentalityAt(dx, dy, dz) {
+  if(solarSample)return solarSample(dx,dy,dz).land;
+  if(floatingWorld())return -1;
   if(FORMATIONS&&(CONFIG.terrainKey==='ocean'||CONFIG.terrainKey==='varied'&&CONFIG.environment?.pack==='ocean'&&CONFIG.environment.coverage>=.95))return FORMATIONS.landmass(dx,dy,dz);
   return fbm3(nBase, dx * F_CONT, dy * F_CONT, dz * F_CONT, 2) + .12;
 }
@@ -251,12 +264,14 @@ function regionalHeight(dx,dy,dz,includeFine) {
 // Sea level is not a land classification: inland gorges can lie below it.
 // The same continental mask drives water rendering, movement and placement.
 export function oceanAt(dx,dy,dz) {
+  if(CONFIG.environment?.solar&&!['earth','titan'].includes(CONFIG.environment.theme))return false;
   return !CONFIG.terrain || continentalityAt(dx,dy,dz)<=.3+CONFIG.terrain.ocean || FORMATIONS.lagoonAt(dx,dy,dz);
 }
-export function waterDepthAt(dir,height=terrainHeight(dir.x,dir.y,dir.z,false)) {
+export function navigationHeight(x,y,z,fine=true){const h=terrainHeight(x,y,z,fine);return floatingWorld()&&FEATURES?FEATURES.support([x,y,z],Infinity,h):h;}
+export function waterDepthAt(dir,height=navigationHeight(dir.x,dir.y,dir.z,false)) {
   return oceanAt(dir.x,dir.y,dir.z)?Math.max(0,-height):0;
 }
-export function surfaceElevation(dir,height=terrainHeight(dir.x,dir.y,dir.z)) {
+export function surfaceElevation(dir,height=navigationHeight(dir.x,dir.y,dir.z)) {
   return oceanAt(dir.x,dir.y,dir.z)?Math.max(.03,height):height;
 }
 
@@ -270,6 +285,7 @@ export function solidTerrainAt(dir,feet,height){return FEATURES?.intersects(dir.
 // includeFine=false gives the gameplay surface: the same terrain minus the
 // cosmetic facet relief, so walkability never fractures on visual noise.
 export function terrainHeight(dx, dy, dz, includeFine = true) {
+  if(floatingWorld())return -2.2;
   // Space maps have no continents: a deep void with authored rock platforms
   // hanging at their own altitudes.
   if (SPACE) {
@@ -292,7 +308,7 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
     }
     return h;
   }
-  if(CONFIG.terrain)return regionalHeight(dx,dy,dz,includeFine)+faultHeight(dx,dy,dz);
+  if(CONFIG.terrain){const h=regionalHeight(dx,dy,dz,includeFine);if(solarSample){const g=solarSample(dx,dy,dz);return (oceanAt(dx,dy,dz)&&h<0?h:h*g.relief)+g.extra+faultHeight(dx,dy,dz);}return h+faultHeight(dx,dy,dz);}
   const w = 0.26;
   const wx = dx + nWarp(dx * F_WARP + 7.7, dy * F_WARP, dz * F_WARP) * w;
   const wy = dy + nWarp(dx * F_WARP, dy * F_WARP + 3.1, dz * F_WARP) * w;
@@ -402,7 +418,7 @@ function tangentBasis(dir, outA, outB) {
 export function slopeAt(dir, predictedFault=null) {
   const eps = CONFIG.terrain ? 0.8 / R : 0.016;
   tangentBasis(dir, _t1, _t2);
-  const sample=d=>terrainHeight(d.x,d.y,d.z,false)+(predictedFault?terrainFaultDelta(predictedFault,d.x,d.y,d.z):0);
+  const sample=d=>navigationHeight(d.x,d.y,d.z,false)+(predictedFault?terrainFaultDelta(predictedFault,d.x,d.y,d.z):0);
   const h0 = sample(dir);
   _p1.copy(dir).addScaledVector(_t1, eps).normalize();
   _p2.copy(dir).addScaledVector(_t2, eps).normalize();
@@ -418,7 +434,7 @@ export function slopeAt(dir, predictedFault=null) {
 // including flat empty gaps between trunks, creating invisible body walls.
 export function isWalkableDir(dir) {
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
-  const h = terrainHeight(dir.x, dir.y, dir.z, false);
+  const h = navigationHeight(dir.x, dir.y, dir.z, false);
   if(CONFIG.terrain&&solidTerrainAt(dir,surfaceElevation(dir,h),1.7))return false;
   if (CONFIG.terrain && h < 0.05 && waterDepthAt(dir,h)>0) return true; // water is a slower route
   if (!CONFIG.terrain && (h < 0.05 || h > CONFIG.walkMaxHeight)) return false;
@@ -431,7 +447,7 @@ export function isWalkableDir(dir) {
 // not exist at play resolution), so seed selection only asks about landmass.
 export function isLandDir(dir) {
   if (!inBattlefield(dir.x, dir.y, dir.z)) return false;
-  const h = terrainHeight(dir.x, dir.y, dir.z, false);
+  const h = navigationHeight(dir.x, dir.y, dir.z, false);
   return h >= 0.05 && (CONFIG.terrain || h <= CONFIG.walkMaxHeight + 1.2);
 }
 
@@ -486,7 +502,7 @@ export function terrainFootprint(dir, radius, type) {
     _footDir.copy(dir).multiplyScalar(Math.cos(arc))
       .addScaledVector(_footA, Math.sin(arc) * Math.cos(angle))
       .addScaledVector(_footB, Math.sin(arc) * Math.sin(angle)).normalize();
-    const h = terrainHeight(_footDir.x, _footDir.y, _footDir.z, false);
+    const h = navigationHeight(_footDir.x, _footDir.y, _footDir.z, false);
     if (waterDepthAt(_footDir,h)>0 || !inBattlefield(_footDir.x, _footDir.y, _footDir.z)) return { ok: false, reason: 'water' };
     low = Math.min(low, h); high = Math.max(high, h);
     climates.push(climateAt(_footDir, h));
@@ -515,7 +531,7 @@ export function surfaceTravel(unit, bearing, distance = 0.05) {
 
 export function canFlyAt(dir, clearance = FLIGHT_CLEARANCE) {
   return !CONFIG.terrain || (inBattlefield(dir.x, dir.y, dir.z)
-    && terrainHeight(dir.x, dir.y, dir.z, false) + clearance <= FLIGHT_CEILING);
+    && navigationHeight(dir.x, dir.y, dir.z, false) + clearance <= FLIGHT_CEILING);
 }
 
 // Analytic ray-to-surface intersection: enter the terrain shell, march, then
@@ -550,7 +566,7 @@ export function raycastTerrain(origin, dir, out) {
     const len = _rp.length();
     if (len < 1e-6) return 1;
     const inv = 1 / len;
-    const h = terrainHeight(_rp.x * inv, _rp.y * inv, _rp.z * inv);
+    const h = navigationHeight(_rp.x * inv, _rp.y * inv, _rp.z * inv);
     const height = CONFIG.terrain && !oceanAt(_rp.x*inv,_rp.y*inv,_rp.z*inv) ? h : Math.max(h,floor);
     return len - (R + height);
   };
@@ -609,6 +625,7 @@ const SPACE_RUST = new THREE.Color(0xa08d76);
 const SPACE_UNDER = new THREE.Color(0x474c5c);
 
 export function faceColor(dir, h, slope, jrand, out) {
+  if(solarSample){const g=solarSample(dir.x,dir.y,dir.z);paintBiome(out,biomeAt(dir,h),h,slope,jrand);if(g.tint)out.lerp(new THREE.Color(g.tint),.4);return out;}
   if (SPACE) {
     const roll = fbm3(nDetail, dir.x * 7 + 5, dir.y * 7, dir.z * 7, 2);
     if (h < 0.75) {
@@ -1123,19 +1140,21 @@ function buildWater() {
   return mesh;
 }
 
-function buildAtmosphere() {
-  const geo = new THREE.SphereGeometry(R * 1.17, 64, 48);
+export function buildAtmosphere(radius=R,environment=CONFIG.environment) {
+  if(environment?.solar&&environment.tags?.includes('airless'))return null;
+  const tint={mars:0xb88f72,venus:0xd3ba82,titan:0xda9e4f,jupiter:0xcba88b,saturn:0xd5c69b,uranus:0x91d4d7,neptune:0x579bc2}[environment?.theme]||0x3f9fdd;
+  const geo = new THREE.SphereGeometry(radius * (environment?.solar?1.07:1.17), 64, 48);
   const mat = new THREE.ShaderMaterial({
     side: THREE.BackSide,
     transparent: true,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
-    uniforms: { uColor: { value: new THREE.Color(0x3f9fdd) } },
+    uniforms: { uColor: { value: new THREE.Color(tint) } },
     vertexShader: /* glsl */ `
       varying vec3 vN; varying vec3 vP;
       void main() {
-        vN = normalize(position);
-        vP = position;
+        vN = normalize((modelMatrix * vec4(position, 0.0)).xyz);
+        vP = (modelMatrix * vec4(position, 1.0)).xyz;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }
     `,
@@ -1523,7 +1542,7 @@ function scatterDecor(rng) {
       if (dir.lengthSq() > 1 || dir.lengthSq() < 0.01) continue;
     }
     dir.normalize();
-    const h = terrainHeight(dir.x, dir.y, dir.z);
+    const h = navigationHeight(dir.x, dir.y, dir.z);
     if (ECOLOGY ? waterDepthAt(dir,h)>0 : h<.12){
       if(ECOLOGY){const kind=BIOME_VISUALS[biomeAt(dir,h)]?.decor,list=exoticSpots[kind];if(['coralreef','kelp','coral'].includes(kind)&&list&&list.length<240&&rng()<.12)list.push({dir:dir.clone(),h,s:.7+rng()*.5});}
       continue;
@@ -1587,7 +1606,7 @@ function scatterDecor(rng) {
       for(let i=0;i<320&&added<70&&spots.jungle.length<limit;i++){
         const u=(rng()-.5)*m.extent*1.25,v=(rng()-.5)*m.extent*1.25;
         dir.set(...m.dir).addScaledVector(_t1.set(...m.axis),u/R).addScaledVector(_t2.set(...m.side),v/R).normalize();
-        const h=terrainHeight(dir.x,dir.y,dir.z);
+        const h=navigationHeight(dir.x,dir.y,dir.z);
         if(h<2||h>CONFIG.terrain.snow*.85||slopeAt(dir)>.7||biomeAt(dir,h)!=='jungle')continue;
         spots.jungle.push({dir:dir.clone(),h,s:2.4+rng()*1.8});added++;
       }
@@ -1598,7 +1617,7 @@ function scatterDecor(rng) {
     let total=0;
     for(let k=0;k<4800&&total<1200;k++){
       const y=1-2*(k+.5)/4800,a=k*2.3999632297,r=Math.sqrt(1-y*y);dir.set(r*Math.cos(a),y,r*Math.sin(a));
-      const h=terrainHeight(dir.x,dir.y,dir.z),water=waterDepthAt(dir,h),kind=BIOME_VISUALS[biomeAt(dir,h)]?.decor,list=exoticSpots[kind];
+      const h=navigationHeight(dir.x,dir.y,dir.z),water=waterDepthAt(dir,h),kind=BIOME_VISUALS[biomeAt(dir,h)]?.decor,list=exoticSpots[kind];
       if(!list||list.length>=500||water>0&&!['coral','coralreef','kelp'].includes(kind)||slopeAt(dir)>.6)continue;
       list.push({dir:dir.clone(),h,s:kind==='kelp'?.65+rng()*.35:1+rng()*.8});total++;
     }
@@ -1640,8 +1659,9 @@ function buildClouds(rng) {
   // let the night side dim to slate instead of vanishing, so cover reads
   // planet-wide from orbit.
   const baseMat = new THREE.MeshBasicMaterial({ vertexColors: true });
-  const cloudTop = new THREE.Color(0xeff4fc);
-  const cloudBot = new THREE.Color(0xaebdd8);
+  const warmCloud=['venus','titan'].includes(CONFIG.environment?.theme);
+  const cloudTop = new THREE.Color(warmCloud?0xe3ca91:0xeff4fc);
+  const cloudBot = new THREE.Color(warmCloud?0xa28259:0xaebdd8);
   const clouds = [];
   const group = new THREE.Group();
   const cloudCount = Math.min(16, Math.round(9 * Math.sqrt(R / 30)));
@@ -2002,7 +2022,8 @@ export class World {
         }
         break;
       case 3: {
-        if (!SPACE) this.scene.add(buildAtmosphere());
+        if (!SPACE) {const atmosphere=buildAtmosphere();if(atmosphere)this.scene.add(atmosphere);}
+        if(CONFIG.environment?.rings)this.scene.add(buildPlanetAdornment(CONFIG.environment,R));
         const sky = buildSky(this.rng);
         this.sky = sky.group;
         this.starMat = sky.starMat;
@@ -2011,7 +2032,7 @@ export class World {
       }
       case 4: {
         this.decor = scatterDecor(this.rng);
-        if(FEATURES){this.featureArt=FEATURES.build({color:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),terrainHeight(...d))]?.rock||0x9b927f,topColor:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),terrainHeight(...d))]?.color||0x859e63});this.scene.add(this.featureArt);}
+        if(FEATURES){this.featureArt=FEATURES.build({color:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),navigationHeight(...d))]?.rock||0x9b927f,topColor:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),navigationHeight(...d))]?.color||0x859e63});this.scene.add(this.featureArt);}
         // Decor is instanced, so casting costs one shadow draw per set rather
         // than one per tree. This is most of what sells the diorama read.
         for (const s of this.decor.sets) {
@@ -2020,9 +2041,11 @@ export class World {
           this.scene.add(s.mesh);
         }
         if (!SPACE) {
-          const cl = buildClouds(this.rng);
-          this.clouds = cl.clouds;
-          this.scene.add(cl.group);
+          if(!CONFIG.environment?.solar||!CONFIG.environment.tags?.includes('airless')&&CONFIG.environment.theme!=='mars'){
+            const cl = buildClouds(this.rng);
+            this.clouds = cl.clouds;
+            this.scene.add(cl.group);
+          }
         } else {
           this.scene.add(buildAsteroidBellies(this.rng));
           this.dust = buildSpaceDust(this.rng);
@@ -2101,7 +2124,7 @@ export class World {
     for(const mesh of [this.terrain,this.fogVeil?.mesh]){
       if(!mesh)continue;const p=mesh.geometry.attributes.position,colors=mesh.geometry.attributes.color;
       for(let i=0;i<p.count;i++){
-        if(i%512===0)yield;
+        if(i%64===0)yield;
         dir.fromBufferAttribute(p,i).normalize();if(dir.dot(fault.dir)<fault.limit)continue;
         const h=terrainHeight(dir.x,dir.y,dir.z);dir.multiplyScalar(R+h+(mesh===this.terrain?0:1.5));p.setXYZ(i,dir.x,dir.y,dir.z);
         if(colors){dir.normalize();faceColor(dir,h,slopeAt(dir),.5,color);colors.setXYZ(i,color.r,color.g,color.b);}changed++;
@@ -2111,7 +2134,7 @@ export class World {
       if(mesh.geometry.boundingSphere)mesh.geometry.boundingSphere.radius+=14*fault.strength;
       else mesh.geometry.computeBoundingSphere();
     }
-    for(const vent of FEATURES?.vents||[])if(vent.dir.dot(fault.dir)>=fault.limit)vent.height=terrainHeight(...vent.dir.toArray(),false);
+    for(const vent of FEATURES?.active||[])if(vent.dir.dot(fault.dir)>=fault.limit)vent.height=navigationHeight(...vent.dir.toArray(),false);
     // Scenery follows the changed ground; its cached inverse is refreshed.
     if(this.decor)for(const set of this.decor.sets)for(let i=0;i<set.list.length;i++){
       const item=set.list[i];if(!item.alive||item.dir.dot(fault.dir)<fault.limit)continue;

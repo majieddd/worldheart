@@ -5,7 +5,7 @@ import { nestSite, NEST_SCHEDULE_CAPACITY } from './nest-sites.js';
 import { CONFIG } from './config.js';
 import { mulberry32 } from './noise.js';
 import { travelCost, isFloorTerrain, MOUNTAIN_MARCH } from './traversal.js';
-import { R, SUN_DIR, SPACE, initTerrainField, terrainHeight, isWalkableDir, isLandDir, surfacePoint } from './world.js';
+import { R, SUN_DIR, SPACE, initTerrainField, navigationHeight as terrainHeight, isWalkableDir, isLandDir, surfacePoint } from './world.js';
 import * as WORLD from './world.js';
 
 // Walkability graph over a geodesic icosphere (detail 5, 10242 nodes).
@@ -127,7 +127,7 @@ export class NavGraph {
         for (let c = 0; c < 5; c++) {
           const center = this._pickCapCenter(rng, relax, theta);
           // A front that is mostly sea is not a battlefield; try another seed.
-          const islands=CONFIG.terrainKey==='ocean'||CONFIG.environment?.pack==='ocean'&&CONFIG.environment.coverage>=.95;
+          const islands=WORLD.floatingWorld()||CONFIG.terrainKey==='ocean'||CONFIG.environment?.pack==='ocean'&&CONFIG.environment.coverage>=.95;
           if (this.capLandFrac < (islands?.28-relax*.1:.76-relax*.3)) break;
           this._buildGraph(center, theta);
           if (this._chooseSites(relax, center, theta)) {
@@ -157,6 +157,7 @@ export class NavGraph {
   // placement alone once dropped the front over open ocean, where most of the
   // visible field refused every tower.
   _pickCapCenter(rng, relax, theta) {
+    const datum=WORLD.floatingWorld()?28:CONFIG.environment?.cloud?1.5:0;
     const v = new THREE.Vector3();
     const e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
     const probe = new THREE.Vector3();
@@ -171,8 +172,8 @@ export class NavGraph {
       // Anchor on dry ground before paying for the full cap survey.
       const anchorHeight = terrainHeight(v.x, v.y, v.z, false);
       if (anchorHeight < 0.15) continue;
-      if (CONFIG.terrain && (anchorHeight > 1.3 || !WORLD.isBuildableDir(v) || !isWalkableDir(v) || WORLD.climateAt(v, anchorHeight) !== 'neutral')) continue;
-      if (CONFIG.terrain && WORLD.continentalityAt(v.x, v.y, v.z) - CONFIG.terrain.ocean < .22) continue;
+      if (CONFIG.terrain && (anchorHeight > datum+1.3 || !WORLD.isBuildableDir(v) || !isWalkableDir(v) || WORLD.climateAt(v, anchorHeight) !== 'neutral')) continue;
+      if (CONFIG.terrain && !WORLD.floatingWorld()&&WORLD.continentalityAt(v.x, v.y, v.z) - CONFIG.terrain.ocean < .22) continue;
 
       if (Math.abs(v.y) < 0.93) e1.set(0, 1, 0); else e1.set(1, 0, 0);
       e2.crossVectors(v, e1).normalize();
@@ -219,7 +220,7 @@ export class NavGraph {
         if (dry) land++;
         if (CONFIG.terrain && dry && isWalkableDir(probe)) {
           traversable++;
-          if (h <= 1.5 && WORLD.continentalityAt(probe.x, probe.y, probe.z) - CONFIG.terrain.ocean > .25) inlandFloor++;
+          if (h <= datum+1.5 && (WORLD.floatingWorld()||WORLD.continentalityAt(probe.x, probe.y, probe.z) - CONFIG.terrain.ocean > .25)) inlandFloor++;
         }
       }
       const frac = land / SAMPLES;
@@ -228,7 +229,7 @@ export class NavGraph {
       if (CONFIG.terrainKey === 'alpine' && CONFIG.terrain && sampledPeak < CONFIG.terrain.range * .65) continue;
       const islands=CONFIG.terrainKey==='ocean'||CONFIG.environment?.pack==='ocean'&&CONFIG.environment.coverage>=.95;
       const required=CONFIG.terrain?Math.min(islands?2:3,new Set(WORLD.FORMATIONS.modules.filter(m=>m.height>0).map(m=>m.type)).size):0;
-      if (CONFIG.terrain && (exposedFamilies.size < required || Math.max(sampledPeak,sampledDepth) < (islands?8:16))) continue;
+      if (CONFIG.terrain && !CONFIG.environment?.solar&&(exposedFamilies.size < required || Math.max(sampledPeak,sampledDepth) < (islands?8:16))) continue;
       // Land is still what matters most - a field in the sea is unplayable
       // where a dim one is merely moody - so rim light is a modest bonus that
       // breaks ties between otherwise equal caps.
@@ -244,6 +245,7 @@ export class NavGraph {
   }
 
   _buildGraph(capCenter = null, capTheta = 0, walkAll = false, detail = DETAIL, coarse = false, supplied = null) {
+    this.floorDatum=WORLD.floatingWorld()?28:CONFIG.environment?.cloud?1.5:0;
     let ico = supplied;
     if (ico) { /* accepted whole-world topology supplied by build() */ }
     else if (capCenter) {
@@ -317,7 +319,7 @@ export class NavGraph {
       // flow field bends every lane around the platforms.
       this.walk[idx] = walkAll ? (h < 0.55 ? 1 : 0)
         : (coarse ? (isLandDir(_v) ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0));
-      if(this.floorWalk)this.floorWalk[idx]=this.walk[idx]&&isFloorTerrain(this.baseHeight[idx],WORLD.slopeAt(_v),this.waterDepth[idx])?1:0;
+      if(this.floorWalk)this.floorWalk[idx]=this.walk[idx]&&isFloorTerrain(this.baseHeight[idx]-this.floorDatum,WORLD.slopeAt(_v),this.waterDepth[idx])?1:0;
       // The retained mesh includes a stitching margin outside the wall.
       // It must never become a route that the movement boundary refuses.
       if (CONFIG.terrain && capCenter && _v.dot(capCenter) < Math.cos(capTheta - 0.8 / R)) {
@@ -572,7 +574,7 @@ export class NavGraph {
       if (!this.walk[i] || region[i] !== main) continue;
       if (this.floorWalk && !this.floorWalk[i]) continue;
       if (!capCenter && Math.abs(this.dirs[i * 3 + 1]) > 0.82) continue;
-      if (this.height[i] < 0.14 || this.height[i] > (CONFIG.terrain ? WORLD.FLIGHT_CEILING * 0.5 : 1.6)) continue;
+      if (this.height[i] < 0.14 || this.height[i] > (CONFIG.terrain ? (this.floorDatum||0)+WORLD.FLIGHT_CEILING * 0.5 : 1.6)) continue;
       // The heart anchors the main battlefield: keep it in the sun, and on
       // capped maps pull it toward the field's center.
       const sunDot = this.dirs[i * 3] * SUN_DIR.x + this.dirs[i * 3 + 1] * SUN_DIR.y + this.dirs[i * 3 + 2] * SUN_DIR.z;
@@ -760,14 +762,14 @@ export class NavGraph {
   *refreshTerrainSteps(fault,predicted=false){
     const dirty=new Uint8Array(this.n);let changed=0;
     for(let i=0;i<this.n;i++){
-      if(i%64===0)yield;
+      if(i%16===0)yield;
       this.nodeDir(i,_v);if(_v.dot(fault.dir)<Math.cos(48/R))continue;
       const delta=predicted?WORLD.terrainFaultDelta(fault,_v.x,_v.y,_v.z):0;
       const h=terrainHeight(_v.x,_v.y,_v.z)+delta,base=terrainHeight(_v.x,_v.y,_v.z,false)+delta;
       this.height[i]=h;this.baseHeight[i]=base;this.waterDepth[i]=WORLD.waterDepthAt(_v,base);
       const slope=WORLD.slopeAt(_v,predicted?fault:null);
       this.walk[i]=predicted?(WORLD.inBattlefield(_v.x,_v.y,_v.z)&&!WORLD.solidTerrainAt(_v,WORLD.surfaceElevation(_v,base),1.7)&&(this.waterDepth[i]>0||slope<=CONFIG.walkMaxSlope)?1:0):(isWalkableDir(_v)?1:0);
-      this.floorWalk[i]=this.walk[i]&&isFloorTerrain(base,slope,this.waterDepth[i])?1:0;
+      this.floorWalk[i]=this.walk[i]&&isFloorTerrain(base-this.floorDatum,slope,this.waterDepth[i])?1:0;
       this.airWalk[i]=predicted?(base+WORLD.FLIGHT_CLEARANCE+3<=WORLD.FLIGHT_CEILING?1:0):(WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+3)?1:0);
       const radius=R+WORLD.surfaceElevation(_v,h);this.pos[i*3]=_v.x*radius;this.pos[i*3+1]=_v.y*radius;this.pos[i*3+2]=_v.z*radius;
       dirty[i]=1;for(let e=this.adjOff[i];e<this.adjOff[i+1];e++)dirty[this.adj[e]]=1;changed++;

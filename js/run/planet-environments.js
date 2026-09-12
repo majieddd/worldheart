@@ -1,8 +1,11 @@
-import {NEW_PLANET_THEMES} from './world-catalogue.js';
+import {NEW_PLANET_THEMES,NEW_BIOMES} from './world-catalogue.js';
+import {SOLAR_THEMES,ASTRONOMICAL_BIOMES} from './solar-worlds.js';
 // A stylized orbital model, not a climate simulator. Separate seed mixing keeps
 // environment additions from consuming combat, loot or campaign random streams.
 export const PLANET_THEMES = Object.freeze({
   auto:{name:'From star and orbit'},
+  ...SOLAR_THEMES,
+  all:{name:'All Planet',orbit:1,wetness:0,activity:.3,radius:480,showcase:true,pack:'varied',coverage:1,tags:['rock','ice','volcanic','wet','ocean','dry','atmosphere','cloud'],biomes:['meadow','woodland','jungle','desert','savanna','wetland','mangrove','tundra','alpine','volcanic','ocean','crystalline','fungal','ferrous','twilight',...Object.keys(NEW_BIOMES),...Object.keys(ASTRONOMICAL_BIOMES)],water:0x307fa2,shore:0x7cbdba,note:'An oversized atlas planet with the complete formation vocabulary, ten terrain provinces and a broad mosaic of ecology.'},
   ...NEW_PLANET_THEMES,
   temperate:{name:'Garden world',orbit:1,wetness:0,activity:.18},
   monsoon:{name:'Canopy world',orbit:.91,wetness:.40,activity:.12},
@@ -26,7 +29,7 @@ export function stellarFlux(luminosity,orbitAU){return luminosity/(orbitAU*orbit
 export function planetEnvironment(seed,key='auto'){
   if(!Number.isInteger(seed)||seed<1||seed>0xffffffff)throw Error('Invalid environment seed');
   if(!Object.hasOwn(PLANET_THEMES,key))throw Error('Unknown planet theme');
-  const star={...STARS[Math.floor(hash(seed^0x507ea123)*STARS.length)]};
+  let star={...STARS[Math.floor(hash(seed^0x507ea123)*STARS.length)]};
   const naturalOrbit=.6+hash(seed^0x447bb091)*1.25,activity=hash(seed^0x62db3741);
   const chemistry=hash(seed^0x937dec21);
   let naturalTheme=naturalOrbit>1.5?'frozen':naturalOrbit<.75?(activity>.55?'volcanic':'ferrous')
@@ -37,9 +40,12 @@ export function planetEnvironment(seed,key='auto'){
     const choices=naturalOrbit<.8?['sulfurfurnace','saltmirror']:naturalOrbit>1.35?['stormglass','fossil','skyarchipelago']:['titanforest','bloomsanctuary','reefocean','copperharvest','carnivorousfen'];
     naturalTheme=choices[Math.floor(chemistry*choices.length)];
   }
+  if(hash(seed^0x3bfa7991)>.86){const solar=Object.keys(SOLAR_THEMES);naturalTheme=solar[Math.floor(hash(seed^0x76f17b61)*solar.length)];}
+  if(hash(seed^0x716aa84b)>.994)naturalTheme='all';
   const theme=key==='auto'?naturalTheme:key;
   const recipe=PLANET_THEMES[theme],relativeOrbit=key==='auto'?naturalOrbit:recipe.orbit;
-  const orbitAU=Math.sqrt(star.luminosity)*relativeOrbit,flux=stellarFlux(star.luminosity,orbitAU);
+  if(recipe.solar)star={...STARS[2],name:'Sun'};
+  const orbitAU=recipe.solar?recipe.orbit:Math.sqrt(star.luminosity)*relativeOrbit,flux=stellarFlux(star.luminosity,orbitAU);
   // Flux supplies the thermal bias; water inventory and tectonics remain
   // independent. Close orbits do not automatically mean active volcanism.
   const warmth=Math.max(-.34,Math.min(.28,Math.log2(flux)*.2));
@@ -57,7 +63,7 @@ export function planetEnvironment(seed,key='auto'){
   // Humidity and ocean volume are related but not identical. Preserve enough
   // continents for certified nests even on a wet, island-rich pelagic world.
   const oceanShift=['oceanic','reefocean'].includes(theme)?.22:Math.max(-.17,Math.min(.1,recipe.wetness*.3));
-  const geology={monsoon:['karst',.55],arid:['aeolian',.85],frozen:['glacial',1],volcanic:['geothermal',1],crystalline:['badlands',.75],fungal:['karst',.75],oceanic:['ocean',1],ferrous:['badlands',.8],twilight:['sky',.7]};
+  const geology={monsoon:['karst',.55],arid:['aeolian',.85],frozen:['glacial',1],volcanic:['varied',1],crystalline:['badlands',.75],fungal:['karst',.75],oceanic:['ocean',1],ferrous:['badlands',.8],twilight:['sky',.7]};
   const [pack,coverage]=recipe.pack?[recipe.pack,recipe.coverage]:geology[theme]||['varied',0];
-  return {version:3,pack,coverage,biomes:recipe.biomes?[...recipe.biomes]:null,seed,key,theme,name:recipe.name,star,orbitAU,relativeOrbit,flux,warmth,wetness,tectonics,oceanShift,weights:{...weights}};
+  return {version:5,solar:!!recipe.solar,cloud:!!recipe.cloud,rings:!!recipe.rings,tilt:recipe.tilt||0,radius:recipe.radius||240,showcase:!!recipe.showcase,tags:recipe.tags?[...recipe.tags]:null,exclusive:!!recipe.exclusive||theme==='volcanic',pack,coverage,biomes:recipe.biomes?[...recipe.biomes]:null,seed,key,theme,name:recipe.name,star,orbitAU,relativeOrbit,flux,warmth,wetness,tectonics,oceanShift,weights:{...weights}};
 }

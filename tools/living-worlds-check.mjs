@@ -8,13 +8,14 @@ page.on('pageerror',e=>errors.push(e.stack));page.setDefaultTimeout(180000);
 const ck=(name,ok,detail)=>checks.push({name,ok:!!ok,detail});
 await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__frames=true;window.requestAnimationFrame=fn=>raf(t=>{if(__frames)fn(t);});});
 try{
- await page.goto(base+'/?map=ninetynine&campaign=1&seed=12345');await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'));await page.locator('#btn-begin').click();
+ await page.goto(base+'/?map=ninetynine&campaign=1&seed=12346');await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'));await page.locator('#btn-begin').click();
  await page.evaluate(()=>{__frames=false;WH.waves.canRaid=()=>false;WH.step(.05,60,true);document.activeElement.blur();});
  checks.push(...await page.evaluate(async()=>{
   const W=WH,m=W.mode99,a=m.commander,world=await import(new URL('js/world.js',location.href)),T=await import(new URL('lib/three.module.min.js',location.href)),r=[],ck=(name,ok,detail)=>r.push({name,ok:!!ok,detail});
   const home=W.nav.nodeDir(W.nav.heartNode,new T.Vector3());a.dir.copy(home);a.height=world.terrainHeight(...home.toArray());
-  for(let i=0;i<8;i++){const before=m.ore.ore;m.oreField.add(home,99);m.oreField.update(.01);ck('One rendered relic grants exactly one ore, including a legacy multi-ore request '+i,m.ore.ore===before+1);if(i===2){ck('First actual forge costs three ore',!!m.craft()&&m.ore.ore===0&&m.ore.cost===5);}}
-  ck('Second actual forge costs five ore',!!m.craft()&&m.ore.ore===0&&m.ore.cost===7);const cost=m.ore.cost;ck('Failed forge keeps the next price',!m.craft()&&m.ore.cost===cost);
+  const weapons=await import(new URL('js/run/weapons.js',location.href));
+  for(let i=0;i<8;i++){const before=m.forge.balance,item=weapons.generateWeapon({id:'living-scrap-'+i,seed:i,tier:1,family:'sword',rng:()=>.1});m.inventory.register(item);m.inventory.salvage(item.id);ck('One salvaged weapon grants one scrap '+i,m.forge.balance===before+1);if(i===2){ck('First actual forge costs three scraps',!!m.craft()&&m.forge.balance===0&&m.forge.cost===5);}}
+  ck('Second actual forge costs five scraps',!!m.craft()&&m.forge.balance===0&&m.forge.cost===7);const cost=m.forge.cost;ck('Failed forge keeps the next price',!m.craft()&&m.forge.cost===cost);
   let edge=null;
   for(let i=0;i<W.nav.n&&!edge;i++)if(W.nav.height[i]>8&&!W.nav.block[i])for(let e=W.nav.adjOff[i];e<W.nav.adjOff[i+1];e++){
     const j=W.nav.adj[e];if(W.nav.height[i]-W.nav.height[j]>.8&&!Number.isFinite(W.nav.cost[e])){edge=[i,j];break;}
@@ -38,7 +39,7 @@ try{
   ck('Disrupted nest is destroyed and removed from spawning',__quakeNest.destroyed&&!__quakeNest.active&&W.waves.destroyedNodes.has(__quakeNest.node),event);
   ck('Forecast is removed after the shift',!m.weather.forecast.group.visible);
   const error=Math.max(...__forecast.map(s=>Math.abs(w.terrainHeight(...s.dir)-(s.height+s.delta))));ck('Forecast matches the committed terrain',error<.02,{maxError:error,strength:event.strength});
-  const ore=m.oreField.entries.length;m.weather.update(1);ck('Nest collapse does not pay repeatedly',m.oreField.entries.length===ore);
+  const reward=[W.game.gold,m.inventory.scrap];m.weather.update(1);ck('Nest collapse does not pay repeatedly',W.game.gold===reward[0]&&m.inventory.scrap===reward[1]&&!m.oreField);
   W.step(.01,60,true);W.ui.toast('Earthquake warning: leave the highlighted terrain.','danger');return r;
  }));
  await page.screenshot({path:resolve(out,'quake-result.png')});

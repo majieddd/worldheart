@@ -25,10 +25,10 @@ export function exoticHeight(m,u,v,extent,rise) {
     case 'impact': {
       // One excavated meteor bowl, a broken raised rim and radial ejecta.
       // A wide graded breach connects the crater floor to the outer ground.
-      const gate=smooth(.08,.32,Math.abs(a-.12));
+      const breach=a-(Math.PI-.12),gate=smooth(.18,.52,Math.abs(Math.atan2(Math.sin(breach),Math.cos(breach))));
       const rim=.48*ridge(r-.65,.18)*gate;
-      const bowl=(1-smooth(.28,.61,r))*smooth(-.9,-.2,x);
-      const ejecta=.12*ridge(r-.85,.22)*Math.abs(Math.cos(a*7));
+      const bowl=(1-smooth(.28,.61,r))*smooth(-.9,.1,x);
+      const ejecta=.12*ridge(r-.85,.22)*Math.abs(Math.cos(a*7))*gate;
       return envelope*(m.height*(rim+ejecta)-depth*.75*bowl);
     }
     case 'yardangs': {
@@ -97,11 +97,11 @@ export function exoticHeight(m,u,v,extent,rise) {
       // Low convex polygon rafts divided by a continuous depressed network.
       // Smooth tops distinguish these from tall angular chaos blocks.
       let first=Infinity,second=Infinity;
-      for(let row=-2;row<=2;row++)for(let col=-2;col<=2;col++){
-        const d=Math.hypot(x-col*.72-(row%2)*.36,y-row*.624);
+      for(let row=-3;row<=3;row++)for(let col=-3;col<=3;col++){
+        const d=Math.hypot(x-col*.46-(row%2)*.23,y-row*.40);
         if(d<first){second=first;first=d;}else if(d<second)second=d;
       }
-      const seam=1-smooth(.17,.27,second-first);
+      const seam=1-smooth(.10,.19,second-first);
       return Math.min(m.height,16)*envelope*((1-seam)*.75-seam*.3);
     }
     case 'stripes': {

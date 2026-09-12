@@ -1,6 +1,36 @@
 # 99 Planets development progress
 
 Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
+Published and publicly verified: Codex on `feature/planet-ecology-and-active-worlds`,
+based on V2 `8f94dc6`, completed U89-U114. This includes combat, scrap forging,
+commander focus, aiming, abilities, wave pacing, earthquake performance,
+independent active features, disaster hostility, terrain refinement and
+astronomical worlds.
+[Current request ledger](qa/implementation/ACTIVE-WORLDS.md). Prior U75-U88
+remains preserved in the implementation history and earlier acceptance records.
+
+First checkpoint published and publicly verified as `574d6f4`: U89 and U106-U114. [Combat evidence](qa/implementation/ACTIVE-WORLDS/COMBAT.md)
+records 50 targeted checks, 23 traversal/quake/economy regressions, 22 equipment
+checks, 12 finish comparisons, five map camera suites, 307 automated tests and
+a legal ten-wave victory/extraction. Native quake p99 fell from 13.9ms to 7.2ms;
+longest work slice fell from 17.6ms to 6ms in the bounded reference scenario.
+262 public identity comparisons and 50 public combat checks passed.
+
+U90-U105 are published and publicly verified as `5f6836d` through
+[Pages 34724405688](https://github.com/majieddd/worldheart/actions/runs/34724405688). The new
+catalogue has 52 formations, 10 terrain packs, 44 biomes, 12 local active
+features, 12 disasters and 37 themes. [Environmental checkpoint](qa/implementation/ACTIVE-WORLDS/ENVIRONMENT.md)
+records the implemented contracts and initial evidence; [research](qa/implementation/ACTIVE-WORLDS-RESEARCH.md)
+explains the new spatial patterns and all 16 solar-system analogues. Verification
+includes 318 automated tests, 108 route/composition checks across 47 worlds,
+264 Debug checks, 25 environmental effects, eight surface checks, seven camera
+cases, 50 combat and 23 regression checks. A legal floating-world defense won
+all ten waves and extracted four items. Native Debug overview p99 is 14ms;
+combined quake p99 is 7.2ms on this workstation. Public verification passed
+272 identity comparisons and 339 functional checks. Main remains `1374122`.
+The latest owner request is complete; full 99-planet, device, long-term balance
+and multiplayer acceptance remain in the broader roadmap.
+
 Published and publicly verified: Codex on `feature/living-worlds-and-traversal`, based on V2 `42b1ee0`,
 owns U75-U88: disaster prediction, traversal/pathfinding, forge/relic/HUD fixes,
 weapon and tower advancement, UFO mount, fifty formations, ten terrain packs,

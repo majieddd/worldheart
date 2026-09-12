@@ -9,7 +9,7 @@ export const NEST_SCHEDULE_CAPACITY = 11;
 
 function dryFloor(nav, i) {
   return nav.walk[i] && !nav.block[i] && nav.airWalk[i]
-    && (nav.waterDepth ? nav.waterDepth[i] === 0 : nav.baseHeight[i] >= .18) && nav.baseHeight[i] <= 1.5
+    && (nav.waterDepth ? nav.waterDepth[i] === 0 : nav.baseHeight[i] >= .18) && nav.baseHeight[i] <= 1.5+(nav.floorDatum||0)
     && nav.march.floorReach[i] && Number.isFinite(nav.airDist[i]);
 }
 
@@ -78,14 +78,15 @@ export function* availableNestSites(nav, centre, scratch) {
   }
 }
 
-export function nestSite(nav, original, centre, theta, used, scratch) {
+export function nestSite(nav, original, centre, theta, used, scratch, wave = 1) {
   const field = nav.march, cache = siteCache(nav);
   if (!cache) return -1;
   nav.nodeDir(original, scratch);
   const ox = scratch.x, oy = scratch.y, oz = scratch.z;
   nav.nodePos(nav.heartNode, scratch);
   const radius = scratch.length() - nav.height[nav.heartNode];
-  const target = theta * radius * 1.12;
+  const outward = Math.min(radius * 1.4, 12 + Math.max(0, wave - 1) * 7);
+  const target = Math.max(theta * radius * 1.12, outward);
   let chosen = -1, best = Infinity;
   for (const i of cache.candidates) {
     if (used.has(i) || !Number.isFinite(field.dist[i])) continue;
@@ -96,7 +97,7 @@ export function nestSite(nav, original, centre, theta, used, scratch) {
     // Prefer the requested azimuth near the frontier, but a shorter healthy
     // approach inside expanded territory beats a remote ocean detour.
     const bearing = Math.acos(Math.max(-1, Math.min(1, scratch.x * ox + scratch.y * oy + scratch.z * oz)));
-    const score = Math.abs(arc - target) + bearing * radius * .08 + field.dist[i] * .1 + cache.wetDistance[i] * 2 + Math.max(0,field.dist[i]-NEST_ROUTE_LIMIT)*4;
+    const score = Math.abs(arc - target) + Math.max(0, outward * .8 - arc) * 6 + bearing * radius * .08 + field.dist[i] * .1 + cache.wetDistance[i] * 2 + Math.max(0,field.dist[i]-Math.max(NEST_ROUTE_LIMIT,target*2.5))*4;
     if (score >= best) continue;
     nav.nodePos(i, scratch);
     let separate = true;

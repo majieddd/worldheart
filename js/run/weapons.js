@@ -159,6 +159,12 @@ export function createInventory(commander, initial = null) {
       if (!find(id)) return false;
       items = items.filter(x => x.id !== id); scrap++; return true;
     },
+    spendScrap(cost, grant) {
+      if (!Number.isInteger(cost) || cost < 1 || scrap < cost) return null;
+      // A rejected tower roll (for example, a full hand) spends nothing.
+      const result = grant(); if (!result) return null;
+      scrap -= cost; return result;
+    },
     request(op, busy = false) {
       // Validate on a disposable transaction state before accepting a queue.
       const oldItems = clone(items), oldSlots = [...slots], oldActive = active;

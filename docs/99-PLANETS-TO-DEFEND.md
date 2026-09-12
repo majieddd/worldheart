@@ -4,6 +4,25 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation is underway on feature/99-planets-integration. Start with the [QA evidence](qa/2026-09-05/README.md) and [progress ledger](PROGRESS.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
+The latest U89-U114 request is tracked in [Active worlds](qa/implementation/ACTIVE-WORLDS.md).
+It supersedes amber ore with weapon-salvage scrap forging, adds commander and
+weapon abilities plus FPS aiming, halves wave intervals, expands nest distance
+independently of the base, and separates recipe-fit persistent features from
+theme-compatible disasters with seeded environmental hostility. Geological
+and astronomical world refinements follow the same shared production catalogue.
+The environmental implementation separates 52 landforms, 10 terrain packs,
+44 biomes, 12 persistent active features, 12 disasters and 37 themes. Four
+replacement packs provide cave galleries, impact chains, spiral terraces and
+connected floating kingdoms. All Planet uses twice the ordinary radius, while
+16 solar-system analogues use authored regional geography and seeded details.
+See the [environmental acceptance record](qa/implementation/ACTIVE-WORLDS/ENVIRONMENT.md)
+for the distinction between implementation, runtime verification and publication.
+The combined local acceptance covers all 47 pack/theme worlds, actual feature
+and disaster effects, native performance, all camera maps and one legal
+ten-wave floating-world defense. V2 `5f6836d` also passed 272 public identity
+comparisons and 339 public functional checks. This completes U89-U114; it does
+not close full-campaign, hardware or multiplayer acceptance.
+
 The September 12 U60-U74 work is on `feature/expedition-lobby-and-survival`.
 The subsequent U75-U88 request is tracked in
 [Living worlds and traversal](qa/implementation/LIVING-WORLDS.md), including
@@ -15,8 +34,8 @@ supersede the older numerical prototypes: a walkable solo lobby, free starting
 commander choice, three mounts, ten-wave victory with opt-in Endless, base-scaled
 commander/equipment stats, 30-second safe-territory recovery and outside death.
 Ten accelerating base upgrades reach the entire planet. Warned tornadoes and
-terrain-changing quakes alter the battlefield. Three collected relic ore forge
-a free-placement tower at the heart. The debug catalogue adds a combined Terrain
+terrain-changing quakes alter the battlefield. Salvaged weapons supply scraps
+for increasingly priced free-placement towers at the heart. The debug catalogue adds a combined Terrain
 lane and fifteenth biome; planet themes now own climate without a second selector.
 Early zoom stays close to the action, while later regional/global territory
 unlocks enough orbit height to inspect the newly owned planet.

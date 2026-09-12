@@ -5,6 +5,7 @@ import { worldgenUrl, rememberWorld } from './worldgen.js';
 import { FORMATIONS, FEATURES, ECOLOGY, terrainHeight, biomeAt, waterDepthAt } from './world.js';
 import { NestAtlasView } from './nest-atlas-view.js';
 import { PLANET_THEMES } from './run/planet-environments.js';
+import {environmentalHostility} from './run/environment-catalogue.js';
 import { LANDFORM_RECIPES } from './terrain/recipes.js';
 import { surveyLandmarks } from './terrain/landmarks.js';
 
@@ -32,6 +33,7 @@ export class WorldgenPanel {
         <form id="worldgen-form">
           <label>Terrain<select id="worldgen-terrain">${Object.entries(labels).map(([key, label]) => `<option value="${key}">${label}</option>`).join('')}</select></label>
           <label>Planet theme<select id="worldgen-planet">${Object.entries(PLANET_THEMES).map(([key,value])=>`<option value="${key}">${value.name}</option>`).join('')}</select></label>
+          <label>Environmental hostility<select id="worldgen-hostility"><option value="">Seeded for this planet</option><option value="0.15">Peaceful</option><option value="0.6">Restless</option><option value="1.2">Violent</option><option value="2">Extreme</option></select></label>
           <button class="btn primary" type="button" id="worldgen-new">Generate world</button>
           <label>Seed<input id="worldgen-seed" inputmode="numeric" pattern="[0-9]+" required aria-describedby="worldgen-status"></label>
           <button class="btn" type="submit">Load seed</button>
@@ -52,6 +54,7 @@ export class WorldgenPanel {
     const el = id => panel.querySelector('#worldgen-' + id);
     this.status = el('status'); el('seed').value = CONFIG.requestedSeed; el('terrain').value = this.terrain;
     el('planet').value=CONFIG.planetKey;
+    el('hostility').value=CONFIG.hostility===null?'':String(CONFIG.hostility);
     this.inspectionLight=new THREE.DirectionalLight(0xffeddb,1.9);
     this.inspectionLight.name='Inspection daylight';scene.add(this.inspectionLight);
     el('daylight').onchange=()=>{this.inspectionLight.visible=el('daylight').checked;};
@@ -99,6 +102,7 @@ export class WorldgenPanel {
     if(CONFIG.environment){
       const e=CONFIG.environment;
       el('info').textContent+=` · ${e.name} · ${e.star.name} (${e.star.type}) · ${e.orbitAU.toFixed(2)} AU · ${e.flux.toFixed(2)}x Earth sunlight`;
+      el('info').textContent+=` · environmental hostility ${environmentalHostility(CONFIG.seed,CONFIG.planetIndex-1,CONFIG.hostility).value.toFixed(2)} · ${FEATURES?.active.length||0} local features`;
       if(CONFIG.biomeKey==='auto')el('info').textContent+=' · Latitude shapes local bands within this planet theme. Theme sets its dominant ecology.';
     }
     this.status.textContent = saved ? 'Campaign and rewards are separate from this sandbox.' : 'History could not be saved. Copy a seed link to keep this world.';
@@ -114,11 +118,12 @@ export class WorldgenPanel {
   generate(input, terrain, biome='auto',planet=this.panel.querySelector('#worldgen-planet').value) {
     try {
       if (!/^\d+$/.test(String(input).trim())) throw Error('Enter a whole-number seed.');
-      const url = worldgenUrl(location.href, Number(input), terrain, true, biome,planet);
+      const url = new URL(worldgenUrl(location.href, Number(input), terrain, true, biome,planet));
+      const hostility=this.panel.querySelector('#worldgen-hostility').value;if(hostility!=='')url.searchParams.set('hostility',hostility);else url.searchParams.delete('hostility');
       this.status.textContent = 'Generating terrain and checking routes…';
       this.panel.setAttribute('aria-busy', 'true');
       for (const el of this.panel.querySelectorAll('button,input,select')) el.disabled = true;
-      location.href = url;
+      location.href = url.href;
     } catch (error) { this.status.textContent = error.message; }
   }
 

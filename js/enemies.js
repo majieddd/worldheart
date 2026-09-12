@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { surfaceElevation, R, terrainHeight, surfaceTravel, canFlyAt } from './world.js';
+import { surfaceElevation, R, navigationHeight as terrainHeight, surfaceTravel, canFlyAt } from './world.js';
 import { MAX_SLOW, swimOffset, MOUNTAIN_MARCH } from './traversal.js';
 import { enemyStrike, insideStrike } from './attacks.js';
 import { planetBoss } from './encounters.js';

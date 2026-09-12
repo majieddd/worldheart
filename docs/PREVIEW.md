@@ -8,7 +8,7 @@ alongside the stable game without merging gameplay PRs into main.
 | [Original game](https://majieddd.github.io/worldheart/) | main | Stable game; preview publishes preserve its tracked file bytes |
 | [V2 preview](https://majieddd.github.io/worldheart/v2/) | preview/v2 | Latest integrated, verified work; opens the preparation lobby |
 | [Campaign](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=1) | preview/v2 | Direct entry to the saved 99-planet campaign |
-| [Debug World](https://majieddd.github.io/worldheart/v2/debug.html) | preview/v2 | Production models, mounts, formations, combined terrain, biomes and theme globes; no save access |
+| [Debug World](https://majieddd.github.io/worldheart/v2/debug.html) | preview/v2 | Production models, mounts, formations, combined terrain, biomes, active features, disasters and theme globes; no save access |
 | [Live build identity](https://majieddd.github.io/worldheart/v2/build.json) | Deployment artifact | Exact preview/main commits and preview asset hashes |
 | /worldheart/dist/worldheart.html | main | Stable single-file download |
 

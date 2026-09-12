@@ -5,6 +5,7 @@ import {PLANET_THEMES,planetEnvironment} from '../../js/run/planet-environments.
 import {createEcology} from '../../js/terrain/ecology.js';
 import {LANDFORM_RECIPES,formationHeightLimit,formationDepthLimit} from '../../js/terrain/recipes.js';
 import {formationSample} from '../../js/terrain/samples.js';
+import {SOLAR_THEMES,solarGeography} from '../../js/run/solar-worlds.js';
 import {NEW_PLANET_THEMES} from '../../js/run/world-catalogue.js';
 globalThis.location={search:'?map=ninetynine&campaign=0'};globalThis.matchMedia=()=>({matches:false});
 registerHooks({resolve(s,c,n){return s==='three'?{url:new URL('../../lib/three.module.min.js',import.meta.url).href,shortCircuit:true}:n(s,c);}});
@@ -39,21 +40,21 @@ test('actual tower acquisition covers the added annulus but rejects a target out
   assert.equal(tower._acquire([far,near]),near);tower.target=null;assert.equal(tower._acquire([far]),null);
  }
 });
-test('twenty seeded themes have distinct surfaces and coherent biome compositions',()=>{
- assert.equal(Object.keys(PLANET_THEMES).length-1,20);
+test('thirty-seven seeded themes have distinct surfaces and coherent biome compositions',()=>{
+ assert.equal(Object.keys(PLANET_THEMES).length-1,37);
  assert.deepEqual(Object.keys(THEME_SURFACES).sort(),Object.keys(PLANET_THEMES).filter(k=>k!=='auto').sort());
  const identities=new Set();
  for(const [theme,visual]of Object.entries(THEME_SURFACES)){
-  identities.add([visual.biome,visual.water].join('/'));assert.ok(BIOME_VISUALS[visual.biome]);
+  identities.add([visual.biome,visual.water,JSON.stringify(Array.from({length:24},(_,i)=>solarGeography(theme,Math.cos(i),Math.sin(i*.2)*.5,Math.sin(i))))].join('/'));assert.ok(BIOME_VISUALS[visual.biome]);
   const e=createEcology(771,'auto',planetEnvironment(771,theme)),counts={};
   for(let k=0;k<2000;k++){const y=1-2*(k+.5)/2000,r=Math.sqrt(1-y*y),a=k*2.39996,b=e.biome(r*Math.cos(a),y,r*Math.sin(a),.6);counts[b]=(counts[b]||0)+1;}
   if(NEW_PLANET_THEMES[theme]){const palette=NEW_PLANET_THEMES[theme].biomes;assert.ok(Object.keys(counts).every(b=>palette.includes(b)));assert.ok(Object.keys(counts).length>=2,'new themes use distinct belts');}
-  else if(!['temperate','oceanic'].includes(theme))assert.ok(Math.max(...Object.values(counts))>=1800,`${theme} must read as a dominant extreme`);
+  else if(!SOLAR_THEMES[theme]&&theme!=='all'&&!['temperate','oceanic'].includes(theme))assert.ok(Math.max(...Object.values(counts))>=1800,`${theme} must read as a dominant extreme`);
  }
- assert.equal(identities.size,20);
+ assert.equal(identities.size,37);
 });
-test('fifty real formation fields and additional surfaces are finite, distinctive and bounded',()=>{
- assert.equal(Object.keys(LANDFORM_RECIPES).length,50);const fingerprints=new Set();
+test('fifty-two real formation fields and additional surfaces are finite, distinctive and bounded',()=>{
+ assert.equal(Object.keys(LANDFORM_RECIPES).length,52);const fingerprints=new Set();
  for(const type of Object.keys(LANDFORM_RECIPES)){
   const sample=formationSample(type),values=[];
   for(let x=-sample.half;x<=sample.half;x+=3)for(let y=-sample.half;y<=sample.half;y+=3){

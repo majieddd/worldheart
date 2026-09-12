@@ -262,6 +262,7 @@ export class Possession {
     this.onExit = null;
     this.goldFound = 0;
     this.firing = false;
+    this.aiming = false; this.aimT = 0;
     this.kick = 0;
     this.stride = 0;
     this.pitch = 0;
@@ -344,12 +345,14 @@ export class Possession {
     // route their clicks to the canvas until the player presses Escape twice.
     document.addEventListener('pointerlockchange', () => {
       if (this.suspended && document.pointerLockElement === this.canvas) document.exitPointerLock?.();
+      if (document.pointerLockElement !== this.canvas) this.aiming = false;
     });
     addEventListener('blur', () => this.keys.clear());
 
     // Left click strikes.
     this.canvas.addEventListener('mousedown', (e) => {
       if (!this.active || this.suspended) return;
+      if (e.button === 2 && this.boom < .35 && !this.game.buildType) { e.preventDefault(); this.aiming = true; }
       if (e.button === 0) {
         e.preventDefault();
         // With a card armed the click raises the tower under the crosshair
@@ -363,8 +366,8 @@ export class Possession {
     // Held rather than clicked, so a beam channels and a melee keeps its own
     // cadence without the player having to match it by hand. playerAttack's own
     // cooldown does the rate limiting.
-    addEventListener('mouseup', (e) => { if (e.button === 0) this.firing = false; });
-    addEventListener('blur', () => { this.firing = false; });
+    addEventListener('mouseup', (e) => { if (e.button === 0) this.firing = false; if (e.button === 2) this.aiming = false; });
+    addEventListener('blur', () => { this.firing = false; this.aiming = false; this.aimT = 0; });
 
     // Mouse look. Pointer lock when the browser grants it, drag-look otherwise,
     // so the mode is usable even where lock is refused. The fallback drags on
@@ -374,7 +377,7 @@ export class Possession {
       if (!this.active || this.suspended) return;
       const locked = document.pointerLockElement === this.canvas;
       if (locked || (e.buttons & 2)) {
-        const sens = TURN_PER_PIXEL * (CAM_TUNE.lookSens || 100) / 100;
+        const sens = TURN_PER_PIXEL * (CAM_TUNE.lookSens || 100) / 100 * (1 - .38 * this.aimT);
         this.yawQueue += e.movementX * sens;
         // Screen-down should look down, and movementY is positive downward.
         // Queued like yaw and drained through the same filter in update().
@@ -402,6 +405,7 @@ export class Possession {
     if (!unit || !unit.active || unit.dead) return false;
     if (this.unit) this.exit();
     this.unit = unit;
+    this.aiming = false; this.aimT = 0;
     this.rig.cancelFlight();
     this.rig.keys.clear();
     this.rig.pointers.clear();
@@ -459,6 +463,7 @@ export class Possession {
     this.boom = 0;
     this.boomWant = 0;
     this.firing = false;
+    this.aiming = false; this.aimT = 0;
     this.kick = 0;
     this.viewModel?.hide();
     this.tpTrail?.clear();
@@ -509,6 +514,7 @@ export class Possession {
   suspend(on) {
     if (this.suspended === on) return;
     this.suspended = on;
+    this.aiming = false; this.aimT = 0;
     this.keys.clear();
     this.firing = false;
     this.yawQueue = 0;
@@ -636,6 +642,8 @@ export class Possession {
     // View changes remain responsive while solo simulation is paused. Update
     // body/weapon visibility before either path can place an inside-head eye.
     this.boom += (this.boomWant - this.boom) * (1 - Math.exp(-dt * TP_EASE));
+    if (this.boomWant > .35 || !simRunning || this.suspended || this.game.buildType) this.aiming = false;
+    this.aimT += ((this.aiming ? 1 : 0) - this.aimT) * (1 - Math.exp(-dt * 18));
     u.hidden = this.boom <= 0.35;
     if (this.viewModel) this.viewModel.visible = u.hidden && !!this.viewModel.current;
     if (!simRunning || this.suspended) {
@@ -662,7 +670,7 @@ export class Possession {
     const wantLen = Math.hypot(fwd, strafe);
     if (wantLen > 1) { fwd /= wantLen; strafe /= wantLen; }
     // Sprint only carries forward: a sideways sprint reads as a glitch.
-    this.sprint = !u.swimming && (this.keys.has('ShiftLeft') || this.keys.has('ShiftRight')) && fwd > 0.5;
+    this.sprint = !this.aiming && !u.swimming && (this.keys.has('ShiftLeft') || this.keys.has('ShiftRight')) && fwd > 0.5;
     const airborne = u.airT > 0;
     const rate = airborne ? AIR_CONTROL : (wantLen > 0 ? ACCEL : DECEL);
     const k = 1 - Math.exp(-dt * rate);
@@ -674,7 +682,7 @@ export class Possession {
     this.sprintT += ((this.sprint ? 1 : 0) - this.sprintT) * (1-Math.exp(-dt*5));
     u.sprint = this.sprint;
     _driveStart.copy(u.dir);
-    if (speedFrac > 0) this.allies.driveUnit(u, this.vel.x, this.vel.y, dt, 1 + (SPRINT_MUL - 1) * this.sprintT);
+    if (speedFrac > 0) this.allies.driveUnit(u, this.vel.x, this.vel.y, dt, (1 + (SPRINT_MUL - 1) * this.sprintT) * (1 - .22 * this.aimT));
     else u.strafeIn = 0;
     // Input velocity is intent, not travel: a blocked commander used to run
     // the full head/weapon bob and footstep cycle while standing still.
@@ -742,6 +750,7 @@ export class Possession {
       stride: this.stride,
       kick: this.kick,
       firing: this.firing,
+      aim: this.aimT,
       airborne: this.unit.airT > 0,
       spring: this.springY,
       yawRate: live && dt > 0 ? this._yawUsed / dt : 0,
@@ -915,7 +924,7 @@ export class Possession {
     }
 
     // The lens: the archetype's base, widened by sprint and by brief kicks.
-    const fov = (this.baseFov || cam.fov) + (SPRINT_FOV * this.sprintT + this.fovKick) * motion;
+    const fov = (this.baseFov || cam.fov) * (1 - .29 * this.aimT) + (SPRINT_FOV * this.sprintT + this.fovKick) * motion * (1 - .8 * this.aimT);
     let proj = false;
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; proj = true; }
     // The orbit near plane is metres deep and swallowed everything close to the

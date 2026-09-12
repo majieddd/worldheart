@@ -1,16 +1,29 @@
 import {createRequire} from 'node:module';import {resolve} from 'node:path';import {mkdirSync,writeFileSync} from 'node:fs';
 const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright'),out=resolve(process.argv[2]||'artifacts/living-worlds/surfaces'),base=process.env.WH_BASE_URL||'http://127.0.0.1:8139';mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1440,height:900}}),checks=[],faults=[];page.on('pageerror',e=>faults.push(String(e)));
+page.setDefaultNavigationTimeout(180000);
 await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__frames=true;window.requestAnimationFrame=fn=>raf(t=>{if(__frames)fn(t);});});
-try{for(const terrain of ['sky','geothermal']){
- await page.goto(`${base}/?map=ninetynine&campaign=0&planet=temperate&terrain=${terrain}&seed=4206018157`);await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'),{},{timeout:150000});await page.locator('#btn-begin').click();await page.waitForFunction(()=>getComputedStyle(document.querySelector('#title-overlay')).opacity==='0');if(await page.locator('#draft-cards button:visible').count())await page.locator('#draft-cards button').first().click();await page.evaluate(()=>document.activeElement.blur());
+try{for(const terrain of ['sky','varied']){
+ await page.goto(`${base}/?map=ninetynine&campaign=0&planet=${terrain==='sky'?'skyarchipelago':'sulfurfurnace'}&terrain=${terrain}&seed=4206018157`);await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'),{},{timeout:150000});await page.locator('#btn-begin').click();await page.waitForFunction(()=>getComputedStyle(document.querySelector('#title-overlay')).opacity==='0');if(await page.locator('#draft-cards button:visible').count())await page.locator('#draft-cards button').first().click();await page.evaluate(()=>document.activeElement.blur());
  checks.push(...await page.evaluate(async terrain=>{
   __frames=false;const W=WH,m=W.mode99,w=await import(new URL('js/world.js',location.href)),T=await import(new URL('lib/three.module.min.js',location.href)),a=m.commander,r=[],ck=(name,ok,actual)=>r.push({name,ok:!!ok,actual});W.waves.canRaid=()=>false;W.game.paused=false;
   if(terrain==='sky'){
+   ck('Commander initially spawns on the upper island surface',Math.abs(a.height-28)<.2,{height:a.height});
+   const source=W.nav.portalNodes[0],enemy=W.enemies.spawn('husk',source,1),startDistance=W.nav.march.dist[source];let minimum=Infinity,maximumProgress=0;
+   const wasActive=a.active;a.active=false;
+   for(let k=0;k<12000&&enemy.active;k++){W.enemies.update(1/60);minimum=Math.min(minimum,enemy.height);maximumProgress=Math.max(maximumProgress,startDistance-W.nav.march.dist[enemy.node]);}
+   a.active=wasActive;ck('A real ground enemy follows the upper island network toward the base',minimum>26&&maximumProgress>startDistance*.8,{minimum,maximumProgress,startDistance});
+   const tower=W.towers.place('bolt',w.surfacePoint(W.heartPos.clone().normalize(),new T.Vector3()));ck('Tower anchoring uses the upper island surface',Math.abs(tower.pos.length()-w.R-28)<.2,{height:tower.pos.length()-w.R});W.towers.remove(tower);
    const deck=w.FEATURES.surfaces.find(s=>s.key==='floating-slab'&&s.top(0,0)>w.terrainHeight(...s.dir)+3);ck('Actual planet contains a suspended deck',!!deck);if(!deck)return r;
    a.dir.set(...deck.dir);a.height=w.terrainHeight(...deck.dir);a.hop=deck.top(0,0)+.3-w.surfaceElevation(a.dir,a.height);a.vertVel=-20;a.airT=1;a.mountKey='none';a.mountFlight=0;
    W.allies._fall(a,1/30);ck('Actual commander lands on the rendered deck',a.airT===0&&Math.abs(a.height-deck.top(0,0))<.02,{height:a.height,top:deck.top(0,0)});
-   W.possession.enter(a);W.possession.boom=W.possession.boomWant=5;W.possession.suspended=false;a.fwd.set(...deck.m.axis).addScaledVector(a.dir,-new T.Vector3(...deck.m.axis).dot(a.dir)).normalize();window.__deck=deck;window.__start=a.dir.clone();window.__fell=false;
+   // Locate an actual exposed edge. Walking along a causeway proves travel,
+   // but cannot establish that the commander can leave a floating surface.
+   const centre=a.dir.clone(),axis=new T.Vector3(...deck.m.axis).addScaledVector(centre,-new T.Vector3(...deck.m.axis).dot(centre)).normalize(),side=new T.Vector3().crossVectors(centre,axis);let edge=null;
+   for(let k=0;k<32;k++){const heading=axis.clone().multiplyScalar(Math.cos(k*Math.PI/16)).addScaledVector(side,Math.sin(k*Math.PI/16));for(let distance=1;distance<80;distance++){const probe=centre.clone().addScaledVector(heading,distance/w.R).normalize();if(w.navigationHeight(...probe.toArray(),false)<27){if(!edge||distance<edge.distance)edge={heading,distance};break;}}}
+   if(!edge)throw Error('No exposed deck edge found for the movement fixture');
+   a.dir.copy(centre).addScaledVector(edge.heading,Math.max(0,edge.distance-3)/w.R).normalize();a.height=w.navigationHeight(...a.dir.toArray(),false);a.hop=a.airT=a.vertVel=0;
+   W.possession.enter(a);W.possession.boom=W.possession.boomWant=5;W.possession.suspended=false;a.fwd.copy(edge.heading).addScaledVector(a.dir,-edge.heading.dot(a.dir)).normalize();window.__deck=deck;window.__start=a.dir.clone();window.__fell=false;
    W.step(.01,60,true);
   }else{
    const vent=w.FEATURES.vents[0];ck('Actual volcanic pack contains an erupting vent',!!vent);if(!vent)return r;

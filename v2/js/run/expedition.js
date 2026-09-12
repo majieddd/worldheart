@@ -39,15 +39,17 @@ export function createRespawn() {
 }
 export const FORGE_COST = 3;
 export function forgeCost(forged = 0) { return FORGE_COST + Math.max(0, Math.floor(forged)) * 2; }
-export function createOreLedger() {
-  const collected = new Set(); let ore = 0, forged = 0;
+export function createScrapForge(inventory) {
+  let forged = 0;
   return {
-    get ore() { return ore; },
+    get balance() { return inventory.scrap; },
     get forged() { return forged; },
     get cost() { return forgeCost(forged); },
-    collect(id, amount = 1) { if (collected.has(id) || !id || !Number.isInteger(amount) || amount < 1) return false;
-      collected.add(id); ore += amount; return true; },
-    craft(insideBase, makeTower) { const cost = forgeCost(forged); if (!insideBase || ore < cost) return null;
-      const tower = makeTower(); if (!tower) return null; ore -= cost; forged++; return tower; },
+    craft(inside, grant) {
+      if (!inside) return null;
+      const tower = inventory.spendScrap(forgeCost(forged), grant);
+      if (tower) forged++;
+      return tower;
+    },
   };
 }

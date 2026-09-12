@@ -7,6 +7,8 @@ const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json'))
 const out=resolve(process.argv[2]||'artifacts/living-worlds/expansion'),kind=process.argv[3]||'all',base=process.env.WH_BASE_URL||'http://127.0.0.1:8139';mkdirSync(out,{recursive:true});
 const cases=[...(kind==='themes'?[]:Object.keys(TERRAIN_PACKS).map(terrain=>({terrain,planet:'temperate',label:'terrain-'+terrain}))),...(kind==='packs'?[]:Object.keys(PLANET_THEMES).filter(x=>x!=='auto').map(planet=>({terrain:'varied',planet,label:'planet-'+planet})))];
 const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1440,height:900}}),checks=[],records=[],faults=[];
+page.setDefaultNavigationTimeout(180000);
+await page.route('**/*',route=>route.continue());
 page.on('pageerror',e=>faults.push(String(e)));await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__frames=true;window.requestAnimationFrame=fn=>raf(t=>{if(__frames)fn(t);});});
 const ck=(name,ok,actual)=>checks.push({name,ok:!!ok,actual}),save=()=>writeFileSync(resolve(out,'report.json'),JSON.stringify({base,checks,records,faults},null,2));
 try{for(const c of cases.filter(c=>!process.argv[4]||process.argv[4].split(',').includes(c.label))){const start=Date.now();
@@ -21,9 +23,10 @@ try{for(const c of cases.filter(c=>!process.argv[4]||process.argv[4].split(',').
     const reached=n.march.floorReach[i];if(!reached){const key=w.FORMATIONS.inspect(n.dirs[i*3],n.dirs[i*3+1],n.dirs[i*3+2]).type;bad[key]=(bad[key]||0)+1;if(['karst','kettles'].includes(key)){pits++;continue;}}
     dry++;if(reached)connected++;
    }
-   for(let i=0;i<3000;i++){const y=1-2*(i+.5)/3000,a=i*2.39996323,r=Math.sqrt(1-y*y);v.set(r*Math.cos(a),y,r*Math.sin(a));const h=w.terrainHeight(...v.toArray(),false),b=w.biomeAt(v,h);biomes[b]=(biomes[b]||0)+1;if(w.waterDepthAt(v,h)>0)water++;else land++;}
+   for(let i=0;i<3000;i++){const y=1-2*(i+.5)/3000,a=i*2.39996323,r=Math.sqrt(1-y*y);v.set(r*Math.cos(a),y,r*Math.sin(a));const h=w.navigationHeight(...v.toArray(),false),b=w.biomeAt(v,h);biomes[b]=(biomes[b]||0)+1;if(w.waterDepthAt(v,h)>0)water++;else land++;}
    const centre=n.nodeDir(n.heartNode,v.clone());for(let k=0;k<11;k++){const node=sites.nestSite(n,n.portalNodes[k%n.portalNodes.length],centre,.05,used,v);if(node<0)break;used.add(node);let i=node,steps=0,legal=true;while(i!==n.heartNode&&i>=0&&steps<n.n){const j=n.march.next[i];if(j<0||!n.march.floorReach[i]){legal=false;break;}i=j;steps++;}routes.push({node,legal:legal&&i===n.heartNode,steps});}
-   return {seed:W.CONFIG.seed,attempts:n.attempts,types,biomes,dry,connected,pits,bad,water,land,routes,certificate:n.terrainCertificate,features:w.FEATURES.surfaces.length,vents:w.FEATURES.vents.length,environment:W.CONFIG.environment};
+   const activeFeatures={};for(const site of w.FEATURES.active)activeFeatures[site.key]=(activeFeatures[site.key]||0)+1;
+   return {seed:W.CONFIG.seed,attempts:n.attempts,types,biomes,dry,connected,pits,bad,water,land,routes,certificate:n.terrainCertificate,features:w.FEATURES.surfaces.length,vents:w.FEATURES.vents.length,activeFeatures,environment:W.CONFIG.environment};
   });
   ck(c.label+': certified battlefield and eleven actual nest approaches',result.certificate?.pass&&result.routes.length===11&&result.routes.every(r=>r.legal),{certificate:result.certificate,routes:result.routes});
   ck(c.label+': dry passage connectivity',!result.dry||result.connected/result.dry>=.95,{dry:result.dry,connected:result.connected,pits:result.pits,disconnected:result.bad});

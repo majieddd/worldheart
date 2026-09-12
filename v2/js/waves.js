@@ -71,7 +71,7 @@ export function waveReward(wave) {
 
 // A campaign wave adds sources on a clock even if earlier enemies survive.
 // Breathing room grows with the size of the assault, not with enemy transit.
-export function nestWaveInterval(wave) { return Math.min(75, 45 + (wave - 1) * 2); }
+export function nestWaveInterval(wave) { return Math.min(37.5, 22.5 + (wave - 1)); }
 export function newNestCount(wave) { return wave < CONFIG.waves.count && wave % 5 === 0 ? 2 : 1; }
 
 // Returns spawn groups: { type, count, gap, portal: 'all' | index-within-active }

@@ -1,0 +1,214 @@
+{
+  "scope": "Instrumented economy, input, real unit damage, ability lifecycle and rendered camera. Not a full campaign.",
+  "checks": [
+    {
+      "name": "Orange relic field is removed",
+      "ok": true
+    },
+    {
+      "name": "First real tower forge consumes 3 scraps",
+      "ok": true
+    },
+    {
+      "name": "Second real forge consumes 5 scraps",
+      "ok": true
+    },
+    {
+      "name": "Failed craft preserves price and balance",
+      "ok": true
+    },
+    {
+      "name": "Scepter emits a beam into empty sky",
+      "ok": true
+    },
+    {
+      "name": "Scepter damages a visible nest",
+      "ok": true,
+      "actual": 985.96
+    },
+    {
+      "name": "Commander frame follows its live body",
+      "ok": true
+    },
+    {
+      "name": "Held right mouse aims in first person",
+      "ok": true
+    },
+    {
+      "name": "Releasing aim restores the lens",
+      "ok": true
+    },
+    {
+      "name": "commander ability activates once",
+      "ok": true
+    },
+    {
+      "name": "commander ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 675,
+        "enemy": 10000,
+        "moved": 0
+      }
+    },
+    {
+      "name": "commander temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "duelist ability activates once",
+      "ok": true
+    },
+    {
+      "name": "duelist ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 525,
+        "enemy": 10000,
+        "moved": 8.011559533838382
+      }
+    },
+    {
+      "name": "duelist temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "marksman ability activates once",
+      "ok": true
+    },
+    {
+      "name": "marksman ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 450,
+        "enemy": 10000,
+        "moved": 0
+      }
+    },
+    {
+      "name": "marksman temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "bombardier ability activates once",
+      "ok": true
+    },
+    {
+      "name": "bombardier ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 575,
+        "enemy": 9904,
+        "moved": 0
+      }
+    },
+    {
+      "name": "bombardier temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "oracle ability activates once",
+      "ok": true
+    },
+    {
+      "name": "oracle ability changes its advertised gameplay",
+      "ok": true,
+      "actual": {
+        "health": 570,
+        "enemy": 9964,
+        "moved": 0
+      }
+    },
+    {
+      "name": "oracle temporary modifiers expire",
+      "ok": true
+    },
+    {
+      "name": "twinblade weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "twinblade special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 10000,
+        "dance": true
+      }
+    },
+    {
+      "name": "scepter weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "scepter special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 9870.399999999998,
+        "dance": false
+      }
+    },
+    {
+      "name": "sword weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "sword special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 9928,
+        "dance": false
+      }
+    },
+    {
+      "name": "spear weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "spear special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 9907.6,
+        "dance": false
+      }
+    },
+    {
+      "name": "carbine weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "carbine special applies its gameplay",
+      "ok": true,
+      "actual": {
+        "hp": 9913,
+        "dance": false
+      }
+    },
+    {
+      "name": "lobber weapon special activates once",
+      "ok": true
+    },
+    {
+      "name": "lobber special applies its gameplay",
+      "ok": false,
+      "actual": {
+        "hp": 10000,
+        "dance": false
+      }
+    },
+    {
+      "name": "Global base zoom centres and frames the complete planet",
+      "ok": true,
+      "actual": {
+        "center": [
+          -1.1978982707738392e-16,
+          -1.193237188008182e-16,
+          0.9931212060665665
+        ],
+        "angular": 0.2981568875641182,
+        "half": 0.4000178618752888,
+        "distance": 1408.3603304885517
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,10 +1,12 @@
 import * as THREE from 'three';
+import {ASTRONOMICAL_BIOMES,SOLAR_THEMES} from './run/solar-worlds.js';
 import {NEW_BIOMES,NEW_PLANET_THEMES} from './run/world-catalogue.js';
 import {appendBiomeDressing} from './biome-dressing.js';
 
 // Shared visual catalogue for the battlefield and Debug World. Colors are
 // surface identities; placement still uses the visible hot/cold rules.
 export const BIOME_VISUALS = Object.freeze({
+  ...ASTRONOMICAL_BIOMES,
   ...Object.fromEntries(Object.entries(NEW_BIOMES).map(([key,b])=>[key,{...b,color:b.ground}])),
   meadow:{name:'Meadow',color:0x70964e,decor:'leaf'},
   woodland:{name:'Woodland',color:0x3f6a42,decor:'pine'},
@@ -13,7 +15,7 @@ export const BIOME_VISUALS = Object.freeze({
   savanna:{name:'Savanna',color:0xa4a058,decor:'leaf'},
   wetland:{name:'Wetlands',color:0x477e68,decor:'reed'},
   mangrove:{name:'Mangrove delta',color:0x467665,decor:'mangrove'},
-  tundra:{name:'Tundra',color:0xc0d9e1,decor:'ice'},
+  tundra:{name:'Tundra',color:0xa5b9af,decor:'frostgrass'},
   alpine:{name:'Alpine ice',color:0xe0edf0,decor:'ice'},
   volcanic:{name:'Lava crust',color:0x38303a,decor:'vent'},
   ocean:{name:'Ocean',color:0x238eae,decor:'coral'},
@@ -23,6 +25,8 @@ export const BIOME_VISUALS = Object.freeze({
   twilight:{name:'Luminous thicket',color:0x263c79,decor:'twilight'},
 });
 export const THEME_SURFACES = Object.freeze({
+  ...Object.fromEntries(Object.entries(SOLAR_THEMES).map(([key,t])=>[key,{biome:t.biomes[0],water:t.water,shore:t.shore,note:t.note}])),
+  all:{biome:'meadow',water:0x307fa2,shore:0x7cbdba,note:'An oversized atlas of geology and ecology, with 52 formations across ten terrain provinces.'},
   ...Object.fromEntries(Object.entries(NEW_PLANET_THEMES).map(([key,t])=>[key,{biome:t.biomes[0],water:t.water,shore:t.shore,note:t.note}])),
   temperate:{biome:'meadow',water:0x176278,shore:0x2fb4ae,note:'Meadows, forests and latitude belts. Balanced terrain.'},
   monsoon:{biome:'jungle',water:0x154c47,shore:0x42a783,note:'Dense canopy and humid green highlands. Ravines and karst divide forest routes.'},
@@ -49,7 +53,13 @@ export function paintBiome(out,key,height,slope,variation=.5){
 export function biomeDressingGeometry(kind){
   const parts=[];
   const add=(g,color,x=0,y=0,z=0,rz=0)=>{g.rotateZ(rz);g.translate(x,y,z);const flat=g.index?g.toNonIndexed():g;if(flat!==g)g.dispose();parts.push([flat,color]);};
-  if(appendBiomeDressing(kind,add)){/* Habitat-specific geometry added above. */}
+  if(ASTRONOMICAL_BIOMES[kind]){
+    const b=ASTRONOMICAL_BIOMES[kind];
+    if(kind.includes('cloud')||kind==='ammonia')for(let k=0;k<5;k++){const g=new THREE.SphereGeometry(.7,8,5);g.scale(kind==='stormcloud'?1:2,.28,.65);add(g,b.color,Math.sin(k*2)*1.3,.2+k*.07,Math.cos(k*2)*1.1);}
+    else if(kind==='fracturedice'||kind==='venusrock')for(let k=0;k<7;k++)add(new THREE.BoxGeometry(.2,.35,2.7),k%2?b.color:b.rock,(k-3)*.42,.16,Math.sin(k)*.3,Math.sin(k)*.15);
+    else if(kind==='nitrogen')for(let k=0;k<4;k++)add(new THREE.CylinderGeometry(.75,.8,.12,6),b.color,Math.sin(k*2)*.8,.06,Math.cos(k*2)*.8);
+    else for(let k=0;k<6;k++){const g=kind==='waterice'?new THREE.BoxGeometry(.8,.4,.6):new THREE.IcosahedronGeometry(.4,0);g.scale(1,.6+(k%3)*.3,1);add(g,k%2?b.color:b.rock,Math.sin(k*2.4)*1.2,.15,Math.cos(k*2.4)*1.2);}
+  }else if(appendBiomeDressing(kind,add)){/* Habitat-specific geometry added above. */}
   else if(kind==='mangrove'){
     add(new THREE.CylinderGeometry(.22,.36,2.5,7),0x74674c,0,1.8);
     for(let k=0;k<6;k++){
@@ -77,6 +87,9 @@ export function biomeDressingGeometry(kind){
     add(new THREE.CylinderGeometry(.35,.9,1.6,7),0x39313c,0,.8);
     add(new THREE.CylinderGeometry(.27,.29,.08,7),0xff983c,0,1.6);
     for(let k=0;k<3;k++)add(new THREE.OctahedronGeometry(.17),0xffc270,(k-1)*.15,1.9+k*.35,0);
+  }else if(kind==='frostgrass'){
+    for(let k=0;k<5;k++){const h=.3+(k%3)*.22;add(new THREE.BoxGeometry(.7+(k%2)*.4,h,.7),k%2?0xb7dadc:0x87afb9,Math.cos(k*2.4)*.8,h/2,Math.sin(k*2.4)*.8);}
+    for(let k=0;k<11;k++){const blade=new THREE.BoxGeometry(.035,.38+(k%3)*.13,.035);add(blade,k%2?0x8caa96:0xc4d2bd,Math.sin(k*2.4)*1.3,.22,Math.cos(k*2.4)*1.3,Math.sin(k)*.2);}
   }else if(kind==='reed'){
     for(let k=0;k<7;k++)add(new THREE.ConeGeometry(.13,1.3+(k%3)*.3,4),0x759961,Math.sin(k)*.5,.7,Math.cos(k)*.5);
   }else{
