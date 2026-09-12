@@ -12,8 +12,8 @@ Add ten geometrically distinct patterns to the existing twenty. Compare actual r
 
 ## Status
 
-- U52-U55: implemented and locally verified, including combat and exhibition performance. Publication pending.
-- Publication: pending. Main remains unchanged.
+- U52-U55: implemented, verified locally and published/verified on V2.
+- Publication: functional commit `712e7ff`, Pages run `34684741196`. Main remains unchanged.
 
 ## Research converted into geometry
 
@@ -134,3 +134,22 @@ The two catalogue tools accept `WH_BASE_URL` for the deployed V2 route.
 The stronger tower reach is an initial balance revision. Full unforced
 99-planet completion, owner feel acceptance, broad seeds/device coverage,
 loot-frequency balancing and multiplayer/platform work remain open.
+
+## Published preview
+
+Functional commit `712e7ff03bdeda0d1b45d84bd41902c01d0a0578` deployed through
+[Pages 34684741196](https://github.com/majieddd/worldheart/actions/runs/34684741196).
+[Open the Debug World](https://majieddd.github.io/worldheart/v2/debug.html) or
+[compare ten themes in the generator](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=0&worldgen=1&terrain=varied&seed=4206018157).
+
+Public verification passes all 158 browser cases: [118 Debug cases](EXTREME-WORLDS/public-debug.json)
+and [40 complete-planet cases](EXTREME-WORLDS/public-themes.json). Deployed captures
+of [the gallery](EXTREME-WORLDS/public-debug.png) and
+[the molten world](EXTREME-WORLDS/public-molten.png) were opened for visual inspection.
+[226 public asset/source comparisons](EXTREME-WORLDS/public-identity.json) pass,
+including stable main `1374122d1109919a5fab10b69fefdfb80308eb6e`.
+
+[Draft PR #35](https://github.com/majieddd/worldheart/pull/35) remains stacked on
+PR #34. The documentation handoff preserves the tested functional assets.
+The shared tracker and live build manifest identify the latest handoff SHA.
+No gameplay PR was merged into main; the broader acceptance gaps above remain open.

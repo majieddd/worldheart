@@ -123,7 +123,8 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 ### Terrain traversal and flight
 
-U52-U55 extends the preview to ten visibly distinct planet themes and thirty
+U52-U55 is published and publicly verified through PR #35: 158 public browser
+cases and 226 asset/source comparisons pass. It extends the preview to ten visibly distinct planet themes and thirty
 formation recipes in landforms v7. A shared visual catalogue supplies matching
 land/sea palettes and biome scenery in gameplay and a flat Debug World.
 The six labeled exhibition lanes contain 97 production-backed exhibits, with
