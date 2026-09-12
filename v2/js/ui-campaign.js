@@ -3,7 +3,12 @@
 export class CampaignPanel {
   constructor({store,api,ui,game}) {
     Object.assign(this,{store,api,ui,game});
-    this.badge=document.createElement('button');this.badge.className='campaign-badge';this.badge.id='campaign-status';ui.root.append(this.badge);
+    this.badge=document.createElement('button');this.badge.className='campaign-badge';this.badge.id='campaign-status';
+    // Campaign identity and transient alerts share one flow, so translated or
+    // wrapped messages cannot land on top of the planet counter.
+    this.statusStack=document.createElement('div');this.statusStack.className='campaign-status-stack';
+    ui.root.querySelector('.hud-top-center').append(this.statusStack);
+    this.statusStack.append(this.badge,ui.root.querySelector('#toast-anchor'));
     this.badge.onclick=()=>api.showReceipt();
     this.receipt=document.createElement('section');this.receipt.className='campaign-receipt';this.receipt.id='campaign-receipt';
     ui.el['end-card'].insertBefore(this.receipt,ui.el['end-card'].querySelector('.o-actions'));

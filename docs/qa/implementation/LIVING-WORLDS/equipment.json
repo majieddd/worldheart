@@ -1,0 +1,174 @@
+{
+  "scope": "Instrumented real inventory, combat, elemental effects and first-person rendering",
+  "checks": [
+    {
+      "name": "twinblade wood equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "duelist:twin:ancient:frost:wood",
+        "family": "twinblade"
+      }
+    },
+    {
+      "name": "twinblade wood damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9980.2,
+        "slow": 0.18
+      }
+    },
+    {
+      "name": "twinblade iron equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "duelist:twin:ancient:frost:iron",
+        "family": "twinblade"
+      }
+    },
+    {
+      "name": "twinblade iron damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9978.616,
+        "slow": 0.18
+      }
+    },
+    {
+      "name": "twinblade gold equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "duelist:twin:ancient:frost:gold",
+        "family": "twinblade"
+      }
+    },
+    {
+      "name": "twinblade gold damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9977.032,
+        "slow": 0.18
+      }
+    },
+    {
+      "name": "twinblade diamond equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "duelist:twin:technological:frost:diamond",
+        "family": "twinblade"
+      }
+    },
+    {
+      "name": "twinblade diamond damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9964.104976,
+        "slow": 0.18
+      }
+    },
+    {
+      "name": "twinblade onyx equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "duelist:twin:empowered:frost:onyx",
+        "family": "twinblade"
+      }
+    },
+    {
+      "name": "twinblade onyx damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9949.714336,
+        "slow": 0.18
+      }
+    },
+    {
+      "name": "twinblade held assembly has finite transforms",
+      "ok": true
+    },
+    {
+      "name": "scepter wood equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "oracle:staff:ancient:frost:wood",
+        "family": "scepter"
+      }
+    },
+    {
+      "name": "scepter wood damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9992.737216,
+        "slow": 0.216
+      }
+    },
+    {
+      "name": "scepter iron equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "oracle:staff:ancient:frost:iron",
+        "family": "scepter"
+      }
+    },
+    {
+      "name": "scepter iron damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9992.15619328,
+        "slow": 0.216
+      }
+    },
+    {
+      "name": "scepter gold equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "oracle:staff:ancient:frost:gold",
+        "family": "scepter"
+      }
+    },
+    {
+      "name": "scepter gold damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9991.57517056,
+        "slow": 0.216
+      }
+    },
+    {
+      "name": "scepter diamond equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "oracle:staff:technological:frost:diamond",
+        "family": "scepter"
+      }
+    },
+    {
+      "name": "scepter diamond damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9986.83344414208,
+        "slow": 0.216
+      }
+    },
+    {
+      "name": "scepter onyx equips a real inventory item",
+      "ok": true,
+      "detail": {
+        "model": "oracle:staff:empowered:frost:onyx",
+        "family": "scepter"
+      }
+    },
+    {
+      "name": "scepter onyx damages and applies its fitted core",
+      "ok": true,
+      "detail": {
+        "hp": 9981.55485273088,
+        "slow": 0.216
+      }
+    },
+    {
+      "name": "scepter held assembly has finite transforms",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

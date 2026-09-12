@@ -1,4 +1,9 @@
 import {box,slab,cone,shift,spin,merge} from './rig.js';
+export const MATERIAL_FINISH = {
+  wood:{color:0xa67540,metalness:0,roughness:.88},iron:{color:0xb3c4cb,metalness:.62,roughness:.4},
+  gold:{color:0xe6b74c,metalness:.7,roughness:.28},diamond:{color:0x6fe7e0,metalness:.35,roughness:.15},
+  onyx:{color:0x303142,metalness:.68,roughness:.24},
+};
 
 export function weaponAppearanceMaterial(mats,source,appearance){
   if(!appearance)return source;
@@ -7,7 +12,7 @@ export function weaponAppearanceMaterial(mats,source,appearance){
     const color={tempered:0xffd399,ember:0xff794d,frost:0x91ddff,pulse:0xa9a0ff}[appearance.core];
     material.color.setHex(color);material.emissive.setHex(color);
     material.emissiveIntensity={ancient:.12,technological:1.3,empowered:2.2}[appearance.era];
-  }else if(source===mats.trim||source===mats.gold){material.color.setHex(appearance.era==='technological'?0xcbe4ef:0xcaa56f);material.metalness=appearance.era==='ancient'?.25:.55;}
+  }else if(source===mats.trim||source===mats.gold){const finish=MATERIAL_FINISH[appearance.material]||MATERIAL_FINISH.iron;material.color.setHex(finish.color);material.emissive?.setHex(0);material.metalness=finish.metalness;material.roughness=finish.roughness;}
   return material;
 }
 
@@ -22,7 +27,21 @@ export function buildWeapon(visual,era='ancient',mats) {
   const blade=(base,tip,start,end,thick,key)=>add(spin(slab(tip,thick,base,thick,start,end),-Math.PI/2,0,0),key);
   const metal='trim',grip=tech?'dark':'grip';
   let support=null,line=null;
-  if(visual==='sword'){
+  if(visual==='twin'){
+    tube(.035,.04,.24,0,0,0,grip);block(tech?.28:.32,.065,.09,0,0,-.14,metal);
+    blade(tech?.19:.14,.04,.15,.68,.045,metal);blade(.15,.005,.67,.92,.035,metal);
+    block(.027,.05,.55,0,0,-.43,'energy');
+    if(tech)for(const x of [-.09,.09])block(.04,.08,.25,x,0,-.24,'body');
+    if(magic){block(.4,.08,.11,0,0,-.16,'gold');for(const x of [-.15,.15])tube(.004,.035,.22,x,0,-.29,'energy');}
+    line=[0,0,-.2,0,0,-.92];
+  }else if(visual==='staff'){
+    tube(.042,.055,1.9,0,0,-.4,metal);tube(.06,.06,.28,0,0,0,grip);tube(.10,.085,.20,0,0,-1.29,metal);
+    for(const x of [-.16,.16]){block(.075,.09,.38,x,0,-1.46,metal);block(.21,.08,.075,x*.5,0,-1.3,metal);}
+    tube(.09,.17,.30,0,0,-1.53,'energy');tube(.018,.09,.22,0,0,-1.78,'energy');
+    if(tech){for(const z of [-.55,-.84,-1.13])tube(.09,.09,.055,0,0,z,'body');block(.1,.16,.24,0,0,-.3,'energy');}
+    if(magic){for(const x of [-.25,.25]){block(.07,.07,.34,x,0,-1.40,'gold');tube(.005,.06,.21,x,0,-1.65,'energy');}}
+    support=[-.015,0,-.48];
+  }else if(visual==='sword'){
     tube(.042,.042,.30,0,0,0,grip);
     tube(.065,.052,.08,0,0,.16,'gold');
     block(tech?.40:magic?.58:.46,.08,.11,0,0,-.17,metal);
@@ -33,7 +52,7 @@ export function buildWeapon(visual,era='ancient',mats) {
     if(magic){for(const x of [-.22,.22]){block(.09,.09,.20,x,0,-.23,'gold');block(.055,.10,.09,x,0,-.31,'energy');}blade(.29,.19,.30,.56,.05,'gold');}
     line=[0,0,-.25,0,0,-1.44];
   }else if(visual==='spear'){
-    tube(.035,.04,1.70,0,0,-.40,grip);
+    tube(.035,.04,1.70,0,0,-.40,metal);tube(.048,.048,.28,0,0,0,grip);
     tube(.05,.05,.16,0,0,-1.18,metal);
     blade(tech?.18:.22,.008,1.20,1.83,.055,metal);
     block(.03,.06,.34,0,0,-1.43,'energy');
@@ -72,5 +91,5 @@ export function buildWeapon(visual,era='ancient',mats) {
     }
     support=[-.025,-.055,-.49];
   }
-  return {parts:[...groups].map(([mat,geos])=>({mat,geo:merge(geos)})),support,blade:line};
+  return {parts:[...groups].map(([mat,geos])=>({mat,geo:merge(geos)})),support,blade:line,paired:visual==='twin'};
 }

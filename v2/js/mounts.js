@@ -9,9 +9,13 @@ export function buildMount(key){
   const glow=new THREE.MeshStandardMaterial({color:0xadebdf,emissive:0x63b8a4,emissiveIntensity:.6,flatShading:true});
   const add=(g,mat,x,y,z)=>{const mesh=new THREE.Mesh(g,mat);mesh.position.set(x,y,z);group.add(mesh);return mesh;};
   if(key==='skyray'){
-    const torso=add(new THREE.IcosahedronGeometry(.65,1),body,0,.65,0);torso.scale.set(1,.4,1.7);
-    for(const side of [-1,1]){const wing=add(new THREE.ConeGeometry(1.2,2.4,3),body,side*.8,.6,0);wing.rotation.z=side*-Math.PI/2;wing.scale.z=.22;moving.push({mesh:wing,side,wing:true});}
-    const tail=add(new THREE.ConeGeometry(.17,1.5,5),dark,0,.65,1.35);tail.rotation.x=Math.PI/2;
+    add(new THREE.CylinderGeometry(.57,1.14,.22,24),body,0,.77,0);
+    add(new THREE.CylinderGeometry(1.14,.4,.25,24),dark,0,.535,0);
+    const rim=add(new THREE.TorusGeometry(1.10,.045,5,32),glow,0,.66,0);rim.rotation.x=Math.PI/2;
+    const canopy=add(new THREE.SphereGeometry(.43,16,8,0,Math.PI*2,0,Math.PI/2),new THREE.MeshStandardMaterial({color:0x85d9df,transparent:true,opacity:.72,roughness:.15,metalness:.25}),0,.88,-.42);canopy.scale.z=.8;
+    add(new THREE.CylinderGeometry(.32,.24,.08,12),glow,0,.37,0);
+    for(let i=0;i<8;i++){const a=i*Math.PI/4;add(new THREE.SphereGeometry(.07,6,4),glow,Math.cos(a)*.9,.69,Math.sin(a)*.9);}
+    moving.push({mesh:rim,spin:true});
   }else{
     const torso=add(key==='tideback'?new THREE.IcosahedronGeometry(.8,1):new THREE.BoxGeometry(.85,.65,1.5),body,0,.9,0);torso.scale.set(1,key==='tideback'?.65:1,1.1);
     add(new THREE.BoxGeometry(.46,.45,.65),body,0,1.3,-.85);
@@ -20,7 +24,7 @@ export function buildMount(key){
     if(key==='strider')for(const side of [-1,1]){const horn=add(new THREE.ConeGeometry(.09,.7,5),glow,side*.22,1.8,-.78);horn.rotation.z=side*.25;}
   }
   add(new THREE.BoxGeometry(.55,.15,.65),dark,0,key==='skyray'?.84:1.24,0);
-  return {group,update(t,motion=0){for(const p of moving)if(p.wing)p.mesh.rotation.x=Math.sin(t*5)*.2;else p.mesh.rotation.x=Math.sin(t*9)*motion*.55*p.side;}};
+  return {group,update(t,motion=0){for(const p of moving)if(p.spin)p.mesh.rotation.z=t*.7;else p.mesh.rotation.x=Math.sin(t*9)*motion*.55*p.side;}};
 }
 const v=new THREE.Vector3(),back=new THREE.Vector3(),right=new THREE.Vector3(),basis=new THREE.Matrix4();
 export class MountController {

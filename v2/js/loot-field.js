@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { surfacePoint } from './world.js';
 
-const COLORS = { common: 0xd7e1dd, uncommon: 0x68e6aa, rare: 0x75b4ff, relic: 0xfacb69 };
+const COLORS = { common: 0xd7e1dd, uncommon: 0x68e6aa, rare: 0xfacb69, epic:0x75e7ec, relic: 0xc6a4ed };
 // No loot rules live here. This is the visible, persistent-on-ground side of
 // the shell's transactions, with identities instead of recyclable enemy refs.
 export class LootField {

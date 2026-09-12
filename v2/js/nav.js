@@ -740,16 +740,30 @@ export class NavGraph {
     const steps=this.refreshTerrainSteps(fault);let result;do{result=steps.next();}while(!result.done);return result.value;
   }
 
-  *refreshTerrainSteps(fault){
+  // Forecasts solve on private buffers. The live graph, terrain and footprint
+  // ownership are untouched until the advertised fault is committed.
+  *forecastGraphSteps(){
+    const draft=Object.assign(Object.create(Object.getPrototypeOf(this)),this);
+    for(const key of ['height','baseHeight','waterDepth','walk','floorWalk','airWalk','pos','cost','airCost','dist','next','airDist','airNext','flow']){
+      const value=this[key];if(!value)continue;draft[key]=new value.constructor(value.length);yield;
+      for(let at=0;at<value.length;at+=65536){draft[key].set(value.subarray(at,at+65536),at);yield;}
+    }
+    draft._heap=null;draft.march=null;draft._nestSites=null;draft._routeRegions=null;
+    return draft;
+  }
+
+  *refreshTerrainSteps(fault,predicted=false){
     const dirty=new Uint8Array(this.n);let changed=0;
     for(let i=0;i<this.n;i++){
       if(i%64===0)yield;
       this.nodeDir(i,_v);if(_v.dot(fault.dir)<Math.cos(48/R))continue;
-      const h=terrainHeight(_v.x,_v.y,_v.z),base=terrainHeight(_v.x,_v.y,_v.z,false);
+      const delta=predicted?WORLD.terrainFaultDelta(fault,_v.x,_v.y,_v.z):0;
+      const h=terrainHeight(_v.x,_v.y,_v.z)+delta,base=terrainHeight(_v.x,_v.y,_v.z,false)+delta;
       this.height[i]=h;this.baseHeight[i]=base;this.waterDepth[i]=WORLD.waterDepthAt(_v,base);
-      this.walk[i]=isWalkableDir(_v)?1:0;
-      this.floorWalk[i]=this.walk[i]&&isFloorTerrain(base,WORLD.slopeAt(_v),this.waterDepth[i])?1:0;
-      this.airWalk[i]=WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+3)?1:0;
+      const slope=WORLD.slopeAt(_v,predicted?fault:null);
+      this.walk[i]=predicted?(WORLD.inBattlefield(_v.x,_v.y,_v.z)&&(this.waterDepth[i]>0||slope<=CONFIG.walkMaxSlope)?1:0):(isWalkableDir(_v)?1:0);
+      this.floorWalk[i]=this.walk[i]&&isFloorTerrain(base,slope,this.waterDepth[i])?1:0;
+      this.airWalk[i]=predicted?(base+WORLD.FLIGHT_CLEARANCE+3<=WORLD.FLIGHT_CEILING?1:0):(WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+3)?1:0);
       const radius=R+WORLD.surfaceElevation(_v,h);this.pos[i*3]=_v.x*radius;this.pos[i*3+1]=_v.y*radius;this.pos[i*3+2]=_v.z*radius;
       dirty[i]=1;for(let e=this.adjOff[i];e<this.adjOff[i+1];e++)dirty[this.adj[e]]=1;changed++;
     }
@@ -875,6 +889,27 @@ export class NavGraph {
     return false;
   }
 
+  canDrive(fromDir,toDir,footHeight,airborne=false,radius=.45) {
+    if(!CONFIG.terrain)return true;
+    if(!WORLD.inBattlefield(toDir.x,toDir.y,toDir.z))return false;
+    const ground=WORLD.surfaceElevation(toDir),from=WORLD.surfaceElevation(fromDir);
+    const distance=Math.max(.001,fromDir.distanceTo(toDir)*R);
+    // A ground flow edge describes walking in both directions. A commander
+    // may leave that graph and fall off a ledge, but cannot walk up its wall.
+    if(ground>footHeight+.12||(ground>from+.02&&!airborne&&(ground-from)/distance>1.1))return false;
+    for(const body of this.towerBodies?.values()||[]){
+      const limit=body.radius+radius*.3,old=fromDir.distanceTo(body.dir)*R;
+      if(toDir.distanceTo(body.dir)*R<limit&&old>=toDir.distanceTo(body.dir)*R)return false;
+    }
+    return true;
+  }
+
+  towerNodes(center,radius) {
+    // Build spacing includes decorative outriggers. Navigation occupies the
+    // central plinth, so those ornaments do not turn visible gaps into walls.
+    return this.nodesInRadius(center,radius*(CONFIG.map.mode==='ninetynine'?.7:1));
+  }
+
   // Blend the flow of the tracked node and its neighbors, project to the
   // tangent plane at dir. Returns progress (distance to heart) as well.
   sampleFlow(nodeIdx, dir, out) {
@@ -936,7 +971,7 @@ export class NavGraph {
 
   // Would blocking this footprint sever any portal from the heart?
   validatePlacement(center, radius, requiredNodes = []) {
-    const nodes = this.nodesInRadius(center, radius);
+    const nodes = this.towerNodes(center, radius);
     const temp = new Set();
     for (const i of nodes) {
       if (this.walk[i] && this.block[i] === 0) temp.add(i);
@@ -1019,7 +1054,9 @@ export class NavGraph {
 
   blockNodes(center, radius, towerId) {
     this.revision++;
-    const nodes = this.nodesInRadius(center, radius);
+    this.towerBodies ||= new Map();
+    this.towerBodies.set(towerId,{dir:center.clone().normalize(),radius:radius*(CONFIG.map.mode==='ninetynine'?.7:1)});
+    const nodes = this.towerNodes(center, radius);
     for (const i of nodes) {
       if (this.block[i] === 0) this.block[i] = towerId;
     }
@@ -1028,6 +1065,7 @@ export class NavGraph {
 
   unblockNodes(towerId) {
     this.revision++;
+    this.towerBodies?.delete(towerId);
     for (let i = 0; i < this.n; i++) {
       if (this.block[i] === towerId) this.block[i] = 0;
     }
@@ -1051,7 +1089,7 @@ export class NavGraph {
     let temp = null;
     if (tempCenter) {
       temp = new Set();
-      for (const i of this.nodesInRadius(tempCenter, radius)) {
+      for (const i of this.towerNodes(tempCenter, radius)) {
         if (this.walk[i] && this.block[i] === 0) temp.add(i);
       }
     }

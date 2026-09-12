@@ -10,7 +10,7 @@ export const MOUNTS = {
   none: { name: 'On foot', speed: 1, water: 1, damage: 1, height: 0, description: 'Full weapon power and precise movement.' },
   strider: { name: 'Ridge Strider', speed: 1.65, water: .7, damage: .8, height: 1.1, color: 0xd9b084, description: 'Fast on land. Slow in water; mounted damage 80%.' },
   tideback: { name: 'Tideback', speed: 1.2, water: 2.4, damage: .9, height: .8, color: 0x5fd3ca, description: 'Amphibious: crosses oceans quickly. Mounted damage 90%.' },
-  skyray: { name: 'Sky Ray', speed: 1.35, water: 1, damage: .65, height: 1.2, flight: 12, color: 0xb7a4ef, description: 'Hold Space to fly for up to 12 seconds. Recharge on land; mounted damage 65%.' },
+  skyray: { name: 'Scout Saucer', speed: 1.35, water: 1, damage: .65, height: 1.2, flight: 12, color: 0x9dbbc9, description: 'Hold Space to fly for up to 12 seconds. Recharge on land; mounted damage 65%.' },
 };
 export function commanderStats(key, level = 0) {
   const c = COMMANDERS[key] || COMMANDERS.commander, l = Math.max(0, Math.min(10, Number(level) || 0));
@@ -38,13 +38,16 @@ export function createRespawn() {
   };
 }
 export const FORGE_COST = 3;
+export function forgeCost(forged = 0) { return FORGE_COST + Math.max(0, Math.floor(forged)) * 2; }
 export function createOreLedger() {
-  const collected = new Set(); let ore = 0;
+  const collected = new Set(); let ore = 0, forged = 0;
   return {
     get ore() { return ore; },
+    get forged() { return forged; },
+    get cost() { return forgeCost(forged); },
     collect(id, amount = 1) { if (collected.has(id) || !id || !Number.isInteger(amount) || amount < 1) return false;
       collected.add(id); ore += amount; return true; },
-    craft(insideBase, makeTower) { if (!insideBase || ore < FORGE_COST) return null;
-      const tower = makeTower(); if (!tower) return null; ore -= FORGE_COST; return tower; },
+    craft(insideBase, makeTower) { const cost = forgeCost(forged); if (!insideBase || ore < cost) return null;
+      const tower = makeTower(); if (!tower) return null; ore -= cost; forged++; return tower; },
   };
 }

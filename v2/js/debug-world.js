@@ -6,7 +6,7 @@ import {ALLY_TYPES} from './allies.js';
 import {ENEMY_TYPES,buildEnemyModel} from './enemies.js';
 import {buildSoldier,poseSoldier,freshSoldierState} from './soldier.js';
 import {buildWeapon,weaponAppearanceMaterial} from './weapon-model.js';
-import {FAMILIES,ERAS,PARTS,validPart} from './run/weapons.js';
+import {FAMILIES,ERAS,WEAPON_MATERIALS,PARTS,validPart} from './run/weapons.js';
 import {PALETTE,TERRAIN_PROFILES} from './config.js';
 import {LANDFORM_RECIPES} from './terrain/recipes.js';
 import {formationSample} from './terrain/samples.js';
@@ -153,19 +153,20 @@ export async function startDebugWorld(){
       }
     }
     if(lane.key==='mounts')for(const [key,m]of Object.entries(MOUNTS))if(key!=='none'){const model=buildMount(key);model.group.scale.setScalar(4);add(lane,key,m.name,model.group,m.description,{Speed:m.speed+'x',Water:m.water+'x',Damage:m.damage+'x'},20,(t,mode)=>model.update(t,mode==='still'?0:1));}
-    if(lane.key==='towers')for(const [key,type]of Object.entries(TOWER_TYPES))for(let tier=0;tier<AUTHORED_TIERS;tier++){
+    if(lane.key==='towers')for(const [key,type]of Object.entries(TOWER_TYPES))for(const tier of [0,1,2,5,11]){
       const b=buildTowerVisual(key,tier);b.group.scale.setScalar(4*TOWER_SCALE);const s=tierStats(key,tier);
-      add(lane,`${key}-${tier}`,`${type.name} · Mk ${tier+1}`,b.group,'Production authored tower model. Higher upgrades retain the third silhouette and continue statistical progression.',{Range:`${s.range.toFixed(2)} m`,Scale:'4x',Tier:tier+1},22);
+      add(lane,`${key}-${tier}`,`${type.name} · Mk ${tier+1}`,b.group,'Production tower with reinforced family-specific structure. Higher marks add armor, capacitors, ice petals or fortified supports while preserving targeting.',{Range:`${s.range.toFixed(2)} m`,Scale:'4x',Tier:tier+1},22);
     }
-    if(lane.key==='weapons')for(const [key,family]of Object.entries(FAMILIES))for(const era of ERAS){
-      const mats=modelMats(),b=buildWeapon(family.visual,era,mats),group=new THREE.Group();for(const p of b.parts){const mesh=new THREE.Mesh(p.geo,weaponAppearanceMaterial(mats,p.mat,{era,core:'tempered'}));mesh.userData.energy=p.mat===mats.energy;group.add(mesh);}group.rotation.x=-.4;group.rotation.y=-.6;group.scale.setScalar(4);
-      const item=add(lane,`${key}-${era}`,`${family.name} · ${era}`,weaponExhibit(group),'Shared held, loot and soldier weapon geometry. Core selection previews the actual energy tint; stat-only grip/head rolls do not add separate models.',{Family:family.kind,Era:era,Scale:'4x'},18);
-      item.weapon={family:key,era,mats,core:'tempered'};
+    if(lane.key==='weapons')for(const [key,family]of Object.entries(FAMILIES))for(const material of WEAPON_MATERIALS){
+      const era=material==='diamond'?'technological':material==='onyx'?'empowered':'ancient';
+      const mats=modelMats(),b=buildWeapon(family.visual,era,mats),group=new THREE.Group();for(const p of b.parts){const mesh=new THREE.Mesh(p.geo,weaponAppearanceMaterial(mats,p.mat,{era,material,core:'tempered'}));mesh.userData.energy=p.mat===mats.energy;group.add(mesh);if(b.paired){const left=mesh.clone();left.position.x=-.42;left.position.z=.08;group.add(left);}}group.rotation.x=-.4;group.rotation.y=-.6;group.scale.setScalar(4);
+      const item=add(lane,`${key}-${material}`,`${family.name} · ${material}`,weaponExhibit(group),'Shared held, loot and soldier geometry. Wood, iron, gold, diamond and onyx correspond to five rarity steps; core choice changes the energy channel.',{Family:family.kind,Material:material,Era:era,Scale:'4x'},18);
+      item.weapon={family:key,era,material,mats,core:'tempered'};
     }
     if(lane.key==='weapons')for(const [key,name]of [['duelist','Native twin swords'],['oracle','Native beam staff']]){
       const build=buildSoldier(key,modelMats()),b=articulated(build,false,key);b.update(0,'still');const group=new THREE.Group();
       for(const part of build.parts)for(const at of part.at)if(['weaponR','weaponL'].includes(at.joint.name)){const mesh=new THREE.Mesh(part.geo,part.mat);mesh.applyMatrix4(new THREE.Matrix4().multiplyMatrices(at.joint.world,at.off));group.add(mesh);}
-      group.scale.setScalar(4);add(lane,`native-${key}`,name,weaponExhibit(group),'Native commander equipment from the soldier builder. Separate from the four loot families.',{Source:ALLY_TYPES[key].name,Scale:'4x'},18);
+      group.scale.setScalar(4);add(lane,`native-${key}`,name,weaponExhibit(group),'Native commander equipment from the shared soldier builder. Loot variations appear beside it.',{Source:ALLY_TYPES[key].name,Scale:'4x'},18);
     }
     if(lane.key==='formations')for(const [key,recipe]of Object.entries(LANDFORM_RECIPES)){
       const sample=terrainTile(key,771);add(lane,key,recipe.label,sample.group,'An isolated sample of the real spherical formation field. Terrain dimensions retain a common 1:5 display scale. Inward cuts are dry in this exhibit.',{Peak:`${sample.high.toFixed(1)} m`,Depth:`${(-sample.low).toFixed(1)} m`,Width:`${(sample.width/SCALE).toFixed(0)} m`,Seed:sample.seed},sample.width+4);
@@ -238,7 +239,7 @@ export async function startDebugWorld(){
   viewport.addEventListener('wheel',e=>{e.preventDefault();view.distance=Math.max(8,Math.min(2200,view.distance*Math.exp(e.deltaY*.001)));},{passive:false});
   viewport.onkeydown=e=>{const moves={ArrowLeft:[30,0],ArrowRight:[-30,0],ArrowUp:[0,30],ArrowDown:[0,-30]};if(moves[e.key]){e.preventDefault();pan(...moves[e.key]);}};
   const observer=new ResizeObserver(()=>{const w=viewport.clientWidth,h=viewport.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();});observer.observe(viewport);
-  const hash=()=>{const [lane,key]=location.hash.slice(1).split('/');select(lane,key,false);};addEventListener('hashchange',hash);hash();
+  const hash=()=>{let [lane,key]=location.hash.slice(1).split('/');if(lane==='weapons')key=key?.replace(/-(ancient|technological|empowered)$/,(_,era)=>'-'+({ancient:'wood',technological:'diamond',empowered:'onyx'}[era]));select(lane,key,false);};addEventListener('hashchange',hash);hash();
   reduced.addEventListener('change',()=>{if(reduced.matches)el('motion').value='still';});
   const projected=new THREE.Vector3();
   function render(now){

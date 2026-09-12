@@ -672,3 +672,7 @@ body.end-open #fp-hud, body.end-open .weapon-cue, body.end-open .nest-marker { v
 @media(max-width:700px){.expedition-tools{width:185px;font-size:11px}.hud-top-left:has(.expedition-tools){max-height:calc(100vh - 275px)}}
 
 .overlay-card .o-actions{flex-wrap:wrap}
+.campaign-status-stack{display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);max-width:min(420px,calc(100vw - 24px));pointer-events:none}
+.campaign-status-stack .campaign-badge{position:static;transform:none;max-width:100%;flex-shrink:0}
+.campaign-status-stack #toast-anchor{position:static;transform:none;max-width:100%;max-height:20vh;overflow:hidden}
+.weapon-item.rarity-epic{border-color:var(--accent)}

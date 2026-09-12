@@ -270,7 +270,7 @@ class Ally {
     this.weaponView = null;
     this.weaponTint = 0xffffff;
     this.weaponLength = 1;
-    this.weaponEra = null; this.weaponCore = null;
+    this.weaponEra = null; this.weaponCore = null; this.weaponMaterial = null;
     this.moveNode = -1;
     this.dir.copy(dirVec).normalize();
     this.anchor.copy(anchorDir).normalize();
@@ -416,8 +416,8 @@ export class AllyManager {
     a.type = spec ? { ...a.baseType, strike: { ...spec }, reach: spec.radius || spec.range || 14 } : a.baseType;
     a.weaponFamily = spec?.weaponFamily || null;
     a.weaponVisual = visual; a.weaponView = view; a.weaponTint = tint; a.weaponLength = length;
-    a.weaponEra=appearance?.era||null;a.weaponCore=appearance?.core||null;
-    a.modelKey = visual ? `${a.typeKey}:${visual}${appearance?':'+appearance.era+':'+appearance.core:''}` : a.typeKey;
+    a.weaponEra=appearance?.era||null;a.weaponCore=appearance?.core||null;a.weaponMaterial=appearance?.material||null;
+    a.modelKey = visual ? `${a.typeKey}:${visual}${appearance?':'+appearance.era+':'+appearance.core+':'+appearance.material:''}` : a.typeKey;
     if (!this.species[a.modelKey]) this._addSpecies(a.modelKey, a.typeKey, visual,appearance);
     a.heat = 0; a.heatLock = 0; a.beamOn = null; a.beamRamp = 0;
     return true;
@@ -428,12 +428,13 @@ export class AllyManager {
     // and material as an equipped weapon. Replacing a preview discards only
     // its lightweight group; disposing these shared GPU assets would break
     // the equipped model and every matching drop still on the ground.
-    const key=`commander:${visual}:${appearance.era}:${appearance.core}`;
+    const key=`commander:${visual}:${appearance.era}:${appearance.core}:${appearance.material}`;
     if(!this.species[key])this._addSpecies(key,'commander',visual,appearance);
     const group=new THREE.Group();
     for(const part of this.species[key].parts)if(part.weapon)for(const at of part.at)if(at.joint.name==='weaponR') {
       const mesh=new THREE.Mesh(part.mesh.geometry,part.mesh.material);
       mesh.applyMatrix4(at.off);group.add(mesh);
+      if(visual==='twin'){const left=mesh.clone();left.position.x-=.42;left.position.z+=.08;group.add(left);}
     }
     group.scale.z=length;group.userData.weaponVisual=visual;
     return group;
@@ -841,13 +842,21 @@ export class AllyManager {
       let moved=false;
       for (const angle of DRIVE_SLIDES) {
         _slideBearing.copy(_driveBearing).applyAxisAngle(a.dir,angle);
-        const factor=a.mountFlying ? 1 : surfaceTravel(a,_slideBearing,distance/segments) * (a.swimming ? (a.mountWater || 1) : 1);
+        _routeStep.copy(a.dir).addScaledVector(_slideBearing,distance/segments/R).normalize();
+        const previousGround=surfaceElevation(a.dir,a.height),nextGround=surfaceElevation(_routeStep);
+        const dropping=nextGround<previousGround-.08;
+        const factor=a.mountFlying||a.airT>0||dropping ? 1 : surfaceTravel(a,_slideBearing,distance/segments) * (a.swimming ? (a.mountWater || 1) : 1);
         const step=distance/segments*factor*Math.cos(angle)/R;
         if (!(step>0)) continue;
         _axis.crossVectors(a.dir,_slideBearing).normalize();
         _routeStep.copy(a.dir).applyAxisAngle(_axis,step).normalize();
-        if (!this.enemies.nav.canStep(a.dir,_routeStep,a.mountFlying,a.moveNode)) continue;
+        if (a.mountFlying?!this.enemies.nav.canStep(a.dir,_routeStep,true,a.moveNode):!this.enemies.nav.canDrive(a.dir,_routeStep,previousGround+a.hop,a.airT>0,a.type.radius)) continue;
+        const targetHeight=terrainHeight(_routeStep.x,_routeStep.y,_routeStep.z),targetGround=surfaceElevation(_routeStep,targetHeight);
+        if(!a.mountFlying&&(a.airT>0||previousGround-targetGround>.08)){
+          a.hop=Math.max(0,a.hop+previousGround-targetGround);if(a.hop>0)a.airT=Math.max(.0001,a.airT);
+        }
         a.dir.copy(_routeStep);
+        a.height=targetHeight;
         if(CONFIG.terrain)a.moveNode=this.enemies.nav.descendNode(a.moveNode,a.dir);
         reflatten(a.fwd.applyAxisAngle(_axis,step),a.dir);
         reflatten(_driveBearing.applyAxisAngle(_axis,step),a.dir);
@@ -1198,6 +1207,7 @@ export class AllyManager {
     const landed = this.enemies.damage(best, s.dps * ramp * dt, {
       armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
     });
+    this._weaponEffect(best,s,landed);
     if (this.onBeam) this.onBeam(a, best, landed, _strikeOrigin, bestAlong);
     return 1;
   }

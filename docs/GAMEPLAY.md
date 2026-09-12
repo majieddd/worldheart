@@ -57,7 +57,7 @@ useless where everything flies (`js/towers.js:84`).
 
 ### Marks
 
-Three marks are authored per tower. The tier index in code is zero based and the
+Three base assemblies and four bounded reinforcement stages are authored per tower. The tier index in code is zero based and the
 player sees `tier + 1`, so `tierStats(type, 0)` is a freshly built tower and
 `tierCost(type, 1)` is the price of the first upgrade. That off-by-one runs
 through the whole file and through the gate at `js/game.js:585`.
@@ -615,3 +615,20 @@ Longsight, Kettle and Emberline on screen. Towers are `bolt`, `tesla`, `helios`
 against Bolt Sentinel, Arc Spire, Helios Lance. The unlock toast prints the raw
 id in capitals, so a player is told "TESLA unlocked" and then goes looking for a
 tower called Arc Spire.
+
+## Living-worlds gameplay checkpoint
+
+Amber relic objects each grant one ore. Forging costs 3, 5, 7, 9 and so on;
+only a successful craft raises the price. Six weapon families now include
+Twinfang blades and Ember scepters. Common, uncommon, rare, epic and relic
+rarities map to wood, iron, gold, diamond and onyx materials. Eras remain a
+separate silhouette/core progression. The flying mount is the Scout Saucer;
+its flight duration and recharge rules are unchanged.
+
+Earthquakes preflight their final fault shape against current ground routes and
+future nest capacity, then show that exact red pulsing surface for eight seconds.
+Disrupted established nests collapse once and stop feeding their queued mobs.
+Commander ledge drops preserve radial height and enter the existing fall model.
+Tower route footprints use the central plinth at 70% of nominal radius in the
+99 Planets mode; construction spacing and classic map footprints retain their
+existing rules. The nest approach distance is a preference, not a hard cutoff.

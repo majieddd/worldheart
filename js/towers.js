@@ -88,9 +88,8 @@ if (CONFIG.map.mode === 'space') {
   TOWER_TYPES.mortar.desc = 'Lobbed shells, area damage at the flight layer. Minimum range.';
 }
 
-// The three AUTHORED tiers are where a tower changes shape. Past them it keeps
-// its tier-3 silhouette and keeps getting stronger, for ever - there is no
-// ceiling, and price is the only thing standing in the way.
+// Three base assemblies preserve each family's silhouette. Higher marks add
+// bounded reinforcement kits while stats continue to grow without a ceiling.
 export const AUTHORED_TIERS = 3;
 
 // Cost climbs EXPONENTIALLY. Tiers 1 and 2 keep the numbers the run was
@@ -432,10 +431,30 @@ const BUILDERS = { bolt: buildBolt, mortar: buildMortar, tesla: buildTesla, cryo
 export const TOWER_SCALE = 1.45;
 
 export function buildTowerVisual(typeKey, tier) {
-  // Only three forms are authored. Past them a tower keeps its final
-  // silhouette, so an uncapped upgrade never asks for a model that does not
-  // exist - the growth after tier three is in the numbers, not the shape.
-  return BUILDERS[typeKey](Math.min(tier, AUTHORED_TIERS - 1));
+  const b=BUILDERS[typeKey](Math.min(tier,AUTHORED_TIERS-1));
+  if(tier<1)return b;
+  // Structural kits retain each working head and firing reference. Later
+  // marks add bounded reinforcement instead of scaling an entire footprint.
+  const stage=Math.min(4,1+Math.floor(tier/2)),g=b.group,head=b.head||g;
+  g.add(cyl(.59,.64,.12,8,MAT.trim,0,.17,0));
+  if(typeKey==='bolt'){
+    for(const side of [-1,1]){head.add(box(.10,.28,.50,MAT.body,side*.36,.08,-.05));for(let i=0;i<stage+1;i++)head.add(box(.13,.055,.27,MAT.trim,side*.41,.10+i*.075,-.18));}
+    if(tier>=2)head.add(box(.33,.12,.25,MAT.energySoft,0,.31,-.26));
+  }else if(typeKey==='cryo'){
+    for(let i=0;i<4+stage;i++){const a=i*Math.PI*2/(4+stage),ice=new THREE.Mesh(new THREE.ConeGeometry(.12,.55+stage*.13,5),MAT.frost);ice.position.set(Math.cos(a)*.52,.59,Math.sin(a)*.52);ice.rotation.z=-Math.cos(a)*.45;ice.rotation.x=Math.sin(a)*.45;g.add(ice);}
+  }else if(typeKey==='mortar'){
+    for(const side of [-1,1]){g.add(box(.15,.5,.45,MAT.body,side*.48,.37,0));g.add(cyl(.07,.09,.45+stage*.06,6,MAT.trim,side*.46,.65,.13));}
+    for(let i=0;i<stage;i++)head.add(box(.55,.06,.11,MAT.trim,0,.13+i*.11,-.25));
+  }else if(typeKey==='tesla'){
+    for(const side of [-1,1]){g.add(cyl(.15,.18,.55+stage*.13,8,MAT.body,side*.42,.55,0));for(let i=0;i<2+stage;i++)g.add(cyl(.18,.18,.045,8,MAT.energySoft,side*.42,.32+i*.14,0));}
+  }else if(typeKey==='helios'){
+    for(const side of [-1,1]){g.add(box(.12,.9+stage*.13,.16,MAT.trim,side*.46,.67,0));g.add(box(.055,.65+stage*.1,.18,MAT.energySoft,side*.46,.71,0));}
+    const halo=new THREE.Mesh(new THREE.TorusGeometry(.35+stage*.025,.045,5,16),MAT.trim);halo.rotation.x=Math.PI/2;halo.position.y=.75+stage*.07;head.add(halo);
+  }else if(typeKey==='warden'){
+    for(const side of [-1,1]){g.add(box(.19,.65+stage*.12,.3,MAT.body,side*.47,.49,0));g.add(box(.25,.10,.36,MAT.trim,side*.47,.85+stage*.12,0));}
+    if(tier>=2){g.add(box(.94,.14,.25,MAT.body,0,1.16,0));g.add(box(.32,.12,.04,MAT.energySoft,0,1.16,.15));}
+  }
+  b.refs.upgradeStage=stage;return b;
 }
 
 // ---------------------------------------------------------------------------

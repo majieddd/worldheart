@@ -99,22 +99,26 @@ let nWarp, nBase, nDetail, nRidge, nMoist, nRange, nCanyon, nGap;
 export let FORMATIONS = null;
 export let ECOLOGY = null;
 export const TERRAIN_FAULTS = [];
-export function addTerrainFault(dir,axis,protectedDir){
-  if(TERRAIN_FAULTS.length>=8)return null;
+export function createTerrainFault(dir,axis,protectedDir){
   const side=new THREE.Vector3().crossVectors(dir,axis).normalize();
-  const fault={dir:dir.clone(),axis:axis.clone(),side,protectedDir:protectedDir.clone(),strength:1,limit:Math.cos(44/R)};
+  return {dir:dir.clone(),axis:axis.clone(),side,protectedDir:protectedDir.clone(),strength:1,limit:Math.cos(44/R)};
+}
+export function addTerrainFault(dir,axis,protectedDir,planned=null){
+  if(TERRAIN_FAULTS.length>=8)return null;
+  const fault=planned||createTerrainFault(dir,axis,protectedDir);
   TERRAIN_FAULTS.push(fault);return fault;
+}
+export function terrainFaultDelta(f,x,y,z){
+  const dot=x*f.dir.x+y*f.dir.y+z*f.dir.z;if(dot<f.limit)return 0;
+  if(x*f.protectedDir.x+y*f.protectedDir.y+z*f.protectedDir.z>Math.cos(7/R))return 0;
+  const u=(x*f.axis.x+y*f.axis.y+z*f.axis.z)*R,v=(x*f.side.x+y*f.side.y+z*f.side.z)*R;
+  const end=1-smoothstep(20,38,Math.abs(u));
+  const ridge=10*Math.exp(-(((v-6)/11)**2)),cut=4*Math.exp(-(((v+9)/7)**2));
+  return (ridge-cut)*end*f.strength;
 }
 function faultHeight(x,y,z){
   let h=0;
-  for(const f of TERRAIN_FAULTS){
-    const dot=x*f.dir.x+y*f.dir.y+z*f.dir.z;if(dot<f.limit)continue;
-    if(x*f.protectedDir.x+y*f.protectedDir.y+z*f.protectedDir.z>Math.cos(7/R))continue;
-    const u=(x*f.axis.x+y*f.axis.y+z*f.axis.z)*R,v=(x*f.side.x+y*f.side.y+z*f.side.z)*R;
-    const end=1-smoothstep(20,38,Math.abs(u));
-    const ridge=10*Math.exp(-(((v-6)/11)**2)),cut=4*Math.exp(-(((v+9)/7)**2));
-    h+=(ridge-cut)*end*f.strength;
-  }
+  for(const f of TERRAIN_FAULTS)h+=terrainFaultDelta(f,x,y,z);
   return h;
 }
 let coastClearance=null;
@@ -383,14 +387,15 @@ function tangentBasis(dir, outA, outB) {
 
 // Gradient magnitude of the gameplay height field (base terrain, no cosmetic
 // relief), in height units per surface unit.
-export function slopeAt(dir) {
+export function slopeAt(dir, predictedFault=null) {
   const eps = CONFIG.terrain ? 0.8 / R : 0.016;
   tangentBasis(dir, _t1, _t2);
-  const h0 = terrainHeight(dir.x, dir.y, dir.z, false);
+  const sample=d=>terrainHeight(d.x,d.y,d.z,false)+(predictedFault?terrainFaultDelta(predictedFault,d.x,d.y,d.z):0);
+  const h0 = sample(dir);
   _p1.copy(dir).addScaledVector(_t1, eps).normalize();
   _p2.copy(dir).addScaledVector(_t2, eps).normalize();
-  const h1 = terrainHeight(_p1.x, _p1.y, _p1.z, false);
-  const h2 = terrainHeight(_p2.x, _p2.y, _p2.z, false);
+  const h1 = sample(_p1);
+  const h2 = sample(_p2);
   const d = eps * R;
   return Math.hypot((h1 - h0) / d, (h2 - h0) / d);
 }
@@ -2133,8 +2138,8 @@ export class World {
   }
 
   // Returns true when this hit was the one that brought it down.
-  damagePortal(p, amount) {
-    if (!p || p.destroyed || p.guardianPending) return false;
+  damagePortal(p, amount, disaster=false) {
+    if (!p || p.destroyed || (p.guardianPending&&!disaster)) return false;
     p.hp -= amount;
     p.flash = Math.max(p.flash, 0.35);
     if (p.hp > 0) return false;
