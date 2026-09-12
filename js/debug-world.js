@@ -11,8 +11,10 @@ import {formationSample} from './terrain/samples.js';
 import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './biome-visuals.js';
 import {PLANET_THEMES} from './run/planet-environments.js';
 import {makePineGeometry,makeBroadleafGeometry,makeCactusGeometry} from './world.js';
+import {animationClip} from './debug-animation.js';
+import {miniaturePlanet,MINIATURE_SEED} from './debug-planets.js';
 
-const ID=new THREE.Matrix4(),SCALE=.2;
+const SCALE=.2;
 const mat=(color,extra={})=>new THREE.MeshStandardMaterial({color,roughness:.65,flatShading:true,...extra});
 const modelMats=()=>({body:MAT.body,trim:MAT.trim,dark:MAT.dark,grip:mat(0x755744),gold:MAT.gemGold,energy:MAT.energy,cloth:mat(0x385e75)});
 const waitFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
@@ -23,21 +25,49 @@ function articulated(build,isEnemy,key){
     const attachments=isEnemy?part.on.map(([name,off])=>({joint:skeleton.get(name),off})):part.at;
     for(const at of attachments){const mesh=new THREE.Mesh(part.geo,part.mat);mesh.matrixAutoUpdate=false;group.add(mesh);bindings.push({mesh,...at});}
   }
-  const state=freshSoldierState(),unit={type:ALLY_TYPES[key],phase:0,hop:0,airT:0,vertVel:0,flashT:0,swingT:0,swingDur:.85,heat:0,hopPrev:0,plates:4};
+  const type=(isEnemy?ENEMY_TYPES:ALLY_TYPES)[key],state=freshSoldierState(),clip={},root=new THREE.Matrix4();
+  const unit={type,phase:0,hop:0,airT:0,vertVel:0,flashT:0,swingT:0,swingDur:.85,heat:0,hopPrev:0,plates:4,alt:type.flying?1:0};
+  const context={t:0,phase:0,gait:0,move:0,wind:0,strike:1,lunge:0,flinch:0,stun:0,shield:0,turn:0,dying:0,scale:1};
   function update(t,motion){
-    const cycle=t%2.4,walk=motion==='walk'?1:0;
+    animationClip(t,motion,isEnemy,clip);
+    const name=clip.name,local=clip.local,k=clip.strength,walk=name==='walk'||name==='sprint'||name==='strafe'?k:0;
+    group.userData.animation=name;root.identity();
     skeleton.reset();
     if(isEnemy){
-      const wind=motion==='attack'&&cycle<.5?cycle/.5:0;
-      const strike=motion==='attack'&&cycle>=.5&&cycle<1?(cycle-.5)/.5:1;
-      build.pose(unit,{t,phase:0,gait:t*.65,move:walk,wind,strike,lunge:Math.sin(strike*Math.PI),flinch:0,stun:0,shield:0,turn:0,dying:0,scale:1});
+      const strikeTime=local%type.swing;
+      context.t=t;context.gait=t*.65;context.move=walk;
+      context.wind=name==='attack'&&strikeTime<type.wind?strikeTime/type.wind:0;
+      context.strike=name==='attack'&&strikeTime>=type.wind?Math.min(1,(strikeTime-type.wind)/.25):1;
+      context.lunge=Math.sin(context.strike*Math.PI);
+      context.flinch=name==='hurt'?k*(1-local/2.4):0;
+      context.stun=name==='stun'?k:0;context.shield=name==='shield'?k:0;
+      context.turn=name==='turn'?Math.sin(local*3)*k:0;
+      context.dying=name==='collapse'?Math.min(1,local/1.1)*k:0;
+      build.pose(unit,context);
     }else{
-      state.moveT=walk;state.gaitT=t*7;unit.swingT=motion==='attack'&&cycle<.85?.85-cycle:0;
+      state.moveT=walk;state.sprint=name==='sprint';state.strafeT=name==='strafe'?Math.sin(local*3)*k:0;state.gaitT=t*(state.sprint?9:7);
+      const jump=name==='jump'&&local<.95;
+      unit.airT=jump?local:0;unit.vertVel=jump?Math.cos(local/.95*Math.PI):0;
+      unit.hop=jump?Math.sin(local/.95*Math.PI)*.65:0;root.makeTranslation(0,unit.hop,0);
+      state.landT=name==='jump'&&local>=.95?Math.max(0,.28-(local-.95)):0;
+      unit.flashT=name==='hurt'?.1*k*Math.max(0,1-local/1.2):0;
+      unit.swingT=name==='attack'&&local%1.2<.85?.85-local%1.2:0;
+      unit.swingSide=Math.floor(local/1.2)%2?-1:1;unit.beamOn=name==='attack'&&k>.1;unit.heat=unit.beamOn?k*.7:0;
       poseSoldier(skeleton,build.spec,unit,state,t);
     }
-    skeleton.compute(ID);for(const b of bindings)b.mesh.matrix.multiplyMatrices(b.joint.world,b.off);
+    skeleton.compute(root);for(const b of bindings)b.mesh.matrix.multiplyMatrices(b.joint.world,b.off);
   }
   update(0,'still');return {group,update};
+}
+
+function weaponExhibit(assembly){
+  // Held weapons point below their local origin. Lift the complete assembly
+  // above the plinth, then wrap it so lane placement cannot erase that lift.
+  assembly.updateMatrixWorld(true);
+  const bounds=new THREE.Box3().setFromObject(assembly),center=bounds.getCenter(new THREE.Vector3());
+  assembly.position.set(-center.x,.65-bounds.min.y,-center.z);
+  const group=new THREE.Group();group.add(assembly);
+  group.userData.focusY=.65+(bounds.max.y-bounds.min.y)/2;return group;
 }
 
 function terrainTile(type,seed){
@@ -126,13 +156,13 @@ export async function startDebugWorld(){
     }
     if(lane.key==='weapons')for(const [key,family]of Object.entries(FAMILIES))for(const era of ERAS){
       const mats=modelMats(),b=buildWeapon(family.visual,era,mats),group=new THREE.Group();for(const p of b.parts){const mesh=new THREE.Mesh(p.geo,weaponAppearanceMaterial(mats,p.mat,{era,core:'tempered'}));mesh.userData.energy=p.mat===mats.energy;group.add(mesh);}group.rotation.x=-.4;group.rotation.y=-.6;group.scale.setScalar(4);
-      const item=add(lane,`${key}-${era}`,`${family.name} · ${era}`,group,'Shared held, loot and soldier weapon geometry. Core selection previews the actual energy tint; stat-only grip/head rolls do not add separate models.',{Family:family.kind,Era:era,Scale:'4x'},18);
+      const item=add(lane,`${key}-${era}`,`${family.name} · ${era}`,weaponExhibit(group),'Shared held, loot and soldier weapon geometry. Core selection previews the actual energy tint; stat-only grip/head rolls do not add separate models.',{Family:family.kind,Era:era,Scale:'4x'},18);
       item.weapon={family:key,era,mats,core:'tempered'};
     }
     if(lane.key==='weapons')for(const [key,name]of [['duelist','Native twin swords'],['oracle','Native beam staff']]){
       const build=buildSoldier(key,modelMats()),b=articulated(build,false,key);b.update(0,'still');const group=new THREE.Group();
       for(const part of build.parts)for(const at of part.at)if(['weaponR','weaponL'].includes(at.joint.name)){const mesh=new THREE.Mesh(part.geo,part.mat);mesh.applyMatrix4(new THREE.Matrix4().multiplyMatrices(at.joint.world,at.off));group.add(mesh);}
-      group.scale.setScalar(4);add(lane,`native-${key}`,name,group,'Native commander equipment from the soldier builder. Separate from the four loot families.',{Source:ALLY_TYPES[key].name,Scale:'4x'},18);
+      group.scale.setScalar(4);add(lane,`native-${key}`,name,weaponExhibit(group),'Native commander equipment from the soldier builder. Separate from the four loot families.',{Source:ALLY_TYPES[key].name,Scale:'4x'},18);
     }
     if(lane.key==='formations')for(const [key,recipe]of Object.entries(LANDFORM_RECIPES)){
       const sample=terrainTile(key,771);add(lane,key,recipe.label,sample.group,'An isolated sample of the real spherical formation field. Terrain dimensions retain a common 1:5 display scale. Inward cuts are dry in this exhibit.',{Peak:`${sample.high.toFixed(1)} m`,Depth:`${(-sample.low).toFixed(1)} m`,Width:`${(sample.width/SCALE).toFixed(0)} m`,Seed:sample.seed},sample.width+4);
@@ -140,8 +170,10 @@ export async function startDebugWorld(){
     }
     if(lane.key==='biomes')for(const [key,b]of Object.entries(BIOME_VISUALS))add(lane,key,b.name,biomeTile(key),'Production biome palette and scenery geometry on a flat sample plot.',{Dressing:b.decor},28);
     if(lane.key==='themes')for(const [key,theme]of Object.entries(PLANET_THEMES))if(key!=='auto'){
-      const s=THEME_SURFACES[key],item=add(lane,key,theme.name,biomeTile(s.biome,key),s.note,{Surface:BIOME_VISUALS[s.biome].name},28);
+      const s=THEME_SURFACES[key],group=miniaturePlanet(key),sample=group.userData.miniature;
+      const item=add(lane,key,theme.name,group,`${s.note} A miniature of the production terrain field with its biome belts, formations and scenery.`,{Biomes:Object.keys(sample.biomes).length,Formations:sample.formations.length,Peak:`${sample.max.toFixed(0)} m`,Depth:`${(-sample.min).toFixed(0)} m`,Seed:sample.seed},32);
       item.planet=key;
+      animated.push({item,update:t=>{group.children[0].rotation.y=t*.09;}});await waitFrame();
     }
     const strip=new THREE.Mesh(new THREE.PlaneGeometry(lane.width,2),mat(0x4e7588));strip.rotation.x=-Math.PI/2;strip.position.set(lane.width/2,-.5,lane.z+22);scene.add(strip);
     lane.label=document.createElement('div');lane.label.className='label lane-title';lane.label.textContent=`${lane.name} / ${lane.items.length}`;labels.append(lane.label);
@@ -149,7 +181,15 @@ export async function startDebugWorld(){
   function frame(){
     camera.position.set(target.x+Math.sin(view.yaw)*Math.cos(view.pitch)*view.distance,target.y+Math.sin(view.pitch)*view.distance,target.z+Math.cos(view.yaw)*Math.cos(view.pitch)*view.distance);camera.lookAt(target);
   }
-  function focus(item){target.set(item.x,Math.max(item.lane==='units'?3:0,Number.parseFloat(item.metrics.Peak||0)*SCALE*.25),item.z);view.distance=item.lane==='weapons'?17:item.lane==='units'?25:Math.max(25,item.width*1.7);view.pitch=.65;frame();}
+  function focus(item){
+    target.set(item.x,item.lane==='themes'?15:item.group.userData.focusY??Math.max(item.lane==='units'?3:0,Number.parseFloat(item.metrics.Peak||0)*SCALE*.25),item.z);
+    view.distance=item.lane==='weapons'?17:item.lane==='units'?25:Math.max(25,item.width*1.7);
+    if(item.lane==='themes'){
+      const radius=10+item.group.userData.miniature.max/24+.6,angle=Math.atan(Math.tan(camera.fov*Math.PI/360)*Math.min(1,camera.aspect));
+      view.distance=Math.max(40,radius/Math.sin(angle)*1.08);
+    }
+    view.pitch=item.lane==='themes'?.3:.65;frame();
+  }
   function select(laneKey,key,hash=true){
     const lane=lanes.find(x=>x.key===laneKey)||lanes[0];selected=lane.items.find(x=>x.key===key)||lane.items[0];
     el('exhibit').replaceChildren(...lane.items.map(item=>{const o=new Option(item.name,item.key);o.selected=item===selected;return o;}));
@@ -158,8 +198,7 @@ export async function startDebugWorld(){
     el('metrics').innerHTML=Object.entries(selected.metrics).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('');
     el('core').disabled=!selected.weapon;
     el('core').value=selected.weapon?.core||'tempered';
-    el('motion').disabled=selected.lane!=='units';
-    if(selected.planet){const a=document.createElement('a');a.textContent='Explore a complete planet';a.href=`./?map=ninetynine&campaign=0&worldgen=1&terrain=varied&seed=4206018157&planet=${selected.planet}`;a.target='_blank';a.rel='noopener';el('description').append(document.createElement('br'),a);}
+    if(selected.planet){const a=document.createElement('a');a.textContent='Explore a complete planet';a.href=`./?map=ninetynine&campaign=0&worldgen=1&terrain=varied&seed=${MINIATURE_SEED}&planet=${selected.planet}`;a.target='_blank';a.rel='noopener';el('description').append(document.createElement('br'),a);}
     el('status').textContent=`${lane.name}: ${lane.items.indexOf(selected)+1} of ${lane.items.length}. ${exhibits.length} exhibits across ${lanes.length} lanes.`;
     focus(selected);if(hash)history.replaceState(null,'',`#${lane.key}/${selected.key}`);
   }
@@ -179,28 +218,36 @@ export async function startDebugWorld(){
   };
   let drag=null;
   viewport.oncontextmenu=e=>e.preventDefault();
-  viewport.onpointerdown=e=>{viewport.focus();viewport.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,pan:e.shiftKey||e.button===2};};
+  viewport.onpointerdown=e=>{e.preventDefault();viewport.focus();viewport.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,pan:e.shiftKey||e.button===2||e.button===1};};
   viewport.onpointerup=()=>{drag=null;};viewport.onpointercancel=()=>{drag=null;};
-  function pan(dx,dy){const s=view.distance*.0015;target.x+=(-dx*Math.cos(view.yaw)+dy*Math.sin(view.yaw))*s;target.z+=(dx*Math.sin(view.yaw)+dy*Math.cos(view.yaw))*s;}
+  function pan(dx,dy){
+    // Grab the floor in screen space. Vertical drag must account for the
+    // orbit pitch and move the scene in the same direction as the pointer.
+    const s=2*view.distance*Math.tan(camera.fov*Math.PI/360)/viewport.clientHeight,y=dy/Math.sin(view.pitch);
+    target.x+=(-dx*Math.cos(view.yaw)-y*Math.sin(view.yaw))*s;
+    target.z+=(dx*Math.sin(view.yaw)-y*Math.cos(view.yaw))*s;
+  }
   viewport.onpointermove=e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.x=e.clientX;drag.y=e.clientY;if(drag.pan)pan(dx,dy);else{view.yaw-=dx*.006;view.pitch=Math.max(.12,Math.min(1.5,view.pitch+dy*.006));}};
   viewport.addEventListener('wheel',e=>{e.preventDefault();view.distance=Math.max(8,Math.min(2200,view.distance*Math.exp(e.deltaY*.001)));},{passive:false});
-  viewport.onkeydown=e=>{const moves={ArrowLeft:[30,0],ArrowRight:[-30,0],ArrowUp:[0,-30],ArrowDown:[0,30]};if(moves[e.key]){e.preventDefault();pan(...moves[e.key]);}};
+  viewport.onkeydown=e=>{const moves={ArrowLeft:[30,0],ArrowRight:[-30,0],ArrowUp:[0,30],ArrowDown:[0,-30]};if(moves[e.key]){e.preventDefault();pan(...moves[e.key]);}};
   const observer=new ResizeObserver(()=>{const w=viewport.clientWidth,h=viewport.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();});observer.observe(viewport);
   const hash=()=>{const [lane,key]=location.hash.slice(1).split('/');select(lane,key,false);};addEventListener('hashchange',hash);hash();
   reduced.addEventListener('change',()=>{if(reduced.matches)el('motion').value='still';});
   const projected=new THREE.Vector3();
   function render(now){
-    if(disposed)return;const dt=Math.min(.05,(now-last)/1000);last=now;
+    if(disposed)return;const dt=Math.min(1/30,(now-last)/1000);last=now;
     const motion=reduced.matches?'still':el('motion').value;if(motion!=='still')time+=dt;
     frame();
-    for(const {item,update}of animated)if(item.group.position.distanceTo(camera.position)<150)update(motion==='still'?0:time,motion);
+    for(const {update}of animated)update(motion==='still'?0:time,motion);
+    const clip=reduced.matches?'Motion paused by reduced-motion preference':motion==='still'?'Motion paused':selected.lane==='units'?`Playing: ${selected.group.userData.animation}`:motion==='cycle'?'Units cycle in their lane; planet previews rotate.':`Unit motion: ${motion}. Planet previews rotate.`;
+    if(el('clip').textContent!==clip)el('clip').textContent=clip;
     renderer.render(scene,camera);
     for(const item of exhibits){projected.set(item.x,0,item.z+item.width*.45).project(camera);
-      const visible=projected.z>0&&projected.z<1&&Math.abs(projected.x)<.94&&Math.abs(projected.y)<.92&&view.distance<190;
+      const visible=item.lane===selected.lane&&(item.lane!=='themes'||item===selected)&&projected.z>0&&projected.z<1&&Math.abs(projected.x)<.94&&Math.abs(projected.y)<.92&&view.distance<190;
       item.label.hidden=!visible;if(visible){item.label.style.left=`${(projected.x*.5+.5)*viewport.clientWidth}px`;item.label.style.top=`${(-projected.y*.5+.5)*viewport.clientHeight}px`;}}
     for(const lane of lanes){projected.set(lane.width/2,0,lane.z+26).project(camera);const visible=view.distance>=190&&projected.z>0&&projected.z<1&&Math.abs(projected.x)<.94&&Math.abs(projected.y)<.95;lane.label.hidden=!visible;if(visible){lane.label.style.left=`${(projected.x*.5+.5)*viewport.clientWidth}px`;lane.label.style.top=`${(-projected.y*.5+.5)*viewport.clientHeight}px`;}}
     requestAnimationFrame(render);
   }
-  window.DEBUG_WORLD={scene,camera,renderer,lanes,exhibits,select,focus,view,target,get selected(){return selected;},get time(){return time;}};
+  window.DEBUG_WORLD={scene,camera,renderer,lanes,exhibits,select,focus,view,target,previewAnimation:(t,mode='cycle')=>{for(const {update}of animated)update(t,mode);},get selected(){return selected;},get time(){return time;}};
   addEventListener('pagehide',event=>{if(!event.persisted){disposed=true;observer.disconnect();renderer.dispose();}});requestAnimationFrame(render);
 }

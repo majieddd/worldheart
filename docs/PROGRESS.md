@@ -1,6 +1,14 @@
 # 99 Planets development progress
 
 Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
+Active: Codex on `fix/debug-world-inspection`, based on V2 `bc814c8`, owns
+U56-U59: intuitive grab pan, fully visible weapons, all-unit animation cycles
+and ten miniature themed spheres. Implementation, 155 targeted checks, 118
+gallery checks, five-map regression and native performance pass locally.
+A fresh legal 15-wave victory and extraction pass with 22 lives. V2
+publication and public verification are in progress.
+[Inspection fixes and retained evidence](qa/implementation/DEBUG-INSPECTION.md).
+
 Published and publicly verified: Codex on `feature/extreme-worlds-and-debug-gallery`, based on V2 `009e873`,
 owns U52-U55: stronger early tower reach, extreme planet ecology, thirty distinct
 formations and a flat Debug World using real models and terrain. 288 tests,

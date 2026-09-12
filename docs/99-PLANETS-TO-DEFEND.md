@@ -123,6 +123,14 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 ### Terrain traversal and flight
 
+U56-U59 follow-up: Debug World now uses grab-style right-drag, centered weapons
+above their plinths, automatic full animation sequences on every unit, and
+ten miniature spheres from the production terrain/biome field. Local
+verification passes; publication is in progress. The
+[inspection record](qa/implementation/DEBUG-INSPECTION.md) preserves the
+weapon occlusion missed by the older finite-geometry check and the expanded
+acceptance. Full campaign/device/balance gates remain separate.
+
 U52-U55 is published and publicly verified through PR #35: 158 public browser
 cases and 226 asset/source comparisons pass. It extends the preview to ten visibly distinct planet themes and thirty
 formation recipes in landforms v7. A shared visual catalogue supplies matching

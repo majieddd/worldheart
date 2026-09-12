@@ -106,6 +106,7 @@ export const MAPS = {
 };
 
 const mapKey = (() => {
+  if (/\/debug\.html$/.test(location.pathname || '')) return 'ninetynine';
   const q = url.get('map');
   if (q && MAPS[q]) return q;
   const s = stored('whMap');
