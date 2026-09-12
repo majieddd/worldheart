@@ -2,9 +2,16 @@
 // Three.js. The core decides WHAT happened; this file decides what it looks
 // like. Nothing here leaks back into js/run.
 
+import { preparation } from '../preparation.js';
+import { MountController } from '../mounts.js';
+import { OreField } from '../ore-field.js';
+import { PlanetWeather } from '../weather.js';
+import { expeditionControls } from '../ui-expedition.js';
 import { createRun } from '../run/run.js';
 import { makeRng } from '../run/rng.js';
-import { MAX_HEART_LEVEL, HEART_RINGS } from '../run/schedule.js';
+import { MAX_HEART_LEVEL, HEART_RINGS, TOTAL_WAVES } from '../run/schedule.js';
+import { ALLY_TYPES } from '../allies.js';
+import { COMMANDERS as COMMANDER_STATS, commanderStats, scaleWeapon, createRespawn, createOreLedger, MOUNTS } from '../run/expedition.js';
 import { MODS, TOWER_TYPES } from '../towers.js';
 import { EVO } from '../enemies.js';
 import { SIM_RANDOM } from '../noise.js';
@@ -21,7 +28,7 @@ import { UnitRoutes } from '../unit-routes.js';
 import { nestSite } from '../nest-sites.js';
 import { ThreatGuides } from '../threat-guides.js';
 import { campaignStore } from './campaign-store.js';
-import { beginAssault, awardWave, resolveAssault, updateSalvage, extractPlanet, startExpedition } from '../run/campaign.js';
+import { beginAssault, awardWave, resolveAssault, updateSalvage, extractPlanet, startExpedition, continueEndless } from '../run/campaign.js';
 import { CampaignPanel } from '../ui-campaign.js';
 import { planetDefinition } from '../run/planets.js';
 
@@ -81,7 +88,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // is never panned out over ground they cannot use yet, and how far they may
     // pull back grows with the territory they hold.
     rig.frontierTheta = theta;
-    if (rig.confine) rig.confine.maxAng = theta * 1.02;
+    if (rig.confine) rig.confine.maxAng = Math.min(Math.PI, theta * 1.02);
     if (changed && overview) rig.targetDist = rig.distMax;
     // Possession reads this to fog the view once a unit walks out past it.
     if (possession) possession.frontier = game.frontier;
@@ -160,6 +167,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // no events, and the gold goes back, so a stray B can never charge for
   // nothing.
   function tryUpgradeHeart() {
+    if(game.terrainBusy)return false;
     if (game.state !== 'playing' || run.getPhase() !== 'building') return false;
     if (possession?.active && !possession.linked) {
       ui.toast('Return inside the frontier to control the base', 'warn');
@@ -230,15 +238,17 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         if (paid.interest > 0) ui.toast(`Interest +${paid.interest}`, 'info');
         if (paid.healed > 0) ui.toast(`Worldheart recovered ${paid.healed} life`, 'info');
       } else if (e.type === 'runWon') {
+        // Both campaign and sandbox victories leave a safe salvage field.
+        for(const enemy of [...enemies.active])enemies._release(enemy);
+        waves.raidQueue=[];waves.queues=[];
         if(campaign){
           commander.swingT=0;commander.strikePending=false;inventory.settle(false);syncWeapon();
           campaign.commit(s=>resolveAssault(s,assaultId,'victory',salvageSnapshot()));
           // Surviving raiders disperse when the planet falls silent. Salvage
           // cannot race a late leak or an enemy still swinging at the player.
-          for(const enemy of [...enemies.active])enemies._release(enemy);
-          waves.raidQueue=[];waves.queues=[];showCampaignReceipt();
+          showCampaignReceipt();
         }else{
-          const progress = bankVictory();
+          const progress = victoryBanked ? loadProfile() : bankVictory(); victoryBanked = true;
           ui.showEnd(true, `the planet is yours - ${progress.planetsBeaten} held`);
         }
       }
@@ -262,7 +272,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // dropped. Returning early here let the director run the next wave while the
   // core stood still, so the two counters drifted apart a wave at a time and
   // the run silently stopped expanding, unlocking and evolving on schedule.
-  let pendingClears = 0;
+  let pendingClears = 0, victoryBanked = false;
 
   const prevClear = waves.onWaveClear;
   waves.onWaveClear = (n, reward) => {
@@ -308,7 +318,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     const count = newNestCount(wave);
     const fresh = world.portals.filter(p => p.established && p.sourceWave === wave);
     for (let i=fresh.length; i<count; i++) {
-      const guardian = wave === CONFIG.waves.count;
+      const guardian = wave % TOTAL_WAVES === 0;
       const p = establishNest(world.portals.filter(p => p.established).length, wave, guardian);
       if (!p) {
         // One healthy nest still starts a milestone wave. If none can fit,
@@ -359,7 +369,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   game.uncappedTiers = true;
 
   // The RUN decides when the planet is won, not the wave director. Both count
-  // to fifteen, so leaving the classic hook armed meant two endings raced for
+  // to ten, so leaving the classic hook armed meant two endings raced for
   // the same overlay.
   waves.onVictory = () => {};
 
@@ -368,30 +378,38 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   game.onCardSpent = (index) => { run.playCard(index); syncFromRun(); };
 
   // ---- commanders -------------------------------------------------------
-  // Drawn from what the profile has unlocked, on the run's own seeded RNG so a
-  // seed still replays identically.
+  // The player chooses a free roster member. A saved expedition retains its
+  // leader until the player explicitly starts a fresh route.
   const COMMANDERS = ['commander', 'duelist', 'marksman', 'bombardier', 'oracle'];
   function pickCommander() {
     if(expedition?.commander)return expedition.commander;
-    const owned = COMMANDERS.filter((k) => profile.commanders.includes(k));
-    const pool = owned.length ? owned : ['commander'];
-    return pool[Math.floor(rng() * pool.length) % pool.length];
+    const chosen = new URLSearchParams(location.search).get('commander');
+    return COMMANDERS.includes(chosen) ? chosen : preparation().commander;
   }
 
-  // One is granted at the start of the run and is permanent. Losing it ends
-  // the run, which is the entire reason a trip into the fog is a gamble.
+  // Safe territory offers timed recovery. A death beyond its current radius
+  // ends the assault, making exploration a risk even with a healthy heart.
   let commander = null;
+  const respawn = createRespawn();
+  let fallenKey = null;
   if (allies && centre) {
     // Which commander leads the run. The archetypes play very differently, so
     // this is a real choice rather than a skin - and it is the hook the talent
     // tree hangs its commander unlocks on.
     commander = allies.spawn(pickCommander(), centre, centre, 8);
-    allies.onCommanderLost = () => {
+    allies.onCommanderLost = dead => {
+      if (run.getPhase() === 'victory' || run.getPhase() === 'defeat') return;
+      const inside = Math.acos(Math.max(-1,Math.min(1,dead.dir.dot(centre)))) <= frontierTheta + 1e-7;
+      if (possession.unit === dead) possession.exit(true);
+      // Hold this dead identity outside the generic pool until its replacement is spawned.
+      const pooled = allies.pool.indexOf(dead); if (pooled >= 0) allies.pool.splice(pooled,1);
+      fallenKey = dead.typeKey; crystals.loseCarried();
+      if (respawn.die(inside) === 'respawning') { ui.toast('Commander fell inside the base. Respawning in 30 seconds.', 'warn'); return; }
       if(!run.loseRun())return;
       crystals.loseCarried();
       if(campaign)campaign.commit(s=>resolveAssault(s,assaultId,'defeat'));
       game.state = 'defeat';
-      ui.showEnd(false, 'the commander fell');
+      ui.showEnd(false, 'The commander fell outside the base');
       campaignPanel?.update();
     };
     // A commander buff appearing or vanishing has to reach the towers, and it
@@ -418,9 +436,15 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const nearbyLoot = () => commander.active && !commander.dead ? loot.nearby(allies.worldPos(commander, _up)) : [];
   function syncWeapon() {
     const item = inventory.active === 'basic' ? basic : inventory.current;
-    const signature = JSON.stringify([inventory.active,item]);
+    const signature = JSON.stringify([inventory.active,item,run.getHeartLevel(),commander.id,commander.mountKey||'none']);
     if (signature === weaponSignature || busyWeapon()) return;
-    const spec = item ? weaponStats(item,commander.typeKey) : null;
+    if (!commander.active || commander.dead) return;
+    const stats = commanderStats(commander.typeKey,run.getHeartLevel());
+    const fraction = commander.hp / commander.hpMax;
+    commander.hpMax = stats.health * (allies.healthMultiplier || 1); commander.hp = Math.max(1,commander.hpMax * fraction);
+    const original = ALLY_TYPES[commander.typeKey];
+    commander.baseType = { ...original, speed: 3 * stats.speed, dps: original.dps * stats.power };
+    const spec = scaleWeapon(item ? weaponStats(item,commander.typeKey) : original.strike,commander.typeKey,run.getHeartLevel(),commander.mountKey);
     const family = item && FAMILIES[item.family];
     const appearance=item?{era:item.era,core:item.parts.core}:null;
     if (allies.setWeapon(commander,spec,family?.visual,family?.view,0xffffff,item?.parts.head==='long'?1.2:1,appearance)) {
@@ -432,7 +456,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     inventory,
     previewModel,
     inspect:id=>loot.entries.get(id),
-    canInteract: () => game.state === 'playing' && ['building','victory'].includes(run.getPhase()) && (!campaign||['assault','victory'].includes(campaign.expeditionStatus())) && commander.active && !commander.dead,
+    canInteract: () => !game.terrainBusy && game.state === 'playing' && ['building','victory'].includes(run.getPhase()) && (!campaign||['assault','victory'].includes(campaign.expeditionStatus())) && commander.active && !commander.dead,
     nearby: nearbyLoot,
     request(op) {
       if (!this.canInteract()) return false;
@@ -468,7 +492,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     ui.toast(`${count === 1 ? 'Weapon' : `${count} weapons`} collected. I to compare and equip.`, 'info');
   }
   const weaponPanel = new WeaponPanel({game,possession,ui,api:weaponApi,rules:{
-    name:weaponName,stats:item=>weaponStats(item,commander.typeKey),inspectStats:item=>weaponStats(item,commander.typeKey,true),parts:PARTS,
+    name:weaponName,stats:item=>scaleWeapon(weaponStats(item,commander.typeKey),commander.typeKey,run.getHeartLevel(),commander.mountKey),inspectStats:item=>scaleWeapon(weaponStats(item,commander.typeKey,true),commander.typeKey,run.getHeartLevel(),commander.mountKey),parts:PARTS,
     compatible:family=>compatible(commander.typeKey,family),validPart,trait:COMPATIBILITY[commander.typeKey].label,
   }});
   const previousKill = enemies.onKill;
@@ -528,7 +552,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     ui.onCampaignRetry=()=>campaignApi.reload();
     ui.onBegin=()=>{
       if(restoredVictory){
-        ui.el['title-overlay'].classList.remove('show');game.state='playing';waves.state='idle';waves.wave=15;
+        ui.el['title-overlay'].classList.remove('show');game.state='playing';waves.state='idle';waves.wave=TOTAL_WAVES;
         const v=expedition.assault?.victory;if(v){game.kills=v.kills;game.score=v.score;game.lives=v.lives;}
         showCampaignReceipt();return false;
       }
@@ -802,12 +826,48 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       distance, direction, swimming: commander.swimming, canDeposit: distance <= 4.5 && !game.paused && crystals.carried.length > 0 });
   }
 
+  const requestedMount=new URLSearchParams(location.search).get('mount');
+  const mounts=new MountController({scene:game.scene,allies,possession,commander:()=>commander,choice:Object.hasOwn(MOUNTS,requestedMount)?requestedMount:preparation().mount,ui});
+  const ore=createOreLedger();
+  const oreField=new OreField({scene:game.scene,nav,centre,ledger:ore,commander:()=>commander,allies,ui,rng:makeRng(CONFIG.seed^0x814ca)});
+  const destroyed=allies.onPortalDestroyed;
+  allies.onPortalDestroyed=p=>{destroyed?.(p);oreField.add(_up.copy(p.group.position).normalize(),2);};
+  game.freeTowerCredits=new Map();
+  function craft(){
+    if(game.state!=='playing'||game.paused||game.terrainBusy||run.getPhase()!=='building')return false;
+    const tower=ore.craft(homeDistance()<=6,()=>run.craftTower());
+    if(!tower){ui.toast('Forge near the heart with 3 relic ore and a free card slot.', 'info');return false;}
+    const def=TOWER_TYPES[tower];game.freeTowerCredits.set(def,(game.freeTowerCredits.get(def)||0)+1);
+    syncFromRun();ui.toast(def.name+' forged. Place the next matching card for free.','info');ui.audio?.play('upgrade');return tower;
+  }
+  function startEndlessRun(){
+    if(run.getPhase()!=='victory'||run.isEndless())return false;
+    if(campaign){const result=campaign.commit(s=>continueEndless(s,assaultId));if(!result.ok)return false;}
+    if(!run.startEndless())return false;
+    waves.endless=true;waves.state='countdown';waves.countdown=20;waves.victoryFired=false;
+    game.state='playing';game.paused=false;ui._ended=false;
+    ui.el['end-overlay'].classList.remove('show');document.body.classList.remove('end-open');possession.suspend(false);
+    syncFromRun();campaignPanel?.update();ui.toast('Endless begins. Leave through Expedition kit at the heart when ready.', 'info');return true;
+  }
+  function finishEndlessRun(){
+    if(game.terrainBusy)return false;
+    if(game.paused||homeDistance()>6){ui.toast('Return within 6m of the heart to finish Endless.', 'info');return false;}
+    const events=run.finishEndless();if(!events.length)return false;
+    handle(events);return true;
+  }
+  const weather=new PlanetWeather({scene:game.scene,nav,world,allies,enemies,game,commander:()=>commander,centre,ui,oreField});
+  const started=waves.onWaveStart;waves.onWaveStart=(n,comp)=>{started?.(n,comp);weather.wave(n);};
+  const expeditionUi=expeditionControls({ui,game,lockedCommander:expedition?.commander,api:{commander:()=>commander,run,respawn,mounts,ore,weather,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun}});
+
   seedCaches(run.getFrontierTheta());
   syncFromRun();
   updateCrystals();
 
   return {
     run,
+    get commander() { return commander; },
+    respawn,
+    mounts,ore,oreField,weather,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
     crystals,
     depositCrystals,
     inventory,
@@ -817,12 +877,20 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     weapons: weaponApi,
     weaponPanel,
     campaign:campaignApi,
-    renderEffects(dt) { loot.update(dt); unitRoutes.update(dt); threats.update(); weaponPanel.update(); if(campaignPanel){campaignPanel.badge.hidden=game.state==='title';} },
+    renderEffects(dt) { weather.advanceShift(); expeditionUi.update(); if(game.terrainBusy)return; loot.update(dt); unitRoutes.update(dt); threats.update(); weaponPanel.update(); if(campaignPanel){campaignPanel.badge.hidden=game.state==='title';} },
     // The same path the panel and the B key use, exposed so a scripted run
     // can buy a level without synthesising a click.
     upgradeHeart: tryUpgradeHeart,
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
+      const activeDt=run.getPhase()==='building'?dt*game.speed:0;
+      mounts.update(activeDt);oreField.update(activeDt);weather.update(activeDt);
+      if(game.terrainBusy)return;
+      if (run.getPhase() !== 'drafting' && respawn.tick(dt * game.speed)) {
+        const old = commander; commander = allies.spawn(fallenKey,centre,centre,12);
+        if (!commander) { commander = old; respawn.die(true); }
+        else { allies.pool.push(old); weaponSignature=''; syncWeapon(); syncFromRun(); ui.toast('Commander restored at the heart. Click to take control.', 'info'); }
+      }
       if(inventory.settle(busyWeapon()))persistSalvage(); syncWeapon();
       collectNearbyWeapons();
       updateCrystals();

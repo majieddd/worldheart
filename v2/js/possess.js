@@ -50,21 +50,21 @@ const JUMP_BUFFER = 0.14;
 // Locomotion. Rates are per second toward the target velocity: a tenth of a
 // second to full speed, a little less to stop, and almost no control in the
 // air so a jump commits you to its arc.
-const ACCEL = 14;
-const DECEL = 18;
+const ACCEL = 11;
+const DECEL = 15;
 const AIR_CONTROL = 3.5;
 const SPRINT_MUL = 1.45;
-const SPRINT_FOV = 7;           // degrees of lens widening at full sprint
+const SPRINT_FOV = 3;           // degrees of lens widening at full sprint
 
 // Head bob. Vertical runs at twice the stride rate (one dip per footfall),
 // lateral and roll at the stride rate (one sway per pair), which is the
 // figure-eight a real head traces. Amplitudes scale with the body's smoothed
 // speed so a creeping start does not thump.
-const BOB_Y = 0.055;
-const BOB_X = 0.032;
-const BOB_ROLL = 0.020;
-const STRAFE_ROLL = 0.045;      // radians of lean at full strafe
-const SPRINT_BOB = 1.5;
+const BOB_Y = 0.022;
+const BOB_X = 0.014;
+const BOB_ROLL = 0.004;
+const STRAFE_ROLL = 0.010;      // radians of lean at full strafe
+const SPRINT_BOB = 1.15;
 
 // The landing spring: a critically damped second-order system on the eye
 // height, kicked by touchdown speed. k and c give a ~0.3 s settle.
@@ -334,7 +334,7 @@ export class Possession {
       // checks possession before it toggles). F stays as an alias.
       if ((e.code === 'Space' || e.code === 'KeyF') && !e.repeat) {
         e.preventDefault();
-        if (!this.jump()) this.jumpBuffer = JUMP_BUFFER;
+        if (this.unit.mountKey !== 'skyray' && !this.jump()) this.jumpBuffer = JUMP_BUFFER;
       }
       if (e.code === 'KeyH') { e.preventDefault(); this.dismiss(); }
     });
@@ -822,7 +822,7 @@ export class Possession {
     // The bob. Vertical at twice the stride, lateral and roll at the stride,
     // all scaled by the smoothed speed and lifted by sprint.
     const motion = PRESENTATION.bob ? 1 : 0;
-    const amp = this.moveT * (1 + (SPRINT_BOB - 1) * this.sprintT) * motion * (u.swimming ? 0.3 : 1);
+    const amp = Math.min(1,this.moveT) * (u.mountKey && u.mountKey!=='none' ? .45 : 1) * (1 + (SPRINT_BOB - 1) * this.sprintT) * motion * (u.swimming ? 0.3 : 1);
     const s1 = Math.sin(this.stride);
     const s2 = Math.sin(this.stride * 2);
     const bobY = s2 * BOB_Y * amp;
@@ -831,10 +831,10 @@ export class Possession {
     this.roll += (wantRoll - this.roll) * (1-Math.exp(-dtShake*12));
     if(!motion)this.roll=0;
 
-    const alt = surfaceElevation(u.dir,u.height) + (u.hop || 0) - swimOffset(u);
+    const alt = surfaceElevation(u.dir,u.height) + (u.hop || 0) + (u.mountOffset || 0) + (u.mountFlight || 0) + (u.weatherLift || 0) - swimOffset(u);
     _right.crossVectors(u.fwd, u.dir).normalize();
     _eye.copy(u.dir).multiplyScalar(
-      R + alt + EYE_HEIGHT * u.type.scale + bobY + this.springY * 0.11 * motion - this.kick * 0.06 * motion);
+      R + alt + EYE_HEIGHT * u.type.scale + bobY + this.springY * 0.045 * motion - this.kick * 0.06 * motion);
     _eye.addScaledVector(_right, bobX);
     this.aimDir(_aim);
     // Published on the body so the strike paths aim where the player is

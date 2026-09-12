@@ -38,15 +38,15 @@ test('independent climate overrides expose new biomes and preserve cold tower gr
    assert.equal(eco.biome(...p,-8,'neutral',true),'ocean');
   }
  }
- assert.ok(counts.desert.desert>500);assert.ok(counts.jungle.jungle>500);assert.ok(counts.volcanic.volcanic>1000);
+ assert.ok(counts.desert.desert>500);assert.ok((counts.jungle.jungle||0)+(counts.jungle.mangrove||0)>500);assert.ok(counts.volcanic.volcanic>1000);
  assert.ok(counts.boreal.tundra>500);assert.ok(counts.wetland.wetland>500);
 });
 
-test('climate survives play/share/history without changing explicit terrain intent',()=>{
+test('legacy climate links defer to the planet theme without changing terrain intent',()=>{
  const base='https://example.com/worldheart/v2/';
  for(const key of Object.keys(BIOME_REGIMES)){
   const url=new URL(worldgenUrl(base,12345,'varied',false,key));
-  assert.equal(url.searchParams.get('biome')||'auto',key);assert.equal(url.searchParams.get('campaign'),'0');
+  assert.equal(url.searchParams.get('biome')||'auto','auto');assert.equal(url.searchParams.get('campaign'),'0');
  }
  assert.throws(()=>worldgenUrl(base,12345,'varied',true,'invalid'));
  let history=rememberWorld([],{seed:12345,terrain:'varied',biome:'desert'});

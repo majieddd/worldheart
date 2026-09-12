@@ -98,6 +98,25 @@ export function inBattlefield(dx, dy, dz, margin = 0) {
 let nWarp, nBase, nDetail, nRidge, nMoist, nRange, nCanyon, nGap;
 export let FORMATIONS = null;
 export let ECOLOGY = null;
+export const TERRAIN_FAULTS = [];
+export function addTerrainFault(dir,axis,protectedDir){
+  if(TERRAIN_FAULTS.length>=8)return null;
+  const side=new THREE.Vector3().crossVectors(dir,axis).normalize();
+  const fault={dir:dir.clone(),axis:axis.clone(),side,protectedDir:protectedDir.clone(),strength:1,limit:Math.cos(44/R)};
+  TERRAIN_FAULTS.push(fault);return fault;
+}
+function faultHeight(x,y,z){
+  let h=0;
+  for(const f of TERRAIN_FAULTS){
+    const dot=x*f.dir.x+y*f.dir.y+z*f.dir.z;if(dot<f.limit)continue;
+    if(x*f.protectedDir.x+y*f.protectedDir.y+z*f.protectedDir.z>Math.cos(7/R))continue;
+    const u=(x*f.axis.x+y*f.axis.y+z*f.axis.z)*R,v=(x*f.side.x+y*f.side.y+z*f.side.z)*R;
+    const end=1-smoothstep(20,38,Math.abs(u));
+    const ridge=10*Math.exp(-(((v-6)/11)**2)),cut=4*Math.exp(-(((v+9)/7)**2));
+    h+=(ridge-cut)*end*f.strength;
+  }
+  return h;
+}
 let coastClearance=null;
 
 // Space Battlefield layout: predetermined, balanced platform positions of
@@ -178,6 +197,7 @@ function initSpaceLayout(seed) {
 }
 
 export function initTerrainField(seed) {
+  TERRAIN_FAULTS.length=0;
   nWarp = makeNoise3D(seed ^ 0x9e3779b9);
   nBase = makeNoise3D(seed);
   nDetail = makeNoise3D(seed ^ 0x51ab3c);
@@ -256,7 +276,7 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
     }
     return h;
   }
-  if(CONFIG.terrain)return regionalHeight(dx,dy,dz,includeFine);
+  if(CONFIG.terrain)return regionalHeight(dx,dy,dz,includeFine)+faultHeight(dx,dy,dz);
   const w = 0.26;
   const wx = dx + nWarp(dx * F_WARP + 7.7, dy * F_WARP, dz * F_WARP) * w;
   const wy = dy + nWarp(dx * F_WARP, dy * F_WARP + 3.1, dz * F_WARP) * w;
@@ -1456,7 +1476,7 @@ function scatterDecor(rng) {
   });
 
   const spots = { pine: [], leaf: [], jungle: [], cactus: [], rock: [], crys: [] };
-  const exoticSpots=Object.fromEntries(['crystalline','fungal','ferrous','twilight','ice','vent','coral'].map(k=>[k,[]]));
+  const exoticSpots=Object.fromEntries(['crystalline','fungal','ferrous','twilight','ice','vent','coral','mangrove','reed'].map(k=>[k,[]]));
   const dir = new THREE.Vector3();
   const mul = CONFIG.map.decorMul;
   const caps = {
@@ -1466,11 +1486,11 @@ function scatterDecor(rng) {
   // With a battlefield cap, decor concentrates in and just beyond the wall;
   // the far side of a titan is scenery nobody lands on.
   const capC = BATTLEFIELD.center;
-  const capMax = BATTLEFIELD.theta * 1.5;
+  const capMax = Math.min(Math.PI,(CONFIG.map.mode==='ninetynine'?CONFIG.map.fieldTheta:BATTLEFIELD.theta)*1.5);
   let attempts = 0;
   const maxAttempts = 26000 * Math.max(mul, 1);
   while (attempts++ < maxAttempts && (spots.pine.length < caps.pine || spots.rock.length < caps.rock)) {
-    if (capC) {
+    if (capC && (!CONFIG.terrain || rng()<.8)) {
       const cosMax = Math.cos(capMax);
       const cz = 1 - rng() * (1 - cosMax);
       const sz = Math.sqrt(Math.max(0, 1 - cz * cz));
@@ -2047,6 +2067,50 @@ export class World {
     this.fieldWall.mesh.geometry.dispose();
     this.fieldWall = buildFieldWall(centerDir, theta);
     this.scene.add(this.fieldWall.mesh);
+    this.fieldWall.mesh.visible=theta<Math.PI-.01;
+  }
+
+  refreshFault(fault){
+    const steps=this.refreshFaultSteps(fault);let result;do{result=steps.next();}while(!result.done);return result.value;
+  }
+
+  *refreshFaultSteps(fault){
+    const dir=new THREE.Vector3(),color=new THREE.Color();let changed=0;
+    for(const mesh of [this.terrain,this.fogVeil?.mesh]){
+      if(!mesh)continue;const p=mesh.geometry.attributes.position,colors=mesh.geometry.attributes.color;
+      for(let i=0;i<p.count;i++){
+        if(i%512===0)yield;
+        dir.fromBufferAttribute(p,i).normalize();if(dir.dot(fault.dir)<fault.limit)continue;
+        const h=terrainHeight(dir.x,dir.y,dir.z);dir.multiplyScalar(R+h+(mesh===this.terrain?0:1.5));p.setXYZ(i,dir.x,dir.y,dir.z);
+        if(colors){dir.normalize();faceColor(dir,h,slopeAt(dir),.5,color);colors.setXYZ(i,color.r,color.g,color.b);}changed++;
+      }
+      p.needsUpdate=true;if(colors)colors.needsUpdate=true;
+      if(mesh===this.terrain)yield* this._faultNormals(mesh.geometry);
+      if(mesh.geometry.boundingSphere)mesh.geometry.boundingSphere.radius+=14*fault.strength;
+      else mesh.geometry.computeBoundingSphere();
+    }
+    // Scenery follows the changed ground; its cached inverse is refreshed.
+    if(this.decor)for(const set of this.decor.sets)for(let i=0;i<set.list.length;i++){
+      const item=set.list[i];if(!item.alive||item.dir.dot(fault.dir)<fault.limit)continue;
+      set.mesh.getMatrixAt(i,_m4);item.h=terrainHeight(item.dir.x,item.dir.y,item.dir.z);_pos.copy(item.dir).multiplyScalar(R+item.h-.05);_m4.setPosition(_pos);set.mesh.setMatrixAt(i,_m4);item.occlusionInverse?.copy(_m4).invert();set.mesh.instanceMatrix.needsUpdate=true;
+    }
+    return changed;
+  }
+
+  *_faultNormals(geometry){
+    // Equivalent to computeVertexNormals, with bounded batches so a large
+    // planet never blocks camera input for a whole normal-buffer pass.
+    const p=geometry.attributes.position.array,n=geometry.attributes.normal.array,index=geometry.index?.array;
+    n.fill(0);const count=index?.length||p.length/3;
+    for(let i=0;i<count;i+=3){
+      if(i%3072===0)yield;
+      const a=(index?index[i]:i)*3,b=(index?index[i+1]:i+1)*3,c=(index?index[i+2]:i+2)*3;
+      const ux=p[c]-p[b],uy=p[c+1]-p[b+1],uz=p[c+2]-p[b+2],vx=p[a]-p[b],vy=p[a+1]-p[b+1],vz=p[a+2]-p[b+2];
+      const x=uy*vz-uz*vy,y=uz*vx-ux*vz,z=ux*vy-uy*vx;
+      for(const at of [a,b,c]){n[at]+=x;n[at+1]+=y;n[at+2]+=z;}
+    }
+    for(let i=0;i<n.length;i+=3){if(i%12288===0)yield;const length=Math.hypot(n[i],n[i+1],n[i+2])||1;n[i]/=length;n[i+1]/=length;n[i+2]/=length;}
+    geometry.attributes.normal.needsUpdate=true;
   }
 
   addCloudDeck(centerDir, theta) {

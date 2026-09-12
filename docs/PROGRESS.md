@@ -1,6 +1,16 @@
 # 99 Planets development progress
 
 Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
+Published and publicly verified: Codex on `feature/expedition-lobby-and-survival`, based on `665b8f3`,
+owns U60-U74: combined terrain exhibits, theme-owned climate, fifteen biomes,
+commander choice/scaling/respawn, ten-wave and endless play, full-planet base
+growth, stronger threats, comfortable movement, tactical weather, mounts,
+an exploration crafting loop and a walkable preparation lobby.
+297 unit/shell tests, 260 public browser cases, 248 asset/source comparisons, all
+five camera suites and a legal ten-wave victory/extraction pass. Functional build
+`048055c` is live on V2. U60-U74 is complete; main remains `1374122`.
+[Full request ledger and current acceptance](qa/implementation/EXPEDITION-LOBBY.md).
+
 Published and publicly verified: Codex on `fix/debug-world-inspection`, based on V2 `bc814c8`, owns
 U56-U59: intuitive grab pan, fully visible weapons, all-unit animation cycles
 and ten miniature themed spheres. Implementation, 155 targeted checks, 118
@@ -25,7 +35,8 @@ complete for this bounded request; full campaign, device and balance QA remain o
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
-Current review: [Debug World inspection fixes, PR #36](https://github.com/majieddd/worldheart/pull/36),
+Current review: [Preparation lobby and expedition survival, PR #37](https://github.com/majieddd/worldheart/pull/37),
+stacked on [Debug World inspection fixes, PR #36](https://github.com/majieddd/worldheart/pull/36),
 stacked on [ten extreme themes and Debug World, PR #35](https://github.com/majieddd/worldheart/pull/35),
 stacked on [cosmic landforms and star-driven climates, PR #34](https://github.com/majieddd/worldheart/pull/34),
 stacked on [mixed landforms, dry canyon routes and biomes, PR #33](https://github.com/majieddd/worldheart/pull/33),

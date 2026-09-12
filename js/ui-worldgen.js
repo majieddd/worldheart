@@ -4,7 +4,6 @@ import { browserStorage } from './storage.js';
 import { worldgenUrl, rememberWorld } from './worldgen.js';
 import { FORMATIONS, ECOLOGY, terrainHeight, biomeAt, waterDepthAt } from './world.js';
 import { NestAtlasView } from './nest-atlas-view.js';
-import { BIOME_REGIMES } from './terrain/ecology.js';
 import { PLANET_THEMES } from './run/planet-environments.js';
 import { LANDFORM_RECIPES } from './terrain/recipes.js';
 import { surveyLandmarks } from './terrain/landmarks.js';
@@ -32,13 +31,12 @@ export class WorldgenPanel {
         <p>Roll a world, explore its terrain, then play the seed in a new tab.</p>
         <form id="worldgen-form">
           <label>Terrain<select id="worldgen-terrain">${Object.entries(labels).map(([key, label]) => `<option value="${key}">${label}</option>`).join('')}</select></label>
-          <label>Climate<select id="worldgen-biome">${Object.entries(BIOME_REGIMES).map(([key,value])=>`<option value="${key}">${value.name}</option>`).join('')}</select></label>
           <label>Planet theme<select id="worldgen-planet">${Object.entries(PLANET_THEMES).map(([key,value])=>`<option value="${key}">${value.name}</option>`).join('')}</select></label>
           <button class="btn primary" type="button" id="worldgen-new">Generate world</button>
           <label>Seed<input id="worldgen-seed" inputmode="numeric" pattern="[0-9]+" required aria-describedby="worldgen-status"></label>
           <button class="btn" type="submit">Load seed</button>
         </form>
-        <label>Recent worlds<select id="worldgen-history">${this.history.map((x, i) => `<option value="${i}">${x.seed} · ${labels[x.terrain]} · ${BIOME_REGIMES[x.biome||'auto']?.name||'Planet mix'} · ${PLANET_THEMES[x.planet||'auto'].name}</option>`).join('')}</select></label>
+        <label>Recent worlds<select id="worldgen-history">${this.history.map((x, i) => `<option value="${i}">${x.seed} · ${labels[x.terrain]} · ${PLANET_THEMES[x.planet||'auto'].name}</option>`).join('')}</select></label>
         <div class="worldgen-actions"><button class="btn" id="worldgen-home">Base area</button><button class="btn" id="worldgen-peak">Highest peak</button><button class="btn" id="worldgen-globe">Whole planet</button></div>
         <label id="worldgen-formation-label">Explore a formation<select id="worldgen-formation"><option value="">Choose a landform</option></select></label>
         <label class="worldgen-toggle"><input type="checkbox" id="worldgen-daylight" checked> Daylight inspection</label>
@@ -52,7 +50,7 @@ export class WorldgenPanel {
       </div>`;
     document.body.append(panel); document.body.classList.add('worldgen');
     const el = id => panel.querySelector('#worldgen-' + id);
-    this.status = el('status'); el('seed').value = CONFIG.requestedSeed; el('terrain').value = this.terrain; el('biome').value = ECOLOGY?.manifest().key || 'auto';
+    this.status = el('status'); el('seed').value = CONFIG.requestedSeed; el('terrain').value = this.terrain;
     el('planet').value=CONFIG.planetKey;
     this.inspectionLight=new THREE.DirectionalLight(0xffeddb,1.9);
     this.inspectionLight.name='Inspection daylight';scene.add(this.inspectionLight);
@@ -113,7 +111,7 @@ export class WorldgenPanel {
     this.inspectionLight.position.copy(dir).multiplyScalar(1000);
   }
 
-  generate(input, terrain, biome=this.panel.querySelector('#worldgen-biome').value,planet=this.panel.querySelector('#worldgen-planet').value) {
+  generate(input, terrain, biome='auto',planet=this.panel.querySelector('#worldgen-planet').value) {
     try {
       if (!/^\d+$/.test(String(input).trim())) throw Error('Enter a whole-number seed.');
       const url = worldgenUrl(location.href, Number(input), terrain, true, biome,planet);

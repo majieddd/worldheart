@@ -1,0 +1,98 @@
+{
+  "lanes": [
+    {
+      "key": "units",
+      "count": 11
+    },
+    {
+      "key": "mounts",
+      "count": 3
+    },
+    {
+      "key": "towers",
+      "count": 18
+    },
+    {
+      "key": "weapons",
+      "count": 14
+    },
+    {
+      "key": "formations",
+      "count": 30
+    },
+    {
+      "key": "terrain",
+      "count": 4
+    },
+    {
+      "key": "biomes",
+      "count": 15
+    },
+    {
+      "key": "themes",
+      "count": 10
+    }
+  ],
+  "terrain": [
+    {
+      "key": "varied",
+      "seed": 4206018157,
+      "min": -3.5842667887522826,
+      "max": 57.066517142884265,
+      "formations": [
+        "buttes",
+        "karst",
+        "spider",
+        "plateau",
+        "forest",
+        "canyon",
+        "dunes",
+        "crevice"
+      ]
+    },
+    {
+      "key": "alpine",
+      "seed": 4206018157,
+      "min": -10.069713499359475,
+      "max": 77.0568623806953,
+      "formations": [
+        "range",
+        "basin",
+        "ravine",
+        "valley",
+        "caldera"
+      ]
+    },
+    {
+      "key": "canyon",
+      "seed": 4206018157,
+      "min": -4.610969099200955,
+      "max": 48.06969205051563,
+      "formations": [
+        "crevice",
+        "caldera",
+        "gorge",
+        "canyon",
+        "valley",
+        "ravine"
+      ]
+    },
+    {
+      "key": "ocean",
+      "seed": 4206018157,
+      "min": -1.9528103975318487,
+      "max": 47.96535802358069,
+      "formations": [
+        "dunes",
+        "mesa",
+        "valley",
+        "hills",
+        "crevice",
+        "gorge",
+        "basin"
+      ]
+    }
+  ],
+  "body": "Still pose\nIdle\nWalk\nAttack\n\nUnits cycle in their lane; planet previews rotate.\n\nWeapon energy core\nTempered\nEmber\nFrost\nPulse (ranged)\nFocus exhibit\nSee whole lane\nSee all lanes\n\nDrag to orbit. Right-drag, middle-drag or Shift-drag to grab and move the scene. Wheel up zooms in; wheel down zooms out. Arrow keys move the view.\n\nTerrain samples use one display scale. Larger continental cuts occupy wider plots. Model lanes use 4x display scale.\n\nMounts: 3 of 3. 105 exhibits across 8 lanes.\n\nSky Ray",
+  "errors": []
+}

@@ -5,19 +5,19 @@ import {
   frontierTheta, unlocksTowerAt, evolutionTierAfter, isBossWave,
 } from '../../js/run/schedule.js';
 
-test('the run is 15 waves and the boss is the last', () => {
-  assert.equal(TOTAL_WAVES, 15);
-  assert.equal(BOSS_WAVE, 15);
-  assert.ok(isBossWave(15));
-  assert.ok(!isBossWave(14));
+test('the run is 10 waves and the boss is the last', () => {
+  assert.equal(TOTAL_WAVES, 10);
+  assert.equal(BOSS_WAVE, 10);
+  assert.ok(isBossWave(10));
+  assert.ok(!isBossWave(9));
 });
 
 test('frontier starts at THETA_START before any wave clears', () => {
   assert.equal(frontierTheta(0), THETA_START);
 });
 
-test('frontier reaches THETA_END after wave 14 clears', () => {
-  assert.ok(Math.abs(frontierTheta(14) - THETA_END) < 1e-9);
+test('frontier reaches THETA_END after ten explicit upgrades', () => {
+  assert.ok(Math.abs(frontierTheta(10) - THETA_END) < 1e-9);
 });
 
 test('frontier never shrinks and never exceeds the end', () => {
@@ -34,10 +34,10 @@ test('the boss wave adds no expansion', () => {
   assert.equal(frontierTheta(15), frontierTheta(14));
 });
 
-test('expansion eases out: the first step is larger than the last', () => {
+test('expansion accelerates: late base upgrades claim more territory', () => {
   const first = frontierTheta(1) - frontierTheta(0);
-  const last = frontierTheta(14) - frontierTheta(13);
-  assert.ok(first > last, `first ${first} should exceed last ${last}`);
+  const last = frontierTheta(14) - frontierTheta(9);
+  assert.ok(last > first, `first ${first} should be below last ${last}`);
 });
 
 test('towers unlock on waves 2, 4, 6, 8, 10 only', () => {
@@ -63,20 +63,20 @@ test('the schedule gates tower upgrades by the heart, not by the wave', async ()
   assert.equal(mod.tierCapAfter, undefined, 'tierCapAfter should not exist');
   assert.equal(mod.tierCapForHeart(0), 2);
   assert.equal(mod.tierCapForHeart(5), 7);
-  assert.equal(mod.tierCapForHeart(99), 7, 'the cap must clamp at the top level');
+  assert.equal(mod.tierCapForHeart(99), 12, 'the cap must clamp at the top level');
 });
 
 test('the heart tables agree with the number of expansions', async () => {
   const { HEART_COSTS, HEART_RINGS, MAX_HEART_LEVEL, heartCost, ringsPermitted } = await import('../../js/run/schedule.js');
-  assert.deepEqual(HEART_COSTS, [250, 450, 700, 1000, 1400]);
-  assert.deepEqual(HEART_RINGS, [0, 3, 5, 8, 11, 14]);
-  assert.equal(MAX_HEART_LEVEL, 5);
+  assert.deepEqual(HEART_COSTS, [180, 280, 420, 620, 880, 1200, 1600, 2100, 2700, 3400]);
+  assert.deepEqual(HEART_RINGS, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  assert.equal(MAX_HEART_LEVEL, 10);
   // One ring entry per level 0..5, rising, and the top level holds every
   // expansion or the final frontier could never be reached.
   assert.equal(HEART_RINGS.length, MAX_HEART_LEVEL + 1);
   for (let i = 1; i < HEART_RINGS.length; i++) assert.ok(HEART_RINGS[i] > HEART_RINGS[i - 1]);
-  assert.equal(ringsPermitted(MAX_HEART_LEVEL), 14);
-  assert.equal(heartCost(0), 250);
+  assert.equal(ringsPermitted(MAX_HEART_LEVEL), 10);
+  assert.equal(heartCost(0), 180);
   assert.equal(heartCost(MAX_HEART_LEVEL), null, 'no price at the ceiling');
 });
 

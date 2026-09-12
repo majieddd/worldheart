@@ -4,6 +4,19 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation is underway on feature/99-planets-integration. Start with the [QA evidence](qa/2026-09-05/README.md) and [progress ledger](PROGRESS.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
+The September 12 U60-U74 work is on `feature/expedition-lobby-and-survival`.
+Its [request ledger](qa/implementation/EXPEDITION-LOBBY.md) and
+[current gameplay rules](GAMEPLAY.md#expedition-preparation-and-commander-survival)
+supersede the older numerical prototypes: a walkable solo lobby, free starting
+commander choice, three mounts, ten-wave victory with opt-in Endless, base-scaled
+commander/equipment stats, 30-second safe-territory recovery and outside death.
+Ten accelerating base upgrades reach the entire planet. Warned tornadoes and
+terrain-changing quakes alter the battlefield. Three collected relic ore forge
+a free-placement tower at the heart. The debug catalogue adds a combined Terrain
+lane and fifteenth biome; planet themes now own climate without a second selector.
+Early zoom stays close to the action, while later regional/global territory
+unlocks enough orbit height to inspect the newly owned planet.
+
 ## Reference
 
 The owner's references are Dark Souls for committed, choreographed attacks with readable anticipation and recovery, and Borderlands for mechanically varied weapons and rewarding loot. Borrow those qualities without importing their artwork, names, grim visual tone, or a long inactivity-heavy combat cadence. No external reference research or asset selection was needed for this planning pass.
@@ -292,9 +305,9 @@ All **prototype** numbers below require telemetry and playtesting. They are star
 
 | Value | Baseline or prototype | Rationale |
 |---|---|---|
-| Current planet | 15 waves; 20 lives; 450 gold | Verified current opening and source; retain while diagnosing reward/feel defects |
-| Current base costs | 250, 450, 700, 1000, 1400 | Start with a known economy while replacing expansion triggers |
-| Current tower caps | II, III, IV, V, VI, VII by base level | Preserve one-mark-per-upgrade readability initially |
+| Current planet | 10 waves, optional Endless; 20 lives; 450 gold | U66 explicitly shortens the normal assault |
+| Current base costs | 180, 280, 420, 620, 880, 1200, 1600, 2100, 2700, 3400 | Ten increasingly large territory purchases reach the globe |
+| Current tower caps | II through XII by base level | Preserve one-mark-per-upgrade readability |
 | New frontier policy | Radius table keyed only by base level | Avoid hidden wave-earned territory and make purchase outcomes predictable |
 | Uphill speed | Prototype smoothly falls to 80% on a moderate climb, floor 65% before impassable slope; no downhill speed boost initially | Modest local penalty plus detour cost, without frustrating controls or downhill exploits |
 | Swimming | Prototype 60% of ground speed; no sprint | Noticeable route tradeoff without immobilizing actors |

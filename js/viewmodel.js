@@ -551,12 +551,12 @@ export class ViewModel {
     if(!motion)this._sway.set(0,0);
     const mv = (opts.moveT || 0) * motion;
     const stride = opts.stride || 0;
-    const amp = mv * (1 + 0.5 * (opts.sprint || 0));
-    ox += Math.sin(this.t * 1.2) * 0.010 * g * motion + Math.sin(stride - 0.4) * 0.040 * g * amp;
-    oy += Math.sin(this.t * 1.7) * 0.008 * g * motion + Math.sin(stride * 2 - 0.6) * 0.030 * g * amp
-      + (opts.spring || 0) * 0.03 * g * motion;
-    rz += Math.sin(stride - 0.4) * 0.05 * amp;
-    rx += Math.sin(this.t * 1.7) * 0.016 * motion + Math.sin(stride * 2 - 0.6) * 0.02 * amp;
+    const amp = Math.min(1, mv) * (1 + 0.15 * (opts.sprint || 0));
+    ox += Math.sin(this.t * 1.2) * 0.006 * g * motion + Math.sin(stride - 0.4) * 0.022 * g * amp;
+    oy += Math.sin(this.t * 1.7) * 0.005 * g * motion + Math.sin(stride * 2 - 0.6) * 0.016 * g * amp
+      + (opts.spring || 0) * 0.015 * g * motion;
+    rz += Math.sin(stride - 0.4) * 0.022 * amp;
+    rx += Math.sin(this.t * 1.7) * 0.010 * motion + Math.sin(stride * 2 - 0.6) * 0.01 * amp;
     // Sprinting drops the weapon low and forward, the way a runner carries it.
     const sp = (opts.sprint || 0) * motion;
     oy += -0.10 * g * sp;

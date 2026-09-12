@@ -448,6 +448,7 @@ export class Game {
   }
 
   _validate(def) {
+    if(this.terrainBusy)return {ok:false,reason:'shifting'};
     if (!this.cursorValid) return { ok: false, reason: 'terrain' };
     // From the ground you build what you can walk to. Without a reach the
     // crosshair could raise a tower on the far side of the circle from a
@@ -501,11 +502,13 @@ export class Game {
   // Tower price after run modifiers. Economy powers write costMul; this is the
   // only place the price is decided, so they cannot drift apart.
   _cost(def) {
+    if (this.freeTowerCredits?.get(def) > 0) return 0;
     const m = MODS.current;
     return m ? Math.max(1, Math.round(def.cost * m.costMul)) : def.cost;
   }
 
   _refreshPaths(withGhost) {
+    if(this.terrainBusy)return;
     const def = this.buildType ? TOWER_TYPES[this.buildType] : null;
     const paths = (withGhost && def && this.cursorValid)
       ? this.nav.previewPaths(this.cursorPos, this._fp(def))
@@ -535,6 +538,7 @@ export class Game {
         gold: 'Not enough gold',
         frontier: 'Beyond the frontier. Upgrade the Worldheart to expand it.',
         reach: 'Too far to build from here. Walk closer.',
+        shifting: 'The ground is shifting. Build when the tremor settles.',
       };
       if (this.onToast) this.onToast(msgs[this.validity.reason] || 'Cannot build here', this.validity.reason === 'path' ? 'danger' : 'warn');
       this.rig.addTrauma(0.06);
@@ -544,6 +548,8 @@ export class Game {
     const paid = this._cost(def);
     this.gold -= paid;
     const tower = this.towerMgr.place(this.buildType, this.cursorPos);
+    tower.invested=paid;
+    if(this.freeTowerCredits?.get(def)>0)this.freeTowerCredits.set(def,this.freeTowerCredits.get(def)-1);
     tower.terrain = this.validity.climate || 'neutral';
     this.nav.blockNodes(this.cursorPos, this._fp(def), tower.id);
     const crushed = this.world.crushDecorNear(this.cursorPos, this._fp(def) + 0.5);
@@ -612,6 +618,7 @@ export class Game {
   }
 
   upgradeSelected() {
+    if(this.terrainBusy)return false;
     const t = this.context ? this.contextTower : this.selectedTower;
     if (this.context && !this.context.validTower(t)) return;
     if (!t) return;
@@ -653,6 +660,7 @@ export class Game {
   }
 
   sellSelected() {
+    if(this.terrainBusy)return false;
     const t = this.context ? this.contextTower : this.selectedTower;
     if (this.context && !this.context.validTower(t)) return;
     if (!t) return;

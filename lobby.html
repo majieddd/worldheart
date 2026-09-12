@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>99 Planets To Defend · Preparation</title><link rel="icon" href="data:,"><link rel="stylesheet" href="css/lobby.css"></head>
+<body>
+<canvas id="lobby-view" tabindex="0" aria-label="Walkable preparation courtyard. WASD or arrows move. Right drag turns the camera. E opens a nearby station."></canvas>
+<header><div><small>WORLDHEART EXPEDITIONS</small><h1>99 Planets To Defend</h1><p>Prepare here. Defend out there.</p></div><div class="account"><span id="coins">0 coins</span><a href="debug.html">Debug World</a><a href="./?map=ninetynine&campaign=0&worldgen=1&terrain=varied">Planet generator</a></div></header>
+<nav aria-label="Preparation stations"><button data-station="commanders">Commanders</button><button data-station="foundry">Tower foundry</button><button data-station="mounts">Mounts</button><button data-station="mission">Mission gate</button></nav>
+<aside id="station-panel" hidden aria-labelledby="station-title"><button id="close-station" aria-label="Close station">×</button><small id="station-kicker">PREPARATION</small><h2 id="station-title"></h2><div id="station-content"></div><p id="station-message" role="status"></p></aside>
+<div id="approach" hidden><button id="interact">E · Enter station</button></div>
+<footer><div id="loadout-summary"></div><p>WASD / arrows move · Click ground to walk · Right-drag to look · Wheel to zoom · E to interact</p><span id="save-status" role="status"></span></footer>
+<script type="importmap">{"imports":{"three":"./lib/three.module.min.js"}}</script><script type="module" src="js/lobby.js"></script>
+</body></html>

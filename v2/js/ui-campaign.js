@@ -70,7 +70,7 @@ function uiEnd(ui,e) {
   ui.el['btn-new'].hidden=e.status!=='complete';ui.el['btn-new'].textContent='New expedition';
   if(e.status==='complete'){
     ui.el['end-mark'].textContent='EXPEDITION COMPLETE';ui.el['btn-continue'].style.display='none';
-    ui.el['end-waves'].textContent=String(e.completed*15);
+    ui.el['end-waves'].textContent=String(e.completed*10);
     ui.el['end-kills'].textContent=String(e.receipts.reduce((sum,r)=>sum+r.kills,0));
     ui.el['end-score'].textContent=String(e.receipts.reduce((sum,r)=>sum+r.score,0));
     ui.el['end-body'].textContent='Your defended planets and extracted arsenal are recorded in this checkpoint.';

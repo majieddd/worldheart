@@ -131,6 +131,16 @@ export class NavGraph {
           this._buildGraph(center, theta);
           if (this._chooseSites(relax, center, theta)) {
             this.fieldCenter = CONFIG.terrain ? this.nodeDir(this.heartNode, new THREE.Vector3()) : center;
+            if (CONFIG.map.mode === 'ninetynine') {
+              const heart=this.nodeDir(this.heartNode,new THREE.Vector3());
+              const portals=this.portalNodes.map(n=>this.nodeDir(n,new THREE.Vector3()));
+              const ico=buildIcosphere(DETAIL,this.fieldCenter,theta,7);
+              this._buildGraph(null,0,false,DETAIL,false,ico);
+              this.heartNode=this.nearestWalkableNode(heart);
+              this.portalNodes=portals.map(d=>this.nearestWalkableNode(d));
+              this.global=true;
+              this.recomputeFlow();
+            }
             return;
           }
         }
@@ -228,9 +238,10 @@ export class NavGraph {
     return best || SUN_DIR.clone();
   }
 
-  _buildGraph(capCenter = null, capTheta = 0, walkAll = false, detail = DETAIL, coarse = false) {
-    let ico;
-    if (capCenter) {
+  _buildGraph(capCenter = null, capTheta = 0, walkAll = false, detail = DETAIL, coarse = false, supplied = null) {
+    let ico = supplied;
+    if (ico) { /* accepted whole-world topology supplied by build() */ }
+    else if (capCenter) {
       // Cap-pruned spheres depend on where the field landed, so they are built
       // per attempt rather than cached; pruning keeps that cheap.
       ico = buildIcosphere(detail, capCenter, capTheta);
@@ -649,6 +660,10 @@ export class NavGraph {
   }
 
   _dijkstra(source, blockFilter, field = this, stop = -1, guided = false) {
+    for(const _ of this._dijkstraSteps(source,blockFilter,field,stop,guided)){/* Synchronous path for ordinary placements. */}
+  }
+
+  *_dijkstraSteps(source, blockFilter, field = this, stop = -1, guided = false) {
     const n = this.n;
     const { dist, next, walk, block, cost } = field;
     // Only commander point-to-point searches use this goal heuristic.
@@ -670,7 +685,9 @@ export class NavGraph {
     done.fill(0);
     dist[source] = 0;
     heap.push(source, 0);
+    let visits=0;
     while (heap.n > 0) {
+      if(++visits%512===0)yield;
       const a = heap.pop();
       if (done[a]) continue;
       done[a] = 1;
@@ -693,14 +710,19 @@ export class NavGraph {
   }
 
   recomputeFlow() {
-    this._dijkstra(this.heartNode, null);
-    if(this.floorWalk)this._marchFlow();
+    for(const _ of this.recomputeFlowSteps()){/* Drain during ordinary placement. */}
+  }
+
+  *recomputeFlowSteps() {
+    yield* this._dijkstraSteps(this.heartNode, null);
+    if(this.floorWalk)yield* this._marchFlowSteps();
     if (this.airWalk && !this._airReady) {
-      this._dijkstra(this.heartNode, null, { dist: this.airDist, next: this.airNext, walk: this.airWalk, cost: this.airCost });
+      yield* this._dijkstraSteps(this.heartNode, null, { dist: this.airDist, next: this.airNext, walk: this.airWalk, cost: this.airCost });
       this._airReady = true;
     }
     const n = this.n;
     for (let i = 0; i < n; i++) {
+      if(i%4096===0)yield;
       const j = (this.march?.next||this.next)[i];
       if (j < 0) {
         this.flow[i * 3] = 0; this.flow[i * 3 + 1] = 0; this.flow[i * 3 + 2] = 0;
@@ -712,6 +734,33 @@ export class NavGraph {
       const l = Math.hypot(fx, fy, fz) || 1;
       this.flow[i * 3] = fx / l; this.flow[i * 3 + 1] = fy / l; this.flow[i * 3 + 2] = fz / l;
     }
+  }
+
+  refreshTerrain(fault){
+    const steps=this.refreshTerrainSteps(fault);let result;do{result=steps.next();}while(!result.done);return result.value;
+  }
+
+  *refreshTerrainSteps(fault){
+    const dirty=new Uint8Array(this.n);let changed=0;
+    for(let i=0;i<this.n;i++){
+      if(i%64===0)yield;
+      this.nodeDir(i,_v);if(_v.dot(fault.dir)<Math.cos(48/R))continue;
+      const h=terrainHeight(_v.x,_v.y,_v.z),base=terrainHeight(_v.x,_v.y,_v.z,false);
+      this.height[i]=h;this.baseHeight[i]=base;this.waterDepth[i]=WORLD.waterDepthAt(_v,base);
+      this.walk[i]=isWalkableDir(_v)?1:0;
+      this.floorWalk[i]=this.walk[i]&&isFloorTerrain(base,WORLD.slopeAt(_v),this.waterDepth[i])?1:0;
+      this.airWalk[i]=WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+3)?1:0;
+      const radius=R+WORLD.surfaceElevation(_v,h);this.pos[i*3]=_v.x*radius;this.pos[i*3+1]=_v.y*radius;this.pos[i*3+2]=_v.z*radius;
+      dirty[i]=1;for(let e=this.adjOff[i];e<this.adjOff[i+1];e++)dirty[this.adj[e]]=1;changed++;
+    }
+    for(let i=0;i<this.n;i++){if(i%64===0)yield;if(dirty[i])for(let e=this.adjOff[i];e<this.adjOff[i+1];e++){
+      const j=this.adj[e];this.nodeDir(i,_v);this.nodeDir(j,_v2);const angle=Math.acos(Math.max(-1,Math.min(1,_v.dot(_v2))));
+      const horizontal=angle*(R+(WORLD.surfaceElevation(_v,this.baseHeight[i])+WORLD.surfaceElevation(_v2,this.baseHeight[j]))*.5);
+      this.cost[e]=travelCost(this.baseHeight[j],this.baseHeight[i],horizontal,this.waterDepth[j],this.waterDepth[i]);
+      _v.add(_v2).normalize();this.airCost[e]=this.airWalk[i]&&this.airWalk[j]&&WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+3)?angle*R:Infinity;
+    }}
+    // Node identity, adjacency and tower footprint ownership are retained.
+    this.march=null;this._airReady=false;this._routeHeuristicScale=0;yield* this.recomputeFlowSteps();this.revision++;return changed;
   }
 
   sampleAirFlow(node, dir, out) {
@@ -749,10 +798,14 @@ export class NavGraph {
   }
 
   _marchFlow() {
+    for(const _ of this._marchFlowSteps()){/* Drain during ordinary placement. */}
+  }
+
+  *_marchFlowSteps() {
     const n=this.n;
     if(!this.march||this.march.dist.length!==n){
       const cost=new Float32Array(this.cost.length);
-      for(let i=0;i<n;i++)for(let e=this.adjOff[i];e<this.adjOff[i+1];e++)cost[e]=this.cost[e]/(this.floorWalk[i]&&this.floorWalk[this.adj[e]]?1:MOUNTAIN_MARCH);
+      for(let i=0;i<n;i++){if(i%2048===0)yield;for(let e=this.adjOff[i];e<this.adjOff[i+1];e++)cost[e]=this.cost[e]/(this.floorWalk[i]&&this.floorWalk[this.adj[e]]?1:MOUNTAIN_MARCH);}
       this.march={dist:new Float64Array(n),next:new Int32Array(n),floorReach:new Uint8Array(n),cost,
         lowerDist:new Float64Array(n),lowerNext:new Int32Array(n)};
     }
@@ -760,13 +813,15 @@ export class NavGraph {
     // Certify floor-only routes first. These nodes never take a mountain
     // shortcut, however long their valley route is. The second flood joins
     // disconnected floor regions through the least costly slow passage.
-    this._dijkstra(this.heartNode,null,{...m,walk:this.floorWalk,cost:this.cost,block:this.block});
+    yield* this._dijkstraSteps(this.heartNode,null,{...m,walk:this.floorWalk,cost:this.cost,block:this.block});
     const heap=this._heap,done=this._done;heap.n=0;done.fill(0);
-    for(let i=0;i<n;i++)m.floorReach[i]=Number.isFinite(m.dist[i])?1:0;
-    for(let i=0;i<n;i++)if(m.floorReach[i]){
+    for(let i=0;i<n;i++){if(i%4096===0)yield;m.floorReach[i]=Number.isFinite(m.dist[i])?1:0;}
+    for(let i=0;i<n;i++){if(i%2048===0)yield;if(m.floorReach[i]){
       for(let e=this.adjOff[i];e<this.adjOff[i+1];e++)if(this.walk[this.adj[e]]&&!m.floorReach[this.adj[e]]){heap.push(i,m.dist[i]);break;}
-    }
+    }}
+    let visits=0;
     while(heap.n){
+      if(++visits%512===0)yield;
       const a=heap.pop();if(done[a])continue;done[a]=1;
       for(let e=this.adjOff[a];e<this.adjOff[a+1];e++){
         const b=this.adj[e];if(done[b]||m.floorReach[b]||!this.walk[b]||this.block[b])continue;
@@ -776,7 +831,7 @@ export class NavGraph {
     // An unconstrained, mountain-weighted distance is a safe lower bound for
     // emergency preview detours. The floor-first field itself can overestimate
     // such a detour, so it cannot serve as that search's A* heuristic.
-    this._dijkstra(this.heartNode,null,{dist:m.lowerDist,next:m.lowerNext,walk:this.walk,cost:m.cost,block:this.block});
+    yield* this._dijkstraSteps(this.heartNode,null,{dist:m.lowerDist,next:m.lowerNext,walk:this.walk,cost:m.cost,block:this.block});
   }
 
   canMarchStep(fromDir,toDir,node=-1) {
@@ -788,6 +843,7 @@ export class NavGraph {
   }
 
   findPath(fromDir, toDir) {
+    if(this.terrainBusy)return [];
     const start = this.nearestWalkableNode(fromDir, true), end = this.nearestWalkableNode(toDir, true);
     if (start < 0 || end < 0 || this.block[end]) return [];
     if(start===end){const path=[start];path.cost=0;return path;}

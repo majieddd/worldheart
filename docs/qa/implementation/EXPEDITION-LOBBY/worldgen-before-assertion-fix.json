@@ -1,0 +1,633 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "scope": "Normal UI navigation and deterministic render frames; forced clipboard denial only",
+  "checks": [
+    {
+      "name": "Title opens an independent inspector tab",
+      "ok": true
+    },
+    {
+      "name": "Inspector cannot launch campaign, waves or rewards",
+      "ok": true
+    },
+    {
+      "name": "Opening inspector leaves all normal saved data unchanged",
+      "ok": true
+    },
+    {
+      "name": "Mixed landscape inspector catalogs exposed hills, peaks and cuts together",
+      "ok": true,
+      "actual": [
+        {
+          "type": "basin",
+          "dir": [
+            -0.6311993465037038,
+            0.536016751833036,
+            0.5606009514152277
+          ],
+          "height": 18.824352025173763,
+          "relief": 18.14973845972021,
+          "depth": 0,
+          "score": 18.824352025173763,
+          "inside": false,
+          "scale": 35.369253426952284
+        },
+        {
+          "type": "blades",
+          "dir": [
+            -0.9087707503759923,
+            0.2385557849664757,
+            0.3423840836255164
+          ],
+          "height": 18.408928370193568,
+          "relief": 20.46240724986034,
+          "depth": 0,
+          "score": 18.408928370193568,
+          "inside": false,
+          "scale": 55.0126497184597
+        },
+        {
+          "type": "buttes",
+          "dir": [
+            0.1750691838506407,
+            -0.7854552475990563,
+            -0.5936420090298324
+          ],
+          "height": 16.582980853568312,
+          "relief": 24.247414632868765,
+          "depth": 0,
+          "score": 16.582980853568312,
+          "inside": false,
+          "scale": 30.309268291085957
+        },
+        {
+          "type": "caldera",
+          "dir": [
+            0.6258669622449147,
+            -0.5298217330907796,
+            -0.5723455920289813
+          ],
+          "height": 0.571063514378599,
+          "relief": 0,
+          "depth": 31.03717844946011,
+          "score": 31.03717844946011,
+          "inside": false,
+          "scale": 55.69412658780813
+        },
+        {
+          "type": "canyon",
+          "dir": [
+            -0.4003302635741278,
+            -0.18420594068852608,
+            0.897665779386585
+          ],
+          "height": 0.5814482131116818,
+          "relief": 0,
+          "depth": 26.24735723695238,
+          "score": 26.24735723695238,
+          "inside": false,
+          "scale": 45.428810233399275
+        },
+        {
+          "type": "cells",
+          "dir": [
+            0.7708488664904687,
+            0.27140613706728484,
+            0.5763078463742916
+          ],
+          "height": 5.35234972730445,
+          "relief": 5.7693458381713025,
+          "depth": 0,
+          "score": 5.35234972730445,
+          "inside": false,
+          "scale": 18.37472765104473
+        },
+        {
+          "type": "chaos",
+          "dir": [
+            -0.515841799886147,
+            -0.8320596324104236,
+            0.2039215672832351
+          ],
+          "height": 13.407322181078497,
+          "relief": 12.969434842229271,
+          "depth": 0,
+          "score": 13.407322181078497,
+          "inside": false,
+          "scale": 24.868054138913752
+        },
+        {
+          "type": "drumlins",
+          "dir": [
+            0.9671132595523347,
+            0.11318661606819333,
+            0.22777342501066616
+          ],
+          "height": 16.124800365344427,
+          "relief": 15.441677619282393,
+          "depth": 0,
+          "score": 16.124800365344427,
+          "inside": true,
+          "scale": 17.12948371118959
+        },
+        {
+          "type": "dunes",
+          "dir": [
+            -0.7456261374770852,
+            0.6504677735496434,
+            -0.14468358125361913
+          ],
+          "height": 8.322134297312473,
+          "relief": 7.8142386351324635,
+          "depth": 0,
+          "score": 8.322134297312473,
+          "inside": false,
+          "scale": 7.850969477200415
+        },
+        {
+          "type": "escarpment",
+          "dir": [
+            -0.5732516148087329,
+            0.37356983170970465,
+            -0.7292654982621645
+          ],
+          "height": 36.317233205595116,
+          "relief": 39.64198889467121,
+          "depth": 0,
+          "score": 36.317233205595116,
+          "inside": false,
+          "scale": 39.64198889467121
+        },
+        {
+          "type": "fan",
+          "dir": [
+            0.21178289231307668,
+            -0.7792101746220739,
+            0.5898978812378839
+          ],
+          "height": 23.069267777640903,
+          "relief": 28.42791736687707,
+          "depth": 0,
+          "score": 23.069267777640903,
+          "inside": false,
+          "scale": 36.44903393825143
+        },
+        {
+          "type": "gorge",
+          "dir": [
+            0.13653447946130087,
+            0.6590420374580809,
+            -0.7396093082035495
+          ],
+          "height": -2.5618005300206446,
+          "relief": -6.152913765008626,
+          "depth": 3.1648227517383054,
+          "score": 3.1648227517383054,
+          "inside": false,
+          "scale": 15.42327667415142
+        },
+        {
+          "type": "grand",
+          "dir": [
+            -0.9816906428020691,
+            0.10924393559670717,
+            0.15604244413044488
+          ],
+          "height": -5.273524104729439,
+          "relief": -14.63777269298518,
+          "depth": 5.861800741019856,
+          "score": 5.861800741019856,
+          "inside": false,
+          "scale": 77.91845940939862
+        },
+        {
+          "type": "hills",
+          "dir": [
+            0.8020992824244523,
+            0.5894619039408575,
+            0.0957674523864878
+          ],
+          "height": 10.108398019247355,
+          "relief": 13.118500468410163,
+          "depth": 0,
+          "score": 10.108398019247355,
+          "inside": true,
+          "scale": 19.674571004530414
+        },
+        {
+          "type": "impact",
+          "dir": [
+            0.7997158408988975,
+            0.5731292865337831,
+            -0.17882224339451117
+          ],
+          "height": 36.564029034133846,
+          "relief": 36.496054321216974,
+          "depth": 0,
+          "score": 36.564029034133846,
+          "inside": true,
+          "scale": 56.25372135629878
+        },
+        {
+          "type": "karst",
+          "dir": [
+            -0.8652238325689963,
+            -0.12397609173371724,
+            0.4858164758764883
+          ],
+          "height": -4.203239404472498,
+          "relief": -4.667704138312177,
+          "depth": 4.790708963809432,
+          "score": 4.790708963809432,
+          "inside": false,
+          "scale": 25.08092264294625
+        },
+        {
+          "type": "labyrinth",
+          "dir": [
+            0.782032669059933,
+            -0.6204890840693618,
+            -0.0584653835509719
+          ],
+          "height": -6.170485287435683,
+          "relief": -23.685037746317278,
+          "depth": 6.644913237716636,
+          "score": 6.644913237716636,
+          "inside": false,
+          "scale": 72.08173583629376
+        },
+        {
+          "type": "mesa",
+          "dir": [
+            0.2905444800214607,
+            0.19534430684596316,
+            0.93670940366366
+          ],
+          "height": 20.2304053298323,
+          "relief": 29.289092380848203,
+          "depth": 0,
+          "score": 20.2304053298323,
+          "inside": false,
+          "scale": 30.82028175711632
+        },
+        {
+          "type": "plateau",
+          "dir": [
+            -0.9396552192671878,
+            -0.1462619469286352,
+            -0.3092822526181845
+          ],
+          "height": 22.92251283024856,
+          "relief": 22.369497827720647,
+          "depth": 0,
+          "score": 22.92251283024856,
+          "inside": false,
+          "scale": 27.961872284650806
+        },
+        {
+          "type": "range",
+          "dir": [
+            0.4594130090609347,
+            -0.5305676600200604,
+            0.7123465766369732
+          ],
+          "height": 88.1636474108794,
+          "relief": 87.46376791846758,
+          "depth": 0,
+          "score": 88.1636474108794,
+          "inside": false,
+          "scale": 90
+        },
+        {
+          "type": "ravine",
+          "dir": [
+            -0.08379830311589613,
+            -0.0825366669341469,
+            -0.9930586805452628
+          ],
+          "height": -7.004645483362573,
+          "relief": -10.250667399886119,
+          "depth": 41.87871792255632,
+          "score": 41.87871792255632,
+          "inside": false,
+          "scale": 36.468709269046784
+        },
+        {
+          "type": "spider",
+          "dir": [
+            0.26350767338199915,
+            0.9561556206573538,
+            0.12778941722285228
+          ],
+          "height": -7.617938612528546,
+          "relief": -11.75270766390926,
+          "depth": 8.17589419737049,
+          "score": 8.17589419737049,
+          "inside": false,
+          "scale": 22.438295150041583
+        },
+        {
+          "type": "spine",
+          "dir": [
+            0.9063884683747566,
+            -0.19159658445221703,
+            -0.37649793256206204
+          ],
+          "height": 66.70629050969744,
+          "relief": 66.28942578767908,
+          "depth": 0,
+          "score": 66.70629050969744,
+          "inside": true,
+          "scale": 70.58892258167268
+        },
+        {
+          "type": "spiral",
+          "dir": [
+            0.24908599100977566,
+            0.003821498893558634,
+            -0.9684738330119635
+          ],
+          "height": -1.8173315584998435,
+          "relief": -5.071378628274653,
+          "depth": 2.3916274727190183,
+          "score": 2.3916274727190183,
+          "inside": false,
+          "scale": 30.92129412992299
+        },
+        {
+          "type": "stripes",
+          "dir": [
+            0.12489566254626519,
+            -0.5591354692133392,
+            0.8196149099087378
+          ],
+          "height": -2.443825037667451,
+          "relief": -5.92712507018287,
+          "depth": 3.1148553876457705,
+          "score": 3.1148553876457705,
+          "inside": false,
+          "scale": 21.105852759599685
+        },
+        {
+          "type": "valley",
+          "dir": [
+            -0.6218089369511607,
+            -0.5181682213500198,
+            -0.587243850806992
+          ],
+          "height": -4.258960039677287,
+          "relief": -7.386967991518693,
+          "depth": 35.90210786020714,
+          "score": 35.90210786020714,
+          "inside": false,
+          "scale": 50.62638413371145
+        },
+        {
+          "type": "volcano",
+          "dir": [
+            0.27940767302324376,
+            0.7957222057247251,
+            -0.537361632024761
+          ],
+          "height": 26.32961895015955,
+          "relief": 25.76276180142489,
+          "depth": 8.760843131444346,
+          "score": 8.760843131444346,
+          "inside": false,
+          "scale": 57.66260402038694
+        }
+      ]
+    },
+    {
+      "name": "Formation selector focuses the actual basin",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual blades",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual buttes",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual caldera",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual canyon",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual cells",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual chaos",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual drumlins",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual dunes",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual escarpment",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual fan",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual gorge",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual grand",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual hills",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual impact",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual karst",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual labyrinth",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual mesa",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual plateau",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual range",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual ravine",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual spider",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual spine",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual spiral",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual stripes",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual valley",
+      "ok": true
+    },
+    {
+      "name": "Formation selector focuses the actual volcano",
+      "ok": true
+    },
+    {
+      "name": "Formation selector arrows focus its selection without leaking pan input",
+      "ok": true
+    },
+    {
+      "name": "Planet theme owns climate without a duplicate selector",
+      "ok": true
+    },
+    {
+      "name": "Real nest approach overlay reaches the heart from all eleven scheduled sources",
+      "ok": false
+    },
+    {
+      "name": "Peak camera stays finite and above the planet",
+      "ok": true
+    },
+    {
+      "name": "Whole-planet inspection has a separate wide zoom",
+      "ok": true
+    },
+    {
+      "name": "Paused inspector accepts real arrow navigation",
+      "ok": true
+    },
+    {
+      "name": "Keyboard focus enters the generator with a visible outline",
+      "ok": true
+    },
+    {
+      "name": "Inspector text contrast exceeds 4.5 to one",
+      "ok": true,
+      "actual": [
+        16.20214253305593,
+        7.726546710231671
+      ]
+    },
+    {
+      "name": "Collapsing the inspector clears the terrain view",
+      "ok": true
+    },
+    {
+      "name": "Editing a seed does not pan the world",
+      "ok": true
+    },
+    {
+      "name": "Generator fits 390px viewport",
+      "ok": true,
+      "actual": {
+        "right": 374,
+        "bottom": 784,
+        "scroll": 356,
+        "width": 356,
+        "body": 390
+      }
+    },
+    {
+      "name": "Generator fits 768px viewport",
+      "ok": true,
+      "actual": {
+        "right": 376,
+        "bottom": 784,
+        "scroll": 358,
+        "width": 358,
+        "body": 768
+      }
+    },
+    {
+      "name": "Generator fits 1280px viewport",
+      "ok": true,
+      "actual": {
+        "right": 376,
+        "bottom": 784,
+        "scroll": 358,
+        "width": 358,
+        "body": 1280
+      }
+    },
+    {
+      "name": "Invalid seed gives an actionable error without losing the scene",
+      "ok": true
+    },
+    {
+      "name": "Generate world loads a new deterministic world",
+      "ok": true
+    },
+    {
+      "name": "Previous seed remains in recent history",
+      "ok": true
+    },
+    {
+      "name": "Recent history exactly replays accepted seed, base and heights",
+      "ok": true
+    },
+    {
+      "name": "Denied clipboard exposes a selectable reproducible link",
+      "ok": true
+    },
+    {
+      "name": "Terrain selector loads Giant peaks and retains sandbox isolation",
+      "ok": true
+    },
+    {
+      "name": "Play this seed opens the normal sandbox with the same world",
+      "ok": true
+    },
+    {
+      "name": "Classic whole-planet comparison uses the original terrain formula",
+      "ok": true
+    },
+    {
+      "name": "Classic comparison hides the procedural formation catalog",
+      "ok": true
+    },
+    {
+      "name": "Regeneration and play handoff preserve saved campaign bytes",
+      "ok": true
+    },
+    {
+      "name": "In-game generator entry pauses the original battle",
+      "ok": true
+    }
+  ],
+  "faults": [],
+  "pass": false
+}

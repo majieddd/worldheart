@@ -135,11 +135,11 @@ test('Deep Freeze has a real recovery interval even under overlapping auras',()=
   assert.ok(held>0);assert.ok(released>60,'target must get a meaningful recovery interval');
 });
 
-test('all 13 talents buy, persist, reject duplicate charging, and reach the next run',async()=>{
+test('nine paid talents persist; four free commanders never charge and cannot bypass progression',async()=>{
   const saved=new Map();globalThis.localStorage={getItem:k=>saved.get(k)||null,setItem:(k,v)=>saved.set(k,v)};
   const p=await import('../../js/modes/progress.js');const profile=p.loadProfile();profile.coins=10000;p.saveProfile(profile);
   assert.equal(p.buyTalent('b-veteran').reason,'locked');let spent=0;
-  for(const t of p.TALENTS){assert.equal(p.buyTalent(t.id).ok,true,t.id);spent+=t.cost;assert.equal(p.isOwned(p.loadProfile(),t),true);assert.equal(p.buyTalent(t.id).reason,'owned');}
+  for(const t of p.TALENTS){if(t.kind!=='commander'){assert.equal(p.buyTalent(t.id).ok,true,t.id);spent+=t.cost;}assert.equal(p.isOwned(p.loadProfile(),t),true);assert.equal(p.buyTalent(t.id).reason,'owned');}
   const current=p.loadProfile();assert.equal(current.coins,10000-spent);assert.equal(p.TALENTS.length,13);
   const run=createRun({seed:3,playerIds:['solo'],profile:current});assert.equal(run.getFrontierSteps(),1);
   for(const t of current.towers)assert.ok(run.getUnlockedTowers().includes(t),t);

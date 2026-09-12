@@ -296,6 +296,7 @@ class Ally {
     this.routeAt = 0;
     this.routeUntil = 0;
     this.routeRevision = -1;
+    this.mountKey = 'none'; this.mountOffset = 0; this.mountFlight = 0; this.mountFlying = false; this.mountSpeed = 1; this.mountWater = 1; this.weatherLift = 0;
     this.hop = 0;        // metres above the ground while airborne
     this.vertVel = 0;
     this.airT = 0;
@@ -460,12 +461,12 @@ export class AllyManager {
     // jump mean something to every system at once: enemy melee acquisition, the
     // landing re-check that lets you dodge a telegraphed swing, the enemy's blow, the instanced renderer and the strike origin all read this.
     return out.copy(a.dir).multiplyScalar(
-      R + surfaceElevation(a.dir,a.height) + (a.hop || 0) + a.type.radius * 0.9 - swimOffset(a));
+      R + surfaceElevation(a.dir,a.height) + (a.hop || 0) + (a.mountOffset || 0) + (a.mountFlight || 0) + (a.weatherLift || 0) + a.type.radius * 0.9 - swimOffset(a));
   }
 
   enemyPos(e, out) {
     const h = surfaceElevation(e.dir,e.height) - swimOffset(e);
-    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + e.type.radius * 0.9);
+    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + (e.weatherLift || 0) + e.type.radius * 0.9);
   }
 
   _release(a) {
@@ -767,6 +768,7 @@ export class AllyManager {
   }
 
   _moveToward(a, target, distance) {
+    distance *= a.mountSpeed || 1;
     if (!CONFIG.terrain) return advanceToward(a.dir, target, distance * a.carryMul / R, a.fwd);
     const nav = this.enemies.nav;
     const changed = !a.routeGoal || a.routeGoal.angleTo(target) * R > 2;
@@ -785,7 +787,7 @@ export class AllyManager {
     }
     const goal = a.routeAt < a.route.length ? _routePoint : target;
     _routeBearing.copy(goal).addScaledVector(a.dir, -goal.dot(a.dir)).normalize();
-    const factor = surfaceTravel(a, _routeBearing, Math.min(distance, a.dir.angleTo(goal) * R));
+    const factor = surfaceTravel(a, _routeBearing, Math.min(distance, a.dir.angleTo(goal) * R)) * (a.swimming ? (a.mountWater || 1) : 1);
     _routeStep.copy(a.dir);
     advanceToward(_routeStep, goal, distance * a.carryMul * factor / R);
     if (!nav.canStep(a.dir, _routeStep,false,this._movementNode(a))) { a.route = []; a.routeUntil = this.time + 0.5; return false; }
@@ -829,7 +831,7 @@ export class AllyManager {
     _tmp2.normalize();
     _driveBearing.copy(_tmp2);
     if (a.swimming) { mul = Math.min(1, mul); a.sprint = false; }
-    const distance = a.type.speed * 1.25 * mul * mag * a.carryMul * Math.min(dt, 0.1);
+    const distance = a.type.speed * 1.25 * mul * mag * a.carryMul * (a.mountSpeed || 1) * Math.min(dt, 0.1);
     if(CONFIG.terrain)this._movementNode(a);
     const segments = Math.max(1, Math.ceil(distance / 0.12));
     for (let segment=0; segment<segments; segment++) {
@@ -839,12 +841,12 @@ export class AllyManager {
       let moved=false;
       for (const angle of DRIVE_SLIDES) {
         _slideBearing.copy(_driveBearing).applyAxisAngle(a.dir,angle);
-        const factor=surfaceTravel(a,_slideBearing,distance/segments);
+        const factor=a.mountFlying ? 1 : surfaceTravel(a,_slideBearing,distance/segments) * (a.swimming ? (a.mountWater || 1) : 1);
         const step=distance/segments*factor*Math.cos(angle)/R;
         if (!(step>0)) continue;
         _axis.crossVectors(a.dir,_slideBearing).normalize();
         _routeStep.copy(a.dir).applyAxisAngle(_axis,step).normalize();
-        if (!this.enemies.nav.canStep(a.dir,_routeStep,false,a.moveNode)) continue;
+        if (!this.enemies.nav.canStep(a.dir,_routeStep,a.mountFlying,a.moveNode)) continue;
         a.dir.copy(_routeStep);
         if(CONFIG.terrain)a.moveNode=this.enemies.nav.descendNode(a.moveNode,a.dir);
         reflatten(a.fwd.applyAxisAngle(_axis,step),a.dir);
@@ -1332,6 +1334,7 @@ export class AllyManager {
         _frame.compose(_tmp, _q, _s);
 
         poseSoldier(sk, sp.spec, a, a.cos, this.time);
+        if(a.mountKey && a.mountKey!=='none'){sk.byName.hipR.rot.x=-.85;sk.byName.hipL.rot.x=-.85;sk.byName.kneeR.rot.x=1.3;sk.byName.kneeL.rot.x=1.3;}
         // A selected unit's ground ring swells and lifts, which is how a
         // boxed unit is obvious from the board without another draw call.
         const ground = sk.byName.ground;

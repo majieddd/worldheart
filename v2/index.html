@@ -27,6 +27,10 @@
 <script type="importmap">
 { "imports": { "three": "./lib/three.module.min.js" } }
 </script>
-<script type="module" src="js/main.js"></script>
+<script type="module">
+const entry=new URLSearchParams(location.search);
+if(location.protocol!=='file:'&&!['map','seed','campaign','worldgen'].some(k=>entry.has(k)))location.replace(new URL('lobby.html',location.href));
+else import('./js/main.js');
+</script>
 </body>
 </html>

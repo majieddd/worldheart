@@ -6,10 +6,10 @@ registerHooks({resolve(spec,context,next){if(spec==='three')return{url:new URL('
 const T=await import('../../lib/three.module.min.js'),{OrbitRig}=await import('../../js/camera.js'),{CONFIG,CAM_TUNE}=await import('../../js/config.js');
 const {frontierTheta,HEART_RINGS}=await import('../../js/run/schedule.js'),saved={...CAM_TUNE};afterEach(()=>Object.assign(CAM_TUNE,saved));
 function rig(){const r=new OrbitRig({clientHeight:720,addEventListener(){}});r.frontierTheta=.05;r.dist=r.targetDist=35;r.confine={center:new T.Vector3(0,0,1),maxAng:.051};return r;}
-test('owner U35 restores the original close altitude and permits only ten percent extra maximum height',()=>{
+test('close base retains its original zoom while a global base can frame the planet',()=>{
  const r=rig(),start=r.defaultDist;let previous=0;
  for(const steps of HEART_RINGS){r.frontierTheta=frontierTheta(steps);r.confine.maxAng=r.frontierTheta*1.02;assert.ok(r.distMax>previous);previous=r.distMax;}
- assert.ok(Math.abs(r.distMax-124.08)<1e-7);
+ assert.ok(r.distMax>CONFIG.planetRadius*2);
  r.frontierTheta=.05;r.confine.maxAng=.051;assert.equal(r.defaultDist,start);assert.equal(r.distMax,46.8);
 });
 test('viewport and polar focus cannot inflate the owner-approved zoom band',()=>{

@@ -64,8 +64,8 @@ Each requested planet seed selects an M/K/G/F star and an orbital distance.
 Flux L/a^2 shifts temperature; water inventory and tectonic activity separately
 produce ten extreme themes, described below. Planet Mix has
 wet equatorial, dry subtropical, wetter temperate and cold polar belts, with
-smaller longitude noise and an altitude cooling term. Explicit Temperate,
-Desert, Boreal, Jungle, Volcanic and Wetlands overrides remain available.
+smaller longitude noise and an altitude cooling term. The Planet theme owns
+this climate; there is no second climate dropdown to contradict the theme.
 The climate fields produce meadow,
 woodland, jungle, wetland, savanna, desert and tundra regions across multiple formation
 families. Tectonic activity independently creates volcanic regions. Hot stone and
@@ -75,8 +75,8 @@ regions show basalt and warm fissures on raised hot crust. This is solid rock,
 not a liquid lava simulation or added damage hazard. Hot volcanic highlands use
 the existing Mortar-only restriction/bonus; snowy ground retains Cryo rules.
 Trees and cacti remain passable scenery. Mild benches can support vegetation.
-The inspector Climate selector independently dresses the same layout and is
-preserved by Load seed, recent history, share links and Play this seed. Campaign
+The theme choice is preserved by Load seed, recent history, share links and
+Play this seed. Legacy biome URL arguments are ignored by the shell. Campaign
 climates remain seeded; inspector choices do not overwrite campaign saves.
 
 ## Extreme worlds and exhibition
@@ -97,9 +97,13 @@ hot/cold tower affinities. Molten seas currently use swimming slowdown; they do
 not add an unannounced damage rule. Scenery remains passable. Neither a theme
 nor a color change grants a hidden movement or tower modifier.
 
-`debug.html` provides six flat lanes: 11 unit rigs, 18 authored tower marks,
-14 weapon family/era or native silhouettes, 30 isolated formations, 14 biomes
-and 10 theme plots. Formation tiles use the real production field at a common
+`debug.html` provides eight flat lanes: 11 unit rigs, 3 mounts, 18 authored tower
+marks, 14 weapon family/era or native silhouettes, 30 isolated formations,
+4 combined Terrain collections, 15 biomes and 10 theme globes. The Terrain lane
+is between formations and biomes. Each approximately 300m production patch
+shows the multiple formation groups selected by that relief mix. Mangrove
+adds stilt-rooted trees to wet lowland Canopy and Pelagic planets.
+Formation tiles use the real production field at a common
 1:5 scale. Model poses and materials come from the same production builders.
 Each theme links to a full generated planet. Debug reads/writes no campaign or
 preference storage. [Research, visual comparisons and checks](qa/implementation/EXTREME-WORLDS.md).

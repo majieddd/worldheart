@@ -16,6 +16,7 @@ export function createRunState({ seed, playerIds, startGold = DEFAULT_START_GOLD
   return {
     seed,
     wavesCleared: 0,
+    endless: false,
     phase: 'building',
     players: playerIds.map((id) => ({ id, gold: startGold })),
     powers: [],

@@ -1,11 +1,12 @@
 import{test}from'node:test';import assert from'node:assert/strict';import{registerHooks}from'node:module';
 globalThis.location={search:'?map=ninetynine'};globalThis.matchMedia=()=>({matches:false});
 registerHooks({resolve(spec,context,next){if(spec==='three')return{url:new URL('../../lib/three.module.min.js',import.meta.url).href,shortCircuit:true};return next(spec,context);}});
-const{WaveDirector,newNestCount}=await import('../../js/waves.js');
+const{WaveDirector,newNestCount,hpScale,waveComp}=await import('../../js/waves.js');
 const{CONFIG}=await import('../../js/config.js');
 const{NEST_SCHEDULE_CAPACITY}=await import('../../js/nest-sites.js');
 const{World}=await import('../../js/world.js');
 const{EnemyManager,EVO}=await import('../../js/enemies.js');
+test('long Endless runs keep finite increasing health and bounded individual packs',()=>{let previous=0;for(const wave of [10,20,50,100,1000,1000000]){const health=hpScale(wave);assert.ok(Number.isFinite(health)&&health>previous);previous=health;for(const group of waveComp(wave))assert.ok(group.count>0&&group.count<=90);}});
 const nestFixture=()=>{
  const enemies={active:[],spawn(type,node){const e={id:this.active.length+1,type:{},typeKey:type,node};this.active.push(e);return e;}},game={gold:0};
  const waves=new WaveDirector(game,enemies,{});Object.assign(waves,{nestOnly:true,nestSources:[4,8],destroyedNodes:new Set(),state:'spawning',wave:2,clock:0});
@@ -92,9 +93,9 @@ test('a full pool retains both overlapping assaults and cannot pay either early'
 });
 test('final timed assault fires victory once only after every earlier wave and boss child',()=>{
  const{waves,enemies}=timedFixture();let victories=0;waves.onVictory=()=>victories++;
- waves.wave=CONFIG.waves.count;waves.state='combat';waves.clearedWaves=13;
- const child=enemies.spawn('mite',1);waves.assaultIds.set(child.id,15);
- waves.update(1000);assert.equal(waves.clearedWaves,14);assert.equal(waves.wave,15);assert.equal(victories,0);
+ waves.wave=CONFIG.waves.count;waves.state='combat';waves.clearedWaves=CONFIG.waves.count-2;
+ const child=enemies.spawn('mite',1);waves.assaultIds.set(child.id,CONFIG.waves.count);
+ waves.update(1000);assert.equal(waves.clearedWaves,CONFIG.waves.count-1);assert.equal(waves.wave,CONFIG.waves.count);assert.equal(victories,0);
  waves.update(1000);assert.equal(victories,0);enemies.active=[];waves.update(.1);waves.update(1000);
  assert.equal(victories,1);assert.equal(waves.state,'idle');
 });

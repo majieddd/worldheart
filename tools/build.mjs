@@ -104,7 +104,7 @@ async function build() {
     `<script type="importmap">\n${JSON.stringify({ imports }, null, 0)}\n</script>`,
   );
   html = html.replace(
-    /<script type="module" src="js\/main.js"><\/script>/,
+    /<script type="module">[\s\S]*?<\/script>|<script type="module" src="js\/main.js"><\/script>/,
     `<script type="module">import 'main';</script>`,
   );
 

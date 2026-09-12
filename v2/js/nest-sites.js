@@ -5,7 +5,7 @@
 export const NEST_CLEARANCE = 2.4;
 export const NEST_SEPARATION = 6;
 export const NEST_ROUTE_LIMIT = 160;
-export const NEST_SCHEDULE_CAPACITY = 17;
+export const NEST_SCHEDULE_CAPACITY = 11;
 
 function dryFloor(nav, i) {
   return nav.walk[i] && !nav.block[i] && nav.airWalk[i]

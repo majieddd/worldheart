@@ -52,7 +52,9 @@ export function hpScale(wave) {
   let s = 1 + (wave - 1) * 0.08;
   if (wave > 10) s += (wave - 10) * 0.05;
   if (wave > 20) s += (wave - 20) * 0.055;
-  if (wave > 30) s *= Math.pow(1.12, wave - 30);
+  // Endless eventually becomes linear again; neither HP nor a queue may
+  // overflow just because a player keeps the same assault running.
+  if (wave > 30) s *= Math.pow(1.12, Math.min(60, wave - 30));
   return s;
 }
 
@@ -78,9 +80,9 @@ export function waveComp(wave) {
   const total = CONFIG.waves.count;
   // A short run gets exactly one boss, on its final wave. The classic 30-wave
   // maps keep their bosses at 10, 20 and 30.
-  const boss = total === 30 ? w % 10 === 0 : w === total;
+  const boss = total === 30 || CONFIG.map.mode === 'ninetynine' ? w % 10 === 0 : w === total;
   const groups = [];
-  const push = (type, count, gap, portal = 'spread') => groups.push({ type, count, gap, portal });
+  const push = (type, count, gap, portal = 'spread') => groups.push({ type, count:Math.min(90,count), gap, portal });
 
   if (boss) {
     if (total !== 30) {
@@ -169,7 +171,10 @@ export class WaveDirector {
     this.clearedWaves = 0;
     this.assaultIds = new Map();
     this.siteBlocked = false;
+    this.endless = false;
   }
+
+  get limit() { return this.endless ? Infinity : CONFIG.waves.count; }
 
   begin() {
     this.wave = 0;
@@ -184,7 +189,7 @@ export class WaveDirector {
 
   callEarly() {
     if (this.siteBlocked) return 0;
-    if (this.state !== 'countdown' && !(this.timedNests && this.state !== 'idle' && this.wave < CONFIG.waves.count)) return 0;
+    if (this.state !== 'countdown' && !(this.timedNests && this.state !== 'idle' && this.wave < this.limit)) return 0;
     const bonus = Math.floor(this.countdown) * CONFIG.waves.earlyBonusPerSec;
     this.game.gold += bonus;
     this.countdown = 0;
@@ -203,7 +208,7 @@ export class WaveDirector {
   }
 
   _startWave() {
-    if (this.timedNests && this.wave >= CONFIG.waves.count) return false;
+    if (this.timedNests && this.wave >= this.limit) return false;
     const survivors = this.nestOnly ? this.activePortals() : [];
     // Campaign sources are physical structures prepared before any unit is
     // queued. An empty list means the player prevented this assault.
@@ -224,7 +229,7 @@ export class WaveDirector {
     // Enemy melee grows with the wave so a garrison does not stay free forever,
     // but on a much shallower slope than health does and with a ceiling, so a
     // late swarm is dangerous rather than a one-shot on every body.
-    this.enemies.atkScale = Math.min(1 + (scale - 1) * ATK_SCALE_SLOPE, ATK_SCALE_CAP);
+    this.enemies.atkScale = Math.min(1 + (scale - 1) * ATK_SCALE_SLOPE, ATK_SCALE_CAP) * (CONFIG.map.mode === 'ninetynine' ? 2.8 : 1);
     const active = this.activePortals();
     if (!this.timedNests) { this.queues = []; this.clock = 0; }
 
@@ -252,7 +257,7 @@ export class WaveDirector {
     }
     this.pendingSpawns = this.queues.length;
     this.queues.sort((a, b) => a.t - b.t);
-    if (this.timedNests) this.countdown = this.wave < CONFIG.waves.count ? nestWaveInterval(this.wave) : 0;
+    if (this.timedNests) this.countdown = this.wave < this.limit ? nestWaveInterval(this.wave) : 0;
     this.state = 'spawning';
     this.refreshNests();
     if (this.onWaveStart) this.onWaveStart(this.wave, waveComp(this.wave));
@@ -282,7 +287,7 @@ export class WaveDirector {
     const reward = waveReward(next);
     this.game.gold += reward;
     this.onWaveClear?.(next, reward);
-    if (next === CONFIG.waves.count && !this.victoryFired) {
+    if (next === this.limit && !this.victoryFired) {
       this.victoryFired = true;
       this.state = 'idle';
       this.onVictory?.();
@@ -412,7 +417,7 @@ export class WaveDirector {
       return;
     }
     if (this.state === 'spawning' || this.state === 'combat') {
-      if (this.timedNests && this.wave < CONFIG.waves.count) {
+      if (this.timedNests && this.wave < this.limit) {
         this.countdown -= dt;
         if (this.countdown <= 0) this._startWave();
       }
@@ -441,7 +446,7 @@ export class WaveDirector {
         const reward = waveReward(this.wave);
         this.game.gold += reward;
         if (this.onWaveClear) this.onWaveClear(this.wave, reward);
-        if (this.wave >= CONFIG.waves.count && !this.victoryFired) {
+        if (this.wave >= this.limit && !this.victoryFired) {
           this.victoryFired = true;
           if (this.onVictory) this.onVictory();
         }

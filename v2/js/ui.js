@@ -113,7 +113,7 @@ export class HUD {
         <button class="btn icon" id="btn-speed" title="Game speed (F)"><span class="marker" id="speed-label" style="color:inherit">1x</span></button>
         <button class="btn icon" id="btn-home" title="Return to heart (Home)">${icon('heart')}</button>
         <button class="btn icon" id="btn-pause" title="Pause (P; Space on the board)">${icon('pause')}</button>
-        <button class="btn icon" id="btn-sound" title="Sound (M)">${icon('volume')}</button>
+        <button class="btn icon" id="btn-sound" title="Sound (${CONFIG.map.mode === 'ninetynine' ? 'N' : 'M'})">${icon('volume')}</button>
         <button class="btn icon" id="btn-settings" title="Settings">${icon('settings')}</button>
       </div>
 
@@ -594,7 +594,7 @@ export class HUD {
       if (e.code === 'Space') { e.preventDefault(); if (!this.possession?.active) this.togglePause(); }
       else if (e.code === 'KeyP') { e.preventDefault(); this.togglePause(); }
       else if (e.code === 'KeyF') { if (!this.possession?.active) this.cycleSpeed(); }
-      else if (e.code === 'KeyM') this.toggleSound();
+      else if (e.code === (CONFIG.map.mode === 'ninetynine' ? 'KeyN' : 'KeyM')) this.toggleSound();
       else if (e.code === 'Home') { e.preventDefault(); this.returnToHeart(); }
       // B raises the Worldheart. A board verb like F: on the ground the panel
       // is not even visible, and spending 450 gold from inside a body with no
