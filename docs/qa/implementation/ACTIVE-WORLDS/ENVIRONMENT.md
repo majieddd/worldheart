@@ -1,7 +1,8 @@
 # Environmental implementation and acceptance
 
 Owner: Codex. U90-U105 on `feature/planet-ecology-and-active-worlds`.
-Implementation checkpoint; final combined and public verification is underway.
+Local acceptance complete; public V2 verification is next. The source and
+checked-in V2 mirror remain separate from a live deployment claim.
 
 The shared production catalogue now contains 52 formations, 10 terrain packs,
 44 biomes, 12 active land features, 12 disasters and 37 planet themes. Debug
@@ -38,21 +39,89 @@ ten geological provinces. Astronomical themes combine recognizable regional
 geography with seeded local formations, correct atmospheric compatibility and
 distinct surface materials. Miniatures use the same field at a lower mesh LOD.
 
-## Verification in progress
+## Combined verification
 
-Initial implementation checks: 315 automated tests; 23 actual feature/disaster
-checks; 14 world-route checks across six representative worlds; 84 finite-render
-and selection checks. These precede the final review refinements and therefore
-are checkpoint evidence rather than final acceptance of the current tree.
+- [318 automated tests](environment/tests.txt): rules, seed determinism,
+  compatibility, geometry/collision agreement, equipment and lifecycle. A
+  dedicated regression checks that floating island features use their upper
+  ecology after structural surfaces have been created.
+- [264 Debug checks](environment/debug.json): all 243 exhibits in ten lanes,
+  finite production models, animation, selection, core controls, keyboard/pointer
+  camera input, responsive layouts, reduced motion and contrast. Startup was
+  11.0 seconds. The route does not read or change browser saves.
+- [108 route/composition checks](environment/worlds.json) across all ten packs
+  and 37 themes. Each has a certified battlefield and eleven connected nest
+  approaches. The independent whole-globe survey requires at least 95% of
+  traversable dry depressed ground to reach the base, excluding authored
+  trap sinkholes. All Planet contains all 52 formations, 44 biomes and twelve
+  active feature kinds. Its radius is 480, versus 240 for ordinary planets.
+- [25 environmental checks](environment/effects.json): all natural sites in
+  the fixture satisfy their fit, both hemispheres receive features, garden
+  volcanic biomes follow volcano geology, and all eleven timed local effects
+  and ten new disasters affect actual commanders and enemies. Disaster types
+  are deliberately forced in a compatible fixture; this is separate from
+  natural event probabilities and the compatibility rules tested above.
+- [Eight actual surface checks](environment/surfaces.json): commander spawn,
+  enemy navigation and tower anchoring on upper islands, real landings and
+  keyboard-driven falls off an exposed edge, plus geyser lift for both teams.
+  Position and time are instrumented; this is not an unforced expedition.
+- [50 combat checks](environment/combat.json) and [23 regressions](environment/regression.json)
+  pass against the combined tree: all abilities, aim cancellation, scepter
+  muzzle, salvage/forge rules, outward nest growth, cliff traversal, quake nest
+  destruction and shared predicted/committed terrain.
+- [Seven camera cases](environment/cameras.json): all five maps, oversized
+  All Planet and Saturn. A global base frames the whole globe and its rings.
+- [Legal defense and extraction](environment/defense.json): seed 12345,
+  floating-island campaign opener, ten waves, 250 kills, six towers, 20 heart
+  health and four inventory items carried into Planet 2. No resource, enemy
+  or victory injection. This is an instrumented policy at 60Hz simulation,
+  with sparse rendering; it does not establish gameplay FPS.
 
-The initial visual review caught slab-like bridge roofs, excessive positive
-canyon relief, hidden astronomical landmarks and weak Debug tornado rendering.
-The first runtime effect pass caught an incorrect enemy slow-method name.
-Those were corrected. Sky generation initially took 91 seconds; caching shared
-warped coordinates and avoiding irrelevant lower-ground sampling are being
-measured in the full route sweep. All initial artifacts and failures remain in
-`artifacts/active-worlds/` until durable final evidence is recorded here.
+The route aggregate keeps the latest corrected record per case. Its source
+reports preserve failed crater exits, the initial Mercury/terrain routing
+failures and the subsequently corrected Sky Archipelago biome distribution.
+Only one authored seed and its production deterministic fallback are covered
+per world case; this is not exhaustive seed or 99-planet completion.
 
-Required remaining acceptance: all pack/theme worlds, actual upper-deck
-movement and enemy routes, native render/quake timing, combined gameplay,
-five camera maps, a legal ten-wave defense and public V2 identity/interaction.
+## Native performance
+
+[The combined earthquake run](environment/quake.json) changed 24,688 existing
+navigation nodes and 15,564 mesh vertices, preserved footprints and resumed
+simulation while camera input stayed responsive. Chrome, this workstation,
+1440x900: median 6.9ms, p99 7.2ms, worst frame 34.6ms, longest terrain-work slice
+7.5ms. Triggered quake and fixture-funded base upgrades; no broad-device claim.
+The identical-geometry before/after comparison remains in [the combat checkpoint](COMBAT.md#earthquake-timing).
+
+The first full Debug overview exposed almost 7,000 draw calls and a 34.7ms
+median. Static surface batching preserves the actual vertices and colors;
+subpixel active props disappear only in distant catalogue views and return
+when inspected. The first correction measured 13.7ms median and 14ms p99.
+[Final native verification](environment/debug-performance.json) measured 7.1ms
+median and 14ms p99 for the overview, and 6.9ms median / 7.1ms p99 for animated
+units, at 1280x720 over two fifteen-second samples. All eleven unit rigs visited
+all their clips. These are native measurements on this workstation only.
+
+## Review and retained failures
+
+The visual review covered every theme, formation, biome, active feature and
+disaster. Corrections include low roofs joined to their actual banks, matching
+pedestal rock, deeper canyon cuts, visible astronomical landmarks, proper
+airless skies and the shared in-game tornado model in Debug. Full-resolution
+captures and [compact contact sheets](environment/VISUALS.md) accompany the
+final catalogue report.
+
+Runtime review caught and fixed an incorrect enemy slow method, warped-log
+geometry disagreeing with collision, crater exit ramps facing away from their
+rim openings, and cavern roofs trapping ordinary passage floors. Sky worlds
+also needed upper-surface spawning, a compatible base-height/flight envelope,
+and their own upper ecology for biome and feature placement. The first fall
+fixture walked along a causeway; the corrected input fixture starts at a real
+exposed edge. The 30-second browser navigation timeout was insufficient for
+the larger world and is recorded separately from gameplay failures.
+
+Cached geography remains query-order independent. Reusing warped coordinates
+and avoiding lower-floor queries reduced the same explicit floating terrain
+case from about 91 to 20 seconds, and Earth from 75 to 25 seconds. The final
+Sky Archipelago theme boots in about 41 seconds; large world generation still
+has a visible loading interval. Owner art/feel review, broad hardware coverage,
+all 99 planets and multiplayer remain separate longer-term acceptance work.

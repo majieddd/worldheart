@@ -17,6 +17,10 @@ connected floating kingdoms. All Planet uses twice the ordinary radius, while
 16 solar-system analogues use authored regional geography and seeded details.
 See the [environmental acceptance record](qa/implementation/ACTIVE-WORLDS/ENVIRONMENT.md)
 for the distinction between implementation, runtime verification and publication.
+The combined local acceptance covers all 47 pack/theme worlds, actual feature
+and disaster effects, native performance, all camera maps and one legal
+ten-wave floating-world defense. Public V2 verification follows those checks;
+this does not close full-campaign, hardware or multiplayer acceptance.
 
 The September 12 U60-U74 work is on `feature/expedition-lobby-and-survival`.
 The subsequent U75-U88 request is tracked in

@@ -7,6 +7,7 @@ const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json'))
 const out=resolve(process.argv[2]||'artifacts/living-worlds/expansion'),kind=process.argv[3]||'all',base=process.env.WH_BASE_URL||'http://127.0.0.1:8139';mkdirSync(out,{recursive:true});
 const cases=[...(kind==='themes'?[]:Object.keys(TERRAIN_PACKS).map(terrain=>({terrain,planet:'temperate',label:'terrain-'+terrain}))),...(kind==='packs'?[]:Object.keys(PLANET_THEMES).filter(x=>x!=='auto').map(planet=>({terrain:'varied',planet,label:'planet-'+planet})))];
 const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1440,height:900}}),checks=[],records=[],faults=[];
+page.setDefaultNavigationTimeout(180000);
 await page.route('**/*',route=>route.continue());
 page.on('pageerror',e=>faults.push(String(e)));await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__frames=true;window.requestAnimationFrame=fn=>raf(t=>{if(__frames)fn(t);});});
 const ck=(name,ok,actual)=>checks.push({name,ok:!!ok,actual}),save=()=>writeFileSync(resolve(out,'report.json'),JSON.stringify({base,checks,records,faults},null,2));

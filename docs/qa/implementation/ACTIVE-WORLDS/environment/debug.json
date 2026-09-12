@@ -1,0 +1,2342 @@
+{
+  "checks": [
+    {
+      "name": "all ten registries are represented",
+      "ok": true,
+      "actual": [
+        {
+          "key": "units",
+          "n": 11
+        },
+        {
+          "key": "mounts",
+          "n": 3
+        },
+        {
+          "key": "towers",
+          "n": 30
+        },
+        {
+          "key": "weapons",
+          "n": 32
+        },
+        {
+          "key": "formations",
+          "n": 52
+        },
+        {
+          "key": "terrain",
+          "n": 10
+        },
+        {
+          "key": "biomes",
+          "n": 44
+        },
+        {
+          "key": "features",
+          "n": 12
+        },
+        {
+          "key": "disasters",
+          "n": 12
+        },
+        {
+          "key": "themes",
+          "n": 37
+        }
+      ]
+    },
+    {
+      "name": "debug route never reads or mutates browser saves",
+      "ok": true,
+      "actual": []
+    },
+    {
+      "name": "bounded exhibit startup",
+      "ok": true,
+      "actual": {
+        "ms": 11003
+      }
+    },
+    {
+      "name": "units/warden: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1920,
+        "bad": 0,
+        "key": "warden"
+      }
+    },
+    {
+      "name": "units/commander: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 2184,
+        "bad": 0,
+        "key": "commander"
+      }
+    },
+    {
+      "name": "units/duelist: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 2112,
+        "bad": 0,
+        "key": "duelist"
+      }
+    },
+    {
+      "name": "units/marksman: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 2604,
+        "bad": 0,
+        "key": "marksman"
+      }
+    },
+    {
+      "name": "units/bombardier: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 2616,
+        "bad": 0,
+        "key": "bombardier"
+      }
+    },
+    {
+      "name": "units/oracle: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 2424,
+        "bad": 0,
+        "key": "oracle"
+      }
+    },
+    {
+      "name": "units/mite: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1284,
+        "bad": 0,
+        "key": "mite"
+      }
+    },
+    {
+      "name": "units/husk: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1080,
+        "bad": 0,
+        "key": "husk"
+      }
+    },
+    {
+      "name": "units/aegis: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1296,
+        "bad": 0,
+        "key": "aegis"
+      }
+    },
+    {
+      "name": "units/wisp: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 564,
+        "bad": 0,
+        "key": "wisp"
+      }
+    },
+    {
+      "name": "units/colossus: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1992,
+        "bad": 0,
+        "key": "colossus"
+      }
+    },
+    {
+      "name": "mounts/strider: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 262,
+        "bad": 0,
+        "key": "strider"
+      }
+    },
+    {
+      "name": "mounts/tideback: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 432,
+        "bad": 0,
+        "key": "tideback"
+      }
+    },
+    {
+      "name": "mounts/skyray: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1027,
+        "bad": 0,
+        "key": "skyray"
+      }
+    },
+    {
+      "name": "towers/bolt-0: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 344,
+        "bad": 0,
+        "key": "bolt-0"
+      }
+    },
+    {
+      "name": "towers/bolt-1: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 612,
+        "bad": 0,
+        "key": "bolt-1"
+      }
+    },
+    {
+      "name": "towers/bolt-2: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 684,
+        "bad": 0,
+        "key": "bolt-2"
+      }
+    },
+    {
+      "name": "towers/bolt-5: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 732,
+        "bad": 0,
+        "key": "bolt-5"
+      }
+    },
+    {
+      "name": "towers/bolt-11: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 780,
+        "bad": 0,
+        "key": "bolt-11"
+      }
+    },
+    {
+      "name": "towers/cryo-0: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 279,
+        "bad": 0,
+        "key": "cryo-0"
+      }
+    },
+    {
+      "name": "towers/cryo-1: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 470,
+        "bad": 0,
+        "key": "cryo-1"
+      }
+    },
+    {
+      "name": "towers/cryo-2: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 517,
+        "bad": 0,
+        "key": "cryo-2"
+      }
+    },
+    {
+      "name": "towers/cryo-5: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 540,
+        "bad": 0,
+        "key": "cryo-5"
+      }
+    },
+    {
+      "name": "towers/cryo-11: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 563,
+        "bad": 0,
+        "key": "cryo-11"
+      }
+    },
+    {
+      "name": "towers/mortar-0: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 437,
+        "bad": 0,
+        "key": "mortar-0"
+      }
+    },
+    {
+      "name": "towers/mortar-1: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 737,
+        "bad": 0,
+        "key": "mortar-1"
+      }
+    },
+    {
+      "name": "towers/mortar-2: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 813,
+        "bad": 0,
+        "key": "mortar-2"
+      }
+    },
+    {
+      "name": "towers/mortar-5: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 837,
+        "bad": 0,
+        "key": "mortar-5"
+      }
+    },
+    {
+      "name": "towers/mortar-11: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 861,
+        "bad": 0,
+        "key": "mortar-11"
+      }
+    },
+    {
+      "name": "towers/tesla-0: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 410,
+        "bad": 0,
+        "key": "tesla-0"
+      }
+    },
+    {
+      "name": "towers/tesla-1: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 926,
+        "bad": 0,
+        "key": "tesla-1"
+      }
+    },
+    {
+      "name": "towers/tesla-2: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1211,
+        "bad": 0,
+        "key": "tesla-2"
+      }
+    },
+    {
+      "name": "towers/tesla-5: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1315,
+        "bad": 0,
+        "key": "tesla-5"
+      }
+    },
+    {
+      "name": "towers/tesla-11: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1419,
+        "bad": 0,
+        "key": "tesla-11"
+      }
+    },
+    {
+      "name": "towers/helios-0: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 536,
+        "bad": 0,
+        "key": "helios-0"
+      }
+    },
+    {
+      "name": "towers/helios-1: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 786,
+        "bad": 0,
+        "key": "helios-1"
+      }
+    },
+    {
+      "name": "towers/helios-2: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 905,
+        "bad": 0,
+        "key": "helios-2"
+      }
+    },
+    {
+      "name": "towers/helios-5: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 905,
+        "bad": 0,
+        "key": "helios-5"
+      }
+    },
+    {
+      "name": "towers/helios-11: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 905,
+        "bad": 0,
+        "key": "helios-11"
+      }
+    },
+    {
+      "name": "towers/warden-0: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 251,
+        "bad": 0,
+        "key": "warden-0"
+      }
+    },
+    {
+      "name": "towers/warden-1: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 423,
+        "bad": 0,
+        "key": "warden-1"
+      }
+    },
+    {
+      "name": "towers/warden-2: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 495,
+        "bad": 0,
+        "key": "warden-2"
+      }
+    },
+    {
+      "name": "towers/warden-5: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 495,
+        "bad": 0,
+        "key": "warden-5"
+      }
+    },
+    {
+      "name": "towers/warden-11: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 495,
+        "bad": 0,
+        "key": "warden-11"
+      }
+    },
+    {
+      "name": "weapons/twinblade-wood: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 480,
+        "bad": 0,
+        "key": "twinblade-wood"
+      }
+    },
+    {
+      "name": "weapons/twinblade-iron: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 480,
+        "bad": 0,
+        "key": "twinblade-iron"
+      }
+    },
+    {
+      "name": "weapons/twinblade-gold: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 480,
+        "bad": 0,
+        "key": "twinblade-gold"
+      }
+    },
+    {
+      "name": "weapons/twinblade-diamond: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 624,
+        "bad": 0,
+        "key": "twinblade-diamond"
+      }
+    },
+    {
+      "name": "weapons/twinblade-onyx: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 936,
+        "bad": 0,
+        "key": "twinblade-onyx"
+      }
+    },
+    {
+      "name": "weapons/scepter-wood: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 624,
+        "bad": 0,
+        "key": "scepter-wood"
+      }
+    },
+    {
+      "name": "weapons/scepter-iron: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 624,
+        "bad": 0,
+        "key": "scepter-iron"
+      }
+    },
+    {
+      "name": "weapons/scepter-gold: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 624,
+        "bad": 0,
+        "key": "scepter-gold"
+      }
+    },
+    {
+      "name": "weapons/scepter-diamond: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 948,
+        "bad": 0,
+        "key": "scepter-diamond"
+      }
+    },
+    {
+      "name": "weapons/scepter-onyx: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 888,
+        "bad": 0,
+        "key": "scepter-onyx"
+      }
+    },
+    {
+      "name": "weapons/sword-wood: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 336,
+        "bad": 0,
+        "key": "sword-wood"
+      }
+    },
+    {
+      "name": "weapons/sword-iron: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 336,
+        "bad": 0,
+        "key": "sword-iron"
+      }
+    },
+    {
+      "name": "weapons/sword-gold: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 336,
+        "bad": 0,
+        "key": "sword-gold"
+      }
+    },
+    {
+      "name": "weapons/sword-diamond: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 444,
+        "bad": 0,
+        "key": "sword-diamond"
+      }
+    },
+    {
+      "name": "weapons/sword-onyx: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 516,
+        "bad": 0,
+        "key": "sword-onyx"
+      }
+    },
+    {
+      "name": "weapons/spear-wood: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 360,
+        "bad": 0,
+        "key": "spear-wood"
+      }
+    },
+    {
+      "name": "weapons/spear-iron: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 360,
+        "bad": 0,
+        "key": "spear-iron"
+      }
+    },
+    {
+      "name": "weapons/spear-gold: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 360,
+        "bad": 0,
+        "key": "spear-gold"
+      }
+    },
+    {
+      "name": "weapons/spear-diamond: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 528,
+        "bad": 0,
+        "key": "spear-diamond"
+      }
+    },
+    {
+      "name": "weapons/spear-onyx: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 588,
+        "bad": 0,
+        "key": "spear-onyx"
+      }
+    },
+    {
+      "name": "weapons/carbine-wood: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 804,
+        "bad": 0,
+        "key": "carbine-wood"
+      }
+    },
+    {
+      "name": "weapons/carbine-iron: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 804,
+        "bad": 0,
+        "key": "carbine-iron"
+      }
+    },
+    {
+      "name": "weapons/carbine-gold: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 804,
+        "bad": 0,
+        "key": "carbine-gold"
+      }
+    },
+    {
+      "name": "weapons/carbine-diamond: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1044,
+        "bad": 0,
+        "key": "carbine-diamond"
+      }
+    },
+    {
+      "name": "weapons/carbine-onyx: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 972,
+        "bad": 0,
+        "key": "carbine-onyx"
+      }
+    },
+    {
+      "name": "weapons/lobber-wood: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 804,
+        "bad": 0,
+        "key": "lobber-wood"
+      }
+    },
+    {
+      "name": "weapons/lobber-iron: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 804,
+        "bad": 0,
+        "key": "lobber-iron"
+      }
+    },
+    {
+      "name": "weapons/lobber-gold: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 804,
+        "bad": 0,
+        "key": "lobber-gold"
+      }
+    },
+    {
+      "name": "weapons/lobber-diamond: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 972,
+        "bad": 0,
+        "key": "lobber-diamond"
+      }
+    },
+    {
+      "name": "weapons/lobber-onyx: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 972,
+        "bad": 0,
+        "key": "lobber-onyx"
+      }
+    },
+    {
+      "name": "weapons/native-duelist: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 480,
+        "bad": 0,
+        "key": "native-duelist"
+      }
+    },
+    {
+      "name": "weapons/native-oracle: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 624,
+        "bad": 0,
+        "key": "native-oracle"
+      }
+    },
+    {
+      "name": "formations/range: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "range"
+      }
+    },
+    {
+      "name": "formations/canyon: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "canyon"
+      }
+    },
+    {
+      "name": "formations/basin: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "basin"
+      }
+    },
+    {
+      "name": "formations/hills: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "hills"
+      }
+    },
+    {
+      "name": "formations/mesa: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "mesa"
+      }
+    },
+    {
+      "name": "formations/plateau: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "plateau"
+      }
+    },
+    {
+      "name": "formations/ravine: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "ravine"
+      }
+    },
+    {
+      "name": "formations/crevice: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "crevice"
+      }
+    },
+    {
+      "name": "formations/buttes: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "buttes"
+      }
+    },
+    {
+      "name": "formations/caldera: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "caldera"
+      }
+    },
+    {
+      "name": "formations/dunes: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "dunes"
+      }
+    },
+    {
+      "name": "formations/gorge: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "gorge"
+      }
+    },
+    {
+      "name": "formations/escarpment: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "escarpment"
+      }
+    },
+    {
+      "name": "formations/valley: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 65664,
+        "bad": 0,
+        "key": "valley"
+      }
+    },
+    {
+      "name": "formations/grand: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 101376,
+        "bad": 0,
+        "key": "grand"
+      }
+    },
+    {
+      "name": "formations/labyrinth: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 101376,
+        "bad": 0,
+        "key": "labyrinth"
+      }
+    },
+    {
+      "name": "formations/chaos: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "chaos"
+      }
+    },
+    {
+      "name": "formations/spine: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "spine"
+      }
+    },
+    {
+      "name": "formations/volcano: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "volcano"
+      }
+    },
+    {
+      "name": "formations/forest: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "forest"
+      }
+    },
+    {
+      "name": "formations/impact: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "impact"
+      }
+    },
+    {
+      "name": "formations/yardangs: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "yardangs"
+      }
+    },
+    {
+      "name": "formations/drumlins: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "drumlins"
+      }
+    },
+    {
+      "name": "formations/fan: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "fan"
+      }
+    },
+    {
+      "name": "formations/karst: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "karst"
+      }
+    },
+    {
+      "name": "formations/spiral: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "spiral"
+      }
+    },
+    {
+      "name": "formations/blades: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "blades"
+      }
+    },
+    {
+      "name": "formations/spider: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "spider"
+      }
+    },
+    {
+      "name": "formations/cells: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "cells"
+      }
+    },
+    {
+      "name": "formations/stripes: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "stripes"
+      }
+    },
+    {
+      "name": "formations/grotto: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 65664,
+        "bad": 0,
+        "key": "grotto"
+      }
+    },
+    {
+      "name": "formations/sky: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 81792,
+        "bad": 0,
+        "key": "sky"
+      }
+    },
+    {
+      "name": "formations/caverns: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 81792,
+        "bad": 0,
+        "key": "caverns"
+      }
+    },
+    {
+      "name": "formations/delta: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "delta"
+      }
+    },
+    {
+      "name": "formations/arcade: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 81792,
+        "bad": 0,
+        "key": "arcade"
+      }
+    },
+    {
+      "name": "formations/cuesta: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "cuesta"
+      }
+    },
+    {
+      "name": "formations/crescents: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "crescents"
+      }
+    },
+    {
+      "name": "formations/dome: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "dome"
+      }
+    },
+    {
+      "name": "formations/pedestals: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 81792,
+        "bad": 0,
+        "key": "pedestals"
+      }
+    },
+    {
+      "name": "formations/honeycomb: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "honeycomb"
+      }
+    },
+    {
+      "name": "formations/wave: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "wave"
+      }
+    },
+    {
+      "name": "formations/scablands: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "scablands"
+      }
+    },
+    {
+      "name": "formations/box: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "box"
+      }
+    },
+    {
+      "name": "formations/kame: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "kame"
+      }
+    },
+    {
+      "name": "formations/atoll: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "atoll"
+      }
+    },
+    {
+      "name": "formations/ribbons: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 80064,
+        "bad": 0,
+        "key": "ribbons"
+      }
+    },
+    {
+      "name": "formations/catena: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "catena"
+      }
+    },
+    {
+      "name": "formations/coil: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "coil"
+      }
+    },
+    {
+      "name": "formations/oxbow: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "oxbow"
+      }
+    },
+    {
+      "name": "formations/shields: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "shields"
+      }
+    },
+    {
+      "name": "formations/kettles: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "kettles"
+      }
+    },
+    {
+      "name": "formations/fulgurite: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57600,
+        "bad": 0,
+        "key": "fulgurite"
+      }
+    },
+    {
+      "name": "terrain/varied: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 67660,
+        "bad": 0,
+        "key": "varied"
+      }
+    },
+    {
+      "name": "terrain/alpine: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 75115,
+        "bad": 0,
+        "key": "alpine"
+      }
+    },
+    {
+      "name": "terrain/canyon: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 39670,
+        "bad": 0,
+        "key": "canyon"
+      }
+    },
+    {
+      "name": "terrain/ocean: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 86242,
+        "bad": 0,
+        "key": "ocean"
+      }
+    },
+    {
+      "name": "terrain/badlands: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 82966,
+        "bad": 0,
+        "key": "badlands"
+      }
+    },
+    {
+      "name": "terrain/karst: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 76933,
+        "bad": 0,
+        "key": "karst"
+      }
+    },
+    {
+      "name": "terrain/geothermal: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 57127,
+        "bad": 0,
+        "key": "geothermal"
+      }
+    },
+    {
+      "name": "terrain/glacial: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 67090,
+        "bad": 0,
+        "key": "glacial"
+      }
+    },
+    {
+      "name": "terrain/aeolian: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 47110,
+        "bad": 0,
+        "key": "aeolian"
+      }
+    },
+    {
+      "name": "terrain/sky: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 219817,
+        "bad": 0,
+        "key": "sky"
+      }
+    },
+    {
+      "name": "biomes/regolith: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 6720,
+        "bad": 0,
+        "key": "regolith"
+      }
+    },
+    {
+      "name": "biomes/basalt: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 6720,
+        "bad": 0,
+        "key": "basalt"
+      }
+    },
+    {
+      "name": "biomes/marsdust: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 6720,
+        "bad": 0,
+        "key": "marsdust"
+      }
+    },
+    {
+      "name": "biomes/venusrock: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 5424,
+        "bad": 0,
+        "key": "venusrock"
+      }
+    },
+    {
+      "name": "biomes/ammonia: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 13920,
+        "bad": 0,
+        "key": "ammonia"
+      }
+    },
+    {
+      "name": "biomes/ochrecloud: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 13920,
+        "bad": 0,
+        "key": "ochrecloud"
+      }
+    },
+    {
+      "name": "biomes/stormcloud: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 13920,
+        "bad": 0,
+        "key": "stormcloud"
+      }
+    },
+    {
+      "name": "biomes/cyancloud: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 13920,
+        "bad": 0,
+        "key": "cyancloud"
+      }
+    },
+    {
+      "name": "biomes/bluecloud: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 13920,
+        "bad": 0,
+        "key": "bluecloud"
+      }
+    },
+    {
+      "name": "biomes/tholins: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 6720,
+        "bad": 0,
+        "key": "tholins"
+      }
+    },
+    {
+      "name": "biomes/nitrogen: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 5856,
+        "bad": 0,
+        "key": "nitrogen"
+      }
+    },
+    {
+      "name": "biomes/waterice: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 4992,
+        "bad": 0,
+        "key": "waterice"
+      }
+    },
+    {
+      "name": "biomes/fracturedice: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 5424,
+        "bad": 0,
+        "key": "fracturedice"
+      }
+    },
+    {
+      "name": "biomes/ioplains: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 6720,
+        "bad": 0,
+        "key": "ioplains"
+      }
+    },
+    {
+      "name": "biomes/redwood: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 6000,
+        "bad": 0,
+        "key": "redwood"
+      }
+    },
+    {
+      "name": "biomes/bamboo: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 48480,
+        "bad": 0,
+        "key": "bamboo"
+      }
+    },
+    {
+      "name": "biomes/cherry: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 25872,
+        "bad": 0,
+        "key": "cherry"
+      }
+    },
+    {
+      "name": "biomes/autumn: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 14928,
+        "bad": 0,
+        "key": "autumn"
+      }
+    },
+    {
+      "name": "biomes/baobab: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 22128,
+        "bad": 0,
+        "key": "baobab"
+      }
+    },
+    {
+      "name": "biomes/cloudforest: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 30768,
+        "bad": 0,
+        "key": "cloudforest"
+      }
+    },
+    {
+      "name": "biomes/salt: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 7728,
+        "bad": 0,
+        "key": "salt"
+      }
+    },
+    {
+      "name": "biomes/sulfur: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 15072,
+        "bad": 0,
+        "key": "sulfur"
+      }
+    },
+    {
+      "name": "biomes/obsidian: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 4560,
+        "bad": 0,
+        "key": "obsidian"
+      }
+    },
+    {
+      "name": "biomes/coralreef: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 47332,
+        "bad": 0,
+        "key": "coralreef"
+      }
+    },
+    {
+      "name": "biomes/kelp: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 5644,
+        "bad": 0,
+        "key": "kelp"
+      }
+    },
+    {
+      "name": "biomes/lichen: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 25440,
+        "bad": 0,
+        "key": "lichen"
+      }
+    },
+    {
+      "name": "biomes/sponge: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 21984,
+        "bad": 0,
+        "key": "sponge"
+      }
+    },
+    {
+      "name": "biomes/carnivorous: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 30264,
+        "bad": 0,
+        "key": "carnivorous"
+      }
+    },
+    {
+      "name": "biomes/aurora: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 39840,
+        "bad": 0,
+        "key": "aurora"
+      }
+    },
+    {
+      "name": "biomes/meadow: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 6720,
+        "bad": 0,
+        "key": "meadow"
+      }
+    },
+    {
+      "name": "biomes/woodland: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 4416,
+        "bad": 0,
+        "key": "woodland"
+      }
+    },
+    {
+      "name": "biomes/jungle: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 15900,
+        "bad": 0,
+        "key": "jungle"
+      }
+    },
+    {
+      "name": "biomes/desert: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 5856,
+        "bad": 0,
+        "key": "desert"
+      }
+    },
+    {
+      "name": "biomes/savanna: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 6720,
+        "bad": 0,
+        "key": "savanna"
+      }
+    },
+    {
+      "name": "biomes/wetland: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 4416,
+        "bad": 0,
+        "key": "wetland"
+      }
+    },
+    {
+      "name": "biomes/mangrove: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 12048,
+        "bad": 0,
+        "key": "mangrove"
+      }
+    },
+    {
+      "name": "biomes/tundra: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 9312,
+        "bad": 0,
+        "key": "tundra"
+      }
+    },
+    {
+      "name": "biomes/alpine: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 7800,
+        "bad": 0,
+        "key": "alpine"
+      }
+    },
+    {
+      "name": "biomes/volcanic: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 5280,
+        "bad": 0,
+        "key": "volcanic"
+      }
+    },
+    {
+      "name": "biomes/ocean: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 11188,
+        "bad": 0,
+        "key": "ocean"
+      }
+    },
+    {
+      "name": "biomes/crystalline: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 7800,
+        "bad": 0,
+        "key": "crystalline"
+      }
+    },
+    {
+      "name": "biomes/fungal: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 22272,
+        "bad": 0,
+        "key": "fungal"
+      }
+    },
+    {
+      "name": "biomes/ferrous: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 3480,
+        "bad": 0,
+        "key": "ferrous"
+      }
+    },
+    {
+      "name": "biomes/twilight: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 20544,
+        "bad": 0,
+        "key": "twilight"
+      }
+    },
+    {
+      "name": "features/geyser: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1524,
+        "bad": 0,
+        "key": "geyser"
+      }
+    },
+    {
+      "name": "features/trunks: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1488,
+        "bad": 0,
+        "key": "trunks"
+      }
+    },
+    {
+      "name": "features/mudpot: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1092,
+        "bad": 0,
+        "key": "mudpot"
+      }
+    },
+    {
+      "name": "features/fumarole: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1314,
+        "bad": 0,
+        "key": "fumarole"
+      }
+    },
+    {
+      "name": "features/seep: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1344,
+        "bad": 0,
+        "key": "seep"
+      }
+    },
+    {
+      "name": "features/cryovent: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1308,
+        "bad": 0,
+        "key": "cryovent"
+      }
+    },
+    {
+      "name": "features/crystal: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 894,
+        "bad": 0,
+        "key": "crystal"
+      }
+    },
+    {
+      "name": "features/spores: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1794,
+        "bad": 0,
+        "key": "spores"
+      }
+    },
+    {
+      "name": "features/updraft: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 276,
+        "bad": 0,
+        "key": "updraft"
+      }
+    },
+    {
+      "name": "features/spring: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1452,
+        "bad": 0,
+        "key": "spring"
+      }
+    },
+    {
+      "name": "features/boulder: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 504,
+        "bad": 0,
+        "key": "boulder"
+      }
+    },
+    {
+      "name": "features/whirlpool: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 2532,
+        "bad": 0,
+        "key": "whirlpool"
+      }
+    },
+    {
+      "name": "disasters/quake: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 2033,
+        "bad": 0,
+        "key": "quake"
+      }
+    },
+    {
+      "name": "disasters/tornado: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 1539,
+        "bad": 0,
+        "key": "tornado"
+      }
+    },
+    {
+      "name": "disasters/meteor: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 574,
+        "bad": 0,
+        "key": "meteor"
+      }
+    },
+    {
+      "name": "disasters/thunder: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 574,
+        "bad": 0,
+        "key": "thunder"
+      }
+    },
+    {
+      "name": "disasters/hail: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 574,
+        "bad": 0,
+        "key": "hail"
+      }
+    },
+    {
+      "name": "disasters/blizzard: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 574,
+        "bad": 0,
+        "key": "blizzard"
+      }
+    },
+    {
+      "name": "disasters/sandstorm: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 574,
+        "bad": 0,
+        "key": "sandstorm"
+      }
+    },
+    {
+      "name": "disasters/ashfall: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 574,
+        "bad": 0,
+        "key": "ashfall"
+      }
+    },
+    {
+      "name": "disasters/tsunami: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 538,
+        "bad": 0,
+        "key": "tsunami"
+      }
+    },
+    {
+      "name": "disasters/solar: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 574,
+        "bad": 0,
+        "key": "solar"
+      }
+    },
+    {
+      "name": "disasters/cryoburst: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 574,
+        "bad": 0,
+        "key": "cryoburst"
+      }
+    },
+    {
+      "name": "disasters/eruption: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 574,
+        "bad": 0,
+        "key": "eruption"
+      }
+    },
+    {
+      "name": "themes/earth: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 255779,
+        "bad": 0,
+        "key": "earth"
+      }
+    },
+    {
+      "name": "themes/moon: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 87870,
+        "bad": 0,
+        "key": "moon"
+      }
+    },
+    {
+      "name": "themes/mars: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 105419,
+        "bad": 0,
+        "key": "mars"
+      }
+    },
+    {
+      "name": "themes/venus: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 182435,
+        "bad": 0,
+        "key": "venus"
+      }
+    },
+    {
+      "name": "themes/mercury: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 77040,
+        "bad": 0,
+        "key": "mercury"
+      }
+    },
+    {
+      "name": "themes/jupiter: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 91697,
+        "bad": 0,
+        "key": "jupiter"
+      }
+    },
+    {
+      "name": "themes/saturn: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 91703,
+        "bad": 0,
+        "key": "saturn"
+      }
+    },
+    {
+      "name": "themes/neptune: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 91381,
+        "bad": 0,
+        "key": "neptune"
+      }
+    },
+    {
+      "name": "themes/uranus: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 91381,
+        "bad": 0,
+        "key": "uranus"
+      }
+    },
+    {
+      "name": "themes/titan: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 198803,
+        "bad": 0,
+        "key": "titan"
+      }
+    },
+    {
+      "name": "themes/europa: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 185172,
+        "bad": 0,
+        "key": "europa"
+      }
+    },
+    {
+      "name": "themes/ganymede: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 186228,
+        "bad": 0,
+        "key": "ganymede"
+      }
+    },
+    {
+      "name": "themes/triton: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 172620,
+        "bad": 0,
+        "key": "triton"
+      }
+    },
+    {
+      "name": "themes/io: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 121356,
+        "bad": 0,
+        "key": "io"
+      }
+    },
+    {
+      "name": "themes/callisto: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 71754,
+        "bad": 0,
+        "key": "callisto"
+      }
+    },
+    {
+      "name": "themes/pluto: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 189672,
+        "bad": 0,
+        "key": "pluto"
+      }
+    },
+    {
+      "name": "themes/all: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 564908,
+        "bad": 0,
+        "key": "all"
+      }
+    },
+    {
+      "name": "themes/titanforest: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 348842,
+        "bad": 0,
+        "key": "titanforest"
+      }
+    },
+    {
+      "name": "themes/bloomsanctuary: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 200963,
+        "bad": 0,
+        "key": "bloomsanctuary"
+      }
+    },
+    {
+      "name": "themes/sulfurfurnace: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 130652,
+        "bad": 0,
+        "key": "sulfurfurnace"
+      }
+    },
+    {
+      "name": "themes/saltmirror: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 174767,
+        "bad": 0,
+        "key": "saltmirror"
+      }
+    },
+    {
+      "name": "themes/reefocean: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 256160,
+        "bad": 0,
+        "key": "reefocean"
+      }
+    },
+    {
+      "name": "themes/skyarchipelago: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 609485,
+        "bad": 0,
+        "key": "skyarchipelago"
+      }
+    },
+    {
+      "name": "themes/fossil: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 232343,
+        "bad": 0,
+        "key": "fossil"
+      }
+    },
+    {
+      "name": "themes/copperharvest: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 211634,
+        "bad": 0,
+        "key": "copperharvest"
+      }
+    },
+    {
+      "name": "themes/carnivorousfen: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 363503,
+        "bad": 0,
+        "key": "carnivorousfen"
+      }
+    },
+    {
+      "name": "themes/stormglass: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 273086,
+        "bad": 0,
+        "key": "stormglass"
+      }
+    },
+    {
+      "name": "themes/temperate: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 216221,
+        "bad": 0,
+        "key": "temperate"
+      }
+    },
+    {
+      "name": "themes/monsoon: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 284819,
+        "bad": 0,
+        "key": "monsoon"
+      }
+    },
+    {
+      "name": "themes/arid: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 129521,
+        "bad": 0,
+        "key": "arid"
+      }
+    },
+    {
+      "name": "themes/frozen: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 143342,
+        "bad": 0,
+        "key": "frozen"
+      }
+    },
+    {
+      "name": "themes/volcanic: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 130118,
+        "bad": 0,
+        "key": "volcanic"
+      }
+    },
+    {
+      "name": "themes/crystalline: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 227984,
+        "bad": 0,
+        "key": "crystalline"
+      }
+    },
+    {
+      "name": "themes/fungal: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 373838,
+        "bad": 0,
+        "key": "fungal"
+      }
+    },
+    {
+      "name": "themes/oceanic: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 174242,
+        "bad": 0,
+        "key": "oceanic"
+      }
+    },
+    {
+      "name": "themes/ferrous: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 221537,
+        "bad": 0,
+        "key": "ferrous"
+      }
+    },
+    {
+      "name": "themes/twilight: selectable finite rendered model",
+      "ok": true,
+      "actual": {
+        "vertices": 419375,
+        "bad": 0,
+        "key": "twilight"
+      }
+    },
+    {
+      "name": "idle: real rig changes pose",
+      "ok": true
+    },
+    {
+      "name": "walk: real rig changes pose",
+      "ok": true
+    },
+    {
+      "name": "attack: real rig changes pose",
+      "ok": true
+    },
+    {
+      "name": "energy core changes actual weapon material",
+      "ok": true
+    },
+    {
+      "name": "core selector follows the selected weapon",
+      "ok": true
+    },
+    {
+      "name": "incompatible core restores the actual selection",
+      "ok": true
+    },
+    {
+      "name": "returning to a weapon retains its core",
+      "ok": true
+    },
+    {
+      "name": "keyboard pans the scene",
+      "ok": true
+    },
+    {
+      "name": "pointer drag rotates camera",
+      "ok": true
+    },
+    {
+      "name": "wheel zoom changes distance",
+      "ok": true
+    },
+    {
+      "name": "overview names all lanes",
+      "ok": true
+    },
+    {
+      "name": "theme opens the matching real planet",
+      "ok": true
+    },
+    {
+      "name": "reduced motion holds the scene still",
+      "ok": true
+    },
+    {
+      "name": "375px: usable layout without horizontal overflow",
+      "ok": true,
+      "actual": {
+        "overflow": false,
+        "nav": 52,
+        "canvas": 562,
+        "buttons": []
+      }
+    },
+    {
+      "name": "768px: usable layout without horizontal overflow",
+      "ok": true,
+      "actual": {
+        "overflow": false,
+        "nav": 56,
+        "canvas": 792,
+        "buttons": []
+      }
+    },
+    {
+      "name": "1280px: usable layout without horizontal overflow",
+      "ok": true,
+      "actual": {
+        "overflow": false,
+        "nav": 56,
+        "canvas": 792,
+        "buttons": []
+      }
+    },
+    {
+      "name": "computed UI text contrast passes AA",
+      "ok": true,
+      "actual": []
+    },
+    {
+      "name": "no runtime faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "faults": []
+}

@@ -53,3 +53,12 @@ test('fallen feature logs bend through the same coordinates as their walkable su
   assert.ok(hit,'visible log at the collider sample');assert.ok(Math.abs(hit.point.length()-240-top)<.18,'bark agrees with the walkable top '+JSON.stringify({along,top,rendered:hit.point.length()-240}));
  }
 });
+
+test('floating-world feature recipes sample the upper island ecology after bridges exist',()=>{
+ const sample=formationSample('sky'),f=createTerrainFeatures(sample.field,240,()=>-2.2,{seed:771,floating:true,biome:(_,h)=>h>20?'cloudforest':'ocean',water:()=>true});
+ const upper=f.active.filter(s=>s.height>20),lower=f.active.filter(s=>s.height<0);
+ assert.ok(upper.length,'islands receive real features rather than only ocean whirlpools');
+ assert.ok(lower.length,'ocean pockets remain a separate placement context');
+ assert.ok(upper.every(s=>s.height===28&&s.context.biome==='cloudforest'&&!s.context.water));
+ assert.ok(lower.every(s=>s.key==='whirlpool'&&s.context.water));
+});

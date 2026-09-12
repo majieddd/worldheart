@@ -1,0 +1,64 @@
+{
+  "scope": "Targeted positions and time, actual rendered world, units, collision and keyboard events. Not an unforced expedition.",
+  "checks": [
+    {
+      "name": "Commander initially spawns on the upper island surface",
+      "ok": true,
+      "actual": {
+        "height": 28
+      }
+    },
+    {
+      "name": "A real ground enemy follows the upper island network toward the base",
+      "ok": true,
+      "actual": {
+        "minimum": 28,
+        "maximumProgress": 297.08580738306046,
+        "startDistance": 299.4385596513748
+      }
+    },
+    {
+      "name": "Tower anchoring uses the upper island surface",
+      "ok": true,
+      "actual": {
+        "height": 28
+      }
+    },
+    {
+      "name": "Actual planet contains a suspended deck",
+      "ok": true
+    },
+    {
+      "name": "Actual commander lands on the rendered deck",
+      "ok": true,
+      "actual": {
+        "height": 28,
+        "top": 28
+      }
+    },
+    {
+      "name": "Keyboard movement leaves a deck and enters a real fall",
+      "ok": false,
+      "actual": {
+        "distance": 20.341106557482075,
+        "fell": false,
+        "height": 28,
+        "hop": 0
+      }
+    },
+    {
+      "name": "Actual volcanic pack contains an erupting vent",
+      "ok": true
+    },
+    {
+      "name": "Visible geyser lifts the commander and a real husk",
+      "ok": true,
+      "actual": {
+        "commanderLift": 4.950445833333329,
+        "enemyLift": 7.050000000000011,
+        "launches": 2
+      }
+    }
+  ],
+  "faults": []
+}

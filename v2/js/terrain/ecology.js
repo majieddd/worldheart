@@ -47,7 +47,7 @@ export function createEcology(seed, key='auto',environment=planetEnvironment((se
       const list=custom.biomes,lat=latitude(x,y,z)+rain(x*4,y*4,z*4)*5;
       if(water)return list.includes('kelp')?(height<-.8?'kelp':list.includes('coralreef')?'coralreef':'ocean'):'ocean';
       if(element==='hot'&&list.includes('sulfur'))return height>25?'obsidian':'sulfur';
-      const belt=height>22?2:lat<19?0:lat<39?1:lat<65?2:list.length-1;
+      const belt=height>22&&extreme!=='skyarchipelago'?2:lat<19?0:lat<39?1:lat<65?2:list.length-1;
       return list[Math.min(belt,list.length-1)];
     }
     if(water)return 'ocean';

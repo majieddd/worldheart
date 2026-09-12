@@ -57,7 +57,7 @@ export function miniaturePlanet(theme,seed=MINIATURE_SEED){
     for(const f of sphere.faces){
       const a=points[f[0]],b=points[f[1]],c=points[f[2]];v.copy(a).add(b).add(c).normalize();
       const h=(heights[f[0]]+heights[f[1]]+heights[f[2]])/3,wet=oceanAt(v.x,v.y,v.z);
-      if(f[0]%7===0){const biome=biomeAt(v,h);data.biomes[biome]=(data.biomes[biome]||0)+1;}
+      if(f[0]%7===0){const biome=biomeAt(v,navigationHeight(v.x,v.y,v.z,false));data.biomes[biome]=(data.biomes[biome]||0)+1;}
       normal.crossVectors(ab.copy(b).sub(a),ac.copy(c).sub(a)).normalize();
       faceColor(v,h,(1-Math.abs(normal.dot(v)))*3.2,.5,stone);
       const thermal=terrainThermal(v,h);if(thermal?.lava>.12)stone.lerp(sea.setHex(0xffab42),thermal.lava);

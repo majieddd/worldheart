@@ -25,6 +25,27 @@ const mat=(color,extra={})=>new THREE.MeshStandardMaterial({color,roughness:.65,
 const modelMats=()=>({body:MAT.body,trim:MAT.trim,dark:MAT.dark,grip:mat(0x755744),gold:MAT.gemGold,energy:MAT.energy,cloth:mat(0x385e75)});
 const waitFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 
+// Hundreds of centimetre-sized feature props are subpixel in the catalogue
+// overview. Keep their full production models for close inspection, and batch
+// the fixed surface meshes without changing any of their vertices or colors.
+function preparePreview(group){
+  const details=[];
+  group.traverse(root=>{
+    if(root.name.startsWith('active-'))details.push(root);
+    const meshes=root.children.filter(o=>o.isMesh&&o.userData.surface);
+    if(meshes.length<2)return;
+    const geometry=new THREE.BufferGeometry();
+    for(const key of ['position','normal','color']){
+      const arrays=meshes.map(m=>m.geometry.attributes[key].array),data=new Float32Array(arrays.reduce((n,a)=>n+a.length,0));let offset=0;
+      for(const a of arrays){data.set(a,offset);offset+=a.length;}geometry.setAttribute(key,new THREE.BufferAttribute(data,3));
+    }
+    const material=meshes[0].material;
+    for(const mesh of meshes){root.remove(mesh);mesh.geometry.dispose();if(mesh.material!==material)mesh.material.dispose();}
+    const mesh=new THREE.Mesh(geometry,material);mesh.name='preview-surface-batch';root.add(mesh);
+  });
+  return details;
+}
+
 export function articulated(build,isEnemy,key){
   const group=new THREE.Group(),skeleton=isEnemy?build.skel:build.skeleton,bindings=[];
   for(const part of build.parts){
@@ -145,7 +166,8 @@ export async function startDebugWorld(){
       const pad=new THREE.Mesh(new THREE.BoxGeometry(width-2,.5,18),mat(0x344a5b));pad.position.set(x,-.3,lane.z);scene.add(pad);
     }
     const label=document.createElement('div');label.className='label';label.textContent=name;labels.append(label);
-    const item={lane:lane.key,key,name,group,description,metrics,width,x,z:lane.z,label};lane.items.push(item);exhibits.push(item);if(update)animated.push({item,update});return item;
+    const details=['themes','terrain','formations'].includes(lane.key)?preparePreview(group):[];
+    const item={lane:lane.key,key,name,group,description,metrics,width,x,z:lane.z,label,details};lane.items.push(item);exhibits.push(item);if(update)animated.push({item,update});return item;
   }
   for(const lane of lanes){
     el('status').textContent=`Building ${lane.name.toLowerCase()}…`;await waitFrame();
@@ -263,7 +285,8 @@ export async function startDebugWorld(){
     if(disposed)return;const dt=Math.min(1/30,(now-last)/1000);last=now;
     const motion=reduced.matches?'still':el('motion').value;if(motion!=='still')time+=dt;
     frame();
-    for(const {update}of animated)update(motion==='still'?0:time,motion);
+    for(const item of exhibits)for(const root of item.details)root.visible=item.group.visible&&view.distance<160;
+    for(const {item,update}of animated)if(item.lane==='units'||item.group.visible)update(motion==='still'?0:time,motion);
     const clip=reduced.matches?'Motion paused by reduced-motion preference':motion==='still'?'Motion paused':selected.lane==='units'?`Playing: ${selected.group.userData.animation}`:motion==='cycle'?'Units cycle in their lane; planet previews rotate.':`Unit motion: ${motion}. Planet previews rotate.`;
     if(el('clip').textContent!==clip)el('clip').textContent=clip;
     renderer.render(scene,camera);

@@ -6,7 +6,7 @@ import {placeActiveFeatures,buildActiveFeature} from './active-features.js';
 // can land on a roof they reach from above. Mesh and collision share these data.
 export function createTerrainFeatures(field,radius,ground,ecology=null){
  const surfaces=[],vents=[];
- const active=ecology?placeActiveFeatures(field,radius,ground,ecology.biome,ecology.water,ecology.seed):[];
+ const active=[];
  const at=(m,u,v)=>ground(...field.project(m,u,v));
  const add=(m,key,u,v,halfU,halfV,top,bottom,round=false,angle=0)=>{
   surfaces.push({m,key,u,v,halfU,halfV,top,bottom,round,angle,dir:field.project(m,u,v),bound:(Math.hypot(u,v)+Math.hypot(halfU,halfV))*1.2/radius});
@@ -68,12 +68,6 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
    }
   }
  }
- for(const site of active){
-  if(site.key==='geyser')vents.push(site);
-  if(site.key==='trunks'){
-   add(site.m,'fossil-log',site.u,site.v,1.05,6,(u,v)=>site.height+1.35+Math.sqrt(Math.max(0,(.975-v*.0125)**2-u*u)),(u,v)=>site.height+1.35-Math.sqrt(Math.max(0,(.975-v*.0125)**2-u*u)),false);
-  }
- }
  function local(s,dir,w){
   if(dir[0]*s.dir[0]+dir[1]*s.dir[1]+dir[2]*s.dir[2]<Math.cos(s.bound+.025))return null;
   const p=w?{u:(w[0]*s.m.axis[0]+w[1]*s.m.axis[1]+w[2]*s.m.axis[2])*radius,v:(w[0]*s.m.side[0]+w[1]*s.m.side[1]+w[2]*s.m.side[2])*radius}:field.coordinates(s.m,dir),x=p.u-s.u,y=p.v-s.v,c=Math.cos(s.angle),n=Math.sin(s.angle),u=x*c+y*n,v=y*c-x*n-(s.bend?.(u)||0);
@@ -87,6 +81,18 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
  }
  function ceiling(dir,feet){const w=field.warped(dir);let best=Infinity;for(const s of nearby(dir)){const p=local(s,dir,w);if(!p)continue;const h=s.bottom(p.u,p.v);if(h>feet+.1)best=Math.min(best,h);}return best;}
  function intersects(dir,feet,height){const w=field.warped(dir);for(const s of nearby(dir)){const p=local(s,dir,w);if(p&&feet<s.top(p.u,p.v)-.1&&feet+height>s.bottom(p.u,p.v)+.05)return true;}return false;}
+ // Resolve recipe fits only after the structural surfaces exist. Floating
+ // islands must host their own ecology, rather than placing every feature on
+ // the ocean underneath them. Keep ground-level features under normal caves.
+ if(ecology){
+  const featureGround=ecology.floating?(x,y,z)=>support([x,y,z],Infinity,ground(x,y,z)):ground;
+  active.push(...placeActiveFeatures(field,radius,featureGround,ecology.biome,ecology.water,ecology.seed));
+  for(const site of active){
+   if(site.key==='geyser')vents.push(site);
+   if(site.key==='trunks')add(site.m,'fossil-log',site.u,site.v,1.05,6,(u,v)=>site.height+1.35+Math.sqrt(Math.max(0,(.975-v*.0125)**2-u*u)),(u,v)=>site.height+1.35-Math.sqrt(Math.max(0,(.975-v*.0125)**2-u*u)),false);
+  }
+  buckets.clear();
+ }
  function build({point,color=()=>0x987f65,topColor=()=>0x859e63,scale=1,spherical=!point,include=()=>true}={}){
   const group=new THREE.Group(),steam=[],roots=[];let projectionCache;
   const vertex=(s,u,v,h)=>{const key=u+','+v;let dir=projectionCache.get(key);if(!dir){const c=Math.cos(s.angle),n=Math.sin(s.angle),b=v+(s.bend?.(u)||0);dir=field.project(s.m,s.u+u*c-b*n,s.v+b*c+u*n);projectionCache.set(key,dir);}return point?point(dir,h):new THREE.Vector3(...dir).multiplyScalar(radius+h);};
@@ -135,7 +141,7 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
    }
    group.add(model);activeArt.push({site,model});
   }
-  group.userData.update=time=>{for(const a of activeArt){a.model.position.copy(point?point(a.site.dir.toArray(),a.site.height):a.site.dir.clone().multiplyScalar(radius+a.site.height));a.model.userData.update(time+a.site.phase);}for(const r of roots)if(r.height!==r.vent.height){r.height=r.vent.height;r.root.position.copy(point?point(r.vent.dir.toArray(),r.height):r.vent.dir.clone().multiplyScalar(radius+r.height));}for(const p of steam){const phase=(time+p.vent.phase)%12,on=phase<2.8;p.cloud.visible=on;if(on){const h=((time*5+p.k*.9)%9);p.cloud.position.set(Math.sin(p.k+time)*.5,h,Math.cos(p.k+time)*.5);p.cloud.scale.setScalar(.4+h*.12);}}};
+  group.userData.update=time=>{for(const a of activeArt){if(!a.model.visible)continue;a.model.position.copy(point?point(a.site.dir.toArray(),a.site.height):a.site.dir.clone().multiplyScalar(radius+a.site.height));a.model.userData.update(time+a.site.phase);}for(const r of roots)if(r.height!==r.vent.height){r.height=r.vent.height;r.root.position.copy(point?point(r.vent.dir.toArray(),r.height):r.vent.dir.clone().multiplyScalar(radius+r.height));}for(const p of steam){const phase=(time+p.vent.phase)%12,on=phase<2.8;p.cloud.visible=on;if(on){const h=((time*5+p.k*.9)%9);p.cloud.position.set(Math.sin(p.k+time)*.5,h,Math.cos(p.k+time)*.5);p.cloud.scale.setScalar(.4+h*.12);}}};
   return group;
  }
  return {surfaces,vents,active,support,ceiling,intersects,build,field};
