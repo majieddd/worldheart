@@ -1,0 +1,30 @@
+{
+  "scope": "Instrumented tower placement and actual enemy steering, without tower attacks",
+  "checks": [
+    {
+      "name": "Actual tower pair leaves its visible gap walkable",
+      "ok": true,
+      "detail": {
+        "node": 410937,
+        "nominalGap": 0.6999999999999997,
+        "route": 13.432271301746368
+      }
+    },
+    {
+      "name": "Approach remains reachable",
+      "ok": true
+    },
+    {
+      "name": "A real ground enemy walks between the towers",
+      "ok": true,
+      "detail": {
+        "nearestTowerCenter": 1.4459986358823038
+      }
+    },
+    {
+      "name": "All original nest routes survive the pair",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

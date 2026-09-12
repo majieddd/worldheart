@@ -6,15 +6,15 @@ interrupted copies are superseded by this ledger. Main is not a publication targ
 
 | Item | State | Acceptance |
 |---|---|---|
-| U75 Earthquake prediction and nest destruction | Verified locally | Shared fault geometry produces a red pulsing predicted surface; disrupted nests are destroyed once |
-| U76 Commander cliff traversal | Verified locally | Walk and jump off real ledges, fall and land naturally, retaining terrain and tower collision |
-| U77 Increasing forge cost | Verified locally | Each successful forge raises the displayed next cost; failed attempts do not |
-| U78 Tower clearance and nest routes | Verified locally | Enemies pass close to towers through actual gaps; valid nests are not delayed by inflated grid footprints |
-| U79 One relic per object | Verified locally | Every visible amber pickup grants exactly one ore, including nest drops |
-| U80 Alert and campaign HUD separation | Verified locally | Planet status, alerts and controls do not overlap at desktop and narrow sizes |
-| U81 Weapon families and five material tiers | Verified locally | Twin blades and ember staves receive wood, iron, gold, diamond and onyx models and rarity stats alongside every weapon family |
-| U82 Tower upgrade silhouettes | Verified locally | Every family retains its identity while upgrades add clear structural advancement |
-| U83 Flying saucer mount | Verified locally | Replace the flying mount model with a coherent UFO, retaining flight controls and balance |
+| U75 Earthquake prediction and nest destruction | Published and publicly verified | Shared fault geometry produces a red pulsing predicted surface; disrupted nests are destroyed once |
+| U76 Commander cliff traversal | Published and publicly verified | Walk and jump off real ledges, fall and land naturally, retaining terrain and tower collision |
+| U77 Increasing forge cost | Published and publicly verified | Each successful forge raises the displayed next cost; failed attempts do not |
+| U78 Tower clearance and nest routes | Published and publicly verified | Enemies pass close to towers through actual gaps; valid nests are not delayed by inflated grid footprints |
+| U79 One relic per object | Published and publicly verified | Every visible amber pickup grants exactly one ore, including nest drops |
+| U80 Alert and campaign HUD separation | Published and publicly verified | Planet status, alerts and controls do not overlap at desktop and narrow sizes |
+| U81 Weapon families and five material tiers | Published and publicly verified | Twin blades and ember staves receive wood, iron, gold, diamond and onyx models and rarity stats alongside every weapon family |
+| U82 Tower upgrade silhouettes | Published and publicly verified | Every family retains its identity while upgrades add clear structural advancement |
+| U83 Flying saucer mount | Published and publicly verified | Replace the flying mount model with a coherent UFO, retaining flight controls and balance |
 | U84 Twenty new landforms | Active: audited and authored design | Audit existing thirty; research, author and visually compare fifty distinct formations, including useful traversal and interactive features |
 | U85 Ten terrain packs | Active: audited and authored design | Mixed default; specialized extreme peaks, deep cuts and island worlds; ten packs with theme-dependent regional coverage |
 | U86 Fifteen new biomes | Active: audited and authored design | Audit existing fifteen; thirty distinct biome palettes, vegetation and environmental dressing in planets and Debug World |
@@ -40,8 +40,10 @@ worst frame and 16.8 ms longest preparation slice on this RTX 4080 laptop.
 The initial 71 ms preparation slice is retained as a failed check; private
 buffer copies and clearing probes now yield between bounded chunks. Four
 physical tower-gap checks pass, including a real husk walking through the
-0.7 m nominal gap, passing within 1.45 m of a tower centre. Local verification
-is complete for U75-U83; preview publication is in progress.
+0.7 m nominal gap, passing within 1.45 m of a tower centre. U75-U83 are published at V2 as e67d697 through
+[Pages 34708733408](https://github.com/majieddd/worldheart/actions/runs/34708733408).
+All 250 source/asset identity comparisons and 49 public interaction cases pass.
+Main remains 1374122. Current review: [PR #38](https://github.com/majieddd/worldheart/pull/38).
 
 Adversarial finding retained: the first complete-defense attempt stalled after
 wave 6 because an earthquake left no future nest clearings. Forecast preparation

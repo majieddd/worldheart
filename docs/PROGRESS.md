@@ -6,8 +6,9 @@ owns U75-U88: disaster prediction, traversal/pathfinding, forge/relic/HUD fixes,
 weapon and tower advancement, UFO mount, fifty formations, ten terrain packs,
 thirty biomes, twenty themes and the requested existing-shape revisions.
 [Current request ledger and acceptance](qa/implementation/LIVING-WORLDS.md).
-U75-U83 are locally verified, including a legal ten-wave victory and extraction;
-preview publication is in progress. U84-U88 remain active and unimplemented.
+U75-U83 are published and publicly verified as e67d697 on V2, with 250 identity
+comparisons and 49 public interaction cases. PR #38 retains the review. U84-U88
+remain active: geometry, ecology and terrain-pack implementation is underway.
 
 Published and publicly verified: Codex on `feature/expedition-lobby-and-survival`, based on `665b8f3`,
 owns U60-U74: combined terrain exhibits, theme-owned climate, fifteen biomes,
