@@ -1,0 +1,164 @@
+{
+  "scope": "Browser input and instrumented traversal/combat fixtures; no unforced campaign claim.",
+  "base": "http://127.0.0.1:8139",
+  "results": [
+    {
+      "name": "M mounts without muting sound",
+      "ok": true
+    },
+    {
+      "name": "N controls sound in 99 Planets",
+      "ok": true
+    },
+    {
+      "name": "Keyboard walk accelerates instead of snapping",
+      "ok": true,
+      "detail": 0.16750938738839727
+    },
+    {
+      "name": "First-person sprint actually traverses with a finite camera",
+      "ok": true,
+      "detail": {
+        "distance": 6.793358036110531,
+        "first": true,
+        "move": 0.9038378417059315,
+        "sprint": 0.9975212478233336,
+        "finite": true,
+        "fov": 86.98425744480245
+      }
+    },
+    {
+      "name": "Released movement settles without drift",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "Strider is fastest on real ground traversal",
+      "ok": true,
+      "detail": {
+        "none": 2.1723703406451427,
+        "strider": 3.505374170364247,
+        "tideback": 2.559959216279262,
+        "skyray": 2.8483200703935023
+      }
+    },
+    {
+      "name": "Tideback has a real ocean traversal advantage",
+      "ok": true,
+      "detail": {
+        "none": 1.3723265893787493,
+        "strider": 1.5850364894572873,
+        "tideback": 3.95226130198552
+      }
+    },
+    {
+      "name": "Sky Ray flies and cannot dismount in the air",
+      "ok": true,
+      "detail": {
+        "energy": 1.9999999999998233,
+        "height": 8
+      }
+    },
+    {
+      "name": "Exhausted flight lands even while Space is held",
+      "ok": true
+    },
+    {
+      "name": "Grounded flight recharges",
+      "ok": true
+    },
+    {
+      "name": "Bob-off removes periodic camera displacement",
+      "ok": true
+    },
+    {
+      "name": "Third person shows mounted-compatible body and camera",
+      "ok": true
+    },
+    {
+      "name": "Equipped loot scales its actual damage and reach",
+      "ok": true,
+      "detail": {
+        "before": {
+          "damage": 22.5,
+          "range": 2.5
+        },
+        "after": {
+          "name": "Twinfang blades",
+          "visual": "twin",
+          "view": "duelist",
+          "kind": "melee",
+          "dmg": 25.200000000000006,
+          "cd": 0.387,
+          "radius": 2.6125,
+          "arcDeg": 90,
+          "cleave": 0.4,
+          "pierce": 4,
+          "knockback": 0.22,
+          "kick": 0.13,
+          "trauma": 0.1,
+          "fov": 84,
+          "weaponFamily": "twinblade"
+        }
+      }
+    },
+    {
+      "name": "Telegraphed enemy blow removes 2.8x actual commander health",
+      "ok": true,
+      "detail": {
+        "wind": 0.4,
+        "damage": 11,
+        "loss": 30.799999999999955,
+        "hp": 1208
+      }
+    },
+    {
+      "name": "Seismic transition holds combat and prevents placement",
+      "ok": true
+    },
+    {
+      "name": "Earthquake refresh completes with changed terrain",
+      "ok": true,
+      "detail": {
+        "milliseconds": 1746.6000000014901,
+        "maxSlice": 14.699999999254942,
+        "slices": 314,
+        "event": {
+          "kind": "quake",
+          "strength": 1,
+          "changedNodes": 24024,
+          "vertices": 15000,
+          "disruptedNests": [],
+          "revisionBefore": 2,
+          "revisionAfter": 3,
+          "footprintsPreserved": true
+        }
+      }
+    },
+    {
+      "name": "Earthquake work yields to responsive frames",
+      "ok": true,
+      "detail": {
+        "maxSlice": 14.699999999254942,
+        "slices": 314
+      }
+    },
+    {
+      "name": "Visible world ore is collected once on approach",
+      "ok": true
+    },
+    {
+      "name": "Consumed ore slots can be reused for later nest drops with fresh identities",
+      "ok": true
+    },
+    {
+      "name": "Outside-base commander death actually defeats the run",
+      "ok": true,
+      "detail": {
+        "state": "defeat",
+        "phase": "defeat"
+      }
+    }
+  ],
+  "errors": []
+}

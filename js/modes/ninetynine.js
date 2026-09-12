@@ -1,3 +1,4 @@
+import {GeyserField} from '../terrain/geysers.js';
 // The 99 Planets shell. The ONLY file that knows both the pure run core and
 // Three.js. The core decides WHAT happened; this file decides what it looks
 // like. Nothing here leaks back into js/run.
@@ -21,7 +22,7 @@ import * as THREE from 'three';
 import { bankVictory, bankCoins, loadProfile } from './progress.js';
 import { createRewardConsumer } from '../rewards.js';
 import { createCrystalLedger, CRYSTAL_CAPACITY } from '../run/crystals.js';
-import { createInventory, generateWeapon, weaponStats, weaponName, shouldDrop, compatible, validPart, PARTS, FAMILIES, COMPATIBILITY } from '../run/weapons.js';
+import { createInventory, generateWeapon, weaponStats, weaponName, materialForWeapon, shouldDrop, compatible, validPart, PARTS, FAMILIES, COMPATIBILITY } from '../run/weapons.js';
 import { LootField } from '../loot-field.js';
 import { WeaponPanel } from '../ui-weapons.js';
 import { UnitRoutes } from '../unit-routes.js';
@@ -325,7 +326,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         // retry after a visible breather instead of creating a mountain source
         // or granting a free wave clear from an empty spawn list.
         if (fresh.length) break;
-        ui.toast('Nest wave delayed: no clear ground route. Sell a blocking tower to reopen ground.', 'warn');
+        const survivors=world.portals.filter(p=>p.established&&!p.destroyed&&Number.isFinite(nav.march.dist[p.node]));
+        if(survivors.length){if(guardian){waves.guardianNode=survivors[0].node;survivors[0].guardianPending=true;}return survivors.map(p=>p.node);}
+        ui.toast('The swarm is seeking a clear approach. The next nest is scouting another location.', 'warn');
         return null;
       }
       fresh.push(p);
@@ -421,12 +424,12 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const initialInventory=expedition?.assault?.victory?.inventory || expedition?.assault?.start || expedition?.banked;
   const inventory = createInventory(commander.typeKey,initialInventory);
   const lootRng = makeRng((CONFIG.seed ^ 0x19427cb5) >>> 0);
-  const previewModel = item => allies.weaponPreview(FAMILIES[item.family].visual,{era:item.era,core:item.parts.core},item.parts.head==='long'?1.2:1);
+  const previewModel = item => allies.weaponPreview(FAMILIES[item.family].visual,{era:item.era,core:item.parts.core,material:materialForWeapon(item)},item.parts.head==='long'?1.2:1);
   const loot = new LootField(game.scene, allies, previewModel);
   const unitRoutes = new UnitRoutes(game.scene,allies,nav);
   const threats = new ThreatGuides(game.scene,enemies);
   let lootSequence = 0, weaponSignature = '';
-  const starterFamily = { commander:'sword', duelist:'sword', marksman:'carbine', bombardier:'lobber', oracle:'spear' }[commander.typeKey];
+  const starterFamily = { commander:'sword', duelist:'twinblade', marksman:'carbine', bombardier:'lobber', oracle:'scepter' }[commander.typeKey];
   const starter = generateWeapon({id:`starter-${CONFIG.seed}`,seed:CONFIG.seed,family:starterFamily,rng:makeRng(CONFIG.seed ^ 0xa42)});
   starter.rarity = 'common'; starter.affixes = []; starter.parts = {head:'balanced',grip:'balanced',core:'tempered'};
   if(!initialInventory){inventory.register(starter); inventory.pickup(starter.id); inventory.request({kind:'equip',id:starter.id,slot:0}); inventory.request({kind:'select',slot:'native'});}
@@ -446,7 +449,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     commander.baseType = { ...original, speed: 3 * stats.speed, dps: original.dps * stats.power };
     const spec = scaleWeapon(item ? weaponStats(item,commander.typeKey) : original.strike,commander.typeKey,run.getHeartLevel(),commander.mountKey);
     const family = item && FAMILIES[item.family];
-    const appearance=item?{era:item.era,core:item.parts.core}:null;
+    const appearance=item?{era:item.era,core:item.parts.core,material:materialForWeapon(item)}:null;
     if (allies.setWeapon(commander,spec,family?.visual,family?.view,0xffffff,item?.parts.head==='long'?1.2:1,appearance)) {
       weaponSignature = signature;
       if (possession.unit === commander) { possession.baseFov = commander.type.strike.fov || 80; ui.showPossession(commander); }
@@ -831,12 +834,12 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const ore=createOreLedger();
   const oreField=new OreField({scene:game.scene,nav,centre,ledger:ore,commander:()=>commander,allies,ui,rng:makeRng(CONFIG.seed^0x814ca)});
   const destroyed=allies.onPortalDestroyed;
-  allies.onPortalDestroyed=p=>{destroyed?.(p);oreField.add(_up.copy(p.group.position).normalize(),2);};
+  allies.onPortalDestroyed=p=>{destroyed?.(p);oreField.add(_up.copy(p.group.position).normalize());};
   game.freeTowerCredits=new Map();
   function craft(){
     if(game.state!=='playing'||game.paused||game.terrainBusy||run.getPhase()!=='building')return false;
     const tower=ore.craft(homeDistance()<=6,()=>run.craftTower());
-    if(!tower){ui.toast('Forge near the heart with 3 relic ore and a free card slot.', 'info');return false;}
+    if(!tower){ui.toast(`Forge near the heart with ${ore.cost} relic ore and a free card slot.`, 'info');return false;}
     const def=TOWER_TYPES[tower];game.freeTowerCredits.set(def,(game.freeTowerCredits.get(def)||0)+1);
     syncFromRun();ui.toast(def.name+' forged. Place the next matching card for free.','info');ui.audio?.play('upgrade');return tower;
   }
@@ -855,6 +858,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     const events=run.finishEndless();if(!events.length)return false;
     handle(events);return true;
   }
+  const geysers=new GeyserField(world,allies,enemies);
   const weather=new PlanetWeather({scene:game.scene,nav,world,allies,enemies,game,commander:()=>commander,centre,ui,oreField});
   const started=waves.onWaveStart;waves.onWaveStart=(n,comp)=>{started?.(n,comp);weather.wave(n);};
   const expeditionUi=expeditionControls({ui,game,lockedCommander:expedition?.commander,api:{commander:()=>commander,run,respawn,mounts,ore,weather,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun}});
@@ -867,7 +871,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     run,
     get commander() { return commander; },
     respawn,
-    mounts,ore,oreField,weather,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
+    mounts,ore,oreField,weather,geysers,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
     crystals,
     depositCrystals,
     inventory,
@@ -886,6 +890,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       const activeDt=run.getPhase()==='building'?dt*game.speed:0;
       mounts.update(activeDt);oreField.update(activeDt);weather.update(activeDt);
       if(game.terrainBusy)return;
+      geysers.update(activeDt);
       if (run.getPhase() !== 'drafting' && respawn.tick(dt * game.speed)) {
         const old = commander; commander = allies.spawn(fallenKey,centre,centre,12);
         if (!commander) { commander = old; respawn.die(true); }

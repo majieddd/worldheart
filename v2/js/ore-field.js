@@ -13,7 +13,7 @@ export class OreField {
       if(this.entries.some(e=>e.dir.distanceToSquared(this.tmp)<(5/R)**2))continue;this.add(this.tmp,1);}
     this.render();
   }
-  add(dir,amount=1){const free=this.entries.findIndex(e=>e.taken);if(free<0&&this.entries.length>=128)return false;const entry={id:`relic-${++this.sequence}`,dir:dir.clone().normalize(),amount,taken:false};if(free>=0)this.entries[free]=entry;else this.entries.push(entry);return true;}
+  add(dir){const free=this.entries.findIndex(e=>e.taken);if(free<0&&this.entries.length>=128)return false;const entry={id:`relic-${++this.sequence}`,dir:dir.clone().normalize(),amount:1,taken:false};if(free>=0)this.entries[free]=entry;else this.entries.push(entry);return true;}
   update(dt){
     this.time+=dt;const a=this.commander();
     if(dt>0&&a?.active&&!a.dead){const pos=this.allies.worldPos(a,this.tmp);

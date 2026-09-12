@@ -24,16 +24,16 @@ try{
  });
  await page.waitForFunction(()=>getComputedStyle(document.getElementById('title-overlay')).opacity==='0',{},{polling:50});
  const records=[];
- for(const family of ['sword','spear','carbine','lobber'])for(const tier of [1,34,67]){
+ for(const family of ['sword','spear','carbine','lobber','twinblade','scepter'])for(const tier of [1,34,67]){
   records.push(await page.evaluate(async({family,tier})=>{
-   const {generateWeapon,weaponStats,FAMILIES}=await import(new URL('js/run/weapons.js',location.href)),{makeRng}=await import(new URL('js/run/rng.js',location.href));
-   const W=WH;W.possession.exit();let unit=W.allies.active.find(a=>a.typeKey===(family==='carbine'?'marksman':'commander'));
+   const {generateWeapon,weaponStats,FAMILIES,materialForWeapon}=await import(new URL('js/run/weapons.js',location.href)),{makeRng}=await import(new URL('js/run/rng.js',location.href));
+   const W=WH;W.possession.exit();let unit=W.allies.active.find(a=>a.typeKey===(family==='carbine'||family==='scepter'?'marksman':'commander'));
    if(!unit){const lead=W.allies.active[0];unit=W.allies.spawn('marksman',lead.dir,lead.dir,8);}
    for(const a of W.allies.active)a.hidden=true;
    unit.dir.copy(__poseDir);unit.anchor.copy(__poseDir);unit.fwd.copy(__poseFacing);W.allies._ground(unit);
-   const item=generateWeapon({id:'pose',seed:42,tier,family,rng:makeRng(42)});item.parts={head:'balanced',grip:'balanced',core:'frost'};
+   const item=generateWeapon({id:'pose',seed:42,tier,family,rng:makeRng(42)});item.rarity=tier===1?'common':tier===34?'epic':'relic';item.parts={head:'balanced',grip:'balanced',core:'frost'};
    unit.swingT=0;unit.strikePending=false;
-   W.allies.setWeapon(unit,weaponStats(item,unit.typeKey),FAMILIES[family].visual,FAMILIES[family].view,0xffffff,1,{era:item.era,core:item.parts.core});
+   W.allies.setWeapon(unit,weaponStats(item,unit.typeKey),FAMILIES[family].visual,FAMILIES[family].view,0xffffff,1,{era:item.era,core:item.parts.core,material:materialForWeapon(item)});
    W.possession.enter(unit);W.possession.boom=W.possession.boomWant=0;W.step(.1);
    return {family,tier,era:item.era,model:unit.modelKey,view:W.viewModel.typeKey,near:W.rig.camera.near,weaponParts:W.allies.species[unit.modelKey].parts.filter(p=>p.weapon).length};
   },{family,tier}));

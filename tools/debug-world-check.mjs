@@ -10,7 +10,7 @@ await page.addInitScript(()=>{window.__storageCalls=[];for(const name of ['getIt
 try{
  const start=Date.now();await page.goto(`${base}/debug.html`);await page.waitForFunction(()=>window.DEBUG_WORLD,{},{timeout:120000});
  const counts=await page.evaluate(()=>DEBUG_WORLD.lanes.map(l=>({key:l.key,n:l.items.length})));
- check('all eight registries are represented',JSON.stringify(counts.map(l=>l.n))===JSON.stringify([11,3,18,14,30,4,15,10]),counts);
+ check('all eight registries are represented',JSON.stringify(counts.map(l=>l.n))===JSON.stringify([11,3,30,32,50,10,30,20]),counts);
  check('debug route never reads or mutates browser saves',await page.evaluate(()=>__storageCalls.length===0),await page.evaluate(()=>__storageCalls));
  check('bounded exhibit startup',Date.now()-start<15000,{ms:Date.now()-start});
  const entries=await page.evaluate(()=>DEBUG_WORLD.exhibits.map(e=>({key:e.key,lane:e.lane,name:e.name})));
@@ -19,7 +19,7 @@ try{
    const result=await page.evaluate(()=>{const e=DEBUG_WORLD.selected;let vertices=0,bad=0;e.group.updateMatrixWorld(true);e.group.traverse(o=>{if(o.isMesh){const p=o.geometry.attributes.position;vertices+=p.count;for(const x of p.array)if(!Number.isFinite(x))bad++;for(const x of o.matrixWorld.elements)if(!Number.isFinite(x))bad++;}});return {vertices,bad,key:e.key};});
    check(`${e.lane}/${e.key}: selectable finite rendered model`,result.key===e.key&&result.vertices>0&&!result.bad,result);
    await page.waitForTimeout(35);
-   if(['formations','terrain','mounts','biomes','themes'].includes(e.lane)||['commander','colossus','carbine-technological','lobber-ancient','native-oracle','bolt-0','helios-2'].includes(e.key))await page.screenshot({path:resolve(out,`${e.lane}-${e.key}.png`)});
+   if(['formations','terrain','mounts','biomes','themes','weapons','towers'].includes(e.lane)||['commander','colossus','carbine-technological','lobber-ancient','native-oracle','bolt-0','helios-2'].includes(e.key))await page.screenshot({path:resolve(out,`${e.lane}-${e.key}.png`)});
  }
  await page.locator('[data-lane="units"]').click();await page.locator('#exhibit').selectOption('commander');
  for(const motion of ['idle','walk','attack']){
@@ -27,13 +27,13 @@ try{
    const a=await page.evaluate(()=>DEBUG_WORLD.selected.group.children[0].matrix.toArray());await page.waitForTimeout(220);
    const b=await page.evaluate(()=>DEBUG_WORLD.selected.group.children[0].matrix.toArray());check(`${motion}: real rig changes pose`,JSON.stringify(a)!==JSON.stringify(b));
  }
- await page.locator('[data-lane="weapons"]').click();await page.locator('#exhibit').selectOption('carbine-technological');await page.locator('#core').selectOption('ember');
+ await page.locator('[data-lane="weapons"]').click();await page.locator('#exhibit').selectOption('carbine-diamond');await page.locator('#core').selectOption('ember');
  check('energy core changes actual weapon material',await page.evaluate(()=>{let match=false;DEBUG_WORLD.selected.group.traverse(o=>{if(o.userData.energy&&o.material.color.getHex()===0xff794d)match=true;});return match;}));
- await page.locator('#exhibit').selectOption('sword-ancient');
+ await page.locator('#exhibit').selectOption('sword-wood');
  check('core selector follows the selected weapon',await page.locator('#core').inputValue()==='tempered');
  await page.locator('#core').selectOption('pulse');
  check('incompatible core restores the actual selection',await page.locator('#core').inputValue()==='tempered');
- await page.locator('#exhibit').selectOption('carbine-technological');
+ await page.locator('#exhibit').selectOption('carbine-diamond');
  check('returning to a weapon retains its core',await page.locator('#core').inputValue()==='ember');
  const original=await page.evaluate(()=>JSON.stringify(DEBUG_WORLD.target.toArray()));await page.locator('#viewport').focus();await page.keyboard.press('ArrowRight');
  check('keyboard pans the scene',await page.evaluate(()=>JSON.stringify(DEBUG_WORLD.target.toArray()))!==original);

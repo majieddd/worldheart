@@ -4,10 +4,10 @@ import {resolve} from 'node:path';
 import {mkdirSync,writeFileSync} from 'node:fs';
 const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright');
 const out=resolve(process.argv[2]||'artifacts/debug-performance'),base=process.env.WH_BASE_URL||'http://127.0.0.1:8139';mkdirSync(out,{recursive:true});
-const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1280,height:720}}),faults=[],records=[];
+const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1280,height:720}}),faults=[],records=[];let startupMs=0;
 page.on('pageerror',e=>faults.push(String(e)));
 try{
- await page.goto(base+'/debug.html');await page.waitForFunction(()=>window.DEBUG_WORLD,{},{timeout:120000});
+ const started=Date.now();await page.goto(base+'/debug.html');await page.waitForFunction(()=>window.DEBUG_WORLD,{},{timeout:120000});startupMs=Date.now()-started;console.log(JSON.stringify({startupMs}));
  for(const mode of ['all lanes','animated units']){
   if(mode==='all lanes')await page.locator('#overview').click();
   else{await page.locator('[data-lane="units"]').click();await page.locator('#motion').selectOption('walk');await page.locator('#row').click();}
@@ -24,4 +24,4 @@ try{
  }
 }finally{await browser.close();}
 const pass=!faults.length&&records.length===2&&records.every(r=>r.p50<=16.8&&r.p99<=33.4)&&records[0].clips.every(c=>c.names.length>=7);
-writeFileSync(resolve(out,'results.json'),JSON.stringify({scope:'Two 15-second native Debug World render fixtures at 1280x720, this machine only',records,faults,pass},null,2));if(!pass)process.exitCode=1;
+writeFileSync(resolve(out,'results.json'),JSON.stringify({scope:'Two 15-second native Debug World render fixtures at 1280x720, this machine only',startupMs,records,faults,pass},null,2));if(!pass)process.exitCode=1;

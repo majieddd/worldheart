@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { PALETTE, PRESENTATION } from './config.js';
 import { slab, cone, merge, shift, spin, keyed, hump } from './rig.js';
 import { STRIKE_AT } from './attacks.js';
-import { buildWeapon } from './weapon-model.js';
+import { buildWeapon, MATERIAL_FINISH } from './weapon-model.js';
 
 // The thing in your hands.
 //
@@ -444,9 +444,18 @@ export class ViewModel {
     const key=`${typeKey}:${era}`;
     if (!this.models.has(key)) {
       const build = BUILD[typeKey] || BUILD.warden;
-      const visual={commander:'sword',warden:'spear',marksman:'rifle',bombardier:'mortar'}[typeKey];
+      const visual={commander:'sword',warden:'spear',marksman:'rifle',bombardier:'mortar',oracle:'staff'}[typeKey];
       let g;
-      if(visual){
+      if(typeKey==='duelist'){
+        g=new THREE.Group();g.userData.paired=true;g.userData.weaponGroups=[];
+        for(const side of [-1,1]){
+          const hand=new THREE.Group(),prop=new THREE.Group(),kit=buildWeapon('twin',era,{...MAT,trim:MAT.steel});
+          for(const piece of kit.parts)prop.add(mesh(piece.geo,piece.mat));
+          hand.name=side>0?'right':'left';hand.position.set(side*1.1,side>0?0:-.04,side>0?0:.1);hand.rotation.y=-side*.35;
+          hand.add(prop,arm(hand,side));g.add(hand);g.userData.weaponGroups.push(prop);
+        }
+        g.userData.blade=[1.1,0,-.2,1.1,0,-.92];
+      }else if(visual){
         g=new THREE.Group();const kit=buildWeapon(visual,era,{...MAT,trim:MAT.steel});
         for(const piece of kit.parts)g.add(mesh(piece.geo,piece.mat));
         g.add(arm(g));
@@ -457,7 +466,7 @@ export class ViewModel {
       // model also stretched the gauntlet and forearm on every long weapon.
       const weaponGroup = new THREE.Group();
       weaponGroup.name = 'held-weapon';
-      for (const child of [...g.children]) if (child.name !== 'holding-arm') weaponGroup.add(child);
+      for (const child of [...g.children]) if (!g.userData.paired&&child.name !== 'holding-arm') weaponGroup.add(child);
       g.add(weaponGroup); g.userData.weaponGroup = weaponGroup;
       g.traverse((o) => { o.castShadow = false; o.receiveShadow = false; });
       g.scale.setScalar(VM_SCALE);
@@ -492,7 +501,7 @@ export class ViewModel {
     if (!this.visible || !this.current) return;
     const visual = unit.weaponView || unit.typeKey;
     if (visual !== this.typeKey || (unit.weaponEra||'ancient')!==this.era) this.show(visual,unit.weaponEra||'ancient');
-    const appearance = `${unit.weaponFamily}:${unit.weaponTint}:${unit.weaponLength}:${unit.weaponEra}:${unit.weaponCore}`;
+    const appearance = `${unit.weaponFamily}:${unit.weaponTint}:${unit.weaponLength}:${unit.weaponEra}:${unit.weaponCore}:${unit.weaponMaterial}`;
     if (this.current.userData.appearance !== appearance) {
       this.current.userData.appearance = appearance;
       this.current.traverse(o => {
@@ -510,15 +519,16 @@ export class ViewModel {
           const color={tempered:0xffd399,ember:0xff794d,frost:0x91ddff,pulse:0xa9a0ff}[unit.weaponCore];
           o.material.color.setHex(color);o.material.emissive.setHex(color);o.material.emissiveIntensity={ancient:.12,technological:1.3,empowered:2.2}[unit.weaponEra];
         }
-        if(unit.weaponEra&&o.userData.metalPart)o.material.color.setHex(unit.weaponEra==='technological'?0xcbe4ef:0xcaa56f);
+        if(unit.weaponEra&&o.userData.metalPart){const f=MATERIAL_FINISH[unit.weaponMaterial]||MATERIAL_FINISH.iron;o.material.color.setHex(f.color);o.material.emissive.setHex(0);o.material.metalness=f.metalness;o.material.roughness=f.roughness;}
       });
       this.current.userData.weaponGroup.scale.z = unit.weaponLength || 1;
+      for(const prop of this.current.userData.weaponGroups||[])prop.scale.z=unit.weaponLength||1;
       for(const child of this.current.children)if(child.userData.supportZ!==undefined)child.position.z=child.userData.supportZ*(unit.weaponLength||1);
     }
     this.t += dt;
     const g = this.grip;
     const kind = unit.type.strike?.kind || 'melee';
-    const twin = !unit.weaponFamily && unit.typeKey === 'duelist';
+    const twin = unit.weaponVisual==='twin'||(!unit.weaponFamily && unit.typeKey === 'duelist');
     const spear = unit.weaponVisual === 'spear' || (!unit.weaponFamily && unit.typeKey === 'warden');
     const rest = kind !== 'melee' ? RESTS.ranged : twin ? RESTS.twin : spear ? RESTS.spear : RESTS.melee;
 
@@ -626,7 +636,7 @@ export class ViewModel {
     this.current.scale.setScalar(VM_SCALE);
     // The twin blades swap which hand leads: the striking blade is brought to
     // the centre of the frame, the other stays out at its side.
-    if (unit.typeKey === 'duelist') {
+    if (this.typeKey === 'duelist') {
       const r = this.current.getObjectByName('right');
       const l = this.current.getObjectByName('left');
       if (r && l) {

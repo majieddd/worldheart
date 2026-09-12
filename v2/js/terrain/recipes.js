@@ -1,8 +1,10 @@
+import {TERRAIN_PACKS} from '../run/world-catalogue.js';
+import {ADDITIONAL_RECIPES} from './additional-formations.js';
 // Authored geometry vocabulary, independent of temperature, material and foliage.
 // A planet mixes these groups; any group can carry any biome's surface rules.
 // Dimensions are world metres. Change the version when the seeded layout changes.
 import {EXOTIC_RECIPES} from './exotic-formations.js';
-export const LANDFORM_VERSION = 7;
+export const LANDFORM_VERSION = 8;
 export const LANDFORM_RECIPES = Object.freeze({
   range: Object.freeze({ label: 'Ridge chain', relief: 'range', gain: 1.18, roughness: .28 }),
   canyon: Object.freeze({ label: 'Winding Valley', relief: 'canyon', gain: 1.65, roughness: .1 }),
@@ -14,7 +16,7 @@ export const LANDFORM_RECIPES = Object.freeze({
   crevice: Object.freeze({ label: 'Fault crevices', relief: 'canyon', gain: .65, roughness: .18 }),
   buttes: Object.freeze({ label: 'Eroded butte cluster', relief: 'canyon', gain: 1.15, roughness: .12 }),
   caldera: Object.freeze({ label: 'Breached caldera', relief: 'range', gain: .7, roughness: .14 }),
-  dunes: Object.freeze({ label: 'Hill Fields', relief: 'range', gain: .085, roughness: .1 }),
+  dunes: Object.freeze({ label: 'Hill Fields', relief: 'range', gain: .16, roughness: .1 }),
   gorge: Object.freeze({ label: 'Winding Canyon', relief: 'canyon', gain: .6, roughness: .12 }),
   escarpment: Object.freeze({ label: 'Staircase escarpment', relief: 'canyon', gain: 1.05, roughness: .08 }),
   valley: Object.freeze({ label: 'Glacial trough', relief: 'range', gain: .48, roughness: .14 }),
@@ -22,31 +24,34 @@ export const LANDFORM_RECIPES = Object.freeze({
   labyrinth: Object.freeze({ label: 'Noctis labyrinth', relief: 'canyon', gain: .95, roughness: .12 }),
   chaos: Object.freeze({ label: 'Rafted crust blocks', relief: 'canyon', gain: .85, roughness: .08 }),
   spine: Object.freeze({ label: 'Razorback ridge', relief: 'range', gain: .92, roughness: .1 }),
-  volcano: Object.freeze({ label: 'Lava spill volcano', relief: 'range', gain: .8, roughness: .1 }),
+  volcano: Object.freeze({ label: 'Lava spill volcano', relief: 'range', gain: 1.02, roughness: .1 }),
   forest: Object.freeze({ label: 'Canopy highlands', relief: 'range', gain: .55, roughness: .08 }),
   ...EXOTIC_RECIPES,
+  ...ADDITIONAL_RECIPES,
 });
 
-export function formationHeightLimit(profile) {
-  return Math.max(...Object.values(LANDFORM_RECIPES).map(r => profile[r.relief] * r.gain * 1.22),
-    ...(profile.formations?.groups || []).map(g => g.height || 0)) + 2;
+export function formationHeightLimit(profile,composition) {
+  const pack=TERRAIN_PACKS[composition?.pack];
+  return Math.max(...Object.values(LANDFORM_RECIPES).map(r => Math.max(profile[r.relief],pack?.[r.relief]||0) * r.gain * 1.22),
+    ...(profile.formations?.groups || []).map(g => g.height || 0)) + 24;
 }
-export function formationDepthLimit(profile) {
-  return Math.max(...Object.values(LANDFORM_RECIPES).filter(r=>r.relief==='canyon').map(r=>profile.canyon*r.gain*1.22),
+export function formationDepthLimit(profile,composition) {
+  return Math.max(...Object.values(LANDFORM_RECIPES).filter(r=>r.relief==='canyon').map(r=>Math.max(profile.canyon,TERRAIN_PACKS[composition?.pack]?.canyon||0)*r.gain*1.22),
     // A height-only override can resolve to a crevice through its seeded mix.
     ...(profile.formations?.groups || []).map(g => g.height || 0)) + 2;
 }
-export const LANDFORM_MIXES = Object.freeze({
-  varied: Object.freeze({ spacing: 104, valley: 6, weights: { range: 5, canyon: 3, basin: 1, hills: 4, mesa: 1, plateau: 3, ravine: 3, crevice: 2, buttes: 3, caldera: 2, dunes: 3, valley: 3, gorge: 4, escarpment: 3, grand:2,labyrinth:2,chaos:2,spine:2,volcano:3,forest:3,impact:2,yardangs:2,drumlins:2,fan:2,karst:2,spiral:2,blades:2,spider:2,cells:2,stripes:2 } }),
-  alpine: Object.freeze({ spacing: 128, valley: 8, weights: { range: 8, canyon: 3, basin: 1, hills: 2, mesa: 1, plateau: 2, ravine: 2, crevice: 2, buttes: 2, caldera: 2, dunes: 1, valley: 4, gorge: 2, escarpment: 2 } }),
-  canyon: Object.freeze({ spacing: 108, valley: 6, weights: { range: 4, canyon: 5, basin: 1, hills: 3, mesa: 2, plateau: 3, ravine: 4, crevice: 3, buttes: 4, caldera: 1, dunes: 3, valley: 2, gorge: 6, escarpment: 3 } }),
-  ocean: Object.freeze({ spacing: 96, valley: 6, weights: { range: 4, canyon: 2, basin: 2, hills: 4, mesa: 1, plateau: 2, ravine: 2, crevice: 2, buttes: 2, caldera: 3, dunes: 1, valley: 3, gorge: 2, escarpment: 2 } }),
-});
+export const LANDFORM_MIXES = Object.freeze(Object.fromEntries(Object.entries(TERRAIN_PACKS).map(([key,p])=>[key,{spacing:p.spacing,valley:p.valley,weights:p.weights}])));
 
 export function landformSettings(key = 'varied', overrides = {}) {
   if (!Object.hasOwn(LANDFORM_MIXES, key)) throw new Error(`Unknown landform mix: ${key}`);
   const base = LANDFORM_MIXES[key], result = { ...base, groups: [], ...overrides, weights: { ...base.weights, ...overrides.weights } };
-  for (const k of Object.keys(overrides)) if (!['spacing', 'valley', 'weights', 'groups'].includes(k)) throw new Error(`Unknown landform setting: ${k}`);
+  for (const k of Object.keys(overrides)) if (!['spacing', 'valley', 'weights', 'groups', 'composition'].includes(k)) throw new Error(`Unknown landform setting: ${k}`);
+  if(result.composition){
+    const c=result.composition;
+    if(!Object.hasOwn(TERRAIN_PACKS,c.pack)||!Number.isFinite(c.coverage)||c.coverage<0||c.coverage>1)throw new Error('Invalid terrain composition');
+    for(const [key,weight]of Object.entries(c.weights||{}))if(!Object.hasOwn(LANDFORM_RECIPES,key)||!Number.isFinite(weight)||weight<0)throw new Error('Invalid composition weight');
+    result.composition={...c,weights:{...c.weights}};
+  }
   if (!Array.isArray(result.groups)) throw new Error('Landform groups must be an array');
   const used = new Set();
   result.groups = result.groups.map(g => {

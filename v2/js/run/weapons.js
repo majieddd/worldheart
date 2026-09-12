@@ -1,17 +1,19 @@
 // Serializable weapon rules. RNG and identity are supplied by the shell.
 export const BACKPACK_SIZE = 12;
 export const FAMILIES = {
+  twinblade: { name:'Twinfang blades',visual:'twin',view:'duelist',kind:'melee',dmg:25,cd:.43,radius:2.5,arcDeg:90,cleave:.4,pierce:4,knockback:.22,kick:.13,trauma:.1,fov:84 },
+  scepter: { name:'Ember scepter',visual:'staff',view:'oracle',kind:'beam',dmg:48,dps:48,cd:.06,range:18,corridor:.55,pierce:4,ramp:1.9,rampTime:2.2,heatUp:1,heatDown:.75,kick:0,trauma:.04,fov:80,cross:'ranged' },
   sword: { name: 'Sword', visual: 'sword', view: 'commander', kind: 'melee', dmg: 40, cd: 0.85, radius: 3, arcDeg: 120, cleave: 0.65, pierce: 4, knockback: 0.6, kick: 0.3, trauma: 0.2, fov: 78 },
   spear: { name: 'Spear', visual: 'spear', view: 'warden', kind: 'melee', dmg: 42, cd: 1.05, radius: 4.4, arcDeg: 38, cleave: 0.35, pierce: 6, knockback: 0.3, kick: 0.22, trauma: 0.16, fov: 78 },
   carbine: { name: 'Carbine', visual: 'rifle', view: 'marksman', kind: 'projectile', dmg: 29, cd: 0.6, range: 34, speed: 42, corridor: 0.18, pierce: 3, kick: 0.22, trauma: 0.12, fov: 78, cross: 'ranged' },
   lobber: { name: 'Lobber', visual: 'mortar', view: 'bombardier', kind: 'lob', dmg: 40, cd: 1.15, speed: 16, lift: 0.42, gravity: 16, aoe: 3.4, pierce: 99, fuse: 2.6, kick: 0.3, trauma: 0.22, fov: 80, cross: 'ranged' },
 };
 export const COMPATIBILITY = {
-  commander: { families: ['sword', 'spear', 'lobber'], label: 'Bulwark: broad melee arcs', arc: 1.15 },
-  duelist: { families: ['sword', 'spear', 'carbine'], label: 'Twinfang: quick handling', cadence: 0.9 },
-  marksman: { families: ['sword', 'spear', 'carbine'], label: 'Longsight: fast projectiles', velocity: 1.15 },
+  commander: { families: ['sword', 'spear', 'lobber', 'twinblade'], label: 'Bulwark: broad melee arcs', arc: 1.15 },
+  duelist: { families: ['sword', 'spear', 'carbine', 'twinblade'], label: 'Twinfang: quick handling', cadence: 0.9 },
+  marksman: { families: ['sword', 'spear', 'carbine', 'scepter'], label: 'Longsight: fast projectiles', velocity: 1.15 },
   bombardier: { families: ['sword', 'carbine', 'lobber'], label: 'Kettle: wider shell bursts', blast: 1.1 },
-  oracle: { families: ['sword', 'spear', 'lobber'], label: 'Emberline: stronger elemental cores', element: 1.2 },
+  oracle: { families: ['sword', 'spear', 'lobber', 'scepter'], label: 'Emberline: stronger elemental cores', element: 1.2 },
 };
 export const PARTS = {
   head: {
@@ -33,7 +35,9 @@ export const PARTS = {
     pulse: { name: 'Pulse', note: '+30% projectile speed, 10% less impact', velocity: 1.3, damage: 0.9, families: ['carbine', 'lobber'] },
   },
 };
-export const RARITIES = ['common', 'uncommon', 'rare', 'relic'];
+export const RARITIES = ['common', 'uncommon', 'rare', 'epic', 'relic'];
+export const WEAPON_MATERIALS = ['wood','iron','gold','diamond','onyx'];
+export const materialForWeapon = item => WEAPON_MATERIALS[Math.max(0,RARITIES.indexOf(item.rarity))];
 export const ERAS = ['ancient', 'technological', 'empowered'];
 export function eraForPlanet(planet) { return planet <= 33 ? 'ancient' : planet <= 66 ? 'technological' : 'empowered'; }
 export function compatible(commander, family) { return !!COMPATIBILITY[commander]?.families.includes(family); }
@@ -54,7 +58,7 @@ const clone = value => JSON.parse(JSON.stringify(value));
 export function generateWeapon({ id, seed, tier = 1, family = null, rng }) {
   const keys = Object.keys(FAMILIES), roll = rng();
   family ||= keys[Math.floor(rng() * keys.length)];
-  const rarity = roll < 0.68 ? 'common' : roll < 0.9 ? 'uncommon' : roll < 0.985 ? 'rare' : 'relic';
+  const rarity = roll < 0.68 ? 'common' : roll < 0.9 ? 'uncommon' : roll < 0.975 ? 'rare' : roll < .995 ? 'epic' : 'relic';
   const parts = {};
   for (const slot of Object.keys(PARTS)) {
     const pool = Object.keys(PARTS[slot]).filter(key => validPart(family, slot, key));
@@ -68,7 +72,8 @@ export function generateWeapon({ id, seed, tier = 1, family = null, rng }) {
 export function shouldDrop({ boss = false, elite = false }, rng) { return boss || rng() < (elite ? 0.1 : 0.02); }
 export function weaponName(item) {
   const eras = { ancient: 'Forged', technological: 'Circuit', empowered: 'Awakened' };
-  return `${eras[item.era]} ${FAMILIES[item.family].name}`;
+  const material=materialForWeapon(item);
+  return `${material[0].toUpperCase()+material.slice(1)} ${eras[item.era]} ${FAMILIES[item.family].name}`;
 }
 export function weaponStats(item, commander, inspect = false) {
   if (!validWeapon(item) || (!inspect && !compatible(commander, item.family))) return null;
@@ -92,6 +97,7 @@ export function weaponStats(item, commander, inspect = false) {
     if (p.slow) s.slow = p.slow * (trait.element || 1);
   }
   s.weaponFamily = item.family;
+  if(s.kind==='beam')s.dps=s.dmg;
   return s;
 }
 

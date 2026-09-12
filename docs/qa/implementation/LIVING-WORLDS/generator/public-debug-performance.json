@@ -1,0 +1,674 @@
+{
+  "scope": "Two 15-second native Debug World render fixtures at 1280x720, this machine only",
+  "startupMs": 12749,
+  "records": [
+    {
+      "mode": "all lanes",
+      "frames": 1625,
+      "p50": 7,
+      "p99": 14,
+      "max": 20.900000000001455,
+      "load": [
+        {
+          "frame": 150,
+          "calls": 2293,
+          "triangles": 6856294,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 210,
+          "calls": 2279,
+          "triangles": 6856014,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 270,
+          "calls": 2272,
+          "triangles": 6855874,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 330,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 390,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 450,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 510,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 570,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 630,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 690,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 750,
+          "calls": 2314,
+          "triangles": 6856714,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 810,
+          "calls": 2328,
+          "triangles": 6856994,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 870,
+          "calls": 2370,
+          "triangles": 6857834,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 930,
+          "calls": 2370,
+          "triangles": 6857834,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 990,
+          "calls": 2447,
+          "triangles": 6859374,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1050,
+          "calls": 2412,
+          "triangles": 6858674,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1110,
+          "calls": 2426,
+          "triangles": 6858954,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1170,
+          "calls": 2398,
+          "triangles": 6858394,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1230,
+          "calls": 2314,
+          "triangles": 6856714,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1290,
+          "calls": 2328,
+          "triangles": 6856994,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1350,
+          "calls": 2314,
+          "triangles": 6856714,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1410,
+          "calls": 2293,
+          "triangles": 6856294,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1470,
+          "calls": 2293,
+          "triangles": 6856294,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1530,
+          "calls": 2279,
+          "triangles": 6856014,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1590,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1650,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 1710,
+          "calls": 2258,
+          "triangles": 6855594,
+          "points": 0,
+          "lines": 0
+        }
+      ],
+      "clips": [
+        {
+          "key": "warden",
+          "names": [
+            "idle",
+            "walk",
+            "sprint",
+            "strafe",
+            "jump",
+            "attack",
+            "hurt"
+          ]
+        },
+        {
+          "key": "commander",
+          "names": [
+            "idle",
+            "walk",
+            "sprint",
+            "strafe",
+            "jump",
+            "attack",
+            "hurt"
+          ]
+        },
+        {
+          "key": "duelist",
+          "names": [
+            "idle",
+            "walk",
+            "sprint",
+            "strafe",
+            "jump",
+            "attack",
+            "hurt"
+          ]
+        },
+        {
+          "key": "marksman",
+          "names": [
+            "idle",
+            "walk",
+            "sprint",
+            "strafe",
+            "jump",
+            "attack",
+            "hurt"
+          ]
+        },
+        {
+          "key": "bombardier",
+          "names": [
+            "idle",
+            "walk",
+            "sprint",
+            "strafe",
+            "jump",
+            "attack",
+            "hurt"
+          ]
+        },
+        {
+          "key": "oracle",
+          "names": [
+            "idle",
+            "walk",
+            "sprint",
+            "strafe",
+            "jump",
+            "attack",
+            "hurt"
+          ]
+        },
+        {
+          "key": "mite",
+          "names": [
+            "idle",
+            "walk",
+            "turn",
+            "attack",
+            "hurt",
+            "stun",
+            "shield",
+            "collapse"
+          ]
+        },
+        {
+          "key": "husk",
+          "names": [
+            "idle",
+            "walk",
+            "turn",
+            "attack",
+            "hurt",
+            "stun",
+            "shield",
+            "collapse"
+          ]
+        },
+        {
+          "key": "aegis",
+          "names": [
+            "idle",
+            "walk",
+            "turn",
+            "attack",
+            "hurt",
+            "stun",
+            "shield",
+            "collapse"
+          ]
+        },
+        {
+          "key": "wisp",
+          "names": [
+            "idle",
+            "walk",
+            "turn",
+            "attack",
+            "hurt",
+            "stun",
+            "shield",
+            "collapse"
+          ]
+        },
+        {
+          "key": "colossus",
+          "names": [
+            "idle",
+            "walk",
+            "turn",
+            "attack",
+            "hurt",
+            "stun",
+            "shield",
+            "collapse"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "animated units",
+      "frames": 2161,
+      "p50": 6.900000000001455,
+      "p99": 7.19999999999709,
+      "max": 8.19999999999709,
+      "load": [
+        {
+          "frame": 2010,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2070,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2130,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2190,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2250,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2310,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2370,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2430,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2490,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2550,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2610,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2670,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2730,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2790,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2850,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2910,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 2970,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3030,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3090,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3150,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3210,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3270,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3330,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3390,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3450,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3510,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3570,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3630,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3690,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3750,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3810,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3870,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3930,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 3990,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 4050,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        },
+        {
+          "frame": 4110,
+          "calls": 337,
+          "triangles": 8244,
+          "points": 0,
+          "lines": 0
+        }
+      ],
+      "clips": [
+        {
+          "key": "warden",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "commander",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "duelist",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "marksman",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "bombardier",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "oracle",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "mite",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "husk",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "aegis",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "wisp",
+          "names": [
+            "walk"
+          ]
+        },
+        {
+          "key": "colossus",
+          "names": [
+            "walk"
+          ]
+        }
+      ]
+    }
+  ],
+  "faults": [],
+  "pass": true
+}

@@ -13,6 +13,15 @@ function dryFloor(nav, i) {
     && nav.march.floorReach[i] && Number.isFinite(nav.airDist[i]);
 }
 
+// Cheap per-site certificate for a staged terrain forecast. It shares the
+// spawning predicates without rebuilding the global wet-route scoring cache.
+export function isNestClearing(nav,i,scratch){
+  if(!dryFloor(nav,i))return false;
+  for(let e=nav.adjOff[i];e<nav.adjOff[i+1];e++)if(!dryFloor(nav,nav.adj[e])||!Number.isFinite(nav.cost[e]))return false;
+  nav.nodePos(i,scratch);
+  return nav.nodesInRadius(scratch,NEST_CLEARANCE).every(n=>dryFloor(nav,n));
+}
+
 function siteCache(nav) {
   const field = nav.march;
   if (!field) return null;
@@ -62,7 +71,7 @@ export function* availableNestSites(nav, centre, scratch) {
   nav.nodePos(nav.heartNode, scratch);
   const radius = scratch.length() - nav.height[nav.heartNode];
   for (const i of cache.candidates) {
-    if (nav.march.dist[i] > NEST_ROUTE_LIMIT) continue;
+    if (!Number.isFinite(nav.march.dist[i])) continue;
     nav.nodeDir(i, scratch);
     if (Math.acos(Math.max(-1, Math.min(1, scratch.dot(centre)))) * radius < 10) continue;
     if (clearing(nav, cache, i, scratch)) yield i;
@@ -76,10 +85,10 @@ export function nestSite(nav, original, centre, theta, used, scratch) {
   const ox = scratch.x, oy = scratch.y, oz = scratch.z;
   nav.nodePos(nav.heartNode, scratch);
   const radius = scratch.length() - nav.height[nav.heartNode];
-  const target = theta * radius * 1.12, budget = NEST_ROUTE_LIMIT;
+  const target = theta * radius * 1.12;
   let chosen = -1, best = Infinity;
   for (const i of cache.candidates) {
-    if (used.has(i) || field.dist[i] > budget) continue;
+    if (used.has(i) || !Number.isFinite(field.dist[i])) continue;
     nav.nodeDir(i, scratch);
     const angle = Math.acos(Math.max(-1, Math.min(1, scratch.dot(centre))));
     const arc = angle * radius;
@@ -87,7 +96,7 @@ export function nestSite(nav, original, centre, theta, used, scratch) {
     // Prefer the requested azimuth near the frontier, but a shorter healthy
     // approach inside expanded territory beats a remote ocean detour.
     const bearing = Math.acos(Math.max(-1, Math.min(1, scratch.x * ox + scratch.y * oy + scratch.z * oz)));
-    const score = Math.abs(arc - target) + bearing * radius * .08 + field.dist[i] * .1 + cache.wetDistance[i] * 2;
+    const score = Math.abs(arc - target) + bearing * radius * .08 + field.dist[i] * .1 + cache.wetDistance[i] * 2 + Math.max(0,field.dist[i]-NEST_ROUTE_LIMIT)*4;
     if (score >= best) continue;
     nav.nodePos(i, scratch);
     let separate = true;
@@ -99,7 +108,7 @@ export function nestSite(nav, original, centre, theta, used, scratch) {
     if (!clearing(nav, cache, i, scratch)) continue;
     chosen = i; best = score;
   }
-  // Never force a mountain fallback. The director delays this wave if player
-  // footprints leave no legal source; selling reopens candidates by revision.
+  // The preferred short approach is a score, not a hard world boundary.
+  // Expanded bases and legitimate tower detours may require a longer route.
   return chosen;
 }

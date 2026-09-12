@@ -315,11 +315,11 @@ export function buildSoldier(key, mats, weapon = null, era = 'ancient') {
   // it; built along the forearm instead, a resting sword pointed at the
   // soldier's own elbow and hung behind the body point-down.
   const forward = (g) => spin(g, -Math.PI / 2, 0, 0);
-  if(['sword','spear','rifle','mortar'].includes(spec.weapon)){
+  if(['sword','spear','rifle','mortar','twin','staff'].includes(spec.weapon)){
     const kit=buildWeapon(spec.weapon,era,mats);spec.blade=kit.blade;
     for(const piece of kit.parts)P.one(piece.geo,piece.mat,'weaponR');
   }else for (const piece of weapons[spec.weapon]()) P.one(forward(piece.geo), piece.mat, 'weaponR');
-  if (spec.weapon === 'twin') for (const piece of knifeGeo(mats)) P.one(forward(piece.geo), piece.mat, 'weaponL');
+  if (spec.weapon === 'twin') for (const piece of buildWeapon('twin',era,mats).parts) P.one(piece.geo,piece.mat,'weaponL');
 
   return { skeleton: sk, parts: P.parts, spec };
 }

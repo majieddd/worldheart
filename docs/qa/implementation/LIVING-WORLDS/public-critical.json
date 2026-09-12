@@ -1,0 +1,124 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "scope": "Targeted actual forge/pickup, physical ledge, nest collapse and HUD fixtures; setup and time are instrumented.",
+  "checks": [
+    {
+      "name": "One rendered relic grants exactly one ore, including a legacy multi-ore request 0",
+      "ok": true
+    },
+    {
+      "name": "One rendered relic grants exactly one ore, including a legacy multi-ore request 1",
+      "ok": true
+    },
+    {
+      "name": "One rendered relic grants exactly one ore, including a legacy multi-ore request 2",
+      "ok": true
+    },
+    {
+      "name": "First actual forge costs three ore",
+      "ok": true
+    },
+    {
+      "name": "One rendered relic grants exactly one ore, including a legacy multi-ore request 3",
+      "ok": true
+    },
+    {
+      "name": "One rendered relic grants exactly one ore, including a legacy multi-ore request 4",
+      "ok": true
+    },
+    {
+      "name": "One rendered relic grants exactly one ore, including a legacy multi-ore request 5",
+      "ok": true
+    },
+    {
+      "name": "One rendered relic grants exactly one ore, including a legacy multi-ore request 6",
+      "ok": true
+    },
+    {
+      "name": "One rendered relic grants exactly one ore, including a legacy multi-ore request 7",
+      "ok": true
+    },
+    {
+      "name": "Second actual forge costs five ore",
+      "ok": true
+    },
+    {
+      "name": "Failed forge keeps the next price",
+      "ok": true
+    },
+    {
+      "name": "Fixture finds an actual steep terrain edge",
+      "ok": true
+    },
+    {
+      "name": "Commander steps off a steep edge without a ground-graph wall",
+      "ok": true,
+      "detail": {
+        "distance": 1.1499988998303363,
+        "hop": 5.728604510532357
+      }
+    },
+    {
+      "name": "Dropping preserves height and enters a ballistic fall",
+      "ok": true,
+      "detail": {
+        "before": 49.93284369266968,
+        "after": 49.93284369266968,
+        "hop": 5.728604510532357
+      }
+    },
+    {
+      "name": "The drop lands cleanly",
+      "ok": true
+    },
+    {
+      "name": "A real nest is available for the quake",
+      "ok": true
+    },
+    {
+      "name": "Earthquake displays a predicted red surface",
+      "ok": true
+    },
+    {
+      "name": "Disrupted nest is destroyed and removed from spawning",
+      "ok": true,
+      "detail": {
+        "kind": "quake",
+        "strength": 1,
+        "changedNodes": 24514,
+        "vertices": 15432,
+        "disruptedNests": [
+          218244
+        ],
+        "revisionBefore": 2,
+        "revisionAfter": 3,
+        "footprintsPreserved": true
+      }
+    },
+    {
+      "name": "Forecast is removed after the shift",
+      "ok": true
+    },
+    {
+      "name": "Forecast matches the committed terrain",
+      "ok": true,
+      "detail": {
+        "maxError": 0,
+        "strength": 1
+      }
+    },
+    {
+      "name": "Nest collapse does not pay repeatedly",
+      "ok": true
+    },
+    {
+      "name": "1440px: planet badge and alerts do not overlap",
+      "ok": true
+    },
+    {
+      "name": "390px: planet badge and alerts do not overlap",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

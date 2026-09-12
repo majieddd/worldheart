@@ -30,7 +30,7 @@ test('buttes, dunes, calderas and glacial troughs retain distinct relief and ope
   }
   assert.ok(floor>600&&high>80,`${type} needs open routes and visible raised terrain`);
   if(type==='valley')assert.ok(subfloor>30,'glacial troughs have a broad bed below the enclosing floor');
-  if(type==='dunes')assert.ok(peak<10,'wind ridges stay at the small scale');else assert.ok(peak>15);
+  if(type==='dunes')assert.ok(peak>10&&peak<20,'Hill Fields have larger hills, below the mountain scale');else assert.ok(peak>15);
   fingerprints.push(heights.join(','));
  }
  assert.equal(new Set(fingerprints).size,4,'new families cannot share one renamed shape');

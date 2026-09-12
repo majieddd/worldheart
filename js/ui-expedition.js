@@ -13,7 +13,7 @@ export function expeditionControls({ui,game,api,lockedCommander}){
   const endless=document.createElement('button');endless.id='btn-endless';endless.className='btn primary';endless.textContent='Continue in Endless';endless.hidden=true;
   ui.el['end-card'].querySelector('.o-actions').prepend(endless);endless.onclick=()=>api.startEndless();
   const dock=document.createElement('details');dock.className='expedition-tools panel';dock.id='expedition-tools';
-  dock.innerHTML='<summary>Expedition kit <span id="kit-summary"></span></summary><p id="expedition-life" role="status"></p><p id="expedition-weather" role="status"></p><button class="btn" id="mount-toggle">M · Mount</button><p id="mount-info"></p><button class="btn" id="craft-tower">T · Forge tower (3 ore)</button><p>Recover amber relic ore in the wild and from destroyed nests. Forge within 6m of the heart; the next matching tower is free.</p><button class="btn" id="endless-extract" hidden>End Endless and collect loot</button>';
+  dock.innerHTML='<summary>Expedition kit <span id="kit-summary"></span></summary><p id="expedition-life" role="status"></p><p id="expedition-weather" role="status"></p><button class="btn" id="mount-toggle">M · Mount</button><p id="mount-info"></p><button class="btn" id="craft-tower">T · Forge tower (3 ore)</button><p>Recover amber relic ore in the wild and from destroyed nests. Each relic grants 1 ore. Forge costs rise by 2 each time. Forge within 6m of the heart; the next matching tower is free.</p><button class="btn" id="endless-extract" hidden>End Endless and collect loot</button>';
   ui.root.querySelector('.hud-top-left').append(dock);const el=id=>dock.querySelector('#'+id);
   el('mount-toggle').onclick=()=>api.mounts.toggle();el('craft-tower').onclick=()=>api.craft();el('endless-extract').onclick=()=>api.finishEndless();
   addEventListener('keydown',e=>{if(e.repeat||e.ctrlKey||e.metaKey||e.altKey||game.state!=='playing'||game.paused||e.target?.matches?.('input,textarea,select,button')||document.querySelector('dialog[open]'))return;
@@ -21,7 +21,7 @@ export function expeditionControls({ui,game,api,lockedCommander}){
   let last='';
   return {update(){
     dock.hidden=game.state==='title';const a=api.commander(),m=MOUNTS[a.mountKey||'none'],remaining=api.respawn.remaining,weather=api.weather?.label||'Weather calm';
-    const state=[api.ore.ore,Math.ceil(remaining),a.active,m?.name,Math.ceil(api.mounts.energy),api.run.isEndless(),api.run.getPhase(),weather].join('|');
+    const state=[api.ore.ore,api.ore.cost,Math.ceil(remaining),a.active,m?.name,Math.ceil(api.mounts.energy),api.run.isEndless(),api.run.getPhase(),weather].join('|');
     endless.hidden=api.run.getPhase()!=='victory'||api.run.isEndless();
     if(state===last)return;last=state;
     el('kit-summary').textContent=` · ${api.ore.ore} ore${remaining>0?' · '+Math.ceil(remaining)+'s respawn':''}`;
@@ -30,7 +30,8 @@ export function expeditionControls({ui,game,api,lockedCommander}){
     el('mount-toggle').textContent=a.mountKey&&a.mountKey!=='none'?'M · Dismount':`M · Ride ${MOUNTS[api.mounts.choice].name}`;
     el('mount-toggle').disabled=!a.active||a.dead;
     el('mount-info').textContent=a.mountKey==='skyray'?`${Math.ceil(api.mounts.energy)} / 12s flight. Hold Space to rise; release to land.`:m.description;
-    el('craft-tower').disabled=api.ore.ore<3;
+    el('craft-tower').textContent=`T · Forge tower (${api.ore.cost} ore)`;
+    el('craft-tower').disabled=api.ore.ore<api.ore.cost;
     el('endless-extract').hidden=!api.run.isEndless()||api.run.getPhase()!=='building';
   }};
 }

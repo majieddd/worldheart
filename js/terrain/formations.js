@@ -1,3 +1,5 @@
+import {TERRAIN_PACKS} from '../run/world-catalogue.js';
+import {ADDITIONAL_RECIPES,additionalHeight} from './additional-formations.js';
 import { makeNoise3D, mulberry32, smoothstep } from '../noise.js';
 import { LANDFORM_VERSION, LANDFORM_RECIPES, landformSettings } from './recipes.js';
 import {riftSample} from './rifts.js';
@@ -18,16 +20,17 @@ const bucketKey = (x, y, z) => (bucketAxis(x) * GRID + bucketAxis(y)) * GRID + b
 export function createFormationField(seed, radius, profile, mix = 'varied', overrides = {}) {
   if (!Number.isInteger(seed) || !Number.isFinite(radius) || radius < 30) throw new Error('Invalid formation seed/radius');
   if (![profile.range, profile.canyon].every(x => Number.isFinite(x) && x >= 0 && x <= 160)) throw new Error('Invalid formation relief');
-  const settings = landformSettings(mix, overrides), rng = mulberry32(seed ^ 0x62e2ac19);
+  const settings = landformSettings(mix, overrides), composition=settings.composition, pack=composition&&TERRAIN_PACKS[composition.pack], rng = mulberry32(seed ^ 0x62e2ac19);
+  if(pack&&composition.coverage>=.95&&!overrides.spacing)settings.spacing=pack.spacing;
   const count = Math.max(12, Math.round(4 * Math.PI * radius * radius / settings.spacing ** 2));
   if (settings.groups.some(g => g.id >= count)) throw new Error('Authored group id is outside this layout');
   const overridesById = new Map(settings.groups.map(g => [g.id, g]));
   const entries = Object.entries(settings.weights), geology = makeNoise3D(seed ^ 0x42aef103);
-  const vocabulary=entries.filter(([,weight])=>weight>0).map(([key])=>key),reserved=new Map();
+  const vocabulary=entries.filter(([key,weight])=>weight>0&&['range','hills','plateau','gorge','caldera'].includes(key)).map(([key])=>key),reserved=new Map();
   // Reserve one widely separated anchor per enabled family before drawing
   // the remaining weighted mix. Expanding the vocabulary must not silently
   // remove all foothills or all dry faults from an otherwise varied globe.
-  if(mix==='varied')for(let k=0;k<Math.min(vocabulary.length,count);k++)reserved.set((Math.floor(k*count/vocabulary.length)+(seed%count))%count,vocabulary[k]);
+  if(mix==='varied'&&(!composition?.coverage))for(let k=0;k<Math.min(vocabulary.length,count);k++)reserved.set((Math.floor(k*count/vocabulary.length)+(seed%count))%count,vocabulary[k]);
   const modules = [], rotate = rng() * TAU, tilt = rng() * TAU, ct = Math.cos(tilt), st = Math.sin(tilt);
   for (let i = 0; i < count; i++) {
     const y = 1 - 2 * (i + .5) / count, r = Math.sqrt(1 - y * y), az = i * 2.399963229728653 + rotate;
@@ -37,17 +40,19 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     // Broad geological provinces bias neighboring sites toward related forms.
     // They still contain contrasting families, rather than one global recipe.
     const province = geology(dir[0] * 2.4 + 17, dir[1] * 2.4, dir[2] * 2.4);
+    const provincial=pack&&(composition.coverage>=1||composition.coverage>0&&.5+province*.75<composition.coverage), localProfile=provincial?pack:profile;
+    const localEntries=provincial?Object.entries({...pack.weights,...composition.weights,...overrides.weights}):entries;
     const weightAt = (key, weight) => weight * (key === 'range' ? 1 + province * .7
       : key === 'hills' || key === 'basin' ? 1 - province * .5 : 1 + Math.abs(province) * .2);
-    const total = entries.reduce((sum, [key, weight]) => sum + weightAt(key, weight), 0);
-    let pick = rng() * total, type = entries.at(-1)[0];
-    for (const [key, weight] of entries) { pick -= weightAt(key, weight); if (pick < 0) { type = key; break; } }
+    const total = localEntries.reduce((sum, [key, weight]) => sum + weightAt(key, weight), 0);
+    let pick = rng() * total, type = localEntries.at(-1)[0];
+    for (const [key, weight] of localEntries) { pick -= weightAt(key, weight); if (pick < 0) { type = key; break; } }
     if(reserved.has(i))type=reserved.get(i);
     if (authored?.type) type = authored.type;
     const a = norm(cross(dir, Math.abs(dir[1]) < .93 ? [0, 1, 0] : [1, 0, 0])), b = cross(dir, a);
     const angle = rng() * TAU, ca = Math.cos(angle), sa = Math.sin(angle), recipe = LANDFORM_RECIPES[type];
     modules.push({ id: i, type, dir, axis: a.map((v, k) => v * ca + b[k] * sa), side: a.map((v, k) => b[k] * ca - v * sa),
-      height: profile[recipe.relief] * recipe.gain * (.78 + rng() * .44), phase: rng() * TAU,
+      pack:provincial?composition.pack:mix,noise:localProfile.noise??1, height: localProfile[recipe.relief] * recipe.gain * (.78 + rng() * .44), phase: rng() * TAU,
       size: .78 + rng() * .44, roughness: recipe.roughness * (.85 + rng() * .3), province });
     const m = modules.at(-1);
     // Shape parameters derive from the existing phase, not new random draws.
@@ -79,12 +84,12 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     const count = 7 + Math.floor(m.phase * 997) % 6, extent = m.extent * Math.min(m.size, 1);
     m.pillars = Array.from({length:count}, (_,k) => {
       const inner = k < 3, n = inner ? 3 : count - 3, index = inner ? k : k - 3;
-      const angle = index * TAU / n + m.phase + (inner ? .45 : 0), offset = extent * (inner ? .17 : .58);
+      const angle = index * TAU / n + m.phase + (inner ? .45 : 0), offset = extent * (inner ? .28 : .78);
       return {u:Math.cos(angle)*offset, v:Math.sin(angle)*offset, gain:.7+.1*(k%3)};
     });
     for (const p of m.pillars) {
       const separation = Math.min(...m.pillars.filter(q=>p!==q).map(q=>Math.hypot(p.u-q.u,p.v-q.v)));
-      p.width = Math.max(.5, Math.min(extent*.14, (separation-5.5)/2));
+      p.width = Math.max(.5, Math.min(extent*.21, (separation-5.5)/2));
     }
   }
 
@@ -147,8 +152,8 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
   // their bends. The bucket half-diagonal covers every point in the cube;
   // exhaustive inspection keeps the full scan as an independent oracle.
   const riftBuckets=new Array(GRID**3),riftBounds=rifts.map(m=>{
-    const length=Math.min(radius*.68,m.extent*(m.type==='grand'?2.8:2.3));
-    return {m,u:length/radius+halfDiagonal,v:(m.type==='grand'?length*.6+m.extent*.5+10:m.extent*1.5)/radius+halfDiagonal};
+    const length=Math.min(radius*.86,m.extent*(m.type==='grand'?4.3:2.3));
+    return {m,u:length/radius+halfDiagonal,v:(m.type==='grand'?length*.98+m.extent*.25+10:m.extent*1.5)/radius+halfDiagonal};
   });
   function riftCandidates(x,y,z){
     const key=bucketKey(x,y,z);if(riftBuckets[key])return riftBuckets[key];
@@ -159,7 +164,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
       Math.abs(cx*m.side[0]+cy*m.side[1]+cz*m.side[2])<=v).map(b=>b.m);
   }
   const rafts=new Map(modules.filter(m=>m.type==='chaos').map(m=>[m,Array.from({length:7},(_,k)=>{
-    const angle=k*2.39996+m.phase,ring=k===0?0:m.extent*m.size*.44;
+    const angle=k*2.39996+m.phase,ring=k===0?0:m.extent*m.size*.63;
     return {cos:Math.cos(angle),sin:Math.sin(angle),u:Math.cos(angle)*ring,v:Math.sin(angle)*ring,gain:.65+.2*Math.sin(k+1)};
   })]));
   function evaluate(x, y, z, out, exhaustive = false) {
@@ -197,7 +202,8 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
       const extent = m.extent * m.size, bend = Math.sin(u / extent * 2.6 + m.phase) * extent * .16;
       const channel = Math.abs(v + bend);
       const folds = .5 + .5 * Math.cos(u / extent * 8 + Math.sin(v / extent * 3) + m.phase);
-      if (chain) {
+      if(ADDITIONAL_RECIPES[m.type]){h=additionalHeight(m,u,v,extent,rise);incision=Math.max(0,-h);}
+      else if (chain) {
         let distance = Infinity;
         for (const [from, to] of chain.links) {
           const a = modules[from].dir, b = modules[to].dir;
@@ -230,8 +236,8 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         h = m.height * shoulder * bowl * entrance;
       } else if (m.type === 'mesa') {
         // Broad buildable benches, eroded shoulders, a pass through one flank.
-        entrance = smoothstep(valley, valley + extent * .24, Math.abs(v + extent * .27));
-        h = m.height * smoothstep(0, .66, shoulder) * entrance;
+        entrance = smoothstep(valley, valley + extent * .16, Math.abs(v + extent * .27));
+        h = m.height * Math.min(smoothstep(0, .25, rise),smoothstep(0,.58,entrance));
       } else if (m.type === 'plateau') {
         // Asymmetric two/three-tier shelves, scalloped flanks and one broad
         // ramp. Bench interiors stay flat enough to support emplacements.
@@ -262,7 +268,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
       } else if (m.type === 'gorge') {
         // A negative incision through the planet, with stepped inner walls
         // and two long ramps to the shared floor. Water is a separate field.
-        const width = 4.5 + extent * .035;
+        const width = 8 + extent * .055;
         const winding = Math.abs(v + Math.sin(u/extent*4.4+m.phase)*extent*.28);
         const cut = 1 - smoothstep(width, width + extent * .3, winding);
         const strata = .68 * cut + .32 * smoothstep(.32,.68,cut);
@@ -283,9 +289,9 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         // The wider dry bottom is a passage, not a decorative flooded crack.
         const fault = Math.abs(v + Math.sin(u / extent * 2 + m.phase) * extent * .13);
         const branch = Math.abs(v + u * .38 - extent * .18) + Math.max(0, -u) * .7;
-        const cut = 1 - smoothstep(3.2, Math.max(9, extent * .28), Math.min(fault, branch));
+        const cut = 1 - smoothstep(7.5, Math.max(13, extent * .32), Math.min(fault, branch));
         const upland = m.height * smoothstep(0, .62, shoulder);
-        incision = (upland + Math.min(m.height*.8,m.extent*.3) * smoothstep(0,.12,rise)*rise) * cut;
+        incision = (upland + Math.min(m.height*.8,m.extent*.48) * smoothstep(0,.12,rise)*rise) * cut;
         h = upland - incision;
       } else if (m.type === 'buttes') {
         // Several independent remnants, not a single mesa with a new name.
@@ -293,7 +299,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         let cluster = 0;
         for (const p of m.pillars) {
           const d = Math.hypot(u-p.u,v-p.v);
-          const remnant = 1-smoothstep(p.width*.38,p.width,d);
+          const remnant = 1-smoothstep(p.width*.55,p.width,d);
           cluster = Math.max(cluster,remnant*p.gain);
         }
         h = m.height * smoothstep(0, .28, rise) * cluster;
@@ -307,7 +313,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         h = m.height * smoothstep(0, .33, rise) * wall * (u > 0 ? breach : 1);
         incision = m.height * Math.max(0,1-radial/(rim*.7)) * smoothstep(0,.25,rise);
       } else if (m.type === 'volcano') {
-        const radial=Math.hypot(u,v),cone=1-smoothstep(extent*.18,extent*.94,radial);
+        const radial=Math.hypot(u,v),cone=1-smoothstep(extent*.24,extent*1.16,radial);
         const crater=1-smoothstep(extent*.12,extent*.27,radial);
         const spill=Math.abs(v+Math.sin(u/extent*4+m.phase)*extent*.07);
         const chute=(1-smoothstep(2.4,6,spill))*smoothstep(0,extent*.18,u);
@@ -323,7 +329,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         for(const raft of rafts.get(m)){
           const du=u-raft.u,dv=v-raft.v;
           const a=du*raft.cos+dv*raft.sin,b=dv*raft.cos-du*raft.sin;
-          const slab=1-smoothstep(.7,1,Math.max(Math.abs(a)/(extent*.24),Math.abs(b)/(extent*.16)));
+          const slab=1-smoothstep(.7,1,Math.max(Math.abs(a)/(extent*.22),Math.abs(b)/(extent*.15)));
           blocks=Math.max(blocks,slab*(raft.gain+a/extent*.3));
         }
         // Rafts are broad plates, not another set of narrow butte pillars.
@@ -336,7 +342,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
       } else if (m.type === 'forest') {
         const lobes=.72+.28*Math.cos(Math.atan2(v,u)*3+m.phase);
         const terraces=.55*smoothstep(.04,.34,rise)+.45*smoothstep(.5,.82,rise);
-        h=m.height*terraces*lobes;
+        h=m.height*(.55*smoothstep(.04,.22,rise*lobes)+.45*smoothstep(.35,.54,rise*lobes));
       } else if (m.type === 'grand' || m.type === 'labyrinth') {
         h=m.type==='labyrinth'?m.height*.65*smoothstep(0,.4,rise):0;
       } else if (m.type === 'dunes') {
@@ -365,21 +371,51 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         h = m.height * shoulder * (.25 + .75 * roll * roll * roll);
       }
     }
+    if(h<0&&!['karst','kettles'].includes(m.type))h=Math.max(h,-Math.max(0,edge-valley)*.4);
     let visible=m,macro=false;
     for(const rift of exhaustive?rifts:riftCandidates(x,y,z)){
       if(!riftSample(rift,x,y,z,radius,riftScratch))continue;
       const next=h*(1-riftScratch.cut)-riftScratch.depth*riftScratch.cut;
       if(next<h){macro=true;if(riftScratch.cut>.5)visible=rift;incision=Math.max(incision,h-next);h=next;lava=0;}
     }
-    if (out) Object.assign(out, { id: visible.id, group: groupOf[visible.id], type: visible.type, neighbour: neighbour.id, edge, valley, relief: h,
+    if(out?.detailOnly)out.noise=m.noise;
+    else if (out) Object.assign(out, { id: visible.id, group: groupOf[visible.id], type: visible.type, neighbour: neighbour.id, edge, valley, relief: h,
       incision, macro, lava, flow, province: visible.province, candidates: list.length, version: LANDFORM_VERSION });
     return h;
   }
-  const volcanoes=modules.filter(m=>m.type==='volcano'),forests=modules.filter(m=>m.type==='forest');
+  const volcanoes=modules.filter(m=>m.type==='volcano'),forests=modules.filter(m=>m.type==='forest'),atolls=modules.filter(m=>m.type==='atoll'&&m.height>0);
+  function warped(d){
+    const [x,y,z]=d;return norm([x+warp(x*4+17,y*4,z*4)*amplitude,y+warp(x*4,y*4+31,z*4)*amplitude,z+warp(x*4,y*4,z*4+53)*amplitude]);
+  }
+  function project(m,u,v){
+    const radial=Math.sqrt(Math.max(.01,1-(u*u+v*v)/(radius*radius)));
+    const target=m.dir.map((d,k)=>d*radial+(m.axis[k]*u+m.side[k]*v)/radius);let d=target.slice();
+    for(let k=0;k<16;k++){const w=warped(d),delta=target.map((x,i)=>x-w[i]);if(delta.reduce((s,x)=>s+x*x,0)<1e-14)break;d=norm(d.map((x,i)=>x+delta[i]));}return d;
+  }
+  function coordinates(m,dir){const w=warped(dir);return {u:dot(w,m.axis)*radius,v:dot(w,m.side)*radius};}
   const within=(list,x,y,z)=>{for(const m of list)if(2-2*(x*m.dir[0]+y*m.dir[1]+z*m.dir[2])<(m.extent*.72/radius)**2)return true;return false;};
+  function lagoonAt(x,y,z){for(const m of atolls){if(2-2*(x*m.dir[0]+y*m.dir[1]+z*m.dir[2])>(m.extent*.6/radius)**2)continue;const p=coordinates(m,[x,y,z]);if(Math.hypot(p.u,p.v)<m.extent*m.size*.39)return true;}return false;}
+  const islandBuckets=new Array(GRID**3);
+  function landmass(x,y,z){
+    const key=bucketKey(x,y,z);
+    if(!islandBuckets[key]){
+      const c=[x,y,z].map(v=>-1+(bucketAxis(v)+.5)*2/GRID);
+      islandBuckets[key]=modules.filter(m=>Math.hypot(...m.dir.map((d,k)=>d-c[k]))<m.extent*2.7/radius+halfDiagonal);
+    }
+    let coast=-1;
+    for(const m of islandBuckets[key]){
+      if(x*m.dir[0]+y*m.dir[1]+z*m.dir[2]<.7)continue;
+      const u=(x*m.axis[0]+y*m.axis[1]+z*m.axis[2])*radius/m.extent,v=(x*m.side[0]+y*m.side[1]+z*m.side[2])*radius/m.extent;
+      // Round islands, long peninsulas and linked chains share the same
+      // coast mask as swimming. Every island has an authored formation core.
+      const elongation=m.id%4===0?1.65:1,shore=Math.hypot(u/elongation,v/(m.id%3===0?.68:1));
+      coast=Math.max(coast,1.02-.95*shore+.06*Math.sin(Math.atan2(v,u)*3+m.phase));
+    }
+    return coast;
+  }
   return {
-    version: LANDFORM_VERSION, seed, radius, settings,
-    modules, height: (x, y, z) => evaluate(x, y, z),
+    version: LANDFORM_VERSION, seed, radius, mix, settings,
+    modules, height: (x, y, z,detail=null) => evaluate(x, y, z,detail),landmass,lagoonAt,project,coordinates,
     volcanic:(x,y,z)=>within(volcanoes,x,y,z),
     canopy:(x,y,z)=>within(forests,x,y,z),
     inspect(x, y, z, exhaustive = false) { const out = {}; evaluate(x, y, z, out, exhaustive); return out; },

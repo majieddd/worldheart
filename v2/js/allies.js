@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { waterDepthAt, surfaceElevation, R, terrainHeight, surfaceTravel } from './world.js';
+import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, R, terrainHeight, surfaceTravel } from './world.js';
 import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
 import { uploadInstances } from './rig.js';
@@ -270,7 +270,7 @@ class Ally {
     this.weaponView = null;
     this.weaponTint = 0xffffff;
     this.weaponLength = 1;
-    this.weaponEra = null; this.weaponCore = null;
+    this.weaponEra = null; this.weaponCore = null; this.weaponMaterial = null;
     this.moveNode = -1;
     this.dir.copy(dirVec).normalize();
     this.anchor.copy(anchorDir).normalize();
@@ -300,6 +300,7 @@ class Ally {
     this.hop = 0;        // metres above the ground while airborne
     this.vertVel = 0;
     this.airT = 0;
+    this.geyserStamp = '';
     this.beamRamp = 0;
     this.beamOn = null;
     this.flashT = 0;
@@ -416,8 +417,8 @@ export class AllyManager {
     a.type = spec ? { ...a.baseType, strike: { ...spec }, reach: spec.radius || spec.range || 14 } : a.baseType;
     a.weaponFamily = spec?.weaponFamily || null;
     a.weaponVisual = visual; a.weaponView = view; a.weaponTint = tint; a.weaponLength = length;
-    a.weaponEra=appearance?.era||null;a.weaponCore=appearance?.core||null;
-    a.modelKey = visual ? `${a.typeKey}:${visual}${appearance?':'+appearance.era+':'+appearance.core:''}` : a.typeKey;
+    a.weaponEra=appearance?.era||null;a.weaponCore=appearance?.core||null;a.weaponMaterial=appearance?.material||null;
+    a.modelKey = visual ? `${a.typeKey}:${visual}${appearance?':'+appearance.era+':'+appearance.core+':'+appearance.material:''}` : a.typeKey;
     if (!this.species[a.modelKey]) this._addSpecies(a.modelKey, a.typeKey, visual,appearance);
     a.heat = 0; a.heatLock = 0; a.beamOn = null; a.beamRamp = 0;
     return true;
@@ -428,12 +429,13 @@ export class AllyManager {
     // and material as an equipped weapon. Replacing a preview discards only
     // its lightweight group; disposing these shared GPU assets would break
     // the equipped model and every matching drop still on the ground.
-    const key=`commander:${visual}:${appearance.era}:${appearance.core}`;
+    const key=`commander:${visual}:${appearance.era}:${appearance.core}:${appearance.material}`;
     if(!this.species[key])this._addSpecies(key,'commander',visual,appearance);
     const group=new THREE.Group();
     for(const part of this.species[key].parts)if(part.weapon)for(const at of part.at)if(at.joint.name==='weaponR') {
       const mesh=new THREE.Mesh(part.mesh.geometry,part.mesh.material);
       mesh.applyMatrix4(at.off);group.add(mesh);
+      if(visual==='twin'){const left=mesh.clone();left.position.x-=.42;left.position.z+=.08;group.add(left);}
     }
     group.scale.z=length;group.userData.weaponVisual=visual;
     return group;
@@ -466,7 +468,7 @@ export class AllyManager {
 
   enemyPos(e, out) {
     const h = surfaceElevation(e.dir,e.height) - swimOffset(e);
-    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + (e.weatherLift || 0) + e.type.radius * 0.9);
+    return out.copy(e.dir).multiplyScalar(R + h + (e.alt ?? e.type.altitude) + (e.weatherLift || 0) + (e.geyserLift || 0) + e.type.radius * 0.9);
   }
 
   _release(a) {
@@ -752,8 +754,16 @@ export class AllyManager {
   }
 
   _ground(a) {
-    a.height = terrainHeight(a.dir.x, a.dir.y, a.dir.z);
-    if (CONFIG.terrain) a.swimming = isSwimming(a.swimming, waterDepthAt(a.dir));
+    const old=surfaceElevation(a.dir,a.height),feet=old+(a.hop||0)+(a.mountFlight||0),h=supportHeight(a.dir,feet);
+    const ground=surfaceElevation(a.dir,h);
+    if(h>terrainHeight(a.dir.x,a.dir.y,a.dir.z)+.1&&(a.airT>0||a.mountFlight>0))this._keepAltitude(a,feet-ground);
+    a.height = h;
+    if (CONFIG.terrain) a.swimming = isSwimming(a.swimming, waterDepthAt(a.dir,h));
+  }
+
+  _keepAltitude(a,above){
+    above=Math.max(0,above);a.mountFlight=Math.min(a.mountFlight||0,above);a.hop=Math.max(0,above-a.mountFlight);
+    if(a.hop>0)a.airT=Math.max(.0001,a.airT);
   }
 
   _movementNode(a) {
@@ -800,9 +810,13 @@ export class AllyManager {
   // untouched, so running off a slope mid-jump behaves the way it should: the
   // ground moves under you and you land on whatever is there.
   _fall(a, dt) {
+    const feet=surfaceElevation(a.dir,a.height)+a.hop+(a.mountFlight||0),ceiling=overheadHeight(a.dir,feet),head=(a.mountOffset||0)+1.7;
     const g = JUMP_GRAVITY * (a.vertVel < 0 ? JUMP_FALL_MUL : 1);
     a.vertVel -= g * dt;
     a.hop += a.vertVel * dt;
+    const landing=supportHeight(a.dir,feet),floor=surfaceElevation(a.dir,landing);
+    if(a.vertVel<=0&&surfaceElevation(a.dir,a.height)+a.hop+(a.mountFlight||0)<=floor+.001){a.height=landing;a.hop=0;a.mountFlight=0;a.vertVel=0;a.airT=0;if(this.onLand)this.onLand(a);return;}
+    if(a.vertVel>0&&surfaceElevation(a.dir,a.height)+a.hop+(a.mountFlight||0)+head>ceiling){a.hop=Math.max(0,ceiling-head-surfaceElevation(a.dir,a.height)-(a.mountFlight||0));a.vertVel=0;}
     if (a.hop <= 0) {
       a.hop = 0;
       a.vertVel = 0;
@@ -841,13 +855,22 @@ export class AllyManager {
       let moved=false;
       for (const angle of DRIVE_SLIDES) {
         _slideBearing.copy(_driveBearing).applyAxisAngle(a.dir,angle);
-        const factor=a.mountFlying ? 1 : surfaceTravel(a,_slideBearing,distance/segments) * (a.swimming ? (a.mountWater || 1) : 1);
+        _routeStep.copy(a.dir).addScaledVector(_slideBearing,distance/segments/R).normalize();
+        const previousGround=surfaceElevation(a.dir,a.height),nextGround=surfaceElevation(_routeStep,supportHeight(_routeStep,previousGround+a.hop+(a.mountFlight||0)));
+        const dropping=nextGround<previousGround-.08;
+        const factor=a.mountFlying||a.airT>0||dropping ? 1 : surfaceTravel(a,_slideBearing,distance/segments) * (a.swimming ? (a.mountWater || 1) : 1);
         const step=distance/segments*factor*Math.cos(angle)/R;
         if (!(step>0)) continue;
         _axis.crossVectors(a.dir,_slideBearing).normalize();
         _routeStep.copy(a.dir).applyAxisAngle(_axis,step).normalize();
-        if (!this.enemies.nav.canStep(a.dir,_routeStep,a.mountFlying,a.moveNode)) continue;
+        if(solidTerrainAt(_routeStep,previousGround+a.hop+(a.mountFlight||0),1.7+(a.mountOffset||0)))continue;
+        if (a.mountFlying?!this.enemies.nav.canStep(a.dir,_routeStep,true,a.moveNode):!this.enemies.nav.canDrive(a.dir,_routeStep,previousGround+a.hop,a.airT>0,a.type.radius)) continue;
+        const targetHeight=supportHeight(_routeStep,previousGround+a.hop+(a.mountFlight||0)),targetGround=surfaceElevation(_routeStep,targetHeight);
+        if(a.mountFlying||a.airT>0||previousGround-targetGround>.08){
+          this._keepAltitude(a,a.hop+(a.mountFlight||0)+previousGround-targetGround);
+        }
         a.dir.copy(_routeStep);
+        a.height=targetHeight;
         if(CONFIG.terrain)a.moveNode=this.enemies.nav.descendNode(a.moveNode,a.dir);
         reflatten(a.fwd.applyAxisAngle(_axis,step),a.dir);
         reflatten(_driveBearing.applyAxisAngle(_axis,step),a.dir);
@@ -1198,6 +1221,7 @@ export class AllyManager {
     const landed = this.enemies.damage(best, s.dps * ramp * dt, {
       armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
     });
+    this._weaponEffect(best,s,landed);
     if (this.onBeam) this.onBeam(a, best, landed, _strikeOrigin, bestAlong);
     return 1;
   }

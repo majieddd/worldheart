@@ -1,0 +1,924 @@
+{
+  "scope": "Unforced planets 1 through 1, linked by normal saved extraction; no wave/resource/enemy injection. A ready checkpoint means remaining planets are unplayed.",
+  "sourceCheckpoint": null,
+  "planets": [
+    {
+      "planet": 1,
+      "result": {
+        "state": "playing",
+        "phase": "victory",
+        "wave": 10,
+        "lives": 22,
+        "gold": 224,
+        "kills": 262,
+        "score": 5720,
+        "towers": 6,
+        "commander": [
+          {
+            "hp": 1820,
+            "hpMax": 1820,
+            "state": "roam",
+            "dir": [
+              0.789643597713454,
+              0.5411760043870778,
+              0.28912198267477107
+            ]
+          }
+        ],
+        "seed": 44021,
+        "talentPurchases": [],
+        "rendering": "60Hz simulation; one rendered frame per two simulation seconds, plus captures",
+        "trace": 38,
+        "faults": [],
+        "policy": {
+          "strategy": "defense",
+          "towerPriority": [
+            "bolt",
+            "tesla",
+            "helios",
+            "warden",
+            "mortar",
+            "cryo"
+          ],
+          "towerLimit": 8,
+          "cautious": true
+        },
+        "assault": null,
+        "towerStats": [
+          {
+            "type": "bolt",
+            "tier": 3,
+            "damage": 7321.826273381533,
+            "kills": 54
+          },
+          {
+            "type": "bolt",
+            "tier": 3,
+            "damage": 15579.9273272166,
+            "kills": 107
+          },
+          {
+            "type": "bolt",
+            "tier": 3,
+            "damage": 12492.639896017632,
+            "kills": 71
+          },
+          {
+            "type": "bolt",
+            "tier": 3,
+            "damage": 4167.595150205807,
+            "kills": 20
+          },
+          {
+            "type": "cryo",
+            "tier": 2,
+            "damage": 0,
+            "kills": 0
+          },
+          {
+            "type": "tesla",
+            "tier": 3,
+            "damage": 1989.1360432719787,
+            "kills": 8
+          }
+        ],
+        "scope": "Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; fresh profile",
+        "runtimeHashes": {
+          "/": "b0bdf198c5a40feede9ee701f3fac3c1045e0f80f7d6c121893b2a4c2ddd4936",
+          "/css/style.css": "b306cb5fa4fc5fa01d5eef6bec88402f0e1a4d072377ac1382f5f212037d2e54",
+          "/js/main.js": "ed5f4e52b0251e5449a7a09972b69ca94549878645c239398ce4b2128dd2d8e0",
+          "/js/postfx.js": "eb4802e336f83d2aef63cff21bc40a370925d484f2ed62a461763819dfaf3b84",
+          "/js/camera.js": "615ec19120202dadff0dda6cb020677e0954de769ff318431e3d568b0357d8e3",
+          "/js/config.js": "3f4e7b3555f522d1c74e72c11d83ce29d52a2e6c5998f5b3cb6c8c861dbe879b",
+          "/js/run/rng.js": "0d483c3fa2a21d2e282b0ecd99667b9e8ad01702de1d40c4e6c9994d21b0e862",
+          "/js/noise.js": "f59d0548bdd9f359ec6667e521ccf49ba1aa61ddfb81069ad460555d2a5ea435",
+          "/js/possess.js": "364a31d8c337d57ce542aa248d44e5f578f76cc465f3e5853887fdeac537640b",
+          "/js/viewmodel.js": "fdd0647fbd3031a318632577f354f754708b492a908a98c4aa1b2e6f665495c6",
+          "/js/allies.js": "912b8208ba1649e39d86beb46fdf396a516fe6ad6a2b9e853f55b669ed177f35",
+          "/js/combatfx.js": "79d9353f06e36bf4088973c3d4f6498a646ccdf3b188a0bc44280f72de7a706c",
+          "/js/effects.js": "c97b3626cb455dc63a1f4ce6014676e2930bd4b2c6798a929f6969a8d39f2e99",
+          "/js/nav.js": "e571c12601f84dacf43012e89610dfb8ec2fbcf3d861d447a530bc01d6fb6426",
+          "/js/audio.js": "0b9586817664b3192d72995e7d20bc7b2cf94389170163e023c0c8df554645ee",
+          "/js/game.js": "274f596d6c3c105054090de4c46722fe946075d32d56b3c60bce4b1b4803fa43",
+          "/js/world-context.js": "469029c66aa76b422aa390af9fcd736d5bdbfeab07c8f794850088e1b7789b04",
+          "/js/waves.js": "0db7a10f5b3a765b18c063a35c460823f79a5410fd4b674c66eeeda7d69d4b42",
+          "/js/enemies.js": "6ea564264a0dd6e4c897429ec96ef3807326ac63f9ecb843c6a860c2cc0bb369",
+          "/js/world.js": "75023787caf1f5136dd735ea53d92d2856243d41c9f14eb19b655def55f71c49",
+          "/js/towers.js": "cd83a42b792a0fe393b806020a9ebb95489f3ebaa8162e6dbbeaecd1e03a14a1",
+          "/js/ui.js": "ad3aa6d025febd6954e94a2c54a2d27d47a9050198ccccc4c09b1da77ee0b176",
+          "/lib/three.module.min.js": "852c06b9fe936cf8ebc2870c86370d1015c310b04de98cdfc07f4efaf6afd2af",
+          "/js/run/world-catalogue.js": "1d3dfe0b6459091dce9a91cd7d282a16b25d43b1e55eb43709a69daccc089014",
+          "/js/run/planet-environments.js": "3cbb02cc6bba0e813f96beac19c432517c425808e3e7988358d674d0cb3b7878",
+          "/js/modes/campaign-launch.js": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+          "/js/storage.js": "3002fdd1cc70379116894b47f9afb521113b5083bc1776a8c4ab084aeb90e44f",
+          "/js/weapon-model.js": "6e3f3423dd2e0532325c05c7ba01d91939c612080130e3dba8521140a7eca75f",
+          "/js/traversal.js": "3683bb413958e90c9d52dd9fb1dce87c60b874b2db7d7b7ad484d5b573aa9c8b",
+          "/js/attacks.js": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+          "/js/nest-sites.js": "1462ceed954f1cf24c629e1f040eb4293fb803b2581bda41fab1fb17e46496e0",
+          "/js/geodesic.js": "18b7a3682366e33241acf13286e03463949d0f6b18cb9724158199fb81d0ccf5",
+          "/js/run/frontier.js": "2eb79cf668687ec1971b85f6940aee8e821b79934a20608ae85e6c33a3c7326f",
+          "/js/terrain/recipes.js": "dea1d81bcaa2b155100b2b5bcce9b37f57e84bb526a69b77054135c52e9d7f2d",
+          "/js/terrain/features.js": "31a54e9b7f659ab56063d195eca967089976d61d6f73a2496796cd364ecbc313",
+          "/js/terrain/acceptance.js": "40b83389cec48b8f8bd523f76737c815af48d5fbdcf15554758c1be5a6fb8ce8",
+          "/js/terrain/ecology.js": "d064198a7279d4ea2384784dafee2908ad130b2abd148a1deecc3ec2733e310c",
+          "/js/encounters.js": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+          "/js/range-guide.js": "fe8e9045832161b2a50a30ab0446d166f300a88ca2401872306daea82881e444",
+          "/js/soldier.js": "2aa1138b0777a1cf7a3736e46bc7b9e0f6c74fcf8e6843bf606be7d2ec73d752",
+          "/js/rig.js": "0362e7c2c1075a8f8581cae8d52bed7fcd4f3e9c1e980a5d4283fad4c82b98f2",
+          "/js/rewards.js": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+          "/js/biome-visuals.js": "8e61273eef522dfb7b1c5fa54c1c427e67c1f1d20f0684304ad368b9a6599203",
+          "/js/terrain/coast-clearance.js": "85f3e91bba97c55eb71888af0574a69e7349357c8abd44ce844c6b4700721321",
+          "/js/ui-icons.js": "fc391ee3a21bce7a65b7eecaebbb5ad62b64451b85796037f49e7aba1bc9f0b3",
+          "/js/worldgen.js": "630597401c0950db450931ec8d34c4939e85d50b05b0e2cd276a9b9e7c557675",
+          "/js/modes/progress.js": "4ddad61115e3d8262ea9d8b10ed1d2cfb9e6e167edd1844d9133470a7e5b77e3",
+          "/js/terrain/formations.js": "db6baa6c8699936adbad06dbadc35243854830529215d1d8c640172e4cbfc2e2",
+          "/js/modes/campaign-store.js": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+          "/js/run/campaign.js": "5bad26152efec3423fc3f7d6fb24b51c543846a6f95f956ba7c909f46b6514e7",
+          "/js/run/planets.js": "ab559dfda693c052262f2d61a8902a40e0f76fc68ea4515da293c843cadb89e7",
+          "/js/terrain/exotic-formations.js": "5792930034c6c9bee1bbda0e8dbee46d8d09695fbe5b0d32bd2ff492b1d76e1c",
+          "/js/biome-dressing.js": "c1238e9d466a7216f28549f6137b685f26e4b2c76bcfe90927384035485e7de1",
+          "/js/terrain/rifts.js": "597390c08a9216c36dc47d3e69583f5b8d6b45e13802ef84fb5303585fec1556",
+          "/js/terrain/additional-formations.js": "e6c019e1b9394f6b358cc7a0208c52ae5a6313ddd3c5bede69fa526b341e6caa",
+          "/js/run/weapons.js": "53d54fd0af415e88e9a0167ec39e72795c960d5d35d2914b0495c17eb307ed35",
+          "/lib/three.core.min.js": "4183cee05f0aa093682fdf551363a16bb20bd92b68e14f7576905f45c461ba82",
+          "/js/modes/ninetynine.js": "5b40d2701458f71036be1334d3458be6b106d34dae89a1db79be6d05fbcf6428",
+          "/js/terrain/geysers.js": "d8c5e3c7e0912d269fab09fe18ba2d1ad53852daaa4cc1d4a3d74dd57a268441",
+          "/js/preparation.js": "4923e49151362ee684afc11eec918457d299465d06bda9e03a75ef006e440e00",
+          "/js/ore-field.js": "b150497abaad6e62accb0473dfb69f508fb7c7c0653062b40aa7b70feb71c702",
+          "/js/weather.js": "5f27f863a21c916a5eed4843d9586a271b5ba6425018802dd8fc0911325c0c9c",
+          "/js/mounts.js": "7d83088120820abafec0cc51880959d357c0b94ded5094dbf82ed5737105a353",
+          "/js/ui-expedition.js": "5cf3572920d8b4459b1fd14566fe8ac0848064c568f8199f815c45e237ea9497",
+          "/js/run/schedule.js": "9e63cbdbcccdfa150080fbc21e77c2a4926457a015c26f60376fb0f9b010f4cd",
+          "/js/run/run.js": "b20ca8badcb5c9a10ff5a20d4188069aedc533f6d707ec645bbac3a0f5e366c8",
+          "/js/run/expedition.js": "aa19fa5d019dbfd75538f9f2746d218b422d563291327a9242d7b753fb1b82a8",
+          "/js/loot-field.js": "9c8871bcb91fc0332085cdf2086730fba8e4fd1fc55c5da82e5d450b80509534",
+          "/js/run/crystals.js": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+          "/js/ui-weapons.js": "7fae2eef2631bbb2c354c45bf9952ea241998abec4287e53a81c78c398831463",
+          "/js/unit-routes.js": "8a454e3c68b85e90a81e078892826461ca813ebe13ac60ca590d25744d9c8f71",
+          "/js/threat-guides.js": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+          "/js/ui-campaign.js": "112f6ba1d491badeb14fa1f959506ec2eaba801ad9bb00316ce5bb79da9f4ae4",
+          "/js/run/modifiers.js": "0f7fc001625d5e54e0051c54e08cc6962354ac005c125478603598b18590cd44",
+          "/js/disaster-preview.js": "5cc6bf12ff5c28e195b68dc41eab7ca6f6bc45e60e8f2016db51a5d5df3a8175",
+          "/js/run/state.js": "ddd68b76ee1ef06a20d39c8100425904f4efd7d09138c0e9bf090637512b7854",
+          "/js/run/draft.js": "3d38483829fae8a29b3786d49453041abb536d372776ac2ddf3f9bb63d9e1310",
+          "/js/run/powers.js": "314493afbfe65425784095045b70272e5591c32e8b961802e88695265090c9b3",
+          "/js/dotted-path.js": "b88492b61f1045cce0c9f56765d2445ed544da3875fd43b33d4df608bd54b8d4"
+        },
+        "policySourceHash": null,
+        "navigation": {
+          "heartNode": 376185,
+          "towers": [
+            {
+              "type": "bolt",
+              "pos": [
+                196.90021693548945,
+                135.89990923844854,
+                22.746008404682275
+              ]
+            },
+            {
+              "type": "bolt",
+              "pos": [
+                195.4353256216373,
+                138.17753123200166,
+                23.51291409897083
+              ]
+            },
+            {
+              "type": "bolt",
+              "pos": [
+                198.37428731954435,
+                133.80844852174772,
+                23.91459046017747
+              ]
+            },
+            {
+              "type": "bolt",
+              "pos": [
+                201.50214744405838,
+                138.78015291237932,
+                20.08771276557211
+              ]
+            },
+            {
+              "type": "cryo",
+              "pos": [
+                194.48828220741566,
+                138.68050418405983,
+                29.226373202690656
+              ]
+            },
+            {
+              "type": "tesla",
+              "pos": [
+                195.44944701648566,
+                136.5234481420716,
+                30.772101955153847
+              ]
+            }
+          ],
+          "nests": [
+            {
+              "node": 407125,
+              "destroyed": true,
+              "next": 407104,
+              "airNext": 217331,
+              "blocked": false,
+              "pos": [
+                206.81132148772753,
+                125.9348080386486,
+                17.014922641268353
+              ]
+            },
+            {
+              "node": 378475,
+              "destroyed": true,
+              "next": 210214,
+              "airNext": 210214,
+              "blocked": false,
+              "pos": [
+                186.742066431099,
+                146.03673751028174,
+                36.783767541408565
+              ]
+            },
+            {
+              "node": 407398,
+              "destroyed": true,
+              "next": 217404,
+              "airNext": 407397,
+              "blocked": false,
+              "pos": [
+                205.53697968468268,
+                125.14162351587704,
+                37.26450829177052
+              ]
+            },
+            {
+              "node": 388031,
+              "destroyed": true,
+              "next": 212578,
+              "airNext": 388028,
+              "blocked": false,
+              "pos": [
+                192.91001998649875,
+                149.8913124298458,
+                16.15462016135308
+              ]
+            },
+            {
+              "node": 375211,
+              "destroyed": true,
+              "next": 375224,
+              "airNext": 209393,
+              "blocked": false,
+              "pos": [
+                202.83414193124267,
+                131.64555928141115,
+                11.418141289298207
+              ]
+            },
+            {
+              "node": 217477,
+              "destroyed": true,
+              "next": 407697,
+              "airNext": 407697,
+              "blocked": false,
+              "pos": [
+                208.93490937931156,
+                124.08425034290681,
+                22.87797355173218
+              ]
+            },
+            {
+              "node": 379358,
+              "destroyed": false,
+              "next": 379421,
+              "airNext": 161598,
+              "blocked": false,
+              "pos": [
+                189.92055310873215,
+                140.7557371175729,
+                41.960981874558456
+              ]
+            },
+            {
+              "node": 404972,
+              "destroyed": false,
+              "next": 163175,
+              "airNext": 163175,
+              "blocked": false,
+              "pos": [
+                205.93519592285156,
+                114.24090576171875,
+                48.89204788208008
+              ]
+            },
+            {
+              "node": 390434,
+              "destroyed": false,
+              "next": 213187,
+              "airNext": 390419,
+              "blocked": false,
+              "pos": [
+                180.71170043945312,
+                158.61224365234375,
+                9.788153648376465
+              ]
+            },
+            {
+              "node": 391552,
+              "destroyed": false,
+              "next": 390462,
+              "airNext": 10155,
+              "blocked": false,
+              "pos": [
+                183.25869750976562,
+                155.4535369873047,
+                4.586068630218506
+              ]
+            },
+            {
+              "node": 163165,
+              "destroyed": false,
+              "next": 404832,
+              "airNext": 404845,
+              "blocked": false,
+              "pos": [
+                201.87489318847656,
+                117.35079956054688,
+                52.761112213134766
+              ]
+            }
+          ],
+          "enemies": []
+        },
+        "inventory": {
+          "version": 1,
+          "items": [
+            {
+              "id": "starter-44021",
+              "seed": 44021,
+              "tier": 1,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "balanced",
+                "core": "tempered"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-2",
+              "seed": 2681360819,
+              "tier": 1,
+              "family": "scepter",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "long",
+                "grip": "balanced",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-3",
+              "seed": 514844763,
+              "tier": 1,
+              "family": "twinblade",
+              "era": "ancient",
+              "rarity": "rare",
+              "parts": {
+                "head": "keen",
+                "grip": "balanced",
+                "core": "frost"
+              },
+              "affixes": [
+                "nimble"
+              ],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-4",
+              "seed": 3322448000,
+              "tier": 1,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "broad",
+                "grip": "steady",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 0
+            },
+            {
+              "id": "weapon-expedition-1-1-1-5",
+              "seed": 2344856992,
+              "tier": 1,
+              "family": "lobber",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "balanced",
+                "core": "frost"
+              },
+              "affixes": [],
+              "infusions": 0
+            }
+          ],
+          "slots": [
+            "starter-44021",
+            null
+          ],
+          "active": "native",
+          "scrap": 0
+        },
+        "weaponLoop": false
+      },
+      "checkpoint": {
+        "id": "expedition-1",
+        "seed": 12345,
+        "limit": 99,
+        "planet": 1,
+        "completed": 0,
+        "status": "victory",
+        "attempt": 1,
+        "commander": "commander",
+        "banked": {
+          "version": 1,
+          "items": [
+            {
+              "id": "starter-44021",
+              "seed": 44021,
+              "tier": 1,
+              "family": "sword",
+              "era": "ancient",
+              "rarity": "common",
+              "parts": {
+                "head": "balanced",
+                "grip": "balanced",
+                "core": "tempered"
+              },
+              "affixes": [],
+              "infusions": 0
+            }
+          ],
+          "slots": [
+            "starter-44021",
+            null
+          ],
+          "active": "native",
+          "scrap": 0
+        },
+        "assault": {
+          "id": "expedition-1-1-1",
+          "paid": 1023,
+          "coins": 310,
+          "effectiveSeed": 44021,
+          "start": {
+            "version": 1,
+            "items": [
+              {
+                "id": "starter-44021",
+                "seed": 44021,
+                "tier": 1,
+                "family": "sword",
+                "era": "ancient",
+                "rarity": "common",
+                "parts": {
+                  "head": "balanced",
+                  "grip": "balanced",
+                  "core": "tempered"
+                },
+                "affixes": [],
+                "infusions": 0
+              }
+            ],
+            "slots": [
+              "starter-44021",
+              null
+            ],
+            "active": "native",
+            "scrap": 0
+          },
+          "victory": {
+            "inventory": {
+              "version": 1,
+              "items": [
+                {
+                  "id": "starter-44021",
+                  "seed": 44021,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-2",
+                  "seed": 2681360819,
+                  "tier": 1,
+                  "family": "scepter",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-3",
+                  "seed": 514844763,
+                  "tier": 1,
+                  "family": "twinblade",
+                  "era": "ancient",
+                  "rarity": "rare",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-4",
+                  "seed": 3322448000,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                {
+                  "id": "weapon-expedition-1-1-1-5",
+                  "seed": 2344856992,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                }
+              ],
+              "slots": [
+                "starter-44021",
+                null
+              ],
+              "active": "native",
+              "scrap": 0
+            },
+            "drops": [
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-1",
+                  "seed": 481619542,
+                  "tier": 1,
+                  "family": "twinblade",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8353114099534322,
+                  0.5465462785141674,
+                  0.05951482037209633
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-6",
+                  "seed": 3757342633,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "quick",
+                    "core": "tempered"
+                  },
+                  "affixes": [
+                    "forceful"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.7849840470575733,
+                  0.6104656418055289,
+                  0.10550708999909628
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-7",
+                  "seed": 3091781700,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "balanced",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8112020194080842,
+                  0.5662557094392794,
+                  0.14596491097405825
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-8",
+                  "seed": 1970428764,
+                  "tier": 1,
+                  "family": "carbine",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "quick",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8184052851757055,
+                  0.555570016281152,
+                  0.14681534731026114
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-9",
+                  "seed": 4190537677,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "keen",
+                    "grip": "steady",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8124149120490822,
+                  0.564842720065369,
+                  0.14468832803456314
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-10",
+                  "seed": 3077082804,
+                  "tier": 1,
+                  "family": "sword",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "balanced",
+                    "core": "tempered"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8160289611807341,
+                  0.5605862795658726,
+                  0.14085367470103644
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-11",
+                  "seed": 181426619,
+                  "tier": 1,
+                  "family": "lobber",
+                  "era": "ancient",
+                  "rarity": "uncommon",
+                  "parts": {
+                    "head": "broad",
+                    "grip": "weighted",
+                    "core": "ember"
+                  },
+                  "affixes": [
+                    "nimble"
+                  ],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8054126221304134,
+                  0.5842417871657563,
+                  0.09986011337053022
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-12",
+                  "seed": 3728667321,
+                  "tier": 1,
+                  "family": "spear",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "balanced",
+                    "grip": "weighted",
+                    "core": "ember"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8190154316821537,
+                  0.5559439580087251,
+                  0.14191560245472878
+                ]
+              },
+              {
+                "item": {
+                  "id": "weapon-expedition-1-1-1-13",
+                  "seed": 90744275,
+                  "tier": 1,
+                  "family": "twinblade",
+                  "era": "ancient",
+                  "rarity": "common",
+                  "parts": {
+                    "head": "long",
+                    "grip": "steady",
+                    "core": "frost"
+                  },
+                  "affixes": [],
+                  "infusions": 0
+                },
+                "dir": [
+                  0.8157284807366477,
+                  0.5604024496154183,
+                  0.14330436204149294
+                ]
+              }
+            ],
+            "kills": 262,
+            "score": 5720,
+            "lives": 22
+          }
+        },
+        "receipts": []
+      }
+    }
+  ],
+  "final": {
+    "id": "expedition-1",
+    "seed": 12345,
+    "limit": 99,
+    "planet": 2,
+    "completed": 1,
+    "status": "ready",
+    "attempt": 1,
+    "commander": "commander",
+    "banked": {
+      "version": 1,
+      "items": [
+        {
+          "id": "starter-44021",
+          "seed": 44021,
+          "tier": 1,
+          "family": "sword",
+          "era": "ancient",
+          "rarity": "common",
+          "parts": {
+            "head": "balanced",
+            "grip": "balanced",
+            "core": "tempered"
+          },
+          "affixes": [],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-1-1-2",
+          "seed": 2681360819,
+          "tier": 1,
+          "family": "scepter",
+          "era": "ancient",
+          "rarity": "common",
+          "parts": {
+            "head": "long",
+            "grip": "balanced",
+            "core": "frost"
+          },
+          "affixes": [],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-1-1-3",
+          "seed": 514844763,
+          "tier": 1,
+          "family": "twinblade",
+          "era": "ancient",
+          "rarity": "rare",
+          "parts": {
+            "head": "keen",
+            "grip": "balanced",
+            "core": "frost"
+          },
+          "affixes": [
+            "nimble"
+          ],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-1-1-4",
+          "seed": 3322448000,
+          "tier": 1,
+          "family": "sword",
+          "era": "ancient",
+          "rarity": "common",
+          "parts": {
+            "head": "broad",
+            "grip": "steady",
+            "core": "frost"
+          },
+          "affixes": [],
+          "infusions": 0
+        },
+        {
+          "id": "weapon-expedition-1-1-1-5",
+          "seed": 2344856992,
+          "tier": 1,
+          "family": "lobber",
+          "era": "ancient",
+          "rarity": "common",
+          "parts": {
+            "head": "balanced",
+            "grip": "balanced",
+            "core": "frost"
+          },
+          "affixes": [],
+          "infusions": 0
+        }
+      ],
+      "slots": [
+        "starter-44021",
+        null
+      ],
+      "active": "native",
+      "scrap": 0
+    },
+    "assault": null,
+    "receipts": [
+      {
+        "id": "expedition-1-1",
+        "planet": 1,
+        "items": 5,
+        "coins": 310,
+        "kills": 262,
+        "score": 5720
+      }
+    ]
+  },
+  "faults": []
+}
