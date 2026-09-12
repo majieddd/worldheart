@@ -3,8 +3,9 @@
 The first U89-U114 checkpoint covers wood/gold finishes, commander focus,
 scepter fire, global-base overview, quicker outward nest waves, scrap forging,
 held aiming, bounded earthquake work and activated commander/weapon skills.
-Environmental systems, terrain refinements and astronomical worlds are still
-open in [the request ledger](../ACTIVE-WORLDS.md).
+This is the historical first checkpoint. The subsequent environmental systems,
+terrain refinements and astronomical worlds are completed in the
+[combined acceptance record](ENVIRONMENT.md) and [request ledger](../ACTIVE-WORLDS.md).
 
 ## Evidence
 

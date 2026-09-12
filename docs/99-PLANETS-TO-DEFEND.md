@@ -19,8 +19,9 @@ See the [environmental acceptance record](qa/implementation/ACTIVE-WORLDS/ENVIRO
 for the distinction between implementation, runtime verification and publication.
 The combined local acceptance covers all 47 pack/theme worlds, actual feature
 and disaster effects, native performance, all camera maps and one legal
-ten-wave floating-world defense. Public V2 verification follows those checks;
-this does not close full-campaign, hardware or multiplayer acceptance.
+ten-wave floating-world defense. V2 `5f6836d` also passed 272 public identity
+comparisons and 339 public functional checks. This completes U89-U114; it does
+not close full-campaign, hardware or multiplayer acceptance.
 
 The September 12 U60-U74 work is on `feature/expedition-lobby-and-survival`.
 The subsequent U75-U88 request is tracked in

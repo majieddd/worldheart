@@ -1,8 +1,10 @@
 # Environmental implementation and acceptance
 
 Owner: Codex. U90-U105 on `feature/planet-ecology-and-active-worlds`.
-Local acceptance complete; public V2 verification is next. The source and
-checked-in V2 mirror remain separate from a live deployment claim.
+Published and publicly verified as `5f6836d` through
+[Pages run 34724405688](https://github.com/majieddd/worldheart/actions/runs/34724405688).
+Stable main remains `1374122`. All latest request items are recorded in the
+[completed ledger](../ACTIVE-WORLDS.md).
 
 The shared production catalogue now contains 52 formations, 10 terrain packs,
 44 biomes, 12 active land features, 12 disasters and 37 planet themes. Debug
@@ -78,7 +80,8 @@ distinct surface materials. Miniatures use the same field at a lower mesh LOD.
   with sparse rendering; it does not establish gameplay FPS.
 
 The route aggregate keeps the latest corrected record per case. Its source
-reports preserve failed crater exits, the initial Mercury/terrain routing
+reports and [earlier refinement run](environment/worlds-refinement.json)
+preserve failed crater exits, the initial Mercury/terrain routing
 failures and the subsequently corrected Sky Archipelago biome distribution.
 Only one authored seed and its production deterministic fallback are covered
 per world case; this is not exhaustive seed or 99-planet completion.
@@ -125,3 +128,16 @@ case from about 91 to 20 seconds, and Earth from 75 to 25 seconds. The final
 Sky Archipelago theme boots in about 41 seconds; large world generation still
 has a visible loading interval. Owner art/feel review, broad hardware coverage,
 all 99 planets and multiplayer remain separate longer-term acceptance work.
+
+## Public V2 verification
+
+[272 identity comparisons](environment/public-identity.json) verified the live
+preview and stable root against their actual source commits. The deployed game
+passed [50 combat checks](environment/public-combat.json), [25 environmental
+checks](environment/public-effects.json) and [264 Debug checks](environment/public-debug.json).
+There were no runtime faults. These are public source-informed fixtures, not
+a second blind playthrough or full-campaign acceptance.
+
+[Play V2](https://majieddd.github.io/worldheart/v2/) or inspect the
+[active-feature lane](https://majieddd.github.io/worldheart/v2/debug.html#features/geyser).
+An already-open session needs a refresh to load the deployed build.

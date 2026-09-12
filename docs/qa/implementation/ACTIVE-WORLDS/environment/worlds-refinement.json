@@ -1,0 +1,1383 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "checks": [
+    {
+      "name": "terrain-geothermal: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "scablands": {
+              "samples": 136,
+              "peak": 18.805767059326172
+            },
+            "impact": {
+              "samples": 36,
+              "peak": 6.451046466827393
+            },
+            "catena": {
+              "samples": 42,
+              "peak": 5.8546528816223145
+            },
+            "chaos": {
+              "samples": 15,
+              "peak": 9.480676651000977
+            }
+          },
+          "families": [
+            "scablands",
+            "impact",
+            "catena",
+            "chaos"
+          ],
+          "requiredFamilies": 3,
+          "dry": 120931,
+          "connected": 120425,
+          "dryConnected": 0.995815795784373,
+          "deep": 6589,
+          "deepConnected": 6589,
+          "pits": 0,
+          "channels": 112,
+          "peak": 20.002735137939453,
+          "depth": 6.368030071258545,
+          "surface": "ground",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 395782,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 214224,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 397042,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 393814,
+            "legal": true,
+            "steps": 22
+          },
+          {
+            "node": 214096,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 138313,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 213462,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 396289,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 213638,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 397155,
+            "legal": true,
+            "steps": 20
+          },
+          {
+            "node": 214265,
+            "legal": true,
+            "steps": 31
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain-geothermal: dry passage connectivity",
+      "ok": false,
+      "actual": {
+        "dry": 9426,
+        "connected": 8489,
+        "pits": 0,
+        "disconnected": {
+          "impact": 932,
+          "catena": 4,
+          "scablands": 1
+        }
+      }
+    },
+    {
+      "name": "terrain-sky: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "ribbons": {
+              "samples": 748,
+              "peak": 28
+            },
+            "sky": {
+              "samples": 562,
+              "peak": 28
+            }
+          },
+          "families": [
+            "ribbons",
+            "sky"
+          ],
+          "requiredFamilies": 2,
+          "dry": 51276,
+          "connected": 51276,
+          "dryConnected": 1,
+          "deep": 0,
+          "deepConnected": 0,
+          "pits": 0,
+          "channels": 0,
+          "peak": 28,
+          "depth": 2.200000047683716,
+          "surface": "floating network",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 183914,
+            "legal": true,
+            "steps": 28
+          },
+          {
+            "node": 267341,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 265309,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 176647,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 267242,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 267928,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 267858,
+            "legal": true,
+            "steps": 34
+          },
+          {
+            "node": 295822,
+            "legal": true,
+            "steps": 33
+          },
+          {
+            "node": 267674,
+            "legal": true,
+            "steps": 35
+          },
+          {
+            "node": 262536,
+            "legal": true,
+            "steps": 37
+          },
+          {
+            "node": 262773,
+            "legal": true,
+            "steps": 33
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain-sky: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "connected": 0,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "planet-earth: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "range": {
+              "samples": 82,
+              "peak": 6.739035606384277
+            },
+            "valley": {
+              "samples": 80,
+              "peak": 15.95107650756836
+            },
+            "basin": {
+              "samples": 51,
+              "peak": 4.2353291511535645
+            },
+            "hills": {
+              "samples": 47,
+              "peak": 3.2929248809814453
+            }
+          },
+          "families": [
+            "range",
+            "valley",
+            "basin",
+            "hills"
+          ],
+          "requiredFamilies": 3,
+          "dry": 151590,
+          "connected": 151452,
+          "dryConnected": 0.9990896497130417,
+          "deep": 3465,
+          "deepConnected": 3465,
+          "pits": 0,
+          "channels": 28,
+          "peak": 16.546072006225586,
+          "depth": 2.2740278244018555,
+          "surface": "astronomical analogue",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 344507,
+            "legal": true,
+            "steps": 53
+          },
+          {
+            "node": 344295,
+            "legal": true,
+            "steps": 28
+          },
+          {
+            "node": 343930,
+            "legal": true,
+            "steps": 52
+          },
+          {
+            "node": 335660,
+            "legal": true,
+            "steps": 67
+          },
+          {
+            "node": 339042,
+            "legal": true,
+            "steps": 98
+          },
+          {
+            "node": 335794,
+            "legal": true,
+            "steps": 79
+          },
+          {
+            "node": 343394,
+            "legal": true,
+            "steps": 62
+          },
+          {
+            "node": 344444,
+            "legal": true,
+            "steps": 38
+          },
+          {
+            "node": 336423,
+            "legal": true,
+            "steps": 91
+          },
+          {
+            "node": 339780,
+            "legal": true,
+            "steps": 148
+          },
+          {
+            "node": 77927,
+            "legal": true,
+            "steps": 48
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-earth: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 9275,
+        "connected": 9275,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "planet-mars: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "impact": {
+              "samples": 282,
+              "peak": 6.845274448394775
+            },
+            "shields": {
+              "samples": 420,
+              "peak": 8.652227401733398
+            },
+            "scablands": {
+              "samples": 149,
+              "peak": 3.719862222671509
+            }
+          },
+          "families": [
+            "impact",
+            "shields",
+            "scablands"
+          ],
+          "requiredFamilies": 3,
+          "dry": 131319,
+          "connected": 131305,
+          "dryConnected": 0.9998933893800592,
+          "deep": 19400,
+          "deepConnected": 19400,
+          "pits": 0,
+          "channels": 108,
+          "peak": 8.663995742797852,
+          "depth": 2.7677502632141113,
+          "surface": "astronomical analogue",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 359756,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 332554,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 194254,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 203399,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 359622,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 363897,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 202628,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 329831,
+            "legal": true,
+            "steps": 28
+          },
+          {
+            "node": 203133,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 202099,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 364426,
+            "legal": true,
+            "steps": 28
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-mars: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 91573,
+        "connected": 87897,
+        "pits": 0,
+        "disconnected": {
+          "scablands": 1096,
+          "impact": 269,
+          "grand": 2294,
+          "yardangs": 9,
+          "shields": 8
+        }
+      }
+    },
+    {
+      "name": "planet-mercury: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "impact": {
+              "samples": 651,
+              "peak": 12.534849166870117
+            },
+            "escarpment": {
+              "samples": 458,
+              "peak": 31.916486740112305
+            },
+            "catena": {
+              "samples": 27,
+              "peak": 2.6945738792419434
+            }
+          },
+          "families": [
+            "impact",
+            "escarpment",
+            "catena"
+          ],
+          "requiredFamilies": 3,
+          "dry": 114916,
+          "connected": 114881,
+          "dryConnected": 0.999695429705176,
+          "deep": 16422,
+          "deepConnected": 16414,
+          "pits": 0,
+          "channels": 279,
+          "peak": 31.9692440032959,
+          "depth": 5.258007526397705,
+          "surface": "astronomical analogue",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 353119,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 354265,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 355254,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 174701,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 250718,
+            "legal": true,
+            "steps": 29
+          },
+          {
+            "node": 357377,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 253093,
+            "legal": true,
+            "steps": 29
+          },
+          {
+            "node": 203477,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 253532,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 355503,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 358545,
+            "legal": true,
+            "steps": 28
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-mercury: dry passage connectivity",
+      "ok": false,
+      "actual": {
+        "dry": 34486,
+        "connected": 29272,
+        "pits": 0,
+        "disconnected": {
+          "catena": 1812,
+          "impact": 3402
+        }
+      }
+    },
+    {
+      "name": "No browser faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "records": [
+    {
+      "terrain": "geothermal",
+      "planet": "temperate",
+      "label": "terrain-geothermal",
+      "ms": 17370,
+      "seed": 4206041914,
+      "attempts": 4,
+      "types": {
+        "catena": 26,
+        "impact": 9,
+        "chaos": 5,
+        "scablands": 4
+      },
+      "biomes": {
+        "tundra": 942,
+        "ocean": 717,
+        "meadow": 550,
+        "desert": 156,
+        "savanna": 155,
+        "wetland": 92,
+        "mangrove": 339,
+        "jungle": 43,
+        "woodland": 3,
+        "alpine": 3
+      },
+      "dry": 9426,
+      "connected": 8489,
+      "pits": 0,
+      "bad": {
+        "impact": 932,
+        "catena": 4,
+        "scablands": 1
+      },
+      "water": 717,
+      "land": 2283,
+      "routes": [
+        {
+          "node": 395782,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 214224,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 397042,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 393814,
+          "legal": true,
+          "steps": 22
+        },
+        {
+          "node": 214096,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 138313,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 213462,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 396289,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 213638,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 397155,
+          "legal": true,
+          "steps": 20
+        },
+        {
+          "node": 214265,
+          "legal": true,
+          "steps": 31
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "scablands": {
+            "samples": 136,
+            "peak": 18.805767059326172
+          },
+          "impact": {
+            "samples": 36,
+            "peak": 6.451046466827393
+          },
+          "catena": {
+            "samples": 42,
+            "peak": 5.8546528816223145
+          },
+          "chaos": {
+            "samples": 15,
+            "peak": 9.480676651000977
+          }
+        },
+        "families": [
+          "scablands",
+          "impact",
+          "catena",
+          "chaos"
+        ],
+        "requiredFamilies": 3,
+        "dry": 120931,
+        "connected": 120425,
+        "dryConnected": 0.995815795784373,
+        "deep": 6589,
+        "deepConnected": 6589,
+        "pits": 0,
+        "channels": 112,
+        "peak": 20.002735137939453,
+        "depth": 6.368030071258545,
+        "surface": "ground",
+        "pass": true
+      },
+      "features": 0,
+      "vents": 3,
+      "environment": {
+        "version": 5,
+        "solar": false,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": null,
+        "exclusive": false,
+        "pack": "varied",
+        "coverage": 0,
+        "biomes": null,
+        "seed": 4206018157,
+        "key": "temperate",
+        "theme": "temperate",
+        "name": "Garden world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6733200530681511,
+        "relativeOrbit": 1,
+        "flux": 0.9999999999999999,
+        "warmth": -3.203426503814918e-17,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": 0,
+        "weights": {}
+      }
+    },
+    {
+      "terrain": "sky",
+      "planet": "temperate",
+      "label": "terrain-sky",
+      "ms": 20204,
+      "seed": 4206018157,
+      "attempts": 1,
+      "types": {
+        "ribbons": 14,
+        "sky": 14
+      },
+      "biomes": {
+        "ocean": 2249,
+        "alpine": 341,
+        "tundra": 53,
+        "meadow": 180,
+        "savanna": 2,
+        "woodland": 37,
+        "jungle": 137,
+        "desert": 1
+      },
+      "dry": 0,
+      "connected": 0,
+      "pits": 0,
+      "bad": {},
+      "water": 2249,
+      "land": 751,
+      "routes": [
+        {
+          "node": 183914,
+          "legal": true,
+          "steps": 28
+        },
+        {
+          "node": 267341,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 265309,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 176647,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 267242,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 267928,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 267858,
+          "legal": true,
+          "steps": 34
+        },
+        {
+          "node": 295822,
+          "legal": true,
+          "steps": 33
+        },
+        {
+          "node": 267674,
+          "legal": true,
+          "steps": 35
+        },
+        {
+          "node": 262536,
+          "legal": true,
+          "steps": 37
+        },
+        {
+          "node": 262773,
+          "legal": true,
+          "steps": 33
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "ribbons": {
+            "samples": 748,
+            "peak": 28
+          },
+          "sky": {
+            "samples": 562,
+            "peak": 28
+          }
+        },
+        "families": [
+          "ribbons",
+          "sky"
+        ],
+        "requiredFamilies": 2,
+        "dry": 51276,
+        "connected": 51276,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "pits": 0,
+        "channels": 0,
+        "peak": 28,
+        "depth": 2.200000047683716,
+        "surface": "floating network",
+        "pass": true
+      },
+      "features": 156,
+      "vents": 19,
+      "environment": {
+        "version": 5,
+        "solar": false,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": null,
+        "exclusive": false,
+        "pack": "varied",
+        "coverage": 0,
+        "biomes": null,
+        "seed": 4206018157,
+        "key": "temperate",
+        "theme": "temperate",
+        "name": "Garden world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6733200530681511,
+        "relativeOrbit": 1,
+        "flux": 0.9999999999999999,
+        "warmth": -3.203426503814918e-17,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": 0,
+        "weights": {}
+      }
+    },
+    {
+      "terrain": "varied",
+      "planet": "earth",
+      "label": "planet-earth",
+      "ms": 25250,
+      "seed": 4206018157,
+      "attempts": 1,
+      "types": {
+        "gorge": 7,
+        "hills": 20,
+        "plateau": 5,
+        "basin": 6,
+        "valley": 8,
+        "range": 7,
+        "volcano": 1
+      },
+      "biomes": {
+        "ocean": 1488,
+        "tundra": 213,
+        "woodland": 232,
+        "meadow": 420,
+        "desert": 176,
+        "savanna": 180,
+        "jungle": 291
+      },
+      "dry": 9275,
+      "connected": 9275,
+      "pits": 0,
+      "bad": {},
+      "water": 1488,
+      "land": 1512,
+      "routes": [
+        {
+          "node": 344507,
+          "legal": true,
+          "steps": 53
+        },
+        {
+          "node": 344295,
+          "legal": true,
+          "steps": 28
+        },
+        {
+          "node": 343930,
+          "legal": true,
+          "steps": 52
+        },
+        {
+          "node": 335660,
+          "legal": true,
+          "steps": 67
+        },
+        {
+          "node": 339042,
+          "legal": true,
+          "steps": 98
+        },
+        {
+          "node": 335794,
+          "legal": true,
+          "steps": 79
+        },
+        {
+          "node": 343394,
+          "legal": true,
+          "steps": 62
+        },
+        {
+          "node": 344444,
+          "legal": true,
+          "steps": 38
+        },
+        {
+          "node": 336423,
+          "legal": true,
+          "steps": 91
+        },
+        {
+          "node": 339780,
+          "legal": true,
+          "steps": 148
+        },
+        {
+          "node": 77927,
+          "legal": true,
+          "steps": 48
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "range": {
+            "samples": 82,
+            "peak": 6.739035606384277
+          },
+          "valley": {
+            "samples": 80,
+            "peak": 15.95107650756836
+          },
+          "basin": {
+            "samples": 51,
+            "peak": 4.2353291511535645
+          },
+          "hills": {
+            "samples": 47,
+            "peak": 3.2929248809814453
+          }
+        },
+        "families": [
+          "range",
+          "valley",
+          "basin",
+          "hills"
+        ],
+        "requiredFamilies": 3,
+        "dry": 151590,
+        "connected": 151452,
+        "dryConnected": 0.9990896497130417,
+        "deep": 3465,
+        "deepConnected": 3465,
+        "pits": 0,
+        "channels": 28,
+        "peak": 16.546072006225586,
+        "depth": 2.2740278244018555,
+        "surface": "astronomical analogue",
+        "pass": true
+      },
+      "features": 16,
+      "vents": 15,
+      "environment": {
+        "version": 5,
+        "solar": true,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": [
+          "rock",
+          "wet",
+          "ocean",
+          "atmosphere"
+        ],
+        "exclusive": true,
+        "pack": "varied",
+        "coverage": 1,
+        "biomes": [
+          "jungle",
+          "desert",
+          "woodland",
+          "tundra"
+        ],
+        "seed": 4206018157,
+        "key": "earth",
+        "theme": "earth",
+        "name": "Earth",
+        "star": {
+          "type": "G",
+          "name": "Sun",
+          "luminosity": 1,
+          "color": 16771524
+        },
+        "orbitAU": 1,
+        "relativeOrbit": 1,
+        "flux": 1,
+        "warmth": 0,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.12277334021404387,
+        "oceanShift": 0,
+        "weights": {
+          "range": 6,
+          "hills": 9,
+          "plateau": 3,
+          "valley": 2,
+          "gorge": 3,
+          "basin": 6,
+          "volcano": 1
+        }
+      }
+    },
+    {
+      "terrain": "varied",
+      "planet": "mars",
+      "label": "planet-mars",
+      "ms": 30541,
+      "seed": 4206018157,
+      "attempts": 1,
+      "types": {
+        "scablands": 17,
+        "shields": 13,
+        "grand": 12,
+        "yardangs": 4,
+        "impact": 8
+      },
+      "biomes": {
+        "waterice": 90,
+        "marsdust": 942,
+        "ferrous": 1968
+      },
+      "dry": 91573,
+      "connected": 87897,
+      "pits": 0,
+      "bad": {
+        "scablands": 1096,
+        "impact": 269,
+        "grand": 2294,
+        "yardangs": 9,
+        "shields": 8
+      },
+      "water": 0,
+      "land": 3000,
+      "routes": [
+        {
+          "node": 359756,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 332554,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 194254,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 203399,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 359622,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 363897,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 202628,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 329831,
+          "legal": true,
+          "steps": 28
+        },
+        {
+          "node": 203133,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 202099,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 364426,
+          "legal": true,
+          "steps": 28
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "impact": {
+            "samples": 282,
+            "peak": 6.845274448394775
+          },
+          "shields": {
+            "samples": 420,
+            "peak": 8.652227401733398
+          },
+          "scablands": {
+            "samples": 149,
+            "peak": 3.719862222671509
+          }
+        },
+        "families": [
+          "impact",
+          "shields",
+          "scablands"
+        ],
+        "requiredFamilies": 3,
+        "dry": 131319,
+        "connected": 131305,
+        "dryConnected": 0.9998933893800592,
+        "deep": 19400,
+        "deepConnected": 19400,
+        "pits": 0,
+        "channels": 108,
+        "peak": 8.663995742797852,
+        "depth": 2.7677502632141113,
+        "surface": "astronomical analogue",
+        "pass": true
+      },
+      "features": 0,
+      "vents": 3,
+      "environment": {
+        "version": 5,
+        "solar": true,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": [
+          "rock",
+          "dry",
+          "cold",
+          "atmosphere"
+        ],
+        "exclusive": true,
+        "pack": "varied",
+        "coverage": 1,
+        "biomes": [
+          "marsdust",
+          "ferrous",
+          "waterice"
+        ],
+        "seed": 4206018157,
+        "key": "mars",
+        "theme": "mars",
+        "name": "Mars",
+        "star": {
+          "type": "G",
+          "name": "Sun",
+          "luminosity": 1,
+          "color": 16771524
+        },
+        "orbitAU": 1.524,
+        "relativeOrbit": 1.524,
+        "flux": 0.43055641666838884,
+        "warmth": -0.24314516113249407,
+        "wetness": -0.5055158765870147,
+        "tectonics": -0.017226659785956146,
+        "oceanShift": -0.15,
+        "weights": {
+          "impact": 6,
+          "shields": 4,
+          "grand": 4,
+          "scablands": 6,
+          "yardangs": 3
+        }
+      }
+    },
+    {
+      "terrain": "varied",
+      "planet": "mercury",
+      "label": "planet-mercury",
+      "ms": 24511,
+      "seed": 4206018157,
+      "attempts": 1,
+      "types": {
+        "catena": 22,
+        "impact": 24,
+        "escarpment": 8
+      },
+      "biomes": {
+        "regolith": 2920,
+        "basalt": 80
+      },
+      "dry": 34486,
+      "connected": 29272,
+      "pits": 0,
+      "bad": {
+        "catena": 1812,
+        "impact": 3402
+      },
+      "water": 0,
+      "land": 3000,
+      "routes": [
+        {
+          "node": 353119,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 354265,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 355254,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 174701,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 250718,
+          "legal": true,
+          "steps": 29
+        },
+        {
+          "node": 357377,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 253093,
+          "legal": true,
+          "steps": 29
+        },
+        {
+          "node": 203477,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 253532,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 355503,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 358545,
+          "legal": true,
+          "steps": 28
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "impact": {
+            "samples": 651,
+            "peak": 12.534849166870117
+          },
+          "escarpment": {
+            "samples": 458,
+            "peak": 31.916486740112305
+          },
+          "catena": {
+            "samples": 27,
+            "peak": 2.6945738792419434
+          }
+        },
+        "families": [
+          "impact",
+          "escarpment",
+          "catena"
+        ],
+        "requiredFamilies": 3,
+        "dry": 114916,
+        "connected": 114881,
+        "dryConnected": 0.999695429705176,
+        "deep": 16422,
+        "deepConnected": 16414,
+        "pits": 0,
+        "channels": 279,
+        "peak": 31.9692440032959,
+        "depth": 5.258007526397705,
+        "surface": "astronomical analogue",
+        "pass": true
+      },
+      "features": 0,
+      "vents": 0,
+      "environment": {
+        "version": 5,
+        "solar": true,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": [
+          "rock",
+          "airless"
+        ],
+        "exclusive": true,
+        "pack": "varied",
+        "coverage": 1,
+        "biomes": [
+          "regolith",
+          "basalt"
+        ],
+        "seed": 4206018157,
+        "key": "mercury",
+        "theme": "mercury",
+        "name": "Mercury",
+        "star": {
+          "type": "G",
+          "name": "Sun",
+          "luminosity": 1,
+          "color": 16771524
+        },
+        "orbitAU": 0.387,
+        "relativeOrbit": 0.387,
+        "flux": 6.67694916838598,
+        "warmth": 0.28,
+        "wetness": -0.5055158765870147,
+        "tectonics": -0.017226659785956146,
+        "oceanShift": -0.15,
+        "weights": {
+          "impact": 14,
+          "catena": 9,
+          "escarpment": 7
+        }
+      }
+    }
+  ],
+  "faults": []
+}
