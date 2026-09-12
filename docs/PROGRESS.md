@@ -1,6 +1,12 @@
 # 99 Planets development progress
 
 Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
+Active: Codex on `feature/living-worlds-and-traversal`, based on V2 `42b1ee0`,
+owns U75-U88: disaster prediction, traversal/pathfinding, forge/relic/HUD fixes,
+weapon and tower advancement, UFO mount, fifty formations, ten terrain packs,
+thirty biomes, twenty themes and the requested existing-shape revisions.
+[Current request ledger and acceptance](qa/implementation/LIVING-WORLDS.md).
+
 Published and publicly verified: Codex on `feature/expedition-lobby-and-survival`, based on `665b8f3`,
 owns U60-U74: combined terrain exhibits, theme-owned climate, fifteen biomes,
 commander choice/scaling/respawn, ten-wave and endless play, full-planet base
