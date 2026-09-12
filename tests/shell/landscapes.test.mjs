@@ -41,8 +41,8 @@ test('mixed terrain includes small hills, deep incisions and major ranges in one
 
 test('climate is repeatable, locally continuous and gives planets distinct biome regions',()=>{
  const regimes=new Set();
- for(const seed of [12345,771,92741,2387895531,13,19,27,32]){
-  const a=createEcology(seed),b=createEcology(seed),biomes=new Set();regimes.add(a.manifest().regime);
+ for(const seed of [12345,771,92741,2387895531,13,19,27,32,4206018157]){
+  const a=createEcology(seed),b=createEcology(seed),biomes=new Set();regimes.add(a.manifest().environment.theme);
   assert.deepEqual(a.manifest(),b.manifest());
   for(let i=0;i<sphere.length;i+=7){const p=sphere[i],t=a.temperature(...p),m=a.moisture(...p);
    assert.equal(t,b.temperature(...p));assert.equal(m,b.moisture(...p));biomes.add(a.biome(...p,.6));

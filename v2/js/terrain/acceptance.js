@@ -1,11 +1,12 @@
 // Certify the accepted battlefield, not the recipe manifest. Tiny submerged
 // slivers do not count as a second landform, and a flat plain is not a route.
 export function surveyBattlefield(nav, field, heightAt, radius, center=null, theta=0) {
-  const exposed={},p=[0,0,0];let dry=0,connected=0,channels=0,peak=0;
+  const exposed={},p=[0,0,0];let dry=0,connected=0,deep=0,deepConnected=0,channels=0,peak=0;
   for(let i=0;i<nav.n;i++){
     if(center&&nav.dirs[i*3]*center.x+nav.dirs[i*3+1]*center.y+nav.dirs[i*3+2]*center.z<Math.cos(theta))continue;
     const h=nav.baseHeight[i];peak=Math.max(peak,h);
     if(nav.floorWalk[i]&&(nav.waterDepth?nav.waterDepth[i]===0:h>=.18)){dry++;if(nav.march.floorReach[i])connected++;}
+    if(h<-1&&nav.floorWalk[i]&&nav.waterDepth?.[i]===0){deep++;if(nav.march.floorReach[i])deepConnected++;}
     if(i%53)continue;
     for(let k=0;k<3;k++)p[k]=nav.dirs[i*3+k];
     const shape=field.inspect(...p);
@@ -29,6 +30,6 @@ export function surveyBattlefield(nav, field, heightAt, radius, center=null, the
     if(enclosed)channels++;
   }
   const families=Object.keys(exposed).filter(k=>exposed[k].samples>=4);
-  return {exposed,families,dry,connected,dryConnected:dry?connected/dry:0,channels,peak,
-    pass:families.length>=3&&dry>0&&connected/dry>=.95&&channels>=8&&peak>=16};
+  return {exposed,families,dry,connected,dryConnected:dry?connected/dry:0,deep,deepConnected,channels,peak,
+    pass:families.length>=3&&dry>0&&connected/dry>=.95&&(!deep||deepConnected/deep>=.95)&&channels>=8&&peak>=16};
 }

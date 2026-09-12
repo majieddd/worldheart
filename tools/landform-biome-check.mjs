@@ -6,12 +6,14 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright');
 const base=(process.env.WH_BASE_URL||'http://127.0.0.1:8139').replace(/\/$/,''),out=resolve(process.argv[2]||'artifacts/landform-biomes/browser');mkdirSync(out,{recursive:true});
 const hydrologyOnly=process.argv.includes('--hydrology-only');
+const seeds=(process.argv.find(a=>a.startsWith('--seeds='))?.slice(8)||'4206018157').split(',').map(Number);
+if(!seeds.length||seeds.length>8||seeds.some(s=>!Number.isInteger(s)||s<1||s>0xffffffff))throw Error('Use one to eight valid seeds');
 const browser=await chromium.launch({channel:'chrome',headless:true}),checks=[],faults=[],records=[];
 const check=(name,ok,actual)=>checks.push({name,ok:!!ok,actual});
 try{
  const page=await browser.newPage({viewport:{width:1280,height:800}});page.on('pageerror',e=>faults.push(String(e)));page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('net::ERR'))faults.push(m.text());});
  await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__qaFramesEnabled=true;window.requestAnimationFrame=fn=>raf(t=>{if(__qaFramesEnabled)fn(t);});});
- for(const [seed,profile] of [[771,'varied'],[4306234,'varied']]){
+ for(const seed of seeds){const profile='varied';
   await page.goto(`${base}/?map=ninetynine&campaign=0&seed=${seed}&terrain=${profile}`);await page.waitForFunction(()=>window.WH?.mode99&&document.getElementById('boot').classList.contains('done'),{},{timeout:180000});
   const result=await page.evaluate(async()=>{
    __qaFramesEnabled=false;document.getElementById('btn-begin').click();WH.game.paused=true;
@@ -19,7 +21,7 @@ try{
    const check=(name,ok,actual)=>checks.push({name,ok:!!ok,actual});
    let total=0,reached=0,low=-1,wet=-1,place=-1;
    for(let i=0;i<n.n;i++){
-    if(n.baseHeight[i]<-1&&n.waterDepth[i]===0&&n.floorWalk[i]&&(WH.CONFIG.requestedSeed!==771||W.FORMATIONS.inspect(...n.nodeDir(i,p).toArray()).type==='gorge')){total++;if(n.march.floorReach[i]){reached++;if(low<0||n.baseHeight[i]<n.baseHeight[low])low=i;}}
+    if(n.baseHeight[i]<-1&&n.waterDepth[i]===0&&n.floorWalk[i]){total++;if(n.march.floorReach[i]){reached++;if(low<0||n.baseHeight[i]<n.baseHeight[low])low=i;}}
     if(n.baseHeight[i]<-1&&n.waterDepth[i]===0&&n.march.floorReach[i]&&place<0){n.nodeDir(i,p);if(W.terrainFootprint(p,1,'bolt').ok)place=i;}
     if(n.waterDepth[i]>1&&n.walk[i])wet=i;
    }

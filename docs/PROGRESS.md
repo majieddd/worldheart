@@ -1,6 +1,6 @@
 # 99 Planets development progress
 
-Updated 2026-09-11. This is the collaborator entry point for the owner's new direction.
+Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
@@ -9,6 +9,21 @@ stacked on [terrain corridors and global habitat atlas, PR #32](https://github.c
 stacked on [diverse landscapes and biomes, PR #31](https://github.com/majieddd/worldheart/pull/31),
 then [modest zoom, world generator and ridges, PR #30](https://github.com/majieddd/worldheart/pull/30).
 These are drafts. Earlier review slices and their evidence remain below.
+
+Active September 11: Codex on `feature/planet-climate-and-cosmic-landforms`,
+based on preview `f50e935`, owns U48-U51. Landforms v6 adds continental rifts,
+Noctis labyrinths, rafted crust, razorback ridges, canopy highlands and flowing
+lava volcanoes. A seeded stellar/orbital environment drives five planet themes
+and stronger Planet Mix latitude bands. Adversarial rendered review caught
+isolated deep floors behind the noisy coast blend; a measured coast-clearance
+ramp and separate deep-floor connectivity acceptance repair that contract.
+284 tests, 32 rendered/UI cases, 30 hydrology/biome cases, four terrain profiles,
+918 isolated arrivals across all five themes, classic equivalence and a legal
+15-wave victory/extraction pass. Native stress passes at 13.8ms p99 after an
+exact terrain-query optimization. The atlas passes at 7.2ms p99 and a 169ms
+longest construction task after asynchronous shader preparation. Source,
+generated mirrors and review gallery are ready for V2 publication.
+[Research, iterations and evidence](qa/implementation/COSMIC-LANDFORMS.md).
 
 **Live development:** [Play V2](https://majieddd.github.io/worldheart/v2/).
 The full implementation stack is now published there from `preview/v2`, while

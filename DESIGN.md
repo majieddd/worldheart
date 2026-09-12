@@ -39,6 +39,14 @@ of geometry, including dry inland canyon floors below sea level.
 The World generator's formation selector reuses its existing native select,
 panel and camera focus behavior; it adds no decorative animation or UI accent.
 
+Landforms v6 adds broad angular crust rafts, a narrow toothed ridge, long
+continental incisions, crossed fault labyrinths and canopy shelves. Each must
+read by silhouette and route, not just a palette swap. Lava uses the existing
+warm fissure palette in an emissive crater and downhill channel; a slow
+advecting crust pattern stops for reduced motion. Planet Mix's broad climate
+belts should be readable from orbit. The inspector's labeled daylight toggle
+is for judging terrain, separate from ordinary game lighting.
+
 Rules: no pure #000 or #fff anywhere. One UI accent (cyan); gold and danger are semantic, never decorative. Magenta belongs to the enemy faction in the scene and never appears in HUD chrome. No purple gradients in UI.
 
 ## Type

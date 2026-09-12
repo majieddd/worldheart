@@ -1,0 +1,239 @@
+{
+  "scope": "Native 10-second whole-globe inspector frame pacing and construction, no injected combat",
+  "base": "http://127.0.0.1:8139",
+  "faults": [],
+  "atlas": {
+    "nodes": 40962,
+    "edgeCount": 91552,
+    "potential": 12812,
+    "connected": 12812,
+    "disconnected": 0,
+    "floor": 32042,
+    "reached": 31973,
+    "exact": 44571,
+    "buildMs": 2706.1000000089407,
+    "vertices": 95136
+  },
+  "totalBuildMs": 7834,
+  "cpuProfile": [
+    {
+      "selfMs": 2690.846,
+      "functionName": "nodesInRadius",
+      "scriptId": "10",
+      "url": "http://127.0.0.1:8139/js/nav.js",
+      "lineNumber": 858,
+      "columnNumber": 15
+    },
+    {
+      "selfMs": 1192.096,
+      "functionName": "getProgramInfoLog",
+      "scriptId": "0",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1
+    },
+    {
+      "selfMs": 289.667,
+      "functionName": "(program)",
+      "scriptId": "0",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1
+    },
+    {
+      "selfMs": 260.677,
+      "functionName": "noise3",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8139/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "selfMs": 201.875,
+      "functionName": "evaluate",
+      "scriptId": "33",
+      "url": "http://127.0.0.1:8139/js/terrain/formations.js",
+      "lineNumber": 156,
+      "columnNumber": 19
+    },
+    {
+      "selfMs": 116.511,
+      "functionName": "noise3",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8139/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "selfMs": 110.908,
+      "functionName": "noise3",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8139/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "selfMs": 99.256,
+      "functionName": "noise3",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8139/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "selfMs": 98.315,
+      "functionName": "createTerrainAtlas",
+      "scriptId": "84",
+      "url": "http://127.0.0.1:8139/js/terrain/atlas.js",
+      "lineNumber": 11,
+      "columnNumber": 40
+    },
+    {
+      "selfMs": 94.902,
+      "functionName": "noise3",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8139/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "selfMs": 89.94,
+      "functionName": "evaluate",
+      "scriptId": "33",
+      "url": "http://127.0.0.1:8139/js/terrain/formations.js",
+      "lineNumber": 156,
+      "columnNumber": 19
+    },
+    {
+      "selfMs": 84.218,
+      "functionName": "evaluate",
+      "scriptId": "33",
+      "url": "http://127.0.0.1:8139/js/terrain/formations.js",
+      "lineNumber": 156,
+      "columnNumber": 19
+    },
+    {
+      "selfMs": 70.937,
+      "functionName": "regionalHeight",
+      "scriptId": "9",
+      "url": "http://127.0.0.1:8139/js/world.js",
+      "lineNumber": 201,
+      "columnNumber": 23
+    },
+    {
+      "selfMs": 66.088,
+      "functionName": "renderBufferDirect",
+      "scriptId": "5",
+      "url": "http://127.0.0.1:8139/lib/three.module.min.js",
+      "lineNumber": 5,
+      "columnNumber": 309715
+    },
+    {
+      "selfMs": 55.947,
+      "functionName": "nestSite",
+      "scriptId": "32",
+      "url": "http://127.0.0.1:8139/js/nest-sites.js",
+      "lineNumber": 71,
+      "columnNumber": 24
+    },
+    {
+      "selfMs": 53.926,
+      "functionName": "noise3",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8139/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "selfMs": 49.793,
+      "functionName": "noise3",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8139/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "selfMs": 48.888,
+      "functionName": "",
+      "scriptId": "5",
+      "url": "http://127.0.0.1:8139/lib/three.module.min.js",
+      "lineNumber": 5,
+      "columnNumber": 309804
+    },
+    {
+      "selfMs": 46.683,
+      "functionName": "",
+      "scriptId": "84",
+      "url": "http://127.0.0.1:8139/js/terrain/atlas.js",
+      "lineNumber": 23,
+      "columnNumber": 41
+    },
+    {
+      "selfMs": 44.632,
+      "functionName": "noise3",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8139/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "selfMs": 44.217,
+      "functionName": "Ye",
+      "scriptId": "5",
+      "url": "http://127.0.0.1:8139/lib/three.module.min.js",
+      "lineNumber": 5,
+      "columnNumber": 317117
+    },
+    {
+      "selfMs": 43.738,
+      "functionName": "edge",
+      "scriptId": "84",
+      "url": "http://127.0.0.1:8139/js/terrain/atlas.js",
+      "lineNumber": 31,
+      "columnNumber": 15
+    },
+    {
+      "selfMs": 42.05,
+      "functionName": "bufferSubData",
+      "scriptId": "0",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1
+    },
+    {
+      "selfMs": 40.981,
+      "functionName": "getParameters",
+      "scriptId": "5",
+      "url": "http://127.0.0.1:8139/lib/three.module.min.js",
+      "lineNumber": 5,
+      "columnNumber": 218702
+    },
+    {
+      "selfMs": 40.304,
+      "functionName": "(garbage collector)",
+      "scriptId": "0",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1
+    }
+  ],
+  "profileScope": "Sampling profiler adds overhead; diagnostic timing only",
+  "construction": {
+    "longTasks": 2,
+    "maxMs": 1166
+  },
+  "frames": {
+    "count": 1441,
+    "p50": 6.900000000001455,
+    "p95": 7.099999999998545,
+    "p99": 7.200000000000728,
+    "max": 7.600000000002183,
+    "drawCalls": 103,
+    "triangles": 789920,
+    "memory": {
+      "geometries": 254,
+      "textures": 10
+    }
+  },
+  "pass": false
+}

@@ -4,6 +4,7 @@ import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import { createFormationField } from './terrain/formations.js';
 import { formationHeightLimit, formationDepthLimit } from './terrain/recipes.js';
 import { createEcology } from './terrain/ecology.js';
+import { createCoastClearance } from './terrain/coast-clearance.js';
 import {
   makeNoise3D, fbm3, ridged3, mulberry32,
   clamp, lerp, smoothstep,
@@ -96,6 +97,7 @@ export function inBattlefield(dx, dy, dz, margin = 0) {
 let nWarp, nBase, nDetail, nRidge, nMoist, nRange, nCanyon, nGap;
 export let FORMATIONS = null;
 export let ECOLOGY = null;
+let coastClearance=null;
 
 // Space Battlefield layout: predetermined, balanced platform positions of
 // varying size, regenerated deterministically per seed. Null on ground maps.
@@ -183,8 +185,11 @@ export function initTerrainField(seed) {
   nRange = makeNoise3D(seed ^ 0x3c6ef372);
   nCanyon = makeNoise3D(seed ^ 0x1b873593);
   nGap = makeNoise3D(seed ^ 0x85ebca6b);
-  FORMATIONS = CONFIG.terrain ? createFormationField(seed, R, CONFIG.terrain, CONFIG.terrainKey, CONFIG.terrain.formations) : null;
-  ECOLOGY = CONFIG.terrain ? createEcology(seed, CONFIG.biomeKey) : null;
+  coastClearance=CONFIG.terrain?createCoastClearance(R,(x,y,z)=>continentalityAt(x,y,z)<.37+CONFIG.terrain.ocean):null;
+  const authored=CONFIG.terrain?.formations;
+  FORMATIONS = CONFIG.terrain ? createFormationField(seed,R,CONFIG.terrain,CONFIG.terrainKey,
+    {...authored,weights:{...CONFIG.environment?.weights,...authored?.weights}}) : null;
+  ECOLOGY = CONFIG.terrain ? createEcology(seed,CONFIG.biomeKey,CONFIG.environment) : null;
   if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
@@ -204,7 +209,7 @@ function regionalHeight(dx,dy,dz,includeFine) {
   const relief=FORMATIONS.height(dx,dy,dz);
   // Below-sea incisions begin beyond the shoreline mask. The land between
   // ocean and dry cuts stays above sea level, preventing an exposed water wall.
-  h+=(relief<0?smoothstep(.3+profile.ocean,.65+profile.ocean,c):inland)*relief;
+  h+=relief<0?(c>.3+profile.ocean?Math.max(relief,-coastClearance.sample(dx,dy,dz)*.4):0):inland*relief;
   if(includeFine){
     const fine=fbm3(nDetail,dx*F_FINE+53,dy*F_FINE,dz*F_FINE,2);
     const fine2=nDetail(dx*F_FINE2+17,dy*F_FINE2,dz*F_FINE2);
@@ -416,15 +421,19 @@ const _bn = new THREE.Vector3();
 // visible surface, including where a footprint straddles two climates.
 export function climateAt(dir, height = terrainHeight(dir.x, dir.y, dir.z, false)) {
   if (!CONFIG.terrain || height < 0.13) return 'neutral';
+  if(height>1.4&&FORMATIONS.volcanic(dir.x,dir.y,dir.z))return 'hot';
   if (height >= CONFIG.terrain.snow) return 'cold';
-  const temperature = nMoist(dir.x * 3.1 + 81, dir.y * 3.1, dir.z * 3.1);
-  if (height > 1.4 && (temperature > 0.3 || ECOLOGY.volcanic(dir.x,dir.y,dir.z))) return 'hot';
-  if (height > 1.4 && temperature < -0.3) return 'cold';
+  const temperature = ECOLOGY.temperature(dir.x,dir.y,dir.z,height);
+  if (height > 1.4 && ECOLOGY.volcanic(dir.x,dir.y,dir.z)) return 'hot';
+  if (height > 1.4 && temperature < -.23) return 'cold';
   return 'neutral';
 }
 
 export function biomeAt(dir, height = terrainHeight(dir.x,dir.y,dir.z,false)) {
-  return ECOLOGY ? ECOLOGY.biome(dir.x,dir.y,dir.z,height,climateAt(dir,height),waterDepthAt(dir,height)>0) : 'classic';
+  if(!ECOLOGY)return 'classic';
+  const biome=ECOLOGY.biome(dir.x,dir.y,dir.z,height,climateAt(dir,height),waterDepthAt(dir,height)>0);
+  if(['meadow','woodland','wetland','savanna'].includes(biome)&&CONFIG.biomeKey!=='desert'&&FORMATIONS.canopy(dir.x,dir.y,dir.z)&&ECOLOGY.temperature(dir.x,dir.y,dir.z,height)>.02)return 'jungle';
+  return biome;
 }
 
 const _footDir = new THREE.Vector3(), _footA = new THREE.Vector3(), _footB = new THREE.Vector3();
@@ -585,7 +594,7 @@ function faceColor(dir, h, slope, jrand, out) {
     const dry=ECOLOGY?smoothstep(.06,-.25,ECOLOGY.moisture(dir.x,dir.y,dir.z))*smoothstep(-.12,.18,ECOLOGY.temperature(dir.x,dir.y,dir.z,h)):0;
     const tundra=ECOLOGY?smoothstep(.05,-.24,ECOLOGY.temperature(dir.x,dir.y,dir.z,h)):0;
     if(dry>0)out.lerp(C.soil,dry*.4).lerp(C.sand,dry*.7);
-    if(tundra>0)out.lerp(C.cliffHigh,tundra*.65).lerp(C.meadowHigh,tundra*.18);
+    if(tundra>0)out.lerp(C.cliffHigh,tundra*.65).lerp(C.snow,tundra*.65);
     if (forest > 0.55) out.lerp(MOSS, smoothstep(0.55, 0.75, forest) * 0.75);
     const cliff = smoothstep(0.5, 0.7, slope) * (h<0&&!wet?1:smoothstep(0.24, 0.5, h)) + smoothstep(1.4, 1.8, h);
     if (cliff > 0) {
@@ -727,6 +736,7 @@ function buildTerrainMesh() {
   const geo = displaceGeometry(buildIcoGeometry(CONFIG.terrainDetail));
   const pos = geo.attributes.position;
   const colors = new Float32Array(pos.count * 3);
+  const lava=CONFIG.terrain?new Float32Array(pos.count*2):null;
   const a = new THREE.Vector3(), b = new THREE.Vector3(), c3 = new THREE.Vector3();
   const cen = new THREE.Vector3(), n = new THREE.Vector3(), col = new THREE.Color();
   const rng = mulberry32(CONFIG.seed ^ 0xC0FFEE);
@@ -743,10 +753,12 @@ function buildTerrainMesh() {
     cen.divideScalar(len);
     const slope = 1 - Math.abs(n.dot(cen));
     faceColor(cen, h, slope * 3.2, rng(), col);
+    const thermal=lava&&h>1.4&&FORMATIONS.volcanic(cen.x,cen.y,cen.z)?FORMATIONS.inspect(cen.x,cen.y,cen.z):null;
     for (let k = 0; k < 3; k++) {
       colors[(i + k) * 3] = col.r;
       colors[(i + k) * 3 + 1] = col.g;
       colors[(i + k) * 3 + 2] = col.b;
+      if(thermal){lava[(i+k)*2]=thermal.lava;lava[(i+k)*2+1]=thermal.flow;}
     }
   }
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
@@ -786,6 +798,23 @@ function buildTerrainMesh() {
 
   geo.computeVertexNormals();
   const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, metalness: 0 });
+  if(lava){
+    geo.setAttribute('aLava',new THREE.BufferAttribute(lava,2));
+    const time={value:0};mat.userData.lavaTime=time;
+    mat.onBeforeCompile=shader=>{
+      shader.uniforms.uLavaTime=time;
+      shader.vertexShader='attribute vec2 aLava; varying vec2 vLava;\n'+shader.vertexShader;
+      shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvLava=aLava;');
+      shader.fragmentShader='uniform float uLavaTime; varying vec2 vLava;\n'+shader.fragmentShader;
+      shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
+        float crust=.5+.5*sin(vLava.y*1.8-uLavaTime*1.4);
+        float molten=smoothstep(.12,.8,vLava.x);
+        vec3 heat=mix(vec3(.45,.045,.009),vec3(1.0,.42,.035),crust);
+        diffuseColor.rgb=mix(diffuseColor.rgb,heat,molten);
+        totalEmissiveRadiance+=heat*molten*(.6+crust*.55);`);
+    };
+    mat.customProgramCacheKey=()=> 'terrain-lava-v1';
+  }
   const mesh = new THREE.Mesh(geo, mat);
   mesh.name = 'terrain';
   return mesh;
@@ -1446,8 +1475,8 @@ function scatterDecor(rng) {
     const forest = forestAt(dir.x, dir.y, dir.z);
     const slope = slopeAt(dir);
     const biome=biomeAt(dir,h),vegetated=!ECOLOGY||!['desert','volcanic','alpine'].includes(biome);
-    const treeLine=ECOLOGY?CONFIG.terrain.snow*.45:2;
-    if (ECOLOGY && biome==='jungle' && slope<.45 && h<treeLine && spots.jungle.length<Math.round(300*mul) && rng()<.22) {
+    const treeLine=ECOLOGY?CONFIG.terrain.snow*(biome==='jungle'?.85:.45):2;
+    if (ECOLOGY && biome==='jungle' && slope<.6 && h<treeLine && spots.jungle.length<Math.round(400*mul) && rng()<.36) {
       spots.jungle.push({dir:dir.clone(),h,s:2.4+rng()*1.8});
     } else if(ECOLOGY && biome==='desert' && slope<.35 && spots.cactus.length<Math.round(110*mul) && rng()<.025) {
       spots.cactus.push({dir:dir.clone(),h,s:.9+rng()*.9});
@@ -1489,6 +1518,22 @@ function scatterDecor(rng) {
     return mesh;
   }
 
+  // Canopy formations remain forested outside the current battle cap too.
+  // A fixed additional instance budget makes the inspector's far hemisphere
+  // explorable without multiplying scenery by the planet's entire surface.
+  if(FORMATIONS){
+    const limit=spots.jungle.length+600;
+    for(const m of FORMATIONS.modules.filter(m=>m.type==='forest')){
+      let added=0;
+      for(let i=0;i<320&&added<70&&spots.jungle.length<limit;i++){
+        const u=(rng()-.5)*m.extent*1.25,v=(rng()-.5)*m.extent*1.25;
+        dir.set(...m.dir).addScaledVector(_t1.set(...m.axis),u/R).addScaledVector(_t2.set(...m.side),v/R).normalize();
+        const h=terrainHeight(dir.x,dir.y,dir.z);
+        if(h<2||h>CONFIG.terrain.snow*.85||slopeAt(dir)>.7||biomeAt(dir,h)!=='jungle')continue;
+        spots.jungle.push({dir:dir.clone(),h,s:2.4+rng()*1.8});added++;
+      }
+    }
+  }
   const pines = makeInstanced(pineGeo, treeMat, spots.pine, 0.72, 0.16);
   const leafs = makeInstanced(leafGeo, treeMat, spots.leaf, 0.6, 0.14);
   pines.customDepthMaterial = treeDepth; leafs.customDepthMaterial = treeDepth;
@@ -1915,7 +1960,7 @@ export class World {
       case 5: {
         const hemi = new THREE.HemisphereLight(0x8fb4ff, 0x3d6b52, 0.52);
         this.scene.add(hemi);
-        const sun = new THREE.DirectionalLight(PALETTE.sunlight, 2.35);
+        const sun = new THREE.DirectionalLight(CONFIG.environment?.star.color || PALETTE.sunlight, 2.35);
         sun.position.copy(SUN_DIR).multiplyScalar(120);
         // Kept on the World so main.js can fit its shadow camera to the focus
         // point each frame. A directional light's shadow box is world-sized by
@@ -2071,6 +2116,8 @@ export class World {
     const t = this.time;
 
     if (this.water) this.water.material.uniforms.uTime.value = t;
+    const lavaTime=this.terrain?.material.userData.lavaTime;
+    if(lavaTime)lavaTime.value=REDUCED_MOTION?0:t;
     if (this.starMat) this.starMat.uniforms.uTime.value = t;
     if (this.sky) {
       this.sky.position.copy(cameraPos);

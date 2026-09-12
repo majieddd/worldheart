@@ -26,13 +26,14 @@ if (profile) {
     for (let k = 0; k < 8; k++) {
       const angle = k * Math.PI / 4, arc = 12 / W.R;
       q.copy(dir).multiplyScalar(Math.cos(arc)).addScaledVector(a, Math.sin(arc) * Math.cos(angle)).addScaledVector(b, Math.sin(arc) * Math.sin(angle));
-      if (W.terrainHeight(q.x, q.y, q.z, false) < .18) return false;
+      const h=W.terrainHeight(q.x,q.y,q.z,false);
+      if (W.waterDepthAt(q,h)>0) return false;
     }
     return true;
   }
   for (let i = 0; i < nav.n; i++) {
     peak = Math.max(peak, nav.height[i]);
-    if (nav.floorWalk[i] && nav.baseHeight[i] >= .18) { dry++; if (nav.march.floorReach[i]) connected++; }
+    if (nav.floorWalk[i] && nav.waterDepth[i]===0) { dry++; if (nav.march.floorReach[i]) connected++; }
     if (i % 53) continue;
     nav.nodeDir(i, p);
     if (W.FORMATIONS) {
@@ -58,7 +59,7 @@ if (profile) {
       seen.add(i);
       if (steps % 12 === 0) {
         samples++; nav.nodeDir(i, p);
-        if (nav.baseHeight[i] >= .18) { land++; if (inland(p)) interior++; }
+        if (nav.waterDepth[i]===0) { land++; if (inland(p)) interior++; }
       }
       steps++; i = nav.march.next[i];
     }
