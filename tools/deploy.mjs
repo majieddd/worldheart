@@ -22,7 +22,7 @@ import { execFileSync } from 'node:child_process';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIRROR = join(ROOT, 'v2');
 const TREES = ['js', 'css', 'lib'];
-const FILES = ['index.html'];
+const FILES = ['index.html','debug.html'];
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {

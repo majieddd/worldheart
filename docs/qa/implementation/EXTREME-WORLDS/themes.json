@@ -1,0 +1,1782 @@
+{
+  "checks": [
+    {
+      "name": "temperate: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "spine": {
+            "samples": 197,
+            "peak": 74.64676666259766
+          },
+          "volcano": {
+            "samples": 225,
+            "peak": 51.142845153808594
+          },
+          "range": {
+            "samples": 337,
+            "peak": 89.8960952758789
+          },
+          "chaos": {
+            "samples": 36,
+            "peak": 7.8874006271362305
+          }
+        },
+        "families": [
+          "spine",
+          "volcano",
+          "range",
+          "chaos"
+        ],
+        "dry": 103007,
+        "connected": 102993,
+        "dryConnected": 0.9998640869067151,
+        "deep": 9,
+        "deepConnected": 9,
+        "channels": 30,
+        "peak": 90.49235534667969,
+        "pass": true
+      }
+    },
+    {
+      "name": "temperate: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 9,
+        "reached": 9
+      }
+    },
+    {
+      "name": "temperate: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "monsoon: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "forest": {
+            "samples": 550,
+            "peak": 40.555267333984375
+          },
+          "volcano": {
+            "samples": 281,
+            "peak": 33.031227111816406
+          },
+          "range": {
+            "samples": 319,
+            "peak": 89.8960952758789
+          }
+        },
+        "families": [
+          "forest",
+          "volcano",
+          "range"
+        ],
+        "dry": 69618,
+        "connected": 69615,
+        "dryConnected": 0.9999569076962854,
+        "deep": 0,
+        "deepConnected": 0,
+        "channels": 134,
+        "peak": 90.49235534667969,
+        "pass": true
+      }
+    },
+    {
+      "name": "monsoon: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "reached": 0
+      }
+    },
+    {
+      "name": "monsoon: dominant themed land",
+      "ok": true,
+      "actual": {
+        "dominant": 1429,
+        "total": 1465,
+        "ratio": 0.9754266211604096
+      }
+    },
+    {
+      "name": "monsoon: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "arid: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "buttes": {
+            "samples": 48,
+            "peak": 33.449161529541016
+          },
+          "plateau": {
+            "samples": 327,
+            "peak": 21.23928451538086
+          },
+          "canyon": {
+            "samples": 280,
+            "peak": 35.069557189941406
+          },
+          "fan": {
+            "samples": 6,
+            "peak": 33.37175750732422
+          }
+        },
+        "families": [
+          "buttes",
+          "plateau",
+          "canyon",
+          "fan"
+        ],
+        "dry": 108960,
+        "connected": 108904,
+        "dryConnected": 0.9994860499265785,
+        "deep": 2635,
+        "deepConnected": 2618,
+        "channels": 184,
+        "peak": 37.47777557373047,
+        "pass": true
+      }
+    },
+    {
+      "name": "arid: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 2635,
+        "reached": 2618
+      }
+    },
+    {
+      "name": "arid: dominant themed land",
+      "ok": true,
+      "actual": {
+        "dominant": 2127,
+        "total": 2189,
+        "ratio": 0.9716765646413887
+      }
+    },
+    {
+      "name": "arid: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "frozen: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "dunes": {
+            "samples": 272,
+            "peak": 9.042731285095215
+          },
+          "forest": {
+            "samples": 393,
+            "peak": 42.4749755859375
+          },
+          "labyrinth": {
+            "samples": 55,
+            "peak": 17.030160903930664
+          },
+          "volcano": {
+            "samples": 76,
+            "peak": 44.14986801147461
+          },
+          "grand": {
+            "samples": 2,
+            "peak": 4.4646897315979
+          }
+        },
+        "families": [
+          "dunes",
+          "forest",
+          "labyrinth",
+          "volcano"
+        ],
+        "dry": 83996,
+        "connected": 83992,
+        "dryConnected": 0.9999523786846992,
+        "deep": 2747,
+        "deepConnected": 2747,
+        "channels": 140,
+        "peak": 44.373104095458984,
+        "pass": true
+      }
+    },
+    {
+      "name": "frozen: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 2747,
+        "reached": 2747
+      }
+    },
+    {
+      "name": "frozen: dominant themed land",
+      "ok": true,
+      "actual": {
+        "dominant": 1740,
+        "total": 1760,
+        "ratio": 0.9886363636363636
+      }
+    },
+    {
+      "name": "frozen: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "volcanic: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "labyrinth": {
+            "samples": 113,
+            "peak": 19.393905639648438
+          },
+          "hills": {
+            "samples": 150,
+            "peak": 13.803747177124023
+          },
+          "forest": {
+            "samples": 392,
+            "peak": 42.42936706542969
+          },
+          "spine": {
+            "samples": 156,
+            "peak": 73.63106536865234
+          },
+          "blades": {
+            "samples": 48,
+            "peak": 41.75007247924805
+          },
+          "fan": {
+            "samples": 17,
+            "peak": 30.62053680419922
+          }
+        },
+        "families": [
+          "labyrinth",
+          "hills",
+          "forest",
+          "spine",
+          "blades",
+          "fan"
+        ],
+        "dry": 106728,
+        "connected": 106723,
+        "dryConnected": 0.9999531519376359,
+        "deep": 6267,
+        "deepConnected": 6267,
+        "channels": 158,
+        "peak": 78.43621063232422,
+        "pass": true
+      }
+    },
+    {
+      "name": "volcanic: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 6267,
+        "reached": 6267
+      }
+    },
+    {
+      "name": "volcanic: dominant themed land",
+      "ok": true,
+      "actual": {
+        "dominant": 2109,
+        "total": 2109,
+        "ratio": 1
+      }
+    },
+    {
+      "name": "volcanic: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "crystalline: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "forest": {
+            "samples": 391,
+            "peak": 42.435218811035156
+          },
+          "valley": {
+            "samples": 55,
+            "peak": 33.07748031616211
+          },
+          "spine": {
+            "samples": 186,
+            "peak": 74.81426239013672
+          },
+          "escarpment": {
+            "samples": 198,
+            "peak": 11.108983039855957
+          },
+          "impact": {
+            "samples": 47,
+            "peak": 22.641834259033203
+          }
+        },
+        "families": [
+          "forest",
+          "valley",
+          "spine",
+          "escarpment",
+          "impact"
+        ],
+        "dry": 81834,
+        "connected": 81828,
+        "dryConnected": 0.9999266808417039,
+        "deep": 312,
+        "deepConnected": 312,
+        "channels": 75,
+        "peak": 78.43621063232422,
+        "pass": true
+      }
+    },
+    {
+      "name": "crystalline: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 312,
+        "reached": 312
+      }
+    },
+    {
+      "name": "crystalline: dominant themed land",
+      "ok": true,
+      "actual": {
+        "dominant": 1598,
+        "total": 1789,
+        "ratio": 0.8932364449413079
+      }
+    },
+    {
+      "name": "crystalline: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "fungal: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "range": {
+            "samples": 444,
+            "peak": 79.7773666381836
+          },
+          "volcano": {
+            "samples": 554,
+            "peak": 58.09313201904297
+          },
+          "forest": {
+            "samples": 21,
+            "peak": 11.07460880279541
+          }
+        },
+        "families": [
+          "range",
+          "volcano",
+          "forest"
+        ],
+        "dry": 70994,
+        "connected": 70994,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "channels": 70,
+        "peak": 90.49235534667969,
+        "pass": true
+      }
+    },
+    {
+      "name": "fungal: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "reached": 0
+      }
+    },
+    {
+      "name": "fungal: dominant themed land",
+      "ok": true,
+      "actual": {
+        "dominant": 1297,
+        "total": 1513,
+        "ratio": 0.8572372769332453
+      }
+    },
+    {
+      "name": "fungal: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "oceanic: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "volcano": {
+            "samples": 210,
+            "peak": 54.61686706542969
+          },
+          "spine": {
+            "samples": 179,
+            "peak": 60.71382141113281
+          },
+          "range": {
+            "samples": 302,
+            "peak": 89.8960952758789
+          }
+        },
+        "families": [
+          "volcano",
+          "spine",
+          "range"
+        ],
+        "dry": 77470,
+        "connected": 77463,
+        "dryConnected": 0.9999096424422357,
+        "deep": 0,
+        "deepConnected": 0,
+        "channels": 40,
+        "peak": 90.49235534667969,
+        "pass": true
+      }
+    },
+    {
+      "name": "oceanic: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "reached": 0
+      }
+    },
+    {
+      "name": "oceanic: dominant themed land",
+      "ok": true,
+      "actual": {
+        "dominant": 1060,
+        "total": 1213,
+        "ratio": 0.8738664468260511
+      }
+    },
+    {
+      "name": "oceanic: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "ferrous: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "yardangs": {
+            "samples": 68,
+            "peak": 48.333126068115234
+          },
+          "forest": {
+            "samples": 405,
+            "peak": 42.435218811035156
+          },
+          "escarpment": {
+            "samples": 272,
+            "peak": 17.052383422851562
+          },
+          "dunes": {
+            "samples": 41,
+            "peak": 8.787145614624023
+          },
+          "spine": {
+            "samples": 232,
+            "peak": 74.81426239013672
+          },
+          "grand": {
+            "samples": 2,
+            "peak": 3.199613094329834
+          }
+        },
+        "families": [
+          "yardangs",
+          "forest",
+          "escarpment",
+          "dunes",
+          "spine"
+        ],
+        "dry": 91621,
+        "connected": 91616,
+        "dryConnected": 0.9999454273583567,
+        "deep": 1341,
+        "deepConnected": 1341,
+        "channels": 184,
+        "peak": 78.43621063232422,
+        "pass": true
+      }
+    },
+    {
+      "name": "ferrous: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 1341,
+        "reached": 1341
+      }
+    },
+    {
+      "name": "ferrous: dominant themed land",
+      "ok": true,
+      "actual": {
+        "dominant": 2097,
+        "total": 2238,
+        "ratio": 0.9369973190348525
+      }
+    },
+    {
+      "name": "ferrous: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "twilight: exact theme and certified battlefield",
+      "ok": true,
+      "actual": {
+        "exposed": {
+          "volcano": {
+            "samples": 203,
+            "peak": 38.82301330566406
+          },
+          "yardangs": {
+            "samples": 213,
+            "peak": 53.81380844116211
+          },
+          "impact": {
+            "samples": 51,
+            "peak": 21.329845428466797
+          },
+          "canyon": {
+            "samples": 240,
+            "peak": 32.87189483642578
+          },
+          "drumlins": {
+            "samples": 9,
+            "peak": 9.90900993347168
+          }
+        },
+        "families": [
+          "volcano",
+          "yardangs",
+          "impact",
+          "canyon",
+          "drumlins"
+        ],
+        "dry": 95237,
+        "connected": 95236,
+        "dryConnected": 0.9999894998792486,
+        "deep": 0,
+        "deepConnected": 0,
+        "channels": 201,
+        "peak": 55.04505157470703,
+        "pass": true
+      }
+    },
+    {
+      "name": "twilight: connected dry floors",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "reached": 0
+      }
+    },
+    {
+      "name": "twilight: dominant themed land",
+      "ok": true,
+      "actual": {
+        "dominant": 1412,
+        "total": 1586,
+        "ratio": 0.8902900378310215
+      }
+    },
+    {
+      "name": "twilight: selectable theme and debug route",
+      "ok": true
+    },
+    {
+      "name": "no browser faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "records": [
+    {
+      "planet": "temperate",
+      "ms": 6322,
+      "seed": 4206041914,
+      "attempts": 4,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "temperate",
+        "theme": "temperate",
+        "name": "Garden world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6733200530681511,
+        "relativeOrbit": 1,
+        "flux": 0.9999999999999999,
+        "warmth": -3.203426503814918e-17,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": 0,
+        "weights": {}
+      },
+      "counts": {
+        "tundra": 549,
+        "volcanic": 307,
+        "ocean": 1225,
+        "alpine": 105,
+        "meadow": 341,
+        "desert": 89,
+        "savanna": 92,
+        "wetland": 38,
+        "woodland": 14,
+        "jungle": 240
+      },
+      "land": {
+        "tundra": 549,
+        "volcanic": 307,
+        "alpine": 105,
+        "meadow": 341,
+        "desert": 89,
+        "savanna": 92,
+        "wetland": 38,
+        "woodland": 14,
+        "jungle": 240
+      },
+      "dry": 9,
+      "reached": 9,
+      "certificate": {
+        "exposed": {
+          "spine": {
+            "samples": 197,
+            "peak": 74.64676666259766
+          },
+          "volcano": {
+            "samples": 225,
+            "peak": 51.142845153808594
+          },
+          "range": {
+            "samples": 337,
+            "peak": 89.8960952758789
+          },
+          "chaos": {
+            "samples": 36,
+            "peak": 7.8874006271362305
+          }
+        },
+        "families": [
+          "spine",
+          "volcano",
+          "range",
+          "chaos"
+        ],
+        "dry": 103007,
+        "connected": 102993,
+        "dryConnected": 0.9998640869067151,
+        "deep": 9,
+        "deepConnected": 9,
+        "channels": 30,
+        "peak": 90.49235534667969,
+        "pass": true
+      },
+      "decor": [
+        460,
+        26,
+        232,
+        255,
+        0,
+        61,
+        241,
+        59
+      ],
+      "landmarks": [
+        "basin",
+        "blades",
+        "buttes",
+        "caldera",
+        "cells",
+        "chaos",
+        "crevice",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "gorge",
+        "hills",
+        "impact",
+        "labyrinth",
+        "mesa",
+        "plateau",
+        "range",
+        "ravine",
+        "spine",
+        "spiral",
+        "stripes",
+        "volcano",
+        "yardangs"
+      ]
+    },
+    {
+      "planet": "monsoon",
+      "ms": 5173,
+      "seed": 4206041914,
+      "attempts": 4,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "monsoon",
+        "theme": "monsoon",
+        "name": "Canopy world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.5227212482920176,
+        "relativeOrbit": 0.91,
+        "flux": 1.2075836251660423,
+        "warmth": 0.054424619830411275,
+        "wetness": 0.3944841234129854,
+        "tectonics": 0.10277334021404386,
+        "oceanShift": 0.1,
+        "weights": {
+          "forest": 10,
+          "ravine": 5,
+          "hills": 5,
+          "karst": 5
+        }
+      },
+      "counts": {
+        "jungle": 1418,
+        "ocean": 1535,
+        "woodland": 11,
+        "alpine": 16,
+        "volcanic": 20
+      },
+      "land": {
+        "jungle": 1418,
+        "woodland": 11,
+        "alpine": 16,
+        "volcanic": 20
+      },
+      "dry": 0,
+      "reached": 0,
+      "certificate": {
+        "exposed": {
+          "forest": {
+            "samples": 550,
+            "peak": 40.555267333984375
+          },
+          "volcano": {
+            "samples": 281,
+            "peak": 33.031227111816406
+          },
+          "range": {
+            "samples": 319,
+            "peak": 89.8960952758789
+          }
+        },
+        "families": [
+          "forest",
+          "volcano",
+          "range"
+        ],
+        "dry": 69618,
+        "connected": 69615,
+        "dryConnected": 0.9999569076962854,
+        "deep": 0,
+        "deepConnected": 0,
+        "channels": 134,
+        "peak": 90.49235534667969,
+        "pass": true
+      },
+      "decor": [
+        732,
+        0,
+        1,
+        18,
+        0,
+        94,
+        241,
+        74
+      ],
+      "landmarks": [
+        "basin",
+        "blades",
+        "buttes",
+        "caldera",
+        "cells",
+        "chaos",
+        "crevice",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "forest",
+        "hills",
+        "impact",
+        "mesa",
+        "plateau",
+        "range",
+        "ravine",
+        "spine",
+        "spiral",
+        "stripes",
+        "volcano",
+        "yardangs"
+      ]
+    },
+    {
+      "planet": "arid",
+      "ms": 7570,
+      "seed": 4206018157,
+      "attempts": 1,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "arid",
+        "theme": "arid",
+        "name": "Dune world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.154590836617024,
+        "relativeOrbit": 0.69,
+        "flux": 2.100399075824407,
+        "warmth": 0.21413269319862233,
+        "wetness": -0.6555158765870147,
+        "tectonics": 0.10277334021404386,
+        "oceanShift": -0.17,
+        "weights": {
+          "grand": 4,
+          "labyrinth": 3,
+          "mesa": 3,
+          "buttes": 4
+        }
+      },
+      "counts": {
+        "desert": 2127,
+        "ocean": 811,
+        "alpine": 22,
+        "volcanic": 40
+      },
+      "land": {
+        "desert": 2127,
+        "alpine": 22,
+        "volcanic": 40
+      },
+      "dry": 2635,
+      "reached": 2618,
+      "certificate": {
+        "exposed": {
+          "buttes": {
+            "samples": 48,
+            "peak": 33.449161529541016
+          },
+          "plateau": {
+            "samples": 327,
+            "peak": 21.23928451538086
+          },
+          "canyon": {
+            "samples": 280,
+            "peak": 35.069557189941406
+          },
+          "fan": {
+            "samples": 6,
+            "peak": 33.37175750732422
+          }
+        },
+        "families": [
+          "buttes",
+          "plateau",
+          "canyon",
+          "fan"
+        ],
+        "dry": 108960,
+        "connected": 108904,
+        "dryConnected": 0.9994860499265785,
+        "deep": 2635,
+        "deepConnected": 2618,
+        "channels": 184,
+        "peak": 37.47777557373047,
+        "pass": true
+      },
+      "decor": [
+        0,
+        126,
+        0,
+        0,
+        241,
+        74
+      ],
+      "landmarks": [
+        "basin",
+        "blades",
+        "buttes",
+        "caldera",
+        "canyon",
+        "cells",
+        "chaos",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "grand",
+        "hills",
+        "impact",
+        "labyrinth",
+        "mesa",
+        "plateau",
+        "range",
+        "ravine",
+        "spider",
+        "spine",
+        "spiral",
+        "stripes",
+        "valley",
+        "volcano",
+        "yardangs"
+      ]
+    },
+    {
+      "planet": "frozen",
+      "ms": 5323,
+      "seed": 4206026076,
+      "attempts": 2,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "frozen",
+        "theme": "frozen",
+        "name": "Cryosphere",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 3.011976095522672,
+        "relativeOrbit": 1.8,
+        "flux": 0.3086419753086419,
+        "warmth": -0.3391987626219801,
+        "wetness": -0.04551587658701465,
+        "tectonics": 0.0027733402140438547,
+        "oceanShift": -0.012,
+        "weights": {
+          "chaos": 5,
+          "spine": 4,
+          "valley": 5
+        }
+      },
+      "counts": {
+        "tundra": 1576,
+        "ocean": 1240,
+        "alpine": 164,
+        "volcanic": 20
+      },
+      "land": {
+        "tundra": 1576,
+        "alpine": 164,
+        "volcanic": 20
+      },
+      "dry": 2747,
+      "reached": 2747,
+      "certificate": {
+        "exposed": {
+          "dunes": {
+            "samples": 272,
+            "peak": 9.042731285095215
+          },
+          "forest": {
+            "samples": 393,
+            "peak": 42.4749755859375
+          },
+          "labyrinth": {
+            "samples": 55,
+            "peak": 17.030160903930664
+          },
+          "volcano": {
+            "samples": 76,
+            "peak": 44.14986801147461
+          },
+          "grand": {
+            "samples": 2,
+            "peak": 4.4646897315979
+          }
+        },
+        "families": [
+          "dunes",
+          "forest",
+          "labyrinth",
+          "volcano"
+        ],
+        "dry": 83996,
+        "connected": 83992,
+        "dryConnected": 0.9999523786846992,
+        "deep": 2747,
+        "deepConnected": 2747,
+        "channels": 140,
+        "peak": 44.373104095458984,
+        "pass": true
+      },
+      "decor": [
+        0,
+        0,
+        650,
+        8,
+        0,
+        0,
+        241,
+        74
+      ],
+      "landmarks": [
+        "blades",
+        "buttes",
+        "canyon",
+        "cells",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "grand",
+        "hills",
+        "impact",
+        "labyrinth",
+        "mesa",
+        "plateau",
+        "range",
+        "ravine",
+        "spider",
+        "spine",
+        "spiral",
+        "stripes",
+        "valley",
+        "volcano",
+        "yardangs"
+      ]
+    },
+    {
+      "planet": "volcanic",
+      "ms": 5433,
+      "seed": 4206026076,
+      "attempts": 2,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "volcanic",
+        "theme": "volcanic",
+        "name": "Molten world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 0.9705256307795276,
+        "relativeOrbit": 0.58,
+        "flux": 2.9726516052318672,
+        "warmth": 0.28,
+        "wetness": -0.40551587658701466,
+        "tectonics": 0.9627733402140438,
+        "oceanShift": -0.12,
+        "weights": {
+          "volcano": 7,
+          "caldera": 4,
+          "chaos": 3
+        }
+      },
+      "counts": {
+        "volcanic": 2109,
+        "ocean": 891
+      },
+      "land": {
+        "volcanic": 2109
+      },
+      "dry": 6267,
+      "reached": 6267,
+      "certificate": {
+        "exposed": {
+          "labyrinth": {
+            "samples": 113,
+            "peak": 19.393905639648438
+          },
+          "hills": {
+            "samples": 150,
+            "peak": 13.803747177124023
+          },
+          "forest": {
+            "samples": 392,
+            "peak": 42.42936706542969
+          },
+          "spine": {
+            "samples": 156,
+            "peak": 73.63106536865234
+          },
+          "blades": {
+            "samples": 48,
+            "peak": 41.75007247924805
+          },
+          "fan": {
+            "samples": 17,
+            "peak": 30.62053680419922
+          }
+        },
+        "families": [
+          "labyrinth",
+          "hills",
+          "forest",
+          "spine",
+          "blades",
+          "fan"
+        ],
+        "dry": 106728,
+        "connected": 106723,
+        "dryConnected": 0.9999531519376359,
+        "deep": 6267,
+        "deepConnected": 6267,
+        "channels": 158,
+        "peak": 78.43621063232422,
+        "pass": true
+      },
+      "decor": [
+        0,
+        0,
+        650,
+        0,
+        0,
+        241,
+        74
+      ],
+      "landmarks": [
+        "basin",
+        "blades",
+        "buttes",
+        "caldera",
+        "canyon",
+        "cells",
+        "chaos",
+        "crevice",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "grand",
+        "hills",
+        "impact",
+        "labyrinth",
+        "mesa",
+        "plateau",
+        "range",
+        "ravine",
+        "spider",
+        "spine",
+        "spiral",
+        "stripes",
+        "valley",
+        "volcano",
+        "yardangs"
+      ]
+    },
+    {
+      "planet": "crystalline",
+      "ms": 5053,
+      "seed": 4206026076,
+      "attempts": 2,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "crystalline",
+        "theme": "crystalline",
+        "name": "Crystal world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 2.074916865804507,
+        "relativeOrbit": 1.24,
+        "flux": 0.6503642039542145,
+        "warmth": -0.12413604824486016,
+        "wetness": -0.08551587658701465,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": -0.024,
+        "weights": {
+          "blades": 10,
+          "impact": 5,
+          "spine": 5
+        }
+      },
+      "counts": {
+        "crystalline": 1598,
+        "ocean": 1211,
+        "tundra": 93,
+        "alpine": 83,
+        "volcanic": 15
+      },
+      "land": {
+        "crystalline": 1598,
+        "tundra": 93,
+        "alpine": 83,
+        "volcanic": 15
+      },
+      "dry": 312,
+      "reached": 312,
+      "certificate": {
+        "exposed": {
+          "forest": {
+            "samples": 391,
+            "peak": 42.435218811035156
+          },
+          "valley": {
+            "samples": 55,
+            "peak": 33.07748031616211
+          },
+          "spine": {
+            "samples": 186,
+            "peak": 74.81426239013672
+          },
+          "escarpment": {
+            "samples": 198,
+            "peak": 11.108983039855957
+          },
+          "impact": {
+            "samples": 47,
+            "peak": 22.641834259033203
+          }
+        },
+        "families": [
+          "forest",
+          "valley",
+          "spine",
+          "escarpment",
+          "impact"
+        ],
+        "dry": 81834,
+        "connected": 81828,
+        "dryConnected": 0.9999266808417039,
+        "deep": 312,
+        "deepConnected": 312,
+        "channels": 75,
+        "peak": 78.43621063232422,
+        "pass": true
+      },
+      "decor": [
+        0,
+        0,
+        650,
+        42,
+        0,
+        0,
+        241,
+        55
+      ],
+      "landmarks": [
+        "blades",
+        "buttes",
+        "canyon",
+        "cells",
+        "chaos",
+        "crevice",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "grand",
+        "hills",
+        "impact",
+        "mesa",
+        "plateau",
+        "range",
+        "ravine",
+        "spider",
+        "spine",
+        "spiral",
+        "stripes",
+        "valley",
+        "volcano",
+        "yardangs"
+      ]
+    },
+    {
+      "planet": "fungal",
+      "ms": 4893,
+      "seed": 4206041914,
+      "attempts": 4,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "fungal",
+        "theme": "fungal",
+        "name": "Spore world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.8071856573136034,
+        "relativeOrbit": 1.08,
+        "flux": 0.857338820301783,
+        "warmth": -0.044412524955497634,
+        "wetness": 0.2744841234129854,
+        "tectonics": 0.10277334021404386,
+        "oceanShift": 0.084,
+        "weights": {
+          "basin": 6,
+          "karst": 7,
+          "fan": 5
+        }
+      },
+      "counts": {
+        "fungal": 1297,
+        "alpine": 80,
+        "tundra": 88,
+        "ocean": 1487,
+        "volcanic": 48
+      },
+      "land": {
+        "fungal": 1297,
+        "alpine": 80,
+        "tundra": 88,
+        "volcanic": 48
+      },
+      "dry": 0,
+      "reached": 0,
+      "certificate": {
+        "exposed": {
+          "range": {
+            "samples": 444,
+            "peak": 79.7773666381836
+          },
+          "volcano": {
+            "samples": 554,
+            "peak": 58.09313201904297
+          },
+          "forest": {
+            "samples": 21,
+            "peak": 11.07460880279541
+          }
+        },
+        "families": [
+          "range",
+          "volcano",
+          "forest"
+        ],
+        "dry": 70994,
+        "connected": 70994,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "channels": 70,
+        "peak": 90.49235534667969,
+        "pass": true
+      },
+      "decor": [
+        0,
+        0,
+        650,
+        27,
+        0,
+        0,
+        241,
+        69
+      ],
+      "landmarks": [
+        "basin",
+        "blades",
+        "buttes",
+        "caldera",
+        "cells",
+        "chaos",
+        "crevice",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "hills",
+        "impact",
+        "mesa",
+        "plateau",
+        "range",
+        "ravine",
+        "spine",
+        "spiral",
+        "stripes",
+        "volcano"
+      ]
+    },
+    {
+      "planet": "oceanic",
+      "ms": 4815,
+      "seed": 4206041914,
+      "attempts": 4,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "oceanic",
+        "theme": "oceanic",
+        "name": "Pelagic world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6398536520067881,
+        "relativeOrbit": 0.98,
+        "flux": 1.0412328196584757,
+        "warmth": 0.01165853826380661,
+        "wetness": 0.49448412341298537,
+        "tectonics": 0.08277334021404387,
+        "oceanShift": 0.18,
+        "weights": {
+          "caldera": 7,
+          "drumlins": 8,
+          "plateau": 5
+        }
+      },
+      "counts": {
+        "wetland": 884,
+        "ocean": 1787,
+        "tundra": 66,
+        "alpine": 60,
+        "jungle": 176,
+        "volcanic": 27
+      },
+      "land": {
+        "wetland": 884,
+        "tundra": 66,
+        "alpine": 60,
+        "jungle": 176,
+        "volcanic": 27
+      },
+      "dry": 0,
+      "reached": 0,
+      "certificate": {
+        "exposed": {
+          "volcano": {
+            "samples": 210,
+            "peak": 54.61686706542969
+          },
+          "spine": {
+            "samples": 179,
+            "peak": 60.71382141113281
+          },
+          "range": {
+            "samples": 302,
+            "peak": 89.8960952758789
+          }
+        },
+        "families": [
+          "volcano",
+          "spine",
+          "range"
+        ],
+        "dry": 77470,
+        "connected": 77463,
+        "dryConnected": 0.9999096424422357,
+        "deep": 0,
+        "deepConnected": 0,
+        "channels": 40,
+        "peak": 90.49235534667969,
+        "pass": true
+      },
+      "decor": [
+        67,
+        0,
+        30,
+        650,
+        943,
+        110,
+        241,
+        54
+      ],
+      "landmarks": [
+        "buttes",
+        "caldera",
+        "cells",
+        "chaos",
+        "crevice",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "hills",
+        "impact",
+        "mesa",
+        "plateau",
+        "range",
+        "spine",
+        "stripes",
+        "volcano",
+        "yardangs"
+      ]
+    },
+    {
+      "planet": "ferrous",
+      "ms": 5179,
+      "seed": 4206026076,
+      "attempts": 2,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "ferrous",
+        "theme": "ferrous",
+        "name": "Iron desert",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.3051896413931579,
+        "relativeOrbit": 0.78,
+        "flux": 1.6436554898093358,
+        "warmth": 0.14338158836499054,
+        "wetness": -0.5555158765870147,
+        "tectonics": 0.2827733402140438,
+        "oceanShift": -0.165,
+        "weights": {
+          "yardangs": 9,
+          "spider": 7,
+          "buttes": 6
+        }
+      },
+      "counts": {
+        "ferrous": 2097,
+        "tundra": 66,
+        "ocean": 762,
+        "alpine": 60,
+        "volcanic": 15
+      },
+      "land": {
+        "ferrous": 2097,
+        "tundra": 66,
+        "alpine": 60,
+        "volcanic": 15
+      },
+      "dry": 1341,
+      "reached": 1341,
+      "certificate": {
+        "exposed": {
+          "yardangs": {
+            "samples": 68,
+            "peak": 48.333126068115234
+          },
+          "forest": {
+            "samples": 405,
+            "peak": 42.435218811035156
+          },
+          "escarpment": {
+            "samples": 272,
+            "peak": 17.052383422851562
+          },
+          "dunes": {
+            "samples": 41,
+            "peak": 8.787145614624023
+          },
+          "spine": {
+            "samples": 232,
+            "peak": 74.81426239013672
+          },
+          "grand": {
+            "samples": 2,
+            "peak": 3.199613094329834
+          }
+        },
+        "families": [
+          "yardangs",
+          "forest",
+          "escarpment",
+          "dunes",
+          "spine"
+        ],
+        "dry": 91621,
+        "connected": 91616,
+        "dryConnected": 0.9999454273583567,
+        "deep": 1341,
+        "deepConnected": 1341,
+        "channels": 184,
+        "peak": 78.43621063232422,
+        "pass": true
+      },
+      "decor": [
+        0,
+        0,
+        650,
+        39,
+        0,
+        0,
+        241,
+        74
+      ],
+      "landmarks": [
+        "basin",
+        "blades",
+        "buttes",
+        "canyon",
+        "cells",
+        "chaos",
+        "crevice",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "grand",
+        "hills",
+        "impact",
+        "mesa",
+        "plateau",
+        "range",
+        "ravine",
+        "spider",
+        "spine",
+        "spiral",
+        "stripes",
+        "valley",
+        "volcano",
+        "yardangs"
+      ]
+    },
+    {
+      "planet": "twilight",
+      "ms": 5196,
+      "seed": 4206041914,
+      "attempts": 4,
+      "environment": {
+        "version": 2,
+        "seed": 4206018157,
+        "key": "twilight",
+        "theme": "twilight",
+        "name": "Luminous twilight",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 2.2422488711113227,
+        "relativeOrbit": 1.34,
+        "flux": 0.5569169079973266,
+        "warmth": -0.1688932002732192,
+        "wetness": 0.19448412341298538,
+        "tectonics": 0.06277334021404385,
+        "oceanShift": 0.06,
+        "weights": {
+          "spiral": 8,
+          "cells": 8,
+          "stripes": 6
+        }
+      },
+      "counts": {
+        "twilight": 1412,
+        "tundra": 87,
+        "ocean": 1414,
+        "alpine": 68,
+        "volcanic": 19
+      },
+      "land": {
+        "twilight": 1412,
+        "tundra": 87,
+        "alpine": 68,
+        "volcanic": 19
+      },
+      "dry": 0,
+      "reached": 0,
+      "certificate": {
+        "exposed": {
+          "volcano": {
+            "samples": 203,
+            "peak": 38.82301330566406
+          },
+          "yardangs": {
+            "samples": 213,
+            "peak": 53.81380844116211
+          },
+          "impact": {
+            "samples": 51,
+            "peak": 21.329845428466797
+          },
+          "canyon": {
+            "samples": 240,
+            "peak": 32.87189483642578
+          },
+          "drumlins": {
+            "samples": 9,
+            "peak": 9.90900993347168
+          }
+        },
+        "families": [
+          "volcano",
+          "yardangs",
+          "impact",
+          "canyon",
+          "drumlins"
+        ],
+        "dry": 95237,
+        "connected": 95236,
+        "dryConnected": 0.9999894998792486,
+        "deep": 0,
+        "deepConnected": 0,
+        "channels": 201,
+        "peak": 55.04505157470703,
+        "pass": true
+      },
+      "decor": [
+        0,
+        0,
+        650,
+        2,
+        8,
+        0,
+        0,
+        241,
+        70
+      ],
+      "landmarks": [
+        "basin",
+        "blades",
+        "buttes",
+        "caldera",
+        "canyon",
+        "cells",
+        "chaos",
+        "crevice",
+        "drumlins",
+        "dunes",
+        "escarpment",
+        "fan",
+        "hills",
+        "impact",
+        "mesa",
+        "plateau",
+        "range",
+        "ravine",
+        "spine",
+        "spiral",
+        "stripes",
+        "valley",
+        "volcano",
+        "yardangs"
+      ]
+    }
+  ],
+  "faults": []
+}

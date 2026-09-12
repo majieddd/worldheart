@@ -13,8 +13,9 @@ export function scopedStorage(storage, path, namespace = '') {
 
 // Resolve browser storage lazily so denied storage is still handled by the
 // campaign recovery layer, and pure store tests need no browser globals.
+const debugWorld=/\/debug\.html$/.test(globalThis.location?.pathname||'');
 export const browserStorage = scopedStorage({
-  getItem: key => globalThis.localStorage.getItem(key),
-  setItem: (key, value) => globalThis.localStorage.setItem(key, value),
-  removeItem: key => globalThis.localStorage.removeItem(key),
+  getItem: key => debugWorld?null:globalThis.localStorage.getItem(key),
+  setItem: (key, value) => {if(!debugWorld)globalThis.localStorage.setItem(key, value);},
+  removeItem: key => {if(!debugWorld)globalThis.localStorage.removeItem(key);},
 }, globalThis.location?.pathname || '/', new URLSearchParams(globalThis.location?.search || '').get('worldgen') === '1' ? 'whWorldgen:' : '');

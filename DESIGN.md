@@ -8,6 +8,13 @@ DESIGN_VARIANCE: 7/10 (memorable showcase, not a daily tool)
 MOTION_INTENSITY: 5/10 (scene carries the motion; HUD stays at 3 and obeys the frequency gate)
 VISUAL_DENSITY: 4/10 (rich scene, lean HUD)
 
+Debug World: owner-selected flat exhibition lanes, with dials 3/1/6. Static
+presentation by default, explicit model-motion controls, cyan navigation and
+opaque navy panels. Biome colors belong to the scene exhibits. Shared production
+model builders, materials and terrain fields are the source of each sample.
+Ten extreme themes intentionally extend scene palettes beyond the Garden world's
+latitude bands; `js/biome-visuals.js` is their visual registry.
+
 ## Color tokens
 HUD tokens are CSS custom properties in `css/style.css :root` (canonical for DOM). Scene palette is `PALETTE` in `js/config.js` (canonical for WebGL). Values listed here mirror those files.
 

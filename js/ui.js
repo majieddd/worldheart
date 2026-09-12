@@ -130,6 +130,7 @@ export class HUD {
         <div class="set-row"><span>Film grain</span><button class="btn" id="set-grain">${PRESENTATION.grain ? 'On' : 'Off'}</button></div>
         <div class="set-row"><span>Seed</span><span class="marker" id="set-seed" style="color:var(--text)">0</span></div>
         <button class="btn worldgen-launch">World generator</button>
+        <a class="btn" href="debug.html" target="_blank" rel="noopener">Debug World</a>
         <div class="marker" style="margin-top:var(--sp-2)">camera feel</div>
         <div id="cam-sliders"></div>
         <button class="btn" id="cam-reset" style="width:100%;font-size:var(--fs-12)">Reset camera feel</button>

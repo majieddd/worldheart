@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 const hash = file => createHash('sha256').update(readFileSync(file)).digest('hex');
 const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim();
 const publicPath = path => !path.split('/').some(part => part.startsWith('.'));
-const previewPath = path => path === 'index.html' || /^(js|css|lib)\//.test(path);
+const previewPath = path => (path === 'index.html' || path === 'debug.html') || /^(js|css|lib)\//.test(path);
 
 export function composeSite(production, preview, output) {
   production = resolve(production); preview = resolve(preview); output = resolve(output);

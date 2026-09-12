@@ -11,7 +11,7 @@ export function surveyLandmarks(field, heightAt, center, theta, waterAt=()=>fals
       const sample=field.inspect(...dir);if(sample.id!==m.id)continue;
       const height=heightAt(...dir,false);
       const crater=['caldera','volcano'].includes(sample.type);
-      const cut=['ravine','crevice','canyon','gorge','valley','caldera','grand','labyrinth','volcano'].includes(sample.type);
+      const cut=['ravine','crevice','canyon','gorge','valley','caldera','grand','labyrinth','volcano','karst','spiral','spider','stripes'].includes(sample.type);
       let depth=0;
       if(cut&&sample.incision>1){
         // Measure the visible banks too: a large theoretical cut beneath an

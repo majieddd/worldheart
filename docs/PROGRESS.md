@@ -1,10 +1,21 @@
 # 99 Planets development progress
 
 Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
+Published and publicly verified: Codex on `feature/extreme-worlds-and-debug-gallery`, based on V2 `009e873`,
+owns U52-U55: stronger early tower reach, extreme planet ecology, thirty distinct
+formations and a flat Debug World using real models and terrain. 288 tests,
+118 Debug World cases, 40 theme cases, 108 terrain cases, 1,683 isolated enemy
+arrivals and a legal 15-wave victory/extraction pass. Native combat stress is
+14.1ms p99; Debug World is 7.1ms p99. Functional build `712e7ff` deployed through
+[Pages 34684741196](https://github.com/majieddd/worldheart/actions/runs/34684741196).
+158 public browser cases and 226 asset/source comparisons pass. U52-U55 is
+complete for this bounded request; full campaign, device and balance QA remain open.
+[Current work and visual comparisons](qa/implementation/EXTREME-WORLDS.md).
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
-Current review: [cosmic landforms and star-driven climates, PR #34](https://github.com/majieddd/worldheart/pull/34),
+Current review: [ten extreme themes and Debug World, PR #35](https://github.com/majieddd/worldheart/pull/35),
+stacked on [cosmic landforms and star-driven climates, PR #34](https://github.com/majieddd/worldheart/pull/34),
 stacked on [mixed landforms, dry canyon routes and biomes, PR #33](https://github.com/majieddd/worldheart/pull/33),
 stacked on [terrain corridors and global habitat atlas, PR #32](https://github.com/majieddd/worldheart/pull/32),
 stacked on [diverse landscapes and biomes, PR #31](https://github.com/majieddd/worldheart/pull/31),

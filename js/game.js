@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, PALETTE } from './config.js';
 import { clamp } from './noise.js';
 import { R, terrainFootprint, surfacePoint, groundNormal, orientOnSurface, raycastTerrain } from './world.js';
-import { TOWER_TYPES, TOWER_SCALE, tierCost, AUTHORED_TIERS, buildTowerVisual, GHOST_MAT_OK, GHOST_MAT_BAD, MODS } from './towers.js';
+import { TOWER_TYPES, TOWER_SCALE, tierCost, tierStats, AUTHORED_TIERS, buildTowerVisual, GHOST_MAT_OK, GHOST_MAT_BAD, MODS } from './towers.js';
 import { insideFrontier } from './run/frontier.js';
 import { RangeGuide } from './range-guide.js';
 import { modifiedTowerStats } from './rewards.js';
@@ -418,7 +418,7 @@ export class Game {
     this.ghostHolder.visible = true;
     orientOnSurface(this.ghostHolder, this.cursorPos);
     this.rangeRing.show(true);
-    const base = modifiedTowerStats(def.tiers[0], MODS.current);
+    const base = modifiedTowerStats(tierStats(this.buildType,0), MODS.current);
     const preview = CONFIG.terrain ? terrainTowerStats(base, this.buildType, 'neutral', this.cursorPos.length() - R) : base;
     this.rangeRing.place(this.cursorPos, preview.range, preview.minRange || 0);
     this.rangeRing.show(!def.summoner);

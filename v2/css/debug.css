@@ -1,0 +1,34 @@
+:root { color-scheme: dark; font: 14px/1.5 system-ui, sans-serif; color: #dce8f0; background: #101b29; --line: #526679; --accent: #71dbea; }
+* { box-sizing: border-box; }
+body { margin: 0; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+header { display: flex; align-items: center; gap: 24px; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+h1 { font-size: 18px; margin: 0; flex: 1; }
+h2 { font-size: 20px; line-height: 1.2; margin: 22px 0 10px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+nav { display: flex; gap: 5px; padding: 8px 20px; overflow-x: auto; flex-shrink: 0; }
+button, select { font: inherit; color: #dce8f0; background: #1d3042; border: 1px solid var(--line); border-radius: 5px; padding: 8px 10px; min-height: 40px; }
+button { cursor: pointer; white-space: nowrap; }
+button:hover { background: #2b4258; }
+button[aria-current="true"] { border-color: var(--accent); color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+main { display: flex; flex: 1; min-height: 0; }
+aside { width: 300px; flex-shrink: 0; padding: 18px; border-right: 1px solid var(--line); overflow: auto; }
+label { display: grid; gap: 5px; margin: 12px 0; color: #becedb; }
+select { width: 100%; min-width: 0; }
+.actions { display: flex; gap: 8px; margin: 10px 0; }
+.actions button { flex: 1; }
+.help { color: #b6c9d9; font-size: 12px; }
+dl { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 12px; }
+dt { color: #b6c9d9; } dd { margin: 0; text-align: right; }
+#status { font-size: 12px; color: var(--accent); }
+#viewport { position: relative; flex: 1; min-width: 0; overflow: hidden; background: #152334; touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; }
+#labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.label { position: absolute; max-width: 190px; width: max-content; transform: translate(-50%,0); background: #162536; border: 1px solid var(--line); padding: 3px 7px; border-radius: 3px; font-size: 12px; text-align: center; }
+@media (max-width: 760px) {
+  header { gap: 12px; padding: 8px 12px; font-size: 12px; } h1 { font-size: 16px; }
+  nav { padding: 6px 10px; } main { flex-direction: column-reverse; }
+  aside { width: 100%; height: 245px; flex-shrink: 0; border-top: 1px solid var(--line); padding: 10px 14px; }
+  aside label { margin: 6px 0; } h2 { margin: 10px 0; } #viewport { min-height: 180px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }

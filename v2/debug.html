@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Debug World | 99 Planets To Defend</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/debug.css">
+  <script type="importmap">{"imports":{"three":"./lib/three.module.min.js"}}</script>
+</head>
+<body>
+  <header><a href="./?map=ninetynine">99 Planets</a><h1>Debug World</h1><a href="./?map=ninetynine&amp;worldgen=1&amp;terrain=varied&amp;campaign=0">World generator</a></header>
+  <nav id="lanes" aria-label="Exhibit categories"></nav>
+  <main>
+    <aside aria-label="Exhibit controls">
+      <label>Exhibit<select id="exhibit"></select></label>
+      <div class="actions"><button id="previous">Previous</button><button id="next">Next</button></div>
+      <h2 id="name">Preparing exhibits</h2><p id="description">Building production models and terrain samples.</p>
+      <dl id="metrics"></dl>
+      <label>Model motion<select id="motion"><option value="still">Still pose</option><option value="idle">Idle</option><option value="walk">Walk</option><option value="attack">Attack</option></select></label>
+      <label>Weapon energy core<select id="core"><option value="tempered">Tempered</option><option value="ember">Ember</option><option value="frost">Frost</option><option value="pulse">Pulse (ranged)</option></select></label>
+      <div class="actions"><button id="focus">Focus exhibit</button><button id="row">See whole lane</button></div>
+      <button id="overview">See all lanes</button>
+      <p class="help">Drag to orbit. Shift-drag or right-drag to pan. Wheel to zoom. Arrow keys pan when the view has focus.</p>
+      <p class="help">Terrain samples use one display scale. Larger continental cuts occupy wider plots. Model lanes use 4x display scale.</p>
+      <p id="status" role="status">Loading</p>
+    </aside>
+    <section id="viewport" tabindex="0" aria-label="3D Debug World. Drag to orbit, wheel to zoom, arrows to pan."><div id="labels" aria-hidden="true"></div></section>
+  </main>
+  <script type="module">import {startDebugWorld} from './js/debug-world.js'; startDebugWorld().catch(error=>{document.querySelector('#status').textContent='Could not build exhibits. Reload to retry.';console.error(error);});</script>
+</body>
+</html>

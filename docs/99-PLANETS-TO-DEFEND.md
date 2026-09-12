@@ -123,6 +123,22 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 ### Terrain traversal and flight
 
+U52-U55 is published and publicly verified through PR #35: 158 public browser
+cases and 226 asset/source comparisons pass. It extends the preview to ten visibly distinct planet themes and thirty
+formation recipes in landforms v7. A shared visual catalogue supplies matching
+land/sea palettes and biome scenery in gameplay and a flat Debug World.
+The six labeled exhibition lanes contain 97 production-backed exhibits, with
+model poses, weapon core controls and links to full themed planets. Debug
+does not access player saves. New formations draw on primary NASA, ESA, USGS
+and NPS references; comparison renders prompted a sunken U-shaped glacial
+trough, more legible impact rims and exposed-stone incision colors.
+
+Tower base ranges rise 35%; authored upgrade range gains halve and later range
+growth becomes logarithmic. Existing damage/cadence, reward multipliers,
+Mortar inner exclusion and elevation rules are preserved. This is a measured
+preview tuning step, not final campaign balance acceptance. Current evidence
+and publication status: [extreme worlds ledger](qa/implementation/EXTREME-WORLDS.md).
+
 U48-U51 is published and publicly verified in V2 through PR #34 and functional
 build `2481d95`: 284 tests, 54 public browser cases and 214 asset/source checks.
 It extends this in landforms v6: longer continental rifts, intersecting

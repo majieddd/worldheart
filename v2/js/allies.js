@@ -5,6 +5,7 @@ import { waterDepthAt, surfaceElevation, R, terrainHeight, surfaceTravel } from 
 import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
 import { uploadInstances } from './rig.js';
+import {weaponAppearanceMaterial} from './weapon-model.js';
 import { insideStrike, STRIKE_AT } from './attacks.js';
 const _routePoint = new THREE.Vector3(), _routeBearing = new THREE.Vector3(), _routeStep = new THREE.Vector3();
 
@@ -394,14 +395,7 @@ export class AllyManager {
       const build = buildSoldier(typeKey, mats, weapon, appearance?.era||'ancient');
       const parts = build.parts.map((p) => {
         const isWeapon=p.at.some(a=>a.joint.name==='weaponR'||a.joint.name==='weaponL');
-        const material=appearance&&isWeapon?p.mat.clone():p.mat;
-        if(appearance&&isWeapon){
-          if(p.mat===mats.energy){
-            const color={tempered:0xffd399,ember:0xff794d,frost:0x91ddff,pulse:0xa9a0ff}[appearance.core];
-            material.color.setHex(color);material.emissive.setHex(color);
-            material.emissiveIntensity={ancient:.12,technological:1.3,empowered:2.2}[appearance.era];
-          }else if(p.mat===mats.trim||p.mat===mats.gold){material.color.setHex(appearance.era==='technological'?0xcbe4ef:0xcaa56f);material.metalness=appearance.era==='ancient'?.25:.55;}
-        }
+        const material=weaponAppearanceMaterial(mats,p.mat,isWeapon?appearance:null);
         const mesh = new THREE.InstancedMesh(p.geo, material, MAX_ALLIES * p.at.length);
         mesh.count = 0;
         mesh.frustumCulled = false;

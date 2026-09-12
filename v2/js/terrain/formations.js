@@ -1,6 +1,7 @@
 import { makeNoise3D, mulberry32, smoothstep } from '../noise.js';
 import { LANDFORM_VERSION, LANDFORM_RECIPES, landformSettings } from './recipes.js';
 import {riftSample} from './rifts.js';
+import {EXOTIC_RECIPES,exoticHeight} from './exotic-formations.js';
 
 const GRID = 20, TAU = Math.PI * 2;
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -56,6 +57,13 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     if (authored?.height !== undefined) m.height = authored.height;
     if (authored?.size !== undefined) m.size = authored.size;
     if (authored?.disabled) m.height = 0;
+  }
+  // A larger vocabulary must not dilute the one truly major mountain range.
+  // Explicitly authored heights and all non-mixed profiles keep their values.
+  if(mix==='varied'){
+    const ranges=modules.filter(m=>m.type==='range'&&!overridesById.has(m.id));
+    const tallest=ranges.sort((a,b)=>b.height-a.height)[0];
+    if(tallest)tallest.height=Math.max(tallest.height,profile.range);
   }
   // Distances to neighbours give each group a measured footprint; changing
   // spacing changes group size, independently of its height/depth and biome.
@@ -206,6 +214,8 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         // connecting saddle a firmer shoulder without closing the outer floor.
         const chainShoulder = smoothstep(0, .3, rise) * rise;
         h = chain.height * chainShoulder * (.25 + .75 * spine) * (1 - chain.roughness + chain.roughness * fold * fold);
+      } else if (Object.hasOwn(EXOTIC_RECIPES,m.type)) {
+        h=exoticHeight(m,u,v,extent,rise);incision=Math.max(0,-h);
       } else if (m.type === 'range') {
         const spine = Math.pow(clamp(1 - channel / (extent * .88), 0, 1), 1.4);
         h = m.height * shoulder * (.38 + .62 * spine) * (1 - m.roughness + m.roughness * folds * folds);
@@ -337,12 +347,17 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         const crest = t < .76 ? smoothstep(0, .76, t) : 1 - smoothstep(.76, 1, t);
         h = m.height * smoothstep(0, .4, rise) * crest;
       } else if (m.type === 'valley') {
-        // A broad U-shaped trough between unequal glacial shoulders, wider
-        // and smoother at its floor than the narrow V-shaped ravine family.
-        const width = extent * (.25 + .035 * Math.sin(u / extent * 3 + m.phase));
-        const wall = smoothstep(width, width + extent * .4, channel);
-        const upland = m.height * smoothstep(0, .56, shoulder) * (.88 + .12 * Math.sin(u / extent * 4 + m.phase));
-        incision = upland * (1 - wall); h = upland - incision;
+        // A long, sunken U floor with hanging side valleys. This avoids the
+        // winding valley's pair of convex above-ground shoulders. The broad
+        // bed and smooth ends remain connected to the common valley network.
+        const cross=Math.abs(v+extent*.055*Math.sin(u/extent*2+m.phase));
+        const wall=smoothstep(extent*.22,extent*.48,cross);
+        const sideCut=1-smoothstep(extent*.10,extent*.25,Math.abs(u-extent*(v>0?.25:-.3)));
+        const hanging=sideCut*smoothstep(extent*.3,extent*.55,Math.abs(v));
+        const upland=m.height*smoothstep(0,.58,shoulder)*(.72+(v>0?.28:0));
+        const depth=Math.min(m.height*.32,extent*.17)*smoothstep(0,.3,rise);
+        h=upland*wall*(1-hanging*.65)-depth*(1-wall);
+        incision=upland-h;
       } else {
         // The classic field's ridged-noise hills create irregular low walls
         // and saddles. Keep that smaller scale beside the major peaks.
