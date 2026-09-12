@@ -1,0 +1,1690 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "terrain-alpine: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "range": {
+              "samples": 1003,
+              "peak": 45.63283920288086
+            },
+            "spine": {
+              "samples": 214,
+              "peak": 128.38487243652344
+            }
+          },
+          "families": [
+            "range",
+            "spine"
+          ],
+          "requiredFamilies": 2,
+          "dry": 66277,
+          "connected": 66277,
+          "dryConnected": 1,
+          "deep": 0,
+          "deepConnected": 0,
+          "pits": 0,
+          "channels": 22,
+          "peak": 134.29220581054688,
+          "depth": 1.9238617420196533,
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 299165,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 369156,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 198720,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 174854,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 337570,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 174782,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 369652,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 213011,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 368817,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 390979,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 175019,
+            "legal": true,
+            "steps": 30
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain-alpine: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "connected": 0,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "Giant Peaks contains only mountain ranges",
+      "ok": true,
+      "actual": {
+        "range": 12,
+        "spine": 7
+      }
+    },
+    {
+      "name": "terrain-canyon: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "labyrinth": {
+              "samples": 273,
+              "peak": 44.57610321044922
+            },
+            "box": {
+              "samples": 10,
+              "peak": 4.682029724121094
+            },
+            "grand": {
+              "samples": 166,
+              "peak": 16.64014434814453
+            },
+            "gorge": {
+              "samples": 52,
+              "peak": 9.952404022216797
+            }
+          },
+          "families": [
+            "labyrinth",
+            "box",
+            "grand",
+            "gorge"
+          ],
+          "requiredFamilies": 3,
+          "dry": 140163,
+          "connected": 140159,
+          "dryConnected": 0.9999714617980494,
+          "deep": 18403,
+          "deepConnected": 18403,
+          "pits": 0,
+          "channels": 327,
+          "peak": 45.16484451293945,
+          "depth": 12.374085426330566,
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 197065,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 334004,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 226916,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 337778,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 166918,
+            "legal": true,
+            "steps": 28
+          },
+          {
+            "node": 229780,
+            "legal": true,
+            "steps": 31
+          },
+          {
+            "node": 333363,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 231495,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 337645,
+            "legal": true,
+            "steps": 29
+          },
+          {
+            "node": 231545,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 335495,
+            "legal": true,
+            "steps": 31
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain-canyon: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 38483,
+        "connected": 38422,
+        "pits": 5,
+        "disconnected": {
+          "ravine": 11,
+          "spider": 47,
+          "karst": 5,
+          "box": 2,
+          "labyrinth": 1
+        }
+      }
+    },
+    {
+      "name": "Deep Canyons contains only incised families",
+      "ok": true,
+      "actual": {
+        "box": 4,
+        "ravine": 5,
+        "labyrinth": 4,
+        "grand": 5,
+        "spider": 5,
+        "gorge": 2,
+        "oxbow": 5,
+        "karst": 2
+      }
+    },
+    {
+      "name": "terrain-ocean: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "drumlins": {
+              "samples": 167,
+              "peak": 34.0186882019043
+            },
+            "caldera": {
+              "samples": 49,
+              "peak": 45.887054443359375
+            },
+            "volcano": {
+              "samples": 247,
+              "peak": 96.45962524414062
+            },
+            "atoll": {
+              "samples": 75,
+              "peak": 11.751070022583008
+            },
+            "kame": {
+              "samples": 42,
+              "peak": 30.2921142578125
+            },
+            "delta": {
+              "samples": 82,
+              "peak": 2.518465995788574
+            }
+          },
+          "families": [
+            "drumlins",
+            "caldera",
+            "volcano",
+            "atoll",
+            "kame",
+            "delta"
+          ],
+          "requiredFamilies": 2,
+          "dry": 55912,
+          "connected": 55909,
+          "dryConnected": 0.9999463442552583,
+          "deep": 5481,
+          "deepConnected": 5480,
+          "pits": 0,
+          "channels": 160,
+          "peak": 96.55509948730469,
+          "depth": 2.568052053451538,
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 301606,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 168172,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 299291,
+            "legal": true,
+            "steps": 31
+          },
+          {
+            "node": 230619,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 230779,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 300590,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 304131,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 187084,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 231336,
+            "legal": true,
+            "steps": 35
+          },
+          {
+            "node": 186868,
+            "legal": true,
+            "steps": 36
+          },
+          {
+            "node": 230171,
+            "legal": true,
+            "steps": 36
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain-ocean: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 6754,
+        "connected": 6753,
+        "pits": 0,
+        "disconnected": {
+          "delta": 1
+        }
+      }
+    },
+    {
+      "name": "Ocean World has a majority ocean",
+      "ok": true,
+      "actual": {
+        "water": 1557,
+        "land": 1443
+      }
+    },
+    {
+      "name": "planet-sulfurfurnace: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "shields": {
+              "samples": 511,
+              "peak": 40.66740036010742
+            },
+            "stripes": {
+              "samples": 195,
+              "peak": 11.727022171020508
+            },
+            "volcano": {
+              "samples": 58,
+              "peak": 66.34082794189453
+            }
+          },
+          "families": [
+            "shields",
+            "stripes",
+            "volcano"
+          ],
+          "requiredFamilies": 3,
+          "dry": 89903,
+          "connected": 89901,
+          "dryConnected": 0.9999777538013191,
+          "deep": 8749,
+          "deepConnected": 8749,
+          "pits": 0,
+          "channels": 122,
+          "peak": 67.0146713256836,
+          "depth": 12.209105491638184,
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 258416,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 260599,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 320241,
+            "legal": true,
+            "steps": 28
+          },
+          {
+            "node": 176538,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 191611,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 257590,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 262641,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 257091,
+            "legal": true,
+            "steps": 29
+          },
+          {
+            "node": 261919,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 261962,
+            "legal": true,
+            "steps": 31
+          },
+          {
+            "node": 257351,
+            "legal": true,
+            "steps": 36
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-sulfurfurnace: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 9009,
+        "connected": 9009,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "planet-sulfurfurnace: multiple authored biomes present",
+      "ok": true,
+      "actual": {
+        "volcanic": 759,
+        "sulfur": 746,
+        "ocean": 804,
+        "obsidian": 691
+      }
+    },
+    {
+      "name": "planet-reefocean: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "delta": {
+              "samples": 42,
+              "peak": 2.5321247577667236
+            },
+            "atoll": {
+              "samples": 77,
+              "peak": 13.087152481079102
+            },
+            "range": {
+              "samples": 89,
+              "peak": 42.480628967285156
+            },
+            "drumlins": {
+              "samples": 70,
+              "peak": 32.01243591308594
+            },
+            "fan": {
+              "samples": 36,
+              "peak": 13.801335334777832
+            }
+          },
+          "families": [
+            "delta",
+            "atoll",
+            "range",
+            "drumlins",
+            "fan"
+          ],
+          "requiredFamilies": 2,
+          "dry": 55495,
+          "connected": 55494,
+          "dryConnected": 0.9999819803585909,
+          "deep": 3173,
+          "deepConnected": 3172,
+          "pits": 0,
+          "channels": 73,
+          "peak": 49.02974319458008,
+          "depth": 2.554367780685425,
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 261921,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 320158,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 319901,
+            "legal": true,
+            "steps": 28
+          },
+          {
+            "node": 260463,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 320001,
+            "legal": true,
+            "steps": 36
+          },
+          {
+            "node": 260631,
+            "legal": true,
+            "steps": 36
+          },
+          {
+            "node": 191759,
+            "legal": true,
+            "steps": 35
+          },
+          {
+            "node": 176217,
+            "legal": true,
+            "steps": 43
+          },
+          {
+            "node": 260814,
+            "legal": true,
+            "steps": 37
+          },
+          {
+            "node": 77588,
+            "legal": true,
+            "steps": 39
+          },
+          {
+            "node": 261702,
+            "legal": true,
+            "steps": 44
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-reefocean: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 3491,
+        "connected": 3490,
+        "pits": 0,
+        "disconnected": {
+          "delta": 1
+        }
+      }
+    },
+    {
+      "name": "planet-reefocean: multiple authored biomes present",
+      "ok": true,
+      "actual": {
+        "wetland": 96,
+        "kelp": 1852,
+        "coralreef": 620,
+        "mangrove": 432
+      }
+    },
+    {
+      "name": "planet-skyarchipelago: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "grotto": {
+              "samples": 226,
+              "peak": 25.546768188476562
+            },
+            "plateau": {
+              "samples": 41,
+              "peak": 17.193382263183594
+            },
+            "sky": {
+              "samples": 22,
+              "peak": 4.6827521324157715
+            }
+          },
+          "families": [
+            "grotto",
+            "plateau",
+            "sky"
+          ],
+          "requiredFamilies": 3,
+          "dry": 117951,
+          "connected": 117950,
+          "dryConnected": 0.9999915219031632,
+          "deep": 1409,
+          "deepConnected": 1409,
+          "pits": 0,
+          "channels": 37,
+          "peak": 25.606718063354492,
+          "depth": 5.419586658477783,
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 233257,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 204647,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 361495,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 361843,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 204353,
+            "legal": true,
+            "steps": 31
+          },
+          {
+            "node": 233627,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 362807,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 232465,
+            "legal": true,
+            "steps": 31
+          },
+          {
+            "node": 361868,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 233403,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 233013,
+            "legal": true,
+            "steps": 28
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-skyarchipelago: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 2373,
+        "connected": 2372,
+        "pits": 0,
+        "disconnected": {
+          "sky": 1
+        }
+      }
+    },
+    {
+      "name": "planet-skyarchipelago: multiple authored biomes present",
+      "ok": true,
+      "actual": {
+        "ocean": 1383,
+        "lichen": 544,
+        "cloudforest": 545,
+        "aurora": 528
+      }
+    },
+    {
+      "name": "No browser faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "records": [
+    {
+      "terrain": "alpine",
+      "planet": "temperate",
+      "label": "terrain-alpine",
+      "ms": 20256,
+      "seed": 4206026076,
+      "attempts": 2,
+      "types": {
+        "range": 12,
+        "spine": 7
+      },
+      "biomes": {
+        "tundra": 453,
+        "alpine": 309,
+        "ocean": 1035,
+        "volcanic": 324,
+        "meadow": 348,
+        "desert": 103,
+        "savanna": 108,
+        "wetland": 40,
+        "mangrove": 141,
+        "woodland": 34,
+        "jungle": 105
+      },
+      "dry": 0,
+      "connected": 0,
+      "pits": 0,
+      "bad": {},
+      "water": 1035,
+      "land": 1965,
+      "routes": [
+        {
+          "node": 299165,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 369156,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 198720,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 174854,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 337570,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 174782,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 369652,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 213011,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 368817,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 390979,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 175019,
+          "legal": true,
+          "steps": 30
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "range": {
+            "samples": 1003,
+            "peak": 45.63283920288086
+          },
+          "spine": {
+            "samples": 214,
+            "peak": 128.38487243652344
+          }
+        },
+        "families": [
+          "range",
+          "spine"
+        ],
+        "requiredFamilies": 2,
+        "dry": 66277,
+        "connected": 66277,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "pits": 0,
+        "channels": 22,
+        "peak": 134.29220581054688,
+        "depth": 1.9238617420196533,
+        "pass": true
+      },
+      "features": 0,
+      "vents": 0,
+      "environment": {
+        "version": 3,
+        "pack": "varied",
+        "coverage": 0,
+        "biomes": null,
+        "seed": 4206018157,
+        "key": "temperate",
+        "theme": "temperate",
+        "name": "Garden world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6733200530681511,
+        "relativeOrbit": 1,
+        "flux": 0.9999999999999999,
+        "warmth": -3.203426503814918e-17,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": 0,
+        "weights": {}
+      }
+    },
+    {
+      "terrain": "canyon",
+      "planet": "temperate",
+      "label": "terrain-canyon",
+      "ms": 19021,
+      "seed": 4206026076,
+      "attempts": 2,
+      "types": {
+        "box": 4,
+        "ravine": 5,
+        "labyrinth": 4,
+        "grand": 5,
+        "spider": 5,
+        "gorge": 2,
+        "oxbow": 5,
+        "karst": 2
+      },
+      "biomes": {
+        "alpine": 70,
+        "tundra": 603,
+        "ocean": 1006,
+        "volcanic": 336,
+        "meadow": 379,
+        "desert": 140,
+        "savanna": 128,
+        "wetland": 64,
+        "mangrove": 249,
+        "woodland": 9,
+        "jungle": 16
+      },
+      "dry": 38483,
+      "connected": 38422,
+      "pits": 5,
+      "bad": {
+        "ravine": 11,
+        "spider": 47,
+        "karst": 5,
+        "box": 2,
+        "labyrinth": 1
+      },
+      "water": 1006,
+      "land": 1994,
+      "routes": [
+        {
+          "node": 197065,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 334004,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 226916,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 337778,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 166918,
+          "legal": true,
+          "steps": 28
+        },
+        {
+          "node": 229780,
+          "legal": true,
+          "steps": 31
+        },
+        {
+          "node": 333363,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 231495,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 337645,
+          "legal": true,
+          "steps": 29
+        },
+        {
+          "node": 231545,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 335495,
+          "legal": true,
+          "steps": 31
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "labyrinth": {
+            "samples": 273,
+            "peak": 44.57610321044922
+          },
+          "box": {
+            "samples": 10,
+            "peak": 4.682029724121094
+          },
+          "grand": {
+            "samples": 166,
+            "peak": 16.64014434814453
+          },
+          "gorge": {
+            "samples": 52,
+            "peak": 9.952404022216797
+          }
+        },
+        "families": [
+          "labyrinth",
+          "box",
+          "grand",
+          "gorge"
+        ],
+        "requiredFamilies": 3,
+        "dry": 140163,
+        "connected": 140159,
+        "dryConnected": 0.9999714617980494,
+        "deep": 18403,
+        "deepConnected": 18403,
+        "pits": 0,
+        "channels": 327,
+        "peak": 45.16484451293945,
+        "depth": 12.374085426330566,
+        "pass": true
+      },
+      "features": 0,
+      "vents": 0,
+      "environment": {
+        "version": 3,
+        "pack": "varied",
+        "coverage": 0,
+        "biomes": null,
+        "seed": 4206018157,
+        "key": "temperate",
+        "theme": "temperate",
+        "name": "Garden world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6733200530681511,
+        "relativeOrbit": 1,
+        "flux": 0.9999999999999999,
+        "warmth": -3.203426503814918e-17,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": 0,
+        "weights": {}
+      }
+    },
+    {
+      "terrain": "ocean",
+      "planet": "temperate",
+      "label": "terrain-ocean",
+      "ms": 28060,
+      "seed": 4206018157,
+      "attempts": 1,
+      "types": {
+        "kame": 5,
+        "volcano": 6,
+        "plateau": 7,
+        "caldera": 8,
+        "range": 4,
+        "drumlins": 5,
+        "delta": 4,
+        "fan": 7,
+        "atoll": 5,
+        "dome": 1
+      },
+      "biomes": {
+        "tundra": 336,
+        "alpine": 144,
+        "ocean": 1557,
+        "volcanic": 319,
+        "meadow": 276,
+        "desert": 68,
+        "savanna": 60,
+        "wetland": 23,
+        "woodland": 18,
+        "mangrove": 99,
+        "jungle": 100
+      },
+      "dry": 6754,
+      "connected": 6753,
+      "pits": 0,
+      "bad": {
+        "delta": 1
+      },
+      "water": 1557,
+      "land": 1443,
+      "routes": [
+        {
+          "node": 301606,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 168172,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 299291,
+          "legal": true,
+          "steps": 31
+        },
+        {
+          "node": 230619,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 230779,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 300590,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 304131,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 187084,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 231336,
+          "legal": true,
+          "steps": 35
+        },
+        {
+          "node": 186868,
+          "legal": true,
+          "steps": 36
+        },
+        {
+          "node": 230171,
+          "legal": true,
+          "steps": 36
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "drumlins": {
+            "samples": 167,
+            "peak": 34.0186882019043
+          },
+          "caldera": {
+            "samples": 49,
+            "peak": 45.887054443359375
+          },
+          "volcano": {
+            "samples": 247,
+            "peak": 96.45962524414062
+          },
+          "atoll": {
+            "samples": 75,
+            "peak": 11.751070022583008
+          },
+          "kame": {
+            "samples": 42,
+            "peak": 30.2921142578125
+          },
+          "delta": {
+            "samples": 82,
+            "peak": 2.518465995788574
+          }
+        },
+        "families": [
+          "drumlins",
+          "caldera",
+          "volcano",
+          "atoll",
+          "kame",
+          "delta"
+        ],
+        "requiredFamilies": 2,
+        "dry": 55912,
+        "connected": 55909,
+        "dryConnected": 0.9999463442552583,
+        "deep": 5481,
+        "deepConnected": 5480,
+        "pits": 0,
+        "channels": 160,
+        "peak": 96.55509948730469,
+        "depth": 2.568052053451538,
+        "pass": true
+      },
+      "features": 0,
+      "vents": 0,
+      "environment": {
+        "version": 3,
+        "pack": "varied",
+        "coverage": 0,
+        "biomes": null,
+        "seed": 4206018157,
+        "key": "temperate",
+        "theme": "temperate",
+        "name": "Garden world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6733200530681511,
+        "relativeOrbit": 1,
+        "flux": 0.9999999999999999,
+        "warmth": -3.203426503814918e-17,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": 0,
+        "weights": {}
+      }
+    },
+    {
+      "terrain": "varied",
+      "planet": "sulfurfurnace",
+      "label": "planet-sulfurfurnace",
+      "ms": 21835,
+      "seed": 4206018157,
+      "attempts": 1,
+      "types": {
+        "chaos": 4,
+        "shields": 11,
+        "geyser": 15,
+        "stripes": 3,
+        "caldera": 2,
+        "volcano": 2
+      },
+      "biomes": {
+        "volcanic": 759,
+        "sulfur": 746,
+        "ocean": 804,
+        "obsidian": 691
+      },
+      "dry": 9009,
+      "connected": 9009,
+      "pits": 0,
+      "bad": {},
+      "water": 804,
+      "land": 2196,
+      "routes": [
+        {
+          "node": 258416,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 260599,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 320241,
+          "legal": true,
+          "steps": 28
+        },
+        {
+          "node": 176538,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 191611,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 257590,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 262641,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 257091,
+          "legal": true,
+          "steps": 29
+        },
+        {
+          "node": 261919,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 261962,
+          "legal": true,
+          "steps": 31
+        },
+        {
+          "node": 257351,
+          "legal": true,
+          "steps": 36
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "shields": {
+            "samples": 511,
+            "peak": 40.66740036010742
+          },
+          "stripes": {
+            "samples": 195,
+            "peak": 11.727022171020508
+          },
+          "volcano": {
+            "samples": 58,
+            "peak": 66.34082794189453
+          }
+        },
+        "families": [
+          "shields",
+          "stripes",
+          "volcano"
+        ],
+        "requiredFamilies": 3,
+        "dry": 89903,
+        "connected": 89901,
+        "dryConnected": 0.9999777538013191,
+        "deep": 8749,
+        "deepConnected": 8749,
+        "pits": 0,
+        "channels": 122,
+        "peak": 67.0146713256836,
+        "depth": 12.209105491638184,
+        "pass": true
+      },
+      "features": 0,
+      "vents": 15,
+      "environment": {
+        "version": 3,
+        "pack": "geothermal",
+        "coverage": 1,
+        "biomes": [
+          "sulfur",
+          "obsidian",
+          "volcanic"
+        ],
+        "seed": 4206018157,
+        "key": "sulfurfurnace",
+        "theme": "sulfurfurnace",
+        "name": "Sulfur Furnace",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.0541916334329353,
+        "relativeOrbit": 0.63,
+        "flux": 2.5195263290501377,
+        "warmth": 0.2666305065099232,
+        "wetness": -0.5855158765870146,
+        "tectonics": 0.9427733402140438,
+        "oceanShift": -0.17,
+        "weights": {
+          "geyser": 12,
+          "shields": 8,
+          "volcano": 6,
+          "stripes": 4
+        }
+      }
+    },
+    {
+      "terrain": "varied",
+      "planet": "reefocean",
+      "label": "planet-reefocean",
+      "ms": 27723,
+      "seed": 4206018157,
+      "attempts": 1,
+      "types": {
+        "kame": 3,
+        "drumlins": 9,
+        "caldera": 6,
+        "plateau": 4,
+        "delta": 6,
+        "fan": 8,
+        "volcano": 2,
+        "atoll": 10,
+        "range": 3,
+        "dome": 1
+      },
+      "biomes": {
+        "wetland": 96,
+        "kelp": 1852,
+        "coralreef": 620,
+        "mangrove": 432
+      },
+      "dry": 3491,
+      "connected": 3490,
+      "pits": 0,
+      "bad": {
+        "delta": 1
+      },
+      "water": 1809,
+      "land": 1191,
+      "routes": [
+        {
+          "node": 261921,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 320158,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 319901,
+          "legal": true,
+          "steps": 28
+        },
+        {
+          "node": 260463,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 320001,
+          "legal": true,
+          "steps": 36
+        },
+        {
+          "node": 260631,
+          "legal": true,
+          "steps": 36
+        },
+        {
+          "node": 191759,
+          "legal": true,
+          "steps": 35
+        },
+        {
+          "node": 176217,
+          "legal": true,
+          "steps": 43
+        },
+        {
+          "node": 260814,
+          "legal": true,
+          "steps": 37
+        },
+        {
+          "node": 77588,
+          "legal": true,
+          "steps": 39
+        },
+        {
+          "node": 261702,
+          "legal": true,
+          "steps": 44
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "delta": {
+            "samples": 42,
+            "peak": 2.5321247577667236
+          },
+          "atoll": {
+            "samples": 77,
+            "peak": 13.087152481079102
+          },
+          "range": {
+            "samples": 89,
+            "peak": 42.480628967285156
+          },
+          "drumlins": {
+            "samples": 70,
+            "peak": 32.01243591308594
+          },
+          "fan": {
+            "samples": 36,
+            "peak": 13.801335334777832
+          }
+        },
+        "families": [
+          "delta",
+          "atoll",
+          "range",
+          "drumlins",
+          "fan"
+        ],
+        "requiredFamilies": 2,
+        "dry": 55495,
+        "connected": 55494,
+        "dryConnected": 0.9999819803585909,
+        "deep": 3173,
+        "deepConnected": 3172,
+        "pits": 0,
+        "channels": 73,
+        "peak": 49.02974319458008,
+        "depth": 2.554367780685425,
+        "pass": true
+      },
+      "features": 0,
+      "vents": 0,
+      "environment": {
+        "version": 3,
+        "pack": "ocean",
+        "coverage": 1,
+        "biomes": [
+          "coralreef",
+          "kelp",
+          "mangrove",
+          "wetland"
+        ],
+        "seed": 4206018157,
+        "key": "reefocean",
+        "theme": "reefocean",
+        "name": "Reef Ocean",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6231204514761066,
+        "relativeOrbit": 0.97,
+        "flux": 1.0628122010840684,
+        "warmth": 0.01757733903503879,
+        "wetness": 0.6344841234129853,
+        "tectonics": 0.07277334021404386,
+        "oceanShift": 0.22,
+        "weights": {
+          "atoll": 16,
+          "delta": 8,
+          "drumlins": 5,
+          "fan": 5
+        }
+      }
+    },
+    {
+      "terrain": "varied",
+      "planet": "skyarchipelago",
+      "label": "planet-skyarchipelago",
+      "ms": 21134,
+      "seed": 4206049833,
+      "attempts": 5,
+      "types": {
+        "forest": 4,
+        "sky": 19,
+        "dome": 1,
+        "trunks": 5,
+        "grotto": 5,
+        "plateau": 4
+      },
+      "biomes": {
+        "ocean": 1383,
+        "lichen": 544,
+        "cloudforest": 545,
+        "aurora": 528
+      },
+      "dry": 2373,
+      "connected": 2372,
+      "pits": 0,
+      "bad": {
+        "sky": 1
+      },
+      "water": 1383,
+      "land": 1617,
+      "routes": [
+        {
+          "node": 233257,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 204647,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 361495,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 361843,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 204353,
+          "legal": true,
+          "steps": 31
+        },
+        {
+          "node": 233627,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 362807,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 232465,
+          "legal": true,
+          "steps": 31
+        },
+        {
+          "node": 361868,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 233403,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 233013,
+          "legal": true,
+          "steps": 28
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "grotto": {
+            "samples": 226,
+            "peak": 25.546768188476562
+          },
+          "plateau": {
+            "samples": 41,
+            "peak": 17.193382263183594
+          },
+          "sky": {
+            "samples": 22,
+            "peak": 4.6827521324157715
+          }
+        },
+        "families": [
+          "grotto",
+          "plateau",
+          "sky"
+        ],
+        "requiredFamilies": 3,
+        "dry": 117951,
+        "connected": 117950,
+        "dryConnected": 0.9999915219031632,
+        "deep": 1409,
+        "deepConnected": 1409,
+        "pits": 0,
+        "channels": 37,
+        "peak": 25.606718063354492,
+        "depth": 5.419586658477783,
+        "pass": true
+      },
+      "features": 77,
+      "vents": 0,
+      "environment": {
+        "version": 3,
+        "pack": "sky",
+        "coverage": 1,
+        "biomes": [
+          "aurora",
+          "cloudforest",
+          "lichen"
+        ],
+        "seed": 4206018157,
+        "key": "skyarchipelago",
+        "theme": "skyarchipelago",
+        "name": "Sky Archipelago",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.9075848604976922,
+        "relativeOrbit": 1.14,
+        "flux": 0.7694675284702986,
+        "warmth": -0.07561352975600677,
+        "wetness": 0.16448412341298538,
+        "tectonics": 0.14277334021404386,
+        "oceanShift": 0.051000000000000004,
+        "weights": {
+          "sky": 18,
+          "plateau": 5,
+          "grotto": 4,
+          "fulgurite": 4
+        }
+      }
+    }
+  ],
+  "faults": []
+}

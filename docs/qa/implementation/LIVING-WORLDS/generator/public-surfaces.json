@@ -1,0 +1,41 @@
+{
+  "scope": "Targeted positions and time, actual rendered world, units, collision and keyboard events. Not an unforced expedition.",
+  "checks": [
+    {
+      "name": "Actual planet contains a suspended deck",
+      "ok": true
+    },
+    {
+      "name": "Actual commander lands on the rendered deck",
+      "ok": true,
+      "actual": {
+        "height": 7,
+        "top": 7
+      }
+    },
+    {
+      "name": "Keyboard movement leaves a deck and enters a real fall",
+      "ok": true,
+      "actual": {
+        "distance": 20.65249797588749,
+        "fell": true,
+        "height": -1.2135879472524642,
+        "hop": 0
+      }
+    },
+    {
+      "name": "Actual volcanic pack contains an erupting vent",
+      "ok": true
+    },
+    {
+      "name": "Visible geyser lifts the commander and a real husk",
+      "ok": true,
+      "actual": {
+        "commanderLift": 4.950445833333329,
+        "enemyLift": 7.050000000000011,
+        "launches": 2
+      }
+    }
+  ],
+  "faults": []
+}

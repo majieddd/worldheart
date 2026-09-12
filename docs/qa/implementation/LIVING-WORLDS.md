@@ -15,11 +15,18 @@ interrupted copies are superseded by this ledger. Main is not a publication targ
 | U81 Weapon families and five material tiers | Published and publicly verified | Twin blades and ember staves receive wood, iron, gold, diamond and onyx models and rarity stats alongside every weapon family |
 | U82 Tower upgrade silhouettes | Published and publicly verified | Every family retains its identity while upgrades add clear structural advancement |
 | U83 Flying saucer mount | Published and publicly verified | Replace the flying mount model with a coherent UFO, retaining flight controls and balance |
-| U84 Twenty new landforms | Implemented; local QA passed | Audit existing thirty; research, author and visually compare fifty distinct formations, including useful traversal and interactive features |
-| U85 Ten terrain packs | Implemented; local QA passed | Mixed default; specialized extreme peaks, deep cuts and island worlds; ten packs with theme-dependent regional coverage |
-| U86 Fifteen new biomes | Implemented; local QA passed | Audit existing fifteen; thirty distinct biome palettes, vegetation and environmental dressing in planets and Debug World |
-| U87 Ten new planet themes | Implemented; local QA passed | Twenty distinct combinations of terrain packs, climate and biome distribution, shown on real miniature planets |
-| U88 Existing formation revisions | Implemented; local QA passed | Flat plateau siblings, broader spaced buttes, larger hills, glacial bridge, deeper branched rift, spaced crust, larger volcano, flat canopy shelves, meteor crater, spaced yardangs/drumlins/blades, flat fan apex, deep karst, continuous spiral and usable star/cell passages |
+| U84 Twenty new landforms | Published and publicly verified | Audit existing thirty; research, author and visually compare fifty distinct formations, including useful traversal and interactive features |
+| U85 Ten terrain packs | Published and publicly verified | Mixed default; specialized extreme peaks, deep cuts and island worlds; ten packs with theme-dependent regional coverage |
+| U86 Fifteen new biomes | Published and publicly verified | Audit existing fifteen; thirty distinct biome palettes, vegetation and environmental dressing in planets and Debug World |
+| U87 Ten new planet themes | Published and publicly verified | Twenty distinct combinations of terrain packs, climate and biome distribution, shown on real miniature planets |
+| U88 Existing formation revisions | Published and publicly verified | Flat plateau siblings, broader spaced buttes, larger hills, glacial bridge, deeper branched rift, spaced crust, larger volcano, flat canopy shelves, meteor crater, spaced yardangs/drumlins/blades, flat fan apex, deep karst, continuous spiral and usable star/cell passages |
+
+U75-U88 are live at [V2](https://majieddd.github.io/worldheart/v2/) and
+[Debug World](https://majieddd.github.io/worldheart/v2/debug.html) as `8f94dc6`,
+through [Pages 34713172378](https://github.com/majieddd/worldheart/actions/runs/34713172378).
+[PR #38](https://github.com/majieddd/worldheart/pull/38) contains the changes;
+260 identity comparisons and 253 public functional checks pass, with a separate
+12.75s public startup and native render pass. Main remains `1374122`.
 
 ## Execution and evidence
 
@@ -108,4 +115,11 @@ and resumes the same body. Game balance was not changed for this rerun.
 the failed first attempts and bounded acceptance limitations. Upper-deck tower
 placement and layered AI routes are not part of these physical commander
 surfaces. Full 99-planet completion and broad hardware coverage remain open.
-Public deployment verification for this generator checkpoint follows.
+The generator checkpoint is published as `8f94dc6` through the Pages run linked
+above. Public verification includes 260 identity comparisons, 206 functional
+gallery checks, 23 critical cases, five deck/geyser cases and nineteen assertions
+across six representative full worlds. The initial public gallery startup was
+15.39s while concurrent suites ran, missing the 15s target. A separate isolated
+public load took 12.75s; its full-lane p99 was 14ms and unit-lane p99 was 7.2ms.
+Both records are retained. All source hashes match the tested release; the
+production root still matches unchanged main.

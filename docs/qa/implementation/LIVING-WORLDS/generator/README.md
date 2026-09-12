@@ -68,3 +68,19 @@ Reproduction uses the tools committed with this branch. Browser tools require
 Chrome installation, and a static server specified by `WH_BASE_URL`. Raw local
 captures remain under `artifacts/living-worlds`; these selected reports are the
 durable collaborator handoff.
+
+## Published verification
+
+Release `8f94dc6` passed [Pages 34713172378](https://github.com/majieddd/worldheart/actions/runs/34713172378).
+[260 identity comparisons](public-identity.json) match every published source
+and asset against the release and unchanged main. Public functional checks:
+[206 gallery cases](public-gallery.json), [23 gameplay cases](public-critical.json),
+[five deck/geyser cases](public-surfaces.json), and
+[nineteen assertions across six full worlds](public-worlds.json).
+
+The first public gallery run passed all functional checks but took 15.39s to
+load while other browser suites ran, exceeding the 15s startup target. The
+[isolated public startup/render measurement](public-debug-performance.json)
+took 12.75s and passed both native render fixtures (14ms and 7.2ms p99). The
+earlier timing failure is preserved in public-gallery.json; it was not relabelled
+as a pass. Broader devices and networks remain unmeasured.

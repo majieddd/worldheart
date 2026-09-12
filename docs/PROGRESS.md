@@ -1,19 +1,21 @@
 # 99 Planets development progress
 
 Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
-Active: Codex on `feature/living-worlds-and-traversal`, based on V2 `42b1ee0`,
+Published and publicly verified: Codex on `feature/living-worlds-and-traversal`, based on V2 `42b1ee0`,
 owns U75-U88: disaster prediction, traversal/pathfinding, forge/relic/HUD fixes,
 weapon and tower advancement, UFO mount, fifty formations, ten terrain packs,
 thirty biomes, twenty themes and the requested existing-shape revisions.
 [Current request ledger and acceptance](qa/implementation/LIVING-WORLDS.md).
-U75-U83 are published and publicly verified as e67d697 on V2, with 250 identity
-comparisons and 49 public interaction cases. PR #38 retains the review. U84-U88
-are implemented and locally verified: 304 tests, 74 route/composition checks
+U75-U88 are live as `8f94dc6` through
+[Pages 34713172378](https://github.com/majieddd/worldheart/actions/runs/34713172378),
+with 260 identity comparisons and 253 public functional checks. PR #38 retains
+the review. Local verification: 304 tests, 74 route/composition checks
 across thirty pack/theme worlds, 207 Debug World checks, five camera maps and
 real deck/geyser/tower-gap input. Every formation, biome and theme was visually
 reviewed. Native rendering passes; a legal ten-wave victory retained 22 heart
-health and extracted to Planet 2 with five items. Generator publication and
-public verification follow; [durable evidence](qa/implementation/LIVING-WORLDS/generator/).
+health and extracted to Planet 2 with five items. Public isolated Debug startup
+was 12.75s, p99 14ms; the initial concurrent 15.39s startup miss is retained.
+Main remains `1374122`. [Durable evidence](qa/implementation/LIVING-WORLDS/generator/).
 
 Published and publicly verified: Codex on `feature/expedition-lobby-and-survival`, based on `665b8f3`,
 owns U60-U74: combined terrain exhibits, theme-owned climate, fifteen biomes,
