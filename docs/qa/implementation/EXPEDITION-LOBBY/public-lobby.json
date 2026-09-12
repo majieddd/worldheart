@@ -1,0 +1,100 @@
+{
+  "scope": "Real lobby input, choices, reload and launch. Earned coin balance injected for the purchase fixture.",
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "results": [
+    {
+      "name": "Default entry opens preparation lobby",
+      "ok": true
+    },
+    {
+      "name": "WASD walks through courtyard",
+      "ok": true,
+      "detail": {
+        "before": [
+          0,
+          0,
+          17
+        ],
+        "after": [
+          0,
+          0,
+          13.874064024089103
+        ]
+      }
+    },
+    {
+      "name": "Right drag rotates courtyard view",
+      "ok": true
+    },
+    {
+      "name": "E reopens a station approached on foot",
+      "ok": true
+    },
+    {
+      "name": "Foundry refuses unaffordable roll",
+      "ok": true
+    },
+    {
+      "name": "Commander and mount choices survive reload",
+      "ok": true
+    },
+    {
+      "name": "Roll charges once and unlocks a new tower",
+      "ok": true,
+      "detail": {
+        "before": {
+          "version": 2,
+          "planetsBeaten": 0,
+          "coins": 120,
+          "towers": [
+            "bolt"
+          ],
+          "commanders": [
+            "commander"
+          ],
+          "bonuses": {},
+          "loadout": "bolt"
+        },
+        "after": {
+          "version": 2,
+          "planetsBeaten": 0,
+          "coins": 60,
+          "towers": [
+            "bolt",
+            "helios"
+          ],
+          "commanders": [
+            "commander"
+          ],
+          "bonuses": {},
+          "loadout": "bolt"
+        }
+      }
+    },
+    {
+      "name": "Discovered tower can become opening loadout",
+      "ok": true
+    },
+    {
+      "name": "Launch uses chosen commander mount and opening card",
+      "ok": true
+    },
+    {
+      "name": "Expedition controls sit below the base upgrade without overlap",
+      "ok": true
+    },
+    {
+      "name": "Existing expedition cannot silently switch commander",
+      "ok": true
+    },
+    {
+      "name": "Explicit fresh expedition permits new commander",
+      "ok": true
+    },
+    {
+      "name": "Phone-width station fits viewport without horizontal overflow",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

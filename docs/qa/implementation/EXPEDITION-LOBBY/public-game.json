@@ -1,0 +1,221 @@
+{
+  "scope": "Instrumented gameplay fixtures; injected setup gold/ore and wave-clear events are not unforced combat evidence.",
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "results": [
+    {
+      "name": "Chosen commander launches",
+      "ok": true,
+      "detail": "marksman"
+    },
+    {
+      "name": "Chosen mount carries into game",
+      "ok": true
+    },
+    {
+      "name": "Global graph exists at boot",
+      "ok": true,
+      "detail": 416925
+    },
+    {
+      "name": "Antipode has a real graph cell",
+      "ok": true
+    },
+    {
+      "name": "Base upgrade raises actual health",
+      "ok": true,
+      "detail": {
+        "before": 900,
+        "after": 1035
+      }
+    },
+    {
+      "name": "Native weapon damage and range grow",
+      "ok": true,
+      "detail": {
+        "before": {
+          "hp": 900,
+          "power": 34,
+          "range": 34,
+          "speed": 3.24
+        },
+        "after": {
+          "kind": "hitscan",
+          "dmg": 38.080000000000005,
+          "cd": 0.55,
+          "range": 35.53,
+          "corridor": 0.8,
+          "pierce": 3,
+          "falloffFrom": 22.99,
+          "falloffMul": 0.55,
+          "kick": 0.26,
+          "trauma": 0.14,
+          "fov": 78,
+          "cross": "ranged"
+        }
+      }
+    },
+    {
+      "name": "Base upgrade raises actual movement speed",
+      "ok": true
+    },
+    {
+      "name": "Stat sync never compounds",
+      "ok": true
+    },
+    {
+      "name": "Mount has real model and damage tradeoff",
+      "ok": true,
+      "detail": {
+        "damage": 24.752000000000006
+      }
+    },
+    {
+      "name": "Sky Ray rises and spends energy",
+      "ok": true
+    },
+    {
+      "name": "Flight release descends",
+      "ok": true
+    },
+    {
+      "name": "Ore crafts a usable card",
+      "ok": true,
+      "detail": "bolt"
+    },
+    {
+      "name": "Craft pays resource and grants free placement",
+      "ok": true
+    },
+    {
+      "name": "Forged card places without gold and consumes its credit",
+      "ok": true
+    },
+    {
+      "name": "Inside death starts recovery instead of defeat",
+      "ok": true
+    },
+    {
+      "name": "Dead commander identity cannot become a pooled warden",
+      "ok": true
+    },
+    {
+      "name": "Pause freezes respawn",
+      "ok": true
+    },
+    {
+      "name": "Respawn is not early",
+      "ok": true
+    },
+    {
+      "name": "Respawn restores same class, inventory and scaled health",
+      "ok": true,
+      "detail": {
+        "id": 3,
+        "hp": 1035,
+        "remaining": 0
+      }
+    },
+    {
+      "name": "Repeated safe deaths recover again",
+      "ok": true
+    },
+    {
+      "name": "Tornado actually lifts a unit",
+      "ok": true,
+      "detail": {
+        "lift": 6.376935063124277,
+        "events": [
+          {
+            "kind": "tornado",
+            "time": 68.64033333333246
+          },
+          {
+            "kind": "quake",
+            "strength": 1,
+            "changedNodes": 25770,
+            "vertices": 16200,
+            "revisionBefore": 3,
+            "revisionAfter": 4,
+            "footprintsPreserved": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "Weather lift settles after storm",
+      "ok": true
+    },
+    {
+      "name": "Quake deforms visible terrain and retains topology",
+      "ok": true,
+      "detail": {
+        "kind": "quake",
+        "strength": 1,
+        "changedNodes": 25770,
+        "vertices": 16200,
+        "revisionBefore": 3,
+        "revisionAfter": 4,
+        "footprintsPreserved": true
+      }
+    },
+    {
+      "name": "Tower footprint ownership survives quake",
+      "ok": true
+    },
+    {
+      "name": "Quake changes shared terrain height",
+      "ok": true,
+      "detail": {
+        "before": 0.6205305084022421,
+        "after": 7.028217786182383
+      }
+    },
+    {
+      "name": "Paid maximum base covers globe",
+      "ok": true
+    },
+    {
+      "name": "Full base removes collapsed antipode wall",
+      "ok": true
+    },
+    {
+      "name": "Global camera is finite and can zoom to full globe",
+      "ok": true
+    },
+    {
+      "name": "Wave ten produces the victory choice",
+      "ok": true
+    },
+    {
+      "name": "Endless begins only by explicit action",
+      "ok": true
+    },
+    {
+      "name": "Endless respects campaign or sandbox ownership",
+      "ok": true
+    },
+    {
+      "name": "Wave eleven has a physical nest and queued enemies",
+      "ok": true,
+      "detail": {
+        "wave": 11,
+        "nests": 1
+      }
+    },
+    {
+      "name": "Enemies have stronger real attack multiplier",
+      "ok": true,
+      "detail": 3.6329999999999996
+    },
+    {
+      "name": "Endless can finish at the base",
+      "ok": true
+    },
+    {
+      "name": "Shared camera harness",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

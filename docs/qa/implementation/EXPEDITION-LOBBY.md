@@ -3,34 +3,39 @@
 Owner: Codex. Active branch `feature/expedition-lobby-and-survival`, based on
 V2 `665b8f3`. September 12, 2026. Tracker #1; current subsystem ownership:
 run progression, commander lifecycle, world inspection, weather/mount adapters
-and lobby. The parallel lobby-reference research is complete. Implementation is in the
-working branch; local acceptance is complete and V2 publication is next.
+and lobby. The parallel lobby-reference research is complete. Implementation and
+public acceptance are complete. Functional build `048055c`
+is live on [V2](https://majieddd.github.io/worldheart/v2/), published through
+[Pages 34694384459](https://github.com/majieddd/worldheart/actions/runs/34694384459).
+Review: [PR #37](https://github.com/majieddd/worldheart/pull/37), stacked on #36.
 
 ## Complete request ledger
 
 | Item | State | Acceptance |
 |---|---|---|
-| U60: Terrain collection between formations and biomes | Verified locally | Large combined production-field samples show the four terrain mixes |
-| U61: Themes own climate | Verified locally | Remove climate selector, use planet theme; shared inspector links remain reproducible |
-| U62: At least fifteen biomes | Verified locally | Fifteen named, visibly distinct registered samples and themed generation |
-| U63: Starting commander choice | Verified locally | Select any of the five commanders before an assault; show health, power and speed |
-| U64: Weapons scale with base level | Verified locally | Native and equipped weapon damage/range and comparison UI agree |
-| U65: Base can grow over the full planet | Verified locally | Increasing late expansion steps reach the antipode; navigation and camera remain valid |
-| U66: Ten-wave cap and opt-in endless | Verified locally | Wave ten resolves once, then explicit continuation runs increasing waves without a terminal cap |
-| U67: More threatening enemies | Verified locally | Actual commander hits increase, with measured survivability and complete-run checks |
-| U68: Safe-base respawn | Verified locally | Death inside territory waits 30 simulation seconds, outside territory defeats; pause and repeat deaths are safe |
-| U69: Commander identity and level scaling | Verified locally | Five distinct health/power/speed profiles; upgrades apply once and speed includes mounts |
-| U70: Movement comfort | Verified locally | Smooth acceleration/traversal and milder bob, including first/third person and reduced motion |
-| U71: Tactical weather | Verified locally | Warned tornado moves units; earthquake visibly alters terrain and routes without rebuilding graph identities |
-| U72: Distinct balanced mounts | Verified locally | Ground speed, water traversal and limited flight have different strengths/costs, real models and controls |
-| U73: Walkable preparation lobby | Verified locally | Screenshot-inspired open courtyard, commander pavilion, tower roller/loadout, mount station and explicit launch |
-| U74: Exploration-funded random tower crafting | Verified locally | Collect planet resource, return to base, spend once for a random buildable tower; no paid currency |
+| U60: Terrain collection between formations and biomes | Published and verified | Large combined production-field samples show the four terrain mixes |
+| U61: Themes own climate | Published and verified | Remove climate selector, use planet theme; shared inspector links remain reproducible |
+| U62: At least fifteen biomes | Published and verified | Fifteen named, visibly distinct registered samples and themed generation |
+| U63: Starting commander choice | Published and verified | Select any of the five commanders before an assault; show health, power and speed |
+| U64: Weapons scale with base level | Published and verified | Native and equipped weapon damage/range and comparison UI agree |
+| U65: Base can grow over the full planet | Published and verified | Increasing late expansion steps reach the antipode; navigation and camera remain valid |
+| U66: Ten-wave cap and opt-in endless | Published and verified | Wave ten resolves once, then explicit continuation runs increasing waves without a terminal cap |
+| U67: More threatening enemies | Published and verified | Actual commander hits increase, with measured survivability and complete-run checks |
+| U68: Safe-base respawn | Published and verified | Death inside territory waits 30 simulation seconds, outside territory defeats; pause and repeat deaths are safe |
+| U69: Commander identity and level scaling | Published and verified | Five distinct health/power/speed profiles; upgrades apply once and speed includes mounts |
+| U70: Movement comfort | Published and verified | Smooth acceleration/traversal and milder bob, including first/third person and reduced motion |
+| U71: Tactical weather | Published and verified | Warned tornado moves units; earthquake visibly alters terrain and routes without rebuilding graph identities |
+| U72: Distinct balanced mounts | Published and verified | Ground speed, water traversal and limited flight have different strengths/costs, real models and controls |
+| U73: Walkable preparation lobby | Published and verified | Screenshot-inspired open courtyard, commander pavilion, tower roller/loadout, mount station and explicit launch |
+| U74: Exploration-funded random tower crafting | Published and verified | Collect planet resource, return to base, spend once for a random buildable tower; no paid currency |
 
 Local verification: 297 unit/shell tests, 126 gallery cases, 31 theme/hydrology cases,
 35 campaign fixtures, 35 sandbox fixtures, 20 input/traversal cases, 13 lobby cases,
 all five camera suites, standalone bundle launch and native rendered weather pass.
 A fresh legal ten-wave victory/extraction reaches planet two with three weapons.
-[Durable evidence](EXPEDITION-LOBBY/). Publication and public checks are the remaining gate.
+Public acceptance: 260 browser cases and 248 asset/source identity comparisons pass.
+The original route remains byte-identical to main `1374122`.
+[Durable evidence](EXPEDITION-LOBBY/). All U60-U74 acceptance items are complete.
 
 ## Sequence and design decisions
 
@@ -124,3 +129,18 @@ file URL launches 99 Planets with no runtime faults. Source syntax, house style
 and generated mirrors pass. Full 99-planet play, broad device coverage and final
 subjective tuning remain ongoing product acceptance, beyond this completed
 feature batch. The lobby is solo; multiplayer remains future work.
+
+## Published acceptance
+
+Functional build `048055c` passed 260 public browser cases: 13 lobby, 35 campaign
+fixtures, 35 sandbox fixtures, 20 input/traversal, 126 gallery and 31 theme/hydrology.
+These exercise the deployed pages with the same bounded setup described above.
+All 248 deployed/source comparisons pass, including stable production identity.
+The public courtyard, combined Terrain exhibit and Mangrove delta captures were
+visually inspected. Public reports and selected captures are retained beside
+the local evidence. No runtime exceptions were reported in these suites.
+
+The final evidence-only checkpoint does not change runtime assets. The published
+functional SHA remains the acceptance reference; build.json identifies the current
+preview checkpoint. Further work is the existing full-campaign, device, balance
+and multiplayer roadmap, not an unimplemented item in this request.
