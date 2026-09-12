@@ -8,11 +8,13 @@ export function worldgenUrl(base, seed, terrain = 'varied', inspect = true, biom
   if(!['auto','temperate','desert','boreal','jungle','volcanic','wetland'].includes(biome))throw Error('Choose a supported climate.');
   if(!Object.hasOwn(PLANET_THEMES,planet))throw Error('Choose a supported planet theme.');
   const url = new URL(base);
+  const hostility=url.searchParams.get('hostility');
   url.search = ''; url.hash = '';
   url.searchParams.set('map', terrain === 'classic' ? 'giant' : 'ninetynine');
   url.searchParams.set('campaign', '0'); url.searchParams.set('seed', String(seed));
   if (terrain !== 'classic') url.searchParams.set('terrain', terrain);
   if (terrain !== 'classic' && planet !== 'auto') url.searchParams.set('planet',planet);
+  if (terrain !== 'classic' && hostility!==null && Number.isFinite(Number(hostility)) && Number(hostility)>=0 && Number(hostility)<=2) url.searchParams.set('hostility',hostility);
   if (inspect) url.searchParams.set('worldgen', '1');
   return url.href;
 }

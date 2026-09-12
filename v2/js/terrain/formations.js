@@ -40,19 +40,20 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     // Broad geological provinces bias neighboring sites toward related forms.
     // They still contain contrasting families, rather than one global recipe.
     const province = geology(dir[0] * 2.4 + 17, dir[1] * 2.4, dir[2] * 2.4);
-    const provincial=pack&&(composition.coverage>=1||composition.coverage>0&&.5+province*.75<composition.coverage), localProfile=provincial?pack:profile;
-    const localEntries=provincial?Object.entries({...pack.weights,...composition.weights,...overrides.weights}):entries;
+    const provincial=pack&&(composition.coverage>=1||composition.coverage>0&&.5+province*.75<composition.coverage), localProfile=composition?.showcase?Object.values(TERRAIN_PACKS)[Math.floor((Math.atan2(dir[2],dir[0])/TAU+.5)*10)%10]:provincial?pack:profile;
+    const localEntries=provincial?Object.entries({...(composition.exclusive?{}:pack.weights),...composition.weights,...overrides.weights}):entries;
     const weightAt = (key, weight) => weight * (key === 'range' ? 1 + province * .7
       : key === 'hills' || key === 'basin' ? 1 - province * .5 : 1 + Math.abs(province) * .2);
     const total = localEntries.reduce((sum, [key, weight]) => sum + weightAt(key, weight), 0);
     let pick = rng() * total, type = localEntries.at(-1)[0];
     for (const [key, weight] of localEntries) { pick -= weightAt(key, weight); if (pick < 0) { type = key; break; } }
     if(reserved.has(i))type=reserved.get(i);
+    if(composition?.showcase)type=Object.keys(LANDFORM_RECIPES)[i%Object.keys(LANDFORM_RECIPES).length];
     if (authored?.type) type = authored.type;
     const a = norm(cross(dir, Math.abs(dir[1]) < .93 ? [0, 1, 0] : [1, 0, 0])), b = cross(dir, a);
     const angle = rng() * TAU, ca = Math.cos(angle), sa = Math.sin(angle), recipe = LANDFORM_RECIPES[type];
     modules.push({ id: i, type, dir, axis: a.map((v, k) => v * ca + b[k] * sa), side: a.map((v, k) => b[k] * ca - v * sa),
-      pack:provincial?composition.pack:mix,noise:localProfile.noise??1, height: localProfile[recipe.relief] * recipe.gain * (.78 + rng() * .44), phase: rng() * TAU,
+      pack:composition?.showcase?Object.keys(TERRAIN_PACKS).find(k=>TERRAIN_PACKS[k]===localProfile):provincial?composition.pack:mix,noise:localProfile.noise??1, height: localProfile[recipe.relief] * recipe.gain * (.78 + rng() * .44), phase: rng() * TAU,
       size: .78 + rng() * .44, roughness: recipe.roughness * (.85 + rng() * .3), province });
     const m = modules.at(-1);
     // Shape parameters derive from the existing phase, not new random draws.
@@ -371,7 +372,8 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         h = m.height * shoulder * (.25 + .75 * roll * roll * roll);
       }
     }
-    if(h<0&&!['karst','kettles'].includes(m.type))h=Math.max(h,-Math.max(0,edge-valley)*.4);
+    if(mix==='canyon'&&h>0)h*=profile.range/Math.max(1,profile.canyon);
+    if(h<0&&!['karst','kettles'].includes(m.type))h=Math.max(h,-Math.max(0,edge-valley)*(mix==='canyon'?.68:.4));
     let visible=m,macro=false;
     for(const rift of exhaustive?rifts:riftCandidates(x,y,z)){
       if(!riftSample(rift,x,y,z,radius,riftScratch))continue;
@@ -383,7 +385,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
       incision, macro, lava, flow, province: visible.province, candidates: list.length, version: LANDFORM_VERSION });
     return h;
   }
-  const volcanoes=modules.filter(m=>m.type==='volcano'),forests=modules.filter(m=>m.type==='forest'),atolls=modules.filter(m=>m.type==='atoll'&&m.height>0);
+  const volcanoes=modules.filter(m=>m.type==='volcano'&&m.height>0),forests=modules.filter(m=>m.type==='forest'),atolls=modules.filter(m=>m.type==='atoll'&&m.height>0);
   function warped(d){
     const [x,y,z]=d;return norm([x+warp(x*4+17,y*4,z*4)*amplitude,y+warp(x*4,y*4+31,z*4)*amplitude,z+warp(x*4,y*4,z*4+53)*amplitude]);
   }
@@ -415,7 +417,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
   }
   return {
     version: LANDFORM_VERSION, seed, radius, mix, settings,
-    modules, height: (x, y, z,detail=null) => evaluate(x, y, z,detail),landmass,lagoonAt,project,coordinates,
+    modules, height: (x, y, z,detail=null) => evaluate(x, y, z,detail),landmass,lagoonAt,project,coordinates,warped,
     volcanic:(x,y,z)=>within(volcanoes,x,y,z),
     canopy:(x,y,z)=>within(forests,x,y,z),
     inspect(x, y, z, exhaustive = false) { const out = {}; evaluate(x, y, z, out, exhaustive); return out; },

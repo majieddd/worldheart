@@ -127,6 +127,7 @@ const terrainProfile=TERRAIN_PROFILES[terrainKey]||TERRAIN_PROFILES.varied;
 
 export const CONFIG = {
   worldgen,
+  hostility:url.has('hostility')?Math.max(0,Math.min(2,Number(url.get('hostility')))):null,
   requestedSeed,
   biomeKey: 'auto',
   planetKey,
@@ -136,11 +137,11 @@ export const CONFIG = {
   planetIndex:campaign?.index || 1,
   mapKey,
   map: MAP,
-  planetRadius: R0,
+  planetRadius: environment?.radius||R0,
   terrainDetail: MAP.terrainDetail,
   navDetail: MAP.navDetail,
   terrainKey: TERRAIN_PROFILES[terrainKey] ? terrainKey : 'varied',
-  terrain: MAP.mode === 'ninetynine' ? {...terrainProfile,ocean:terrainProfile.ocean+environment.oceanShift} : null,
+  terrain: MAP.mode === 'ninetynine' ? {...terrainProfile,ocean:terrainProfile.ocean+environment.oceanShift,flightCeiling:environment.theme==='skyarchipelago'?TERRAIN_PROFILES.sky.flightCeiling:terrainProfile.flightCeiling} : null,
   seaLevel: 0,           // terrain height at the waterline
   walkMaxHeight: 2.05,   // above this the ground is cliff and unwalkable
   walkMaxSlope: 0.95,    // height units per surface unit; above this is cliff

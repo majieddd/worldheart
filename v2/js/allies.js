@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, R, terrainHeight, surfaceTravel } from './world.js';
+import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, R, terrainHeight, navigationHeight, surfaceTravel } from './world.js';
 import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
 import { uploadInstances } from './rig.js';
@@ -301,7 +301,7 @@ class Ally {
     this.hop = 0;        // metres above the ground while airborne
     this.vertVel = 0;
     this.airT = 0;
-    this.geyserStamp = '';
+    this.geyserStamp = ''; this.environmentSpeed=1; this.weatherSpeed=1;
     this.beamRamp = 0;
     this.beamOn = null;
     this.flashT = 0;
@@ -327,7 +327,7 @@ class Ally {
     Object.assign(this.cos, freshSoldierState());
     this._renderDir.copy(this.dir);
     this.weaponM.identity();
-    this.height = terrainHeight(this.dir.x, this.dir.y, this.dir.z);
+    this.height = navigationHeight(this.dir.x, this.dir.y, this.dir.z);
     this._renderHeight = surfaceElevation(this.dir,this.height);
     _tmp.set(0, 1, 0);
     if (Math.abs(this.dir.y) > 0.9) _tmp.set(1, 0, 0);
@@ -780,6 +780,7 @@ export class AllyManager {
   }
 
   _moveToward(a, target, distance) {
+    distance*=(a.environmentSpeed||1)*(a.weatherSpeed||1);
     distance *= a.mountSpeed || 1;
     if (!CONFIG.terrain) return advanceToward(a.dir, target, distance * a.carryMul / R, a.fwd);
     const nav = this.enemies.nav;
@@ -847,7 +848,7 @@ export class AllyManager {
     _tmp2.normalize();
     _driveBearing.copy(_tmp2);
     if (a.swimming) { mul = Math.min(1, mul); a.sprint = false; }
-    const distance = a.type.speed * 1.25 * mul * mag * a.carryMul * (a.mountSpeed || 1) * (a.abilitySpeed || 1) * Math.min(dt, 0.1);
+    const distance = a.type.speed * 1.25 * mul * mag * a.carryMul * (a.mountSpeed || 1) * (a.abilitySpeed || 1) * (a.environmentSpeed || 1) * (a.weatherSpeed || 1) * Math.min(dt, 0.1);
     if(CONFIG.terrain)this._movementNode(a);
     const segments = Math.max(1, Math.ceil(distance / 0.12));
     for (let segment=0; segment<segments; segment++) {
