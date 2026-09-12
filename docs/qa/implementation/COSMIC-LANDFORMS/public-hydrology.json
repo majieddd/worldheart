@@ -1,0 +1,149 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "scope": "Targeted sub-sea movement/placement and normal climate controls with instrumented frame advance",
+  "checks": [
+    {
+      "name": "Seed 4206018157 varied: Dry sub-sea floors exist and mostly connect to the heart",
+      "ok": true,
+      "actual": {
+        "total": 3909,
+        "reached": 3908,
+        "low": -10.33918571472168,
+        "type": "gorge"
+      }
+    },
+    {
+      "name": "Seed 4206018157 varied: Ray picks the actual negative canyon floor",
+      "ok": true,
+      "actual": {
+        "expected": -10.330888127026055,
+        "actual": -10.330888142835363
+      }
+    },
+    {
+      "name": "Seed 4206018157 varied: Water mesh mask leaves dry canyon open",
+      "ok": true
+    },
+    {
+      "name": "Seed 4206018157 varied: Commander walks below sea level without swimming",
+      "ok": true,
+      "actual": {
+        "distance": 2.06217308598016,
+        "height": -9.392778865458896,
+        "swimming": false
+      }
+    },
+    {
+      "name": "Seed 4206018157 varied: Commander aiming origin stays below sea level with the body",
+      "ok": true,
+      "actual": {
+        "height": -8.7987788654589
+      }
+    },
+    {
+      "name": "Seed 4206018157 varied: A real ground enemy exits the sub-sea passage and reaches base",
+      "ok": true,
+      "actual": {
+        "remaining": 0
+      }
+    },
+    {
+      "name": "Seed 4206018157 varied: First-person camera stays finite inside the canyon",
+      "ok": true
+    },
+    {
+      "name": "Seed 4206018157 varied: Flat dry sub-sea ground permits a normal tower footprint",
+      "ok": true,
+      "actual": {
+        "place": 26
+      }
+    },
+    {
+      "name": "Seed 4206018157 varied: Placed tower stands at negative ground height",
+      "ok": true,
+      "actual": {
+        "height": -5.376533703712738
+      }
+    },
+    {
+      "name": "Seed 4206018157 varied: Ocean swimming surface remains above the seabed",
+      "ok": true
+    }
+  ],
+  "records": [
+    {
+      "seed": 4206018157,
+      "checks": [
+        {
+          "name": "Dry sub-sea floors exist and mostly connect to the heart",
+          "ok": true,
+          "actual": {
+            "total": 3909,
+            "reached": 3908,
+            "low": -10.33918571472168,
+            "type": "gorge"
+          }
+        },
+        {
+          "name": "Ray picks the actual negative canyon floor",
+          "ok": true,
+          "actual": {
+            "expected": -10.330888127026055,
+            "actual": -10.330888142835363
+          }
+        },
+        {
+          "name": "Water mesh mask leaves dry canyon open",
+          "ok": true
+        },
+        {
+          "name": "Commander walks below sea level without swimming",
+          "ok": true,
+          "actual": {
+            "distance": 2.06217308598016,
+            "height": -9.392778865458896,
+            "swimming": false
+          }
+        },
+        {
+          "name": "Commander aiming origin stays below sea level with the body",
+          "ok": true,
+          "actual": {
+            "height": -8.7987788654589
+          }
+        },
+        {
+          "name": "A real ground enemy exits the sub-sea passage and reaches base",
+          "ok": true,
+          "actual": {
+            "remaining": 0
+          }
+        },
+        {
+          "name": "First-person camera stays finite inside the canyon",
+          "ok": true
+        },
+        {
+          "name": "Flat dry sub-sea ground permits a normal tower footprint",
+          "ok": true,
+          "actual": {
+            "place": 26
+          }
+        },
+        {
+          "name": "Placed tower stands at negative ground height",
+          "ok": true,
+          "actual": {
+            "height": -5.376533703712738
+          }
+        },
+        {
+          "name": "Ocean swimming surface remains above the seabed",
+          "ok": true
+        }
+      ]
+    }
+  ],
+  "faults": [],
+  "pass": true
+}

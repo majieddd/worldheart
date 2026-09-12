@@ -1,5 +1,6 @@
 import { makeNoise3D, mulberry32, smoothstep } from '../noise.js';
 import { LANDFORM_VERSION, LANDFORM_RECIPES, landformSettings } from './recipes.js';
+import {riftSample} from './rifts.js';
 
 const GRID = 20, TAU = Math.PI * 2;
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -21,6 +22,11 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
   if (settings.groups.some(g => g.id >= count)) throw new Error('Authored group id is outside this layout');
   const overridesById = new Map(settings.groups.map(g => [g.id, g]));
   const entries = Object.entries(settings.weights), geology = makeNoise3D(seed ^ 0x42aef103);
+  const vocabulary=entries.filter(([,weight])=>weight>0).map(([key])=>key),reserved=new Map();
+  // Reserve one widely separated anchor per enabled family before drawing
+  // the remaining weighted mix. Expanding the vocabulary must not silently
+  // remove all foothills or all dry faults from an otherwise varied globe.
+  if(mix==='varied')for(let k=0;k<Math.min(vocabulary.length,count);k++)reserved.set((Math.floor(k*count/vocabulary.length)+(seed%count))%count,vocabulary[k]);
   const modules = [], rotate = rng() * TAU, tilt = rng() * TAU, ct = Math.cos(tilt), st = Math.sin(tilt);
   for (let i = 0; i < count; i++) {
     const y = 1 - 2 * (i + .5) / count, r = Math.sqrt(1 - y * y), az = i * 2.399963229728653 + rotate;
@@ -35,6 +41,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     const total = entries.reduce((sum, [key, weight]) => sum + weightAt(key, weight), 0);
     let pick = rng() * total, type = entries.at(-1)[0];
     for (const [key, weight] of entries) { pick -= weightAt(key, weight); if (pick < 0) { type = key; break; } }
+    if(reserved.has(i))type=reserved.get(i);
     if (authored?.type) type = authored.type;
     const a = norm(cross(dir, Math.abs(dir[1]) < .93 ? [0, 1, 0] : [1, 0, 0])), b = cross(dir, a);
     const angle = rng() * TAU, ca = Math.cos(angle), sa = Math.sin(angle), recipe = LANDFORM_RECIPES[type];
@@ -127,6 +134,26 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     return buckets[key] = modules.filter((m, i) => distances[i] <= limit);
   }
   const warp = makeNoise3D(seed ^ 0x715fba93), amplitude = settings.spacing / radius * .065;
+  const rifts=modules.filter(m=>['grand','labyrinth'].includes(m.type)&&m.height>0),riftScratch={};
+  // A conservative projection bound rejects entire rifts before evaluating
+  // their bends. The bucket half-diagonal covers every point in the cube;
+  // exhaustive inspection keeps the full scan as an independent oracle.
+  const riftBuckets=new Array(GRID**3),riftBounds=rifts.map(m=>{
+    const length=Math.min(radius*.68,m.extent*(m.type==='grand'?2.8:2.3));
+    return {m,u:length/radius+halfDiagonal,v:(m.type==='grand'?length*.6+m.extent*.5+10:m.extent*1.5)/radius+halfDiagonal};
+  });
+  function riftCandidates(x,y,z){
+    const key=bucketKey(x,y,z);if(riftBuckets[key])return riftBuckets[key];
+    const cx=(bucketAxis(x)+.5)*2/GRID-1,cy=(bucketAxis(y)+.5)*2/GRID-1,cz=(bucketAxis(z)+.5)*2/GRID-1;
+    return riftBuckets[key]=riftBounds.filter(({m,u,v})=>
+      cx*m.dir[0]+cy*m.dir[1]+cz*m.dir[2]+halfDiagonal>=.55&&
+      Math.abs(cx*m.axis[0]+cy*m.axis[1]+cz*m.axis[2])<=u&&
+      Math.abs(cx*m.side[0]+cy*m.side[1]+cz*m.side[2])<=v).map(b=>b.m);
+  }
+  const rafts=new Map(modules.filter(m=>m.type==='chaos').map(m=>[m,Array.from({length:7},(_,k)=>{
+    const angle=k*2.39996+m.phase,ring=k===0?0:m.extent*m.size*.44;
+    return {cos:Math.cos(angle),sin:Math.sin(angle),u:Math.cos(angle)*ring,v:Math.sin(angle)*ring,gain:.65+.2*Math.sin(k+1)};
+  })]));
   function evaluate(x, y, z, out, exhaustive = false) {
     // Low-frequency domain bends make the shared valleys meander. The warp is
     // identical on both sides of a join, and leaves room for a full nest exit.
@@ -155,7 +182,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     // Rounded feet meet a pointed crest. A cubic easing all the way to one
     // flattened tall summits into blunt pillars, even with broad footprints.
     const shoulder = smoothstep(0, .3, rise) * Math.pow(rise, 1.35);
-    let h = 0, entrance = 1, incision = 0;
+    let h = 0, entrance = 1, incision = 0, lava=0,flow=0;
     if (shoulder > 0) {
       const u = (x * m.axis[0] + y * m.axis[1] + z * m.axis[2]) * radius;
       const v = (x * m.side[0] + y * m.side[1] + z * m.side[2]) * radius;
@@ -221,7 +248,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         const upland = m.height * smoothstep(0, .3, rise) * bank;
         const width = valley * .75 + extent * (.025 + .025 * Math.sin(u / extent * 5 + m.phase));
         const cut = 1 - smoothstep(width, width + extent * (.14 + .06 * smoothstep(-extent, extent, v)), drain);
-        incision = upland * cut; h = upland - incision;
+        incision = (upland+Math.min(m.height*.45,m.extent*.3)*smoothstep(0,.12,rise)*rise)*cut; h = upland - incision;
       } else if (m.type === 'gorge') {
         // A negative incision through the planet, with stepped inner walls
         // and two long ramps to the shared floor. Water is a separate field.
@@ -231,8 +258,8 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         const strata = .68 * cut + .32 * smoothstep(.32,.68,cut);
         // Depth follows available ramp length. An arbitrarily deep small cell
         // makes a sealed pit whose exits exceed the floor traversal grade.
-        const depth = Math.min(m.height, m.extent * .24);
-        incision = depth * smoothstep(0,.95,rise) * strata;
+        const depth = Math.min(m.height*1.3, m.extent * .32);
+        incision = depth * smoothstep(0,.12,rise)*rise * strata;
         h = -incision;
       } else if (m.type === 'escarpment') {
         // Three long lateral benches form a staircase across one flank.
@@ -248,7 +275,7 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         const branch = Math.abs(v + u * .38 - extent * .18) + Math.max(0, -u) * .7;
         const cut = 1 - smoothstep(3.2, Math.max(9, extent * .28), Math.min(fault, branch));
         const upland = m.height * smoothstep(0, .62, shoulder);
-        incision = (upland + m.height * .25 * smoothstep(0, .95, rise)) * cut;
+        incision = (upland + Math.min(m.height*.8,m.extent*.3) * smoothstep(0,.12,rise)*rise) * cut;
         h = upland - incision;
       } else if (m.type === 'buttes') {
         // Several independent remnants, not a single mesa with a new name.
@@ -269,6 +296,39 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         const breach = smoothstep(valley * .75, valley + extent * .13, Math.abs(v + bend * .35));
         h = m.height * smoothstep(0, .33, rise) * wall * (u > 0 ? breach : 1);
         incision = m.height * Math.max(0,1-radial/(rim*.7)) * smoothstep(0,.25,rise);
+      } else if (m.type === 'volcano') {
+        const radial=Math.hypot(u,v),cone=1-smoothstep(extent*.18,extent*.94,radial);
+        const crater=1-smoothstep(extent*.12,extent*.27,radial);
+        const spill=Math.abs(v+Math.sin(u/extent*4+m.phase)*extent*.07);
+        const chute=(1-smoothstep(2.4,6,spill))*smoothstep(0,extent*.18,u);
+        const apron=smoothstep(0,.3,rise);
+        h=m.height*apron*(cone-Math.max(crater*.48,chute*.55*cone));
+        // One warm lake feeds a downhill stream. The view advects its crust
+        // pattern along this coordinate instead of pulsing the whole mountain.
+        lava=Math.max(crater,chute*(1-smoothstep(extent*.6,extent*.86,u)))*apron;
+        flow=radial;
+        incision=m.height*crater*.48;
+      } else if (m.type === 'chaos') {
+        let blocks=0;
+        for(const raft of rafts.get(m)){
+          const du=u-raft.u,dv=v-raft.v;
+          const a=du*raft.cos+dv*raft.sin,b=dv*raft.cos-du*raft.sin;
+          const slab=1-smoothstep(.7,1,Math.max(Math.abs(a)/(extent*.24),Math.abs(b)/(extent*.16)));
+          blocks=Math.max(blocks,slab*(raft.gain+a/extent*.3));
+        }
+        // Rafts are broad plates, not another set of narrow butte pillars.
+        h=Math.min(m.height,m.extent*.3)*smoothstep(0,.25,rise)*blocks;
+      } else if (m.type === 'spine') {
+        const blade=Math.pow(Math.max(0,1-Math.abs(v)/(extent*.28)),.7);
+        const teeth=.72+.28*Math.abs(Math.sin(u/extent*9+m.phase));
+        const pass=smoothstep(3.5,8,Math.abs(u-extent*.37));
+        h=m.height*smoothstep(0,.32,rise)*blade*teeth*pass;
+      } else if (m.type === 'forest') {
+        const lobes=.72+.28*Math.cos(Math.atan2(v,u)*3+m.phase);
+        const terraces=.55*smoothstep(.04,.34,rise)+.45*smoothstep(.5,.82,rise);
+        h=m.height*terraces*lobes;
+      } else if (m.type === 'grand' || m.type === 'labyrinth') {
+        h=m.type==='labyrinth'?m.height*.65*smoothstep(0,.4,rise):0;
       } else if (m.type === 'dunes') {
         // Parallel wind-shaped crests, with a long windward slope and short
         // slip face. Low relief remains distinct from rocky mountain spines.
@@ -290,13 +350,23 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         h = m.height * shoulder * (.25 + .75 * roll * roll * roll);
       }
     }
-    if (out) Object.assign(out, { id: m.id, group: groupOf[m.id], type: m.type, neighbour: neighbour.id, edge, valley, relief: h,
-      incision, province: m.province, candidates: list.length, version: LANDFORM_VERSION });
+    let visible=m,macro=false;
+    for(const rift of exhaustive?rifts:riftCandidates(x,y,z)){
+      if(!riftSample(rift,x,y,z,radius,riftScratch))continue;
+      const next=h*(1-riftScratch.cut)-riftScratch.depth*riftScratch.cut;
+      if(next<h){macro=true;if(riftScratch.cut>.5)visible=rift;incision=Math.max(incision,h-next);h=next;lava=0;}
+    }
+    if (out) Object.assign(out, { id: visible.id, group: groupOf[visible.id], type: visible.type, neighbour: neighbour.id, edge, valley, relief: h,
+      incision, macro, lava, flow, province: visible.province, candidates: list.length, version: LANDFORM_VERSION });
     return h;
   }
+  const volcanoes=modules.filter(m=>m.type==='volcano'),forests=modules.filter(m=>m.type==='forest');
+  const within=(list,x,y,z)=>{for(const m of list)if(2-2*(x*m.dir[0]+y*m.dir[1]+z*m.dir[2])<(m.extent*.72/radius)**2)return true;return false;};
   return {
     version: LANDFORM_VERSION, seed, radius, settings,
     modules, height: (x, y, z) => evaluate(x, y, z),
+    volcanic:(x,y,z)=>within(volcanoes,x,y,z),
+    canopy:(x,y,z)=>within(forests,x,y,z),
     inspect(x, y, z, exhaustive = false) { const out = {}; evaluate(x, y, z, out, exhaustive); return out; },
     manifest() { return { version: LANDFORM_VERSION, seed, radius, mix, settings, modules, chains }; },
   };

@@ -27,6 +27,16 @@ envelope. Title purchases require Apply upgrades to save and rebuild that same
 planet with the new account profile. See [M5B](qa/implementation/M5B.md) for exact
 implementation/evidence scope and the remaining release gates.
 
+The landforms v6 preview assigns a deterministic stellar class, luminosity,
+orbital distance, water inventory and tectonic activity to every campaign
+planet. Flux is luminosity divided by distance squared. These stylized inputs
+select Garden, Monsoon, Sunbaked, Frost or Ember themes and bias biome bands,
+ocean coverage and formation families. Mixed Landscapes remains the default.
+The inspector can override the theme independently of its climate preset;
+saved campaign definitions retain their generated environment. See
+[terrain recipes](TERRAIN-RECIPES.md) and the
+[cosmic landforms evidence](qa/implementation/COSMIC-LANDFORMS.md).
+
 ## Towers
 
 Six types, in `TOWER_TYPES` at `js/towers.js:16`.
@@ -395,7 +405,7 @@ height and 0.62 grade boundary used by floor routing. Ground enemies prefer
 connected floor routes; emergency mountain travel remains at 8% speed. Ordinary
 nest placement never depends on that emergency passage.
 
-Landforms v5 retains the v2 joins of selected adjacent ranges into open chains of at most three
+Landforms v6 retains the v2 joins of selected adjacent ranges into open chains of at most three
 cells, keeping a continuous spine across their internal seams. Their outer
 valleys remain low. Isolated mountains, foothills and explicit authored groups
 keep separate footprints. Nest scoring adds twice the wet route distance to

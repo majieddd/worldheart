@@ -11,15 +11,17 @@ const geometry=(points,distances)=>{
 };
 
 export class NestAtlasView {
-  constructor(scene,nav){
+  constructor(scene,nav,{renderer=null,camera=null}={}){
     this.group=new THREE.Group();this.group.name='Nest habitat atlas';scene.add(this.group);
     this.material=dottedPathMaterial();this.globalMaterial=dottedPathMaterial(0xb6c8da,4);
     this.routeCount=0;this.nav=nav;
+    this.renderer=renderer;this.camera=camera;this.scene=scene;
     this.routesReady=this.buildApproaches();
   }
   async buildApproaches(){
     const nav=this.nav;
     const used=new Set(),points=[],distances=[],p=new THREE.Vector3(),q=new THREE.Vector3();
+    let yielded=performance.now();
     for(let k=0;k<17;k++){
       let node=nestSite(nav,nav.portalNodes[k%nav.portalNodes.length],nav.fieldCenter,.5,used,p);
       if(node<0)continue;used.add(node);let count=0;
@@ -27,11 +29,26 @@ export class NestAtlasView {
         const next=nav.march.next[node];if(next<0||next===node)break;
         for(const i of [node,next]){nav.nodeDir(i,p);surfacePoint(p,q).addScaledVector(p,.35);points.push(q.x,q.y,q.z);distances.push(nav.march.dist[i]);}
         node=next;
+        if(count%32===0&&performance.now()-yielded>=5){await yieldTask();yielded=performance.now();}
       }
       if(node===nav.heartNode)this.routeCount++;
-      await yieldTask();
+      await yieldTask();yielded=performance.now();
     }
-    this.group.add(new THREE.LineSegments(geometry(points,distances),this.material));
+    await this.reveal(new THREE.LineSegments(geometry(points,distances),this.material));
+  }
+  async reveal(lines){
+    if(this.renderer&&this.camera){
+      // First use of the dotted shader can stall for a full second. Compile
+      // outside the visible scene and wait for the driver's parallel job.
+      // The game's HDR pass uses linear output; restore renderer state before
+      // awaiting so ordinary frames can continue during compilation.
+      const stage=new THREE.Scene();stage.add(lines);
+      const prior=this.renderer.outputColorSpace;let ready;
+      try{this.renderer.outputColorSpace=THREE.LinearSRGBColorSpace;ready=this.renderer.compileAsync(stage,this.camera,this.scene);}
+      finally{this.renderer.outputColorSpace=prior;}
+      await ready;
+    }
+    this.group.add(lines);
   }
   update(dt){if(this.group.visible){advanceDots(this.material,dt);advanceDots(this.globalMaterial,dt);}}
   async build(){
@@ -51,7 +68,7 @@ export class NestAtlasView {
       const j=nav.adj[e];if(!border[j]||j<=i)continue;
       for(const k of [i,j]){nav.nodeDir(k,p);surfacePoint(p,q).addScaledVector(p,.4);exact.push(q.x,q.y,q.z);exactDistances.push(nav.march.dist[k]);}
     }if(i%32===0)await cooperate();}
-    this.group.add(new THREE.LineSegments(geometry(exact,exactDistances),this.material));await yieldTask();
+    await this.reveal(new THREE.LineSegments(geometry(exact,exactDistances),this.material));await yieldTask();
     const started=performance.now();
     this.atlas=await createTerrainAtlas({radius:R,heart:nav.nodeDir(nav.heartNode,p).toArray(),
       waterAt:(x,y,z,h)=>waterDepthAt(p.set(x,y,z),h),heightAt:(x,y,z)=>terrainHeight(x,y,z,false),slopeAt:(x,y,z)=>slopeAt(p.set(x,y,z)),pause:yieldTask});
@@ -67,13 +84,19 @@ export class NestAtlasView {
       }
       if(i%32===31)await cooperate();
     }
-    for(const pair of atlas.contours)for(const [a,b] of pair){
-      const dir=atlas.verts[a].map((v,k)=>v+atlas.verts[b][k]),l=Math.hypot(...dir);
-      const d=Number.isFinite(atlas.distance[a])?atlas.distance[a]:Number.isFinite(atlas.distance[b])?atlas.distance[b]:a*.4;
-      sample(dir.map(v=>v/l),d);
+    let contours=0;
+    for(const pair of atlas.contours){
+      for(const [a,b] of pair){
+        const dir=atlas.verts[a].map((v,k)=>v+atlas.verts[b][k]),l=Math.hypot(...dir);
+        const d=Number.isFinite(atlas.distance[a])?atlas.distance[a]:Number.isFinite(atlas.distance[b])?atlas.distance[b]:a*.4;
+        sample(dir.map(v=>v/l),d);
+      }
+      // Coast-rich planets can have thousands of contour segments. They
+      // need the same cooperative budget as the preceding route samples.
+      if(++contours%16===0)await cooperate();
     }
     if(atlas.root>=0){sample(atlas.verts[atlas.root],atlas.distance[atlas.root]);sample(nav.nodeDir(nav.heartNode,p).toArray(),0);}
-    this.group.add(new THREE.LineSegments(geometry(points,distances),this.globalMaterial));
+    await this.reveal(new THREE.LineSegments(geometry(points,distances),this.globalMaterial));
     this.stats={...atlas.stats,exact:this.exactNodes.length,buildMs:performance.now()-started,vertices:points.length/3};
     return this.stats;
   }

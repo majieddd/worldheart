@@ -1,4 +1,5 @@
 import { eraForPlanet } from './weapons.js';
+import { planetEnvironment } from './planet-environments.js';
 
 export const CAMPAIGN_LENGTH=99;
 export const CONTENT_VERSION=1;
@@ -37,6 +38,7 @@ export function planetDefinition(index,seed) {
     {name:'Riftshore',terrain:'varied',seed:((seed+104729)>>>0)||1,enemyHealth:1,pressure:'wings',brief:'Ravines, plateaus and mountain passes reward safe crossings. Prepare for more flying creatures.'},
     {name:'Crownfall',terrain:'varied',seed:((seed+209458)>>>0)||1,enemyHealth:1.04,pressure:'armor',brief:'Giant peaks rise above lower hills and canyon routes. Cryo claims ice; Mortars claim hot stone. Expect heavy armor.'},
   ][index-1]);
+  planet.environment=planetEnvironment(planet.seed);
   return planet;
 }
 export function campaignRoute(seed){return Array.from({length:CAMPAIGN_LENGTH},(_,i)=>planetDefinition(i+1,seed));}

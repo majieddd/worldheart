@@ -1,0 +1,36 @@
+{
+  "scope": "Native 10-second whole-globe inspector frame pacing and construction, no injected combat",
+  "base": "http://127.0.0.1:8139",
+  "faults": [],
+  "atlas": {
+    "nodes": 40962,
+    "edgeCount": 91552,
+    "potential": 12812,
+    "connected": 12812,
+    "disconnected": 0,
+    "floor": 32042,
+    "reached": 31973,
+    "exact": 44571,
+    "buildMs": 4275.79999999702,
+    "vertices": 95136
+  },
+  "totalBuildMs": 10726,
+  "construction": {
+    "longTasks": 2,
+    "maxMs": 1160
+  },
+  "frames": {
+    "count": 1440,
+    "p50": 6.900000000001455,
+    "p95": 7.100000000002183,
+    "p99": 7.200000000000728,
+    "max": 13.299999999999272,
+    "drawCalls": 103,
+    "triangles": 789920,
+    "memory": {
+      "geometries": 254,
+      "textures": 10
+    }
+  },
+  "pass": false
+}

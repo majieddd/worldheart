@@ -6,11 +6,21 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright');
 const base=(process.env.WH_BASE_URL||'http://127.0.0.1:8139').replace(/\/$/,''),out=resolve(process.argv[2]||'artifacts/terrain-atlas/atlas-performance');mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1280,height:720}}),faults=[];
+const profiling=process.argv.includes('--profile');
 page.on('pageerror',e=>faults.push(String(e)));const result={scope:'Native 10-second whole-globe inspector frame pacing and construction, no injected combat',base,faults};
 try{
  await page.goto(`${base}/?map=ninetynine&campaign=0&seed=12345&terrain=varied&worldgen=1`);await page.waitForFunction(()=>window.WH?.worldgen,{},{timeout:180000});
  await page.evaluate(()=>{window.__atlasTasks=[];window.__atlasObserver=new PerformanceObserver(list=>__atlasTasks.push(...list.getEntries().map(e=>e.duration)));__atlasObserver.observe({type:'longtask',buffered:false});});
+ const cdp=profiling?await page.context().newCDPSession(page):null;
+ if(cdp){await cdp.send('Profiler.enable');await cdp.send('Profiler.start');}
  const start=Date.now();await page.locator('#worldgen-paths').check();result.atlas=await page.evaluate(()=>WH.worldgen.atlasReady);result.totalBuildMs=Date.now()-start;
+ if(cdp){
+  const {profile}=await cdp.send('Profiler.stop');writeFileSync(resolve(out,'cpu.cpuprofile'),JSON.stringify(profile));
+  const nodes=new Map(profile.nodes.map(n=>[n.id,n])),time=new Map();
+  for(let i=0;i<profile.samples.length;i++)time.set(profile.samples[i],(time.get(profile.samples[i])||0)+profile.timeDeltas[i]);
+  result.cpuProfile=[...time].sort((a,b)=>b[1]-a[1]).slice(0,25).map(([id,microseconds])=>({selfMs:microseconds/1000,...nodes.get(id).callFrame}));
+  result.profileScope='Sampling profiler adds overhead; diagnostic timing only';
+ }
  result.construction=await page.evaluate(()=>{__atlasObserver.disconnect();return {longTasks:__atlasTasks.length,maxMs:Math.max(0,...__atlasTasks)};});
  await page.locator('#worldgen-globe').click();await page.locator('#worldgen-panel summary').click();await page.waitForTimeout(2000);
  result.frames=await page.evaluate(()=>new Promise(resolve=>{

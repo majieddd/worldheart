@@ -5,6 +5,7 @@ import { worldgenUrl, rememberWorld } from './worldgen.js';
 import { FORMATIONS, ECOLOGY, terrainHeight, biomeAt, waterDepthAt } from './world.js';
 import { NestAtlasView } from './nest-atlas-view.js';
 import { BIOME_REGIMES } from './terrain/ecology.js';
+import { PLANET_THEMES } from './run/planet-environments.js';
 import { LANDFORM_RECIPES } from './terrain/recipes.js';
 import { surveyLandmarks } from './terrain/landmarks.js';
 
@@ -20,7 +21,7 @@ export class WorldgenPanel {
     let history = [];
     try { history = JSON.parse(browserStorage.getItem('worldHistory') || '[]'); }
     catch { /* A denied or invalid local history cannot prevent inspection. */ }
-    this.history = rememberWorld(history, {seed: CONFIG.requestedSeed, terrain: this.terrain, biome: CONFIG.biomeKey});
+    this.history = rememberWorld(history, {seed: CONFIG.requestedSeed, terrain: this.terrain, biome: CONFIG.biomeKey, planet: CONFIG.planetKey});
     let saved = true;
     try { browserStorage.setItem('worldHistory', JSON.stringify(this.history)); } catch { saved = false; }
 
@@ -32,13 +33,15 @@ export class WorldgenPanel {
         <form id="worldgen-form">
           <label>Terrain<select id="worldgen-terrain">${Object.entries(labels).map(([key, label]) => `<option value="${key}">${label}</option>`).join('')}</select></label>
           <label>Climate<select id="worldgen-biome">${Object.entries(BIOME_REGIMES).map(([key,value])=>`<option value="${key}">${value.name}</option>`).join('')}</select></label>
+          <label>Planet theme<select id="worldgen-planet">${Object.entries(PLANET_THEMES).map(([key,value])=>`<option value="${key}">${value.name}</option>`).join('')}</select></label>
           <button class="btn primary" type="button" id="worldgen-new">Generate world</button>
           <label>Seed<input id="worldgen-seed" inputmode="numeric" pattern="[0-9]+" required aria-describedby="worldgen-status"></label>
           <button class="btn" type="submit">Load seed</button>
         </form>
-        <label>Recent worlds<select id="worldgen-history">${this.history.map((x, i) => `<option value="${i}">${x.seed} · ${labels[x.terrain]} · ${BIOME_REGIMES[x.biome||'auto']?.name||'Planet mix'}</option>`).join('')}</select></label>
+        <label>Recent worlds<select id="worldgen-history">${this.history.map((x, i) => `<option value="${i}">${x.seed} · ${labels[x.terrain]} · ${BIOME_REGIMES[x.biome||'auto']?.name||'Planet mix'} · ${PLANET_THEMES[x.planet||'auto'].name}</option>`).join('')}</select></label>
         <div class="worldgen-actions"><button class="btn" id="worldgen-home">Base area</button><button class="btn" id="worldgen-peak">Highest peak</button><button class="btn" id="worldgen-globe">Whole planet</button></div>
         <label id="worldgen-formation-label">Explore a formation<select id="worldgen-formation"><option value="">Choose a landform</option></select></label>
+        <label class="worldgen-toggle"><input type="checkbox" id="worldgen-daylight" checked> Daylight inspection</label>
         <label class="worldgen-toggle"><input type="checkbox" id="worldgen-paths"> Show nest habitat and routes</label>
         <p id="worldgen-atlas" hidden>Cyan outlines: valid battlefield areas and approaches. Pale outlines: potential habitat across the globe. Moving dots follow shared routes toward the base.</p>
         <div class="worldgen-actions"><button class="btn" id="worldgen-copy">Copy seed link</button><a class="btn" id="worldgen-play" target="_blank" rel="noopener">Play this seed</a></div>
@@ -49,15 +52,19 @@ export class WorldgenPanel {
     document.body.append(panel); document.body.classList.add('worldgen');
     const el = id => panel.querySelector('#worldgen-' + id);
     this.status = el('status'); el('seed').value = CONFIG.requestedSeed; el('terrain').value = this.terrain; el('biome').value = ECOLOGY?.manifest().key || 'auto';
-    el('play').href = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain, false, CONFIG.biomeKey);
+    el('planet').value=CONFIG.planetKey;
+    this.inspectionLight=new THREE.DirectionalLight(0xffeddb,1.9);
+    this.inspectionLight.name='Inspection daylight';scene.add(this.inspectionLight);
+    el('daylight').onchange=()=>{this.inspectionLight.visible=el('daylight').checked;};
+    el('play').href = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain, false, CONFIG.biomeKey,CONFIG.planetKey);
     el('form').onsubmit = event => { event.preventDefault(); this.generate(el('seed').value, el('terrain').value); };
     el('new').onclick = () => {
       const data = new Uint32Array(1); crypto.getRandomValues(data);
       this.generate((data[0] || 1) === CONFIG.requestedSeed ? (data[0] % 0xfffffffe) + 1 : data[0] || 1, el('terrain').value);
     };
-    el('history').onchange = () => { const selected = this.history[Number(el('history').value)]; this.generate(selected.seed, selected.terrain, selected.biome||'auto'); };
+    el('history').onchange = () => { const selected = this.history[Number(el('history').value)]; this.generate(selected.seed, selected.terrain, selected.biome||'auto',selected.planet||'auto'); };
     el('copy').onclick = async () => {
-      const link = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain, true, CONFIG.biomeKey);
+      const link = worldgenUrl(location.href, CONFIG.requestedSeed, this.terrain, true, CONFIG.biomeKey,CONFIG.planetKey);
       try { await navigator.clipboard.writeText(link); this.status.textContent = 'Seed link copied.'; }
       catch { el('link').hidden = false; el('link').value = link; el('link').focus(); el('link').select(); this.status.textContent = 'Copy the selected seed link.'; }
     };
@@ -74,7 +81,7 @@ export class WorldgenPanel {
     el('home').onclick = () => this.focus(home, 115);
     el('peak').onclick = () => this.focus(peakDir, Math.max(65, CONFIG.terrain?.range || 40));
     el('globe').onclick = () => this.focus(home, CONFIG.planetRadius * 2.8);
-    this.landmarks = FORMATIONS ? surveyLandmarks(FORMATIONS,terrainHeight,nav.fieldCenter,CONFIG.map.fieldTheta,(x,y,z,h)=>waterDepthAt(new THREE.Vector3(x,y,z),h)>0) : [];
+    this.landmarks = FORMATIONS ? surveyLandmarks(FORMATIONS,terrainHeight,nav.fieldCenter,CONFIG.map.fieldTheta,(x,y,z,h)=>waterDepthAt(new THREE.Vector3(x,y,z),h)>0,(x,y,z,h)=>biomeAt(new THREE.Vector3(x,y,z),h)) : [];
     el('formation-label').hidden = !FORMATIONS;
     for(const [i,site]of this.landmarks.entries()){
       const option=document.createElement('option');option.value=String(i);
@@ -90,6 +97,11 @@ export class WorldgenPanel {
     el('paths').disabled = !CONFIG.terrain;
     el('paths').onchange = () => { if (!this.paths) this.buildRoutes(); this.paths.visible = el('paths').checked; el('atlas').hidden = !el('paths').checked; };
     el('info').textContent = `Seed ${CONFIG.requestedSeed} · generated ${CONFIG.seed} · ${FORMATIONS ? 'landforms v' + FORMATIONS.version : 'classic terrain'} · peak ${nav.height[peak].toFixed(1)}m${ECOLOGY?' · '+ECOLOGY.manifest().regime+' climate':''}`;
+    if(CONFIG.environment){
+      const e=CONFIG.environment;
+      el('info').textContent+=` · ${e.name} · ${e.star.name} (${e.star.type}) · ${e.orbitAU.toFixed(2)} AU · ${e.flux.toFixed(2)}x Earth sunlight`;
+      if(CONFIG.biomeKey==='auto')el('info').textContent+=' · Wet equator, dry subtropics, temperate belts, cold poles. Star and orbit shift these bands.';
+    }
     this.status.textContent = saved ? 'Campaign and rewards are separate from this sandbox.' : 'History could not be saved. Copy a seed link to keep this world.';
     this.focus(home, 115);
   }
@@ -97,12 +109,13 @@ export class WorldgenPanel {
   focus(dir, height) {
     this.rig.keys.clear(); this.rig.velLon = this.rig.velLat = 0;
     this.rig.tiltOffset = 0; this.rig.flyTo(dir, height, .6);
+    this.inspectionLight.position.copy(dir).multiplyScalar(1000);
   }
 
-  generate(input, terrain, biome=this.panel.querySelector('#worldgen-biome').value) {
+  generate(input, terrain, biome=this.panel.querySelector('#worldgen-biome').value,planet=this.panel.querySelector('#worldgen-planet').value) {
     try {
       if (!/^\d+$/.test(String(input).trim())) throw Error('Enter a whole-number seed.');
-      const url = worldgenUrl(location.href, Number(input), terrain, true, biome);
+      const url = worldgenUrl(location.href, Number(input), terrain, true, biome,planet);
       this.status.textContent = 'Generating terrain and checking routes…';
       this.panel.setAttribute('aria-busy', 'true');
       for (const el of this.panel.querySelectorAll('button,input,select')) el.disabled = true;
@@ -111,7 +124,7 @@ export class WorldgenPanel {
   }
 
   buildRoutes() {
-    this.routeView = new NestAtlasView(this.scene,this.nav); this.paths=this.routeView.group;
+    this.routeView = new NestAtlasView(this.scene,this.nav,{renderer:this.ui.renderer,camera:this.rig.camera}); this.paths=this.routeView.group;
     this.routeCount=this.routeView.routeCount;
     this.status.textContent='Checking battlefield approaches and surveying the whole planet…';
     this.routeView.routesReady.then(()=>{this.routeCount=this.routeView.routeCount;},()=>{});
@@ -121,5 +134,5 @@ export class WorldgenPanel {
       return stats;
     }).catch(error=>{this.status.textContent='Terrain survey could not finish. Reload this world to retry.';console.error(error);return null;});
   }
-  update(dt){this.routeView?.update(dt);}
+  update(dt){this.routeView?.update(dt);if(this.rig.camera)this.inspectionLight.position.copy(this.rig.camera.position);}
 }

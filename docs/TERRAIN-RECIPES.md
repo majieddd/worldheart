@@ -7,7 +7,7 @@ keep their original terrain formula.
 
 ## Authoring boundaries
 
-`js/terrain/recipes.js` holds version 5, fourteen group recipes and four relief
+`js/terrain/recipes.js` holds version 6, twenty group recipes and four relief
 mixes. `js/terrain/formations.js` lays out and samples those groups. `world.js`
 composes their relief with continents and small surface detail, then applies
 elemental stone rules and the independent `terrain/ecology.js` climate fields.
@@ -30,11 +30,17 @@ resulting surface, rather than drawing hidden routes through blocked mountains.
 | Winding Canyon | Negative incision with winding stepped walls and long end ramps | Dry sub-sea passage, with depth bounded by available exit length |
 | Staircase escarpment | Three lateral benches crossed by a diagonal ramp | Multiple connected positions beside a steep flank |
 | Glacial trough | Broad U-shaped floor between unequal shoulders | A wide corridor distinct from narrow ravines |
+| Great continental rift | Long negative trunk with a side branch and extended end ramps | A deep route crosses several ordinary formation regions |
+| Noctis labyrinth | Offset crossing faults and surviving upland islands | Multiple intersecting channels, inspired by Mars |
+| Rafted crust blocks | Broad tilted angular slabs | Gaps through broken crust, inspired by Europa |
+| Razorback ridge | Narrow toothed wall with a pass | A strong linear barrier, inspired by Iapetus |
+| Lava spill volcano | Crater lake, breached rim and downhill lava channel | Hot elevated positions around an active flow |
+| Canopy highlands | Broad lobed shelves and bounded forest clusters | Wooded highlands with stepped flanks |
 
 Mixed landscapes, Giant peaks, Deep canyons and Ocean islands are **relief mixes**,
 not exclusive biome assignments. Any group can have neutral, hot or cold
 surfaces. All four mixes include hills, tall ranges and incised uplands, with
-different proportions and scales. No individual battlefield guarantees all fourteen
+different proportions and scales. No individual battlefield guarantees all twenty
 families. Low-frequency geology biases neighbouring family choices and peak
 amplitudes, rather than distributing every recipe with identical probability.
 Temperature, altitude snow, water and foliage remain separate fields.
@@ -44,8 +50,13 @@ Mixed Landscapes is the default across all 99 campaign definitions. Other
 relief mixes remain explicit sandbox/inspector options. Distinct per-planet seeds
 and climate preserve variety, including distinct opening-planet seeds.
 
-Each accepted planet seed selects a Temperate, Desert, Boreal, Jungle, Volcanic
-or Wetlands climate bias. Continuous latitude, temperature and moisture fields produce meadow,
+Each requested planet seed selects an M/K/G/F star and an orbital distance.
+Flux L/a^2 shifts temperature; water inventory and tectonic activity separately
+produce Garden, Monsoon, Sunbaked, Frost and Ember themes. Planet Mix has
+wet equatorial, dry subtropical, wetter temperate and cold polar belts, with
+smaller longitude noise and an altitude cooling term. Explicit Temperate,
+Desert, Boreal, Jungle, Volcanic and Wetlands overrides remain available.
+The climate fields produce meadow,
 woodland, jungle, wetland, savanna, desert and tundra regions across multiple formation
 families. Tectonic activity independently creates volcanic regions. Hot stone and
 altitude/cold rules take precedence as volcanic/alpine surface biomes. Biome dressing blends the existing palette and
@@ -75,13 +86,16 @@ climates remain seeded; inspector choices do not overwrite campaign saves.
    Junctions widen naturally. Canyon and basin outlets join that same network.
 5. Measured neighbour spacing sets the shoulders. Feet ease into the floor;
    high crests retain a pointed profile. Mesa tops deliberately stay flat.
-   Winding Valley/ravines cut between raised banks. Fault relief can descend
-   below sea level by up to 25% of group height. Winding Canyon is a true
-   negative incision, with depth limited to 24% of its available cell extent
-   so the exit ramps remain traversable. Broad outer joins stay at zero relief.
+   Winding Valley cuts between raised banks. Ravines and faults also descend
+   below sea level; depth is limited by footprint and available exit length.
+   Winding Canyon is a negative incision capped at 32% of its cell extent.
+   The longer continental rift and labyrinth overlays cross cell joins;
+   other outer joins stay at zero relief.
    This height field does not represent caves or overhangs.
 6. Continental blending creates coasts and islands. Negative incisions begin
    beyond the shoreline band; inland depressions stay dry even below sea level.
+   A spherical coast-distance field limits negative depth to 0.4 times safe
+   distance from shore, avoiding steep dams from noisy coastal blending.
    A shared continental water mask controls the water shader, unit/weapon
    grounding, swimming, placement, ray picking, camera and navigation costs.
    Dry cliff faces never inherit the water shortcut. Climate/decor dress the
@@ -100,6 +114,8 @@ climates remain seeded; inspector choices do not overwrite campaign saves.
    height above 2m and recipe relief above 1m), 95% connected dry floor, and at
    least eight sampled reachable floor positions with raised terrain on opposite
    sides. A minimum 16m peak prevents the mixed front becoming a flat plain.
+   Version 6 separately requires 95% of dry walkable floor below -1m to connect,
+   so a large connected surface cannot conceal isolated deep canyon floors.
    This acceptance is not relaxed during the bounded 32-seed search. The higher
    Giant-peaks requirement remains. The geometry itself supplies the passages;
    navigation does not carve invisible shortcuts.
@@ -184,8 +200,9 @@ bound also controls the picking shell and camera clearance fallback.
 The [implementation ledger](qa/implementation/MODULAR-LANDFORMS.md) records
 results and retained failures. Whole-campaign, broader seed/device and owner
 visual/balance acceptance remain separate from these fixtures.
-The v5 [owner refinement and adversarial ledger](qa/implementation/LANDFORM-BIOMES.md)
-records the current batch. The v4 [research and adversarial ledger](qa/implementation/TERRAIN-ATLAS.md)
+The v6 [cosmic landforms ledger](qa/implementation/COSMIC-LANDFORMS.md)
+records the current batch. The v5 [owner refinement ledger](qa/implementation/LANDFORM-BIOMES.md)
+and v4 [research and adversarial ledger](qa/implementation/TERRAIN-ATLAS.md)
 records the bounded second pass and its integration evidence.
 
 ## Research translated into this implementation

@@ -42,7 +42,7 @@ export class CampaignPanel {
     const terrain={varied:'Highlands',canyon:'Deep canyons',alpine:'Giant peaks',ocean:'Ocean shores'};
     this.badge.textContent=departing?'Checkpoint prepared · Departure pending':`Planet ${e.planet} / ${e.limit} · ${this.api.name}${won?' · Extract':complete?' · Complete':''}`;
     this.badge.hidden=this.game.state==='title';this.badge.disabled=!won&&!complete;
-    this.intro.textContent=`Planet ${e.planet} of ${e.limit}: ${current.name}. ${current.region} · ${terrain[current.terrain]} · ${current.era} weapons.`;
+    this.intro.textContent=`Planet ${e.planet} of ${e.limit}: ${current.name}. ${current.region} · ${current.environment?.name||terrain[current.terrain]} · ${current.era} weapons.`;
     this.briefing.querySelector('p').textContent=`${current.brief} ${current.boss?`Final guardian: ${current.boss.name}. ${bossBrief(current.boss.style)} `:''}Previously extracted weapons are safe. Current assault loot is lost on defeat or refresh; cleared-planet salvage is saved. Reloading an assault starts wave 1 with no duplicate wave coins.`;
     this.ui.el['btn-begin'].textContent=won?'Return to cleared planet':complete?'View expedition receipt':`Defend ${this.api.name}`;
     this.extract.hidden=!won&&!departing;

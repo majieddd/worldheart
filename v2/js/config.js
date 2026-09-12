@@ -2,6 +2,7 @@
 // css/style.css :root is canonical for the DOM HUD. Keep the two in sync with DESIGN.md.
 
 import { BIOME_REGIMES } from './terrain/ecology.js';
+import { PLANET_THEMES, planetEnvironment } from './run/planet-environments.js';
 import { campaignLaunch } from './modes/campaign-launch.js';
 import { browserStorage, isPreviewPath } from './storage.js';
 const url = new URLSearchParams(location.search);
@@ -123,11 +124,16 @@ const rawSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
 const requestedSeed=worldgen&&(!Number.isInteger(rawSeed)||rawSeed<1||rawSeed>0xffffffff)?20260830:rawSeed;
 const campaign=campaignLaunch(!worldgen&&mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':preview),requestedSeed);
 const terrainKey = campaign?.terrain || url.get('terrain') || 'varied';
+const planetKey=!campaign&&Object.hasOwn(PLANET_THEMES,url.get('planet'))?url.get('planet'):'auto';
+const environment=MAP.mode==='ninetynine'?campaign?.environment||planetEnvironment((requestedSeed>>>0)||1,planetKey):null;
+const terrainProfile=TERRAIN_PROFILES[terrainKey]||TERRAIN_PROFILES.varied;
 
 export const CONFIG = {
   worldgen,
   requestedSeed,
   biomeKey: !campaign && Object.hasOwn(BIOME_REGIMES,url.get('biome')) ? url.get('biome') : 'auto',
+  planetKey,
+  environment,
   seed: campaign?.seed || requestedSeed,
   campaign,
   planetIndex:campaign?.index || 1,
@@ -137,7 +143,7 @@ export const CONFIG = {
   terrainDetail: MAP.terrainDetail,
   navDetail: MAP.navDetail,
   terrainKey: TERRAIN_PROFILES[terrainKey] ? terrainKey : 'varied',
-  terrain: MAP.mode === 'ninetynine' ? (TERRAIN_PROFILES[terrainKey] || TERRAIN_PROFILES.varied) : null,
+  terrain: MAP.mode === 'ninetynine' ? {...terrainProfile,ocean:terrainProfile.ocean+environment.oceanShift} : null,
   seaLevel: 0,           // terrain height at the waterline
   walkMaxHeight: 2.05,   // above this the ground is cliff and unwalkable
   walkMaxSlope: 0.95,    // height units per surface unit; above this is cliff

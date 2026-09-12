@@ -123,6 +123,20 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 ### Terrain traversal and flight
 
+U48-U51 is published and publicly verified in V2 through PR #34 and functional
+build `2481d95`: 284 tests, 54 public browser cases and 214 asset/source checks.
+It extends this in landforms v6: longer continental rifts, intersecting
+Noctis labyrinths, tilted crust rafts, razorback walls, canopy highlands and
+active lava-spill volcanoes. Planet Mix has clear equatorial/subtropical/
+temperate/polar climate belts. Seeded star luminosity and orbital distance
+provide a thermal bias; water inventory and tectonics vary separately across
+Garden, Monsoon, Sunbaked, Frost and Ember worlds. The generator can select a
+theme and preserves it in history/share/play links; campaign briefings name
+the generated environment. A coast-distance ramp keeps inland cuts dry, and
+deep-floor connectivity has its own acceptance gate. Research, visual
+iterations and current acceptance are in the
+[cosmic-landform ledger](qa/implementation/COSMIC-LANDFORMS.md).
+
 U44-U47 implements the owner's next refinement in landforms v5. Mixed Landscapes
 is the campaign default. Hill Fields, larger foothills and 7-12 separated buttes
 sit beside preserved calderas and terraced plateaus. Winding Valley names the
