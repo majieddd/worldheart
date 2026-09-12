@@ -26,11 +26,12 @@ export function placeActiveFeatures(field,radius,ground,biome,water,seed){
 // one coloured mesh and moving particles into one instance batch per feature.
 export function buildActiveFeature(key){
  const f=ACTIVE_FEATURES[key],root=new THREE.Group(),parts=[],c=new THREE.Color(),matrix=new THREE.Matrix4();
+ root.name='active-'+key;root.userData.feature=key;
  const add=(geo,color,x=0,y=0,z=0,rx=0)=>{geo.rotateX(rx);geo.translate(x,y,z);parts.push([geo.index?geo.toNonIndexed():geo,color]);};
  const ring=(r,color,y=.08)=>add(new THREE.TorusGeometry(r,.16,5,24),color,0,y,0,Math.PI/2);
  const pool=(r,color)=>add(new THREE.CylinderGeometry(r,r,.08,24),color,0,.05);
  if(key==='trunks'){
-  add(new THREE.CylinderGeometry(.9,1.05,12,12),0x735b43,0,1.35,0,Math.PI/2);
+  add(new THREE.CylinderGeometry(.9,1.05,12,12,12),0x735b43,0,1.35,0,Math.PI/2);
   for(const z of [-6,6])add(new THREE.CylinderGeometry(.84,.84,.04,12),0xb39a6a,0,1.35,z,Math.PI/2);
   for(let i=0;i<5;i++)add(new THREE.BoxGeometry(.2,.28,1.5),0x495b3f,Math.sin(i*2)*.5,2.2,i*2-4);
  }else if(key==='crystal'){

@@ -376,7 +376,8 @@ export class OrbitRig {
       const previous = Math.min(CONFIG.planetRadius * this.frontierTheta * FRONTIER_FRAME, planetCeiling);
       const globalGrowth=clamp((this.frontierTheta-.52)/(Math.PI-.52),0,1);
       const half=Math.atan(Math.tan(CAM_TUNE.fovFar*Math.PI/360)*Math.min(1,this.camera.aspect));
-      const globe=(CONFIG.planetRadius+Math.max(110,this.terrainTop||0))*1.08/Math.sin(Math.max(.06,half))-CONFIG.planetRadius;
+      const visibleRadius=Math.max(CONFIG.planetRadius+Math.max(110,this.terrainTop||0),CONFIG.environment?.rings?CONFIG.planetRadius*(CONFIG.environment.theme==='saturn'?2.12:1.8):0);
+      const globe=visibleRadius*1.08/Math.sin(Math.max(.06,half))-CONFIG.planetRadius;
       return Math.max(previous * (1 + .1 * growth),globalGrowth*globe,d + 2,d * 1.6);
     }
     // Always leave a usable zoom band, however the two height sliders are set.

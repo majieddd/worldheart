@@ -7,7 +7,7 @@ keep their original terrain formula.
 
 ## Authoring boundaries
 
-`js/terrain/recipes.js` holds version 8 and fifty group recipes. The ten terrain
+`js/terrain/recipes.js` holds version 9 and fifty-two group recipes. The ten terrain
 packs in `js/run/world-catalogue.js` set family weights, amplitudes, spacing and
 detail noise. `js/terrain/formations.js` lays out and samples those groups. `world.js`
 composes their relief with continents and small surface detail, then applies
@@ -49,9 +49,9 @@ resulting surface, rather than drawing hidden routes through blocked mountains.
 | Tiger-stripe fractures | Four long parallel negative grooves | Separate narrow tracks with open ends |
 | Vaulted grotto | Raised banks and a separate rough stone roof | A medium-sized open passage below a usable upper surface |
 | Sky mesa | Three irregular floating slabs above a low basin | Flying commanders can land, walk and jump off the decks |
-| Geyser staircase | Four ascending mineral terraces and a vent | Timed steam eruptions launch nearby units on both teams |
+| Daylight cavern network | Crossing cuts beneath rock vaults with open skylights | Ground routes enter and leave a real roofed network |
 | Braided delta | Five diverging sinuous channels | Parallel low routes spread from a common upstream approach |
-| Horseshoe amphitheatre | Open curved wall enclosing an inner court | Sheltered open floor with a wide mouth |
+| Ribbed stone arcade | Three open arches between opposite banks | Repeated underpasses and usable high crossings |
 | Tilted cuesta comb | Three asymmetric tilted benches | Broad dip slopes beside steep faces |
 | Crescent dune caravan | Three unequal crescent dunes | Curved horns enclose pockets, with gaps between dunes |
 | Whaleback dome | One elongated smooth dome split by a cleft | Rounded high ground with a distinct transverse cut |
@@ -62,7 +62,9 @@ resulting surface, rather than drawing hidden routes through blocked mountains.
 | Box canyon | Rectangular inward cut with one open end | Deep enclosed court entered through a broad mouth |
 | Kame staircase | Five staggered ascending mounds | Stepping positions and gaps beside the sequence |
 | Reef atoll | Broken annular reef and shallow wet lagoon | Swim through its breaches or follow the island rim |
-| Petrified trunk maze | Three large grained fallen trunks at different angles | Pass under or traverse the physical logs |
+| Floating ribbon bridges | Curved suspended strips with cross-links | Upper pathways join floating mesas in aerial worlds |
+| Skipping impact chain | Five increasingly large craters with open ejecta ramps | A directional chain of bowls with exits |
+| Helical terrace staircase | A continuous rising coil around an open centre | Climb a spiral terrace or use the surrounding floor |
 | Oxbow terraces | Meandering incision and paired offset benches | Connected curved lower route and upper shelves |
 | Pancake lava shields | Broad low circular lava domes | Overlapping gentle volcanic rises |
 | Kettle chain | Unequal linked deep round pits | Deliberate depressions with separate safe perimeter routes |
@@ -72,8 +74,9 @@ Terrain packs are geological recipes, separate from biome assignments. Mixed
 Landscapes uses the full vocabulary. Giant Peaks uses only extreme ridge chains
 and razorbacks; Deep Canyons emphasizes negative incisions; Ocean World builds
 formation-bearing islands, connected archipelagos and peninsulas. Badlands,
-Karst Labyrinth, Geothermal Fields, Glacial Frontiers, Windlands and Sky Reaches
-complete the ten packs. No individual battlefield guarantees all fifty families.
+Underworld Galleries, Meteor Marches, Spiral Terrace Country, Windlands and
+Aerial Kingdoms complete the ten packs. All Planet reserves all fifty-two
+families across its oversized globe; ordinary battlefields use smaller subsets.
 Themes can apply a pack regionally, across most provinces, or globally. They
 control the pack's weight, amplitude and detail-noise biases in those provinces.
 Temperature, altitude snow, water and foliage remain separate fields.

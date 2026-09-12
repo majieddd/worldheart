@@ -7,6 +7,9 @@ try{
  checks.push(...await page.evaluate(async()=>{
   __frames=false;const W=WH,w=await import(new URL('js/world.js',location.href)),r=await import(new URL('js/run/environment-catalogue.js',location.href)),T=await import(new URL('lib/three.module.min.js',location.href)),m=W.mode99,a=m.commander,e=W.enemies.spawn('husk',W.nav.heartNode,1),checks=[],ck=(name,ok,actual)=>checks.push({name,ok:!!ok,actual});
   const natural=w.FEATURES.active.slice();ck('Every naturally placed feature satisfies its actual biome, formation, water and slope',natural.length>0&&natural.every(s=>r.featureFits(s.key,s.context)),{count:natural.length,kinds:[...new Set(natural.map(s=>s.key))]});
+  ck('Natural feature placement reaches both hemispheres',natural.some(s=>s.dir.y<-.15)&&natural.some(s=>s.dir.y>.15));
+  let volcanic=0,stray=0;for(let i=0;i<W.nav.n;i+=37){const d=W.nav.nodeDir(i,new T.Vector3()),h=w.terrainHeight(...d.toArray(),false);if(w.biomeAt(d,h)==='volcanic'){volcanic++;if(!w.FORMATIONS.volcanic(...d.toArray()))stray++;}}
+  ck('Garden-world volcanic ecology follows actual volcanic geology',volcanic>0&&!stray,{volcanic,stray});
   const reset=dir=>{for(const unit of [a,e]){unit.active=true;unit.dead=false;unit.dir.copy(dir);unit.height=w.terrainHeight(...dir.toArray(),false);unit.hpMax=unit.hp=10000;unit.hop=unit.mountFlight=unit.weatherLift=unit.geyserLift=unit.geyserVelocity=unit.vertVel=unit.airT=0;unit.geyserStamp='';unit.weatherSpeed=unit.environmentSpeed=1;unit.slowFrac=unit.slowT=0;}};
   for(const [key,f]of Object.entries(r.ACTIVE_FEATURES)){
    if(key==='trunks')continue;reset(W.heartPos.clone().normalize());a.hp=e.hp=5000;

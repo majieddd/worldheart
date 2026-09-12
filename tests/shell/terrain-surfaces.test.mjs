@@ -7,6 +7,7 @@ import {TERRAIN_PACKS,NEW_BIOMES,NEW_PLANET_THEMES} from '../../js/run/world-cat
 globalThis.location={search:'?map=ninetynine&campaign=0&planet=temperate',pathname:'/'};globalThis.matchMedia=()=>({matches:false});
 registerHooks({resolve(s,c,n){return s==='three'?{url:new URL('../../lib/three.module.min.js',import.meta.url).href,shortCircuit:true}:n(s,c);}});
 const T=await import('../../lib/three.module.min.js'),w=await import('../../js/world.js'),{CONFIG}=await import('../../js/config.js'),{AllyManager}=await import('../../js/allies.js'),{GeyserField}=await import('../../js/terrain/geysers.js');
+const {createTerrainFeatures}=await import('../../js/terrain/features.js');
 function isolate(type){const sample=formationSample(type);CONFIG.terrain={...TERRAIN_PACKS.varied,range:90,canyon:38,ocean:-1,formations:{weights:Object.fromEntries(Object.keys(LANDFORM_RECIPES).map(k=>[k,k===type?1:0])),groups:sample.field.modules.map(m=>({id:m.id,disabled:m.id!==0}))}};CONFIG.terrainKey='varied';w.initTerrainField(771);return w.FEATURES;}
 test('ten packs and twenty theme recipes reference valid distinct content',()=>{
  assert.equal(Object.keys(TERRAIN_PACKS).length,10);assert.equal(Object.keys(NEW_BIOMES).length,15);assert.equal(Object.keys(NEW_PLANET_THEMES).length,10);
@@ -37,4 +38,18 @@ test('geyser eruptions lift both teams once per cycle and settle without lifting
  let max=0;for(let k=0;k<360;k++){field.update(1/60);if(unit.airT)manager._fall(unit,1/60);max=Math.max(max,unit.hop,enemy.geyserLift);}
  assert.equal(field.launches,2,'standing on the vent cannot retrigger the same burst');assert.ok(max>4);assert.equal(unit.hop,0);assert.equal(enemy.geyserLift,0);
  field.time+=6;field.update(.01);assert.equal(field.launches,4,'the next eruption is reusable');
+});
+test('fallen feature logs bend through the same coordinates as their walkable surface',()=>{
+ const sample=formationSample('hills');let features;
+ for(let seed=1;seed<=12;seed++){
+  const f=createTerrainFeatures(sample.field,240,()=>0,{seed,biome:()=> 'woodland',water:()=>false});
+  if(f.active.some(s=>s.key==='trunks')){features=f;break;}
+ }
+ assert.ok(features,'the seeded recipe produces a fallen tree');
+ const art=features.build();art.updateMatrixWorld(true);const logs=art.children.filter(c=>c.name==='active-trunks');assert.ok(logs.length);
+ for(const site of features.active.filter(s=>s.key==='trunks'))for(const along of [-4,0,4]){
+  const dir=new T.Vector3(...sample.field.project(site.m,site.u,site.v+along)),top=features.support(dir.toArray(),Infinity,0);
+  const ray=new T.Raycaster(dir.clone().multiplyScalar(250),dir.clone().negate()),hit=ray.intersectObjects(logs,true)[0];
+  assert.ok(hit,'visible log at the collider sample');assert.ok(Math.abs(hit.point.length()-240-top)<.18,'bark agrees with the walkable top '+JSON.stringify({along,top,rendered:hit.point.length()-240}));
+ }
 });

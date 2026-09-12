@@ -189,8 +189,8 @@ export async function startDebugWorld(){
       const hazard=lane.key==='disasters',art=hazard?buildDisasterArt(key):buildActiveFeature(key),group=new THREE.Group(),width=hazard?(key==='quake'?90:60):24;
       const groundColor={tsunami:0x326a79,whirlpool:0x326a79,cryovent:0xa2bbc4,cryoburst:0xa2bbc4,blizzard:0x9baeb1,fumarole:0x716344,seep:0x45424a,ashfall:0x45424a,eruption:0x45424a,mudpot:0x7b7860,sandstorm:0xb39b6d,solar:0x6a6675}[key]||0x718565;
       const pad=new THREE.Mesh(new THREE.BoxGeometry(width,.5,width),mat(groundColor));pad.position.y=-.3;group.add(pad,art);
-      const update=t=>art.userData.update(hazard?t%f.duration:t,false);
-      add(lane,key,f.name,group,f.note,hazard?{Compatibility:f.tags.join(', '),Duration:f.duration+' s',Hostility:'Independent size and frequency'}:{Biomes:f.biomes.join(', '),Formations:f.formations.map(k=>LANDFORM_RECIPES[k]?.label||k).join(', '),Period:f.period+' s'},width,update);
+      let item;const update=t=>{const elapsed=Math.max(0,t-(item?.animationStart||0)),cycle=hazard?elapsed%(f.duration+8):elapsed,warning=hazard&&cycle>=f.duration;art.userData.update(warning?cycle-f.duration:cycle,warning);};
+      item=add(lane,key,f.name,group,f.note,hazard?{Compatibility:f.tags.join(', '),Duration:f.duration+' s',Warning:'8 s',Hostility:'Independent size and frequency'}:{Biomes:f.biomes.join(', '),Formations:f.formations.map(k=>LANDFORM_RECIPES[k]?.label||k).join(', '),Period:f.period+' s'},width,update);
     }
     if(lane.key==='themes')for(const [key,theme]of Object.entries(PLANET_THEMES))if(key!=='auto'){
       const s=THEME_SURFACES[key],group=miniaturePlanet(key),sample=group.userData.miniature;

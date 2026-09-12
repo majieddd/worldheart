@@ -68,11 +68,12 @@ export function solarGeography(theme,x,y,z){
  const q=(a,b,w,h)=>oval(lng,lat,a,b,w,h);
  switch(theme){
   case 'earth':{let distance=lat< -67?(-lat-67):Math.max(...continents.map(p=>polygonDistance(lng,lat,p)));land=.3+distance*.035;
-   biome=abs>66?'tundra':abs<13?'jungle':lat>14&&lat<33&&lng>-20&&lng<62?'desert':abs<32&&lng>112&&lng<151?'desert':abs<25?'savanna':abs>48?'woodland':'meadow';
+   const climateLat=lat+Math.sin(lng*.12)*1.8+Math.sin(lng*.3+lat*.05)*.7,climateAbs=Math.abs(climateLat);
+   biome=abs>66?'tundra':climateAbs<13?'jungle':climateLat>14&&climateLat<33&&lng>-20&&lng<62?'desert':climateAbs<32&&lng>112&&lng<151?'desert':climateAbs<25?'savanna':climateAbs>48?'woodland':'meadow';
    relief=.18+.8*Math.max(1-smooth(.4,1,q(87,31,28,9)),1-smooth(.4,1,q(-71,-22,8,38)),1-smooth(.4,1,q(-114,44,10,22)));break;}
   case 'moon':{const maria=Math.min(q(-20,20,28,24),q(22,10,25,23),q(0,48,16,13),q(55,-20,13,12));biome=maria<1?'basalt':'regolith';relief=maria<1?.12:.4;extra=-3*(1-smooth(.65,1,maria));break;}
-  case 'mercury':{const basin=q(160,30,27,24);biome=basin<.8?'basalt':'regolith';tint=0x9b8d79;relief=.5;extra=5*Math.exp(-(((basin-1)/.11)**2))-4*(1-smooth(.7,1,basin));break;}
-  case 'mars':{biome=abs>76?'waterice':lat>20?'marsdust':'ferrous';relief=.25;const trench=Math.abs(lat+12+2*Math.sin(lng*.06)),end=1-smooth(35,50,Math.abs(wrap(lng+65))),cut=(1-smooth(2,12,trench))*end;relief*=1-.8*cut;extra=-15*cut+26*Math.exp(-(q(-134,18,15,13)**2));break;}
+  case 'mercury':{const basin=q(160,30,27,24),angle=Math.atan2((lat-30)/24,wrap(lng-160)/27),passes=smooth(.08,.32,Math.abs(Math.sin(angle*1.5)));biome=basin<.8?'basalt':'regolith';tint=0x9b8d79;relief=.5;extra=5*Math.exp(-(((basin-1)/.11)**2))*passes-4*(1-smooth(.7,1,basin));break;}
+  case 'mars':{biome=abs>76?'waterice':lat>20+Math.sin(lng*.06)*7+Math.sin(lng*.18)*2?'marsdust':'ferrous';relief=.25;const trench=Math.abs(lat+12+2*Math.sin(lng*.06)),end=1-smooth(35,50,Math.abs(wrap(lng+65))),cut=(1-smooth(2,12,trench))*end;relief*=1-.8*cut;extra=-15*cut+26*Math.exp(-(q(-134,18,15,13)**2));break;}
   case 'venus':biome=Math.sin(lng*.03)*Math.cos(lat*.05)>.18?'venusrock':'basalt';relief=.4;extra=8*(1-smooth(.5,1,q(125,-7,38,16)));break;
   case 'jupiter':case 'saturn':case 'uranus':case 'neptune':{
    const axis=theme==='uranus'?Math.asin(x)/rad:lat,bands=Math.sin(axis*(theme==='jupiter'?.36:.22)+Math.sin(lng*.035)*.18);

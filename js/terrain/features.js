@@ -25,9 +25,9 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
   }else if(m.type==='arcade'||m.type==='caverns'){
    const cavern=m.type==='caverns';
    for(let k=-1;k<=1;k++){
-    const x=k*e*.49,span=e*.65,width=e*(cavern?.28:.11),left=at(m,x,-span),right=at(m,x,span);
-    const top=(u,v)=>left+(right-left)*(v/span+1)/2+(cavern?6:10)*Math.max(0,1-(v/span)**2);
-    add(m,cavern?'cavern-vault':'stone-arch',x,0,width,span,top,(u,v)=>top(u,v)-(cavern?4:3)-7*(v/span)**4,true);
+    const x=k*e*.49,span=e*(cavern?.55:.65),width=e*(cavern?.21:.11),left=at(m,x,-span),right=at(m,x,span);
+    const top=(u,v)=>left+(right-left)*(v/span+1)/2+(cavern?8:10)*Math.max(0,1-(v/span)**2);
+    add(m,cavern?'cavern-vault':'stone-arch',x,0,width,span,top,(u,v)=>top(u,v)-3-7*(v/span)**4,true);
     surfaces.at(-1).rim=a=>1/Math.pow(Math.abs(Math.cos(a))**8+Math.abs(Math.sin(a))**8,1/8);
    }
   }else if(m.type==='ribbons'){
@@ -71,7 +71,7 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
  for(const site of active){
   if(site.key==='geyser')vents.push(site);
   if(site.key==='trunks'){
-   add(site.m,'fossil-log',site.u,site.v,1,6,u=>site.height+1.35+Math.sqrt(Math.max(0,1-u*u)),u=>site.height+1.35-Math.sqrt(Math.max(0,1-u*u)),false);
+   add(site.m,'fossil-log',site.u,site.v,1.05,6,(u,v)=>site.height+1.35+Math.sqrt(Math.max(0,(.975-v*.0125)**2-u*u)),(u,v)=>site.height+1.35-Math.sqrt(Math.max(0,(.975-v*.0125)**2-u*u)),false);
   }
  }
  function local(s,dir,w){
@@ -121,7 +121,20 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
    for(let k=0;k<7;k++){const cloud=new THREE.Mesh(new THREE.IcosahedronGeometry(.65+k*.12,0),new THREE.MeshBasicMaterial({color:0xd4eeee,transparent:true,opacity:.48,depthWrite:false}));root.add(cloud);steam.push({cloud,k,vent});}group.add(root);
   }
   const activeArt=[];
-  for(const site of active){if(!include(site.dir.toArray()))continue;const model=buildActiveFeature(site.key);model.position.copy(point?point(site.dir.toArray(),site.height):site.dir.clone().multiplyScalar(radius+site.height));model.scale.setScalar(scale);if(spherical){const x=new THREE.Vector3(...site.m.axis).addScaledVector(site.dir,-new THREE.Vector3(...site.m.axis).dot(site.dir)).normalize(),z=new THREE.Vector3().crossVectors(x,site.dir);model.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(x,site.dir,z));}group.add(model);activeArt.push({site,model});}
+  for(const site of active){
+   if(!include(site.dir.toArray()))continue;
+   const model=buildActiveFeature(site.key),origin=point?point(site.dir.toArray(),site.height):site.dir.clone().multiplyScalar(radius+site.height);model.position.copy(origin);
+   if(site.key==='trunks'){
+    // Bend the visible log through the same projected coordinates as its
+    // collider. A straight tangent prop otherwise misses the warped end caps.
+    const geo=model.children[0].geometry,p=geo.attributes.position;model.children[0].material.side=THREE.DoubleSide;
+    for(let i=0;i<p.count;i++){const d=field.project(site.m,site.u+p.getX(i),site.v+p.getZ(i)),h=site.height+p.getY(i),v=(point?point(d,h):new THREE.Vector3(...d).multiplyScalar(radius+h)).sub(origin);p.setXYZ(i,v.x,v.y,v.z);}
+    p.needsUpdate=true;geo.computeVertexNormals();
+   }else{
+    model.scale.setScalar(scale);if(spherical){const x=new THREE.Vector3(...site.m.axis).addScaledVector(site.dir,-new THREE.Vector3(...site.m.axis).dot(site.dir)).normalize(),z=new THREE.Vector3().crossVectors(x,site.dir);model.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(x,site.dir,z));}
+   }
+   group.add(model);activeArt.push({site,model});
+  }
   group.userData.update=time=>{for(const a of activeArt){a.model.position.copy(point?point(a.site.dir.toArray(),a.site.height):a.site.dir.clone().multiplyScalar(radius+a.site.height));a.model.userData.update(time+a.site.phase);}for(const r of roots)if(r.height!==r.vent.height){r.height=r.vent.height;r.root.position.copy(point?point(r.vent.dir.toArray(),r.height):r.vent.dir.clone().multiplyScalar(radius+r.height));}for(const p of steam){const phase=(time+p.vent.phase)%12,on=phase<2.8;p.cloud.visible=on;if(on){const h=((time*5+p.k*.9)%9);p.cloud.position.set(Math.sin(p.k+time)*.5,h,Math.cos(p.k+time)*.5);p.cloud.scale.setScalar(.4+h*.12);}}};
   return group;
  }

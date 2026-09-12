@@ -8,7 +8,7 @@ page.on('pageerror',e=>errors.push(e.stack));page.setDefaultTimeout(180000);
 const ck=(name,ok,detail)=>checks.push({name,ok:!!ok,detail});
 await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__frames=true;window.requestAnimationFrame=fn=>raf(t=>{if(__frames)fn(t);});});
 try{
- await page.goto(base+'/?map=ninetynine&campaign=1&seed=12345');await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'));await page.locator('#btn-begin').click();
+ await page.goto(base+'/?map=ninetynine&campaign=1&seed=12346');await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'));await page.locator('#btn-begin').click();
  await page.evaluate(()=>{__frames=false;WH.waves.canRaid=()=>false;WH.step(.05,60,true);document.activeElement.blur();});
  checks.push(...await page.evaluate(async()=>{
   const W=WH,m=W.mode99,a=m.commander,world=await import(new URL('js/world.js',location.href)),T=await import(new URL('lib/three.module.min.js',location.href)),r=[],ck=(name,ok,detail)=>r.push({name,ok:!!ok,detail});

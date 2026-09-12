@@ -574,7 +574,7 @@ export class NavGraph {
       if (!this.walk[i] || region[i] !== main) continue;
       if (this.floorWalk && !this.floorWalk[i]) continue;
       if (!capCenter && Math.abs(this.dirs[i * 3 + 1]) > 0.82) continue;
-      if (this.height[i] < 0.14 || this.height[i] > (CONFIG.terrain ? WORLD.FLIGHT_CEILING * 0.5 : 1.6)) continue;
+      if (this.height[i] < 0.14 || this.height[i] > (CONFIG.terrain ? (this.floorDatum||0)+WORLD.FLIGHT_CEILING * 0.5 : 1.6)) continue;
       // The heart anchors the main battlefield: keep it in the sun, and on
       // capped maps pull it toward the field's center.
       const sunDot = this.dirs[i * 3] * SUN_DIR.x + this.dirs[i * 3 + 1] * SUN_DIR.y + this.dirs[i * 3 + 2] * SUN_DIR.z;

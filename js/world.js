@@ -531,7 +531,7 @@ export function surfaceTravel(unit, bearing, distance = 0.05) {
 
 export function canFlyAt(dir, clearance = FLIGHT_CLEARANCE) {
   return !CONFIG.terrain || (inBattlefield(dir.x, dir.y, dir.z)
-    && terrainHeight(dir.x, dir.y, dir.z, false) + clearance <= FLIGHT_CEILING);
+    && navigationHeight(dir.x, dir.y, dir.z, false) + clearance <= FLIGHT_CEILING);
 }
 
 // Analytic ray-to-surface intersection: enter the terrain shell, march, then
@@ -1140,19 +1140,21 @@ function buildWater() {
   return mesh;
 }
 
-function buildAtmosphere() {
-  const geo = new THREE.SphereGeometry(R * 1.17, 64, 48);
+export function buildAtmosphere(radius=R,environment=CONFIG.environment) {
+  if(environment?.solar&&environment.tags?.includes('airless'))return null;
+  const tint={mars:0xb88f72,venus:0xd3ba82,titan:0xda9e4f,jupiter:0xcba88b,saturn:0xd5c69b,uranus:0x91d4d7,neptune:0x579bc2}[environment?.theme]||0x3f9fdd;
+  const geo = new THREE.SphereGeometry(radius * (environment?.solar?1.07:1.17), 64, 48);
   const mat = new THREE.ShaderMaterial({
     side: THREE.BackSide,
     transparent: true,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
-    uniforms: { uColor: { value: new THREE.Color(0x3f9fdd) } },
+    uniforms: { uColor: { value: new THREE.Color(tint) } },
     vertexShader: /* glsl */ `
       varying vec3 vN; varying vec3 vP;
       void main() {
-        vN = normalize(position);
-        vP = position;
+        vN = normalize((modelMatrix * vec4(position, 0.0)).xyz);
+        vP = (modelMatrix * vec4(position, 1.0)).xyz;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }
     `,
@@ -1540,7 +1542,7 @@ function scatterDecor(rng) {
       if (dir.lengthSq() > 1 || dir.lengthSq() < 0.01) continue;
     }
     dir.normalize();
-    const h = terrainHeight(dir.x, dir.y, dir.z);
+    const h = navigationHeight(dir.x, dir.y, dir.z);
     if (ECOLOGY ? waterDepthAt(dir,h)>0 : h<.12){
       if(ECOLOGY){const kind=BIOME_VISUALS[biomeAt(dir,h)]?.decor,list=exoticSpots[kind];if(['coralreef','kelp','coral'].includes(kind)&&list&&list.length<240&&rng()<.12)list.push({dir:dir.clone(),h,s:.7+rng()*.5});}
       continue;
@@ -1657,8 +1659,9 @@ function buildClouds(rng) {
   // let the night side dim to slate instead of vanishing, so cover reads
   // planet-wide from orbit.
   const baseMat = new THREE.MeshBasicMaterial({ vertexColors: true });
-  const cloudTop = new THREE.Color(0xeff4fc);
-  const cloudBot = new THREE.Color(0xaebdd8);
+  const warmCloud=['venus','titan'].includes(CONFIG.environment?.theme);
+  const cloudTop = new THREE.Color(warmCloud?0xe3ca91:0xeff4fc);
+  const cloudBot = new THREE.Color(warmCloud?0xa28259:0xaebdd8);
   const clouds = [];
   const group = new THREE.Group();
   const cloudCount = Math.min(16, Math.round(9 * Math.sqrt(R / 30)));
@@ -2019,7 +2022,7 @@ export class World {
         }
         break;
       case 3: {
-        if (!SPACE) this.scene.add(buildAtmosphere());
+        if (!SPACE) {const atmosphere=buildAtmosphere();if(atmosphere)this.scene.add(atmosphere);}
         if(CONFIG.environment?.rings)this.scene.add(buildPlanetAdornment(CONFIG.environment,R));
         const sky = buildSky(this.rng);
         this.sky = sky.group;
@@ -2038,9 +2041,11 @@ export class World {
           this.scene.add(s.mesh);
         }
         if (!SPACE) {
-          const cl = buildClouds(this.rng);
-          this.clouds = cl.clouds;
-          this.scene.add(cl.group);
+          if(!CONFIG.environment?.solar||!CONFIG.environment.tags?.includes('airless')&&CONFIG.environment.theme!=='mars'){
+            const cl = buildClouds(this.rng);
+            this.clouds = cl.clouds;
+            this.scene.add(cl.group);
+          }
         } else {
           this.scene.add(buildAsteroidBellies(this.rng));
           this.dust = buildSpaceDust(this.rng);

@@ -25,10 +25,10 @@ export function exoticHeight(m,u,v,extent,rise) {
     case 'impact': {
       // One excavated meteor bowl, a broken raised rim and radial ejecta.
       // A wide graded breach connects the crater floor to the outer ground.
-      const gate=smooth(.08,.32,Math.abs(a-.12));
+      const breach=a-(Math.PI-.12),gate=smooth(.18,.52,Math.abs(Math.atan2(Math.sin(breach),Math.cos(breach))));
       const rim=.48*ridge(r-.65,.18)*gate;
-      const bowl=(1-smooth(.28,.61,r))*smooth(-.9,-.2,x);
-      const ejecta=.12*ridge(r-.85,.22)*Math.abs(Math.cos(a*7));
+      const bowl=(1-smooth(.28,.61,r))*smooth(-.9,.1,x);
+      const ejecta=.12*ridge(r-.85,.22)*Math.abs(Math.cos(a*7))*gate;
       return envelope*(m.height*(rim+ejecta)-depth*.75*bowl);
     }
     case 'yardangs': {

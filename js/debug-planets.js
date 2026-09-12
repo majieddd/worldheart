@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {CONFIG,TERRAIN_PROFILES} from './config.js';
 import {planetEnvironment} from './run/planet-environments.js';
 import {buildIcosphere} from './geodesic.js';
-import {R,initTerrainField,terrainHeight,navigationHeight,oceanAt,biomeAt,faceColor,terrainThermal,FORMATIONS,FEATURES,makePineGeometry,makeBroadleafGeometry,makeCactusGeometry} from './world.js';
+import {R,initTerrainField,terrainHeight,navigationHeight,oceanAt,biomeAt,faceColor,terrainThermal,FORMATIONS,FEATURES,makePineGeometry,makeBroadleafGeometry,makeCactusGeometry,buildAtmosphere} from './world.js';
 import {BIOME_VISUALS,THEME_SURFACES,biomeDressingGeometry} from './biome-visuals.js';
 import {buildPlanetAdornment} from './planet-adornment.js';
 
@@ -85,7 +85,7 @@ export function miniaturePlanet(theme,seed=MINIATURE_SEED){
       props.instanceMatrix.needsUpdate=true;group.add(props);
     }
     const art=FEATURES.build({scale,spherical:true,point:(dir,h)=>new THREE.Vector3(...dir).multiplyScalar((R+h)*scale),color:dir=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...dir),navigationHeight(...dir,false))]?.rock||0x8c9084,topColor:dir=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...dir),navigationHeight(...dir,false))]?.color||0x859e63});group.add(art);
-    group.add(buildPlanetAdornment(environment,10));data.radius=R;data.frameRadius=environment.rings?22:10+Math.max(0,data.max)*scale;
+    group.add(buildPlanetAdornment(environment,10));const atmosphere=buildAtmosphere(10,environment);if(atmosphere)group.add(atmosphere);data.radius=R;data.frameRadius=environment.rings?22:10+Math.max(0,data.max)*scale;
     for(const surface of FEATURES.surfaces)data.max=Math.max(data.max,surface.top(0,0));
     data.features=FEATURES.surfaces.length;data.vertices=points.length;data.formations=[...new Set(FORMATIONS.modules.filter(m=>m.height>0).map(m=>m.type))];
     group.position.y=15;

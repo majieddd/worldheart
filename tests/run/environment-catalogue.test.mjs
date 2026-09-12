@@ -1,7 +1,8 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';
 import {ACTIVE_FEATURES,DISASTERS,featureFits,environmentalHostility,compatibleDisasters,disasterExposure,disasterTargets} from '../../js/run/environment-catalogue.js';
 import {planetEnvironment} from '../../js/run/planet-environments.js';
-import {SOLAR_THEMES,solarGeography} from '../../js/run/solar-worlds.js';
+import {SOLAR_THEMES,solarGeography,createSolarSampler} from '../../js/run/solar-worlds.js';
+import {worldgenUrl} from '../../js/worldgen.js';
 import {LANDFORM_RECIPES} from '../../js/terrain/recipes.js';
 import {createFormationField} from '../../js/terrain/formations.js';
 import {TERRAIN_PACKS} from '../../js/run/world-catalogue.js';
@@ -35,4 +36,9 @@ test('sixteen astronomical worlds own geography rather than sharing a colour swa
 });
 test('All Planet reserves the entire formation vocabulary in ten oversized geological provinces',()=>{
  const e=planetEnvironment(771,'all');assert.equal(e.radius,480);const field=createFormationField(771,e.radius,TERRAIN_PACKS.varied,'varied',{composition:e});assert.equal(new Set(field.modules.map(m=>m.type)).size,Object.keys(LANDFORM_RECIPES).length);assert.equal(new Set(field.modules.map(m=>m.pack)).size,10);
+});
+test('geography caching is independent of query order and shared links retain hostility',()=>{
+ const a=createSolarSampler('earth'),b=createSolarSampler('earth'),p=[.65534,.3,.69235],q=p.map(x=>x+1e-8);
+ a(...q);const expected=b(...p);assert.deepEqual(a(...p),expected);b(...q);assert.deepEqual(b(...p),expected);
+ const url=new URL(worldgenUrl('https://example.com/v2/?hostility=1.2',77,'varied',false,'auto','moon'));assert.equal(url.searchParams.get('hostility'),'1.2');assert.equal(url.searchParams.get('worldgen'),null);
 });

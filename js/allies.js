@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, R, terrainHeight, surfaceTravel } from './world.js';
+import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, R, terrainHeight, navigationHeight, surfaceTravel } from './world.js';
 import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
 import { uploadInstances } from './rig.js';
@@ -327,7 +327,7 @@ class Ally {
     Object.assign(this.cos, freshSoldierState());
     this._renderDir.copy(this.dir);
     this.weaponM.identity();
-    this.height = terrainHeight(this.dir.x, this.dir.y, this.dir.z);
+    this.height = navigationHeight(this.dir.x, this.dir.y, this.dir.z);
     this._renderHeight = surfaceElevation(this.dir,this.height);
     _tmp.set(0, 1, 0);
     if (Math.abs(this.dir.y) > 0.9) _tmp.set(1, 0, 0);

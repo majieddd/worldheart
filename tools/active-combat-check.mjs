@@ -9,7 +9,7 @@ page.on('pageerror',e=>errors.push(String(e)));page.setDefaultTimeout(180000);
 await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__frames=true;window.requestAnimationFrame=fn=>raf(t=>{if(__frames)fn(t);});});
 const ck=(name,ok,actual)=>checks.push({name,ok:!!ok,actual});
 try{
- await page.goto(base+'/?map=ninetynine&campaign=0&seed=12345&commander=oracle');await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'));await page.locator('#btn-begin').click();
+ await page.goto(base+'/?map=ninetynine&campaign=0&planet=temperate&seed=12345&commander=oracle');await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'));await page.locator('#btn-begin').click();
  await page.evaluate(()=>{__frames=false;WH.waves.canRaid=()=>false;WH.waves.state='idle';WH.step(.01,60,true);});
  checks.push(...await page.evaluate(async()=>{
   const W=WH,m=W.mode99,a=m.commander,T=await import(new URL('lib/three.module.min.js',location.href)),world=await import(new URL('js/world.js',location.href)),weapons=await import(new URL('js/run/weapons.js',location.href)),r=[];

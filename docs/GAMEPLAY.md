@@ -14,7 +14,7 @@ section lists the places where the code disagrees with itself.
 The active integration adds `?map=ninetynine&campaign=1`. This is a saved
 99-destination campaign; the plain mode URL is a single-planet sandbox.
 `js/run/planets.js` owns region, terrain, pressure, era and milestone definitions.
-Mixed Landscapes is the default; twenty planet themes compose ten geological
+Mixed Landscapes is the default; thirty-seven planet themes compose ten geological
 packs with five pressure patterns. Health scaling is bounded at 1.35x.
 `js/encounters.js` applies flyer, armor and
 swarm composition changes and three milestone attack patterns without mutating
@@ -28,10 +28,10 @@ envelope. Title purchases require Apply upgrades to save and rebuild that same
 planet with the new account profile. See [M5B](qa/implementation/M5B.md) for exact
 implementation/evidence scope and the remaining release gates.
 
-The landforms v8 preview assigns a deterministic stellar class, luminosity,
+The landforms v9 preview assigns a deterministic stellar class, luminosity,
 orbital distance, water inventory and tectonic activity to every campaign
 planet. Flux is luminosity divided by distance squared. These stylized inputs
-select twenty themes and bias thirty biome identities, ocean coverage and fifty
+select thirty-seven themes and bias forty-four biome identities, ocean coverage and fifty-two
 formation families. Each theme selects geological pack coverage from regional
 to global. The shared catalogue lives in `js/run/world-catalogue.js` and
 `js/run/planet-environments.js`. Mixed Landscapes remains the default.
@@ -669,7 +669,8 @@ tower called Arc Spire.
 
 ## Living-worlds gameplay checkpoint
 
-Amber relic objects each grant one ore. Forging costs 3, 5, 7, 9 and so on;
+Weapon salvage grants scraps; amber relic pickups are removed. Forging costs
+3, 5, 7, 9 scraps and so on;
 only a successful craft raises the price. Six weapon families now include
 Twinfang blades and Ember scepters. Common, uncommon, rare, epic and relic
 rarities map to wood, iron, gold, diamond and onyx materials. Eras remain a
@@ -683,3 +684,34 @@ Commander ledge drops preserve radial height and enter the existing fall model.
 Tower route footprints use the central plinth at 70% of nominal radius in the
 99 Planets mode; construction spacing and classic map footprints retain their
 existing rules. The nest approach distance is a preference, not a hard cutoff.
+
+## Active environments and astronomy
+
+The twelve local feature recipes live in `js/run/environment-catalogue.js`.
+Geysers and fallen logs have moved out of the formation registry. Placement
+occurs after height and ecology, with biome, formation, slope and water filters.
+Ten additions affect both armies: mud slows, steam/lava/spores/crystal pulses
+hurt, cold jets and updrafts lift, springs heal, loose rocks hurt and whirlpools
+pull swimmers. Their animation and gameplay share the same period and phase.
+
+The twelve disasters use theme compatibility and their own seeded scheduling
+stream. Environmental Hostility is independent of theme. On Planet 1 its seeded
+range is 0.15-0.60; on Planet 99 it is 0.80-1.60. It scales event radius by
+`0.7 + 0.55 * hostility`, with a calm interval of `150 / (0.65 + hostility)`
+seconds, floored at 38 seconds. Inspector overrides range from 0 to 2 and remain
+in copied/play links. Warnings last eight seconds. Tsunamis require coastline,
+eruptions require a volcano, and overhead rock shelters exposed bodies from
+most airborne hazards. Floating worlds do not select ground-shifting quakes.
+
+All Planet uses radius 480 instead of 240, reserves all 52 formation families
+and spreads ten terrain provinces over the globe. Its mosaic deliberately
+includes otherwise unusual combinations. Solar themes use geography-specific
+biomes and landmarks. Airless bodies have no blue atmosphere or ordinary clouds;
+Venus and Titan have warm haze. Jupiter, Saturn, Uranus and Neptune explicitly
+use fictional cloud decks. Rings and all formations appear in both gameplay
+and Debug, where miniatures use reduced mesh detail.
+
+Floating worlds navigate on linked upper islands while preserving open space
+below. Commanders and summoned units spawn on those upper surfaces and can walk
+off into the existing fall/swim model. Generated routes and nest clearings use
+the same upper surface. Other cave worlds retain ground navigation under roofs.

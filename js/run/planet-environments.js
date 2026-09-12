@@ -5,7 +5,7 @@ import {SOLAR_THEMES,ASTRONOMICAL_BIOMES} from './solar-worlds.js';
 export const PLANET_THEMES = Object.freeze({
   auto:{name:'From star and orbit'},
   ...SOLAR_THEMES,
-  all:{name:'All Planet',orbit:1,wetness:0,activity:.3,radius:480,showcase:true,pack:'varied',coverage:1,biomes:['meadow','woodland','jungle','desert','savanna','wetland','mangrove','tundra','alpine','volcanic','ocean','crystalline','fungal','ferrous','twilight',...Object.keys(NEW_BIOMES),...Object.keys(ASTRONOMICAL_BIOMES)],water:0x307fa2,shore:0x7cbdba,note:'An oversized atlas planet with the complete formation vocabulary, ten terrain provinces and a broad mosaic of ecology.'},
+  all:{name:'All Planet',orbit:1,wetness:0,activity:.3,radius:480,showcase:true,pack:'varied',coverage:1,tags:['rock','ice','volcanic','wet','ocean','dry','atmosphere','cloud'],biomes:['meadow','woodland','jungle','desert','savanna','wetland','mangrove','tundra','alpine','volcanic','ocean','crystalline','fungal','ferrous','twilight',...Object.keys(NEW_BIOMES),...Object.keys(ASTRONOMICAL_BIOMES)],water:0x307fa2,shore:0x7cbdba,note:'An oversized atlas planet with the complete formation vocabulary, ten terrain provinces and a broad mosaic of ecology.'},
   ...NEW_PLANET_THEMES,
   temperate:{name:'Garden world',orbit:1,wetness:0,activity:.18},
   monsoon:{name:'Canopy world',orbit:.91,wetness:.40,activity:.12},
