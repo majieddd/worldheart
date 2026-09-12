@@ -6,7 +6,7 @@ import { PLANET_THEMES, planetEnvironment } from './run/planet-environments.js';
 import { campaignLaunch } from './modes/campaign-launch.js';
 import { browserStorage, isPreviewPath } from './storage.js';
 const url = new URLSearchParams(location.search);
-const worldgen = url.get('worldgen') === '1';
+const worldgen = url.get('worldgen') === '1' || /\/debug\.html$/.test(location.pathname || '');
 const preview = isPreviewPath(location.pathname);
 
 function stored(key) {

@@ -17,7 +17,7 @@ test('orbital flux, themes and campaign environments are deterministic and used'
     assert.deepEqual(e,p.environment);themes.add(e.theme);stars.add(e.star.type);
     assert.ok(Math.abs(e.flux*e.orbitAU**2-e.star.luminosity)<1e-10);
   }
-  assert.equal(themes.size,5);assert.equal(stars.size,4);
+  assert.equal(themes.size,Object.keys(PLANET_THEMES).length-1);assert.equal(stars.size,4);
   assert.ok(planetEnvironment(771,'arid').warmth>planetEnvironment(771,'frozen').warmth);
   assert.notDeepEqual(planetEnvironment(771,'volcanic').weights,planetEnvironment(771,'frozen').weights);
   assert.ok(planetEnvironment(771,'arid').oceanShift<planetEnvironment(771,'temperate').oceanShift);
@@ -81,7 +81,7 @@ test('theme survives links and history with backward-compatible defaults',()=>{
     assert.equal(url.searchParams.get('planet')||'auto',planet);
     history=rememberWorld(history,{seed:771,terrain:'varied',planet});
   }
-  assert.equal(history.length,6);
+  assert.equal(history.length,Object.keys(PLANET_THEMES).length);
   assert.equal(rememberWorld([{seed:771,terrain:'varied'}],{seed:771,terrain:'varied',planet:'auto'}).length,1);
   assert.throws(()=>worldgenUrl('https://example.com/',771,'varied',true,'auto','fake'));
 });

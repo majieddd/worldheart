@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './biome-visuals.js';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import { createFormationField } from './terrain/formations.js';
@@ -422,9 +423,9 @@ const _bn = new THREE.Vector3();
 export function climateAt(dir, height = terrainHeight(dir.x, dir.y, dir.z, false)) {
   if (!CONFIG.terrain || height < 0.13) return 'neutral';
   if(height>1.4&&FORMATIONS.volcanic(dir.x,dir.y,dir.z))return 'hot';
+  if (height > 1.4 && ECOLOGY.volcanic(dir.x,dir.y,dir.z)) return 'hot';
   if (height >= CONFIG.terrain.snow) return 'cold';
   const temperature = ECOLOGY.temperature(dir.x,dir.y,dir.z,height);
-  if (height > 1.4 && ECOLOGY.volcanic(dir.x,dir.y,dir.z)) return 'hot';
   if (height > 1.4 && temperature < -.23) return 'cold';
   return 'neutral';
 }
@@ -619,6 +620,7 @@ function faceColor(dir, h, slope, jrand, out) {
       smoothstep(0.945, 0.985, Math.abs(dir.y)) * smoothstep(0.25, 0.6, h);
     if (snow > 0) out.lerp(C.snow, clamp(snow, 0, 1));
     const biome = biomeAt(dir,h);
+    if(CONFIG.biomeKey==='auto'&&CONFIG.environment?.theme!=='temperate')paintBiome(out,biome,h,slope,jrand);
     if (biome==='jungle') out.lerp(MOSS,.65);
     if (biome==='wetland') out.lerp(MOSS,.38).lerp(C.soil,.15);
     if (biome==='volcanic') {
@@ -753,7 +755,12 @@ function buildTerrainMesh() {
     cen.divideScalar(len);
     const slope = 1 - Math.abs(n.dot(cen));
     faceColor(cen, h, slope * 3.2, rng(), col);
-    const thermal=lava&&h>1.4&&FORMATIONS.volcanic(cen.x,cen.y,cen.z)?FORMATIONS.inspect(cen.x,cen.y,cen.z):null;
+    let thermal=lava&&h>1.4&&FORMATIONS.volcanic(cen.x,cen.y,cen.z)?FORMATIONS.inspect(cen.x,cen.y,cen.z):null;
+    if(lava&&CONFIG.biomeKey==='auto'&&CONFIG.environment?.theme==='volcanic'){
+      const vein=Math.abs(nDetail(cen.x*8+11,cen.y*8,cen.z*8));
+      const heat=(1-smoothstep(.02,.07,vein))*(h>1.4?1:.5);
+      if(heat>(thermal?.lava||0))thermal={lava:heat,flow:cen.y*170+cen.x*75};
+    }
     for (let k = 0; k < 3; k++) {
       colors[(i + k) * 3] = col.r;
       colors[(i + k) * 3 + 1] = col.g;
@@ -1006,8 +1013,8 @@ function buildWater() {
     uniforms: {
       uTime: { value: 0 },
       uSun: { value: SUN_DIR },
-      uDeep: { value: C.oceanDeep },
-      uShore: { value: new THREE.Color(0x2fb4ae) },
+      uDeep: { value: CONFIG.terrain&&CONFIG.biomeKey==='auto'?new THREE.Color(THEME_SURFACES[CONFIG.environment.theme].water):C.oceanDeep },
+      uShore: { value: new THREE.Color(CONFIG.terrain&&CONFIG.biomeKey==='auto'?THEME_SURFACES[CONFIG.environment.theme].shore:0x2fb4ae) },
       uFoam: { value: C.foam },
       uSunCol: { value: C.sunlight },
       uSky: { value: C.skyGlow },
@@ -1339,7 +1346,7 @@ const _up = new THREE.Vector3();
 const _pos = new THREE.Vector3();
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 
-function makePineGeometry() {
+export function makePineGeometry() {
   const trunkC = new THREE.Color(PALETTE.trunk);
   const p1 = new THREE.Color(PALETTE.pineDark);
   const p2 = new THREE.Color(PALETTE.pine);
@@ -1351,7 +1358,7 @@ function makePineGeometry() {
   ]);
 }
 
-function makeBroadleafGeometry() {
+export function makeBroadleafGeometry() {
   const trunkC = new THREE.Color(PALETTE.trunk);
   const leaf = new THREE.Color(PALETTE.leaf);
   const leaf2 = new THREE.Color(PALETTE.pine);
@@ -1364,7 +1371,7 @@ function makeBroadleafGeometry() {
   ]);
 }
 
-function makeCactusGeometry() {
+export function makeCactusGeometry() {
   const color = new THREE.Color(PALETTE.pine);
   return mergeGeoms([
     {geo:new THREE.CylinderGeometry(.14,.19,1.5,6),matrix:_m4.clone().makeTranslation(0,.7,0),color},
@@ -1381,7 +1388,7 @@ function makeRockGeometry() {
   ]);
 }
 
-function makeCrystalGeometry() {
+export function makeCrystalGeometry() {
   const c = new THREE.Color(PALETTE.crystal);
   const m1 = new THREE.Matrix4().makeTranslation(0, 0.42, 0).multiply(new THREE.Matrix4().makeScale(0.75, 2.4, 0.75));
   const m2 = new THREE.Matrix4().makeTranslation(0.2, 0.2, 0.1)
@@ -1443,6 +1450,7 @@ function scatterDecor(rng) {
   });
 
   const spots = { pine: [], leaf: [], jungle: [], cactus: [], rock: [], crys: [] };
+  const exoticSpots=Object.fromEntries(['crystalline','fungal','ferrous','twilight','ice','vent','coral'].map(k=>[k,[]]));
   const dir = new THREE.Vector3();
   const mul = CONFIG.map.decorMul;
   const caps = {
@@ -1474,9 +1482,12 @@ function scatterDecor(rng) {
     if (ECOLOGY ? waterDepthAt(dir,h)>0 : h<.12) continue;
     const forest = forestAt(dir.x, dir.y, dir.z);
     const slope = slopeAt(dir);
-    const biome=biomeAt(dir,h),vegetated=!ECOLOGY||!['desert','volcanic','alpine'].includes(biome);
+    const biome=biomeAt(dir,h),vegetated=!ECOLOGY||!['desert','volcanic','alpine','tundra','crystalline','fungal','ferrous','twilight'].includes(biome);
     const treeLine=ECOLOGY?CONFIG.terrain.snow*(biome==='jungle'?.85:.45):2;
-    if (ECOLOGY && biome==='jungle' && slope<.6 && h<treeLine && spots.jungle.length<Math.round(400*mul) && rng()<.36) {
+    const dressing=BIOME_VISUALS[biome]?.decor;
+    if(ECOLOGY&&exoticSpots[dressing]&&exoticSpots[dressing].length<300*mul&&slope<.5&&rng()<.15){
+      exoticSpots[dressing].push({dir:dir.clone(),h,s:.8+rng()*.8});
+    } else if (ECOLOGY && biome==='jungle' && slope<.6 && h<treeLine && spots.jungle.length<Math.round(400*mul) && rng()<.36) {
       spots.jungle.push({dir:dir.clone(),h,s:2.4+rng()*1.8});
     } else if(ECOLOGY && biome==='desert' && slope<.35 && spots.cactus.length<Math.round(110*mul) && rng()<.025) {
       spots.cactus.push({dir:dir.clone(),h,s:.9+rng()*.9});
@@ -1534,6 +1545,17 @@ function scatterDecor(rng) {
       }
     }
   }
+  // Global, bounded scenery makes distant hemispheres carry the same theme.
+  if(ECOLOGY&&CONFIG.biomeKey==='auto'){
+    const theme=CONFIG.environment.theme,kind=theme==='frozen'?'ice':theme==='volcanic'?'vent':theme==='oceanic'?'coral':theme;
+    const list=exoticSpots[kind];
+    if(list)for(let k=0;k<3600&&list.length<650;k++){
+      const y=1-2*(k+.5)/3600,a=k*2.3999632297,r=Math.sqrt(1-y*y);dir.set(r*Math.cos(a),y,r*Math.sin(a));
+      const h=terrainHeight(dir.x,dir.y,dir.z),water=waterDepthAt(dir,h);
+      if(water>(kind==='coral'?1.4:0)||slopeAt(dir)>.5)continue;
+      list.push({dir:dir.clone(),h,s:1.1+rng()*1.6});
+    }
+  }
   const pines = makeInstanced(pineGeo, treeMat, spots.pine, 0.72, 0.16);
   const leafs = makeInstanced(leafGeo, treeMat, spots.leaf, 0.6, 0.14);
   pines.customDepthMaterial = treeDepth; leafs.customDepthMaterial = treeDepth;
@@ -1545,6 +1567,11 @@ function scatterDecor(rng) {
     {mesh:makeInstanced(makeCactusGeometry(),rockMat,spots.cactus,.9,.12),list:spots.cactus,crushable:true,cameraObstacle:false},
   ] : [];
   if(regional.length)regional[0].mesh.customDepthMaterial=treeDepth;
+  for(const [kind,list]of Object.entries(exoticSpots))if(list.length){
+    const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:kind==='crystalline'?.3:.8,metalness:kind==='ferrous'?.65:0,
+      emissive:kind==='twilight'?0x416768:kind==='fungal'?0x563754:0x182028,emissiveIntensity:.24});
+    regional.push({mesh:makeInstanced(biomeDressingGeometry(kind),mat,list,.9,.1),list,crushable:true,cameraObstacle:false});
+  }
   return { treeMat, crysMat, sets: [
     ...regional,
     // Trees are scenery, not commander or camera barriers. Keep crushing

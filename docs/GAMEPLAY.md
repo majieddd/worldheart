@@ -27,15 +27,17 @@ envelope. Title purchases require Apply upgrades to save and rebuild that same
 planet with the new account profile. See [M5B](qa/implementation/M5B.md) for exact
 implementation/evidence scope and the remaining release gates.
 
-The landforms v6 preview assigns a deterministic stellar class, luminosity,
+The landforms v7 preview assigns a deterministic stellar class, luminosity,
 orbital distance, water inventory and tectonic activity to every campaign
 planet. Flux is luminosity divided by distance squared. These stylized inputs
-select Garden, Monsoon, Sunbaked, Frost or Ember themes and bias biome bands,
+select ten themes (Garden, Canopy, Dune, Cryosphere, Molten, Crystal, Spore,
+Pelagic, Iron desert and Luminous twilight) and bias biome bands,
 ocean coverage and formation families. Mixed Landscapes remains the default.
 The inspector can override the theme independently of its climate preset;
 saved campaign definitions retain their generated environment. See
 [terrain recipes](TERRAIN-RECIPES.md) and the
-[cosmic landforms evidence](qa/implementation/COSMIC-LANDFORMS.md).
+[extreme worlds evidence](qa/implementation/EXTREME-WORLDS.md). Solid land,
+sea and scenery palettes are shared with the flat `debug.html` exhibition.
 
 ## Towers
 
@@ -60,16 +62,24 @@ player sees `tier + 1`, so `tierStats(type, 0)` is a freshly built tower and
 `tierCost(type, 1)` is the price of the first upgrade. That off-by-one runs
 through the whole file and through the gate at `js/game.js:585`.
 
-Selected authored values, from the `tiers` arrays at `js/towers.js:21` onward:
+Effective authored values from `tierStats`, before elevation or rewards:
 
 | Tower | MK I | MK II | MK III |
 |---|---|---|---|
-| Bolt Sentinel | 9 dmg, 4.6/s, 8.1 range | 15, 5.2, 8.85, 15% crit | 24, 6.0, 9.6, 25% crit |
-| Cryo Bloom | 38% slow, 5.25 range | 48%, 6.15 | 55%, 7.05, plus brittle |
-| Mortar Bastion | 34 dmg, 0.48/s, 9.9 range, 2.3 splash | 56, 0.52, 10.8, 2.7 | 88, 0.56, 11.7, 3.1, two shells |
+| Bolt Sentinel | 9 dmg, 4.6/s, 10.935 range | 15, 5.2, 11.31, 15% crit | 24, 6.0, 11.685, 25% crit |
+| Cryo Bloom | 38% slow, 7.0875 range | 48%, 7.5375 | 55%, 7.9875, plus brittle |
+| Mortar Bastion | 34 dmg, 0.48/s, 13.365 range, 2.3 splash | 56, 0.52, 13.815, 2.7 | 88, 0.56, 14.265, 3.1, two shells |
 | Arc Spire | 30 dmg, 1.5 s charge, 3 chains | 46, 1.35, 4 | 68, 1.2, 6 |
 | Helios Lance | 26 dps, 2.0 s ramp to 3x | 42, 1.7, 3x | 64, 1.4, 3.5x |
 | Warden Barracks | 2 units, 7 s to summon | 3, 6 | 5, 5 |
+
+Every family's initial range is 1.35 times its reference table range.
+MK II/III add half the old absolute range gain to that boosted initial value.
+Arc starts at 9.72m, Helios at 14.985m and Warden at 9.45m. Warden's base leash
+uses this same progression; its elevation bonus remains a surface-distance
+bonus. Attack spheres keep the existing vertical-drop compensation. Mortar's
+2.3m inner exclusion is unchanged. Preview, selection and targeting consume the
+same effective statistics; the raw arrays retain the reference values.
 
 Crits multiply by 2.2 on Bolt, Mortar, Arc and Warden hits. Helios applies the
 equivalent expected DPS multiplier to its continuous beam (`js/rewards.js`).
@@ -86,8 +96,10 @@ less (`js/towers.js:100`, `:106`, `:122`).
 
 Scaling is per stat and deliberately uneven at `js/towers.js:130`: damage and
 dps scale with the full multiplier, fire rate at 35% of it, garrison at 50%,
-range by its cube root. Authored slow scaling saturates at 85% and redirects
-surplus into range. Campaign combat additionally caps applied slow at 70%,
+range by `MKIII * (1 + .12 * log2(1 + (tier - 2) / 3))`, with tier zero based.
+This concave curve lowers each later range increment. Authored slow scaling
+saturates at 85%; excess slow no longer creates a second reach bonus.
+Reward multipliers are unchanged. Campaign combat additionally caps applied slow at 70%,
 including terrain and drafted bonuses; classic maps retain the 85% ceiling.
 
 The classic maps stop at MK III. 99 Planets does not, and instead caps the mark

@@ -21,14 +21,15 @@ test('buttes, dunes, calderas and glacial troughs retain distinct relief and ope
  const fingerprints=[];
  for(const type of ['buttes','caldera','dunes','valley']){
   const weights=Object.fromEntries(Object.keys(LANDFORM_RECIPES).map(k=>[k,k===type?1:0]));
-  const f=createFormationField(91,240,{range:90,canyon:38},'varied',{weights});let high=0,floor=0,peak=0;
+  const f=createFormationField(91,240,{range:90,canyon:38},'varied',{weights});let high=0,floor=0,peak=0,subfloor=0;
   const heights=[];
   for(let i=0;i<8000;i++){
    const y=1-2*(i+.5)/8000,r=Math.sqrt(1-y*y),a=i*2.39996323,s=f.inspect(r*Math.cos(a),y,r*Math.sin(a));
-   assert.ok(Number.isFinite(s.relief)&&s.relief>=0);peak=Math.max(peak,s.relief);heights.push(Math.round(s.relief*100));
+   assert.ok(Number.isFinite(s.relief));if(s.relief<0){subfloor++;assert.ok(type==='valley'&&s.incision>=-s.relief&&s.relief>-15);}peak=Math.max(peak,s.relief);heights.push(Math.round(s.relief*100));
    if(s.edge<=s.valley){assert.equal(s.relief,0);floor++;}if(s.relief>2)high++;
   }
   assert.ok(floor>600&&high>80,`${type} needs open routes and visible raised terrain`);
+  if(type==='valley')assert.ok(subfloor>30,'glacial troughs have a broad bed below the enclosing floor');
   if(type==='dunes')assert.ok(peak<10,'wind ridges stay at the small scale');else assert.ok(peak>15);
   fingerprints.push(heights.join(','));
  }

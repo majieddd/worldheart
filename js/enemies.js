@@ -335,6 +335,11 @@ function shear(g, zPerY) {
 // indexed with the sides interleaved (even left, odd right, rows front to
 // back) so the tripods are {0, 3, 4} and {1, 2, 5}: front-left, mid-right and
 // hind-left move together, which is how a real insect keeps three feet down.
+export function buildEnemyModel(key,mats,manager={}) {
+  const builders={mite:makeMite,husk:makeHusk,aegis:makeAegis,wisp:makeWisp,colossus:makeColossus};
+  if(!builders[key])throw Error('Unknown enemy model');
+  return builders[key](mats,manager);
+}
 function makeMite(m) {
   const sk = new Skeleton();
   sk.add('root', null, 0, 0.23, 0);

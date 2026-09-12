@@ -7,6 +7,7 @@ alongside the stable game without merging gameplay PRs into main.
 |---|---|---|
 | [Original game](https://majieddd.github.io/worldheart/) | main | Stable game; preview publishes preserve its tracked file bytes |
 | [V2 preview](https://majieddd.github.io/worldheart/v2/) | preview/v2 | Latest integrated, verified work; defaults to the saved 99-planet campaign |
+| [Debug World](https://majieddd.github.io/worldheart/v2/debug.html) | preview/v2 | Flat exhibition of production models, formations, biomes and themes; no save access |
 | [Live build identity](https://majieddd.github.io/worldheart/v2/build.json) | Deployment artifact | Exact preview/main commits and preview asset hashes |
 | /worldheart/dist/worldheart.html | main | Stable single-file download |
 
@@ -17,7 +18,7 @@ alongside the stable game without merging gameplay PRs into main.
    Claim the issue, owner, branch and bounded subsystem before edits.
 2. Implement a coherent change. Run syntax, relevant tests, house style and
    the necessary browser checks. Keep failures and remaining acceptance explicit.
-3. Run node tools/deploy.mjs, update the progress ledger/blueprint, and commit
+3. Run node tools/deploy.mjs (including the Debug World entry), update the progress ledger/blueprint, and commit
    source plus generated files. Push your feature branch and retain its PR.
 4. Run node tools/publish-preview.mjs. It requires a clean checkout and advances
    preview/v2 by fast-forward only. If another collaborator published first,

@@ -45,6 +45,7 @@ export class WorldgenPanel {
         <label class="worldgen-toggle"><input type="checkbox" id="worldgen-paths"> Show nest habitat and routes</label>
         <p id="worldgen-atlas" hidden>Cyan outlines: valid battlefield areas and approaches. Pale outlines: potential habitat across the globe. Moving dots follow shared routes toward the base.</p>
         <div class="worldgen-actions"><button class="btn" id="worldgen-copy">Copy seed link</button><a class="btn" id="worldgen-play" target="_blank" rel="noopener">Play this seed</a></div>
+        <a class="btn" href="debug.html" target="_blank" rel="noopener">Open Debug World</a>
         <input id="worldgen-link" aria-label="Seed link" readonly hidden>
         <p id="worldgen-info"></p><p id="worldgen-status" role="status"></p>
         <p>Drag terrain or use WASD / arrows. Wheel to zoom. Collapse this panel for a clear view.</p>
@@ -100,7 +101,7 @@ export class WorldgenPanel {
     if(CONFIG.environment){
       const e=CONFIG.environment;
       el('info').textContent+=` · ${e.name} · ${e.star.name} (${e.star.type}) · ${e.orbitAU.toFixed(2)} AU · ${e.flux.toFixed(2)}x Earth sunlight`;
-      if(CONFIG.biomeKey==='auto')el('info').textContent+=' · Wet equator, dry subtropics, temperate belts, cold poles. Star and orbit shift these bands.';
+      if(CONFIG.biomeKey==='auto')el('info').textContent+=' · Latitude shapes local bands within this planet theme. Theme sets its dominant ecology.';
     }
     this.status.textContent = saved ? 'Campaign and rewards are separate from this sandbox.' : 'History could not be saved. Copy a seed link to keep this world.';
     this.focus(home, 115);

@@ -7,7 +7,7 @@ keep their original terrain formula.
 
 ## Authoring boundaries
 
-`js/terrain/recipes.js` holds version 6, twenty group recipes and four relief
+`js/terrain/recipes.js` holds version 7, thirty group recipes and four relief
 mixes. `js/terrain/formations.js` lays out and samples those groups. `world.js`
 composes their relief with continents and small surface detail, then applies
 elemental stone rules and the independent `terrain/ecology.js` climate fields.
@@ -29,18 +29,28 @@ resulting surface, rather than drawing hidden routes through blocked mountains.
 | Hill Fields | More widely spaced parallel low crests with a long windward side and shorter slip face | Low rolling obstacles beside larger formations |
 | Winding Canyon | Negative incision with winding stepped walls and long end ramps | Dry sub-sea passage, with depth bounded by available exit length |
 | Staircase escarpment | Three lateral benches crossed by a diagonal ramp | Multiple connected positions beside a steep flank |
-| Glacial trough | Broad U-shaped floor between unequal shoulders | A wide corridor distinct from narrow ravines |
+| Glacial trough | Sunken U-shaped bed, unequal walls and hanging side valleys | Broad below-floor route with graded ends, distinct from the raised Winding Valley |
 | Great continental rift | Long negative trunk with a side branch and extended end ramps | A deep route crosses several ordinary formation regions |
 | Noctis labyrinth | Offset crossing faults and surviving upland islands | Multiple intersecting channels, inspired by Mars |
 | Rafted crust blocks | Broad tilted angular slabs | Gaps through broken crust, inspired by Europa |
 | Razorback ridge | Narrow toothed wall with a pass | A strong linear barrier, inspired by Iapetus |
 | Lava spill volcano | Crater lake, breached rim and downhill lava channel | Hot elevated positions around an active flow |
 | Canopy highlands | Broad lobed shelves and bounded forest clusters | Wooded highlands with stepped flanks |
+| Concentric impact rings | Two gated rims and a central rebound | Linked concentric shelves and radial approaches |
+| Wind-carved yardangs | Tall parallel fins with staggered ends and a crosswind gap | Several long corridors connected laterally |
+| Drumlin shoal | Rounded asymmetric teardrops with long tails | Gaps between staggered low remnants |
+| Alluvial fan | One apex spreading into a scalloped apron | Diverging radial approaches across an open flank |
+| Joined karst sinkholes | Rounded depressions connected by surface throats | Linked dry doline floors; no simulated caves |
+| Spiral polar troughs | Two winding negative cuts | Curving inward routes with graded exits |
+| Penitente blade field | Dense pointed narrow blades | Many small paths between elevated obstructions |
+| Araneiform star channels | Radial channels converging on a low center | Several inward routes rather than a single ravine trunk |
+| Convection cell mosaic | Polygonal plates and a depressed connected network | Branch choices around multiple adjacent cells |
+| Tiger-stripe fractures | Four long parallel negative grooves | Separate narrow tracks with open ends |
 
 Mixed landscapes, Giant peaks, Deep canyons and Ocean islands are **relief mixes**,
 not exclusive biome assignments. Any group can have neutral, hot or cold
 surfaces. All four mixes include hills, tall ranges and incised uplands, with
-different proportions and scales. No individual battlefield guarantees all twenty
+different proportions and scales. No individual battlefield guarantees all thirty
 families. Low-frequency geology biases neighbouring family choices and peak
 amplitudes, rather than distributing every recipe with identical probability.
 Temperature, altitude snow, water and foliage remain separate fields.
@@ -52,7 +62,7 @@ and climate preserve variety, including distinct opening-planet seeds.
 
 Each requested planet seed selects an M/K/G/F star and an orbital distance.
 Flux L/a^2 shifts temperature; water inventory and tectonic activity separately
-produce Garden, Monsoon, Sunbaked, Frost and Ember themes. Planet Mix has
+produce ten extreme themes, described below. Planet Mix has
 wet equatorial, dry subtropical, wetter temperate and cold polar belts, with
 smaller longitude noise and an altitude cooling term. Explicit Temperate,
 Desert, Boreal, Jungle, Volcanic and Wetlands overrides remain available.
@@ -68,6 +78,31 @@ Trees and cacti remain passable scenery. Mild benches can support vegetation.
 The inspector Climate selector independently dresses the same layout and is
 preserved by Load seed, recent history, share links and Play this seed. Campaign
 climates remain seeded; inspector choices do not overwrite campaign saves.
+
+## Extreme worlds and exhibition
+
+The environment catalogue is independent of the thirty formation recipes.
+Each theme biases suitable shapes and changes land, water and dressing through
+the shared `js/biome-visuals.js` registry. Garden retains varied latitude belts.
+Canopy favors dense jungle; Dune favors dry sandstone and cacti; Cryosphere
+favors ice and cold placement; Molten uses glowing fissures, red seas and hot
+raised ground. Crystal uses violet crust and prisms; Spore uses plum soil and
+mushroom groves; Pelagic emphasizes turquoise water, coral and wetlands; Iron
+desert uses rust-red crust and dark blades; Luminous twilight uses cobalt and
+branching luminous flora. Their major visual identity dominates ordinary land.
+Explicit hot formations and altitude ice can remain as minority contrasts.
+
+Gameplay variety follows real water coverage, terrain biases and the existing
+hot/cold tower affinities. Molten seas currently use swimming slowdown; they do
+not add an unannounced damage rule. Scenery remains passable. Neither a theme
+nor a color change grants a hidden movement or tower modifier.
+
+`debug.html` provides six flat lanes: 11 unit rigs, 18 authored tower marks,
+14 weapon family/era or native silhouettes, 30 isolated formations, 14 biomes
+and 10 theme plots. Formation tiles use the real production field at a common
+1:5 scale. Model poses and materials come from the same production builders.
+Each theme links to a full generated planet. Debug reads/writes no campaign or
+preference storage. [Research, visual comparisons and checks](qa/implementation/EXTREME-WORLDS.md).
 
 ## Generation order
 

@@ -131,24 +131,23 @@ export function tierPowerMul(tier) {
 // needs a hand-written tier four.
 export function tierStats(typeKey, tier) {
   const tiers = TOWER_TYPES[typeKey].tiers;
-  if (tier < tiers.length) return tiers[tier];
+  const reach=t=>tiers[0].range*1.35+(tiers[Math.min(t,tiers.length-1)].range-tiers[0].range)*.5;
+  if (tier < tiers.length) return { ...tiers[tier],range:reach(tier),...(typeKey==='warden'?{leash:reach(tier)}:{}) };
   const top = tiers[tiers.length - 1];
   const k = tierPowerMul(tier);
   const out = { ...top };
-  // Only the magnitudes scale. Range is deliberately damped to a cube root of
-  // the same curve: a tower that could out-range the whole cap would stop the
-  // frontier from meaning anything.
+  // Damage/cadence retain their progression. Reach starts wider, then grows
+  // logarithmically so late towers cannot cover the entire battlefield.
   if (top.dmg !== undefined) out.dmg = top.dmg * k;
   if (top.dps !== undefined) out.dps = top.dps * k;
   if (top.rate !== undefined) out.rate = top.rate * (1 + (k - 1) * 0.35);
   if (top.slow !== undefined) {
-    // The slow saturates, so past the clamp the aura grows instead - otherwise
-    // a cryo upgrade past tier 6 costs thousands and changes nothing at all.
+    // A capped slow still gains a little reach through the shared curve.
     out.slow = Math.min(0.85, top.slow * (1 + (k - 1) * 0.25));
-    if (out.slow >= 0.85 && top.range !== undefined) out.rangeBonus = (k - 1) * 0.25;
   }
   if (top.garrison !== undefined) out.garrison = Math.round(top.garrison * (1 + (k - 1) * 0.5));
-  if (top.range !== undefined) out.range = top.range * Math.cbrt(k) * (1 + (out.rangeBonus || 0));
+  if (top.range !== undefined) out.range = reach(tiers.length-1)*(1+.12*Math.log2(1+(tier-tiers.length+1)/3));
+  if(typeKey==='warden')out.leash=out.range;
   return out;
 }
 

@@ -1,5 +1,16 @@
 import {box,slab,cone,shift,spin,merge} from './rig.js';
 
+export function weaponAppearanceMaterial(mats,source,appearance){
+  if(!appearance)return source;
+  const material=source.clone();
+  if(source===mats.energy){
+    const color={tempered:0xffd399,ember:0xff794d,frost:0x91ddff,pulse:0xa9a0ff}[appearance.core];
+    material.color.setHex(color);material.emissive.setHex(color);
+    material.emissiveIntensity={ancient:.12,technological:1.3,empowered:2.2}[appearance.era];
+  }else if(source===mats.trim||source===mats.gold){material.color.setHex(appearance.era==='technological'?0xcbe4ef:0xcaa56f);material.metalness=appearance.era==='ancient'?.25:.55;}
+  return material;
+}
+
 // A single grip-space assembly serves the held prop, soldier and loot model.
 // Forward is -Z. Stock, receiver, barrel and attachments overlap physically;
 // an era changes the silhouette, never the location of the firing hand.

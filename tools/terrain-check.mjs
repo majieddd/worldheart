@@ -80,6 +80,18 @@ try {
       n.nodePos(n.heartNode, origin); n.blockNodes(origin, 0.1, 30000); n.unblockNodes(30000);
       check('Tower footprints cannot rewrite flyer routes', oldAir.every((x, i) => n.airNext[i] === x));
       const tower = W.towers.place('mortar', W.heartPos);
+      for(const key of Object.keys(TOWER_TYPES)){
+        const built=W.towers.place(key,W.heartPos);
+        const place=g.leashRing.place;let leashPreview=null;
+        g.leashRing.place=function(center,radius,width){leashPreview=radius;return place.call(this,center,radius,width);};
+        g.buildType=key;g.cursorValid=true;g.cursorPos.copy(built.pos);g.cursorDir.copy(built.pos).normalize();g._mountGhost(key);
+        g.leashRing.place=place;
+        const preview=TOWER_TYPES[key].summoner?leashPreview:g.rangeRing.outer.scale.x;
+        const actual=TOWER_TYPES[key].summoner?built.stats.leash:built.range;
+        check(`${key} placement preview matches new built reach`,Math.abs(preview-actual)<1e-6,{preview,actual});
+        W.towers.remove(built);
+      }
+      g.cancelBuild();
       const baseDamage = tower.stats.dmg;
       tower.terrain = 'hot';
       check('Placed Mortar consumes the elemental bonus', Math.abs(tower.stats.dmg / baseDamage - 1.15) < 0.00001, tower.stats.dmg);
