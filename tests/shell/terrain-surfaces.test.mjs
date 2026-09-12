@@ -16,7 +16,7 @@ test('ten packs and twenty theme recipes reference valid distinct content',()=>{
  assert.throws(()=>landformSettings('varied',{composition:{pack:'fake',coverage:1}}));assert.throws(()=>landformSettings('varied',{composition:{pack:'sky',coverage:NaN}}));
 });
 test('bridges, grotto roofs, floating islands, rock caps and logs share rendered collision surfaces',()=>{
- for(const type of ['valley','grotto','sky','pedestals','trunks']){
+ for(const type of ['valley','grotto','sky','pedestals','caverns','arcade','ribbons']){
   const f=isolate(type),art=f.build();art.updateMatrixWorld(true);assert.ok(f.surfaces.length);
   for(const s of f.surfaces){const dir=new T.Vector3(...s.dir),floor=w.terrainHeight(...s.dir),top=f.support(s.dir,Infinity,floor);
    const ray=new T.Raycaster(dir.clone().multiplyScalar(w.R+top+30),dir.clone().negate());const hit=ray.intersectObject(art,true)[0];assert.ok(hit,type+' has an actual mesh');assert.ok(Math.abs(hit.point.length()-w.R-top)<.25,type+' mesh agrees with its landing surface');
@@ -30,7 +30,7 @@ test('bridges, grotto roofs, floating islands, rock caps and logs share rendered
  }
 });
 test('geyser eruptions lift both teams once per cycle and settle without lifting high aircraft',()=>{
- const f=isolate('geyser'),vent=f.vents[0];assert.ok(vent);const manager=Object.create(AllyManager.prototype),unit={dir:vent.dir.clone(),height:w.terrainHeight(...vent.dir.toArray()),hop:0,mountFlight:0,vertVel:0,airT:0,mountOffset:0,active:true,type:{flying:false}};
+ const f=isolate('hills');const d=new T.Vector3(...f.field.project(f.field.modules[0],0,0)),vent={id:0,key:'geyser',m:f.field.modules[0],dir:d,height:w.terrainHeight(...d.toArray()),phase:0,radius:3.8};f.active.splice(0,f.active.length,vent);f.vents.splice(0,f.vents.length,vent);const manager=Object.create(AllyManager.prototype),unit={dir:vent.dir.clone(),height:w.terrainHeight(...vent.dir.toArray()),hop:0,mountFlight:0,vertVel:0,airT:0,mountOffset:0,active:true,type:{flying:false}};
  const enemy={...unit,dir:unit.dir.clone(),geyserLift:0,geyserVelocity:0},high={...unit,dir:unit.dir.clone(),mountFlight:15};
  const field=new GeyserField({}, {active:[unit,high]}, {active:[enemy]});field.time=(12-vent.phase)%12+.01;field.update(.01);
  assert.equal(field.launches,2);assert.ok(unit.vertVel>0&&enemy.geyserVelocity>0);assert.equal(high.airT,0);

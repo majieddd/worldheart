@@ -97,11 +97,11 @@ export function exoticHeight(m,u,v,extent,rise) {
       // Low convex polygon rafts divided by a continuous depressed network.
       // Smooth tops distinguish these from tall angular chaos blocks.
       let first=Infinity,second=Infinity;
-      for(let row=-2;row<=2;row++)for(let col=-2;col<=2;col++){
-        const d=Math.hypot(x-col*.72-(row%2)*.36,y-row*.624);
+      for(let row=-3;row<=3;row++)for(let col=-3;col<=3;col++){
+        const d=Math.hypot(x-col*.46-(row%2)*.23,y-row*.40);
         if(d<first){second=first;first=d;}else if(d<second)second=d;
       }
-      const seam=1-smooth(.17,.27,second-first);
+      const seam=1-smooth(.10,.19,second-first);
       return Math.min(m.height,16)*envelope*((1-seam)*.75-seam*.3);
     }
     case 'stripes': {

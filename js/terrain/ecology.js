@@ -1,5 +1,6 @@
 import {makeNoise3D, mulberry32, smoothstep} from '../noise.js';
-import {planetEnvironment} from '../run/planet-environments.js';
+import {planetEnvironment,PLANET_THEMES} from '../run/planet-environments.js';
+import {createSolarSampler} from '../run/solar-worlds.js';
 import {NEW_PLANET_THEMES} from '../run/world-catalogue.js';
 
 export const BIOME_REGIMES = Object.freeze({
@@ -14,14 +15,15 @@ export const BIOME_REGIMES = Object.freeze({
 
 // Climate and tectonic activity are independent of the formation seed stream.
 // An inspector override dresses the same geometry rather than rerolling it.
-export function createEcology(seed, key='auto',environment=planetEnvironment((seed>>>0)||1)) {
+export function createEcology(seed, key='auto',environment=planetEnvironment((seed>>>0)||1),geology=null,solarSample=null) {
   if(!Object.hasOwn(BIOME_REGIMES,key))key='auto';
   const rng=mulberry32(seed^0x38a534cd);
   const regime=key==='auto'?{name:'Planet mix',warmth:environment.warmth,wetness:environment.wetness,volcano:.53-environment.tectonics*.53}:BIOME_REGIMES[key];
   const warmth=regime.warmth+(rng()-.5)*.08,wetness=regime.wetness+(rng()-.5)*.08;
-  const heat=makeNoise3D(seed^0x316afa13),rain=makeNoise3D(seed^0x491f6e23),tectonic=makeNoise3D(seed^0x661ce021);
+  const heat=makeNoise3D(seed^0x316afa13),rain=makeNoise3D(seed^0x491f6e23);
   const latitude=(x,y,z)=>Math.asin(Math.min(1,Math.abs(y)))*180/Math.PI;
   const extreme=key==='auto'?environment.theme:null;
+  const geography=solarSample||(environment.solar?createSolarSampler(environment.theme):null);
   const custom=NEW_PLANET_THEMES[extreme];
   const thermal=extreme==='frozen'?-.85:extreme==='monsoon'?.55:extreme==='volcanic'?.8:extreme==='arid'?.35:0;
   const temperature=(x,y,z,height=0)=>.52-Math.pow(Math.abs(y),1.15)*1.12+heat(x*3.2+43,y*3.2,z*3.2)*.1+warmth+thermal-Math.max(0,height)*.006;
@@ -33,8 +35,14 @@ export function createEcology(seed, key='auto',environment=planetEnvironment((se
       +.25*Math.exp(-(((lat-53)/12)**2))-.16*smoothstep(66,83,lat);
     return band+noise*.14+rain(x*10.5,y*10.5+51,z*10.5)*.04+wetness;
   }
-  const volcanic=(x,y,z)=>extreme==='volcanic'||((!custom||['sulfurfurnace','stormglass'].includes(extreme))&&!['frozen','monsoon','oceanic','fungal','crystalline','ferrous','twilight','arid'].includes(extreme)&&tectonic(x*3+19,y*3,z*3)>regime.volcano);
+  const volcanic=(x,y,z)=>extreme==='volcanic'||extreme==='sulfurfurnace'||extreme==='io'||key==='volcanic'||!!geology?.volcanic(x,y,z);
   function biome(x,y,z,height,element='neutral',water=height<0) {
+    if(environment.solar){if(water&&['earth','titan'].includes(extreme))return 'ocean';const b=geography(x,y,z).biome;if(extreme==='io'&&geology?.volcanic(x,y,z)&&height>4)return 'basalt';return b;}
+    if(extreme==='all'){
+      if(water)return 'ocean';if(geology?.volcanic(x,y,z))return 'volcanic';
+      const list=PLANET_THEMES.all.biomes,lat=Math.floor((Math.asin(y)/Math.PI+.5)*10),lng=Math.floor((Math.atan2(z,x)/Math.PI+1)*8);
+      return list[(lat*16+lng)%list.length];
+    }
     if(custom){
       const list=custom.biomes,lat=latitude(x,y,z)+rain(x*4,y*4,z*4)*5;
       if(water)return list.includes('kelp')?(height<-.8?'kelp':list.includes('coralreef')?'coralreef':'ocean'):'ocean';

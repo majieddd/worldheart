@@ -10,6 +10,13 @@ weapon abilities plus FPS aiming, halves wave intervals, expands nest distance
 independently of the base, and separates recipe-fit persistent features from
 theme-compatible disasters with seeded environmental hostility. Geological
 and astronomical world refinements follow the same shared production catalogue.
+The environmental implementation separates 52 landforms, 10 terrain packs,
+44 biomes, 12 persistent active features, 12 disasters and 37 themes. Four
+replacement packs provide cave galleries, impact chains, spiral terraces and
+connected floating kingdoms. All Planet uses twice the ordinary radius, while
+16 solar-system analogues use authored regional geography and seeded details.
+See the [environmental acceptance record](qa/implementation/ACTIVE-WORLDS/ENVIRONMENT.md)
+for the distinction between implementation, runtime verification and publication.
 
 The September 12 U60-U74 work is on `feature/expedition-lobby-and-survival`.
 The subsequent U75-U88 request is tracked in

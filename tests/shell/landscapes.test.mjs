@@ -50,7 +50,7 @@ test('climate is repeatable, locally continuous and gives planets distinct biome
    assert.equal(t,b.temperature(...p));assert.equal(m,b.moisture(...p));biomes.add(a.biome(...p,.6));
    assert.ok(Math.abs(a.temperature(p[0]+.0001,p[1],p[2])-t)<.01);
    assert.ok(a.forest(...p)>=0&&a.forest(...p)<=1);
-   if(!NEW_PLANET_THEMES[a.manifest().environment.theme]){assert.equal(a.biome(...p,4,'hot'),'volcanic');assert.equal(a.biome(...p,45,'cold'),'alpine');}
+   if(!NEW_PLANET_THEMES[a.manifest().environment.theme]&&!a.manifest().environment.solar&&a.manifest().environment.theme!=='all'){assert.equal(a.biome(...p,4,'hot'),'volcanic');assert.equal(a.biome(...p,45,'cold'),'alpine');}
   }
   // Owner U53 deliberately permits almost single-biome extreme worlds.
   // Garden worlds still carry the full latitude-driven climate vocabulary.

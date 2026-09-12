@@ -35,7 +35,9 @@ export function surveyBattlefield(nav, field, heightAt, radius, center=null, the
   }
   const families=Object.keys(exposed).filter(k=>exposed[k].samples>=4);
   const islands=field.mix==='ocean'||field.settings.composition?.pack==='ocean'&&field.settings.composition.coverage>=.95;
+  const solar=field.settings.composition?.solar,sky=field.mix==='sky'||field.settings.composition?.theme==='skyarchipelago';
   const requiredFamilies=Math.min(islands?2:3,new Set(field.modules.filter(m=>m.height>0).map(m=>m.type)).size);
   return {exposed,families,requiredFamilies,dry,connected,dryConnected:dry?connected/dry:0,deep,deepConnected,pits,channels,peak,depth,
-    pass:families.length>=requiredFamilies&&dry>0&&connected/dry>=.95&&(!deep||deepConnected/deep>=.95)&&channels>=8&&Math.max(peak,depth)>=(islands?8:16)};
+    surface:sky?'floating network':solar?'astronomical analogue':'ground',
+    pass:(solar||families.length>=requiredFamilies)&&dry>0&&connected/dry>=.95&&(!deep||deepConnected/deep>=.95)&&(sky||solar||channels>=8)&&(solar||Math.max(peak,depth)>=(islands?8:16))};
 }

@@ -13,7 +13,15 @@ records 50 targeted checks, 23 traversal/quake/economy regressions, 22 equipment
 checks, 12 finish comparisons, five map camera suites, 307 automated tests and
 a legal ten-wave victory/extraction. Native quake p99 fell from 13.9ms to 7.2ms;
 longest work slice fell from 17.6ms to 6ms in the bounded reference scenario.
-262 public identity comparisons and 50 public combat checks passed. U90-U105 remain open.
+262 public identity comparisons and 50 public combat checks passed.
+
+U90-U105 are implemented with combined/public verification active. The new
+catalogue has 52 formations, 10 terrain packs, 44 biomes, 12 local active
+features, 12 disasters and 37 themes. [Environmental checkpoint](qa/implementation/ACTIVE-WORLDS/ENVIRONMENT.md)
+records the implemented contracts and initial evidence; [research](qa/implementation/ACTIVE-WORLDS-RESEARCH.md)
+explains the new spatial patterns and all 16 solar-system analogues. The full
+pack/theme route sweep, upper-deck traversal and final performance gates are
+underway. This environmental checkpoint has not yet replaced the public V2 build.
 
 Published and publicly verified: Codex on `feature/living-worlds-and-traversal`, based on V2 `42b1ee0`,
 owns U75-U88: disaster prediction, traversal/pathfinding, forge/relic/HUD fixes,
