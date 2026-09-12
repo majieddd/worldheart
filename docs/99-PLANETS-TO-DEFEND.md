@@ -123,7 +123,9 @@ An impulse cannot remove living enemy debt or change damage release timing.
 
 ### Terrain traversal and flight
 
-U48-U51 extends this in landforms v6: longer continental rifts, intersecting
+U48-U51 is published and publicly verified in V2 through PR #34 and functional
+build `2481d95`: 284 tests, 54 public browser cases and 214 asset/source checks.
+It extends this in landforms v6: longer continental rifts, intersecting
 Noctis labyrinths, tilted crust rafts, razorback walls, canopy highlands and
 active lava-spill volcanoes. Planet Mix has clear equatorial/subtropical/
 temperate/polar climate belts. Seeded star luminosity and orbital distance

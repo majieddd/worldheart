@@ -4,13 +4,14 @@ Updated 2026-09-12. This is the collaborator entry point for the owner's new dir
 Read the [running blueprint](99-PLANETS-TO-DEFEND.md), [QA report and evidence](qa/2026-09-05/README.md), then `CONTRIBUTING.md` and `CLAUDE.md` before changing code.
 
 Tracker: [Direction and milestone tracker](https://github.com/majieddd/worldheart/issues/1). Documentation/QA PR: [#9](https://github.com/majieddd/worldheart/pull/9).
-Current review: [mixed landforms, dry canyon routes and biomes, PR #33](https://github.com/majieddd/worldheart/pull/33),
+Current review: [cosmic landforms and star-driven climates, PR #34](https://github.com/majieddd/worldheart/pull/34),
+stacked on [mixed landforms, dry canyon routes and biomes, PR #33](https://github.com/majieddd/worldheart/pull/33),
 stacked on [terrain corridors and global habitat atlas, PR #32](https://github.com/majieddd/worldheart/pull/32),
 stacked on [diverse landscapes and biomes, PR #31](https://github.com/majieddd/worldheart/pull/31),
 then [modest zoom, world generator and ridges, PR #30](https://github.com/majieddd/worldheart/pull/30).
 These are drafts. Earlier review slices and their evidence remain below.
 
-Active September 11: Codex on `feature/planet-climate-and-cosmic-landforms`,
+Published and publicly verified September 12: Codex on `feature/planet-climate-and-cosmic-landforms`,
 based on preview `f50e935`, owns U48-U51. Landforms v6 adds continental rifts,
 Noctis labyrinths, rafted crust, razorback ridges, canopy highlands and flowing
 lava volcanoes. A seeded stellar/orbital environment drives five planet themes
@@ -21,8 +22,12 @@ ramp and separate deep-floor connectivity acceptance repair that contract.
 918 isolated arrivals across all five themes, classic equivalence and a legal
 15-wave victory/extraction pass. Native stress passes at 13.8ms p99 after an
 exact terrain-query optimization. The atlas passes at 7.2ms p99 and a 169ms
-longest construction task after asynchronous shader preparation. Source,
-generated mirrors and review gallery are ready for V2 publication.
+longest construction task after asynchronous shader preparation. Functional
+build `2481d95` deployed through [Pages 34676110272](https://github.com/majieddd/worldheart/actions/runs/34676110272).
+54 public browser cases and 214 asset/source comparisons pass. The original
+site still matches main `1374122`; the handoff updates documentation only.
+Full unforced 99-planet, broader device/performance, balance and owner feel QA
+remain open. U48-U51 is complete for this bounded request.
 [Research, iterations and evidence](qa/implementation/COSMIC-LANDFORMS.md).
 
 **Live development:** [Play V2](https://majieddd.github.io/worldheart/v2/).

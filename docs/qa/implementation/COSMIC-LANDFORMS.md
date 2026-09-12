@@ -1,9 +1,9 @@
 # Planet climate and cosmic landforms
 
 Owner: Codex, `feature/planet-climate-and-cosmic-landforms`, based on V2
-`f50e935`. U48-U51 on tracker #1 and terrain milestone #5. Work is implemented
-and locally verified. Publication is pending. This ledger does not close broad
-campaign/device QA.
+`f50e935`. U48-U51 on tracker #1 and terrain milestone #5. Published and publicly
+verified on September 12, 2026 through [draft PR #34](https://github.com/majieddd/worldheart/pull/34).
+This ledger does not close broad campaign/device QA.
 
 ## Research translated into mechanics
 
@@ -158,6 +158,7 @@ a solid canopy over steep or cold terrain.
 | [Earlier failed stress](COSMIC-LANDFORMS/performance-before.json) | Retained 48.1 FPS / 55.6ms p99 control |
 | [Interrupted profiler](COSMIC-LANDFORMS/interrupted-profiler.json) | Browser context closed before measurement; no CPU attribution |
 | [Native atlas](COSMIC-LANDFORMS/atlas.json) | 7.2ms frame p99, longest construction task 169ms |
+| [Atlas interactions](COSMIC-LANDFORMS/atlas-ui.json) | 12 cases: visibility, legal sites, global coverage, route progress, dots and reduced motion |
 | [Atlas diagnosis](COSMIC-LANDFORMS/atlas-profile.json) | Shader-log wait accounts for the 1.16-second stall |
 | [Yields-only control](COSMIC-LANDFORMS/atlas-yields-only.json) | Extra segment yields alone did not repair the stall |
 
@@ -170,6 +171,23 @@ isolated causal speedup claim. Full details and load samples are retained.
 The final native atlas passes with 7.2ms p99 and a 169ms longest construction
 task. Its 40,962 nodes, 91,552 edges, 12,812 potential habitat samples and
 95,136 rendered vertices match the pre-scheduling result. Syntax parses
-65 modules; all 70 generated mirror files match their source. Publication
-and live identity remain pending. Broad manual/device acceptance and full
-unforced 99-planet completion remain open.
+65 modules; all 70 generated mirror files match their source. Broad
+manual/device acceptance and full unforced 99-planet completion remain open.
+
+## Published preview
+
+Functional commit `2481d95164d3361ecc07d0aac33a4f263a34e7ba` deployed through
+[Pages 34676110272](https://github.com/majieddd/worldheart/actions/runs/34676110272).
+The [same seed on V2](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=0&seed=4206018157&terrain=varied&worldgen=1)
+passes 54 public browser cases: [32 visual/theme cases](COSMIC-LANDFORMS/public-visual.json),
+[10 dry-floor operations](COSMIC-LANDFORMS/public-hydrology.json), and
+[12 atlas interactions](COSMIC-LANDFORMS/public-atlas.json). There are no runtime
+faults in those runs. Deployed volcano and rift screenshots were also opened
+and visually inspected; [the live volcano capture](COSMIC-LANDFORMS/public-volcano.png)
+is retained separately from the local gallery.
+
+[214 public asset/source comparisons](COSMIC-LANDFORMS/public-identity.json)
+verify the deployed preview and stable root. Main remains
+`1374122d1109919a5fab10b69fefdfb80308eb6e`. The documentation handoff preserves
+the functional commit's runtime bytes; the tracker and live `v2/build.json`
+identify the latest published handoff SHA. No gameplay PR was merged into main.
