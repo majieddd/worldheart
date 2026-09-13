@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, R, terrainHeight, navigationHeight, surfaceTravel } from './world.js';
+import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, floatingWorld, R, terrainHeight, navigationHeight, surfaceTravel } from './world.js';
 import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
 import { uploadInstances } from './rig.js';
@@ -799,7 +799,7 @@ export class AllyManager {
       a.routeAt++;
     }
     const goal = a.routeAt < a.route.length ? _routePoint : target;
-    const fromNode=a.route[Math.max(0,Math.min(a.route.length-1,a.routeAt-1))],toNode=a.route[Math.min(a.route.length-1,a.routeAt)],deck=nav.layer[fromNode]||nav.layer[toNode],ceiling=deck?Math.max(nav.height[fromNode],nav.height[toNode])+.6:null;
+    const fromNode=a.route[Math.max(0,Math.min(a.route.length-1,a.routeAt-1))],toNode=a.route[Math.min(a.route.length-1,a.routeAt)],deck=floatingWorld()||nav.layer[fromNode]||nav.layer[toNode],ceiling=deck?Math.max(nav.height[fromNode],nav.height[toNode])+.6:null;
     _routeBearing.copy(goal).addScaledVector(a.dir, -goal.dot(a.dir)).normalize();
     const factor = surfaceTravel(a, _routeBearing, Math.min(distance, a.dir.angleTo(goal) * R),ceiling) * (a.swimming ? (a.mountWater || 1) : 1);
     _routeStep.copy(a.dir);

@@ -6,7 +6,7 @@ import {worldgenUrl} from '../../js/worldgen.js';
 import {LANDFORM_RECIPES} from '../../js/terrain/recipes.js';
 import {createFormationField} from '../../js/terrain/formations.js';
 import {TERRAIN_PACKS} from '../../js/run/world-catalogue.js';
-const at=(key,lng,lat)=>{lng*=Math.PI/180;lat*=Math.PI/180;return solarGeography(key,Math.cos(lat)*Math.cos(lng),Math.sin(lat),Math.cos(lat)*Math.sin(lng));};
+const at=(key,lng,lat)=>{lng*=Math.PI/180;lat*=Math.PI/180;return solarGeography(key,Math.cos(lat)*Math.cos(lng),Math.sin(lat),(key==='earth'?-1:1)*Math.cos(lat)*Math.sin(lng));};
 test('twelve local features have enforceable geology, ecology, water and slope constraints',()=>{
  assert.equal(Object.keys(ACTIVE_FEATURES).length,12);assert.ok(!LANDFORM_RECIPES.geyser&&!LANDFORM_RECIPES.trunks&&!LANDFORM_RECIPES.amphitheatre);
  for(const [key,f]of Object.entries(ACTIVE_FEATURES)){

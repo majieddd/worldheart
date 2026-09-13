@@ -44,6 +44,7 @@ export function validSave(s) {
     || !integer(v.kills,0,1e9)||!integer(v.score,0,1e12)||!integer(v.lives,1,1e6))return false;
   const inventory=createInventory(e.commander,v.inventory);
   return v.drops.every(d=>d&&Array.isArray(d.dir)&&d.dir.length===3&&d.dir.every(Number.isFinite)
+    && (d.height===undefined||Number.isFinite(d.height)&&Math.abs(d.height)<1e5)
     && Math.abs(Math.hypot(...d.dir)-1)<.001&&inventory.register(d.item));
 }
 export function startExpedition(s,{seed,limit=2}) {

@@ -225,7 +225,7 @@ export function initTerrainField(seed) {
     {...authored,...(CONFIG.terrainKey==='varied'?{composition:CONFIG.environment}:{}),weights:{...authored?.weights}}) : null;
   coastClearance=CONFIG.terrain?createCoastClearance(R,(x,y,z)=>continentalityAt(x,y,z)<.37+CONFIG.terrain.ocean):null;
   ECOLOGY = CONFIG.terrain ? createEcology(seed,CONFIG.biomeKey,CONFIG.environment,FORMATIONS,solarSample) : null;
-  FEATURES=FORMATIONS?createTerrainFeatures(FORMATIONS,R,(x,y,z)=>terrainHeight(x,y,z,false),{seed,biome:biomeAt,water:oceanAt,floating:floatingWorld()}):null;
+  FEATURES=FORMATIONS?createTerrainFeatures(FORMATIONS,R,(x,y,z)=>terrainHeight(x,y,z,false),{seed,theme:CONFIG.environment?.theme,biome:biomeAt,water:oceanAt,floating:floatingWorld()}):null;
   if(FEATURES&&floatingWorld()){
     FEATURES.active.splice(0,FEATURES.active.length,...placeActiveFeatures(FORMATIONS,R,(x,y,z)=>navigationHeight(x,y,z,false),biomeAt,oceanAt,seed).filter(s=>s.key!=='trunks'));
     FEATURES.vents.splice(0,FEATURES.vents.length,...FEATURES.active.filter(s=>s.key==='geyser'));

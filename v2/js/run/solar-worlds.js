@@ -64,14 +64,15 @@ export function createSolarSampler(theme){
  };
 }
 export function solarGeography(theme,x,y,z){
- const lng=lon(x,z),lat=Math.asin(Math.max(-1,Math.min(1,y)))/rad,abs=Math.abs(lat);let biome=null,land=.8,relief=1,extra=0,tint=null;
+ // East runs toward -Z on an outward-facing, north-up Three.js globe.
+ const lng=lon(x,theme==='earth'?-z:z),lat=Math.asin(Math.max(-1,Math.min(1,y)))/rad,abs=Math.abs(lat);let biome=null,land=.8,relief=1,extra=0,tint=null;
  const q=(a,b,w,h)=>oval(lng,lat,a,b,w,h);
  switch(theme){
   case 'earth':{const distance=earthCoastDistance(lng,lat);land=.3+distance*.08;
    const mountains=earthRelief(lng,lat),ice=lat< -65||q(-42,74,17,13)<1;
    const border=Math.sin(lng*.17+lat*.23)*.13+Math.sin(lng*.31-lat*.16)*.07;
    const sahara=lat>14+border*12&&lat<34+border*7&&lng>-18&&lng<59,aridAustralia=q(133,-25,17,10)<1,atacama=q(-70,-24,3,9)<1;
-   const rainforest=q(-61,-4,17,12)<1+border||q(23,0,17,11)<1+border||lat> -11&&lat<14&&lng>92&&lng<153;
+   const rainforest=q(-61,-4,17,12)<1+border||q(22,-1,10,7)<1+border||q(-5,6,7,3.5)<1+border||lat> -11&&lat<14&&lng>92&&lng<153;
    biome=ice?'waterice':mountains>11?'alpine':abs>64?'tundra':sahara||aridAustralia||atacama?'desert':rainforest?'jungle':abs>48?'woodland':abs<24?'savanna':abs<45&&(lng> -90&&lng< -65||lng> -12&&lng<50||lng>100&&lng<150)?'woodland':'meadow';
    relief=.065;extra=mountains*smooth(0,1.5,distance);break;}
   case 'moon':{const maria=Math.min(q(-20,20,28,24),q(22,10,25,23),q(0,48,16,13),q(55,-20,13,12));biome=maria<1?'basalt':'regolith';relief=maria<1?.12:.4;extra=-3*(1-smooth(.65,1,maria));break;}

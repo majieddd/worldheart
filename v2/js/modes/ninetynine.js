@@ -433,7 +433,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const starter = generateWeapon({id:`starter-${CONFIG.seed}`,seed:CONFIG.seed,family:starterFamily,rng:makeRng(CONFIG.seed ^ 0xa42)});
   starter.rarity = 'common'; starter.affixes = []; starter.parts = {head:'balanced',grip:'balanced',core:'tempered'};
   if(!initialInventory){inventory.register(starter); inventory.pickup(starter.id); inventory.request({kind:'equip',id:starter.id,slot:0}); inventory.request({kind:'select',slot:'native'});}
-  for(const drop of expedition?.assault?.victory?.drops || [])if(inventory.register(drop.item))loot.add(drop.item,new THREE.Vector3(...drop.dir));
+  for(const drop of expedition?.assault?.victory?.drops || [])if(inventory.register(drop.item))loot.add(drop.item,new THREE.Vector3(...drop.dir),drop.height??null);
   const basic = { ...starter, id:`basic-${CONFIG.seed}`, family:'sword', rarity:'common', tier:1, affixes:[], parts:{head:'balanced',grip:'balanced',core:'tempered'} };
   const busyWeapon = () => commander.swingT > 0 || commander.strikePending;
   const nearbyLoot = () => commander.active && !commander.dead ? loot.nearby(allies.worldPos(commander, _up)) : [];
@@ -504,10 +504,10 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     if (!shouldDrop({boss:!!e.type.boss,elite:e.typeKey === 'aegis'},lootRng)) return;
     const item = generateWeapon({id:`weapon-${assaultId || CONFIG.seed}-${++lootSequence}`,seed:(lootRng()*0x100000000)>>>0,tier:CONFIG.planetIndex || 1,rng:lootRng});
     if (inventory.register(item)) {
-      let node = nav.nearestWalkableNode(e.dir,true);
+      let node = nav.nearestWalkableNode(e.dir,true,e.height);
       if (node < 0 || !Number.isFinite(nav.dist[node])) node = nav.heartNode;
       if (node >= 0) nav.nodeDir(node,_up); else _up.copy(e.dir);
-      loot.add(item,_up);
+      loot.add(item,_up,node>=0?nav.height[node]:e.height);
       if (item.rarity !== 'common' || e.type.boss) ui.toast(`${weaponName(item)} dropped (${item.rarity}).`,'info');
     }
   };
@@ -517,7 +517,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   allies.onAttackReady = a => { previousReady?.(a); if (a===commander && inventory.settle(false)){syncWeapon();persistSalvage();} };
 
   function salvageSnapshot() {
-    return {inventory:inventory.snapshot(),drops:[...loot.entries.values()].map(x=>({item:x.item,dir:x.position.clone().normalize().toArray()})),kills:game.kills,score:game.score,lives:Math.max(1,game.lives)};
+    return {inventory:inventory.snapshot(),drops:[...loot.entries.values()].map(x=>({item:x.item,dir:x.position.clone().normalize().toArray(),height:x.position.length()-R})),kills:game.kills,score:game.score,lives:Math.max(1,game.lives)};
   }
   function persistSalvage() {
     if(campaign?.snapshot().expedition.status==='victory')campaign.commit(s=>updateSalvage(s,assaultId,salvageSnapshot()));

@@ -14,9 +14,11 @@ export function buildDisasterArt(key,ground=()=>0){
  if(key==='quake'){
   const root=new THREE.Group(),geo=new THREE.PlaneGeometry(84,72,48,40);geo.rotateX(-Math.PI/2);const pos=geo.attributes.position;
   for(let i=0;i<pos.count;i++)pos.setY(i,4+faultProfile(pos.getX(i),pos.getZ(i)));
-  geo.computeVertexNormals();const fill=new THREE.MeshBasicMaterial({color:0xef465a,transparent:true,opacity:.35,side:THREE.DoubleSide,depthWrite:false});root.add(new THREE.Mesh(geo,fill));root.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo,8),new THREE.LineBasicMaterial({color:0xff8790,transparent:true,opacity:.6})));
+  geo.computeVertexNormals();const colors=[],shade=new THREE.Color();for(let i=0;i<pos.count;i++){shade.setHex(pos.getY(i)<2.5?0x796044:0x829267);shade.multiplyScalar(.72+.28*Math.max(0,pos.getY(i)/5));colors.push(shade.r,shade.g,shade.b);}geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+  const land=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:.9,side:THREE.DoubleSide}));root.add(land);
+  const fill=new THREE.MeshBasicMaterial({color:0xef465a,transparent:true,opacity:.35,side:THREE.DoubleSide,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),forecast=new THREE.Mesh(geo,fill);root.add(forecast);
   for(const branch of FAULT_BRANCHES){const points=branch.map(([u,v])=>new THREE.Vector3(u,4.2+faultProfile(u,v),v));root.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0xffb09e})));}
-  root.userData.update=time=>{fill.opacity=.27+.1*Math.sin(time*Math.PI*2);};return root;
+  root.userData.update=(time,warning=false)=>{forecast.visible=warning;fill.opacity=.27+.1*Math.sin(time*Math.PI*2);};root.userData.update(0);return root;
  }
  const f=DISASTERS[key],root=new THREE.Group(),matrix=new THREE.Matrix4();
  const material=new THREE.MeshBasicMaterial({color:f.color,transparent:true,opacity:.65,depthWrite:false});

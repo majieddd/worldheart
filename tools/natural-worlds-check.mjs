@@ -20,7 +20,16 @@ try{
    for(let k=0;k<18000&&enemy.active;k++){W.enemies.update(1/60);peak=Math.max(peak,enemy.height-w.terrainHeight(...enemy.dir.toArray()));progressed=Math.max(progressed,start-enemy.dir.angleTo(b.dir)*w.R);if(enemy.dir.angleTo(b.dir)*w.R<1.3)break;}
    ck('Native enemy walks the upper bridge without selecting the floor below',progressed>start*.8&&peak>2,{start,progressed,peak,active:enemy.active,node:enemy.node});
    nav.heartNode=heart;nav.recomputeFlow();
-   const d=new T.Vector3(...s.dir),target=d.clone().multiplyScalar(w.R+s.top(0,0)),camera=W.rig.camera,axis=new T.Vector3(...s.m.axis);camera.position.copy(target).addScaledVector(axis,65).addScaledVector(d,28);camera.up.copy(d);camera.lookAt(target.clone().addScaledVector(d,-3));camera.updateProjectionMatrix();camera.updateMatrixWorld();W.allies._render(.01);W.enemies._render(.01);W.post.render(W.scene,camera,.01);
+   const {LootField}=await import(new URL('js/loot-field.js',location.href)),loot=new LootField(W.scene,W.allies,()=>new T.Group()),centre=new T.Vector3(...s.dir),floor=w.terrainHeight(...s.dir),top=s.top(0,0);
+   loot.add({id:'bridge-loot',rarity:'common'},centre,top);loot.add({id:'floor-loot',rarity:'common'},centre,floor);
+   ck('Rewards stay on the bridge level where they dropped',Math.abs(loot.entries.get('bridge-loot').position.length()-w.R-top)<.2&&Math.abs(loot.entries.get('floor-loot').position.length()-w.R-floor)<.2,{top:loot.entries.get('bridge-loot').position.length()-w.R,floor:loot.entries.get('floor-loot').position.length()-w.R});
+   loot.remove('bridge-loot');loot.remove('floor-loot');W.scene.remove(loot.boltMesh);
+   const d=new T.Vector3(...s.dir),target=d.clone().multiplyScalar(w.R+(top+floor)/2),camera=W.rig.camera,axis=new T.Vector3(...s.m.axis),cameraDir=new T.Vector3(...w.FORMATIONS.project(s.m,s.u+s.halfU+25,0));camera.position.copy(cameraDir).multiplyScalar(w.R+Math.max(floor+4,w.terrainHeight(...cameraDir.toArray())+4));camera.up.copy(d);camera.lookAt(target);camera.updateProjectionMatrix();camera.updateMatrixWorld();
+   // Inspection lighting and hidden fog expose this remote generated bridge;
+   // movement above ran against the unchanged physical terrain and graph.
+   if(W.world.fogVeil)W.world.fogVeil.mesh.visible=false;
+   const light=new T.DirectionalLight(0xffeddb,2.4);light.position.copy(camera.position);W.scene.add(light);
+   W.allies._render(.01);W.enemies._render(.01);W.post.render(W.scene,camera,.01);
   }
   window.__natural={W,w,T,r,checks};return checks;
  }));await page.screenshot({path:resolve(out,'bridge-native.png')});
@@ -30,9 +39,11 @@ try{
   const pos=dir.clone().multiplyScalar(w.R+w.surfaceElevation(dir)),towers=['bolt','mortar','cryo','tesla','helios','warden'].map(key=>W.towers.place(key,pos));
   const outside=W.towers.place('bolt',dir.clone().addScaledVector(side,65/w.R).normalize().multiplyScalar(w.R+1));weather.update(8);weather.update(.1);
   ck('Radiation hits only local towers',towers.every(t=>t.empRemaining===8)&&outside.empRemaining===0,{remaining:towers.map(t=>t.empRemaining),outside:outside.empRemaining,hits:weather.effectCounts.emp});
+  for(const t of towers){t.update(0,[],W.fx);t.upgrade();}
+  ck('Pause and upgrades cannot bypass the EMP',towers.every(t=>t.empRemaining===8&&t.empRing.visible&&t.empRing.parent===t.holder));
   const enemy=W.enemies.spawn('husk',W.nav.heartNode,1);enemy.dir.copy(dir).addScaledVector(side,3/w.R).normalize();enemy.height=w.terrainHeight(...enemy.dir.toArray());enemy.hp=enemy.hpMax=100000;
   for(const t of towers){const shots=t.shotCount,charge=t.charge,oldCooldown=t.cooldown;for(let k=0;k<70;k++)t.update(.1,[enemy],W.fx);ck(t.typeKey+': EMP prevents firing, charging and summoning',t.shotCount===shots&&t.charge===charge&&t.cooldown===oldCooldown&&t.empRing.visible,{remaining:t.empRemaining,shots:t.shotCount});for(let k=0;k<12;k++)t.update(.1,[enemy],W.fx);ck(t.typeKey+': power and normal updates resume',t.empRemaining===0&&!t.empRing.visible&&t.cooldown<oldCooldown||t.empRemaining===0&&!t.empRing.visible&&t.shotCount>shots,{remaining:t.empRemaining,shots:t.shotCount,cooldown:t.cooldown});}
-  weather.eventTime=.08;weather.hazardArt.userData.update(.08);const camera=W.rig.camera;camera.position.copy(pos).addScaledVector(side,52).addScaledVector(dir,33);camera.up.copy(dir);camera.lookAt(pos.clone().addScaledVector(dir,10));camera.updateProjectionMatrix();camera.updateMatrixWorld();W.enemies._render(.01);W.post.render(W.scene,camera,.01);
+  weather.eventTime=.08;weather.hazardArt.userData.update(.08);const camera=W.rig.camera;camera.position.copy(pos).addScaledVector(side,28).addScaledVector(dir,100);camera.up.copy(side);camera.lookAt(pos.clone().addScaledVector(dir,10));camera.updateProjectionMatrix();camera.updateMatrixWorld();W.enemies._render(.01);W.post.render(W.scene,camera,.01);
   ck('Removed disasters cannot be scheduled or triggered',!r.DISASTERS.ashfall&&!r.DISASTERS.cryoburst&&!r.compatibleDisasters(weather.environment).includes('ashfall'));
   return checks;
  }));await page.screenshot({path:resolve(out,'radiation-native.png')});

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { surfacePoint } from './world.js';
+import { R, surfacePoint, supportHeight, surfaceElevation } from './world.js';
 
 const COLORS = { common: 0xd7e1dd, uncommon: 0x68e6aa, rare: 0xfacb69, epic:0x75e7ec, relic: 0xc6a4ed };
 // No loot rules live here. This is the visible, persistent-on-ground side of
@@ -14,13 +14,14 @@ export class LootField {
     this.boltMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.12, 6, 4), this.materials.rare, 32);
     this.boltMesh.frustumCulled = false; this.boltMesh.count = 0; scene.add(this.boltMesh);
   }
-  add(item, direction) {
+  add(item, direction, height = null) {
     if (this.entries.has(item.id)) return;
     const group = new THREE.Group(), token = this.model(item);
     token.rotation.x=-.45;token.rotation.z=.5;
     token.position.y = 0.7; group.add(token);
     const beam = new THREE.Mesh(this.beamGeometry, this.materials[item.rarity]); beam.position.y = 1.5; group.add(beam);
-    const position = surfacePoint(direction, new THREE.Vector3());
+    const position = height===null ? surfacePoint(direction, new THREE.Vector3())
+      : direction.clone().multiplyScalar(R+surfaceElevation(direction,supportHeight(direction,height+.3)));
     group.position.copy(position); group.quaternion.setFromUnitVectors(_up, direction);
     this.scene.add(group); this.entries.set(item.id, { item, position, group, token });
   }

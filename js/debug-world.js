@@ -105,6 +105,7 @@ function terrainPaint(c,dir,h,slope){
 
 function terrainTile(type,seed){
   const sample=formationSample(type,seed),n=type==='grand'||type==='labyrinth'?128:96,half=sample.half;
+  const features=createTerrainFeatures(sample.field,240,(x,y,z)=>sample.field.height(x,y,z)),a=sample.anchor;
   const geo=new THREE.PlaneGeometry(half*2*SCALE,half*2*SCALE,n,n);geo.rotateX(-Math.PI/2);
   const p=geo.attributes.position;let low=0,high=0;
   for(let i=0;i<p.count;i++){const h=sample.height(p.getX(i)/SCALE,p.getZ(i)/SCALE);p.setY(i,h*SCALE);low=Math.min(low,h);high=Math.max(high,h);}
@@ -114,6 +115,7 @@ function terrainTile(type,seed){
     const h=(pos.getY(i)+pos.getY(i+1)+pos.getY(i+2))/3/SCALE;
     const slope=1-Math.abs(flat.attributes.normal.getY(i));
     terrainPaint(c,null,h,slope);
+    if(features.surfaces.length){const u=(pos.getX(i)+pos.getX(i+1)+pos.getX(i+2))/3/SCALE,v=(pos.getZ(i)+pos.getZ(i+1)+pos.getZ(i+2))/3/SCALE,d=a.dir.map((x,k)=>x+(a.axis[k]*u+a.side[k]*v)/240),length=Math.hypot(...d);if(Number.isFinite(features.ceiling(d.map(x=>x/length),h+1.7)))c.multiplyScalar(.65);}
     for(let k=0;k<3;k++)colors.push(c.r,c.g,c.b);
   }
   flat.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));flat.computeVertexNormals();
@@ -128,7 +130,6 @@ function terrainTile(type,seed){
       b[0]*SCALE,by,b[1]*SCALE,b[0]*SCALE,bottom,b[1]*SCALE,a[0]*SCALE,bottom,a[1]*SCALE);
   }
   const wg=new THREE.BufferGeometry();wg.setAttribute('position',new THREE.Float32BufferAttribute(wall,3));wg.computeVertexNormals();group.add(new THREE.Mesh(wg,mat(0x4c4e55,{side:THREE.DoubleSide})));
-  const features=createTerrainFeatures(sample.field,240,(x,y,z)=>sample.field.height(x,y,z)),a=sample.anchor;
   const point=(dir,h)=>{const dot=dir.reduce((sum,v,k)=>sum+v*a.dir[k],0),u=240*dir.reduce((sum,v,k)=>sum+v*a.axis[k],0)/dot,v=240*dir.reduce((sum,v,k)=>sum+v*a.side[k],0)/dot;return new THREE.Vector3(u*SCALE,h*SCALE,v*SCALE);};
   const art=features.build({paint:terrainPaint,tint:0xdce8e8,roughness:.65,point,scale:SCALE,spherical:false,color:()=>0xa58d60,topColor:()=>0xb4a076,include:dir=>dir.reduce((s,v,k)=>s+v*a.dir[k],0)>.7});group.add(art);
   art.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(art);if(!bounds.isEmpty())high=Math.max(high,bounds.max.y/SCALE);
@@ -214,8 +215,8 @@ export async function startDebugWorld(){
     if(lane.key==='biomes')for(const [key,b]of Object.entries(BIOME_VISUALS))add(lane,key,b.name,biomeTile(key),b.note||'Production biome palette and scenery geometry on a flat sample plot.',{Dressing:b.decor},28);
     if(lane.key==='features'||lane.key==='disasters')for(const [key,f]of Object.entries(lane.key==='features'?ACTIVE_FEATURES:DISASTERS)){
       const hazard=lane.key==='disasters',art=hazard?buildDisasterArt(key):buildActiveFeature(key),group=new THREE.Group(),width=hazard?(key==='quake'?90:60):24;
-      const groundColor={tsunami:0x326a79,whirlpool:0x326a79,cryovent:0xa2bbc4,cryoburst:0xa2bbc4,blizzard:0x9baeb1,fumarole:0x716344,seep:0x45424a,ashfall:0x45424a,eruption:0x45424a,mudpot:0x7b7860,sandstorm:0xb39b6d,solar:0x6a6675}[key]||0x718565;
-      const pad=new THREE.Mesh(new THREE.BoxGeometry(width,.5,width),mat(groundColor));pad.position.y=-.3;group.add(pad,art);
+      const groundColor={tsunami:0x326a79,whirlpool:0x326a79,cryovent:0xa2bbc4,blizzard:0x9baeb1,fumarole:0x716344,seep:0x45424a,eruption:0x45424a,mudpot:0x7b7860,sandstorm:0xb39b6d,solar:0x6a6675}[key]||0x718565;
+      const pad=new THREE.Mesh(new THREE.BoxGeometry(width,.5,width),mat(groundColor));pad.position.y=key==='quake'?-3:-.3;group.add(pad,art);
       let item;const update=t=>{const elapsed=Math.max(0,t-(item?.animationStart||0)),cycle=hazard?elapsed%(f.duration+8):elapsed,warning=hazard&&cycle>=f.duration;art.userData.update(warning?cycle-f.duration:cycle,warning);};
       item=add(lane,key,f.name,group,f.note,hazard?{Compatibility:f.tags.join(', '),Duration:f.duration+' s',Warning:'8 s',Hostility:'Independent size and frequency'}:{Biomes:f.biomes.join(', '),Formations:f.formations.map(k=>LANDFORM_RECIPES[k]?.label||k).join(', '),Period:f.period+' s'},width,update);
     }
@@ -223,7 +224,7 @@ export async function startDebugWorld(){
       const s=THEME_SURFACES[key],group=miniaturePlanet(key),sample=group.userData.miniature;
       const item=add(lane,key,theme.name,group,`${s.note} A miniature of the production terrain field with its biome belts, formations and scenery.`,{Biomes:Object.keys(sample.biomes).length,Formations:sample.formations.length,Peak:`${sample.max.toFixed(0)} m`,Depth:`${(-sample.min).toFixed(0)} m`,Seed:sample.seed},32);
       item.planet=key;
-      animated.push({item,update:t=>{const longitude={earth:20,moon:0,mercury:160,mars:-100,jupiter:-50,pluto:100,callisto:60}[key]??30;group.children[0].rotation.y=(longitude-53)*Math.PI/180+(t-(item.animationStart||0))*.06;group.userData.update?.(t);}});await waitFrame();
+      animated.push({item,update:t=>{const longitude={earth:-20,moon:0,mercury:160,mars:-100,jupiter:-50,pluto:100,callisto:60}[key]??30;group.children[0].rotation.y=(longitude-53)*Math.PI/180+(t-(item.animationStart||0))*.06;group.userData.update?.(t);}});await waitFrame();
     }
     const strip=new THREE.Mesh(new THREE.PlaneGeometry(lane.width,2),mat(0x4e7588));strip.rotation.x=-Math.PI/2;strip.position.set(lane.width/2,-.5,lane.z+22);scene.add(strip);
     lane.label=document.createElement('div');lane.label.className='label lane-title';lane.label.textContent=`${lane.name} / ${lane.items.length}`;labels.append(lane.label);

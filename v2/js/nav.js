@@ -129,6 +129,14 @@ export class NavGraph {
           // A front that is mostly sea is not a battlefield; try another seed.
           const islands=WORLD.floatingWorld()||CONFIG.terrainKey==='ocean'||CONFIG.environment?.pack==='ocean'&&CONFIG.environment.coverage>=.95;
           if (this.capLandFrac < (islands?.28-relax*.1:.76-relax*.3)) break;
+          // Suspended networks can have a good-looking anchor but disconnected
+          // island edges. Reject those candidates on a one-metre scout before
+          // allocating the roughly 190,000-node detailed cap. The accepted cap
+          // still passes the unchanged full-resolution certificate below.
+          if(WORLD.floatingWorld()&&DETAIL>7){
+            this._buildGraph(center,theta,false,DETAIL-1);
+            if(!this._chooseSites(relax,center,theta))continue;
+          }
           this._buildGraph(center, theta);
           if (this._chooseSites(relax, center, theta)) {
             this.fieldCenter = CONFIG.terrain ? this.nodeDir(this.heartNode, new THREE.Vector3()) : center;
@@ -284,7 +292,7 @@ export class NavGraph {
     if(CONFIG.terrain&&!coarse&&!WORLD.floatingWorld()&&WORLD.FEATURES?.surfaces.length){
       for(let i=0;i<total;i++){
         if(keep&&!keep[i])continue;const idx=keep?oldToNew[i]:i,d=verts[i],h=terrainHeight(...d),top=WORLD.FEATURES.support(d,Infinity,h);
-        if(top>h+.08){deckIndex[idx]=n++;decks.push({idx:deckIndex[idx],base:idx,d,h:top});}
+        if(top>h+.08&&(top>=0||!WORLD.oceanAt(...d))){deckIndex[idx]=n++;decks.push({idx:deckIndex[idx],base:idx,d,h:top});}
       }
     }
     this.n = n;this.baseCount=baseCount;this.layer=new Uint8Array(n);this.deckIndex=deckIndex;
@@ -344,6 +352,7 @@ export class NavGraph {
       this.walk[idx]=WORLD.solidTerrainAt(_v,h,1.7)?0:1;this.floorWalk[idx]=this.walk[idx];this.airWalk[idx]=this.airWalk[base];
     }
     // CSR adjacency from unique triangle edges (kept nodes only)
+    const stride=Math.max(1048576,2**Math.ceil(Math.log2(n+1)));
     const edgeSet = new Set();
     const deg = new Int32Array(n);
     const addEdge = (a0, b0) => {
@@ -352,7 +361,7 @@ export class NavGraph {
         if (!keep[a0] || !keep[b0]) return;
         a = oldToNew[a0]; b = oldToNew[b0];
       }
-      const key = a < b ? a * 1048576 + b : b * 1048576 + a;
+      const key = a < b ? a * stride + b : b * stride + a;
       if (edgeSet.has(key)) return;
       edgeSet.add(key);
       deg[a]++; deg[b]++;
@@ -366,9 +375,9 @@ export class NavGraph {
       const probe=new THREE.Vector3();
       for(const t of [.2,.4,.6,.8]){probe.copy(_v).lerp(_v2,t).normalize();const expected=this.height[a]*(1-t)+this.height[b]*t,actual=WORLD.supportHeight(probe,expected+.6);
         if(Math.abs(actual-expected)>Math.max(.7,distance*.18)||WORLD.solidTerrainAt(probe,actual,1.7))return;}
-      const key=Math.min(a,b)*1048576+Math.max(a,b);if(!edgeSet.has(key)){edgeSet.add(key);deg[a]++;deg[b]++;}
+      const key=Math.min(a,b)*stride+Math.max(a,b);if(!edgeSet.has(key)){edgeSet.add(key);deg[a]++;deg[b]++;}
     };
-    for(const key of groundEdges){const a=Math.floor(key/1048576),b=key%1048576,da=deckIndex[a],db=deckIndex[b];if(da>=0&&db>=0)connect(da,db);if(da>=0)connect(da,b);if(db>=0)connect(a,db);}
+    for(const key of groundEdges){const a=Math.floor(key/stride),b=key%stride,da=deckIndex[a],db=deckIndex[b];if(da>=0&&db>=0)connect(da,db);if(da>=0)connect(da,b);if(db>=0)connect(a,db);}
 
     this.adjOff = new Int32Array(n + 1);
     for (let i = 0; i < n; i++) this.adjOff[i + 1] = this.adjOff[i] + deg[i];
@@ -377,7 +386,7 @@ export class NavGraph {
     this.airCost = CONFIG.terrain ? new Float32Array(this.adjOff[n]) : null;
     const cursor = new Int32Array(n);
     for (const key of edgeSet) {
-      const a = Math.floor(key / 1048576), b = key % 1048576;
+      const a = Math.floor(key / stride), b = key % stride;
       this.adj[this.adjOff[a] + cursor[a]++] = b;
       this.adj[this.adjOff[b] + cursor[b]++] = a;
     }
@@ -527,6 +536,14 @@ export class NavGraph {
     if(from===to)return true;
     for(let e=this.adjOff[to];e<this.adjOff[to+1];e++)if(this.adj[e]===from)return Number.isFinite(this.cost[e]);
     return false;
+  }
+
+  bridgeEdgeClear(a,b,predictedFault=null){
+    if(!this.layer[a]&&!this.layer[b])return true;
+    const from=this.nodeDir(a,new THREE.Vector3()),to=this.nodeDir(b,new THREE.Vector3()),probe=new THREE.Vector3(),distance=from.distanceTo(to)*R;
+    for(const t of [.2,.4,.6,.8]){probe.copy(from).lerp(to,t).normalize();const expected=this.height[a]*(1-t)+this.height[b]*t,base=WORLD.terrainHeight(probe.x,probe.y,probe.z,false)+(predictedFault?WORLD.terrainFaultDelta(predictedFault,probe.x,probe.y,probe.z):0),actual=WORLD.FEATURES.support(probe.toArray(),expected+.6,base);
+      if(Math.abs(actual-expected)>Math.max(.7,distance*.18)||WORLD.solidTerrainAt(probe,actual,1.7))return false;
+    }return true;
   }
 
   // Generation-marked scratch: worldgen calls this once per node on graphs of
@@ -803,7 +820,7 @@ export class NavGraph {
       if(i%16===0)yield;
       this.nodeDir(i,_v);if(_v.dot(fault.dir)<Math.cos(48/R))continue;
       const delta=predicted?WORLD.terrainFaultDelta(fault,_v.x,_v.y,_v.z):0;
-      if(this.layer[i]){this.walk[i]=terrainHeight(_v.x,_v.y,_v.z)+delta<this.height[i]+.15&&!WORLD.solidTerrainAt(_v,this.height[i],1.7)?1:0;this.floorWalk[i]=this.walk[i];dirty[i]=1;continue;}
+      if(this.layer[i]){this.walk[i]=terrainHeight(_v.x,_v.y,_v.z)+delta<this.height[i]+.15&&!WORLD.solidTerrainAt(_v,this.height[i],1.7)?1:0;this.floorWalk[i]=this.walk[i];dirty[i]=1;for(let e=this.adjOff[i];e<this.adjOff[i+1];e++)dirty[this.adj[e]]=1;continue;}
       const h=terrainHeight(_v.x,_v.y,_v.z)+delta,base=terrainHeight(_v.x,_v.y,_v.z,false)+delta;
       this.height[i]=h;this.baseHeight[i]=base;this.waterDepth[i]=WORLD.waterDepthAt(_v,base);
       const slope=WORLD.slopeAt(_v,predicted?fault:null);
@@ -817,6 +834,7 @@ export class NavGraph {
       const j=this.adj[e];this.nodeDir(i,_v);this.nodeDir(j,_v2);const angle=Math.acos(Math.max(-1,Math.min(1,_v.dot(_v2))));
       const horizontal=angle*(R+(WORLD.surfaceElevation(_v,this.baseHeight[i])+WORLD.surfaceElevation(_v2,this.baseHeight[j]))*.5);
       this.cost[e]=travelCost(this.baseHeight[j],this.baseHeight[i],horizontal,this.waterDepth[j],this.waterDepth[i]);
+      if(Number.isFinite(this.cost[e])&&!this.bridgeEdgeClear(i,j,predicted?fault:null))this.cost[e]=Infinity;
       _v.add(_v2).normalize();this.airCost[e]=this.airWalk[i]&&this.airWalk[j]&&WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+3)?angle*R:Infinity;
     }}
     // Node identity, adjacency and tower footprint ownership are retained.
@@ -944,6 +962,7 @@ export class NavGraph {
     // may leave that graph and fall off a ledge, but cannot walk up its wall.
     if(ground>footHeight+.12||(ground>from+.02&&!airborne&&(ground-from)/distance>1.1))return false;
     for(const body of this.towerBodies?.values()||[]){
+      if(Number.isFinite(body.height)&&Math.abs(footHeight-body.height)>3.5)continue;
       const limit=body.radius+radius*.3,old=fromDir.distanceTo(body.dir)*R;
       if(toDir.distanceTo(body.dir)*R<limit&&old>=toDir.distanceTo(body.dir)*R)return false;
     }
@@ -953,7 +972,10 @@ export class NavGraph {
   towerNodes(center,radius) {
     // Build spacing includes decorative outriggers. Navigation occupies the
     // central plinth, so those ornaments do not turn visible gaps into walls.
-    return this.nodesInRadius(center,radius*(CONFIG.map.mode==='ninetynine'?.7:1));
+    const nodes=this.nodesInRadius(center,radius*(CONFIG.map.mode==='ninetynine'?.7:1));
+    if(!CONFIG.terrain||!this.layer||this.baseCount===this.n||center.length()<R*.5)return nodes;
+    const height=center.length()-R,tolerance=Math.max(1.5,radius+this.spacing*.55);
+    return nodes.filter(i=>Math.abs(this.height[i]-height)<tolerance);
   }
 
   // Blend the flow of the tracked node and its neighbors, project to the
@@ -1101,7 +1123,7 @@ export class NavGraph {
   blockNodes(center, radius, towerId) {
     this.revision++;
     this.towerBodies ||= new Map();
-    this.towerBodies.set(towerId,{dir:center.clone().normalize(),radius:radius*(CONFIG.map.mode==='ninetynine'?.7:1)});
+    this.towerBodies.set(towerId,{dir:center.clone().normalize(),height:center.length()>R*.5?center.length()-R:null,radius:radius*(CONFIG.map.mode==='ninetynine'?.7:1)});
     const nodes = this.towerNodes(center, radius);
     for (const i of nodes) {
       if (this.block[i] === 0) this.block[i] = towerId;

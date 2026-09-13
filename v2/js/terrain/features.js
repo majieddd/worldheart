@@ -12,6 +12,8 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
  };
  for(const m of field.modules){
   if(!m.height)continue;const e=m.extent*Math.min(1,m.size),h=at(m,0,0);
+  if(['valley','grotto','caverns','arcade'].includes(m.type)&&ecology?.water(...m.dir)&&h<0)continue;
+  if(ecology?.theme==='earth'&&!['alpine','tundra','waterice'].includes(ecology.biome(new THREE.Vector3(...m.dir),h)))continue;
   if(m.type==='valley'||m.type==='grotto'){
    const cave=m.type==='grotto',span=e*(cave?.72:.82),width=e*(cave?.64:.30);
    // Sample the actual banks once. The roof grows from those same shoulders,
@@ -41,7 +43,7 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
    }
    if(ecology?.floating)for(const sign of [-1,1])add(m,'ribbon-crossing',e*.48*sign,0,e*.09,e*.6,()=>28,()=>25,false);
   }else if(['sky','skyreef','skycrown','skyshards'].includes(m.type)){
-   for(let k=0;k<3;k++){const u=(k-1)*e*.43,v=(k%2?.12:-.1)*e,r=e*(ecology?.floating?.4:k===1?.30:.24);
+   for(let k=0;k<3;k++){const u=(k-1)*e*.43,v=(k%2?.12:-.1)*e,r=e*(ecology?.floating?.48:k===1?.30:.24);
     const level=ecology?.floating?28:Math.max(0,h)+18+k*9;
     add(m,'floating-slab',u,v,r,r,()=>level,(x,y)=>level-3-8*Math.max(0,1-Math.hypot(x/r,y/r)),true);
     surfaces.at(-1).rim=a=>m.type==='skyreef'?.72+.23*Math.sin(a*3+m.phase)**2:m.type==='skycrown'?.77+.22*Math.cos(a*5)**2:m.type==='skyshards'?.7+.25*Math.abs(Math.cos(a*2+m.phase)):.9+.06*Math.sin(a*3+m.phase)+.04*Math.cos(a*5);
@@ -104,8 +106,8 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
    if(!include(s.dir))continue;
    if(s.key==='fossil-log'&&active.length)continue;
    projectionCache=new Map();
-   const positions=[],colors=[],n=scale<.1?8:20,rings=scale<.1?4:8,segments=scale<.1?16:32,meshColor=new THREE.Color(color(s.dir));
-   const emit=(u,v,top)=>{u*=s.widthAt?.(v)??1;const p=vertex(s,u,v,(top?s.top:s.bottom)(u,v));positions.push(p.x,p.y,p.z);const c=(top&&s.key!=='fossil-log'?new THREE.Color(topColor(s.dir)).lerp(meshColor,.2):meshColor.clone()).multiplyScalar((top?1:.72)*(s.key==='fossil-log'?.88+.12*Math.cos(u*.65):1));colors.push(c.r,c.g,c.b);};
+   const positions=[],colors=[],tops=[],n=scale<.1?8:20,rings=scale<.1?4:8,segments=scale<.1?16:32,meshColor=new THREE.Color(color(s.dir));
+   const emit=(u,v,top)=>{u*=s.widthAt?.(v)??1;const p=vertex(s,u,v,(top?s.top:s.bottom)(u,v));positions.push(p.x,p.y,p.z);tops.push(top?1:0);const c=(top&&s.key!=='fossil-log'?new THREE.Color(topColor(s.dir)).lerp(meshColor,.2):meshColor.clone()).multiplyScalar((top?1:.72)*(s.key==='fossil-log'?.88+.12*Math.cos(u*.65):1));colors.push(c.r,c.g,c.b);};
    if(s.round)for(let ring=0;ring<rings;ring++)for(let k=0;k<segments;k++){
     const uv=(r,a)=>[Math.cos(a)*r*s.halfU*(s.rim?.(a)??1),Math.sin(a)*r*s.halfV*(s.rim?.(a)??1)],a=k*Math.PI*2/segments,b=(k+1)*Math.PI*2/segments,r=ring/rings,t=(ring+1)/rings;
     for(const top of [true,false])for(const p of [uv(r,a),uv(t,a),uv(r,b),uv(r,b),uv(t,a),uv(t,b)])emit(...p,top);
@@ -124,7 +126,8 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
    if(paint){const p=geo.attributes.position,c=geo.attributes.color,normal=new THREE.Vector3(),a=new THREE.Vector3(),b=new THREE.Vector3(),d=new THREE.Vector3(),shade=new THREE.Color();
     for(let i=0;i<p.count;i+=3){a.fromBufferAttribute(p,i);b.fromBufferAttribute(p,i+1);d.fromBufferAttribute(p,i+2);normal.crossVectors(b.clone().sub(a),d.clone().sub(a)).normalize();const centre=a.add(b).add(d).multiplyScalar(1/3),up=spherical?centre.clone().normalize():new THREE.Vector3(0,1,0),height=spherical?centre.length()/scale-radius:centre.y/scale,slope=1-Math.abs(normal.dot(up));paint(shade,spherical?up.toArray():s.dir,height,slope);shade.multiplyScalar(.96+.04*Math.sin(centre.x*17.7+centre.y*3.7+centre.z*31.9));for(let k=0;k<3;k++)c.setXYZ(i+k,shade.r,shade.g,shade.b);}
    }
-   const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:tint,vertexColors:true,flatShading:true,roughness,side:THREE.DoubleSide}));mesh.name=s.key;mesh.userData.surface=s;group.add(mesh);
+   const c=geo.attributes.color;for(let i=0;i<c.count;i+=3){const light=tops[i]+tops[i+1]+tops[i+2]===3?1:tops[i]+tops[i+1]+tops[i+2]===0?.60:.83;for(let k=0;k<3;k++)c.setXYZ(i+k,c.getX(i+k)*light,c.getY(i+k)*light,c.getZ(i+k)*light);}
+   const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:tint,vertexColors:true,flatShading:true,roughness,side:THREE.DoubleSide}));mesh.castShadow=mesh.receiveShadow=true;mesh.name=s.key;mesh.userData.surface=s;group.add(mesh);
   }
   for(const vent of vents.filter(v=>!v.key)){
    if(!include(vent.dir.toArray()))continue;

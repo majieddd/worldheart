@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { R, terrainHeight, surfaceElevation, addTerrainFault, createTerrainFault, terrainFaultDelta, TERRAIN_FAULTS, orientOnSurface, oceanAt, overheadHeight, FORMATIONS, floatingWorld } from './world.js';
+import { R, terrainHeight, surfaceElevation, addTerrainFault, createTerrainFault, terrainFaultDelta, TERRAIN_FAULTS, orientOnSurface, oceanAt, overheadHeight, supportHeight, FORMATIONS, floatingWorld } from './world.js';
 import {CONFIG} from './config.js';
 import {DISASTERS,compatibleDisasters,environmentalHostility,disasterChoice,disasterExposure,environmentalPulse} from './run/environment-catalogue.js';
 import {buildDisasterArt,buildTornadoArt} from './disaster-art.js';
@@ -80,11 +80,11 @@ export class PlanetWeather {
       if(Math.abs(terrainFaultDelta(fault,this.tmp.x,this.tmp.y,this.tmp.z))<.65)continue;
       if(this.world.damagePortal(p,p.hp,true)){disrupted.push(p.node);this.allies.onPortalDestroyed?.(p);}
     }
-    for(const tower of this.game.towerMgr.towers){this.tmp.copy(tower.pos).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;tower.pos.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp));orientOnSurface(tower.holder,tower.pos);}
+    for(const tower of this.game.towerMgr.towers){this.tmp.copy(tower.pos).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;const height=supportHeight(this.tmp,tower.pos.length()-R+.5);tower.pos.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp,height));orientOnSurface(tower.holder,tower.pos);}
     for(const p of this.world.portals){this.tmp.copy(p.group.position).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;this.position.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp));orientOnSurface(p.group,this.position);}
     this.game._validateT=0;this.game.pathFlow?.setPaths(this.nav.previewPaths());
     this.events.push({kind:'quake',strength:fault.strength,changedNodes:changed,vertices,disruptedNests:disrupted,revisionBefore:beforeRevision,revisionAfter:this.nav.revision,footprintsPreserved:blocks===this.nav.block});
-    this.ui.toast(fault.strength?'The fault rose. Ground routes now follow the new landscape.':'The tremor subsided; routes held.', 'info');
+    this.ui.toast(fault.strength?'A fissure opened. Ground routes now follow the new landscape.':'The tremor subsided; routes held.', 'info');
   }
 
   advanceShift(){

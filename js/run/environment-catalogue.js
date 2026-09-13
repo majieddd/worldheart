@@ -2,7 +2,7 @@
 const wet=['wetland','mangrove','jungle','woodland','cloudforest','bamboo','carnivorous','fungal','ocean','kelp','coralreef'];
 const hot=['volcanic','sulfur','obsidian','basalt','venusrock','ioplains'];
 const cold=['tundra','alpine','aurora','nitrogen','waterice','fracturedice','tholins'];
-const low=['basin','hills','dunes','delta','fan','cells','shields','grotto','valley','oxbow','scablands','forest','mesa','plateau','sky','arcade','caverns','ribbons'];
+const low=['basin','hills','dunes','delta','fan','cells','shields','grotto','valley','oxbow','scablands','forest','mesa','plateau','sky','skyreef','skycrown','skyshards','arcade','caverns','ribbons'];
 const feature=(name,biomes,formations,extra)=>Object.freeze({name,biomes,formations,water:false,slope:.45,radius:3,period:12,on:3,damage:0,slow:1,lift:0,heal:0,...extra});
 export const ACTIVE_FEATURES=Object.freeze({
  geyser:feature('Geyser pockets',[...wet,...hot,...cold],low,{color:0xb0e7e6,radius:3.8,lift:14,note:'Quiet flat mineral pockets erupt, launching bodies that cross them.'}),
@@ -16,7 +16,7 @@ export const ACTIVE_FEATURES=Object.freeze({
  updraft:feature('Thermal updraft',['desert','savanna','cloudforest','aurora','volcanic','ammonia','cyancloud','bluecloud'],[...low,'escarpment','cuesta','range'],{color:0xd9eed2,radius:4,period:6,on:6,lift:8,note:'A visible spiral of dust or cloud lifts bodies along a rising air column.'}),
  spring:feature('Worldheart spring',['meadow','woodland','jungle','bamboo','cherry','cloudforest','lichen'],low,{color:0x6ee9bd,radius:3.5,period:8,on:8,heal:5,note:'A fantasy mineral spring restores health to any body standing in its shallow basin.'}),
  boulder:feature('Rockfall runnel',['desert','ferrous','obsidian','alpine','lichen','regolith','basalt'],[...low,'escarpment','cuesta','range','buttes','yardangs'],{color:0x9e8874,radius:3,period:11,on:4,damage:14,slope:.9,note:'Loose stones tumble along a short, visible runnel; crossing the moving rock hurts.'}),
- whirlpool:feature('Tidal whirlpool',['ocean','kelp','coralreef'],['atoll','delta','drumlins','fan','basin','sky','ribbons'],{color:0x42bbc9,radius:6,water:true,period:15,on:9,slow:.4,damage:3,pull:3,note:'A rotating ocean funnel draws nearby swimmers toward its centre.'}),
+ whirlpool:feature('Tidal whirlpool',['ocean','kelp','coralreef'],['atoll','delta','drumlins','fan','basin','sky','skyreef','skycrown','skyshards','ribbons'],{color:0x42bbc9,radius:6,water:true,period:15,on:9,slow:.4,damage:3,pull:3,note:'A rotating ocean funnel draws nearby swimmers toward its centre.'}),
 });
 export function featureFits(key,{biome,formation,water,slope}){
  const f=ACTIVE_FEATURES[key];return !!f&&f.biomes.includes(biome)&&f.formations.includes(formation)&&f.water===water&&slope<=f.slope;

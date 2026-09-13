@@ -3,7 +3,7 @@ import {earthCoastDistance} from '../../js/run/earth-coast.js';
 import {solarGeography} from '../../js/run/solar-worlds.js';
 import {FAULT_BRANCHES,faultProfile,DISASTERS,disasterExposure,disasterTargets} from '../../js/run/environment-catalogue.js';
 import {ecologyScatter,patchScatter} from '../../js/terrain/scatter.js';
-const at=(lon,lat)=>solarGeography('earth',Math.cos(lat*Math.PI/180)*Math.cos(lon*Math.PI/180),Math.sin(lat*Math.PI/180),Math.cos(lat*Math.PI/180)*Math.sin(lon*Math.PI/180));
+const at=(lon,lat)=>solarGeography('earth',Math.cos(lat*Math.PI/180)*Math.cos(lon*Math.PI/180),Math.sin(lat*Math.PI/180),-Math.cos(lat*Math.PI/180)*Math.sin(lon*Math.PI/180));
 test('Earth coast preserves continental landmarks, major islands, seas and dateline continuity',()=>{
  for(const [name,lon,lat]of [['North America',-105,40],['South America',-60,-10],['Africa',20,0],['Europe',10,50],['Asia',100,50],['Australia',135,-25],['Antarctica',20,-80],['Greenland',-42,72],['Madagascar',47,-20],['Japan',139,36],['Britain',-2,54],['New Zealand',172,-43]])assert.ok(earthCoastDistance(lon,lat)>0,name);
  for(const [name,lon,lat]of [['Pacific',-140,0],['Atlantic',-30,0],['Indian Ocean',80,-20],['Mediterranean',15,35],['Red Sea',38,20],['Gulf of Mexico',-90,25],['Arctic',0,88]])assert.ok(earthCoastDistance(lon,lat)<0,name);
