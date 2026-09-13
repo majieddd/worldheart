@@ -22,9 +22,9 @@ try{
   }
   ck('Fixture finds an actual steep terrain edge',!!edge);
   if(edge){const [i,j]=edge;W.nav.nodeDir(i,a.dir);const goal=W.nav.nodeDir(j,new T.Vector3());a.fwd.copy(goal).addScaledVector(a.dir,-goal.dot(a.dir)).normalize();a.height=world.terrainHeight(...a.dir.toArray());a.hop=0;a.airT=0;a.mountKey='none';a.mountFlying=false;a.mountSpeed=1;a.moveNode=i;
-    const start=a.dir.clone(),height=world.surfaceElevation(a.dir,a.height);for(let k=0;k<20;k++)W.allies.driveUnit(a,1,0,1/60);
+    const start=a.dir.clone(),height=world.surfaceElevation(a.dir,a.height);let takeoff=null;for(let k=0;k<20;k++){const before=world.surfaceElevation(a.dir,a.height)+a.hop,air=a.airT;W.allies.driveUnit(a,1,0,1/60);if(!air&&a.airT>0)takeoff=before;}
     ck('Commander steps off a steep edge without a ground-graph wall',start.distanceTo(a.dir)*world.R>.5,{distance:start.distanceTo(a.dir)*world.R,hop:a.hop});
-    ck('Dropping preserves height and enters a ballistic fall',a.hop>0&&a.airT>0&&Math.abs(world.surfaceElevation(a.dir,a.height)+a.hop-height)<.2,{before:height,after:world.surfaceElevation(a.dir,a.height)+a.hop,hop:a.hop});
+    ck('Dropping preserves height and enters a ballistic fall',takeoff!==null&&a.hop>0&&a.airT>0&&Math.abs(world.surfaceElevation(a.dir,a.height)+a.hop-takeoff)<.2,{startHeight:height,takeoff,after:world.surfaceElevation(a.dir,a.height)+a.hop,hop:a.hop});
     for(let k=0;k<300&&a.airT>0;k++)W.allies._fall(a,1/60);ck('The drop lands cleanly',a.airT===0&&a.hop===0);
   }
   a.dir.copy(home);a.height=world.terrainHeight(...home.toArray());a.hop=a.airT=0;

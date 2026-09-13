@@ -9,6 +9,10 @@ const cases=[...(kind==='themes'?[]:Object.keys(TERRAIN_PACKS).map(terrain=>({te
 const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1440,height:900}}),checks=[],records=[],faults=[];
 page.setDefaultNavigationTimeout(180000);
 await page.route('**/*',route=>route.continue());
+if(process.argv.includes('--profile'))await page.route('**/js/nav.js',async route=>{
+ const response=await route.fetch(),source=await response.text();
+ await route.fulfill({response,body:source+`\nfor(const key of ['build','_pickCapCenter','_buildGraph','_chooseSites','recomputeFlow']){const original=NavGraph.prototype[key];NavGraph.prototype[key]=function(...args){const start=performance.now();const result=original.apply(this,args);(window.__navProfile||=[]).push({key,ms:performance.now()-start,attempt:this.attempts,n:this.n,result:typeof result==='boolean'?result:null});return result;};}`});
+});
 page.on('pageerror',e=>faults.push(String(e)));await page.addInitScript(()=>{const raf=requestAnimationFrame.bind(window);window.__frames=true;window.requestAnimationFrame=fn=>raf(t=>{if(__frames)fn(t);});});
 const ck=(name,ok,actual)=>checks.push({name,ok:!!ok,actual}),save=()=>writeFileSync(resolve(out,'report.json'),JSON.stringify({base,checks,records,faults},null,2));
 try{for(const c of cases.filter(c=>!process.argv[4]||process.argv[4].split(',').includes(c.label))){const start=Date.now();
@@ -26,7 +30,7 @@ try{for(const c of cases.filter(c=>!process.argv[4]||process.argv[4].split(',').
    for(let i=0;i<3000;i++){const y=1-2*(i+.5)/3000,a=i*2.39996323,r=Math.sqrt(1-y*y);v.set(r*Math.cos(a),y,r*Math.sin(a));const h=w.navigationHeight(...v.toArray(),false),b=w.biomeAt(v,h);biomes[b]=(biomes[b]||0)+1;if(w.waterDepthAt(v,h)>0)water++;else land++;}
    const centre=n.nodeDir(n.heartNode,v.clone());for(let k=0;k<11;k++){const node=sites.nestSite(n,n.portalNodes[k%n.portalNodes.length],centre,.05,used,v);if(node<0)break;used.add(node);let i=node,steps=0,legal=true;while(i!==n.heartNode&&i>=0&&steps<n.n){const j=n.march.next[i];if(j<0||!n.march.floorReach[i]){legal=false;break;}i=j;steps++;}routes.push({node,legal:legal&&i===n.heartNode,steps});}
    const activeFeatures={};for(const site of w.FEATURES.active)activeFeatures[site.key]=(activeFeatures[site.key]||0)+1;
-   return {seed:W.CONFIG.seed,attempts:n.attempts,types,biomes,dry,connected,pits,bad,water,land,routes,certificate:n.terrainCertificate,features:w.FEATURES.surfaces.length,vents:w.FEATURES.vents.length,activeFeatures,environment:W.CONFIG.environment};
+   return {seed:W.CONFIG.seed,attempts:n.attempts,types,biomes,dry,connected,pits,bad,water,land,routes,certificate:n.terrainCertificate,features:w.FEATURES.surfaces.length,vents:w.FEATURES.vents.length,activeFeatures,environment:W.CONFIG.environment,profile:window.__navProfile};
   });
   ck(c.label+': certified battlefield and eleven actual nest approaches',result.certificate?.pass&&result.routes.length===11&&result.routes.every(r=>r.legal),{certificate:result.certificate,routes:result.routes});
   ck(c.label+': dry passage connectivity',!result.dry||result.connected/result.dry>=.95,{dry:result.dry,connected:result.connected,pits:result.pits,disconnected:result.bad});

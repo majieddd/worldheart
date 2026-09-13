@@ -1,8 +1,9 @@
+import {earthCoastDistance} from './earth-coast.js';
 // Readable, exaggerated analogues, not scale models or claims of habitable
 // surfaces. The four giants use fictional walkable cloud decks.
 const body=(name,orbit,biomes,weights,extra={})=>({name,orbit,wetness:-.5,activity:0,pack:'varied',coverage:1,exclusive:true,biomes,weights,water:0x3d5666,shore:0x9eacac,tags:['rock','airless'],solar:true,...extra});
 export const SOLAR_THEMES=Object.freeze({
- earth:body('Earth',1,['jungle','desert','woodland','tundra'],{range:6,hills:9,plateau:3,valley:2,gorge:3,basin:6,volcano:1},{wetness:0,activity:.14,tags:['rock','wet','ocean','atmosphere'],water:0x1a577b,shore:0x3ca5aa,note:'Recognizable continents, polar caps, equatorial forests and subtropical deserts.'}),
+ earth:body('Earth',1,['jungle','desert','woodland','tundra'],{range:6,hills:9,plateau:3,valley:2,gorge:3,basin:6},{wetness:0,activity:.14,tags:['rock','wet','ocean','atmosphere'],water:0x1a577b,shore:0x3ca5aa,note:'Recognizable continents, polar caps, equatorial forests and subtropical deserts.'}),
  moon:body('Moon',1,['regolith','basalt'],{impact:15,catena:7,basin:8,escarpment:2},{note:'Airless grey highlands, dark volcanic maria and bright impact ejecta.'}),
  mars:body('Mars',1.524,['marsdust','ferrous','waterice'],{impact:6,shields:4,grand:4,scablands:6,yardangs:3},{tags:['rock','dry','cold','atmosphere'],note:'Rusty highlands, northern lowlands, polar ice, Olympus shield and the Valles Marineris trench.'}),
  venus:body('Venus',.723,['venusrock','basalt'],{shields:10,stripes:9,volcano:2,plateau:3},{activity:.7,tags:['rock','volcanic','dry','atmosphere'],note:'Ochre volcanic plains, folded tessera highlands and broad shield volcanoes under a hazy atmosphere.'}),
@@ -39,19 +40,18 @@ export const ASTRONOMICAL_BIOMES=Object.freeze({
 const PI=Math.PI,rad=PI/180,clamp=x=>Math.max(0,Math.min(1,x)),smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
 const lon=(x,z)=>Math.atan2(z,x)/rad,wrap=a=>(a+540)%360-180;
 const oval=(lng,lat,cx,cy,w,h)=>Math.hypot(wrap(lng-cx)/w,(lat-cy)/h);
-const continents=[
- [[-168,70],[-139,60],[-127,49],[-122,34],[-110,25],[-97,16],[-82,9],[-76,8],[-88,22],[-81,25],[-66,45],[-53,51],[-65,60],[-90,70],[-125,73]],
- [[-81,12],[-64,10],[-49,0],[-35,-8],[-42,-23],[-57,-37],[-68,-55],[-76,-40],[-71,-18],[-81,-4]],
- [[-17,35],[0,37],[13,32],[32,31],[43,12],[51,12],[41,-12],[32,-26],[18,-35],[11,-16],[6,4],[-10,6],[-17,15]],
- [[-10,36],[-9,44],[5,49],[5,58],[20,71],[42,69],[58,72],[90,75],[132,69],[179,65],[170,52],[138,35],[124,22],[108,4],[99,1],[96,21],[80,7],[69,24],[50,30],[41,12],[35,30],[26,40],[10,44]],
- [[113,-22],[115,-34],[132,-36],[151,-38],[154,-24],[142,-11],[130,-13],[120,-18]],
- [[-53,60],[-43,61],[-20,70],[-25,82],[-51,83],[-64,76]],
- [[46,-13],[50,-17],[47,-26],[43,-25]],[[166,-35],[178,-39],[172,-47],[166,-45]],
+const mountainBelts=[
+ [[-150,61],[-130,53],[-119,44],[-111,36],[-105,26]],
+ [[-76,8],[-75,-5],[-68,-18],[-69,-34],[-73,-49]],
+ [[66,35],[75,36],[85,29],[96,29],[105,26]],
+ [[6,45],[11,47],[16,47],[22,44]],
+ [[144,-18],[150,-28],[148,-37]],
+ [[-85,34],[-78,41],[-67,48]],
 ];
-function polygonDistance(lng,lat,poly){let inside=false,min=1e8;for(let i=0,j=poly.length-1;i<poly.length;j=i++){
- const [a,b]=poly[i],[c,d]=poly[j];if((b>lat)!==(d>lat)&&lng<(c-a)*(lat-b)/(d-b)+a)inside=!inside;
- const dx=c-a,dy=d-b,t=clamp(((lng-a)*dx+(lat-b)*dy)/(dx*dx+dy*dy));min=Math.min(min,(lng-a-t*dx)**2+(lat-b-t*dy)**2);
- }min=Math.sqrt(min);return inside?min:-min;}
+function earthRelief(lng,lat){let height=0;for(let b=0;b<mountainBelts.length;b++)for(let i=1;i<mountainBelts[b].length;i++){
+ const [ax,ay]=mountainBelts[b][i-1],[bx,by]=mountainBelts[b][i],sx=Math.cos(lat*rad),dx=(bx-ax)*sx,dy=by-ay,px=wrap(lng-ax)*sx,py=lat-ay,t=clamp((px*dx+py*dy)/(dx*dx+dy*dy)),d=Math.hypot(px-t*dx,py-t*dy);
+ height=Math.max(height,[14,17,22,9,6,5][b]*Math.exp(-((d/[3,2.2,3,1.4,1.8,1.5][b])**2)));
+ }return height;}
 export function createSolarSampler(theme){
  const cache=new Map();
  return (x,y,z)=>{
@@ -64,13 +64,17 @@ export function createSolarSampler(theme){
  };
 }
 export function solarGeography(theme,x,y,z){
- const lng=lon(x,z),lat=Math.asin(Math.max(-1,Math.min(1,y)))/rad,abs=Math.abs(lat);let biome=null,land=.8,relief=1,extra=0,tint=null;
+ // East runs toward -Z on an outward-facing, north-up Three.js globe.
+ const lng=lon(x,theme==='earth'?-z:z),lat=Math.asin(Math.max(-1,Math.min(1,y)))/rad,abs=Math.abs(lat);let biome=null,land=.8,relief=1,extra=0,tint=null;
  const q=(a,b,w,h)=>oval(lng,lat,a,b,w,h);
  switch(theme){
-  case 'earth':{let distance=lat< -67?(-lat-67):Math.max(...continents.map(p=>polygonDistance(lng,lat,p)));land=.3+distance*.035;
-   const climateLat=lat+Math.sin(lng*.12)*1.8+Math.sin(lng*.3+lat*.05)*.7,climateAbs=Math.abs(climateLat);
-   biome=abs>66?'tundra':climateAbs<13?'jungle':climateLat>14&&climateLat<33&&lng>-20&&lng<62?'desert':climateAbs<32&&lng>112&&lng<151?'desert':climateAbs<25?'savanna':climateAbs>48?'woodland':'meadow';
-   relief=.18+.8*Math.max(1-smooth(.4,1,q(87,31,28,9)),1-smooth(.4,1,q(-71,-22,8,38)),1-smooth(.4,1,q(-114,44,10,22)));break;}
+  case 'earth':{const distance=earthCoastDistance(lng,lat);land=.3+distance*.08;
+   const mountains=earthRelief(lng,lat),ice=lat< -65||q(-42,74,17,13)<1;
+   const border=Math.sin(lng*.17+lat*.23)*.13+Math.sin(lng*.31-lat*.16)*.07;
+   const sahara=lat>14+border*12&&lat<34+border*7&&lng>-18&&lng<59,aridAustralia=q(133,-25,17,10)<1,atacama=q(-70,-24,3,9)<1;
+   const rainforest=q(-61,-4,17,12)<1+border||q(22,-1,10,7)<1+border||q(-5,6,7,3.5)<1+border||lat> -11&&lat<14&&lng>92&&lng<153;
+   biome=ice?'waterice':mountains>11?'alpine':abs>64?'tundra':sahara||aridAustralia||atacama?'desert':rainforest?'jungle':abs>48?'woodland':abs<24?'savanna':abs<45&&(lng> -90&&lng< -65||lng> -12&&lng<50||lng>100&&lng<150)?'woodland':'meadow';
+   relief=.065;extra=mountains*smooth(0,1.5,distance);break;}
   case 'moon':{const maria=Math.min(q(-20,20,28,24),q(22,10,25,23),q(0,48,16,13),q(55,-20,13,12));biome=maria<1?'basalt':'regolith';relief=maria<1?.12:.4;extra=-3*(1-smooth(.65,1,maria));break;}
   case 'mercury':{const basin=q(160,30,27,24),angle=Math.atan2((lat-30)/24,wrap(lng-160)/27),passes=smooth(.08,.32,Math.abs(Math.sin(angle*1.5)));biome=basin<.8?'basalt':'regolith';tint=0x9b8d79;relief=.5;extra=5*Math.exp(-(((basin-1)/.11)**2))*passes-4*(1-smooth(.7,1,basin));break;}
   case 'mars':{biome=abs>76?'waterice':lat>20+Math.sin(lng*.06)*7+Math.sin(lng*.18)*2?'marsdust':'ferrous';relief=.25;const trench=Math.abs(lat+12+2*Math.sin(lng*.06)),end=1-smooth(35,50,Math.abs(wrap(lng+65))),cut=(1-smooth(2,12,trench))*end;relief*=1-.8*cut;extra=-15*cut+26*Math.exp(-(q(-134,18,15,13)**2));break;}

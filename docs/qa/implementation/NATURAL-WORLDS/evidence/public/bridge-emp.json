@@ -1,0 +1,174 @@
+{
+  "checks": [
+    {
+      "name": "Native generated planet has a bank-to-bank upper route",
+      "ok": true,
+      "actual": {
+        "key": "stone-arch",
+        "path": 32,
+        "upper": 29
+      }
+    },
+    {
+      "name": "Native ally follows its ordered bridge surface",
+      "ok": true,
+      "actual": {
+        "frames": 1991,
+        "distance": 0.39023722513538545,
+        "maxClearance": 11.120377194358952,
+        "minClearance": 0
+      }
+    },
+    {
+      "name": "Native enemy walks the upper bridge without selecting the floor below",
+      "ok": true,
+      "actual": {
+        "start": 66.92476386747755,
+        "progressed": 65.62703560150085,
+        "peak": 11.119895337682234,
+        "active": true,
+        "node": 415323
+      }
+    },
+    {
+      "name": "Rewards stay on the bridge level where they dropped",
+      "ok": true,
+      "actual": {
+        "top": 6.858904695773646,
+        "floor": 0.40783229635738394
+      }
+    },
+    {
+      "name": "Radiation hits only local towers",
+      "ok": true,
+      "actual": {
+        "remaining": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "outside": 0,
+        "hits": 6
+      }
+    },
+    {
+      "name": "Pause and upgrades cannot bypass the EMP",
+      "ok": true
+    },
+    {
+      "name": "bolt: EMP prevents firing, charging and summoning",
+      "ok": true,
+      "actual": {
+        "remaining": 1.0000000000000115,
+        "shots": 0
+      }
+    },
+    {
+      "name": "bolt: power and normal updates resume",
+      "ok": true,
+      "actual": {
+        "remaining": 0,
+        "shots": 0,
+        "cooldown": -0.1
+      }
+    },
+    {
+      "name": "mortar: EMP prevents firing, charging and summoning",
+      "ok": true,
+      "actual": {
+        "remaining": 1.0000000000000115,
+        "shots": 0
+      }
+    },
+    {
+      "name": "mortar: power and normal updates resume",
+      "ok": true,
+      "actual": {
+        "remaining": 0,
+        "shots": 0,
+        "cooldown": -0.1
+      }
+    },
+    {
+      "name": "cryo: EMP prevents firing, charging and summoning",
+      "ok": true,
+      "actual": {
+        "remaining": 1.0000000000000115,
+        "shots": 0
+      }
+    },
+    {
+      "name": "cryo: power and normal updates resume",
+      "ok": true,
+      "actual": {
+        "remaining": 0,
+        "shots": 0,
+        "cooldown": -0.1
+      }
+    },
+    {
+      "name": "tesla: EMP prevents firing, charging and summoning",
+      "ok": true,
+      "actual": {
+        "remaining": 1.0000000000000115,
+        "shots": 0
+      }
+    },
+    {
+      "name": "tesla: power and normal updates resume",
+      "ok": true,
+      "actual": {
+        "remaining": 0,
+        "shots": 0,
+        "cooldown": -0.1
+      }
+    },
+    {
+      "name": "helios: EMP prevents firing, charging and summoning",
+      "ok": true,
+      "actual": {
+        "remaining": 1.0000000000000115,
+        "shots": 0
+      }
+    },
+    {
+      "name": "helios: power and normal updates resume",
+      "ok": true,
+      "actual": {
+        "remaining": 0,
+        "shots": 0,
+        "cooldown": -0.1
+      }
+    },
+    {
+      "name": "warden: EMP prevents firing, charging and summoning",
+      "ok": true,
+      "actual": {
+        "remaining": 1.0000000000000115,
+        "shots": 0
+      }
+    },
+    {
+      "name": "warden: power and normal updates resume",
+      "ok": true,
+      "actual": {
+        "remaining": 0,
+        "shots": 0,
+        "cooldown": -0.1
+      }
+    },
+    {
+      "name": "Removed disasters cannot be scheduled or triggered",
+      "ok": true
+    },
+    {
+      "name": "No runtime faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "faults": []
+}

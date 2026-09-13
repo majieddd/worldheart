@@ -694,7 +694,7 @@ Ten additions affect both armies: mud slows, steam/lava/spores/crystal pulses
 hurt, cold jets and updrafts lift, springs heal, loose rocks hurt and whirlpools
 pull swimmers. Their animation and gameplay share the same period and phase.
 
-The twelve disasters use theme compatibility and their own seeded scheduling
+The ten disasters use theme compatibility and their own seeded scheduling
 stream. Environmental Hostility is independent of theme. On Planet 1 its seeded
 range is 0.15-0.60; on Planet 99 it is 0.80-1.60. It scales event radius by
 `0.7 + 0.55 * hostility`, with a calm interval of `150 / (0.65 + hostility)`
@@ -703,7 +703,7 @@ in copied/play links. Warnings last eight seconds. Tsunamis require coastline,
 eruptions require a volcano, and overhead rock shelters exposed bodies from
 most airborne hazards. Floating worlds do not select ground-shifting quakes.
 
-All Planet uses radius 480 instead of 240, reserves all 52 formation families
+All Planet uses radius 480 instead of 240, reserves all 55 formation families
 and spreads ten terrain provinces over the globe. Its mosaic deliberately
 includes otherwise unusual combinations. Solar themes use geography-specific
 biomes and landmarks. Airless bodies have no blue atmosphere or ordinary clouds;
@@ -714,4 +714,8 @@ and Debug, where miniatures use reduced mesh detail.
 Floating worlds navigate on linked upper islands while preserving open space
 below. Commanders and summoned units spawn on those upper surfaces and can walk
 off into the existing fall/swim model. Generated routes and nest clearings use
-the same upper surface. Other cave worlds retain ground navigation under roofs.
+the same upper surface. Other cave worlds have separate ground and roof nodes. Continuous bank edges connect the layers; a unit crossing above cannot select the floor underneath it. Orders target the surface clicked. Roofs also shelter ground units.
+
+Earth uses public-domain Natural Earth coastlines, geographic mountain belts and regional ecology. Vegetation and active features use seeded clustered density rather than a uniform spherical spiral. Three additional sky mesa families join the sky packs: drifting reefs, crowned islands and hanging shards.
+
+Quakes carve a branching fissure with a red seam on current ground and a translucent forecast of the exact new surface. Lightning uses connected forked arcs. Tsunamis show a continuous foamy bore and warn with a footprint and travel arrow. Radiation storms show purple clouds and arcs: a struck tower stops firing, charging and summoning for eight seconds, with a visible purple power ring. The timer follows simulation time, survives upgrades and recovers normally. Volcanic ashfall and cryovolcanic outburst were removed from scheduling and Debug; the local cryovolcanic jet remains an independent feature.

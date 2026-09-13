@@ -10,7 +10,7 @@ await page.addInitScript(()=>{window.__storageCalls=[];for(const name of ['getIt
 try{
  const start=Date.now();await page.goto(`${base}/debug.html`);await page.waitForFunction(()=>window.DEBUG_WORLD,{},{timeout:120000});
  const counts=await page.evaluate(()=>DEBUG_WORLD.lanes.map(l=>({key:l.key,n:l.items.length})));
- check('all ten registries are represented',JSON.stringify(counts.map(l=>l.n))===JSON.stringify([11,3,30,32,52,10,44,12,12,37]),counts);
+ check('all ten registries are represented',JSON.stringify(counts.map(l=>l.n))===JSON.stringify([11,3,30,32,55,10,44,12,10,37]),counts);
  check('debug route never reads or mutates browser saves',await page.evaluate(()=>__storageCalls.length===0),await page.evaluate(()=>__storageCalls));
  check('bounded exhibit startup',Date.now()-start<15000,{ms:Date.now()-start});
  const entries=await page.evaluate(()=>DEBUG_WORLD.exhibits.map(e=>({key:e.key,lane:e.lane,name:e.name})));

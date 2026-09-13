@@ -1,0 +1,264 @@
+{
+  "checks": [
+    {
+      "name": "Every naturally placed feature satisfies its actual biome, formation, water and slope",
+      "ok": true,
+      "actual": {
+        "count": 32,
+        "kinds": [
+          "geyser",
+          "mudpot",
+          "cryovent",
+          "spring",
+          "boulder",
+          "whirlpool",
+          "trunks",
+          "updraft"
+        ]
+      }
+    },
+    {
+      "name": "Natural feature placement reaches both hemispheres",
+      "ok": true
+    },
+    {
+      "name": "Garden-world volcanic ecology follows actual volcanic geology",
+      "ok": true,
+      "actual": {
+        "volcanic": 26,
+        "stray": 0
+      }
+    },
+    {
+      "name": "geyser: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 5000,
+        "enemy": 5000,
+        "lift": 14,
+        "enemyLift": 14,
+        "slow": 1
+      }
+    },
+    {
+      "name": "mudpot: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 5000,
+        "enemy": 5000,
+        "lift": 0,
+        "enemyLift": 0,
+        "slow": 0.45
+      }
+    },
+    {
+      "name": "fumarole: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 4999.2,
+        "enemy": 4999,
+        "lift": 0,
+        "enemyLift": 0,
+        "slow": 1
+      }
+    },
+    {
+      "name": "seep: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 4998.8,
+        "enemy": 4998.8,
+        "lift": 0,
+        "enemyLift": 0,
+        "slow": 1
+      }
+    },
+    {
+      "name": "cryovent: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 5000,
+        "enemy": 5000,
+        "lift": 10,
+        "enemyLift": 10,
+        "slow": 0.55
+      }
+    },
+    {
+      "name": "crystal: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 4999,
+        "enemy": 4999,
+        "lift": 0,
+        "enemyLift": 0,
+        "slow": 1
+      }
+    },
+    {
+      "name": "spores: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 4999.5,
+        "enemy": 4999,
+        "lift": 0,
+        "enemyLift": 0,
+        "slow": 0.7
+      }
+    },
+    {
+      "name": "updraft: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 5000,
+        "enemy": 5000,
+        "lift": 8,
+        "enemyLift": 8,
+        "slow": 1
+      }
+    },
+    {
+      "name": "spring: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 5000.5,
+        "enemy": 5000.5,
+        "lift": 0,
+        "enemyLift": 0,
+        "slow": 1
+      }
+    },
+    {
+      "name": "boulder: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 4998.6,
+        "enemy": 4998.6,
+        "lift": 0,
+        "enemyLift": 0,
+        "slow": 1
+      }
+    },
+    {
+      "name": "whirlpool: production effect reaches both real teams",
+      "ok": true,
+      "actual": {
+        "ally": 4999.7,
+        "enemy": 4999,
+        "lift": 0,
+        "enemyLift": 0,
+        "slow": 0.4
+      }
+    },
+    {
+      "name": "meteor: warned effect damages/slows real actors in its footprint",
+      "ok": true,
+      "actual": {
+        "warning": true,
+        "ally": 9997.256584492945,
+        "enemy": 9996.256584492945,
+        "time": 0.1,
+        "height": 0.5376818208383175,
+        "scale": 0.9797912525199353,
+        "count": 4
+      }
+    },
+    {
+      "name": "thunder: warned effect damages/slows real actors in its footprint",
+      "ok": true,
+      "actual": {
+        "warning": true,
+        "ally": 9997.746480119204,
+        "enemy": 9996.746480119204,
+        "time": 0.1,
+        "height": 0.5376818208383175,
+        "scale": 0.9797912525199353,
+        "count": 4
+      }
+    },
+    {
+      "name": "hail: warned effect damages/slows real actors in its footprint",
+      "ok": true,
+      "actual": {
+        "warning": true,
+        "ally": 9999.51010437374,
+        "enemy": 9998,
+        "time": 0.1,
+        "height": 0.47310145046136953,
+        "scale": 0.9797912525199353,
+        "count": 4
+      }
+    },
+    {
+      "name": "blizzard: warned effect damages/slows real actors in its footprint",
+      "ok": true,
+      "actual": {
+        "warning": true,
+        "ally": 9999.804041749496,
+        "enemy": 9998,
+        "time": 0.1,
+        "height": 0.47310145046136953,
+        "scale": 0.9797912525199353,
+        "count": 4
+      }
+    },
+    {
+      "name": "sandstorm: warned effect damages/slows real actors in its footprint",
+      "ok": true,
+      "actual": {
+        "warning": true,
+        "ally": 9999.706062624244,
+        "enemy": 9998,
+        "time": 1,
+        "height": 0.47310145046136953,
+        "scale": 0.9797912525199353,
+        "count": 4
+      }
+    },
+    {
+      "name": "tsunami: warned effect damages/slows real actors in its footprint",
+      "ok": true,
+      "actual": {
+        "warning": true,
+        "ally": 9999.118187872733,
+        "enemy": 9999,
+        "time": 8,
+        "height": -0.7902338551119215,
+        "scale": 0.9797912525199353,
+        "count": 2
+      }
+    },
+    {
+      "name": "solar: warned effect damages/slows real actors in its footprint",
+      "ok": true,
+      "actual": {
+        "warning": true,
+        "ally": 9998.236375745464,
+        "enemy": 9997.236375745464,
+        "time": 0.1,
+        "height": 0.5376818208383175,
+        "scale": 0.9797912525199353,
+        "count": 4
+      }
+    },
+    {
+      "name": "eruption: warned effect damages/slows real actors in its footprint",
+      "ok": true,
+      "actual": {
+        "warning": true,
+        "ally": 9998.236375745464,
+        "enemy": 9997.236375745464,
+        "time": 0.1,
+        "height": 57.866078725686,
+        "scale": 0.9797912525199353,
+        "count": 4
+      }
+    },
+    {
+      "name": "No runtime faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "faults": []
+}

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { R, terrainHeight, surfaceElevation, addTerrainFault, createTerrainFault, terrainFaultDelta, TERRAIN_FAULTS, orientOnSurface, oceanAt, overheadHeight, FORMATIONS, floatingWorld } from './world.js';
+import { R, terrainHeight, surfaceElevation, addTerrainFault, createTerrainFault, terrainFaultDelta, TERRAIN_FAULTS, orientOnSurface, oceanAt, overheadHeight, supportHeight, FORMATIONS, floatingWorld } from './world.js';
 import {CONFIG} from './config.js';
-import {DISASTERS,compatibleDisasters,environmentalHostility,disasterChoice,disasterExposure} from './run/environment-catalogue.js';
+import {DISASTERS,compatibleDisasters,environmentalHostility,disasterChoice,disasterExposure,environmentalPulse} from './run/environment-catalogue.js';
 import {buildDisasterArt,buildTornadoArt} from './disaster-art.js';
 import {FaultForecast} from './disaster-preview.js';
 import {isNestClearing,NEST_SCHEDULE_CAPACITY,NEST_SEPARATION} from './nest-sites.js';
@@ -80,11 +80,11 @@ export class PlanetWeather {
       if(Math.abs(terrainFaultDelta(fault,this.tmp.x,this.tmp.y,this.tmp.z))<.65)continue;
       if(this.world.damagePortal(p,p.hp,true)){disrupted.push(p.node);this.allies.onPortalDestroyed?.(p);}
     }
-    for(const tower of this.game.towerMgr.towers){this.tmp.copy(tower.pos).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;tower.pos.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp));orientOnSurface(tower.holder,tower.pos);}
+    for(const tower of this.game.towerMgr.towers){this.tmp.copy(tower.pos).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;const height=supportHeight(this.tmp,tower.pos.length()-R+.5);tower.pos.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp,height));orientOnSurface(tower.holder,tower.pos);}
     for(const p of this.world.portals){this.tmp.copy(p.group.position).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;this.position.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp));orientOnSurface(p.group,this.position);}
     this.game._validateT=0;this.game.pathFlow?.setPaths(this.nav.previewPaths());
     this.events.push({kind:'quake',strength:fault.strength,changedNodes:changed,vertices,disruptedNests:disrupted,revisionBefore:beforeRevision,revisionAfter:this.nav.revision,footprintsPreserved:blocks===this.nav.block});
-    this.ui.toast(fault.strength?'The fault rose. Ground routes now follow the new landscape.':'The tremor subsided; routes held.', 'info');
+    this.ui.toast(fault.strength?'A fissure opened. Ground routes now follow the new landscape.':'The tremor subsided; routes held.', 'info');
   }
 
   advanceShift(){
@@ -138,12 +138,18 @@ export class PlanetWeather {
       for(const [units,friendly]of [[this.allies.active,true],[this.enemies.active,false]])for(const a of units){
         if(!a.active||a.dead||a.dir.dot(this.dir)<Math.cos(recipe.radius*scale/R))continue;
         const h=a.height+(a.hop||0)+(a.mountFlight||0),u=a.dir.dot(this.axis)*R,v=a.dir.dot(this.bearing)*R;
-        if(Number.isFinite(overheadHeight(a.dir,h+2))&&!['cryoburst','solar'].includes(this.kind))continue;
+        if(Number.isFinite(overheadHeight(a.dir,h+2))&&this.kind!=='solar')continue;
         if(!disasterExposure(this.kind,u,v,h,this.eventTime,scale))continue;
         this.effectCounts[this.kind]=(this.effectCounts[this.kind]||0)+1;
         if(recipe.damage)(friendly?this.allies:this.enemies).damage(a,recipe.damage*activeDt*scale,{armorPierce:99});
         if(recipe.slow<1){if(friendly)a.weatherSpeed=recipe.slow;else this.enemies.applySlow(a,1-recipe.slow,.3);}
         if(recipe.lift){const stamp=this.kind+':'+this.events.length+':'+Math.floor(this.eventTime/recipe.period);if(a.geyserStamp!==stamp){a.geyserStamp=stamp;if(friendly){a.vertVel=Math.max(a.vertVel,recipe.lift*scale);a.airT=Math.max(.001,a.airT);}else a.geyserVelocity=recipe.lift*scale;}}
+      }
+      if(recipe.emp){const stamp=this.events.length+':'+environmentalPulse(recipe,this.eventTime).cycle;
+        for(const tower of this.game.towerMgr.towers){this.tmp.copy(tower.pos).normalize();if(this.tmp.dot(this.dir)<Math.cos(recipe.radius*scale/R)||tower.empStamp===stamp)continue;
+          if(!disasterExposure(this.kind,this.tmp.dot(this.axis)*R,this.tmp.dot(this.bearing)*R,tower.pos.length()-R,this.eventTime,scale))continue;
+          tower.empStamp=stamp;tower.disableFor(recipe.emp);this.effectCounts.emp=(this.effectCounts.emp||0)+1;
+        }
       }
       if(this.remaining<=0){this.phase='calm';this.hazardArt.visible=false;this.nextEvent=this.clock+this.hostility.interval;}
     }

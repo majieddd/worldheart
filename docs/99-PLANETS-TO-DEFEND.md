@@ -2,16 +2,20 @@
 
 Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
-Implementation is underway on feature/99-planets-integration. Start with the [QA evidence](qa/2026-09-05/README.md) and [progress ledger](PROGRESS.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
+Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
-The latest U89-U114 request is tracked in [Active worlds](qa/implementation/ACTIVE-WORLDS.md).
+The U115-U125 refinement is published and verified as V2 `67e14d0`, tracked in [Natural worlds](qa/implementation/NATURAL-WORLDS.md).
+Bridges offer real autonomous paths both above and below, with a coherent
+faceted surface. Radiation strikes disable towers, ashfall and cryovolcanic
+outburst are removed as disasters, and Earth geography uses sourced outlines.
+The prior U89-U114 request is tracked in [Active worlds](qa/implementation/ACTIVE-WORLDS.md).
 It supersedes amber ore with weapon-salvage scrap forging, adds commander and
 weapon abilities plus FPS aiming, halves wave intervals, expands nest distance
 independently of the base, and separates recipe-fit persistent features from
 theme-compatible disasters with seeded environmental hostility. Geological
 and astronomical world refinements follow the same shared production catalogue.
-The environmental implementation separates 52 landforms, 10 terrain packs,
-44 biomes, 12 persistent active features, 12 disasters and 37 themes. Four
+The current environmental implementation separates 55 landforms, 10 terrain packs,
+44 biomes, 12 persistent active features, 10 disasters and 37 themes. Four
 replacement packs provide cave galleries, impact chains, spiral terraces and
 connected floating kingdoms. All Planet uses twice the ordinary radius, while
 16 solar-system analogues use authored regional geography and seeded details.

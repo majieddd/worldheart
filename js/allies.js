@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, R, terrainHeight, navigationHeight, surfaceTravel } from './world.js';
+import { waterDepthAt, surfaceElevation, supportHeight, overheadHeight, solidTerrainAt, floatingWorld, R, terrainHeight, navigationHeight, surfaceTravel } from './world.js';
 import { swimOffset, isSwimming } from './traversal.js';
 import { buildSoldier, poseSoldier, freshSoldierState, advanceSoldierState } from './soldier.js';
 import { uploadInstances } from './rig.js';
@@ -477,7 +477,7 @@ export class AllyManager {
     a.possessed = false;
     a.following = null;
     a.selected = false;
-    a.order = null;
+    a.order = null; a.orderHeight=null;
     // Anything that was following this body is now following a pool object that
     // is about to be handed to a different unit.
     this._severFollowers(a);
@@ -775,7 +775,7 @@ export class AllyManager {
     // Repositioned or recycled units still reacquire from the spatial hash.
     const limit=nav.spacing*1.2/R;
     a.moveNode=a.moveNode>=0&&a.moveNode<nav.n&&nav._dirDist2(a.moveNode,a.dir)<limit*limit
-      ?nav.descendNode(a.moveNode,a.dir):nav.nearestNode(a.dir);
+      ?nav.descendNode(a.moveNode,a.dir,a.height):nav.nearestNode(a.dir,a.height);
     return a.moveNode;
   }
 
@@ -786,7 +786,7 @@ export class AllyManager {
     const nav = this.enemies.nav;
     const changed = !a.routeGoal || a.routeGoal.angleTo(target) * R > 2;
     if (changed || !a.route || a.routeRevision !== nav.revision || (this.time > a.routeUntil && !a.route.length)) {
-      a.route = nav.findPath(a.dir, target);
+      a.route = nav.findPath(a.dir, target,a.height,a.orderHeight??null);
       a.routeGoal = target.clone();
       a.routeAt = 0;
       a.routeUntil = this.time + 1.5;
@@ -799,12 +799,15 @@ export class AllyManager {
       a.routeAt++;
     }
     const goal = a.routeAt < a.route.length ? _routePoint : target;
+    const fromNode=a.route[Math.max(0,Math.min(a.route.length-1,a.routeAt-1))],toNode=a.route[Math.min(a.route.length-1,a.routeAt)],deck=floatingWorld()||nav.layer[fromNode]||nav.layer[toNode],ceiling=deck?Math.max(nav.height[fromNode],nav.height[toNode])+.6:null;
     _routeBearing.copy(goal).addScaledVector(a.dir, -goal.dot(a.dir)).normalize();
-    const factor = surfaceTravel(a, _routeBearing, Math.min(distance, a.dir.angleTo(goal) * R)) * (a.swimming ? (a.mountWater || 1) : 1);
+    const factor = surfaceTravel(a, _routeBearing, Math.min(distance, a.dir.angleTo(goal) * R),ceiling) * (a.swimming ? (a.mountWater || 1) : 1);
     _routeStep.copy(a.dir);
     advanceToward(_routeStep, goal, distance * a.carryMul * factor / R);
-    if (!nav.canStep(a.dir, _routeStep,false,this._movementNode(a))) { a.route = []; a.routeUntil = this.time + 0.5; return false; }
+    if (!nav.routeEdgeOpen(fromNode,toNode)) { a.route = []; a.routeUntil = this.time + 0.5; return false; }
     const arrived = advanceToward(a.dir, goal, distance * a.carryMul * factor / R, a.fwd);
+    a.moveNode=a.dir.angleTo(goal)*R<nav.spacing*.5?toNode:fromNode;
+    a.height=deck?supportHeight(a.dir,ceiling):terrainHeight(a.dir.x,a.dir.y,a.dir.z);
     if (!factor) { a.route = []; a.routeUntil = this.time + 0.5; }
     return arrived && a.routeAt >= a.route.length;
   }
@@ -1249,16 +1252,16 @@ export class AllyManager {
   // Send a unit to a place. The destination becomes its new post on arrival,
   // so an ordered garrison holds the ground it was sent to rather than walking
   // straight back to the barracks door.
-  orderMove(a, dir) {
+  orderMove(a, dir, height = null) {
     if (!a || !a.active || a.dead || a.possessed) return false;
     if (CONFIG.terrain) {
-      const path = this.enemies.nav.findPath(a.dir, dir);
+      const path = this.enemies.nav.findPath(a.dir, dir,a.height,height);
       if (!path.length) return false;
       a.route = path; a.routeAt = 0; a.routeGoal = dir.clone();
       a.routeRevision = this.enemies.nav.revision; a.routeUntil = this.time + 1.5;
     }
     if (!a.order) a.order = new THREE.Vector3();
-    a.order.copy(dir).normalize();
+    a.order.copy(dir).normalize();a.orderHeight=height;
     a.orderUntil = this.time + Math.max(ORDER_MAX, Math.min(240, (a.route?.cost || 0) / (a.type.speed * a.carryMul) + 20));
     a.following = null;
     a.target = null;
@@ -1266,7 +1269,7 @@ export class AllyManager {
   }
 
   clearOrder(a) {
-    a.order = null;
+    a.order = null; a.orderHeight=null;
     a.route = null;
     a.orderUntil = 0;
   }

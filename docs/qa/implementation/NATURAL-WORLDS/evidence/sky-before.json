@@ -1,0 +1,472 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "checks": [
+    {
+      "name": "terrain-sky: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "skyreef": {
+              "samples": 421,
+              "peak": 28
+            },
+            "skyshards": {
+              "samples": 417,
+              "peak": 28
+            },
+            "ribbons": {
+              "samples": 69,
+              "peak": 28
+            }
+          },
+          "families": [
+            "skyreef",
+            "skyshards",
+            "ribbons"
+          ],
+          "requiredFamilies": 3,
+          "dry": 63376,
+          "connected": 63376,
+          "dryConnected": 1,
+          "deep": 0,
+          "deepConnected": 0,
+          "pits": 0,
+          "channels": 0,
+          "peak": 28,
+          "depth": 2.200000047683716,
+          "surface": "floating network",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 328759,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 329231,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 338535,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 328631,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 251497,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 329409,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 194935,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 173554,
+            "legal": true,
+            "steps": 22
+          },
+          {
+            "node": 328788,
+            "legal": true,
+            "steps": 36
+          },
+          {
+            "node": 330583,
+            "legal": true,
+            "steps": 41
+          },
+          {
+            "node": 194958,
+            "legal": true,
+            "steps": 38
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain-sky: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "connected": 0,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "No browser faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "records": [
+    {
+      "terrain": "sky",
+      "planet": "temperate",
+      "label": "terrain-sky",
+      "ms": 60581,
+      "seed": 4206026076,
+      "attempts": 2,
+      "types": {
+        "ribbons": 12,
+        "skyshards": 9,
+        "sky": 4,
+        "skyreef": 3
+      },
+      "biomes": {
+        "alpine": 394,
+        "ocean": 2083,
+        "tundra": 69,
+        "meadow": 280,
+        "desert": 2,
+        "savanna": 3,
+        "woodland": 43,
+        "jungle": 126
+      },
+      "dry": 0,
+      "connected": 0,
+      "pits": 0,
+      "bad": {},
+      "water": 2083,
+      "land": 917,
+      "routes": [
+        {
+          "node": 328759,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 329231,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 338535,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 328631,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 251497,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 329409,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 194935,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 173554,
+          "legal": true,
+          "steps": 22
+        },
+        {
+          "node": 328788,
+          "legal": true,
+          "steps": 36
+        },
+        {
+          "node": 330583,
+          "legal": true,
+          "steps": 41
+        },
+        {
+          "node": 194958,
+          "legal": true,
+          "steps": 38
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "skyreef": {
+            "samples": 421,
+            "peak": 28
+          },
+          "skyshards": {
+            "samples": 417,
+            "peak": 28
+          },
+          "ribbons": {
+            "samples": 69,
+            "peak": 28
+          }
+        },
+        "families": [
+          "skyreef",
+          "skyshards",
+          "ribbons"
+        ],
+        "requiredFamilies": 3,
+        "dry": 63376,
+        "connected": 63376,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "pits": 0,
+        "channels": 0,
+        "peak": 28,
+        "depth": 2.200000047683716,
+        "surface": "floating network",
+        "pass": true
+      },
+      "features": 157,
+      "vents": 9,
+      "activeFeatures": {
+        "spring": 20,
+        "whirlpool": 23,
+        "geyser": 9,
+        "boulder": 8,
+        "spores": 2,
+        "cryovent": 6
+      },
+      "environment": {
+        "version": 5,
+        "solar": false,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": null,
+        "exclusive": false,
+        "pack": "varied",
+        "coverage": 0,
+        "biomes": null,
+        "seed": 4206018157,
+        "key": "temperate",
+        "theme": "temperate",
+        "name": "Garden world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6733200530681511,
+        "relativeOrbit": 1,
+        "flux": 0.9999999999999999,
+        "warmth": -3.203426503814918e-17,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": 0,
+        "weights": {}
+      },
+      "profile": [
+        {
+          "key": "_pickCapCenter",
+          "ms": 27,
+          "attempt": 1,
+          "n": 0,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 6861.60000000149,
+          "attempt": 1,
+          "n": 188544,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 91.60000000149012,
+          "attempt": 1,
+          "n": 188544,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 229.80000000447035,
+          "attempt": 1,
+          "n": 188544,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 12.299999997019768,
+          "attempt": 1,
+          "n": 188544,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 6495.60000000149,
+          "attempt": 1,
+          "n": 187942,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 88.39999999850988,
+          "attempt": 1,
+          "n": 187942,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 229.60000000149012,
+          "attempt": 1,
+          "n": 187942,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 12.300000004470348,
+          "attempt": 1,
+          "n": 187942,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 6808.69999999553,
+          "attempt": 1,
+          "n": 186518,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 61.70000000298023,
+          "attempt": 1,
+          "n": 186518,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 181.80000000447035,
+          "attempt": 1,
+          "n": 186518,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 14.699999995529652,
+          "attempt": 1,
+          "n": 186518,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 6533.89999999851,
+          "attempt": 1,
+          "n": 190242,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 75.79999999701977,
+          "attempt": 1,
+          "n": 190242,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 165.90000000596046,
+          "attempt": 1,
+          "n": 190242,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 9.5,
+          "attempt": 1,
+          "n": 190242,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 6542.5,
+          "attempt": 1,
+          "n": 184851,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 60.29999999701977,
+          "attempt": 1,
+          "n": 184851,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 131,
+          "attempt": 1,
+          "n": 184851,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 13.200000002980232,
+          "attempt": 2,
+          "n": 184851,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 6503.5,
+          "attempt": 2,
+          "n": 185973,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 81.39999999850988,
+          "attempt": 2,
+          "n": 185973,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 207,
+          "attempt": 2,
+          "n": 185973,
+          "result": true
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 13927.39999999851,
+          "attempt": 2,
+          "n": 415039,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 190.29999999701977,
+          "attempt": 2,
+          "n": 415039,
+          "result": null
+        },
+        {
+          "key": "build",
+          "ms": 55525.5,
+          "attempt": 2,
+          "n": 415039,
+          "result": null
+        }
+      ]
+    }
+  ],
+  "faults": []
+}

@@ -8,7 +8,7 @@ export const NEST_ROUTE_LIMIT = 160;
 export const NEST_SCHEDULE_CAPACITY = 11;
 
 function dryFloor(nav, i) {
-  return nav.walk[i] && !nav.block[i] && nav.airWalk[i]
+  return !nav.layer?.[i] && nav.walk[i] && !nav.block[i] && nav.airWalk[i]
     && (nav.waterDepth ? nav.waterDepth[i] === 0 : nav.baseHeight[i] >= .18) && nav.baseHeight[i] <= 1.5+(nav.floorDatum||0)
     && nav.march.floorReach[i] && Number.isFinite(nav.airDist[i]);
 }

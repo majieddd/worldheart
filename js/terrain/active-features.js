@@ -1,16 +1,19 @@
+import {ecologyScatter} from './scatter.js';
 import * as THREE from 'three';
 import {mulberry32} from '../noise.js';
 import {ACTIVE_FEATURES,featureFits,environmentalPulse} from '../run/environment-catalogue.js';
 
 export function placeActiveFeatures(field,radius,ground,biome,water,seed){
- const rng=mulberry32(seed^0x18ea673b),sites=[],keys=Object.keys(ACTIVE_FEATURES),dir=new THREE.Vector3();
+ const scatter=ecologyScatter(seed),rng=mulberry32(seed^0x18ea673b),sites=[],keys=Object.keys(ACTIVE_FEATURES),dir=new THREE.Vector3();
  // Shuffle the full globe before the budget is consumed; a polar-first module
  // array must not leave the other hemisphere empty on larger worlds.
  const modules=field.modules.filter(m=>m.height>0).slice(),budget=Math.min(192,Math.round(96*radius/240));
  for(let i=modules.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[modules[i],modules[j]]=[modules[j],modules[i]];}
  for(const m of modules){
-  for(let slot=0;slot<5&&sites.length<budget;slot++){
+  const slots=3+Math.floor(rng()*10);
+  for(let slot=0;slot<slots&&sites.length<budget;slot++){
    const u=(rng()*2-1)*m.extent*.7,v=(rng()*2-1)*m.extent*.7,d=field.project(m,u,v),height=ground(...d);
+   if(!scatter.accept(d))continue;
    const slope=Math.max(Math.abs(ground(...field.project(m,u+2,v))-height),Math.abs(ground(...field.project(m,u,v+2))-height))/2;
    const context={biome:biome(dir.set(...d),height),formation:m.type,water:water(...d)&&height<0,slope};
    const choices=keys.filter(k=>featureFits(k,context));if(!choices.length)continue;

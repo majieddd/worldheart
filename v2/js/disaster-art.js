@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import {DISASTERS,environmentalPulse,disasterTargets,faultProfile} from './run/environment-catalogue.js';
+import {DISASTERS,environmentalPulse,disasterTargets,faultProfile,FAULT_BRANCHES} from './run/environment-catalogue.js';
+import {buildArcStorm,buildSurge} from './storm-art.js';
 export function buildTornadoArt(){
  const root=new THREE.Group(),rings=[],material=new THREE.MeshBasicMaterial({color:0xd9e9d9,transparent:true,opacity:.3,depthWrite:false});
  for(let i=0;i<12;i++){const mesh=new THREE.Mesh(new THREE.TorusGeometry(1.3+i*.39,.16+i*.013,4,22),material);mesh.rotation.x=Math.PI/2;mesh.position.y=i;root.add(mesh);rings.push(mesh);}
@@ -8,11 +9,16 @@ export function buildTornadoArt(){
 }
 export function buildDisasterArt(key,ground=()=>0){
  if(key==='tornado')return buildTornadoArt();
+ if(key==='thunder'||key==='solar')return buildArcStorm(key,ground);
+ if(key==='tsunami')return buildSurge(ground);
  if(key==='quake'){
   const root=new THREE.Group(),geo=new THREE.PlaneGeometry(84,72,48,40);geo.rotateX(-Math.PI/2);const pos=geo.attributes.position;
   for(let i=0;i<pos.count;i++)pos.setY(i,4+faultProfile(pos.getX(i),pos.getZ(i)));
-  geo.computeVertexNormals();const fill=new THREE.MeshBasicMaterial({color:0xef465a,transparent:true,opacity:.35,side:THREE.DoubleSide,depthWrite:false});root.add(new THREE.Mesh(geo,fill));root.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo,8),new THREE.LineBasicMaterial({color:0xff8790,transparent:true,opacity:.6})));
-  root.userData.update=time=>{fill.opacity=.27+.1*Math.sin(time*Math.PI*2);};return root;
+  geo.computeVertexNormals();const colors=[],shade=new THREE.Color();for(let i=0;i<pos.count;i++){shade.setHex(pos.getY(i)<2.5?0x796044:0x829267);shade.multiplyScalar(.72+.28*Math.max(0,pos.getY(i)/5));colors.push(shade.r,shade.g,shade.b);}geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+  const land=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:.9,side:THREE.DoubleSide}));root.add(land);
+  const fill=new THREE.MeshBasicMaterial({color:0xef465a,transparent:true,opacity:.35,side:THREE.DoubleSide,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}),forecast=new THREE.Mesh(geo,fill);root.add(forecast);
+  for(const branch of FAULT_BRANCHES){const points=branch.map(([u,v])=>new THREE.Vector3(u,4.2+faultProfile(u,v),v));root.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0xffb09e})));}
+  root.userData.update=(time,warning=false)=>{forecast.visible=warning;fill.opacity=.27+.1*Math.sin(time*Math.PI*2);};root.userData.update(0);return root;
  }
  const f=DISASTERS[key],root=new THREE.Group(),matrix=new THREE.Matrix4();
  const material=new THREE.MeshBasicMaterial({color:f.color,transparent:true,opacity:.65,depthWrite:false});
@@ -29,14 +35,9 @@ export function buildDisasterArt(key,ground=()=>0){
    const a=i*2.399+time*.8,t=(time*.45+i/48)%1,r=Math.sqrt(i/48)*f.radius;
    let x=Math.cos(a)*r,z=Math.sin(a)*r,y=1+t*14,s=.22,sx=1,sy=1,sz=1;
    if(key==='meteor'||key==='eruption'){const target=targets[i%targets.length],fall=pulse.phase;x=target.u;z=target.v;y=key==='eruption'?Math.sin(fall*Math.PI)*18:pulse.active?0:24*(1-(fall-f.on/f.period)/(1-f.on/f.period));s=i<4?1:.25;y+=i<4?0:i%12*.5;}
-   else if(key==='thunder'){const target=targets[0];x=target.u+Math.sin(i*3)*.6;z=target.v;y=i/48*24;s=pulse.active?.34:.06;sy=2;}
    else if(key==='hail'){y=20*(1-t);s=.22;}
    else if(key==='blizzard'){y=t*8;s=.35;x+=Math.sin(time+i)*3;}
    else if(key==='sandstorm'){x=Math.sin(time*.2)*f.radius*.6;y=(i%8)*2;z=(Math.floor(i/8)-3)*7;s=3;sx=.7;sy=1.3;sz=1.5;}
-   else if(key==='tsunami'){x=((time/f.duration)*2-1)*f.radius;z=(i/47*2-1)*f.radius;y=1.2+Math.sin(i*.18)*.3;s=1;sx=3;sy=2.5;sz=1.3;}
-   else if(key==='ashfall'){y=18*(1-t);s=.6;x=Math.cos(a)*r*.7;}
-   else if(key==='solar'){x=(i%8-4)*6;z=Math.floor(i/8)*5-12;y=3+Math.sin(time+i*.7)*2;s=.5;sy=8;}
-   else if(key==='cryoburst'){x=Math.cos(a)*(time%5)*4;z=Math.sin(a)*(time%5)*4;y=t*8;s=.5;}
    p.set(x,y+(pointHazard?ground(x,z):0),z);size.set(s*sx,s*sy,s*sz);matrix.compose(p,new THREE.Quaternion(),size);pieces.setMatrixAt(i,matrix);
   }pieces.instanceMatrix.needsUpdate=true;pieces.visible=!warning;
  };
