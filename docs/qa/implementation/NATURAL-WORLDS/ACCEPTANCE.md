@@ -1,8 +1,10 @@
 # Natural worlds acceptance
 
 U115-U125, September 12, 2026. Implementation: `c699def`, following `0cd405a`.
-Local acceptance is complete. V2 publication and public identity checks are the
-remaining release gate. [Request ledger](../NATURAL-WORLDS.md) and
+Published and publicly verified as V2 `67e14d0` through
+[Pages run 34731406144](https://github.com/majieddd/worldheart/actions/runs/34731406144).
+[278 file/source identity comparisons](evidence/public/identity.json) passed;
+main remains `1374122`. [Request ledger](../NATURAL-WORLDS.md) and
 [research/provenance](RESEARCH.md).
 
 ## Result
@@ -50,6 +52,7 @@ scenery and compatible active features in irregular clusters and clearings.
 | Earthquake work | [Native quake profile](evidence/weather.json): p50 7 ms, p99 14 ms, maximum 69.4 ms; largest work slice 10.8 ms; 27,382 nodes / 17,268 vertices updated; camera responsive and simulation resumed |
 | Distribution and art | [Inspection captures](evidence/inspection.json), reviewed at deliberate angles and event times; bridge families, three sky variants, five Earth views, lightning, radiation and both tsunami phases |
 | Build | 93/93 modules parse; style gate passed; 95 bundled modules; 102 preview mirrors match source |
+| Public behavior | 33/33 targeted checks on V2: [20 bridge/EMP](evidence/public/bridge-emp.json), [eight sky/geyser](evidence/public/surfaces.json), [three Earth](evidence/public/earth.json) and [two visual/warning](evidence/public/inspection.json); deliberate inspection views captured against the published site |
 
 The defense used legal purchases, placements, rewards and extraction, with
 instrumented simulation time and sparse rendering. It is not a blind human
@@ -94,4 +97,6 @@ contracts. Native performance values describe this machine and bounded scenes.
 
 Full-resolution captures are adjacent to these sheets. They show the shared
 production Debug models; physical routing and storm effects have separate
-native evidence above.
+native evidence above. [Jungle](evidence/biomes-jungle-density.png) and
+[tundra](evidence/biomes-tundra-density.png) show the irregular patch placement,
+varied size and orientation in the biome lane.
