@@ -21,7 +21,7 @@ test('hostility has an independent reproducible stream and both campaign limits 
  }assert.equal(environmentalHostility(123,0,0).value,0);assert.equal(environmentalHostility(123,98,7).value,2);
 });
 test('weather respects airless, molten and ocean themes',()=>{
- assert.equal(Object.keys(DISASTERS).length,12);
+ assert.equal(Object.keys(DISASTERS).length,10);
  const lava=compatibleDisasters(planetEnvironment(771,'volcanic')),moon=compatibleDisasters(planetEnvironment(771,'moon')),sea=compatibleDisasters(planetEnvironment(771,'oceanic'));
  assert.ok(lava.includes('eruption')&&!lava.includes('tsunami')&&!lava.includes('hail'));assert.ok(moon.includes('meteor')&&moon.includes('solar')&&!moon.includes('tornado')&&!moon.includes('thunder'));assert.ok(sea.includes('tsunami'));
 });
@@ -32,7 +32,7 @@ test('predicted strikes and coast-safe surge have finite bounded real damage foo
 test('sixteen astronomical worlds own geography rather than sharing a colour swap',()=>{
  assert.equal(Object.keys(SOLAR_THEMES).length,16);const fingerprints=new Set();
  for(const key of Object.keys(SOLAR_THEMES)){const e=planetEnvironment(771,key);assert.equal(e.star.name,'Sun');assert.equal(e.orbitAU,SOLAR_THEMES[key].orbit);const p=[];for(let lat=-75;lat<85;lat+=15)for(let lng=-170;lng<180;lng+=15){const g=at(key,lng,lat);assert.ok(Number.isFinite(g.land+g.relief+g.extra));p.push([g.biome,g.land.toFixed(2),g.extra.toFixed(2),g.tint]);}fingerprints.add(JSON.stringify(p));}
- assert.equal(fingerprints.size,16);assert.ok(at('earth',20,0).land>.3&&at('earth',-140,0).land<.3);assert.equal(at('earth',20,-80).biome,'tundra');assert.equal(at('jupiter',-50,-22).biome,'stormcloud');assert.equal(at('pluto',100,12).biome,'nitrogen');assert.ok(at('mars',-65,-12).extra<-10);
+ assert.equal(fingerprints.size,16);assert.ok(at('earth',20,0).land>.3&&at('earth',-140,0).land<.3);assert.equal(at('earth',20,-80).biome,'waterice');assert.equal(at('jupiter',-50,-22).biome,'stormcloud');assert.equal(at('pluto',100,12).biome,'nitrogen');assert.ok(at('mars',-65,-12).extra<-10);
 });
 test('All Planet reserves the entire formation vocabulary in ten oversized geological provinces',()=>{
  const e=planetEnvironment(771,'all');assert.equal(e.radius,480);const field=createFormationField(771,e.radius,TERRAIN_PACKS.varied,'varied',{composition:e});assert.equal(new Set(field.modules.map(m=>m.type)).size,Object.keys(LANDFORM_RECIPES).length);assert.equal(new Set(field.modules.map(m=>m.pack)).size,10);

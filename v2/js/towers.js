@@ -477,6 +477,7 @@ export class Tower {
     this.shotCount = 0;
     this.kills = 0;
     this.cooldown = 0;
+    this.empRemaining = 0;this.empStamp=null;
     this.charge = 0;
     this.target = null;
     this.beamOn = false;
@@ -578,12 +579,20 @@ export class Tower {
     return Math.abs(d-step) < 0.15;
   }
 
+  disableFor(seconds){
+    this.empRemaining=Math.max(this.empRemaining,seconds);this.target=null;this.beamOn=false;this.charge=0;this.rampT=0;
+    if(!this.empRing){this.empRing=new THREE.Mesh(new THREE.TorusGeometry(.9,.065,5,18),new THREE.MeshBasicMaterial({color:0xc57cff,transparent:true,opacity:.8,depthWrite:false}));this.empRing.rotation.x=Math.PI/2;this.empRing.position.y=1.7;this.holder.add(this.empRing);}
+    this.empRing.visible=true;
+  }
+
   update(dt, enemies, fx) {
     this.buildT = Math.min(1, this.buildT + dt * 2.4);
     const rise = 1 - Math.pow(1 - this.buildT, 3);
     // zoomScale swells models at strategic zoom so they stay readable.
     this.group.scale.setScalar(TOWER_SCALE * this.manager.zoomScale * (0.35 + rise * 0.65));
     this.group.position.y = (rise - 1) * 0.6;
+
+    if(this.empRemaining>0){this.empRemaining=Math.max(0,this.empRemaining-dt);if(this.empRing){this.empRing.visible=this.empRemaining>0;this.empRing.rotation.z+=dt;this.empRing.material.opacity=.5+.3*Math.sin(this.empRemaining*3)**2;}return;}
 
     const st = this.stats;
     this.cooldown -= dt;

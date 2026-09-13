@@ -337,6 +337,7 @@ export class Game {
     }
     this.cursorDir.copy(_hit).normalize();
     surfacePoint(this.cursorDir, this.cursorPos);
+    if(!this.buildType&&this.world.featureArt){const roof=this.raycaster.intersectObjects(this.world.featureArt.children.filter(o=>o.userData.surface),false)[0];if(roof&&roof.distance<ray.origin.distanceTo(_hit)){this.cursorPos.copy(roof.point);this.cursorDir.copy(roof.point).normalize();}}
     this.cursorValid = true;
     if (this.buildType) this._updateGhost();
   }

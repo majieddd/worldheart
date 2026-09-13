@@ -30,10 +30,8 @@ export const DISASTERS=Object.freeze({
  hail:hazard('Hail squall',['wet','cloud'],{color:0xcceaff,radius:23,damage:5,slow:.8,note:'Dense falling ice pellets damage exposed units and slow their advance.'}),
  blizzard:hazard('Whiteout',['ice','cold'],{color:0xe3f1f4,radius:28,damage:2,slow:.45,note:'A broad spinning snow curtain slows passage through its footprint.'}),
  sandstorm:hazard('Sand wall',['dry'],{color:0xd9ab64,radius:30,damage:3,slow:.6,note:'An advancing wall of grit abrades and pushes exposed bodies.'}),
- ashfall:hazard('Volcanic ashfall',['volcanic'],{color:0x928784,radius:25,damage:6,slow:.7,note:'A dense dark ash column drops hot fragments over nearby terrain.'}),
  tsunami:hazard('Tsunami surge',['ocean'],{color:0x55cfdd,radius:25,damage:9,slow:.65,lift:4,coast:true,note:'An ocean surge advances across a coastline; high ground provides refuge.'}),
- solar:hazard('Radiation storm',['airless','cloud'],{color:0xef97dc,radius:26,damage:5,period:6,on:3,note:'A stylized charged-particle curtain pulses damage across exposed ground.'}),
- cryoburst:hazard('Cryovolcanic outburst',['ice'],{color:0x90d8f4,radius:18,damage:7,lift:11,period:5,on:2,note:'Expanding ice plumes erupt through a frozen crust.'}),
+ solar:hazard('Radiation storm',['airless','cloud'],{color:0xb17bff,radius:26,damage:18,period:6,on:.65,emp:8,note:'Purple storm clouds discharge branching arcs. Struck towers lose power for eight seconds.'}),
  eruption:hazard('Volcanic bomb eruption',['volcanic'],{color:0xff7238,radius:22,damage:18,period:3,on:1,note:'Incandescent bombs rise from active geology and fall around the vent.'}),
 });
 const hash=n=>{n=Math.imul(n^(n>>>16),0x21f0aaad);n=Math.imul(n^(n>>>15),0x735a2d97);return ((n^(n>>>15))>>>0)/4294967296;};
@@ -58,18 +56,31 @@ export function disasterChoice(environment,index){const choices=compatibleDisast
 export function environmentalPulse(recipe,time){const t=((time%recipe.period)+recipe.period)%recipe.period;return {active:t<recipe.on,phase:t/recipe.period,cycle:Math.floor(time/recipe.period)};}
 export function disasterTargets(key,time,scale=1){
  const cycle=0;
- return Array.from({length:key==='thunder'?1:4},(_,i)=>{const a=i*2.399+cycle*1.7,r=(4+(i%3)*4)*scale;return {u:Math.cos(a)*r,v:Math.sin(a)*r,radius:(key==='thunder'?3:4)*scale};});
+ return Array.from({length:key==='thunder'?1:key==='solar'?3:4},(_,i)=>{const a=i*2.399+cycle*1.7,r=(4+(i%3)*4)*scale;return {u:Math.cos(a)*r,v:Math.sin(a)*r,radius:(key==='thunder'?3:key==='solar'?5:4)*scale};});
 }
 export function disasterExposure(key,u,v,height,time,scale=1){
  const f=DISASTERS[key],r=Math.hypot(u,v);if(r>f.radius*scale||!environmentalPulse(f,time).active)return 0;
- if(['meteor','thunder','eruption'].includes(key))return disasterTargets(key,time,scale).some(p=>Math.hypot(u-p.u,v-p.v)<p.radius)?1:0;
+ if(['meteor','thunder','eruption','solar'].includes(key))return disasterTargets(key,time,scale).some(p=>Math.hypot(u-p.u,v-p.v)<p.radius)?1:0;
  if(key==='tsunami')return height<6*scale&&Math.abs(u-((time/f.duration)*2-1)*f.radius*scale)<5*scale?1:0;
  if(key==='sandstorm')return Math.abs(u-Math.sin(time*.2)*f.radius*scale*.6)<8*scale?1:0;
- if(key==='cryoburst')return Math.abs(r-(time%5)*4*scale)<3*scale?1:0;
  return 1;
 }
 // Shared by the real terrain mutation and the isolated disaster exhibit.
+export const FAULT_BRANCHES=Object.freeze([
+ [[-37,-2],[-28,1],[-19,-2],[-9,2],[0,0],[10,3],[19,0],[28,4],[37,1]],
+ [[-19,-2],[-15,-8],[-9,-12],[-5,-20]],
+ [[0,0],[4,9],[12,15],[15,23]],
+ [[19,0],[23,-7],[28,-12]],
+]);
+const faultSegments=FAULT_BRANCHES.map(line=>line.slice(1).map(([bx,by],i)=>{const [ax,ay]=line[i],dx=bx-ax,dy=by-ay;return {ax,ay,dx,dy,inverse:1/(dx*dx+dy*dy)};}));
 export function faultProfile(u,v){
- const t=Math.max(0,Math.min(1,(Math.abs(u)-20)/18)),end=1-t*t*(3-2*t);
- return (10*Math.exp(-(((v-6)/11)**2))-4*Math.exp(-(((v+9)/7)**2)))*end;
+ let cut=0,uplift=0;
+ for(let b=0;b<faultSegments.length;b++){let nearest=Infinity;for(const {ax,ay,dx,dy,inverse}of faultSegments[b]){
+  const t=Math.max(0,Math.min(1,((u-ax)*dx+(v-ay)*dy)*inverse));nearest=Math.min(nearest,(u-ax-t*dx)**2+(v-ay-t*dy)**2);
+  }const d=Math.sqrt(nearest);
+  const end=Math.max(0,Math.min(1,(40-Math.abs(u))/7)),width=b?3.3:5;
+  cut=Math.max(cut,(b?3.4:5.6)*Math.exp(-((d/width)**2))*end);
+  uplift=Math.max(uplift,1.7*Math.exp(-(((d-width*1.6)/(width*.8))**2))*end);
+ }
+ return uplift*(1-Math.min(1,cut/3))-cut;
 }

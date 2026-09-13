@@ -1,6 +1,13 @@
 # 99 Planets development progress
 
 Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
+Active: Codex on `feature/natural-bridges-and-storms`, owns U115-U125 in the
+[new request ledger](qa/implementation/NATURAL-WORLDS.md): coherent bridge
+geometry with upper/lower navigation, sky mesa varieties, cracked earthquakes,
+arc lightning, water surges, radiation EMP, event removals, Earth geography and
+irregular ecological distribution. Previous bridge/storm visual acceptance is
+superseded by the owner's latest feedback; its historical evidence is preserved.
+
 Published and publicly verified: Codex on `feature/planet-ecology-and-active-worlds`,
 based on V2 `8f94dc6`, completed U89-U114. This includes combat, scrap forging,
 commander focus, aiming, abilities, wave pacing, earthquake performance,

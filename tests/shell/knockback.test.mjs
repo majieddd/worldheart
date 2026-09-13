@@ -12,7 +12,7 @@ function fixture(){
  const count=9,adj=[],off=[0];
  for(let i=0;i<count;i++){if(i>0)adj.push(i-1);if(i<count-1)adj.push(i+1);off.push(adj.length);}
  const nav={walk:new Uint8Array(count).fill(1),block:new Int32Array(count),dist:new Float32Array(count).fill(1),adjOff:off,adj,cost:new Float32Array(adj.length).fill(1),
-  descendNode(node,dir){return Math.max(0,Math.min(count-1,Math.floor(Math.atan2(dir.x,dir.z)*R/.2)));},canStep:NavGraph.prototype.canStep,canMarchStep:NavGraph.prototype.canMarchStep};
+  descendNode(node,dir){return Math.max(0,Math.min(count-1,Math.floor(Math.atan2(dir.x,dir.z)*R/.2)));},routeHeight:NavGraph.prototype.routeHeight,canStep:NavGraph.prototype.canStep,canMarchStep:NavGraph.prototype.canMarchStep};
  const e={active:true,dead:false,type:{flying:false},dir:direction(.05),fwd:new THREE.Vector3(Math.cos(.05/R),0,-Math.sin(.05/R)),node:0,hp:100};
  return {nav,e,manager:{nav},attacker:direction(-1)};
 }

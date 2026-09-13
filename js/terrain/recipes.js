@@ -4,7 +4,7 @@ import {ADDITIONAL_RECIPES} from './additional-formations.js';
 // A planet mixes these groups; any group can carry any biome's surface rules.
 // Dimensions are world metres. Change the version when the seeded layout changes.
 import {EXOTIC_RECIPES} from './exotic-formations.js';
-export const LANDFORM_VERSION = 9;
+export const LANDFORM_VERSION = 10;
 export const LANDFORM_RECIPES = Object.freeze({
   range: Object.freeze({ label: 'Ridge chain', relief: 'range', gain: 1.18, roughness: .28 }),
   canyon: Object.freeze({ label: 'Winding Valley', relief: 'canyon', gain: 1.65, roughness: .1 }),

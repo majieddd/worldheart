@@ -277,7 +277,17 @@ export class NavGraph {
     } else {
       n = total;
     }
-    this.n = n;
+    // Allocate both floors before any tower owns node IDs. An upper deck is
+    // connected to the ground only at a continuous bank, never vertically
+    // through its roof. Ordinary cave floors keep their original node IDs.
+    const baseCount=n,deckIndex=new Int32Array(n).fill(-1),decks=[];
+    if(CONFIG.terrain&&!coarse&&!WORLD.floatingWorld()&&WORLD.FEATURES?.surfaces.length){
+      for(let i=0;i<total;i++){
+        if(keep&&!keep[i])continue;const idx=keep?oldToNew[i]:i,d=verts[i],h=terrainHeight(...d),top=WORLD.FEATURES.support(d,Infinity,h);
+        if(top>h+.08){deckIndex[idx]=n++;decks.push({idx:deckIndex[idx],base:idx,d,h:top});}
+      }
+    }
+    this.n = n;this.baseCount=baseCount;this.layer=new Uint8Array(n);this.deckIndex=deckIndex;
     // Node spacing at this resolution (derived from the detail level, since a
     // cap-pruned sphere carries only part of the globe), and the factor that
     // keeps a tower footprint meaningful against the grid.
@@ -329,6 +339,10 @@ export class NavGraph {
       }
     }
 
+    for(const deck of decks){const {idx,base,d,h}=deck;this.layer[idx]=1;this.dirs.set(d,idx*3);this.height[idx]=this.baseHeight[idx]=h;this.waterDepth[idx]=0;
+      _v.set(...d);const radius=R+h;this.pos[idx*3]=d[0]*radius;this.pos[idx*3+1]=d[1]*radius;this.pos[idx*3+2]=d[2]*radius;
+      this.walk[idx]=WORLD.solidTerrainAt(_v,h,1.7)?0:1;this.floorWalk[idx]=this.walk[idx];this.airWalk[idx]=this.airWalk[base];
+    }
     // CSR adjacency from unique triangle edges (kept nodes only)
     const edgeSet = new Set();
     const deg = new Int32Array(n);
@@ -344,6 +358,17 @@ export class NavGraph {
       deg[a]++; deg[b]++;
     };
     for (const [a, b, c] of faces) { addEdge(a, b); addEdge(b, c); addEdge(c, a); }
+    const groundEdges=[...edgeSet];
+    const connect=(a,b)=>{
+      if(a<0||b<0||!this.walk[a]||!this.walk[b])return;
+      this.nodeDir(a,_v);this.nodeDir(b,_v2);const distance=_v.distanceTo(_v2)*R;
+      if(Math.abs(this.height[a]-this.height[b])>distance*.85+.1)return;
+      const probe=new THREE.Vector3();
+      for(const t of [.2,.4,.6,.8]){probe.copy(_v).lerp(_v2,t).normalize();const expected=this.height[a]*(1-t)+this.height[b]*t,actual=WORLD.supportHeight(probe,expected+.6);
+        if(Math.abs(actual-expected)>Math.max(.7,distance*.18)||WORLD.solidTerrainAt(probe,actual,1.7))return;}
+      const key=Math.min(a,b)*1048576+Math.max(a,b);if(!edgeSet.has(key)){edgeSet.add(key);deg[a]++;deg[b]++;}
+    };
+    for(const key of groundEdges){const a=Math.floor(key/1048576),b=key%1048576,da=deckIndex[a],db=deckIndex[b];if(da>=0&&db>=0)connect(da,db);if(da>=0)connect(da,b);if(db>=0)connect(a,db);}
 
     this.adjOff = new Int32Array(n + 1);
     for (let i = 0; i < n; i++) this.adjOff[i + 1] = this.adjOff[i] + deg[i];
@@ -425,7 +450,8 @@ export class NavGraph {
     return (qx * CELLS + qy) * CELLS + qz;
   }
 
-  nearestNode(dir) {
+  nearestNode(dir, height = null) {
+    if(height===null)height=terrainHeight(dir.x,dir.y,dir.z);
     const qx = ((dir.x + 1) * 0.5 * CELLS) | 0;
     const qy = ((dir.y + 1) * 0.5 * CELLS) | 0;
     const qz = ((dir.z + 1) * 0.5 * CELLS) | 0;
@@ -437,7 +463,7 @@ export class NavGraph {
       if (!arr) continue;
       for (const i of arr) {
         const dx = this.dirs[i * 3] - dir.x, dy = this.dirs[i * 3 + 1] - dir.y, dz = this.dirs[i * 3 + 2] - dir.z;
-        const d = dx * dx + dy * dy + dz * dz;
+        const d = dx * dx + dy * dy + dz * dz + (this.layer?.[i]||this.deckIndex?.[i]>=0 ? ((this.height[i]-height)/R)**2 : 0);
         if (d < bestD) { bestD = d; best = i; }
       }
     }
@@ -446,8 +472,8 @@ export class NavGraph {
 
   // Nearest node that is actually pathable: BFS outward from the nearest
   // node until one qualifies (goal and spawn anchors sit at rock edges).
-  nearestWalkableNode(dir, unblocked = false) {
-    let start = this.nearestNode(dir);
+  nearestWalkableNode(dir, unblocked = false, height = null) {
+    let start = this.nearestNode(dir,height);
     if (start < 0) return -1;
     if (this.walk[start] && (!unblocked || !this.block[start])) return start;
     const seen = new Set([start]);
@@ -470,15 +496,15 @@ export class NavGraph {
 
   // Incremental node tracking for a moving agent: hill-descend to whichever
   // neighbor is angularly closer to dir.
-  descendNode(idx, dir) {
-    if (idx < 0) return this.nearestNode(dir);
+  descendNode(idx, dir, height = null) {
+    if (idx < 0) return this.nearestNode(dir,height);
     for (let hop = 0; hop < 3; hop++) {
       let best = idx;
       let bestD = this._dirDist2(idx, dir);
       for (let e = this.adjOff[idx]; e < this.adjOff[idx + 1]; e++) {
         const j = this.adj[e];
         const d = this._dirDist2(j, dir);
-        if (d < bestD) { bestD = d; best = j; }
+        if (d < bestD && (!this.layer || this.layer[j]===this.layer[idx] || this.walk[j]&&Math.abs(this.height[j]-this.height[idx])<=this.spacing*.85+.1)) { bestD = d; best = j; }
       }
       if (best === idx) return idx;
       idx = best;
@@ -489,6 +515,18 @@ export class NavGraph {
   _dirDist2(i, dir) {
     const dx = this.dirs[i * 3] - dir.x, dy = this.dirs[i * 3 + 1] - dir.y, dz = this.dirs[i * 3 + 2] - dir.z;
     return dx * dx + dy * dy + dz * dz;
+  }
+
+  routeHeight(dir,node){
+    const ground=terrainHeight(dir.x,dir.y,dir.z);
+    return this.layer?.[node]?WORLD.supportHeight(dir,this.height[node]+this.spacing*.9+.3):ground;
+  }
+
+  routeEdgeOpen(from,to){
+    if(from<0||to<0||!this.walk[to]||this.block[to]&&this.block[to]!==this.block[from])return false;
+    if(from===to)return true;
+    for(let e=this.adjOff[to];e<this.adjOff[to+1];e++)if(this.adj[e]===from)return Number.isFinite(this.cost[e]);
+    return false;
   }
 
   // Generation-marked scratch: worldgen calls this once per node on graphs of
@@ -571,7 +609,7 @@ export class NavGraph {
       // Campaign territory and crystal delivery are anchored on the actual
       // base. Choose its surveyed centre, not another point elsewhere in it.
       const i = CONFIG.terrain && capCenter ? this.nearestWalkableNode(capCenter) : (rng() * n) | 0;
-      if (!this.walk[i] || region[i] !== main) continue;
+      if (!this.walk[i] || this.layer[i] || region[i] !== main) continue;
       if (this.floorWalk && !this.floorWalk[i]) continue;
       if (!capCenter && Math.abs(this.dirs[i * 3 + 1]) > 0.82) continue;
       if (this.height[i] < 0.14 || this.height[i] > (CONFIG.terrain ? (this.floorDatum||0)+WORLD.FLIGHT_CEILING * 0.5 : 1.6)) continue;
@@ -765,6 +803,7 @@ export class NavGraph {
       if(i%16===0)yield;
       this.nodeDir(i,_v);if(_v.dot(fault.dir)<Math.cos(48/R))continue;
       const delta=predicted?WORLD.terrainFaultDelta(fault,_v.x,_v.y,_v.z):0;
+      if(this.layer[i]){this.walk[i]=terrainHeight(_v.x,_v.y,_v.z)+delta<this.height[i]+.15&&!WORLD.solidTerrainAt(_v,this.height[i],1.7)?1:0;this.floorWalk[i]=this.walk[i];dirty[i]=1;continue;}
       const h=terrainHeight(_v.x,_v.y,_v.z)+delta,base=terrainHeight(_v.x,_v.y,_v.z,false)+delta;
       this.height[i]=h;this.baseHeight[i]=base;this.waterDepth[i]=WORLD.waterDepthAt(_v,base);
       const slope=WORLD.slopeAt(_v,predicted?fault:null);
@@ -863,9 +902,9 @@ export class NavGraph {
     return !this.march.floorReach[from]||!!this.march.floorReach[to];
   }
 
-  findPath(fromDir, toDir) {
+  findPath(fromDir, toDir, fromHeight = null, toHeight = null) {
     if(this.terrainBusy)return [];
-    const start = this.nearestWalkableNode(fromDir, true), end = this.nearestWalkableNode(toDir, true);
+    const start = this.nearestWalkableNode(fromDir, true,fromHeight), end = this.nearestWalkableNode(toDir, true,toHeight);
     if (start < 0 || end < 0 || this.block[end]) return [];
     if(start===end){const path=[start];path.cost=0;return path;}
     if(CONFIG.terrain&&!this._sameRouteRegion(start,end))return [];

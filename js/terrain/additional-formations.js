@@ -4,6 +4,9 @@ import {smoothstep as smooth} from '../noise.js';
 export const ADDITIONAL_RECIPES=Object.freeze({
  grotto:{label:'Vaulted grotto',relief:'range',gain:.43,roughness:.02},
  sky:{label:'Sky mesa',relief:'range',gain:.7,roughness:.02},
+ skyreef:{label:'Drifting reef mesas',relief:'range',gain:.7,roughness:.02},
+ skycrown:{label:'Crowned sky islands',relief:'range',gain:.7,roughness:.02},
+ skyshards:{label:'Hanging shard mesas',relief:'range',gain:.7,roughness:.02},
  caverns:{label:'Daylight cavern network',relief:'canyon',gain:.8,roughness:.02},
  delta:{label:'Braided delta',relief:'canyon',gain:.4,roughness:.02},
  arcade:{label:'Ribbed stone arcade',relief:'range',gain:.55,roughness:.02},
@@ -31,15 +34,15 @@ export function additionalHeight(m,u,v,extent,rise){
  const x=u/extent,y=v/extent,r=Math.hypot(x,y),a=Math.atan2(y,x),edge=smooth(0,.24,rise),env=edge*(1-smooth(.8,1.15,r));
  const h=m.height,depth=Math.min(h,extent*.72),ramp=smooth(0,.8,rise);
  switch(m.type){
-  case 'grotto': return h*env*(.7*ridge(Math.abs(y)-.42,.23)*(1-smooth(.5,.9,Math.abs(x))))-depth*.15*env*ridge(y,.3);
-  case 'sky': return -depth*.25*env*(1-smooth(.2,.64,r));
+  case 'grotto': return h*env*(.14*ridge(Math.abs(y)-.42,.36)*(1-smooth(.5,.9,Math.abs(x))))-depth*.15*env*ridge(y,.3);
+  case 'sky': case 'skyreef': case 'skycrown': case 'skyshards': return -depth*.25*env*(1-smooth(.2,.64,r));
   case 'caverns': {const corridor=Math.min(Math.abs(y-.17*Math.sin(x*5)),Math.abs(x*.7+y*.7));return -depth*.55*env*(1-smooth(.12,.34,corridor));}
   case 'delta': {
    const t=clamp((x+1)/2),spread=.1+t*.7;let channel=0;
    for(let k=-2;k<=2;k++){const line=k*spread*.45+.08*Math.sin(x*8+k);channel=Math.max(channel,1-smooth(.04+.025*t,.18+.06*t,Math.abs(y-line)));}
    return depth*.24*env*(.3-channel)*(1-smooth(.75,1.05,Math.abs(y)));
   }
-  case 'arcade': return h*.45*env*ridge(Math.abs(y)-.52,.23)*(1-smooth(.72,1,Math.abs(x)));
+  case 'arcade': return h*.14*env*ridge(Math.abs(y)-.52,.34)*(1-smooth(.72,1,Math.abs(x)));
   case 'catena': {let cut=0,rim=0;for(let k=0;k<5;k++){
    const dx=x+.73-k*.36,dy=y-Math.sin(k*.7)*.13,size=.1+k*.022;
    // Each skipping impact has an open ejecta ramp on its downrange side.

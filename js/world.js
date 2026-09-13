@@ -1,3 +1,4 @@
+import {ecologyScatter} from './terrain/scatter.js';
 import * as THREE from 'three';
 import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './biome-visuals.js';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
@@ -264,6 +265,7 @@ function regionalHeight(dx,dy,dz,includeFine) {
 // Sea level is not a land classification: inland gorges can lie below it.
 // The same continental mask drives water rendering, movement and placement.
 export function oceanAt(dx,dy,dz) {
+  if(CONFIG.environment?.theme==='earth')return solarSample(dx,dy,dz).land<=.3;
   if(CONFIG.environment?.solar&&!['earth','titan'].includes(CONFIG.environment.theme))return false;
   return !CONFIG.terrain || continentalityAt(dx,dy,dz)<=.3+CONFIG.terrain.ocean || FORMATIONS.lagoonAt(dx,dy,dz);
 }
@@ -308,7 +310,7 @@ export function terrainHeight(dx, dy, dz, includeFine = true) {
     }
     return h;
   }
-  if(CONFIG.terrain){const h=regionalHeight(dx,dy,dz,includeFine);if(solarSample){const g=solarSample(dx,dy,dz);return (oceanAt(dx,dy,dz)&&h<0?h:h*g.relief)+g.extra+faultHeight(dx,dy,dz);}return h+faultHeight(dx,dy,dz);}
+  if(CONFIG.terrain){const h=regionalHeight(dx,dy,dz,includeFine);if(solarSample){const g=solarSample(dx,dy,dz);if(CONFIG.environment.theme==='earth'){const coast=(g.land-.3)/.08;return (coast<0?Math.max(-5,coast*.65):Math.max(.08,smoothstep(0,1,coast)*(.55+h*g.relief)+g.extra))+faultHeight(dx,dy,dz);}return (oceanAt(dx,dy,dz)&&h<0?h:h*g.relief)+g.extra+faultHeight(dx,dy,dz);}return h+faultHeight(dx,dy,dz);}
   const w = 0.26;
   const wx = dx + nWarp(dx * F_WARP + 7.7, dy * F_WARP, dz * F_WARP) * w;
   const wy = dy + nWarp(dx * F_WARP, dy * F_WARP + 3.1, dz * F_WARP) * w;
@@ -512,17 +514,17 @@ export function terrainFootprint(dir, radius, type) {
 }
 
 const _travelProbe = new THREE.Vector3();
-export function surfaceTravel(unit, bearing, distance = 0.05) {
+export function surfaceTravel(unit, bearing, distance = 0.05, deckCeiling = null) {
   if (!CONFIG.terrain) return 1;
   const d = unit.dir;
   const raw = terrainHeight(d.x, d.y, d.z, false),onDeck=FEATURES?.surfaces.length&&unit.height>raw+.2;
-  const from=onDeck?unit.height:raw;
+  const from=onDeck||deckCeiling!==null?unit.height:raw;
   unit.swimming = isSwimming(unit.swimming, waterDepthAt(d,from));
   const probe = Math.max(0.005, Math.min(0.8, distance));
   const radius = R + surfaceElevation(d,from);
   _travelProbe.copy(d).addScaledVector(bearing, probe / radius).normalize();
   if (!inBattlefield(_travelProbe.x, _travelProbe.y, _travelProbe.z)) return 0;
-  const to = onDeck?supportHeight(_travelProbe,surfaceElevation(d,from)+(unit.hop||0)+(unit.mountFlight||0)):terrainHeight(_travelProbe.x, _travelProbe.y, _travelProbe.z, false);
+  const to = deckCeiling!==null?supportHeight(_travelProbe,deckCeiling):onDeck?supportHeight(_travelProbe,surfaceElevation(d,from)+(unit.hop||0)+(unit.mountFlight||0)):terrainHeight(_travelProbe.x, _travelProbe.y, _travelProbe.z, false);
   const grade = (surfaceElevation(_travelProbe,to) - surfaceElevation(d,from)) / probe;
   // Blocking belongs to the same sampled graph that routes the unit. A
   // second analytic cutoff here can strand a body on a certified edge.
@@ -1497,6 +1499,7 @@ function applySway(mat, uniforms = null) {
 }
 
 function scatterDecor(rng) {
+  const scatter=ecologyScatter(CONFIG.seed);
   const pineGeo = makePineGeometry();
   const leafGeo = makeBroadleafGeometry();
   const rockGeo = makeRockGeometry();
@@ -1616,7 +1619,7 @@ function scatterDecor(rng) {
   if(ECOLOGY&&CONFIG.biomeKey==='auto'){
     let total=0;
     for(let k=0;k<4800&&total<1200;k++){
-      const y=1-2*(k+.5)/4800,a=k*2.3999632297,r=Math.sqrt(1-y*y);dir.set(r*Math.cos(a),y,r*Math.sin(a));
+      dir.set(...scatter.point());if(!scatter.accept(dir.toArray()))continue;
       const h=navigationHeight(dir.x,dir.y,dir.z),water=waterDepthAt(dir,h),kind=BIOME_VISUALS[biomeAt(dir,h)]?.decor,list=exoticSpots[kind];
       if(!list||list.length>=500||water>0&&!['coral','coralreef','kelp'].includes(kind)||slopeAt(dir)>.6)continue;
       list.push({dir:dir.clone(),h,s:kind==='kelp'?.65+rng()*.35:1+rng()*.8});total++;
@@ -2032,7 +2035,7 @@ export class World {
       }
       case 4: {
         this.decor = scatterDecor(this.rng);
-        if(FEATURES){this.featureArt=FEATURES.build({color:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),navigationHeight(...d))]?.rock||0x9b927f,topColor:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),navigationHeight(...d))]?.color||0x859e63});this.scene.add(this.featureArt);}
+        if(FEATURES){this.featureArt=FEATURES.build({paint:(c,d,h,s)=>faceColor(new THREE.Vector3(...d),h,s*3.2,.5,c),color:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),navigationHeight(...d))]?.rock||0x9b927f,topColor:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),navigationHeight(...d))]?.color||0x859e63});this.scene.add(this.featureArt);}
         // Decor is instanced, so casting costs one shadow draw per set rather
         // than one per tree. This is most of what sells the diorama read.
         for (const s of this.decor.sets) {

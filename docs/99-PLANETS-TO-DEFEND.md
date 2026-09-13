@@ -4,7 +4,11 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation is underway on feature/99-planets-integration. Start with the [QA evidence](qa/2026-09-05/README.md) and [progress ledger](PROGRESS.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
-The latest U89-U114 request is tracked in [Active worlds](qa/implementation/ACTIVE-WORLDS.md).
+The current U115-U125 refinement is tracked in [Natural worlds](qa/implementation/NATURAL-WORLDS.md).
+Bridges must offer real autonomous paths both above and below, with a coherent
+faceted surface. Radiation strikes disable towers, ashfall and cryovolcanic
+outburst are removed as disasters, and Earth geography uses sourced outlines.
+The prior U89-U114 request is tracked in [Active worlds](qa/implementation/ACTIVE-WORLDS.md).
 It supersedes amber ore with weapon-salvage scrap forging, adds commander and
 weapon abilities plus FPS aiming, halves wave intervals, expands nest distance
 independently of the base, and separates recipe-fit persistent features from

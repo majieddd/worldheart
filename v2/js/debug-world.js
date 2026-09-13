@@ -1,3 +1,4 @@
+import {patchScatter} from './terrain/scatter.js';
 import {createTerrainFeatures} from './terrain/features.js';
 import {ACTIVE_FEATURES,DISASTERS} from './run/environment-catalogue.js';
 import {buildActiveFeature} from './terrain/active-features.js';
@@ -97,6 +98,11 @@ function weaponExhibit(assembly){
   group.userData.focusY=.65+(bounds.max.y-bounds.min.y)/2;return group;
 }
 
+function terrainPaint(c,dir,h,slope){
+  paintBiome(c,h>3||h<-.8?'desert':'meadow',h,slope,.5);
+  if(h>3)c.lerp(new THREE.Color(0x937765),.45+.15*Math.sin(h*.6));
+}
+
 function terrainTile(type,seed){
   const sample=formationSample(type,seed),n=type==='grand'||type==='labyrinth'?128:96,half=sample.half;
   const geo=new THREE.PlaneGeometry(half*2*SCALE,half*2*SCALE,n,n);geo.rotateX(-Math.PI/2);
@@ -107,8 +113,7 @@ function terrainTile(type,seed){
   for(let i=0;i<pos.count;i+=3){
     const h=(pos.getY(i)+pos.getY(i+1)+pos.getY(i+2))/3/SCALE;
     const slope=1-Math.abs(flat.attributes.normal.getY(i));
-    paintBiome(c,h>3||h<-.8?'desert':'meadow',h,slope,.5);
-    if(h>3)c.lerp(new THREE.Color(0x937765),.45+.15*Math.sin(h*.6));
+    terrainPaint(c,null,h,slope);
     for(let k=0;k<3;k++)colors.push(c.r,c.g,c.b);
   }
   flat.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));flat.computeVertexNormals();
@@ -125,7 +130,7 @@ function terrainTile(type,seed){
   const wg=new THREE.BufferGeometry();wg.setAttribute('position',new THREE.Float32BufferAttribute(wall,3));wg.computeVertexNormals();group.add(new THREE.Mesh(wg,mat(0x4c4e55,{side:THREE.DoubleSide})));
   const features=createTerrainFeatures(sample.field,240,(x,y,z)=>sample.field.height(x,y,z)),a=sample.anchor;
   const point=(dir,h)=>{const dot=dir.reduce((sum,v,k)=>sum+v*a.dir[k],0),u=240*dir.reduce((sum,v,k)=>sum+v*a.axis[k],0)/dot,v=240*dir.reduce((sum,v,k)=>sum+v*a.side[k],0)/dot;return new THREE.Vector3(u*SCALE,h*SCALE,v*SCALE);};
-  const art=features.build({point,scale:SCALE,spherical:false,color:()=>0xa58d60,topColor:()=>0xb4a076,include:dir=>dir.reduce((s,v,k)=>s+v*a.dir[k],0)>.7});group.add(art);
+  const art=features.build({paint:terrainPaint,tint:0xdce8e8,roughness:.65,point,scale:SCALE,spherical:false,color:()=>0xa58d60,topColor:()=>0xb4a076,include:dir=>dir.reduce((s,v,k)=>s+v*a.dir[k],0)>.7});group.add(art);
   art.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(art);if(!bounds.isEmpty())high=Math.max(high,bounds.max.y/SCALE);
   return {group,low,high,width:half*2*SCALE,seed,update:art.userData.update};
 }
@@ -142,8 +147,8 @@ function biomeTile(key,theme=null){
   const make=kind==='pine'?makePineGeometry:kind==='leaf'||kind==='jungle'?makeBroadleafGeometry:kind==='cactus'?makeCactusGeometry:()=>biomeDressingGeometry(kind);
   const dressing=make(),material=mat(0xdce8e8,{side:THREE.DoubleSide,vertexColors:true,emissive:key==='twilight'?0x497a6a:0x18232b,emissiveIntensity:.2});
   const count=kind==='jungle'?25:kind==='leaf'?8:12;
-  for(let i=0;i<count;i++){const prop=new THREE.Mesh(dressing,material),a=i*2.39996,r=2+Math.sqrt(i/count)*7;
-    prop.position.set(Math.cos(a)*r,.2,Math.sin(a)*r);prop.rotation.y=a;prop.scale.setScalar(kind==='jungle'?3.2:1.2+(i%3)*.2);group.add(prop);}
+  for(const p of patchScatter([...key].reduce((s,c)=>Math.imul(s,31)+c.charCodeAt(0),771),count)){const prop=new THREE.Mesh(dressing,material);
+    prop.position.set(p.x,.2,p.z);prop.rotation.y=p.angle;prop.scale.setScalar((kind==='jungle'?3.2:1.4)*p.scale);group.add(prop);}
   if(['ocean','coralreef','kelp'].includes(key)||theme){
     const w=new THREE.Mesh(new THREE.PlaneGeometry(theme?5:24,24),mat(theme?THEME_SURFACES[theme].shore:BIOME_VISUALS.ocean.color,{transparent:true,opacity:.76,roughness:.22}));
     w.rotation.x=-Math.PI/2;w.position.set(theme?9.5:0,.5,0);group.add(w);
@@ -235,7 +240,7 @@ export async function startDebugWorld(){
       const radius=(item.group.userData.miniature.frameRadius||10+item.group.userData.miniature.max/24)+.6,angle=Math.atan(Math.tan(camera.fov*Math.PI/360)*Math.min(1,camera.aspect));
       view.distance=Math.max(40,radius/Math.sin(angle)*1.08);
     }
-    view.pitch=item.lane==='themes'?.3:['sky','ribbons','valley','grotto','caverns'].includes(item.key)?.4:.65;frame();
+    view.pitch=item.lane==='themes'?.3:['sky','skyreef','skycrown','skyshards','ribbons','valley','grotto','caverns','arcade'].includes(item.key)?.3:.65;frame();
   }
   function select(laneKey,key,hash=true){
     const lane=lanes.find(x=>x.key===laneKey)||lanes[0];selected=lane.items.find(x=>x.key===key)||lane.items[0];

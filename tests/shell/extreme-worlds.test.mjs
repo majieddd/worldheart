@@ -53,8 +53,8 @@ test('thirty-seven seeded themes have distinct surfaces and coherent biome compo
  }
  assert.equal(identities.size,37);
 });
-test('fifty-two real formation fields and additional surfaces are finite, distinctive and bounded',()=>{
- assert.equal(Object.keys(LANDFORM_RECIPES).length,52);const fingerprints=new Set();
+test('fifty-five real formation fields and additional surfaces are finite, distinctive and bounded',()=>{
+ assert.equal(Object.keys(LANDFORM_RECIPES).length,55);const fingerprints=new Set();
  for(const type of Object.keys(LANDFORM_RECIPES)){
   const sample=formationSample(type),values=[];
   for(let x=-sample.half;x<=sample.half;x+=3)for(let y=-sample.half;y<=sample.half;y+=3){
@@ -62,7 +62,7 @@ test('fifty-two real formation fields and additional surfaces are finite, distin
    assert.ok(h<=formationHeightLimit({range:90,canyon:38})&&h>=-formationDepthLimit({range:90,canyon:38}));values.push(h);
   }
   const features=createTerrainFeatures(sample.field,240,(...p)=>sample.field.height(...p));
-  for(const s of features.surfaces)values.push(s.top(0,0));
+  for(const s of features.surfaces){values.push(s.top(0,0),s.bottom(0,0),s.halfU,s.halfV);for(let k=0;k<16;k++)values.push(s.rim?.(k*Math.PI/8)??1);}
   assert.ok(Math.max(...values)-Math.min(...values)>2,`${type} is not flat`);
   fingerprints.add(values.map(v=>v.toFixed(2)).join(','));
  }

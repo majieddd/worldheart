@@ -363,7 +363,8 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
         const hanging=sideCut*smoothstep(extent*.3,extent*.55,Math.abs(v));
         const upland=m.height*smoothstep(0,.58,shoulder)*(.72+(v>0?.28:0));
         const depth=Math.min(m.height*.32,extent*.17)*smoothstep(0,.3,rise);
-        h=upland*wall*(1-hanging*.65)-depth*(1-wall);
+        const crossing=1-smoothstep(extent*.35,extent*.6,Math.abs(u));
+        h=upland*wall*(1-hanging*.65)*(1-crossing*.7)-depth*(1-wall);
         incision=upland-h;
       } else {
         // The classic field's ridged-noise hills create irregular low walls

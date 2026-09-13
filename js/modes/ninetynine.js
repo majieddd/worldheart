@@ -693,11 +693,11 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     if (button === 2 && selection.length && game.cursorValid && !game.buildType) {
       // Snap to ground a unit can actually stand on: an unwalkable destination
       // becomes the unit's post on arrival and would strand it there for good.
-      const node = nav.nearestWalkableNode(game.cursorDir);
+      const node = nav.nearestWalkableNode(game.cursorDir,true,game.cursorPos.length()-R);
       if (node >= 0) {
         nav.nodeDir(node, _od);
         let n = 0;
-        for (const a of selection) if (allies.orderMove(a, _od)) n++;
+        for (const a of selection) if (allies.orderMove(a, _od,nav.height[node])) n++;
         if (n) {
           ui.toast(n === 1 ? 'Moving out' : `${n} moving out`, 'info');
           ui.audio?.play('order');

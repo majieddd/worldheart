@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CONFIG, PALETTE, PRESENTATION } from './config.js';
 import { clamp, SIM_RANDOM } from './noise.js';
-import { surfaceElevation, R, navigationHeight as terrainHeight, surfaceTravel, canFlyAt } from './world.js';
+import { surfaceElevation, R, navigationHeight as terrainHeight, surfaceTravel, canFlyAt, supportHeight } from './world.js';
 import { MAX_SLOW, swimOffset, MOUNTAIN_MARCH } from './traversal.js';
 import { enemyStrike, insideStrike } from './attacks.js';
 import { planetBoss } from './encounters.js';
@@ -157,6 +157,7 @@ class Enemy {
     this.dir.copy(dirVec);
     this.node = node;
     this.routeCenter = -1; this.routeExit = -1;
+    this.bridgeFrom=-1;this.bridgeTo=-1;
     this.hpMax = Math.round(type.hp * hpScale);
     this.hp = this.hpMax;
     this.speed = type.speed;
@@ -1373,7 +1374,7 @@ export class EnemyManager {
       e.node = node;
       moved += step;
     }
-    if (moved > 0) e.height = terrainHeight(e.dir.x, e.dir.y, e.dir.z);
+    if (moved > 0) e.height = e.type.flying?terrainHeight(e.dir.x,e.dir.y,e.dir.z):this.nav.routeHeight(e.dir,e.node);
     return moved;
   }
 
@@ -1474,7 +1475,8 @@ export class EnemyManager {
       // field itself routes them over the defended lanes, which keeps
       // anti-air placement meaningful. sampleFlow falls back to a great
       // circle wherever the field is undefined.
-      e.node = this.nav.descendNode(e.node, e.dir);
+      if(e.bridgeTo>=0){this.nav.nodeDir(e.bridgeTo,_routeDes);if(e.dir.distanceTo(_routeDes)*R<.025){e.node=e.bridgeTo;e.bridgeFrom=e.bridgeTo=-1;}}
+      if(e.bridgeTo<0)e.node = this.nav.descendNode(e.node, e.dir);
       if(!type.flying&&this.nav.floorWalk&&!this.nav.floorWalk[e.node])stepSpeed*=MOUNTAIN_MARCH;
       e.progress = type.flying && CONFIG.terrain
         ? this.nav.sampleAirFlow(e.node, e.dir, _des) : this.nav.sampleFlow(e.node, e.dir, _des);
@@ -1491,6 +1493,7 @@ export class EnemyManager {
         const o = this.active[k];
         if (o.dying > 0) continue;
         if (!this.spaceMode && o.type.flying !== type.flying) continue;
+        if(!type.flying&&Math.abs(e.height-o.height)>2)continue;
         _tmp.copy(e.dir).sub(o.dir);
         const d2 = _tmp.lengthSq();
         const rad = (type.radius + o.type.radius) * 1.25 / R;
@@ -1511,6 +1514,10 @@ export class EnemyManager {
       // Walk to the centre and along its certified next edge, without
       // teleporting or relaxing collision, before resuming blended steering.
       let recoveryDistance=Infinity;
+      const routeNext=(this.nav.march?.next||this.nav.next)[e.node];
+      if(!type.flying&&e.bridgeTo<0&&routeNext>=0&&(this.nav.layer[e.node]||this.nav.layer[routeNext])){e.bridgeFrom=e.node;e.bridgeTo=routeNext;e.routeCenter=e.routeExit=-1;}
+      const bridge=e.bridgeTo>=0&&this.nav.routeEdgeOpen(e.bridgeFrom,e.bridgeTo),deckCeiling=bridge?Math.max(this.nav.height[e.bridgeFrom],this.nav.height[e.bridgeTo])+.6:null;
+      if(e.bridgeTo>=0&&!bridge){e.bridgeFrom=e.bridgeTo=-1;}
       for(let stage=0;stage<2;stage++){
         const target=e.routeCenter>=0?e.routeCenter:e.routeExit;
         if(target<0)break;
@@ -1522,6 +1529,7 @@ export class EnemyManager {
         _des.copy(_routeDes).addScaledVector(e.dir,-_routeDes.dot(e.dir)).normalize();
         recoveryDistance=distance;break;
       }
+      if(bridge){this.nav.nodeDir(e.bridgeTo,_routeDes);recoveryDistance=e.dir.distanceTo(_routeDes)*R;_des.copy(_routeDes).addScaledVector(e.dir,-_routeDes.dot(e.dir)).normalize();}
 
       // Turn-rate limited steering: the heading closes a fixed fraction of
       // the remaining angle every frame. This used to lerp the two unit
@@ -1547,7 +1555,8 @@ export class EnemyManager {
 
       // Advance along the sphere
       if(dt>0)stepSpeed=Math.min(stepSpeed,recoveryDistance/dt);
-      if (CONFIG.terrain) {
+      if(bridge)stepSpeed*=surfaceTravel(e,e.fwd,stepSpeed*dt,deckCeiling);
+      else if (CONFIG.terrain) {
         let factor = type.flying ? 1 : surfaceTravel(e, e.fwd, stepSpeed * dt);
         _nextDir.copy(e.dir).addScaledVector(e.fwd, stepSpeed * dt / R).normalize();
         if (!factor || !(type.flying?this.nav.canStep(e.dir,_nextDir,true,e.node):this.nav.canMarchStep(e.dir,_nextDir,e.node)) || (type.flying && !canFlyAt(_nextDir))) {
@@ -1579,12 +1588,12 @@ export class EnemyManager {
       const ang = (stepSpeed * dt) / R;
       _moveAxis.crossVectors(e.dir, e.fwd).normalize();
       _nextDir.copy(e.dir).applyAxisAngle(_moveAxis, ang).normalize();
-      if ((!type.flying || canFlyAt(_nextDir)) && (type.flying?this.nav.canStep(e.dir,_nextDir,true,e.node):this.nav.canMarchStep(e.dir,_nextDir,e.node))) {
+      if ((!type.flying || canFlyAt(_nextDir)) && (bridge|| (type.flying?this.nav.canStep(e.dir,_nextDir,true,e.node):this.nav.canMarchStep(e.dir,_nextDir,e.node)))) {
         e.dir.copy(_nextDir);
         e.fwd.applyAxisAngle(_moveAxis, ang).addScaledVector(e.dir, -e.fwd.dot(e.dir)).normalize();
       } else stepSpeed = 0;
       e.moveV = stepSpeed;
-      e.height = terrainHeight(e.dir.x, e.dir.y, e.dir.z);
+      e.height = bridge?supportHeight(e.dir,deckCeiling):e.type.flying?terrainHeight(e.dir.x,e.dir.y,e.dir.z):this.nav.routeHeight(e.dir,e.node);
 
       // The dive (see DIVE_ALT). Space bands keep their own altitudes.
       if (type.flying && !this.spaceMode) {

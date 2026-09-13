@@ -22,12 +22,12 @@ try{
   const weather=m.weather;weather.environment={...W.CONFIG.environment,tags:['rock','ice','airless','cloud','atmosphere','wet','ocean','dry','volcanic']};weather.nextEvent=Infinity;
   window.__environmentFixture={W,w,r,T,m,a,e,weather,reset,checks};return checks;
  }));
- for(const key of ['meteor','thunder','hail','blizzard','sandstorm','ashfall','tsunami','solar','cryoburst','eruption']){
+ for(const key of ['meteor','thunder','hail','blizzard','sandstorm','tsunami','solar','eruption']){
   const result=await page.evaluate(key=>{
    const {W,w,r,T,a,e,weather,reset}=__environmentFixture;weather.phase='calm';weather.kind=null;weather.nextEvent=Infinity;
    const started=weather.trigger(key,W.heartPos.clone().normalize());if(!started)return {name:key+': compatible location exists',ok:false};
    const scale=weather.hostility.scale,f=r.DISASTERS[key],time=key==='tsunami'?8:key==='sandstorm'?1:.1;
-   const p=['meteor','thunder','eruption'].includes(key)?r.disasterTargets(key,time,scale)[0]:{u:0,v:0};
+   const p=['meteor','thunder','eruption','solar'].includes(key)?r.disasterTargets(key,time,scale)[0]:{u:0,v:0};
    const side=new T.Vector3().crossVectors(weather.axis,weather.dir).normalize(),dir=weather.dir.clone().addScaledVector(weather.axis,p.u/w.R).addScaledVector(side,p.v/w.R).normalize();reset(dir);
    const warning=weather.phase==='warning'&&weather.hazardArt.visible;weather.update(8);weather.eventTime=time-.1;weather.update(.1);
    const changed=f.damage?a.hp<10000&&e.hp<10000:f.slow<1?a.weatherSpeed<1:true;
