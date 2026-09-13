@@ -26,16 +26,4 @@ Use the existing tracker, pure tests, actual movement/effect fixtures, native
 profiles, visual evidence and a completed defense. Publish verified work to
 V2 only with exact deployment identity and public behavior checks.
 
-Implementation checkpoint: 323/323 automated tests and 82/82 initial Debug checks. New autonomous movement checks cover both surfaces of four bridge families. Native enemy traversal, EMP lifecycle, Earth hemisphere review, final performance and public deployment remain in progress. First visual captures are retained in `artifacts/natural-worlds/visual-first`; this is not release acceptance.
-
-Adversarial follow-up: separated tower footprint heights, removed submerged roof nodes from dry-route classification, constrained Earth bridges to cold geography, and made quake forecasts recheck bank/deck continuity. New native bridge and EMP checks pass 18/18, environmental effects 23/23, and the pre-follow-up quake profile measured 6.9 ms median, 7.2 ms p99, 8.6 ms maximum work slice. The broad sweep found Earth's submerged-cap classification issue; its failing result is retained and Earth will be rerun after the fix. Draft PR [#40](https://github.com/majieddd/worldheart/pull/40) carries the implementation checkpoint.
-
-Final acceptance in progress: 327/327 automated tests pass. The 47-world sweep
-finished 107/108; Earth and the three affected theme/pack reruns passed 11/11
-after the submerged-roof correction. Inspection then found reversed east/west
-on Earth, now corrected and queued for final hemisphere and live-world checks.
-Sky generation profiling traced slow boots to repeated full-detail rejected
-caps. A preliminary scout, followed by the unchanged full-detail certificate,
-reduced the two measured sky cases from 61-83 seconds to 34-36 seconds (6/6
-checks). Loot now retains its bridge level. Final native EMP/upgrade, quake
-performance, whole Debug registry, defense and deployment checks are pending.
+Implementation and local acceptance complete at c699def. All U115-U125 items have passing targeted evidence in [the acceptance report](NATURAL-WORLDS/ACCEPTANCE.md), including 329 automated tests, 265 Debug checks, 108 aggregate world checks, physical bridge/sky movement, six tower EMP lifecycles, a completed ten-wave defense and measured quake performance. Publication to V2 and exact public identity/behavior verification remain in progress. First failures and their fixes are retained in the report. Draft PR [#40](https://github.com/majieddd/worldheart/pull/40) contains the implementation.

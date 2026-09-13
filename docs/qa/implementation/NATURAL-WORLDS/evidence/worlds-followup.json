@@ -1,0 +1,1170 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "checks": [
+    {
+      "name": "terrain-sky: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "skyreef": {
+              "samples": 421,
+              "peak": 28
+            },
+            "skyshards": {
+              "samples": 417,
+              "peak": 28
+            },
+            "ribbons": {
+              "samples": 69,
+              "peak": 28
+            }
+          },
+          "families": [
+            "skyreef",
+            "skyshards",
+            "ribbons"
+          ],
+          "requiredFamilies": 3,
+          "dry": 63376,
+          "connected": 63376,
+          "dryConnected": 1,
+          "deep": 0,
+          "deepConnected": 0,
+          "pits": 0,
+          "channels": 0,
+          "peak": 28,
+          "depth": 2.200000047683716,
+          "surface": "floating network",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 328759,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 329231,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 338535,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 328631,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 251497,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 329409,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 194935,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 173554,
+            "legal": true,
+            "steps": 22
+          },
+          {
+            "node": 328788,
+            "legal": true,
+            "steps": 36
+          },
+          {
+            "node": 330583,
+            "legal": true,
+            "steps": 41
+          },
+          {
+            "node": 194958,
+            "legal": true,
+            "steps": 38
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain-sky: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "connected": 0,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "planet-earth: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "range": {
+              "samples": 152,
+              "peak": 5.231961727142334
+            },
+            "valley": {
+              "samples": 81,
+              "peak": 14.87250804901123
+            },
+            "plateau": {
+              "samples": 269,
+              "peak": 25.4458065032959
+            },
+            "hills": {
+              "samples": 39,
+              "peak": 22.065616607666016
+            }
+          },
+          "families": [
+            "range",
+            "valley",
+            "plateau",
+            "hills"
+          ],
+          "requiredFamilies": 3,
+          "dry": 112641,
+          "connected": 112571,
+          "dryConnected": 0.9993785566534388,
+          "deep": 0,
+          "deepConnected": 0,
+          "pits": 0,
+          "channels": 0,
+          "peak": 25.45964813232422,
+          "depth": 2.9303629398345947,
+          "surface": "astronomical analogue",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 310098,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 302142,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 189380,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 188871,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 311249,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 311844,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 302363,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 189522,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 309919,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 301787,
+            "legal": true,
+            "steps": 22
+          },
+          {
+            "node": 188886,
+            "legal": true,
+            "steps": 27
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-earth: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "connected": 0,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "planet-skyarchipelago: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "skyreef": {
+              "samples": 421,
+              "peak": 28
+            },
+            "skyshards": {
+              "samples": 417,
+              "peak": 28
+            },
+            "ribbons": {
+              "samples": 73,
+              "peak": 28
+            }
+          },
+          "families": [
+            "skyreef",
+            "skyshards",
+            "ribbons"
+          ],
+          "requiredFamilies": 3,
+          "dry": 63376,
+          "connected": 63376,
+          "dryConnected": 1,
+          "deep": 0,
+          "deepConnected": 0,
+          "pits": 0,
+          "channels": 0,
+          "peak": 28,
+          "depth": 2.200000047683716,
+          "surface": "floating network",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 328759,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 329231,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 338535,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 328631,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 251497,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 329409,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 194935,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 173554,
+            "legal": true,
+            "steps": 22
+          },
+          {
+            "node": 328788,
+            "legal": true,
+            "steps": 36
+          },
+          {
+            "node": 330583,
+            "legal": true,
+            "steps": 41
+          },
+          {
+            "node": 194958,
+            "legal": true,
+            "steps": 38
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-skyarchipelago: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "connected": 0,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "planet-skyarchipelago: multiple authored biomes present",
+      "ok": true,
+      "actual": {
+        "lichen": 353,
+        "ocean": 2086,
+        "cloudforest": 247,
+        "aurora": 314
+      }
+    },
+    {
+      "name": "planet-stormglass: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "spine": {
+              "samples": 117,
+              "peak": 71.41961669921875
+            },
+            "ribbons": {
+              "samples": 186,
+              "peak": 32.83820724487305
+            },
+            "fulgurite": {
+              "samples": 207,
+              "peak": 67.68599700927734
+            }
+          },
+          "families": [
+            "spine",
+            "ribbons",
+            "fulgurite"
+          ],
+          "requiredFamilies": 3,
+          "dry": 102608,
+          "connected": 98617,
+          "dryConnected": 0.961104397317948,
+          "deep": 6219,
+          "deepConnected": 6214,
+          "pits": 0,
+          "channels": 203,
+          "peak": 76.41398620605469,
+          "depth": 8.958066940307617,
+          "surface": "ground",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 300105,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 370943,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 371394,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 387225,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 371631,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 300165,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 388153,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 301320,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 377985,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 208034,
+            "legal": true,
+            "steps": 31
+          },
+          {
+            "node": 388577,
+            "legal": true,
+            "steps": 27
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-stormglass: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 11634,
+        "connected": 11574,
+        "pits": 0,
+        "disconnected": {
+          "grotto": 55,
+          "ribbons": 5
+        }
+      }
+    },
+    {
+      "name": "planet-stormglass: multiple authored biomes present",
+      "ok": true,
+      "actual": {
+        "sulfur": 755,
+        "ocean": 1137,
+        "aurora": 524,
+        "obsidian": 584
+      }
+    },
+    {
+      "name": "No browser faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "records": [
+    {
+      "terrain": "sky",
+      "planet": "temperate",
+      "label": "terrain-sky",
+      "ms": 60781,
+      "seed": 4206026076,
+      "attempts": 2,
+      "types": {
+        "ribbons": 12,
+        "skyshards": 9,
+        "sky": 4,
+        "skyreef": 3
+      },
+      "biomes": {
+        "alpine": 394,
+        "ocean": 2083,
+        "tundra": 69,
+        "meadow": 280,
+        "desert": 2,
+        "savanna": 3,
+        "woodland": 43,
+        "jungle": 126
+      },
+      "dry": 0,
+      "connected": 0,
+      "pits": 0,
+      "bad": {},
+      "water": 2083,
+      "land": 917,
+      "routes": [
+        {
+          "node": 328759,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 329231,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 338535,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 328631,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 251497,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 329409,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 194935,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 173554,
+          "legal": true,
+          "steps": 22
+        },
+        {
+          "node": 328788,
+          "legal": true,
+          "steps": 36
+        },
+        {
+          "node": 330583,
+          "legal": true,
+          "steps": 41
+        },
+        {
+          "node": 194958,
+          "legal": true,
+          "steps": 38
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "skyreef": {
+            "samples": 421,
+            "peak": 28
+          },
+          "skyshards": {
+            "samples": 417,
+            "peak": 28
+          },
+          "ribbons": {
+            "samples": 69,
+            "peak": 28
+          }
+        },
+        "families": [
+          "skyreef",
+          "skyshards",
+          "ribbons"
+        ],
+        "requiredFamilies": 3,
+        "dry": 63376,
+        "connected": 63376,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "pits": 0,
+        "channels": 0,
+        "peak": 28,
+        "depth": 2.200000047683716,
+        "surface": "floating network",
+        "pass": true
+      },
+      "features": 157,
+      "vents": 9,
+      "activeFeatures": {
+        "spring": 20,
+        "whirlpool": 23,
+        "geyser": 9,
+        "boulder": 8,
+        "spores": 2,
+        "cryovent": 6
+      },
+      "environment": {
+        "version": 5,
+        "solar": false,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": null,
+        "exclusive": false,
+        "pack": "varied",
+        "coverage": 0,
+        "biomes": null,
+        "seed": 4206018157,
+        "key": "temperate",
+        "theme": "temperate",
+        "name": "Garden world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6733200530681511,
+        "relativeOrbit": 1,
+        "flux": 0.9999999999999999,
+        "warmth": -3.203426503814918e-17,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": 0,
+        "weights": {}
+      }
+    },
+    {
+      "terrain": "varied",
+      "planet": "earth",
+      "label": "planet-earth",
+      "ms": 33835,
+      "seed": 4206018157,
+      "attempts": 1,
+      "types": {
+        "gorge": 6,
+        "hills": 20,
+        "basin": 6,
+        "valley": 7,
+        "plateau": 7,
+        "range": 8
+      },
+      "biomes": {
+        "ocean": 2135,
+        "waterice": 85,
+        "tundra": 59,
+        "woodland": 225,
+        "alpine": 38,
+        "meadow": 112,
+        "desert": 119,
+        "savanna": 130,
+        "jungle": 97
+      },
+      "dry": 0,
+      "connected": 0,
+      "pits": 0,
+      "bad": {},
+      "water": 2135,
+      "land": 865,
+      "routes": [
+        {
+          "node": 310098,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 302142,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 189380,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 188871,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 311249,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 311844,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 302363,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 189522,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 309919,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 301787,
+          "legal": true,
+          "steps": 22
+        },
+        {
+          "node": 188886,
+          "legal": true,
+          "steps": 27
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "range": {
+            "samples": 152,
+            "peak": 5.231961727142334
+          },
+          "valley": {
+            "samples": 81,
+            "peak": 14.87250804901123
+          },
+          "plateau": {
+            "samples": 269,
+            "peak": 25.4458065032959
+          },
+          "hills": {
+            "samples": 39,
+            "peak": 22.065616607666016
+          }
+        },
+        "families": [
+          "range",
+          "valley",
+          "plateau",
+          "hills"
+        ],
+        "requiredFamilies": 3,
+        "dry": 112641,
+        "connected": 112571,
+        "dryConnected": 0.9993785566534388,
+        "deep": 0,
+        "deepConnected": 0,
+        "pits": 0,
+        "channels": 0,
+        "peak": 25.45964813232422,
+        "depth": 2.9303629398345947,
+        "surface": "astronomical analogue",
+        "pass": true
+      },
+      "features": 3,
+      "vents": 10,
+      "activeFeatures": {
+        "geyser": 10,
+        "trunks": 1,
+        "updraft": 5,
+        "whirlpool": 9,
+        "cryovent": 3,
+        "spring": 8,
+        "spores": 1,
+        "boulder": 1
+      },
+      "environment": {
+        "version": 5,
+        "solar": true,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": [
+          "rock",
+          "wet",
+          "ocean",
+          "atmosphere"
+        ],
+        "exclusive": true,
+        "pack": "varied",
+        "coverage": 1,
+        "biomes": [
+          "jungle",
+          "desert",
+          "woodland",
+          "tundra"
+        ],
+        "seed": 4206018157,
+        "key": "earth",
+        "theme": "earth",
+        "name": "Earth",
+        "star": {
+          "type": "G",
+          "name": "Sun",
+          "luminosity": 1,
+          "color": 16771524
+        },
+        "orbitAU": 1,
+        "relativeOrbit": 1,
+        "flux": 1,
+        "warmth": 0,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.12277334021404387,
+        "oceanShift": 0,
+        "weights": {
+          "range": 6,
+          "hills": 9,
+          "plateau": 3,
+          "valley": 2,
+          "gorge": 3,
+          "basin": 6
+        }
+      }
+    },
+    {
+      "terrain": "varied",
+      "planet": "skyarchipelago",
+      "label": "planet-skyarchipelago",
+      "ms": 82982,
+      "seed": 4206026076,
+      "attempts": 2,
+      "types": {
+        "ribbons": 12,
+        "skyshards": 9,
+        "sky": 3,
+        "skyreef": 3,
+        "skycrown": 1
+      },
+      "biomes": {
+        "lichen": 353,
+        "ocean": 2086,
+        "cloudforest": 247,
+        "aurora": 314
+      },
+      "dry": 0,
+      "connected": 0,
+      "pits": 0,
+      "bad": {},
+      "water": 2086,
+      "land": 914,
+      "routes": [
+        {
+          "node": 328759,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 329231,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 338535,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 328631,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 251497,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 329409,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 194935,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 173554,
+          "legal": true,
+          "steps": 22
+        },
+        {
+          "node": 328788,
+          "legal": true,
+          "steps": 36
+        },
+        {
+          "node": 330583,
+          "legal": true,
+          "steps": 41
+        },
+        {
+          "node": 194958,
+          "legal": true,
+          "steps": 38
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "skyreef": {
+            "samples": 421,
+            "peak": 28
+          },
+          "skyshards": {
+            "samples": 417,
+            "peak": 28
+          },
+          "ribbons": {
+            "samples": 73,
+            "peak": 28
+          }
+        },
+        "families": [
+          "skyreef",
+          "skyshards",
+          "ribbons"
+        ],
+        "requiredFamilies": 3,
+        "dry": 63376,
+        "connected": 63376,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "pits": 0,
+        "channels": 0,
+        "peak": 28,
+        "depth": 2.200000047683716,
+        "surface": "floating network",
+        "pass": true
+      },
+      "features": 161,
+      "vents": 3,
+      "activeFeatures": {
+        "spores": 5,
+        "whirlpool": 21,
+        "updraft": 3,
+        "spring": 6,
+        "boulder": 8,
+        "crystal": 5,
+        "cryovent": 4,
+        "geyser": 3
+      },
+      "environment": {
+        "version": 5,
+        "solar": false,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": null,
+        "exclusive": true,
+        "pack": "sky",
+        "coverage": 1,
+        "biomes": [
+          "aurora",
+          "cloudforest",
+          "lichen"
+        ],
+        "seed": 4206018157,
+        "key": "skyarchipelago",
+        "theme": "skyarchipelago",
+        "name": "Sky Archipelago",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.9075848604976922,
+        "relativeOrbit": 1.14,
+        "flux": 0.7694675284702986,
+        "warmth": -0.07561352975600677,
+        "wetness": 0.16448412341298538,
+        "tectonics": 0.14277334021404386,
+        "oceanShift": 0.051000000000000004,
+        "weights": {
+          "sky": 8,
+          "skyreef": 7,
+          "skycrown": 7,
+          "skyshards": 7,
+          "ribbons": 14
+        }
+      }
+    },
+    {
+      "terrain": "varied",
+      "planet": "stormglass",
+      "label": "planet-stormglass",
+      "ms": 77269,
+      "seed": 4206041914,
+      "attempts": 4,
+      "types": {
+        "fulgurite": 16,
+        "spine": 4,
+        "ribbons": 8,
+        "wave": 5,
+        "skyshards": 2,
+        "skyreef": 6,
+        "caldera": 1,
+        "sky": 2,
+        "skycrown": 5,
+        "catena": 1,
+        "range": 1,
+        "grotto": 1,
+        "hills": 1,
+        "karst": 1
+      },
+      "biomes": {
+        "sulfur": 755,
+        "ocean": 1137,
+        "aurora": 524,
+        "obsidian": 584
+      },
+      "dry": 11634,
+      "connected": 11574,
+      "pits": 0,
+      "bad": {
+        "grotto": 55,
+        "ribbons": 5
+      },
+      "water": 1137,
+      "land": 1863,
+      "routes": [
+        {
+          "node": 300105,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 370943,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 371394,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 387225,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 371631,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 300165,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 388153,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 301320,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 377985,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 208034,
+          "legal": true,
+          "steps": 31
+        },
+        {
+          "node": 388577,
+          "legal": true,
+          "steps": 27
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "spine": {
+            "samples": 117,
+            "peak": 71.41961669921875
+          },
+          "ribbons": {
+            "samples": 186,
+            "peak": 32.83820724487305
+          },
+          "fulgurite": {
+            "samples": 207,
+            "peak": 67.68599700927734
+          }
+        },
+        "families": [
+          "spine",
+          "ribbons",
+          "fulgurite"
+        ],
+        "requiredFamilies": 3,
+        "dry": 102608,
+        "connected": 98617,
+        "dryConnected": 0.961104397317948,
+        "deep": 6219,
+        "deepConnected": 6214,
+        "pits": 0,
+        "channels": 203,
+        "peak": 76.41398620605469,
+        "depth": 8.958066940307617,
+        "surface": "ground",
+        "pass": true
+      },
+      "features": 70,
+      "vents": 6,
+      "activeFeatures": {
+        "crystal": 22,
+        "cryovent": 4,
+        "geyser": 6,
+        "whirlpool": 16,
+        "mudpot": 5,
+        "seep": 9,
+        "updraft": 4,
+        "fumarole": 6,
+        "boulder": 3
+      },
+      "environment": {
+        "version": 5,
+        "solar": false,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": null,
+        "exclusive": false,
+        "pack": "sky",
+        "coverage": 0.85,
+        "biomes": [
+          "obsidian",
+          "aurora",
+          "sulfur"
+        ],
+        "seed": 4206018157,
+        "key": "stormglass",
+        "theme": "stormglass",
+        "name": "Stormglass",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 2.225515670580641,
+        "relativeOrbit": 1.33,
+        "flux": 0.5653230821414438,
+        "warmth": -0.164570498290586,
+        "wetness": -0.11551587658701465,
+        "tectonics": 0.43277334021404384,
+        "oceanShift": -0.033,
+        "weights": {
+          "fulgurite": 18,
+          "wave": 9,
+          "spine": 6,
+          "sky": 3
+        }
+      }
+    }
+  ],
+  "faults": []
+}

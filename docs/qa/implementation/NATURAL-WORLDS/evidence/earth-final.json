@@ -1,0 +1,313 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "checks": [
+    {
+      "name": "planet-earth: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "plateau": {
+              "samples": 26,
+              "peak": 2.8282017707824707
+            },
+            "hills": {
+              "samples": 27,
+              "peak": 3.673030376434326
+            },
+            "basin": {
+              "samples": 36,
+              "peak": 8.098651885986328
+            },
+            "gorge": {
+              "samples": 7,
+              "peak": 13.378233909606934
+            }
+          },
+          "families": [
+            "plateau",
+            "hills",
+            "basin",
+            "gorge"
+          ],
+          "requiredFamilies": 3,
+          "dry": 128292,
+          "connected": 128292,
+          "dryConnected": 1,
+          "deep": 0,
+          "deepConnected": 0,
+          "pits": 0,
+          "channels": 3,
+          "peak": 22.584396362304688,
+          "depth": 4.072030544281006,
+          "surface": "astronomical analogue",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 287754,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 339073,
+            "legal": true,
+            "steps": 26
+          },
+          {
+            "node": 197257,
+            "legal": true,
+            "steps": 23
+          },
+          {
+            "node": 196911,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 337863,
+            "legal": true,
+            "steps": 28
+          },
+          {
+            "node": 196967,
+            "legal": true,
+            "steps": 20
+          },
+          {
+            "node": 338154,
+            "legal": true,
+            "steps": 19
+          },
+          {
+            "node": 291056,
+            "legal": true,
+            "steps": 41
+          },
+          {
+            "node": 338094,
+            "legal": true,
+            "steps": 37
+          },
+          {
+            "node": 6437,
+            "legal": true,
+            "steps": 35
+          },
+          {
+            "node": 287981,
+            "legal": true,
+            "steps": 42
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-earth: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "connected": 0,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "No browser faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "records": [
+    {
+      "terrain": "varied",
+      "planet": "earth",
+      "label": "planet-earth",
+      "ms": 42233,
+      "seed": 4206018157,
+      "attempts": 1,
+      "types": {
+        "gorge": 6,
+        "hills": 20,
+        "basin": 6,
+        "valley": 7,
+        "plateau": 7,
+        "range": 8
+      },
+      "biomes": {
+        "ocean": 2134,
+        "tundra": 53,
+        "waterice": 82,
+        "woodland": 224,
+        "alpine": 35,
+        "meadow": 117,
+        "desert": 120,
+        "savanna": 159,
+        "jungle": 76
+      },
+      "dry": 0,
+      "connected": 0,
+      "pits": 0,
+      "bad": {},
+      "water": 2134,
+      "land": 866,
+      "routes": [
+        {
+          "node": 287754,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 339073,
+          "legal": true,
+          "steps": 26
+        },
+        {
+          "node": 197257,
+          "legal": true,
+          "steps": 23
+        },
+        {
+          "node": 196911,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 337863,
+          "legal": true,
+          "steps": 28
+        },
+        {
+          "node": 196967,
+          "legal": true,
+          "steps": 20
+        },
+        {
+          "node": 338154,
+          "legal": true,
+          "steps": 19
+        },
+        {
+          "node": 291056,
+          "legal": true,
+          "steps": 41
+        },
+        {
+          "node": 338094,
+          "legal": true,
+          "steps": 37
+        },
+        {
+          "node": 6437,
+          "legal": true,
+          "steps": 35
+        },
+        {
+          "node": 287981,
+          "legal": true,
+          "steps": 42
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "plateau": {
+            "samples": 26,
+            "peak": 2.8282017707824707
+          },
+          "hills": {
+            "samples": 27,
+            "peak": 3.673030376434326
+          },
+          "basin": {
+            "samples": 36,
+            "peak": 8.098651885986328
+          },
+          "gorge": {
+            "samples": 7,
+            "peak": 13.378233909606934
+          }
+        },
+        "families": [
+          "plateau",
+          "hills",
+          "basin",
+          "gorge"
+        ],
+        "requiredFamilies": 3,
+        "dry": 128292,
+        "connected": 128292,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "pits": 0,
+        "channels": 3,
+        "peak": 22.584396362304688,
+        "depth": 4.072030544281006,
+        "surface": "astronomical analogue",
+        "pass": true
+      },
+      "features": 3,
+      "vents": 7,
+      "activeFeatures": {
+        "spring": 6,
+        "whirlpool": 14,
+        "geyser": 7,
+        "updraft": 8,
+        "boulder": 1,
+        "spores": 2,
+        "trunks": 2,
+        "cryovent": 1
+      },
+      "environment": {
+        "version": 5,
+        "solar": true,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": [
+          "rock",
+          "wet",
+          "ocean",
+          "atmosphere"
+        ],
+        "exclusive": true,
+        "pack": "varied",
+        "coverage": 1,
+        "biomes": [
+          "jungle",
+          "desert",
+          "woodland",
+          "tundra"
+        ],
+        "seed": 4206018157,
+        "key": "earth",
+        "theme": "earth",
+        "name": "Earth",
+        "star": {
+          "type": "G",
+          "name": "Sun",
+          "luminosity": 1,
+          "color": 16771524
+        },
+        "orbitAU": 1,
+        "relativeOrbit": 1,
+        "flux": 1,
+        "warmth": 0,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.12277334021404387,
+        "oceanShift": 0,
+        "weights": {
+          "range": 6,
+          "hills": 9,
+          "plateau": 3,
+          "valley": 2,
+          "gorge": 3,
+          "basin": 6
+        }
+      }
+    }
+  ],
+  "faults": []
+}

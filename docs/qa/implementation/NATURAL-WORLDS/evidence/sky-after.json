@@ -1,0 +1,992 @@
+{
+  "base": "http://127.0.0.1:8139",
+  "checks": [
+    {
+      "name": "terrain-sky: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "skyreef": {
+              "samples": 421,
+              "peak": 28
+            },
+            "skyshards": {
+              "samples": 417,
+              "peak": 28
+            },
+            "ribbons": {
+              "samples": 69,
+              "peak": 28
+            }
+          },
+          "families": [
+            "skyreef",
+            "skyshards",
+            "ribbons"
+          ],
+          "requiredFamilies": 3,
+          "dry": 63376,
+          "connected": 63376,
+          "dryConnected": 1,
+          "deep": 0,
+          "deepConnected": 0,
+          "pits": 0,
+          "channels": 0,
+          "peak": 28,
+          "depth": 2.200000047683716,
+          "surface": "floating network",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 328759,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 329231,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 338535,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 328631,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 251497,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 329409,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 194935,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 173554,
+            "legal": true,
+            "steps": 22
+          },
+          {
+            "node": 328788,
+            "legal": true,
+            "steps": 36
+          },
+          {
+            "node": 330583,
+            "legal": true,
+            "steps": 41
+          },
+          {
+            "node": 194958,
+            "legal": true,
+            "steps": 38
+          }
+        ]
+      }
+    },
+    {
+      "name": "terrain-sky: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "connected": 0,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "planet-skyarchipelago: certified battlefield and eleven actual nest approaches",
+      "ok": true,
+      "actual": {
+        "certificate": {
+          "exposed": {
+            "skyreef": {
+              "samples": 421,
+              "peak": 28
+            },
+            "skyshards": {
+              "samples": 417,
+              "peak": 28
+            },
+            "ribbons": {
+              "samples": 73,
+              "peak": 28
+            }
+          },
+          "families": [
+            "skyreef",
+            "skyshards",
+            "ribbons"
+          ],
+          "requiredFamilies": 3,
+          "dry": 63376,
+          "connected": 63376,
+          "dryConnected": 1,
+          "deep": 0,
+          "deepConnected": 0,
+          "pits": 0,
+          "channels": 0,
+          "peak": 28,
+          "depth": 2.200000047683716,
+          "surface": "floating network",
+          "pass": true
+        },
+        "routes": [
+          {
+            "node": 328759,
+            "legal": true,
+            "steps": 27
+          },
+          {
+            "node": 329231,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 338535,
+            "legal": true,
+            "steps": 25
+          },
+          {
+            "node": 328631,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 251497,
+            "legal": true,
+            "steps": 24
+          },
+          {
+            "node": 329409,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 194935,
+            "legal": true,
+            "steps": 30
+          },
+          {
+            "node": 173554,
+            "legal": true,
+            "steps": 22
+          },
+          {
+            "node": 328788,
+            "legal": true,
+            "steps": 36
+          },
+          {
+            "node": 330583,
+            "legal": true,
+            "steps": 41
+          },
+          {
+            "node": 194958,
+            "legal": true,
+            "steps": 38
+          }
+        ]
+      }
+    },
+    {
+      "name": "planet-skyarchipelago: dry passage connectivity",
+      "ok": true,
+      "actual": {
+        "dry": 0,
+        "connected": 0,
+        "pits": 0,
+        "disconnected": {}
+      }
+    },
+    {
+      "name": "planet-skyarchipelago: multiple authored biomes present",
+      "ok": true,
+      "actual": {
+        "lichen": 353,
+        "ocean": 2086,
+        "cloudforest": 247,
+        "aurora": 314
+      }
+    },
+    {
+      "name": "No browser faults",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "records": [
+    {
+      "terrain": "sky",
+      "planet": "temperate",
+      "label": "terrain-sky",
+      "ms": 36169,
+      "seed": 4206026076,
+      "attempts": 2,
+      "types": {
+        "ribbons": 12,
+        "skyshards": 9,
+        "sky": 4,
+        "skyreef": 3
+      },
+      "biomes": {
+        "alpine": 394,
+        "ocean": 2083,
+        "tundra": 69,
+        "meadow": 280,
+        "desert": 2,
+        "savanna": 3,
+        "woodland": 43,
+        "jungle": 126
+      },
+      "dry": 0,
+      "connected": 0,
+      "pits": 0,
+      "bad": {},
+      "water": 2083,
+      "land": 917,
+      "routes": [
+        {
+          "node": 328759,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 329231,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 338535,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 328631,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 251497,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 329409,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 194935,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 173554,
+          "legal": true,
+          "steps": 22
+        },
+        {
+          "node": 328788,
+          "legal": true,
+          "steps": 36
+        },
+        {
+          "node": 330583,
+          "legal": true,
+          "steps": 41
+        },
+        {
+          "node": 194958,
+          "legal": true,
+          "steps": 38
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "skyreef": {
+            "samples": 421,
+            "peak": 28
+          },
+          "skyshards": {
+            "samples": 417,
+            "peak": 28
+          },
+          "ribbons": {
+            "samples": 69,
+            "peak": 28
+          }
+        },
+        "families": [
+          "skyreef",
+          "skyshards",
+          "ribbons"
+        ],
+        "requiredFamilies": 3,
+        "dry": 63376,
+        "connected": 63376,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "pits": 0,
+        "channels": 0,
+        "peak": 28,
+        "depth": 2.200000047683716,
+        "surface": "floating network",
+        "pass": true
+      },
+      "features": 157,
+      "vents": 9,
+      "activeFeatures": {
+        "spring": 20,
+        "whirlpool": 23,
+        "geyser": 9,
+        "boulder": 8,
+        "spores": 2,
+        "cryovent": 6
+      },
+      "environment": {
+        "version": 5,
+        "solar": false,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": null,
+        "exclusive": false,
+        "pack": "varied",
+        "coverage": 0,
+        "biomes": null,
+        "seed": 4206018157,
+        "key": "temperate",
+        "theme": "temperate",
+        "name": "Garden world",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.6733200530681511,
+        "relativeOrbit": 1,
+        "flux": 0.9999999999999999,
+        "warmth": -3.203426503814918e-17,
+        "wetness": -0.0055158765870146455,
+        "tectonics": 0.16277334021404385,
+        "oceanShift": 0,
+        "weights": {}
+      },
+      "profile": [
+        {
+          "key": "_pickCapCenter",
+          "ms": 25.700000002980232,
+          "attempt": 1,
+          "n": 0,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1768.2999999970198,
+          "attempt": 1,
+          "n": 47138,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 29.399999998509884,
+          "attempt": 1,
+          "n": 47138,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 88.10000000149012,
+          "attempt": 1,
+          "n": 47138,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 12.699999995529652,
+          "attempt": 1,
+          "n": 47138,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1662.8999999985099,
+          "attempt": 1,
+          "n": 46986,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 25.19999999552965,
+          "attempt": 1,
+          "n": 46986,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 77.5,
+          "attempt": 1,
+          "n": 46986,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 12.5,
+          "attempt": 1,
+          "n": 46986,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1748.3999999985099,
+          "attempt": 1,
+          "n": 46629,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 17.100000001490116,
+          "attempt": 1,
+          "n": 46629,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 51.20000000298023,
+          "attempt": 1,
+          "n": 46629,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 16.399999998509884,
+          "attempt": 1,
+          "n": 46629,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1667.1000000014901,
+          "attempt": 1,
+          "n": 47561,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 16.399999998509884,
+          "attempt": 1,
+          "n": 47561,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 36.5,
+          "attempt": 1,
+          "n": 47561,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 13.100000001490116,
+          "attempt": 1,
+          "n": 47561,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1627.5,
+          "attempt": 1,
+          "n": 46210,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 14,
+          "attempt": 1,
+          "n": 46210,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 29.399999998509884,
+          "attempt": 1,
+          "n": 46210,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 13.299999997019768,
+          "attempt": 2,
+          "n": 46210,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1599.2999999970198,
+          "attempt": 2,
+          "n": 46506,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 18.399999998509884,
+          "attempt": 2,
+          "n": 46506,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 58.600000001490116,
+          "attempt": 2,
+          "n": 46506,
+          "result": true
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 6383.60000000149,
+          "attempt": 2,
+          "n": 185973,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 83,
+          "attempt": 2,
+          "n": 185973,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 238.69999999552965,
+          "attempt": 2,
+          "n": 185973,
+          "result": true
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 13494.20000000298,
+          "attempt": 2,
+          "n": 415039,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 192.89999999850988,
+          "attempt": 2,
+          "n": 415039,
+          "result": null
+        },
+        {
+          "key": "build",
+          "ms": 31152.80000000447,
+          "attempt": 2,
+          "n": 415039,
+          "result": null
+        }
+      ]
+    },
+    {
+      "terrain": "varied",
+      "planet": "skyarchipelago",
+      "label": "planet-skyarchipelago",
+      "ms": 34305,
+      "seed": 4206026076,
+      "attempts": 2,
+      "types": {
+        "ribbons": 12,
+        "skyshards": 9,
+        "sky": 3,
+        "skyreef": 3,
+        "skycrown": 1
+      },
+      "biomes": {
+        "lichen": 353,
+        "ocean": 2086,
+        "cloudforest": 247,
+        "aurora": 314
+      },
+      "dry": 0,
+      "connected": 0,
+      "pits": 0,
+      "bad": {},
+      "water": 2086,
+      "land": 914,
+      "routes": [
+        {
+          "node": 328759,
+          "legal": true,
+          "steps": 27
+        },
+        {
+          "node": 329231,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 338535,
+          "legal": true,
+          "steps": 25
+        },
+        {
+          "node": 328631,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 251497,
+          "legal": true,
+          "steps": 24
+        },
+        {
+          "node": 329409,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 194935,
+          "legal": true,
+          "steps": 30
+        },
+        {
+          "node": 173554,
+          "legal": true,
+          "steps": 22
+        },
+        {
+          "node": 328788,
+          "legal": true,
+          "steps": 36
+        },
+        {
+          "node": 330583,
+          "legal": true,
+          "steps": 41
+        },
+        {
+          "node": 194958,
+          "legal": true,
+          "steps": 38
+        }
+      ],
+      "certificate": {
+        "exposed": {
+          "skyreef": {
+            "samples": 421,
+            "peak": 28
+          },
+          "skyshards": {
+            "samples": 417,
+            "peak": 28
+          },
+          "ribbons": {
+            "samples": 73,
+            "peak": 28
+          }
+        },
+        "families": [
+          "skyreef",
+          "skyshards",
+          "ribbons"
+        ],
+        "requiredFamilies": 3,
+        "dry": 63376,
+        "connected": 63376,
+        "dryConnected": 1,
+        "deep": 0,
+        "deepConnected": 0,
+        "pits": 0,
+        "channels": 0,
+        "peak": 28,
+        "depth": 2.200000047683716,
+        "surface": "floating network",
+        "pass": true
+      },
+      "features": 161,
+      "vents": 3,
+      "activeFeatures": {
+        "spores": 5,
+        "whirlpool": 21,
+        "updraft": 3,
+        "spring": 6,
+        "boulder": 8,
+        "crystal": 5,
+        "cryovent": 4,
+        "geyser": 3
+      },
+      "environment": {
+        "version": 5,
+        "solar": false,
+        "cloud": false,
+        "rings": false,
+        "tilt": 0,
+        "radius": 240,
+        "showcase": false,
+        "tags": null,
+        "exclusive": true,
+        "pack": "sky",
+        "coverage": 1,
+        "biomes": [
+          "aurora",
+          "cloudforest",
+          "lichen"
+        ],
+        "seed": 4206018157,
+        "key": "skyarchipelago",
+        "theme": "skyarchipelago",
+        "name": "Sky Archipelago",
+        "star": {
+          "type": "F",
+          "name": "White star",
+          "luminosity": 2.8,
+          "color": 15134207
+        },
+        "orbitAU": 1.9075848604976922,
+        "relativeOrbit": 1.14,
+        "flux": 0.7694675284702986,
+        "warmth": -0.07561352975600677,
+        "wetness": 0.16448412341298538,
+        "tectonics": 0.14277334021404386,
+        "oceanShift": 0.051000000000000004,
+        "weights": {
+          "sky": 8,
+          "skyreef": 7,
+          "skycrown": 7,
+          "skyshards": 7,
+          "ribbons": 14
+        }
+      },
+      "profile": [
+        {
+          "key": "_pickCapCenter",
+          "ms": 21.5,
+          "attempt": 1,
+          "n": 0,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1591.7999999970198,
+          "attempt": 1,
+          "n": 47383,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 23.399999998509884,
+          "attempt": 1,
+          "n": 47383,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 72.39999999850988,
+          "attempt": 1,
+          "n": 47383,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 10.100000001490116,
+          "attempt": 1,
+          "n": 47383,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1547.7000000029802,
+          "attempt": 1,
+          "n": 46986,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 25.600000001490116,
+          "attempt": 1,
+          "n": 46986,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 72,
+          "attempt": 1,
+          "n": 46986,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 12.699999995529652,
+          "attempt": 1,
+          "n": 46986,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1681.6000000014901,
+          "attempt": 1,
+          "n": 46629,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 13.100000001490116,
+          "attempt": 1,
+          "n": 46629,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 37.79999999701977,
+          "attempt": 1,
+          "n": 46629,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 12.399999998509884,
+          "attempt": 1,
+          "n": 46629,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1545.7000000029802,
+          "attempt": 1,
+          "n": 47239,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 15.100000001490116,
+          "attempt": 1,
+          "n": 47239,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 35.100000001490116,
+          "attempt": 1,
+          "n": 47239,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 9.799999997019768,
+          "attempt": 1,
+          "n": 47239,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1611.2000000029802,
+          "attempt": 1,
+          "n": 46210,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 15.199999995529652,
+          "attempt": 1,
+          "n": 46210,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 35.899999998509884,
+          "attempt": 1,
+          "n": 46210,
+          "result": false
+        },
+        {
+          "key": "_pickCapCenter",
+          "ms": 12.899999998509884,
+          "attempt": 2,
+          "n": 46210,
+          "result": null
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 1670.7999999970198,
+          "attempt": 2,
+          "n": 46506,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 19,
+          "attempt": 2,
+          "n": 46506,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 60.20000000298023,
+          "attempt": 2,
+          "n": 46506,
+          "result": true
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 6562.39999999851,
+          "attempt": 2,
+          "n": 185973,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 80.10000000149012,
+          "attempt": 2,
+          "n": 185973,
+          "result": null
+        },
+        {
+          "key": "_chooseSites",
+          "ms": 193.60000000149012,
+          "attempt": 2,
+          "n": 185973,
+          "result": true
+        },
+        {
+          "key": "_buildGraph",
+          "ms": 13692.80000000447,
+          "attempt": 2,
+          "n": 415039,
+          "result": null
+        },
+        {
+          "key": "recomputeFlow",
+          "ms": 194.69999999552965,
+          "attempt": 2,
+          "n": 415039,
+          "result": null
+        },
+        {
+          "key": "build",
+          "ms": 31035.19999999553,
+          "attempt": 2,
+          "n": 415039,
+          "result": null
+        }
+      ]
+    }
+  ],
+  "faults": []
+}
