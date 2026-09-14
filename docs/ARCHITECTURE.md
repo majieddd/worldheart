@@ -133,6 +133,37 @@ after it called `onWaveClear`, so the hold lasted one line and the breather ran
 down under the draft overlay. It now starts its own countdown only if nobody
 parked it.
 
+## Runtime visibility and route reuse
+
+`js/terrain-chunks.js` changes submission, not terrain generation. Close views
+submit indexed sectors sharing every original vertex attribute and material.
+Whole-planet views switch to the original single mesh. Quakes expand sector
+bounds before changing the shared positions. Do not clone simplified heights
+or remove collision surfaces to optimize rendering.
+
+Scenery keeps its original instance identities for crushing and collision.
+One compact instance batch per species contains the union of camera-visible
+and shadow-visible sectors, with identical matrices, colors and sway depth
+materials. Camera changes and source matrix/color revisions refresh that
+prefix. `World.syncDecorBatches()` runs after simulation and before rendering,
+so a crushed tree cannot remain in a stale visible copy. Overview uses the
+original batch. Active-feature bounds contain all animation phases; invisible
+particles skip matrix uploads while the feature's gameplay clock continues.
+
+Point routes use generation-marked search buffers and a bounded cache of exact
+start/end node pairs, including failures. Every returned path is a copy. The
+navigation revision invalidates the cache and weak-connectivity labels after
+builds, sales or earthquakes. Finite edges in either direction define weak
+regions; directed costs still decide the actual route. Full heart, flight and
+mountain fields remain separate complete calculations. Layered routes must
+carry endpoint heights and test `routeEdgeOpen`, preserving bridges and the
+floor underneath.
+
+Performance evidence belongs with the request ledger. Browser CPU throttling
+does not emulate a mobile GPU. Keep screenshots outside timed frame samples,
+fix visual settings on both comparison samples, and reject improvements that
+trade fewer triangles for excessive draw calls or slower median frames.
+
 ## Deployment
 
 Pages composes the stable and development routes from separate checkouts:

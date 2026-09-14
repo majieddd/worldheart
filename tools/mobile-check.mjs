@@ -13,7 +13,9 @@ const tap=async selector=>{await page.locator(selector).tap();await page.waitFor
 const rect=selector=>page.locator(selector).boundingBox();
 const at=(r,x=.5,y=.5)=>({x:r.x+r.width*x,y:r.y+r.height*y});
 const points=new Map();
-async function touch(type,id,x=0,y=0){if(type==='touchEnd'||type==='touchCancel')points.delete(id);else points.set(id,{id,x,y,radiusX:4,radiusY:4,force:1});await cdp.send('Input.dispatchTouchEvent',{type,touchPoints:[...points.values()]});}
+// CDP releases the supplied ids, not the remaining DOM TouchList. Supplying
+// survivors ended the movement/fire fingers when a third skill finger lifted.
+async function touch(type,id,x=0,y=0){const ending=points.get(id);if(type==='touchEnd'||type==='touchCancel')points.delete(id);else points.set(id,{id,x,y,radiusX:4,radiusY:4,force:1});await cdp.send('Input.dispatchTouchEvent',{type,touchPoints:type==='touchEnd'?[ending]:type==='touchCancel'?[]:[...points.values()]});await page.waitForTimeout(20);}
 async function swipe(x,y,dx,dy){await touch('touchStart',1,x,y);for(let i=1;i<=8;i++){await touch('touchMove',1,x+dx*i/8,y+dy*i/8);await step(2);}await touch('touchEnd',1);await step();}
 const snap=async name=>{await page.screenshot({path:resolve(out,name+'.png')});};
 try{
@@ -30,10 +32,12 @@ try{
  ck('Drag looks without attacking',await page.evaluate(old=>WH.mode99.commander.fwd.distanceTo({x:old.f[0],y:old.f[1],z:old.f[2]})>.02&&WH.possession.pitch>old.pitch&&!WH.possession.firing,facing));
  await tap('#touch-aim');ck('Aim is a usable toggle',await page.evaluate(()=>WH.possession.aiming));await step(35);ck('Aim narrows the actual lens',await page.evaluate(()=>WH.possession.aimT>.95&&WH.rig.camera.fov<WH.possession.baseFov*.85));await tap('#touch-aim');
  const start=await page.evaluate(()=>WH.mode99.commander.dir.toArray()),stick=at(await rect('#touch-stick'),.5,.22),fire=at(await rect('#touch-fire'));
- await touch('touchStart',1,stick.x,stick.y);await touch('touchStart',2,fire.x,fire.y);await step(20);
+ await touch('touchStart',1,stick.x,stick.y+50);await touch('touchMove',1,stick.x,stick.y);await touch('touchStart',2,fire.x,fire.y);await step(20);
  ck('Movement and attack work simultaneously',await page.evaluate(old=>WH.possession.touchInput.forward>.4&&WH.possession.firing&&WH.mode99.commander.dir.distanceTo({x:old[0],y:old[1],z:old[2]})>1e-5,start));
- const yaw=await page.evaluate(()=>WH.mode99.commander.fwd.toArray());await touch('touchMove',2,fire.x-30,fire.y-20);await step(15);
- ck('Attack finger also steers aim',await page.evaluate(old=>WH.mode99.commander.fwd.distanceTo({x:old[0],y:old[1],z:old[2]})>.01,yaw));
+ const yaw=await page.evaluate(()=>WH.mode99.commander.fwd.toArray());
+ for(let i=1;i<=6;i++){await touch('touchMove',2,fire.x-i*7,fire.y-i*4);await page.waitForTimeout(25);await step(3);}await step(15);
+ const steering=await page.evaluate(old=>({distance:WH.mode99.commander.fwd.distanceTo({x:old[0],y:old[1],z:old[2]}),firing:WH.possession.firing,held:WH.mobile.holds.size,queue:WH.possession.yawQueue}),yaw);
+ ck('Attack finger also steers aim',steering.distance>.01&&steering.firing,steering);
  await touch('touchEnd',2);await touch('touchEnd',1);await step();ck('Lifting fingers releases held actions',await page.evaluate(()=>!WH.possession.firing&&WH.possession.touchInput.forward===0));
  await tap('#touch-sprint');ck('Run toggle enables sprint intent',await page.evaluate(()=>WH.possession.touchInput.sprint));
  await tap('#touch-jump');ck('Touch Jump performs a real jump',await page.evaluate(()=>WH.mode99.commander.airT>0||WH.mode99.commander.hop>0));await step(100);
@@ -58,11 +62,13 @@ try{
  await tap('#touch-order-done');await tap('#touch-build');await snap('portrait-build');await tap('#touch-menu .build-card');
  const held=await page.evaluate(()=>({cards:WH.game.hand.length,gold:WH.game.gold}));await page.touchscreen.tap(190,340);await step();ck('Placement tap only previews, never spends',await page.evaluate(old=>WH.game.gold===old.gold&&WH.game.hand.length===old.cards,held));await tap('#touch-cancel');ck('Cancel returns the unspent card',await page.evaluate(old=>!WH.game.buildType&&WH.game.hand.length===old.cards,held));
  await tap('#touch-menu-open');await tap('#touch-tab-options');await snap('portrait-options');await tap('#touch-keep-paused');await tap('#touch-close');ck('Explicit pause survives menu closing',await page.evaluate(()=>WH.game.paused));await tap('#touch-resume');
- for(const viewport of [{width:844,height:390},{width:360,height:640},{width:768,height:1024},{width:1024,height:768}]){
+ for(const viewport of [{width:844,height:390},{width:640,height:360},{width:568,height:320},{width:360,height:640},{width:768,height:1024},{width:1024,height:768}]){
    await page.setViewportSize(viewport);await step();await tap('#touch-commander');await step(35);
    const layout=await page.evaluate(()=>{const ids=['touch-menu-open','touch-status','touch-stick','touch-fire','touch-jump','touch-special','touch-power','touch-switch'];return {width:innerWidth,overflow:document.body.scrollWidth,controls:ids.map(id=>{const el=document.getElementById(id),r=el.getBoundingClientRect();return {id,x:r.x,y:r.y,w:r.width,h:r.height,visible:!el.hidden,inside:r.x>=0&&r.y>=0&&r.right<=innerWidth+.5&&r.bottom<=innerHeight+.5};})};});
    ck(`Controls fit ${viewport.width}x${viewport.height} with 44px targets`,layout.overflow<=layout.width&&layout.controls.every(r=>!r.visible||r.inside&&r.w>=44&&r.h>=44),layout);
-   const density=await page.evaluate(()=>{const visible=e=>e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden',rect=e=>{const r=e.getBoundingClientRect();return{id:e.id||e.className,x:r.x,y:r.y,w:r.width,h:r.height};},buttons=[...document.querySelectorAll('#touch-hud button,.touch-stick')].filter(visible).map(rect),overlap=[];for(let i=0;i<buttons.length;i++)for(let j=i+1;j<buttons.length;j++){const a=buttons[i],b=buttons[j];if(Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x)>1&&Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y)>1)overlap.push([a.id,b.id]);}const boxes=[...document.querySelectorAll('#touch-hud button,.touch-stick,.touch-wave,.touch-vitals,.touch-boss')].filter(visible).map(rect);return {overlap,area:boxes.reduce((s,r)=>s+r.w*r.h,0)/(innerWidth*innerHeight),aimClear:!buttons.some(r=>innerWidth/2>=r.x&&innerWidth/2<=r.x+r.w&&innerHeight/2>=r.y&&innerHeight/2<=r.y+r.h)};});
+   // Count painted panels, not the transparent floating-stick capture zone.
+   // Hit rectangles still have independent overlap and aim-clearance checks.
+   const density=await page.evaluate(()=>{const visible=e=>e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden',rect=e=>{const r=e.getBoundingClientRect();return{id:e.id||e.className,x:r.x,y:r.y,w:r.width,h:r.height};},buttons=[...document.querySelectorAll('#touch-hud button,.touch-stick')].filter(visible).map(rect),overlap=[];for(let i=0;i<buttons.length;i++)for(let j=i+1;j<buttons.length;j++){const a=buttons[i],b=buttons[j];if(Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x)>1&&Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y)>1)overlap.push([a.id,b.id]);}const boxes=[...document.querySelectorAll('#touch-hud button,.touch-stick-pad,.touch-wave,.touch-vitals,.touch-boss')].filter(visible),painted=boxes.reduce((sum,e)=>{const r=rect(e),corner=getComputedStyle(e).borderTopLeftRadius,radius=Math.min(r.w/2,r.h/2,parseFloat(corner)*(corner.includes('%')?Math.min(r.w,r.h)/100:1)||0);return sum+r.w*r.h-(4-Math.PI)*radius*radius;},0);return {overlap,area:painted/(innerWidth*innerHeight),hitArea:buttons.reduce((sum,r)=>sum+r.w*r.h,0)/(innerWidth*innerHeight),aimClear:!buttons.some(r=>innerWidth/2>=r.x&&innerWidth/2<=r.x+r.w&&innerHeight/2>=r.y&&innerHeight/2<=r.y+r.h)};});
    ck(`Touch targets never overlap and leave aiming clear at ${viewport.width}x${viewport.height}`,!density.overlap.length&&density.aimClear&&density.area<.38,density);
    await snap(`commander-${viewport.width}x${viewport.height}`);await tap('#touch-commander');
  }

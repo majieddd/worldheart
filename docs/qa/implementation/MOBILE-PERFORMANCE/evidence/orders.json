@@ -1,0 +1,47 @@
+{
+  "scope": "Real touch squad orders with a seeded allied unit and barracks. Movement uses production layered navigation and route renderer.",
+  "checks": [
+    {
+      "name": "Rally assigns a real follower",
+      "ok": true
+    },
+    {
+      "name": "Dismiss releases the follower",
+      "ok": true
+    },
+    {
+      "name": "Roster selects an actual unit for orders",
+      "ok": true
+    },
+    {
+      "name": "Touch destination creates a route and moving dotted preview",
+      "ok": true
+    },
+    {
+      "name": "Barracks inspection exposes touch patrol mode",
+      "ok": true
+    },
+    {
+      "name": "Touch patrol updates the actual barracks destination",
+      "ok": true
+    },
+    {
+      "name": "Roster can possess a non-commander unit",
+      "ok": true
+    },
+    {
+      "name": "Return to strategy works for a controlled squad unit",
+      "ok": true
+    },
+    {
+      "name": "Desktop right-click orders retain layered height without exceptions",
+      "ok": true
+    },
+    {
+      "name": "No runtime errors",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "errors": []
+}

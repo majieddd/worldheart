@@ -1,0 +1,377 @@
+{
+  "scope": "Native emulated multitouch plus same-frame visual equivalence, not physical-phone acceptance.",
+  "checks": [
+    {
+      "name": "Terrain culling preserves the rendered image at close, regional and whole-planet views",
+      "ok": true,
+      "actual": [
+        {
+          "distance": 22,
+          "yaw": 0,
+          "original": 1789524,
+          "optimized": 1423481,
+          "ratio": 0.7954523102232772,
+          "changedFraction": 0,
+          "maxDelta": 1
+        },
+        {
+          "distance": 65,
+          "yaw": 0,
+          "original": 1793490,
+          "optimized": 1570908,
+          "ratio": 0.8758944850542797,
+          "changedFraction": 0,
+          "maxDelta": 1
+        },
+        {
+          "distance": 900,
+          "yaw": 0,
+          "original": 1805082,
+          "optimized": 1805082,
+          "ratio": 1,
+          "changedFraction": 0,
+          "maxDelta": 1
+        },
+        {
+          "distance": 22,
+          "yaw": -0.65,
+          "original": 1779332,
+          "optimized": 1272896,
+          "ratio": 0.7153785802761935,
+          "changedFraction": 0,
+          "maxDelta": 1
+        },
+        {
+          "distance": 22,
+          "yaw": 0.65,
+          "original": 1783202,
+          "optimized": 1258814,
+          "ratio": 0.705928997387845,
+          "changedFraction": 0,
+          "maxDelta": 1
+        }
+      ]
+    },
+    {
+      "name": "Close views avoid at least 100000 submitted triangles without reducing detail",
+      "ok": true,
+      "actual": {
+        "distance": 22,
+        "yaw": 0,
+        "original": 1789524,
+        "optimized": 1423481,
+        "ratio": 0.7954523102232772,
+        "changedFraction": 0,
+        "maxDelta": 1
+      }
+    },
+    {
+      "name": "Floating stick starts neutral under the landing thumb",
+      "ok": true
+    },
+    {
+      "name": "Move and held fire coexist",
+      "ok": true
+    },
+    {
+      "name": "A Power tap during held-fire recovery queues exactly once",
+      "ok": true,
+      "actual": {
+        "pending": true,
+        "firing": false,
+        "swing": 0.7833333333333331,
+        "canDrive": true,
+        "events": [],
+        "trace": [
+          {
+            "type": "pointerdown",
+            "id": 5,
+            "target": "touch-stick",
+            "x": 97,
+            "y": 315
+          },
+          {
+            "type": "pointermove",
+            "id": 5,
+            "target": "touch-stick",
+            "x": 97,
+            "y": 260
+          },
+          {
+            "type": "pointerdown",
+            "id": 6,
+            "target": "touch-fire",
+            "x": 704,
+            "y": 254
+          },
+          {
+            "type": "pointerdown",
+            "id": 7,
+            "target": "touch-power",
+            "x": 792,
+            "y": 162
+          },
+          {
+            "type": "click",
+            "id": -1,
+            "target": "touch-power",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "type": "pointerup",
+            "id": 7,
+            "target": "touch-power",
+            "x": 792,
+            "y": 162
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 7,
+            "target": "touch-power",
+            "x": 792,
+            "y": 162
+          }
+        ]
+      }
+    },
+    {
+      "name": "Queued Power activates at recovery and held fire resumes",
+      "ok": true
+    },
+    {
+      "name": "Cooldown keeps ability identity and remaining time visible",
+      "ok": true
+    },
+    {
+      "name": "Opening a menu cancels queued actions and clears every held pointer",
+      "ok": true
+    },
+    {
+      "name": "Cancelled Power never fires after resume",
+      "ok": true
+    },
+    {
+      "name": "Large actions have genuine hit areas at 360x640",
+      "ok": true,
+      "actual": [
+        {
+          "id": "fire",
+          "w": 80,
+          "h": 80,
+          "x": 180,
+          "y": 464,
+          "hit": true
+        },
+        {
+          "id": "jump",
+          "w": 84,
+          "h": 84,
+          "x": 264,
+          "y": 544,
+          "hit": true
+        },
+        {
+          "id": "special",
+          "w": 80,
+          "h": 72,
+          "x": 180,
+          "y": 376,
+          "hit": true
+        },
+        {
+          "id": "power",
+          "w": 80,
+          "h": 72,
+          "x": 268,
+          "y": 376,
+          "hit": true
+        },
+        {
+          "id": "aim",
+          "w": 64,
+          "h": 64,
+          "x": 284,
+          "y": 468,
+          "hit": true
+        },
+        {
+          "id": "switch",
+          "w": 64,
+          "h": 64,
+          "x": 184,
+          "y": 560,
+          "hit": true
+        }
+      ]
+    },
+    {
+      "name": "Large actions have genuine hit areas at 390x844",
+      "ok": true,
+      "actual": [
+        {
+          "id": "fire",
+          "w": 80,
+          "h": 80,
+          "x": 210,
+          "y": 668,
+          "hit": true
+        },
+        {
+          "id": "jump",
+          "w": 84,
+          "h": 84,
+          "x": 294,
+          "y": 748,
+          "hit": true
+        },
+        {
+          "id": "special",
+          "w": 80,
+          "h": 72,
+          "x": 210,
+          "y": 580,
+          "hit": true
+        },
+        {
+          "id": "power",
+          "w": 80,
+          "h": 72,
+          "x": 298,
+          "y": 580,
+          "hit": true
+        },
+        {
+          "id": "aim",
+          "w": 64,
+          "h": 64,
+          "x": 314,
+          "y": 672,
+          "hit": true
+        },
+        {
+          "id": "switch",
+          "w": 64,
+          "h": 64,
+          "x": 214,
+          "y": 764,
+          "hit": true
+        }
+      ]
+    },
+    {
+      "name": "Large actions have genuine hit areas at 844x390",
+      "ok": true,
+      "actual": [
+        {
+          "id": "fire",
+          "w": 80,
+          "h": 80,
+          "x": 664,
+          "y": 214,
+          "hit": true
+        },
+        {
+          "id": "jump",
+          "w": 84,
+          "h": 84,
+          "x": 748,
+          "y": 294,
+          "hit": true
+        },
+        {
+          "id": "special",
+          "w": 80,
+          "h": 72,
+          "x": 664,
+          "y": 126,
+          "hit": true
+        },
+        {
+          "id": "power",
+          "w": 80,
+          "h": 72,
+          "x": 752,
+          "y": 126,
+          "hit": true
+        },
+        {
+          "id": "aim",
+          "w": 64,
+          "h": 64,
+          "x": 768,
+          "y": 218,
+          "hit": true
+        },
+        {
+          "id": "switch",
+          "w": 64,
+          "h": 64,
+          "x": 668,
+          "y": 310,
+          "hit": true
+        }
+      ]
+    },
+    {
+      "name": "Large actions have genuine hit areas at 1024x768",
+      "ok": true,
+      "actual": [
+        {
+          "id": "fire",
+          "w": 80,
+          "h": 80,
+          "x": 844,
+          "y": 592,
+          "hit": true
+        },
+        {
+          "id": "jump",
+          "w": 84,
+          "h": 84,
+          "x": 928,
+          "y": 672,
+          "hit": true
+        },
+        {
+          "id": "special",
+          "w": 80,
+          "h": 72,
+          "x": 844,
+          "y": 504,
+          "hit": true
+        },
+        {
+          "id": "power",
+          "w": 80,
+          "h": 72,
+          "x": 932,
+          "y": 504,
+          "hit": true
+        },
+        {
+          "id": "aim",
+          "w": 64,
+          "h": 64,
+          "x": 948,
+          "y": 596,
+          "hit": true
+        },
+        {
+          "id": "switch",
+          "w": 64,
+          "h": 64,
+          "x": 848,
+          "y": 688,
+          "hit": true
+        }
+      ]
+    },
+    {
+      "name": "No runtime exceptions",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "errors": []
+}

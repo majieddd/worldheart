@@ -63,12 +63,17 @@ export class WorldContext {
     this.close();
   }
   _pick(ray) {
+    if(!this.game.towerMgr.towers.length&&!this.mode?.loot.entries.size)return null;
     let best=null,distance=Infinity;
-    const groundHit=raycastTerrain(ray.origin,ray.direction,_hit);
-    const groundDistance=groundHit?ray.origin.distanceTo(_hit):Infinity;
+    let groundDistance;
     const consider=(kind,object,position,radius)=>{
       const along=_delta.copy(position).sub(ray.origin).dot(ray.direction);
-      if(along<=0||along>groundDistance+radius||along>=distance||ray.distanceSqToPoint(position)>radius*radius)return;
+      if(along<=0||along>=distance||ray.distanceSqToPoint(position)>radius*radius)return;
+      // Most view rays point at empty ground. Solve terrain occlusion only
+      // after a tower or item actually overlaps the ray, with the same exact
+      // occlusion predicate used for a visible candidate.
+      if(groundDistance===undefined)groundDistance=raycastTerrain(ray.origin,ray.direction,_hit)?ray.origin.distanceTo(_hit):Infinity;
+      if(along>groundDistance+radius)return;
       best={kind,object};distance=along;
     };
     for(const t of this.game.towerMgr.towers) {
@@ -166,6 +171,9 @@ export class WorldContext {
   }
   updateMarkers() {
     if(!this.mode)return;
+    // Mobile presents nest information in its compact HUD. Do not project
+    // and rewrite an entire invisible desktop marker layer on every frame.
+    if(this.game.mobile?.enabled)return;
     const placed=[];
     for(const p of this.game.world.portals){
       if(!this.markers.has(p)){const el=document.createElement('div');el.className='nest-marker';this.ui.root.append(el);this.markers.set(p,el);}

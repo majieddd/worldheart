@@ -1,0 +1,53 @@
+{
+  "reference": "102d4a5",
+  "scope": "Same Chrome/GPU session, full visuals, 30 towers/100 replenished enemies, separate native and 4x CPU slowdown. Not physical-phone hardware.",
+  "samples": [
+    {
+      "name": "before",
+      "exit": 1,
+      "bootMs": 27034,
+      "frameMs": {
+        "p50": 41.69999999999709,
+        "p95": 125,
+        "p99": 159.6999999999971,
+        "max": 277.6999999999971
+      },
+      "medianFps": 23.980815347723496,
+      "p99Fps": 6.261740763932488,
+      "budgetPassed": false,
+      "faults": []
+    },
+    {
+      "name": "after",
+      "exit": 1,
+      "bootMs": 15461,
+      "frameMs": {
+        "p50": 83.30000000000291,
+        "p95": 118.09999999999854,
+        "p99": 138.90000000000146,
+        "max": 222.20000000000437
+      },
+      "medianFps": 12.004801920767887,
+      "p99Fps": 7.199424046076238,
+      "budgetPassed": false,
+      "faults": []
+    },
+    {
+      "name": "native",
+      "exit": 0,
+      "bootMs": 16857,
+      "frameMs": {
+        "p50": 13.89999999999418,
+        "p95": 14,
+        "p99": 20.89999999999418,
+        "max": 41.700000000004366
+      },
+      "medianFps": 71.94244604319559,
+      "p99Fps": 47.846889952166435,
+      "budgetPassed": true,
+      "faults": []
+    }
+  ],
+  "p95Improvement": 0.055200000000011684,
+  "pass": false
+}
