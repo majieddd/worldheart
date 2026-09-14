@@ -1,0 +1,14 @@
+{
+  "error": "Error: page.evaluate: ReferenceError: R is not defined\n    at http://127.0.0.1:8139/js/modes/ninetynine.js:520:170\n    at Array.map (<anonymous>)\n    at salvageSnapshot (http://127.0.0.1:8139/js/modes/ninetynine.js:520:77)\n    at http://127.0.0.1:8139/js/modes/ninetynine.js:247:67\n    at Object.commit (http://127.0.0.1:8139/js/modes/campaign-store.js:36:37)\n    at handle (http://127.0.0.1:8139/js/modes/ninetynine.js:247:20)\n    at waves.onWaveClear (http://127.0.0.1:8139/js/modes/ninetynine.js:286:5)\n    at WaveDirector._clearTimedWave (http://127.0.0.1:8139/js/waves.js:289:23)\n    at WaveDirector.update (http://127.0.0.1:8139/js/waves.js:444:35)\n    at stepFrame (http://127.0.0.1:8139/js/main.js:622:11)",
+  "context": {
+    "pointerLock": null,
+    "focused": "",
+    "paused": false,
+    "possession": {
+      "active": false,
+      "suspended": false
+    },
+    "phase": "victory"
+  },
+  "faults": []
+}

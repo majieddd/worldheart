@@ -22,7 +22,7 @@ export class CampaignPanel {
     this.save.querySelector('[data-save="export"]').onclick=()=>{
       const url=URL.createObjectURL(new Blob([store.export()],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='99-planets-checkpoint.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
     };
-    this.save.querySelector('input').onchange=async e=>{const file=e.target.files[0];if(!file)return;if(store.import(await file.text()))api.reload();else{ui.toast('Checkpoint was invalid or could not be saved. Current progress is still available for export.','warn');this.update();}};
+    this.save.querySelector('input').onchange=async e=>{const file=e.target.files[0];if(!file)return;if(store.import(await file.text()))api.reload();else{this.importNotice='Checkpoint was invalid or could not be saved. Current progress is still available for export.';ui.toast(this.importNotice,'warn');this.update();}e.target.value='';};
     for(const button of this.save.querySelectorAll('button'))button.className='btn';
     const title=ui.el['title-overlay'];
     title.classList.add('campaign-title');title.querySelector('.o-mark').textContent='99 PLANETS';
@@ -59,7 +59,7 @@ export class CampaignPanel {
       : 'Current assault loot was lost. Previously extracted weapons and earned talent coins remain available for your retry.';
     this.save.classList.toggle('save-failed',!status.saved);
     const messages={unavailable:'Save failed. Keep this page open; export your checkpoint or retry before traveling.',conflict:'Another tab changed the checkpoint. Export this pending progress, then reload the newer save. Travel is paused.',corrupt:'The stored checkpoint is unreadable. Export preserves its original text. Recover saves this new session in its place.', 'legacy-corrupt':'The old profile is unreadable. Export preserves its original text. Recover saves this new session in its place.'};
-    this.save.querySelector('p').textContent=status.saved?'Checkpoint saved':messages[status.error]||'Progress is waiting to be saved.';
+    this.save.querySelector('p').textContent=(status.saved?'Checkpoint saved':messages[status.error]||'Progress is waiting to be saved.')+(this.importNotice?' '+this.importNotice:'');
     const retry=this.save.querySelector('[data-save="retry"]');retry.hidden=status.saved;retry.textContent=['corrupt','legacy-corrupt'].includes(status.error)?'Recover with this session':'Retry save';
     this.extract.disabled=!status.saved;
     this.arsenal.hidden=!complete;

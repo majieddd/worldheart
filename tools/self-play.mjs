@@ -15,6 +15,7 @@ const campaign=process.argv.includes('--campaign');
 const useTalents=process.argv.includes('--talents');
 const sparseRender=process.argv.includes('--sparse-render');
 const cautious=process.argv.includes('--cautious');
+const mobile=process.argv.includes('--mobile');
 const strategy=process.argv.find(x=>x.startsWith('--strategy='))?.split('=')[1]||'defense';
 if(!['defense','assault'].includes(strategy))throw Error('Unknown strategy');
 const baseUrl=process.argv.find(x=>x.startsWith('--base-url='))?.slice('--base-url='.length)||'http://127.0.0.1:8139/';
@@ -26,7 +27,7 @@ const checkpointPath=process.argv.find(x=>x.startsWith('--checkpoint='))?.slice(
 let sourceCheckpoint=null;
 if(checkpointPath){const parsed=JSON.parse(readFileSync(resolve(checkpointPath),'utf8'));sourceCheckpoint=parsed.checkpoint||parsed;if(!campaign||!validSave(sourceCheckpoint))throw Error('Resume requires --campaign and a valid exported checkpoint');}
 const browser=await chromium.launch({channel:'chrome',headless:true});
-const page=await browser.newPage({viewport:{width:1280,height:720}});const faults=[];
+const page=await browser.newPage(mobile?{viewport:{width:844,height:390},hasTouch:true,isMobile:true}:{viewport:{width:1280,height:720}});const faults=[];
 const runtimeHashes={},responseReads=[];
 page.on('response',response=>{
   const url=new URL(response.url());
@@ -266,7 +267,7 @@ try{
   await page.screenshot({path:resolve(out,'terminal.png')});
   result.talentPurchases=purchases;
   result.rendering=sparseRender?'60Hz simulation; one rendered frame per two simulation seconds, plus captures':'60Hz simulation; rendered every 0.1 simulation seconds';
-  result.trace=await page.evaluate(()=>__qaTrace);result.faults=[...faults];result.policy={strategy,towerPriority,towerLimit,cautious};result.assault=await page.evaluate(()=>window.__qaAssault?.metrics||null);result.towerStats=await page.evaluate(()=>WH.towers.towers.map(t=>({type:t.typeKey,tier:t.tier,damage:t.damageDealt,kills:t.kills})));result.scope=`Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; ${sourceCheckpoint?'resumed exported checkpoint':planet===1?'fresh profile':'continued earned campaign profile'}`;
+  result.trace=await page.evaluate(()=>__qaTrace);result.faults=[...faults];result.policy={strategy,towerPriority,towerLimit,cautious};result.assault=await page.evaluate(()=>window.__qaAssault?.metrics||null);result.towerStats=await page.evaluate(()=>WH.towers.towers.map(t=>({type:t.typeKey,tier:t.tier,damage:t.damageDealt,kills:t.kills})));result.inputScope=mobile?'Touch HUD enabled; policy uses legal gameplay APIs and scripted UI, not a touch-only manual run':'Desktop policy';result.scope=`Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; ${sourceCheckpoint?'resumed exported checkpoint':planet===1?'fresh profile':'continued earned campaign profile'}`;
   await Promise.all(responseReads);result.runtimeHashes={...runtimeHashes};result.policySourceHash=assaultSource?createHash('sha256').update(assaultSource).digest('hex'):null;
   result.navigation=await page.evaluate(()=>({heartNode:WH.nav.heartNode,towers:WH.towers.towers.map(t=>({type:t.typeKey,pos:t.pos.toArray()})),nests:WH.world.portals.filter(p=>p.established).map(p=>({node:p.node,destroyed:p.destroyed,next:WH.nav.next[p.node],airNext:WH.nav.airNext[p.node],blocked:!!WH.nav.block[p.node],pos:p.group.position.toArray()})),enemies:WH.enemies.active.filter(e=>e.active&&!e.dead).map(e=>({id:e.id,type:e.typeKey,node:e.node,nearest:WH.nav.nearestNode(e.dir),next:e.type.flying?WH.nav.airNext[e.node]:WH.nav.next[e.node],blocked:!!WH.nav.block[e.node],source:e.sourceNest,dir:e.dir.toArray()}))}));
   if(useWeapons){result.inventory=await page.evaluate(()=>WH.mode99.inventory.snapshot());result.weaponLoop=result.trace.some(a=>a.action==='weapon-picked-up')&&result.trace.some(a=>['weapon-equipped','assault-weapon'].includes(a.action));}

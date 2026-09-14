@@ -1,0 +1,141 @@
+{
+  "scope": "Real emulated multi-touch and rendered layouts with isolated simulation fixtures. Physical phone testing is separate.",
+  "checks": [
+    {
+      "name": "Touch controls detect a mobile browser",
+      "ok": true
+    },
+    {
+      "name": "Start and commander choice fit the initial portrait viewport",
+      "ok": true
+    },
+    {
+      "name": "No duplicated control identities",
+      "ok": true,
+      "actual": []
+    },
+    {
+      "name": "Commander button enters real possession",
+      "ok": true
+    },
+    {
+      "name": "First person works without Pointer Lock",
+      "ok": true
+    },
+    {
+      "name": "Drag looks without attacking",
+      "ok": true
+    },
+    {
+      "name": "Aim is a usable toggle",
+      "ok": false,
+      "actual": {
+        "events": [
+          {
+            "type": "pointerdown",
+            "target": "touch-aim",
+            "drive": true,
+            "build": null,
+            "boom": 0
+          },
+          {
+            "type": "pointerup",
+            "target": "touch-aim",
+            "drive": true,
+            "build": null,
+            "boom": 0
+          }
+        ],
+        "handler": "()=>{if(this.canDrive()&&possession.boomWant<.35&&!game.buildType)possession.aiming=!possession.aiming;}",
+        "writes": [],
+        "boom": 0,
+        "paused": false,
+        "phase": "building",
+        "drive": true
+      }
+    },
+    {
+      "name": "Aim narrows the actual lens",
+      "ok": false
+    },
+    {
+      "name": "Movement and attack work simultaneously",
+      "ok": true
+    },
+    {
+      "name": "Attack finger also steers aim",
+      "ok": true
+    },
+    {
+      "name": "Lifting fingers releases held actions",
+      "ok": true
+    },
+    {
+      "name": "Run toggle enables sprint intent",
+      "ok": true
+    },
+    {
+      "name": "Touch Jump performs a real jump",
+      "ok": true
+    },
+    {
+      "name": "Commander ability activates from touch",
+      "ok": true
+    },
+    {
+      "name": "Weapon special activates from touch",
+      "ok": true
+    },
+    {
+      "name": "Swap changes the equipped attack after recovery",
+      "ok": true
+    },
+    {
+      "name": "Field menu pauses and clears all combat intent",
+      "ok": true
+    },
+    {
+      "name": "Mount is available without a keyboard",
+      "ok": true
+    },
+    {
+      "name": "Held Rise flies and consumes mount energy",
+      "ok": true
+    },
+    {
+      "name": "Releasing Rise lands the mount",
+      "ok": true
+    },
+    {
+      "name": "Weapons drawer owns pause after switching menus",
+      "ok": true
+    },
+    {
+      "name": "Native attack can be selected in the inventory",
+      "ok": true
+    },
+    {
+      "name": "Inventory resumes touch control",
+      "ok": true
+    },
+    {
+      "name": "Touch cancellation cannot stick movement or fire",
+      "ok": true
+    },
+    {
+      "name": "Strategy button releases linked possession",
+      "ok": true
+    },
+    {
+      "name": "One-finger strategy pan moves the view and stays finite",
+      "ok": true
+    },
+    {
+      "name": "Pinch zoom changes distance without a tap or selection",
+      "ok": true
+    }
+  ],
+  "errors": [
+    "TimeoutError: locator.tap: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#touch-tab-squad')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"btn\" type=\"button\" data-page=\"squad\" id=\"touch-tab-squad\" aria-pressed=\"false\">Squad</button>\u001b[22m\n\u001b[2m  - attempting tap action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying tap action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying tap action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    39 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying tap action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+  ]
+}

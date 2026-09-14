@@ -1,0 +1,123 @@
+{
+  "scope": "Real touch transactions with seeded item, resource and approach fixtures. Waves held to isolate controls; no balance claim.",
+  "checks": [
+    {
+      "name": "Confirm spends exactly one legal card and creates a tower",
+      "ok": true
+    },
+    {
+      "name": "Tapping a real tower opens its management sheet",
+      "ok": true
+    },
+    {
+      "name": "Touch upgrade advances tier and charges gold",
+      "ok": true
+    },
+    {
+      "name": "Base upgrade works from the field menu",
+      "ok": true
+    },
+    {
+      "name": "First-person crosshair discovers a nearby tower",
+      "ok": true
+    },
+    {
+      "name": "Interact suspends movement for real tower buttons",
+      "ok": true
+    },
+    {
+      "name": "First-person upgrade resumes touch looking immediately",
+      "ok": true
+    },
+    {
+      "name": "Touch can equip a carried weapon",
+      "ok": true
+    },
+    {
+      "name": "Part customization changes the actual item",
+      "ok": true
+    },
+    {
+      "name": "Touch salvage creates spendable scraps",
+      "ok": true
+    },
+    {
+      "name": "Crystal deposit uses the real cargo transaction",
+      "ok": true
+    },
+    {
+      "name": "Forge creates a card and raises its next price",
+      "ok": true
+    },
+    {
+      "name": "Confirm spends exactly one legal card and creates a tower",
+      "ok": true
+    },
+    {
+      "name": "Touch sale removes the selected tower",
+      "ok": true,
+      "actual": {
+        "before": {
+          "count": 2,
+          "target": 1,
+          "editing": true,
+          "valid": true,
+          "gold": 9355
+        },
+        "after": {
+          "count": 1,
+          "editing": false,
+          "gold": 9681
+        },
+        "events": [
+          {
+            "type": "pointerdown",
+            "target": "tp-sell",
+            "trusted": true,
+            "pointer": "touch",
+            "x": 656.989990234375,
+            "y": 332,
+            "hit": "tp-sell"
+          },
+          {
+            "type": "click",
+            "target": "tp-sell",
+            "trusted": false,
+            "pointer": "",
+            "x": 0,
+            "y": 0,
+            "hit": "view"
+          },
+          {
+            "type": "pointerup",
+            "target": "tp-sell",
+            "trusted": true,
+            "pointer": "touch",
+            "x": 656.989990234375,
+            "y": 332,
+            "hit": "tp-sell"
+          }
+        ]
+      }
+    },
+    {
+      "name": "No horizontal page overflow after nested transactions",
+      "ok": true,
+      "actual": {
+        "sheets": [
+          "https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;600&display=swap",
+          "http://127.0.0.1:8139/css/style.css",
+          "http://127.0.0.1:8139/css/mobile.css"
+        ],
+        "bodyWidth": 844,
+        "viewport": 844
+      }
+    },
+    {
+      "name": "No runtime errors",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "errors": []
+}

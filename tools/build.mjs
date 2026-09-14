@@ -92,8 +92,9 @@ async function build() {
     imports[key] = toDataUri(rewriteSpecifiers(src, key));
   }
 
-  const css = await readText(root, 'css', 'style.css');
+  const css = await readText(root, 'css', 'style.css') + '\n' + await readText(root, 'css', 'mobile.css');
   let html = await readText(root, 'index.html');
+  html = html.replace('<link rel="stylesheet" href="css/mobile.css">', '');
 
   html = html.replace(
     /<link rel="stylesheet" href="css\/style.css">/,

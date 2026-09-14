@@ -1,0 +1,28 @@
+{
+  "scope": "Real touch in lobby, launch, Debug and generator. Foundry gets 120 fixture coins; all other choices use normal UI.",
+  "checks": [
+    {
+      "name": "Lobby detects touch and keeps stations collapsed",
+      "ok": true
+    },
+    {
+      "name": "Lobby joystick walks the actual commander",
+      "ok": true
+    },
+    {
+      "name": "Lobby one-finger look turns the camera",
+      "ok": true
+    },
+    {
+      "name": "Lobby pinch zoom changes viewing distance",
+      "ok": true
+    },
+    {
+      "name": "Commander choice persists through touch selection",
+      "ok": true
+    }
+  ],
+  "errors": [
+    "TimeoutError: locator.tap: Timeout 25000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#lobby-prepare')\u001b[22m\n"
+  ]
+}

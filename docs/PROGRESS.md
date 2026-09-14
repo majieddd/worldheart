@@ -1,11 +1,11 @@
 # 99 Planets development progress
 
-Updated 2026-09-13. This is the collaborator entry point for the owner's new direction.
+Updated 2026-09-14. This is the collaborator entry point for the owner's new direction.
 Active: Codex on `feature/mobile-controls`, U126-U131: comprehensive touch
 controls, compact responsive HUD, preparation/inspection access and mobile QA.
 [Mobile request ledger](qa/implementation/MOBILE-CONTROLS.md). Based on the
 verified preview below and its documentation closeout; desktop input and main
-remain protected. Implementation is not yet published.
+remain protected. Local acceptance passed 107 touch cases, seven camera suites, 329 automated tests and a complete ten-wave victory/extraction. Publishing and public verification are next.
 
 Published and publicly verified: V2 `67e14d0`, Codex on
 `feature/natural-bridges-and-storms`, completed U115-U125 in the

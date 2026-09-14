@@ -1,0 +1,508 @@
+{
+  "scope": "Real emulated multi-touch and rendered layouts with isolated simulation fixtures. Physical phone testing is separate.",
+  "checks": [
+    {
+      "name": "Touch controls detect a mobile browser",
+      "ok": true
+    },
+    {
+      "name": "Start and commander choice fit the initial portrait viewport",
+      "ok": true
+    },
+    {
+      "name": "No duplicated control identities",
+      "ok": true,
+      "actual": []
+    },
+    {
+      "name": "Commander button enters real possession",
+      "ok": true
+    },
+    {
+      "name": "First person works without Pointer Lock",
+      "ok": true
+    },
+    {
+      "name": "Drag looks without attacking",
+      "ok": true
+    },
+    {
+      "name": "Aim is a usable toggle",
+      "ok": true
+    },
+    {
+      "name": "Aim narrows the actual lens",
+      "ok": true
+    },
+    {
+      "name": "Movement and attack work simultaneously",
+      "ok": true
+    },
+    {
+      "name": "Attack finger also steers aim",
+      "ok": true
+    },
+    {
+      "name": "Lifting fingers releases held actions",
+      "ok": true
+    },
+    {
+      "name": "Run toggle enables sprint intent",
+      "ok": true
+    },
+    {
+      "name": "Touch Jump performs a real jump",
+      "ok": true
+    },
+    {
+      "name": "Commander ability activates from touch",
+      "ok": true
+    },
+    {
+      "name": "Weapon special activates from touch",
+      "ok": true
+    },
+    {
+      "name": "Swap changes the equipped attack after recovery",
+      "ok": true
+    },
+    {
+      "name": "Field menu pauses and clears all combat intent",
+      "ok": true
+    },
+    {
+      "name": "Mount is available without a keyboard",
+      "ok": true
+    },
+    {
+      "name": "Held Rise flies and consumes mount energy",
+      "ok": true
+    },
+    {
+      "name": "Releasing Rise lands the mount",
+      "ok": true
+    },
+    {
+      "name": "Weapons drawer owns pause after switching menus",
+      "ok": true
+    },
+    {
+      "name": "Native attack can be selected in the inventory",
+      "ok": true
+    },
+    {
+      "name": "Inventory resumes touch control",
+      "ok": true
+    },
+    {
+      "name": "Touch cancellation cannot stick movement or fire",
+      "ok": true
+    },
+    {
+      "name": "Strategy button releases linked possession",
+      "ok": true
+    },
+    {
+      "name": "One-finger strategy pan moves the view and stays finite",
+      "ok": true
+    },
+    {
+      "name": "Pinch zoom changes distance without a tap or selection",
+      "ok": true
+    },
+    {
+      "name": "Visible squad selection is touch accessible",
+      "ok": true
+    },
+    {
+      "name": "Placement tap only previews, never spends",
+      "ok": true
+    },
+    {
+      "name": "Cancel returns the unspent card",
+      "ok": true
+    },
+    {
+      "name": "Explicit pause survives menu closing",
+      "ok": true
+    },
+    {
+      "name": "Controls fit 844x390 with 44px targets",
+      "ok": true,
+      "actual": {
+        "width": 844,
+        "overflow": 844,
+        "controls": [
+          {
+            "id": "touch-menu-open",
+            "x": 782.296875,
+            "y": 8,
+            "w": 49.703125,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-status",
+            "x": 12,
+            "y": 8,
+            "w": 92,
+            "h": 49.25,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-stick",
+            "x": 12,
+            "y": 266,
+            "w": 112,
+            "h": 112,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-fire",
+            "x": 768,
+            "y": 302,
+            "w": 64,
+            "h": 64,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-jump",
+            "x": 708,
+            "y": 330,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-special",
+            "x": 720,
+            "y": 210,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-power",
+            "x": 660,
+            "y": 210,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-switch",
+            "x": 708,
+            "y": 270,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "Touch targets never overlap and leave aiming clear at 844x390",
+      "ok": true,
+      "actual": {
+        "overlap": [],
+        "area": 0.15649413469133552,
+        "aimClear": true
+      }
+    },
+    {
+      "name": "Controls fit 360x640 with 44px targets",
+      "ok": true,
+      "actual": {
+        "width": 360,
+        "overflow": 360,
+        "controls": [
+          {
+            "id": "touch-menu-open",
+            "x": 298.296875,
+            "y": 8,
+            "w": 49.703125,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-status",
+            "x": 12,
+            "y": 8,
+            "w": 92,
+            "h": 49.25,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-stick",
+            "x": 12,
+            "y": 524,
+            "w": 104,
+            "h": 104,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-fire",
+            "x": 284,
+            "y": 552,
+            "w": 64,
+            "h": 64,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-jump",
+            "x": 224,
+            "y": 580,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-special",
+            "x": 236,
+            "y": 460,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-power",
+            "x": 176,
+            "y": 460,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-switch",
+            "x": 224,
+            "y": 520,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "Touch targets never overlap and leave aiming clear at 360x640",
+      "ok": true,
+      "actual": {
+        "overlap": [],
+        "area": 0.21607469346788194,
+        "aimClear": true
+      }
+    },
+    {
+      "name": "Controls fit 768x1024 with 44px targets",
+      "ok": true,
+      "actual": {
+        "width": 768,
+        "overflow": 768,
+        "controls": [
+          {
+            "id": "touch-menu-open",
+            "x": 706.296875,
+            "y": 8,
+            "w": 49.703125,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-status",
+            "x": 12,
+            "y": 8,
+            "w": 92,
+            "h": 49.25,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-stick",
+            "x": 12,
+            "y": 900,
+            "w": 112,
+            "h": 112,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-fire",
+            "x": 692,
+            "y": 936,
+            "w": 64,
+            "h": 64,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-jump",
+            "x": 632,
+            "y": 964,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-special",
+            "x": 644,
+            "y": 844,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-power",
+            "x": 584,
+            "y": 844,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-switch",
+            "x": 632,
+            "y": 904,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "Touch targets never overlap and leave aiming clear at 768x1024",
+      "ok": true,
+      "actual": {
+        "overlap": [],
+        "area": 0.06550039847691853,
+        "aimClear": true
+      }
+    },
+    {
+      "name": "Controls fit 1024x768 with 44px targets",
+      "ok": true,
+      "actual": {
+        "width": 1024,
+        "overflow": 1024,
+        "controls": [
+          {
+            "id": "touch-menu-open",
+            "x": 962.296875,
+            "y": 8,
+            "w": 49.703125,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-status",
+            "x": 12,
+            "y": 8,
+            "w": 92,
+            "h": 49.25,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-stick",
+            "x": 12,
+            "y": 644,
+            "w": 112,
+            "h": 112,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-fire",
+            "x": 948,
+            "y": 680,
+            "w": 64,
+            "h": 64,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-jump",
+            "x": 888,
+            "y": 708,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-special",
+            "x": 900,
+            "y": 588,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-power",
+            "x": 840,
+            "y": 588,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          },
+          {
+            "id": "touch-switch",
+            "x": 888,
+            "y": 648,
+            "w": 48,
+            "h": 48,
+            "visible": true,
+            "inside": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "Touch targets never overlap and leave aiming clear at 1024x768",
+      "ok": true,
+      "actual": {
+        "overlap": [],
+        "area": 0.06550039847691853,
+        "aimClear": true
+      }
+    },
+    {
+      "name": "Left-handed layout mirrors the thumb zones",
+      "ok": true
+    },
+    {
+      "name": "Hybrid device can restore original desktop controls",
+      "ok": true
+    },
+    {
+      "name": "No browser runtime exceptions",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "errors": []
+}

@@ -298,6 +298,8 @@ export class Possession {
     // input are ignored and the pointer is released; the camera still
     // follows the body so the world does not freeze behind the cards.
     this.suspended = false;
+    this.touchInput = { forward:0, strafe:0, sprint:false, jump:false };
+    this.touchEnabled = false;
     this.pitchQueue = 0;
     this.tpTrail = scene ? new BladeTrail(scene, 18, 1.0, 0.7) : null;
     this._bind();
@@ -344,13 +346,14 @@ export class Possession {
     // the mouse. Release that late grant as well, or visible buttons still
     // route their clicks to the canvas until the player presses Escape twice.
     document.addEventListener('pointerlockchange', () => {
-      if (this.suspended && document.pointerLockElement === this.canvas) document.exitPointerLock?.();
+      if ((this.suspended||this.touchEnabled) && document.pointerLockElement === this.canvas) document.exitPointerLock?.();
       if (document.pointerLockElement !== this.canvas) this.aiming = false;
     });
     addEventListener('blur', () => this.keys.clear());
 
     // Left click strikes.
     this.canvas.addEventListener('mousedown', (e) => {
+      if (e.sourceCapabilities?.firesTouchEvents) return;
       if (!this.active || this.suspended) return;
       if (e.button === 2 && this.boom < .35 && !this.game.buildType) { e.preventDefault(); this.aiming = true; }
       if (e.button === 0) {
@@ -443,6 +446,7 @@ export class Possession {
   }
 
   exit() {
+    this.clearTouch();
     const unit = this.unit;
     this.unit = null;
     this.keys.clear();
@@ -491,7 +495,7 @@ export class Possession {
   // most of what made a fast mouse swing land somewhere unpredictable; a
   // browser that rejects the option gets the plain request.
   _lock() {
-    if (this.suspended || !this.active) return;
+    if (this.suspended || !this.active || this.touchEnabled) return;
     const el = this.canvas;
     const plain = () => {
       if (this.suspended || !this.active) return;
@@ -519,6 +523,7 @@ export class Possession {
     this.firing = false;
     this.yawQueue = 0;
     this.pitchQueue = 0;
+    this.clearTouch();
     if (on) {
       try {
         if (document.pointerLockElement === this.canvas) document.exitPointerLock?.();
@@ -526,6 +531,21 @@ export class Possession {
     } else if (this.active) {
       this._lock();
     }
+  }
+
+  clearTouch() {
+    Object.assign(this.touchInput,{forward:0,strafe:0,sprint:false,jump:false});
+  }
+
+  touchLook(dx,dy,sensitivity=1) {
+    if(!this.active||this.suspended||this.game.paused)return;
+    const rate=TURN_PER_PIXEL*sensitivity*(1-.38*this.aimT);
+    this.yawQueue+=dx*rate;this.pitchQueue-=dy*rate;
+  }
+
+  touchJump(held) {
+    this.touchInput.jump=held;
+    if(held&&this.active&&!this.suspended&&this.unit.mountKey!=='skyray'&&!this.jump())this.jumpBuffer=JUMP_BUFFER;
   }
 
   // A hop. Purely radial: on a sphere "up" is the surface normal, so a jump is
@@ -661,8 +681,8 @@ export class Possession {
     if (this.keys.has('KeyE')) this.allies.turnUnit(u, KEY_TURN * dt);
 
     // ---- locomotion ---------------------------------------------------
-    let fwd = 0;
-    let strafe = 0;
+    let fwd = this.touchInput.forward;
+    let strafe = this.touchInput.strafe;
     if (this.keys.has('KeyW') || this.keys.has('ArrowUp')) fwd += 1;
     if (this.keys.has('KeyS') || this.keys.has('ArrowDown')) fwd -= 1;
     if (this.keys.has('KeyA') || this.keys.has('ArrowLeft')) strafe -= 1;
@@ -670,7 +690,7 @@ export class Possession {
     const wantLen = Math.hypot(fwd, strafe);
     if (wantLen > 1) { fwd /= wantLen; strafe /= wantLen; }
     // Sprint only carries forward: a sideways sprint reads as a glitch.
-    this.sprint = !this.aiming && !u.swimming && (this.keys.has('ShiftLeft') || this.keys.has('ShiftRight')) && fwd > 0.5;
+    this.sprint = !this.aiming && !u.swimming && (this.touchInput.sprint || this.keys.has('ShiftLeft') || this.keys.has('ShiftRight')) && fwd > 0.5;
     const airborne = u.airT > 0;
     const rate = airborne ? AIR_CONTROL : (wantLen > 0 ? ACCEL : DECEL);
     const k = 1 - Math.exp(-dt * rate);
