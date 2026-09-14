@@ -2,7 +2,12 @@
 
 September 14, 2026. U132-U135, Codex, `feature/mobile-performance-polish`.
 [Request ledger](../MOBILE-PERFORMANCE.md), [draft PR #42](https://github.com/majieddd/worldheart/pull/42).
-Local implementation is verified. V2 publication and public checks are pending.
+Published and publicly verified as V2 gameplay `309aaa7b9a1d79bc7291f7a6c6b552c50cb3f45d`.
+[Pages action](https://github.com/majieddd/worldheart/actions/runs/34830211318) succeeded.
+[Public evidence](evidence/public/summary.json) records 125/125 touch cases and
+[286 asset/source identity comparisons](evidence/public/identity.json). Main
+remains `1374122d1109919a5fab10b69fefdfb80308eb6e`. This documentation closeout
+follows the published gameplay commit; it makes no runtime changes.
 
 ## Controls
 

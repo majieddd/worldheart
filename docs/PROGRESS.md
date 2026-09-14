@@ -2,7 +2,7 @@
 
 Updated 2026-09-14. This is the collaborator entry point for the owner's direction.
 
-Verified locally, publishing: U132-U135, mobile runtime optimization and larger
+Published and publicly verified as V2 `309aaa7`: U132-U135, mobile runtime optimization and larger
 Roblox-style thumb controls. Codex on `feature/mobile-performance-polish`,
 [draft PR #42](https://github.com/majieddd/worldheart/pull/42).
 [Request ledger](qa/implementation/MOBILE-PERFORMANCE.md) and
@@ -11,7 +11,10 @@ cases, 334 tests, 180 route comparisons, seven camera suites, weather checks and
 legal ten-wave victory/extraction. Fixed-setting 4x CPU stress p95 delay fell
 38.1%; the absolute throttled FPS budget and physical-device acceptance remain
 open. Original models, geometry and gameplay are preserved. The larger controls
-supersede the prior mobile sizing acceptance. V2/public confirmation is pending.
+supersede the prior mobile sizing acceptance. Pages action
+[34830211318](https://github.com/majieddd/worldheart/actions/runs/34830211318)
+succeeded; 125 public touch checks and 286 identity comparisons passed.
+Main remains `1374122`. The documentation closeout adds no runtime changes.
 
 Published and publicly verified: V2 `102d4a5`, Codex on
 `feature/mobile-controls`, completed U126-U131. Compact touch controls now cover

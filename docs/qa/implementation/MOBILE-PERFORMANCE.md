@@ -7,7 +7,7 @@ Owner request, 2026-09-14. Owner: Codex. Branch: `feature/mobile-performance-pol
 | U132: diagnose and optimize runtime | Verified, bounded browser evidence | Native and CPU-constrained combat profiles; 38.1% lower p95 delay, same median under 4x slowdown; original visual settings retained |
 | U133: Roblox-style thumb controls | Verified in touch emulation | Floating stick, larger jump/combat actions, named skills and recovery queue, both orientations and handedness |
 | U134: adversarial touch and gameplay QA | Verified | 125 touch cases, 334 automated tests, 180 route comparisons, seven camera suites, weather and ten-wave defense/extraction |
-| U135: V2 publication and handoff | Active | Draft PR #42; local checks and mirrors passed; Pages and public verification pending |
+| U135: V2 publication and handoff | Published and publicly verified | V2 `309aaa7`, successful Pages action, 125 public touch cases and 286 identity comparisons; main remains `1374122` |
 
 ## Scope and evidence
 
@@ -19,7 +19,7 @@ References: Roblox's [thumb zones and context-based UI](https://create.roblox.co
 
 [Acceptance and durable evidence](MOBILE-PERFORMANCE/ACCEPTANCE.md), [draft PR #42](https://github.com/majieddd/worldheart/pull/42). Implementation, verification and publication are separate states.
 
-## Implemented and verified locally
+## Published implementation
 
 - Pathfinding: finite-edge weak regions reject cliff-separated destinations; point searches use generation stamps instead of clearing 415,081-node buffers. A bounded cache copies exact node-pair routes and invalidates on navigation revision. Directed costs and full heart fields remain authoritative.
 - Rendering: terrain sectors share original vertices and materials. One visible instance batch per scenery type retains source identities, matrices, colors and shadows. Full-globe views use the original submissions. Crushing and quake changes synchronize before render. Conservative feature bounds cull offscreen particles without stopping their gameplay.
