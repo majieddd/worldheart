@@ -109,7 +109,7 @@ prepare.onclick=()=>{const on=document.body.classList.toggle('stations-open');pr
 const useTouch=()=>{document.body.classList.add('lobby-touch');canvas.setAttribute('aria-label','Drag to look. Pinch to zoom. Tap ground to walk or use the movement joystick. Prepare opens all stations.');document.querySelector('footer p').textContent='Drag to look · Pinch to zoom · Tap to walk · Prepare for stations';};
 if(hasTouch())useTouch();
 bindTouchActivation(document,()=>document.body.classList.contains('lobby-touch'));
-lobbyStick=new TouchStick(el('lobby-stick'),(x,y)=>{touchMove.x=x;touchMove.y=y;if(x||y)moveGoal=null;},()=>!open);
+lobbyStick=new TouchStick(el('lobby-stick'),(x,y)=>{touchMove.x=x;touchMove.y=y;if(x||y)moveGoal=null;},()=>!open,{floating:true});
 lobbyGesture=new TouchGesture(canvas,{accept:()=>!open,start:useTouch,
   drag:(dx,dy)=>{view.yaw-=dx*.006;view.pitch=clamp(view.pitch+dy*.005,.2,1.2);},
   pinch:zoom=>{view.distance=clamp(view.distance*Math.exp(zoom),14,50);},

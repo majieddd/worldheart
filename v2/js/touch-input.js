@@ -95,20 +95,35 @@ export class TouchGesture {
 }
 
 export class TouchStick {
-  constructor(element, change, accept = () => true) {
+  constructor(element, change, accept = () => true, {floating=false} = {}) {
     this.element=element;this.change=change;this.pointer=null;
     this.thumb=element.querySelector('.touch-stick-thumb');
+    this.floating=floating;
+    if(floating){
+      this.pad=document.createElement('span');this.pad.className='touch-stick-pad';
+      this.thumb.before(this.pad);this.pad.append(this.thumb);element.classList.add('touch-stick-floating');
+    }
     element.addEventListener('pointerdown',e=>{
       if(!accept()||this.pointer!==null)return;
       e.preventDefault();e.stopPropagation();this.pointer=e.pointerId;
+      // Read geometry only when a gesture starts, not after every thumb style
+      // write. A floating origin lets the player land anywhere in the zone.
+      this.rect=element.getBoundingClientRect();
+      this.radius=(this.pad?.offsetWidth||this.rect.width)*.34;
+      this.origin={x:floating?e.clientX:this.rect.left+this.rect.width/2,y:floating?e.clientY:this.rect.top+this.rect.height/2};
+      element.classList.add('touch-stick-active');
       element.setPointerCapture(e.pointerId);this.move(e);
     });
     element.addEventListener('pointermove',e=>{if(e.pointerId===this.pointer){e.preventDefault();this.move(e);}});
     for(const name of ['pointerup','pointercancel','lostpointercapture'])element.addEventListener(name,e=>{if(e.pointerId===this.pointer)this.reset();});
   }
   move(e) {
-    const r=this.element.getBoundingClientRect(),radius=r.width*.34;
-    let x=(e.clientX-r.left-r.width/2)/radius,y=(e.clientY-r.top-r.height/2)/radius;
+    const radius=this.radius,origin=this.origin;
+    let dx=e.clientX-origin.x,dy=e.clientY-origin.y;
+    const travel=Math.hypot(dx,dy),limit=radius*1.4;
+    if(this.floating&&travel>limit){origin.x+=dx*(1-limit/travel);origin.y+=dy*(1-limit/travel);dx=e.clientX-origin.x;dy=e.clientY-origin.y;}
+    if(this.pad)this.pad.style.transform=`translate(${origin.x-this.rect.left-this.rect.width/2}px,${origin.y-this.rect.top-this.rect.height/2}px)`;
+    let x=dx/radius,y=dy/radius;
     const distance=Math.hypot(x,y);if(distance>1){x/=distance;y/=distance;}
     this.thumb.style.transform=`translate(${x*radius}px,${y*radius}px)`;
     const strength=clamp((distance-.12)/.88,0,1),n=Math.hypot(x,y)||1;
@@ -116,6 +131,7 @@ export class TouchStick {
   }
   reset() {
     const id=this.pointer;this.pointer=null;this.change(0,0);this.thumb.style.transform='';
+    this.element.classList.remove('touch-stick-active');if(this.pad)this.pad.style.transform='';
     if(id!==null&&this.element.hasPointerCapture(id))this.element.releasePointerCapture(id);
   }
 }

@@ -1,0 +1,24 @@
+{
+  "scope": "Real touch squad orders with a seeded allied unit and barracks. Movement uses production layered navigation and route renderer.",
+  "checks": [
+    {
+      "name": "Rally assigns a real follower",
+      "ok": true
+    },
+    {
+      "name": "Dismiss releases the follower",
+      "ok": true
+    },
+    {
+      "name": "Roster selects an actual unit for orders",
+      "ok": true
+    },
+    {
+      "name": "Touch destination creates a route and moving dotted preview",
+      "ok": false
+    }
+  ],
+  "errors": [
+    "TimeoutError: locator.tap: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#touch-order-done')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"btn\" type=\"button\" id=\"touch-order-done\">Done</button>\u001b[22m\n\u001b[2m  - attempting tap action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying tap action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying tap action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    39 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying tap action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+  ]
+}

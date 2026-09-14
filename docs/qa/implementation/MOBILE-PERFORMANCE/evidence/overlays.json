@@ -1,0 +1,87 @@
+{
+  "scope": "Touch modal, full-bag and recovery fixtures. Draft/victory phases and loot are arranged; extraction and all UI transactions are real. Not a defense or balance proof.",
+  "checks": [
+    {
+      "name": "Checkpoint recovery is reachable before starting a campaign",
+      "ok": true
+    },
+    {
+      "name": "Draft takes input away from touch combat",
+      "ok": true
+    },
+    {
+      "name": "Scrolled reward commits once and restores control",
+      "ok": true
+    },
+    {
+      "name": "Orientation change clears held movement and attack",
+      "ok": true
+    },
+    {
+      "name": "Blur has no remaining touch pointer owners",
+      "ok": true
+    },
+    {
+      "name": "Full bag leaves the nearby drop on the ground",
+      "ok": true
+    },
+    {
+      "name": "Touch can replace a full-bag item without auto-equipping",
+      "ok": true
+    },
+    {
+      "name": "Results expose weapon review and checkpoint actions",
+      "ok": true
+    },
+    {
+      "name": "Weapon review returns to a suspended victory receipt",
+      "ok": true
+    },
+    {
+      "name": "Results save menu exposes only recovery actions",
+      "ok": true
+    },
+    {
+      "name": "Touch export downloads the actual checkpoint",
+      "ok": true
+    },
+    {
+      "name": "Invalid import preserves the checkpoint",
+      "ok": true
+    },
+    {
+      "name": "Closing save recovery keeps the receipt and input suspension",
+      "ok": true
+    },
+    {
+      "name": "Collection phase exposes a route back to extraction",
+      "ok": true
+    },
+    {
+      "name": "Touch reopens the actual planet receipt",
+      "ok": true
+    },
+    {
+      "name": "Touch starts Endless after a cleared planet",
+      "ok": true
+    },
+    {
+      "name": "Touch ends Endless at the heart and restores extraction",
+      "ok": true
+    },
+    {
+      "name": "Touch extraction reloads the next planet with banked weapons",
+      "ok": true
+    },
+    {
+      "name": "Defeat hides unavailable weapon review but retains saves",
+      "ok": true
+    },
+    {
+      "name": "No runtime errors",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "errors": []
+}

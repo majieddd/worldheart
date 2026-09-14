@@ -2,10 +2,16 @@
 
 Updated 2026-09-14. This is the collaborator entry point for the owner's direction.
 
-Active: U132-U135, mobile runtime optimization and Roblox-style touch polish,
-Codex on `feature/mobile-performance-polish`. [Request ledger](qa/implementation/MOBILE-PERFORMANCE.md)
-tracks profiling, larger thumb controls, regression checks and V2 publication.
-The owner's new sizing/lag feedback supersedes the prior mobile sizing acceptance.
+Verified locally, publishing: U132-U135, mobile runtime optimization and larger
+Roblox-style thumb controls. Codex on `feature/mobile-performance-polish`,
+[draft PR #42](https://github.com/majieddd/worldheart/pull/42).
+[Request ledger](qa/implementation/MOBILE-PERFORMANCE.md) and
+[acceptance](qa/implementation/MOBILE-PERFORMANCE/ACCEPTANCE.md) record 125 touch
+cases, 334 tests, 180 route comparisons, seven camera suites, weather checks and
+legal ten-wave victory/extraction. Fixed-setting 4x CPU stress p95 delay fell
+38.1%; the absolute throttled FPS budget and physical-device acceptance remain
+open. Original models, geometry and gameplay are preserved. The larger controls
+supersede the prior mobile sizing acceptance. V2/public confirmation is pending.
 
 Published and publicly verified: V2 `102d4a5`, Codex on
 `feature/mobile-controls`, completed U126-U131. Compact touch controls now cover

@@ -584,7 +584,7 @@ canvas.addEventListener('webglcontextrestored', () => {
 });
 
 function stepFrame(dt, render) {
-  window.WH?.mobile?.beforeFrame();
+  window.WH?.mobile?.beforeFrame(dt);
   // While a unit is possessed the orbit rig stands down entirely and the
   // camera is placed on the unit's eye instead. That is also what lets a
   // possessed unit walk past the frontier: the confine lives on the rig.
@@ -605,7 +605,7 @@ function stepFrame(dt, render) {
   // Inside stepFrame rather than the rAF loop so WH.step() advances it too:
   // a scripted verification run has to see the same shadows a player does.
   updateShadowCamera();
-  world.update(dt, rig.camera.position);
+  world.update(dt, rig.camera.position, rig.camera);
   window.WH?.worldgen?.update(dt);
   // Drives the draft timer. Outside the simDt gate on purpose: the draft must
   // keep counting while the director is held idle between waves.
@@ -665,7 +665,7 @@ function stepFrame(dt, render) {
     // on; the beam is gated on being fed this frame, not on dt.
     combatFx?.update(simDt);
   }
-  if (render) post.render(scene, rig.camera, dt);
+  if (render) {world.syncDecorBatches();post.render(scene, rig.camera, dt);}
 }
 
 // Every tower needs an entry or the strategic layer lies about what is on the
@@ -1042,7 +1042,7 @@ window.WH = {
   step(seconds = 1, fps60 = 60, draw = true) {
     const n = Math.round(seconds * fps60);
     for (let i = 0; i < n; i++) stepFrame(1 / fps60, false);
-    if (draw) post.render(scene, rig.camera, 1 / fps60);
+    if (draw) {world.syncDecorBatches();post.render(scene, rig.camera, 1 / fps60);}
   },
   // Scripted placement for testing: drop a tower N hops down a portal's path,
   // offset sideways so it shapes the route instead of blocking it.

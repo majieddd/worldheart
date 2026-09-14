@@ -1,5 +1,6 @@
 import {ecologyScatter} from './terrain/scatter.js';
 import * as THREE from 'three';
+import {TerrainChunks,DecorChunks} from './terrain-chunks.js';
 import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './biome-visuals.js';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
@@ -2016,6 +2017,7 @@ export class World {
         // the shadow map every frame; and it has no self-shadowing to show at
         // gameplay zoom anyway. Everything that stands ON it casts instead.
         this.terrain.receiveShadow = true;
+        if(CONFIG.terrain)this.terrainChunks=new TerrainChunks(this.terrain,R);
         this.scene.add(this.terrain);
         break;
       case 2:
@@ -2042,6 +2044,7 @@ export class World {
           s.mesh.castShadow = true;
           s.mesh.receiveShadow = true;
           this.scene.add(s.mesh);
+          if(CONFIG.terrain&&s.list.length>32){s.sectors=new DecorChunks(s.mesh,R);this.scene.add(s.sectors.group);}
         }
         if (!SPACE) {
           if(!CONFIG.environment?.solar||!CONFIG.environment.tags?.includes('airless')&&CONFIG.environment.theme!=='mars'){
@@ -2123,6 +2126,7 @@ export class World {
   }
 
   *refreshFaultSteps(fault){
+    this.terrainChunks?.expandBounds(14*fault.strength);
     const dir=new THREE.Vector3(),color=new THREE.Color();let changed=0;
     for(const mesh of [this.terrain,this.fogVeil?.mesh]){
       if(!mesh)continue;const p=mesh.geometry.attributes.position,colors=mesh.geometry.attributes.color;
@@ -2257,7 +2261,9 @@ export class World {
     return crushed;
   }
 
-  update(dt, cameraPos) {
+  update(dt, cameraPos, camera) {
+    this.terrainChunks?.update(cameraPos);
+    if(camera)this.updateDecorVisibility(camera);
     this.time += dt;
     const t = this.time;
 
@@ -2322,4 +2328,14 @@ export class World {
       p.plateMat.emissiveIntensity = 0.06 + u.uActive.value * 0.5 + p.flash * 1.2;
     }
   }
+
+  updateDecorVisibility(camera){
+    if(!this.decor?.sets.some(s=>s.sectors))return;
+    this.decorView ||= new THREE.Frustum();this.decorShadow ||= new THREE.Frustum();this.decorProjection ||= new THREE.Matrix4();
+    this.decorView.setFromProjectionMatrix(this.decorProjection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+    const sun=this.sun;
+    if(sun?.castShadow){sun.updateMatrixWorld();sun.target.updateMatrixWorld();sun.shadow.updateMatrices(sun);const c=sun.shadow.camera;this.decorShadow.setFromProjectionMatrix(this.decorProjection.multiplyMatrices(c.projectionMatrix,c.matrixWorldInverse));}
+    for(const set of this.decor.sets)set.sectors?.update(camera.position,this.decorView,sun?.castShadow?this.decorShadow:null);
+  }
+  syncDecorBatches(){for(const set of this.decor?.sets||[])set.sectors?.sync();}
 }

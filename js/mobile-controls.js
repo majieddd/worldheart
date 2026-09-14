@@ -3,6 +3,8 @@ import { browserStorage } from './storage.js';
 import { TouchGesture, TouchStick, bindTouchActivation, hasTouch, clamp } from './touch-input.js';
 
 const button=(id,text,extra='')=>`<button type="button" class="btn" id="touch-${id}" ${extra}>${text}</button>`;
+const text=(el,value)=>{if(el.textContent!==value)el.textContent=value;};
+const abilityButton=(id,label)=>button(id,`<small>${label}</small><strong></strong><span class="touch-cooldown">Ready</span>`,'data-touch-ability');
 const reasons={terrain:'Choose solid ground',water:'Needs dry ground',unstable:'Too steep',hot:'Mortars only on hot stone',cold:'Cryo only on ice',mixed:'Move off the biome boundary',heart:'Too close to the heart',portal:'Too close to a nest',overlap:'Overlaps a tower',enemies:'Enemy in footprint',allies:'Friendly in footprint',path:'Keep a route to the heart',landmark:'Landmark in footprint',gold:'Not enough gold',frontier:'Outside base range',reach:'Walk closer',shifting:'Wait for the tremor'};
 
 export class MobileControls {
@@ -19,12 +21,12 @@ export class MobileControls {
     <div class="touch-quick">${button('commander','Commander')}${button('camera','1st person','hidden')}${button('build','Build')}${button('resume','Resume','hidden')}</div>
     <div class="touch-context">${button('interact','Interact','hidden')}${button('deposit','Deposit crystals','hidden')}</div>
     <div class="touch-left"><div class="touch-stick" id="touch-stick" role="group" aria-label="Movement joystick. Drag in the direction you want to move."><span class="touch-stick-thumb"></span><small>Move</small></div>${button('sprint','Run','aria-pressed="false"')}</div>
-    <div class="touch-right">${button('fire','Attack','aria-label="Hold to attack. Drag this button to aim while attacking."')}${button('jump','Jump','aria-label="Jump. Hold to rise on a flying mount."')}${button('aim','Aim','aria-pressed="false"')}${button('special','Skill')}${button('power','Power')}${button('switch','Swap','aria-label="Switch weapon"')}</div>
+    <div class="touch-right">${button('fire','Attack','aria-label="Hold to attack. Drag this button to aim while attacking."')}${button('jump','Jump','aria-label="Jump. Hold to rise on a flying mount."')}${button('aim','Aim','aria-pressed="false"')}${abilityButton('special','Skill')}${abilityButton('power','Power')}${button('switch','Swap','aria-label="Switch weapon"')}</div>
     <div class="touch-vitals"><strong></strong><span></span></div>
     <div class="touch-placement" hidden><span role="status"></span>${button('confirm','Place')}${button('cancel','Cancel')}</div>
     <div class="touch-orders" hidden><span role="status"></span>${button('order-move','Move here')}${button('order-done','Done')}</div>`;
     ui.root.append(this.root);
-    this.el=id=>this.root.querySelector('#touch-'+id);
+    const elements=new Map([...this.root.querySelectorAll('[id]')].map(e=>[e.id.slice(6),e]));this.el=id=>elements.get(id);
     this.menu=document.createElement('dialog');this.menu.id='touch-menu';this.menu.setAttribute('aria-labelledby','touch-menu-title');
     this.menu.innerHTML=`<header><h2 id="touch-menu-title">Field menu</h2>${button('close','Resume')}</header>
       <nav aria-label="Field tools">${['build','base','squad','options'].map(k=>button('tab-'+k,k[0].toUpperCase()+k.slice(1),`data-page="${k}" aria-pressed="false"`)).join('')}${button('weapons','Weapons')}</nav>
@@ -52,16 +54,16 @@ export class MobileControls {
     this.el('deposit').onclick=()=>mode?.depositCrystals();
     this.el('sprint').onclick=()=>{possession.touchInput.sprint=!possession.touchInput.sprint;};
     this.el('aim').onclick=()=>{if(this.canDrive()&&possession.boomWant<.35&&!game.buildType)possession.aiming=!possession.aiming;};
-    this.el('special').onclick=()=>{if(this.canDrive())mode?.abilities.activate('commander');};
-    this.el('power').onclick=()=>{if(this.canDrive())mode?.abilities.activate('weapon');};
+    this.el('special').onclick=()=>this.activateAbility('commander');
+    this.el('power').onclick=()=>this.activateAbility('weapon');
     this.el('switch').onclick=()=>{
       if(!this.canDrive()||!mode||possession.unit!==mode.commander)return;
       const inv=mode.inventory,slots=['native','basic',...inv.slots.flatMap((id,i)=>id?[i]:[])];
       if(mode.weapons.request({kind:'select',slot:slots[(slots.indexOf(inv.active)+1)%slots.length]}))ui.toast(inv.pending?'Weapon change queued until this attack finishes.':inv.current?mode.weaponPanel.rules.name(inv.current):inv.active==='basic'?'Basic sword':'Commander technique','info');
     };
-    this.hold(this.el('fire'),held=>{possession.firing=held;if(held)possession.attack(0);},true);
+    this.hold(this.el('fire'),held=>{possession.firing=held&&!this.pendingPower;if(possession.firing)possession.attack(0);},true);
     this.hold(this.el('jump'),held=>possession.touchJump(held));
-    this.stick=new TouchStick(this.el('stick'),(x,y)=>{possession.touchInput.forward=y;possession.touchInput.strafe=x;},()=>this.canDrive());
+    this.stick=new TouchStick(this.el('stick'),(x,y)=>{possession.touchInput.forward=y;possession.touchInput.strafe=x;},()=>this.canDrive(),{floating:true});
     this.el('confirm').onclick=()=>{if(this.canAct()&&game.buildType){if(possession.active)game.hoverCenter();game._tryPlace();}};
     this.el('cancel').onclick=()=>{game.cancelBuild();this.preview=false;};
     this.el('order-move').onclick=()=>{this.orderMode='move';};
@@ -134,16 +136,17 @@ export class MobileControls {
     element.addEventListener('pointerdown',e=>{
       if(!this.canDrive()||this.game.buildType&&look||this.holds.has(element))return;
       e.preventDefault();e.stopPropagation();element.setPointerCapture(e.pointerId);
-      this.holds.set(element,{id:e.pointerId,x:e.clientX,y:e.clientY,change});change(true);
+      this.holds.set(element,{id:e.pointerId,x:e.clientX,y:e.clientY,change});element.classList.add('touch-held');change(true);
     });
     element.addEventListener('pointermove',e=>{const p=this.holds.get(element);if(p?.id!==e.pointerId)return;if(look)this.look(e.clientX-p.x,e.clientY-p.y);p.x=e.clientX;p.y=e.clientY;});
-    for(const name of ['pointerup','pointercancel','lostpointercapture'])element.addEventListener(name,e=>{const p=this.holds.get(element);if(p?.id===e.pointerId){this.holds.delete(element);change(false);}});
+    for(const name of ['pointerup','pointercancel','lostpointercapture'])element.addEventListener(name,e=>{const p=this.holds.get(element);if(p?.id===e.pointerId){this.holds.delete(element);element.classList.remove('touch-held');change(false);}});
     element.addEventListener('keydown',e=>{if((e.code==='Space'||e.code==='Enter')&&!e.repeat&&this.canDrive()){e.preventDefault();change(true);}});
     element.addEventListener('keyup',e=>{if(e.code==='Space'||e.code==='Enter'){e.preventDefault();change(false);}});
   }
   reset() {
+    this.pendingPower=null;
     this.stick?.reset();this.gesture?.cancel();
-    for(const [element,p]of this.holds){p.change(false);this.holds.delete(element);if(element.hasPointerCapture(p.id))element.releasePointerCapture(p.id);}
+    for(const [element,p]of this.holds){p.change(false);this.holds.delete(element);element.classList.remove('touch-held');if(element.hasPointerCapture(p.id))element.releasePointerCapture(p.id);}
     this.possession.clearTouch();this.possession.firing=false;this.possession.aiming=false;
     this.possession.yawQueue=0;this.possession.pitchQueue=0;this.possession.jumpBuffer=0;
   }
@@ -211,12 +214,32 @@ export class MobileControls {
       const control=document.createElement('button');control.className='btn';control.textContent='Control';control.onclick=()=>{this.closeMenu();if(this.release())this.possession.enter(a);};row.append(name,select,control);root.append(row);
     }
   }
-  beforeFrame() {
+  activateAbility(which) {
+    if(!this.canDrive()||!this.mode||this.possession.unit!==this.mode.commander||this.game.buildType)return;
+    const abilities=this.mode.abilities,s=abilities.describe(which);
+    if(s.remaining>0)return;
+    if(abilities.activate(which)){if(which==='weapon')this.pendingPower=null;this.timer=1;return;}
+    // A held attack previously swallowed a Power tap during recovery. Queue
+    // exactly one request, stop repeating the basic attack, and execute at the
+    // first legal recovery point. This never cancels a strike or its cooldown.
+    if(which==='weapon'){
+      this.pendingPower={unit:this.possession.unit,key:s.key,left:Math.max(.4,this.possession.unit.swingT+.25)};
+      this.possession.firing=false;this.timer=1;
+    }
+  }
+  beforeFrame(dt=1/60) {
     if(!this.enabled)return;
     const drive=this.canDrive();
     if(!drive&&(this.wasDriving||this.holds.size||this.stick.pointer!==null))this.reset();
     this.wasDriving=drive;
     if(this.lastUnit!==this.possession.unit){this.reset();this.lastUnit=this.possession.unit;}
+    if(this.pendingPower){
+      const pending=this.pendingPower,p=this.possession,a=pending.unit;pending.left-=dt;
+      p.firing=false;
+      if(pending.left<=0||!drive||a!==p.unit||this.mode.abilities.describe('weapon').key!==pending.key||this.game.buildType)this.pendingPower=null;
+      else if(a.swingT<=0&&!a.strikePending&&this.mode.abilities.activate('weapon'))this.pendingPower=null;
+      if(!this.pendingPower){p.firing=drive&&this.holds.has(this.el('fire'));this.timer=1;}
+    }
   }
   update(dt=0) {
     if(!this.enabled){this.root.hidden=true;return;}
@@ -227,22 +250,29 @@ export class MobileControls {
     this.menu.querySelector('#touch-receipt').hidden=!m||!['victory','complete'].includes(m.campaign?.state()?.status||m.run.getPhase());
     const drive=p.active&&!p.suspended&&!g.paused&&!g.context.editing;
     this.root.classList.toggle('touch-possessed',drive);this.root.classList.toggle('touch-building',!!g.buildType);
-    this.el('status').textContent=`Heart ${g.lives}\n${Math.floor(g.gold)} gold`;
-    const wave=this.root.querySelector('.touch-wave'),expedition=m?.campaign?.state();wave.querySelector('strong').textContent=(expedition?`P${expedition.planet}/${expedition.limit} · `:'')+this.ui.el['wave-label'].textContent;wave.querySelector('span').textContent=this.ui.el['wave-sub'].textContent;wave.querySelector('small').textContent=this.ui.el['nest-count'].textContent;
+    text(this.el('status'),`Heart ${g.lives}\n${Math.floor(g.gold)} gold`);
+    const wave=this.root.querySelector('.touch-wave'),expedition=m?.campaign?.state();text(wave.querySelector('strong'),(expedition?`P${expedition.planet}/${expedition.limit} · `:'')+this.ui.el['wave-label'].textContent);text(wave.querySelector('span'),this.ui.el['wave-sub'].textContent);text(wave.querySelector('small'),this.ui.el['nest-count'].textContent);
     const boss=g.enemies.active.find(e=>e.type.boss&&!e.dead),bossBar=this.root.querySelector('.touch-boss');bossBar.hidden=!boss;if(boss){bossBar.querySelector('span').textContent=boss.type.name;bossBar.querySelector('meter').value=Math.max(0,boss.hp/boss.hpMax);}
     this.root.classList.toggle('touch-has-boss',!!boss);
     const save=document.querySelector('.campaign-save');this.el('status').classList.toggle('touch-save-failed',!!save?.classList.contains('save-failed'));
-    this.el('commander').hidden=!m;this.el('commander').disabled=!p.active&&(!m?.commander.active||m?.commander.dead);this.el('commander').textContent=p.active?'Strategy':'Commander';
-    this.el('camera').hidden=!drive;this.el('camera').textContent=p.boomWant>.35?'1st person':'3rd person';
+    this.el('commander').hidden=!m;this.el('commander').disabled=!p.active&&(!m?.commander.active||m?.commander.dead);text(this.el('commander'),p.active?'Strategy':'Commander');
+    this.el('camera').hidden=!drive;text(this.el('camera'),p.boomWant>.35?'1st person':'3rd person');
     this.el('build').hidden=!!g.buildType||g.context.editing;this.el('resume').hidden=!g.paused;
     this.el('interact').hidden=!drive||!!g.buildType||!g.context.target;
     this.el('interact').textContent=g.context.target?.kind==='loot'?'Inspect loot':'Manage tower';
     this.el('deposit').hidden=!drive||!m?.crystals.carried.length||this.ui.el['btn-deposit'].disabled;
     this.el('sprint').setAttribute('aria-pressed',String(p.touchInput.sprint));this.el('aim').setAttribute('aria-pressed',String(p.aiming));this.el('aim').hidden=p.boomWant>.35;
-    this.el('jump').textContent=a?.mountKey==='skyray'?'Rise':'Jump';
+    text(this.el('jump'),a?.mountKey==='skyray'?'Rise':'Jump');
     for(const [id,which]of [['special','commander'],['power','weapon']]){
       const b=this.el(id),s=m?.abilities.describe(which);b.hidden=!s||p.unit!==m.commander;
-      if(s){b.textContent=s.remaining>0?Math.ceil(s.remaining)+'s':id==='special'?'Skill':'Power';b.setAttribute('aria-label',`${s.name}. ${s.description}`);b.title=s.name;b.disabled=s.remaining>0;}
+      if(s){
+        const label=which==='commander'?{commander:'Ward',duelist:'Dash',marksman:'Deadeye',bombardier:'Seismic',oracle:'Renewal'}[s.key]:{sword:'Cyclone',spear:'Lunge',twinblade:'Dance',carbine:'Railshot',lobber:'Siege',scepter:'Phoenix'}[s.key];
+        text(b.querySelector('strong'),label||s.name);
+        text(b.querySelector('.touch-cooldown'),s.remaining>0?Math.ceil(s.remaining)+'s':which==='weapon'&&this.pendingPower?'Queued':'Ready');
+        const hint=`${s.name}. ${s.description}${s.remaining>0?' Ready in '+Math.ceil(s.remaining)+' seconds.':''}`;
+        if(b.getAttribute('aria-label')!==hint)b.setAttribute('aria-label',hint);
+        b.title=s.name;b.disabled=s.remaining>0;b.classList.toggle('touch-queued',which==='weapon'&&!!this.pendingPower);
+      }
     }
     this.el('switch').hidden=!m||p.unit!==m.commander;
     const vitals=this.root.querySelector('.touch-vitals');vitals.hidden=!a;

@@ -64,9 +64,14 @@ export function buildActiveFeature(key){
  for(const [g,hex]of parts){c.setHex(hex);for(let i=0;i<g.attributes.position.count;i++){pos.push(g.attributes.position.getX(i),g.attributes.position.getY(i),g.attributes.position.getZ(i));colors.push(c.r,c.g,c.b);}g.dispose();}
  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geo.computeVertexNormals();
  root.add(new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.85,flatShading:true})));
- const particles=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,0),new THREE.MeshBasicMaterial({color:f.color,transparent:true,opacity:key==='boulder'?.95:.48,depthWrite:false}),12);root.add(particles);particles.frustumCulled=false;
+ const particles=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,0),new THREE.MeshBasicMaterial({color:f.color,transparent:true,opacity:key==='boulder'?.95:.48,depthWrite:false}),12);root.add(particles);
+ // This fixed local bound contains every animation phase, including a full
+ // geyser/updraft. Keep offscreen features alive, but do not draw their mist
+ // through the entire planet just because their instance matrices animate.
+ particles.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,5,0),Math.max(20,f.radius+3));
  root.userData.update=(time)=>{
   const pulse=environmentalPulse(f,time),active=pulse.active;particles.visible=active&&key!=='trunks';
+  if(!particles.visible)return;
   for(let i=0;i<12;i++){
    const t=(time*(key==='boulder'?.25:.5)+i/12)%1,a=i*2.4+time,r=key==='whirlpool'?5*(1-t):key==='spores'?t*4:key==='crystal'?t*f.radius:key==='seep'?2:1;
    let y=key==='boulder'?.8:key==='whirlpool'?.2:key==='crystal'?.2:key==='spring'?.25+Math.sin(a)*.1: t*(key==='geyser'?10:key==='updraft'?12:key==='spores'?2:5);

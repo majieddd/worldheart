@@ -8,7 +8,8 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
  const active=[];
  const at=(m,u,v)=>ground(...field.project(m,u,v));
  const add=(m,key,u,v,halfU,halfV,top,bottom,round=false,angle=0)=>{
-  surfaces.push({m,key,u,v,halfU,halfV,top,bottom,round,angle,dir:field.project(m,u,v),bound:(Math.hypot(u,v)+Math.hypot(halfU,halfV))*1.2/radius});
+  const bound=(Math.hypot(u,v)+Math.hypot(halfU,halfV))*1.2/radius;
+  surfaces.push({m,key,u,v,halfU,halfV,top,bottom,round,angle,dir:field.project(m,u,v),bound,localCos:Math.cos(bound+.025),bucketCos:Math.cos(bound+.24),angleCos:Math.cos(angle),angleSin:Math.sin(angle)});
  };
  for(const m of field.modules){
   if(!m.height)continue;const e=m.extent*Math.min(1,m.size),h=at(m,0,0);
@@ -75,13 +76,18 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
   }
  }
  function local(s,dir,w){
-  if(dir[0]*s.dir[0]+dir[1]*s.dir[1]+dir[2]*s.dir[2]<Math.cos(s.bound+.025))return null;
-  const p=w?{u:(w[0]*s.m.axis[0]+w[1]*s.m.axis[1]+w[2]*s.m.axis[2])*radius,v:(w[0]*s.m.side[0]+w[1]*s.m.side[1]+w[2]*s.m.side[2])*radius}:field.coordinates(s.m,dir),x=p.u-s.u,y=p.v-s.v,c=Math.cos(s.angle),n=Math.sin(s.angle),u=x*c+y*n,v=y*c-x*n-(s.bend?.(u)||0);
+  if(dir[0]*s.dir[0]+dir[1]*s.dir[1]+dir[2]*s.dir[2]<s.localCos)return null;
+  const p=w?{u:(w[0]*s.m.axis[0]+w[1]*s.m.axis[1]+w[2]*s.m.axis[2])*radius,v:(w[0]*s.m.side[0]+w[1]*s.m.side[1]+w[2]*s.m.side[2])*radius}:field.coordinates(s.m,dir),x=p.u-s.u,y=p.v-s.v,c=s.angleCos,n=s.angleSin,u=x*c+y*n,v=y*c-x*n-(s.bend?.(u)||0);
   if(Math.abs(u)>s.halfU*(s.widthAt?.(v)??1)||Math.abs(v)>s.halfV||s.round&&Math.hypot(u/s.halfU,v/s.halfV)>(s.rim?.(Math.atan2(v/s.halfV,u/s.halfU))??1))return null;
   return {u,v};
  }
  const buckets=new Map();
- function nearby(dir){const b=dir.map(v=>Math.max(0,Math.min(15,Math.floor((v+1)*8)))),key=b.join(':');if(!buckets.has(key)){const d=new THREE.Vector3(...b.map(v=>(v+.5)/8-1)).normalize();buckets.set(key,surfaces.filter(s=>d.dot(new THREE.Vector3(...s.dir))>Math.cos(s.bound+.24)));}return buckets.get(key);}
+ function nearby(dir){
+  const x=Math.max(0,Math.min(15,Math.floor((dir[0]+1)*8))),y=Math.max(0,Math.min(15,Math.floor((dir[1]+1)*8))),z=Math.max(0,Math.min(15,Math.floor((dir[2]+1)*8))),key=x*256+y*16+z;
+  let list=buckets.get(key);if(list)return list;
+  const d=new THREE.Vector3((x+.5)/8-1,(y+.5)/8-1,(z+.5)/8-1).normalize();
+  list=surfaces.filter(s=>d.x*s.dir[0]+d.y*s.dir[1]+d.z*s.dir[2]>s.bucketCos);buckets.set(key,list);return list;
+ }
  function support(dir,ceiling,floor){
   const w=field.warped(dir);let best=floor;for(const s of nearby(dir)){const p=local(s,dir,w);if(!p)continue;const h=s.top(p.u,p.v);if(h<=ceiling+.12&&h>best)best=h;}return best;
  }

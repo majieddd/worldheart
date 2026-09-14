@@ -732,8 +732,14 @@ export class NavGraph {
     // Authoritative heart and air fields retain the complete calculation.
     const scale=guided&&stop>=0&&Number.isFinite(this._routeHeuristicScale)?this._routeHeuristicScale:0;
     const sx=scale?this.dirs[stop*3]:0,sy=scale?this.dirs[stop*3+1]:0,sz=scale?this.dirs[stop*3+2]:0;
-    dist.fill(Infinity);
-    next.fill(-1);
+    // Point searches normally touch a tiny part of this planet. Generation
+    // stamps avoid clearing its entire distance/parent/visited buffers for
+    // every pursuing guard. Complete heart fields still initialize every node.
+    const sparse=guided&&stop>=0;
+    if(sparse&&(!field.seen||field.seen.length!==n)){field.seen=new Uint32Array(n);field.closed=new Uint32Array(n);field.generation=0;}
+    let generation=0;
+    if(sparse){generation=field.generation=(field.generation+1)>>>0;if(!generation){field.seen.fill(0);field.closed.fill(0);generation=field.generation=1;}}
+    else {dist.fill(Infinity);next.fill(-1);}
     // The heap and visited set are reused: on a colossal world these are
     // multi-megabyte buffers and every build re-solves the field.
     if (!this._heap || this._heapFor !== n) {
@@ -743,27 +749,30 @@ export class NavGraph {
     }
     const heap = this._heap;
     heap.n = 0;
-    const done = this._done;
-    done.fill(0);
+    const done = sparse?field.closed:this._done;
+    if(!sparse)done.fill(0);
+    const mark=sparse?generation:1;
     dist[source] = 0;
+    next[source]=-1;if(sparse)field.seen[source]=generation;
     heap.push(source, 0);
     let visits=0;
     while (heap.n > 0) {
       if(++visits%512===0)yield;
       const a = heap.pop();
-      if (done[a]) continue;
-      done[a] = 1;
+      if (done[a]===mark) continue;
+      done[a] = mark;
       if (a === stop) break;
       const da = dist[a];
       for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
         const b = this.adj[e];
-        if (done[b] || !walk[b]) continue;
+        if (done[b]===mark || !walk[b]) continue;
         if (block && block[b] !== 0 && b !== source) continue;
         if (blockFilter && blockFilter.has(b)) continue;
         const nd = da + cost[e];
-        if (nd < dist[b]) {
+        if (Number.isFinite(nd) && (sparse&&field.seen[b]!==generation || nd < dist[b])) {
           dist[b] = nd;
           next[b] = a;
+          if(sparse)field.seen[b]=generation;
           const h=scale?Math.hypot(this.dirs[b*3]-sx,this.dirs[b*3+1]-sy,this.dirs[b*3+2]-sz)*scale:0;
           heap.push(b, nd+h);
         }
@@ -862,15 +871,23 @@ export class NavGraph {
     // Tower rings can isolate a unit. Re-solving an impossible chase across
     // the entire graph on every new target made movement frames hitch. A
     // cached weak-connectivity check safely rejects separate walkable regions.
-    // Ignore edge weights here: this may allow a later weighted search to
-    // fail, but can never reject a valid directed route. Revision invalidates
+    // A pair is connected if either directed edge has a finite cost. Ignoring
+    // impassable edges joined cliff-separated islands into one false region,
+    // causing repeated whole-planet failed searches. One-way drops remain
+    // connected here; the directed search decides which way is legal.
+    // Revision invalidates
     // labels after construction, selling or a new terrain graph.
     if(!this._routeRegions||this._routeRegions.labels.length!==this.n)this._routeRegions={labels:new Int32Array(this.n),queue:new Int32Array(this.n),revision:-1,count:0};
     const r=this._routeRegions;
     if(r.revision!==this.revision){r.labels.fill(0);r.count=0;r.revision=this.revision;}
     if(!r.labels[start]){
       const id=++r.count;let head=0,tail=1;r.queue[0]=start;r.labels[start]=id;
-      while(head<tail){const a=r.queue[head++];for(let edge=this.adjOff[a];edge<this.adjOff[a+1];edge++){const b=this.adj[edge];if(r.labels[b]||!this.walk[b]||this.block[b])continue;r.labels[b]=id;r.queue[tail++]=b;}}
+      while(head<tail){const a=r.queue[head++];for(let edge=this.adjOff[a];edge<this.adjOff[a+1];edge++){
+        const b=this.adj[edge];if(r.labels[b]||!this.walk[b]||this.block[b])continue;
+        let finite=Number.isFinite(this.cost[edge]);
+        if(!finite)for(let reverse=this.adjOff[b];reverse<this.adjOff[b+1];reverse++)if(this.adj[reverse]===a){finite=Number.isFinite(this.cost[reverse]);break;}
+        if(!finite)continue;r.labels[b]=id;r.queue[tail++]=b;
+      }}
     }
     return r.labels[start]===r.labels[end];
   }
@@ -926,16 +943,30 @@ export class NavGraph {
     if (start < 0 || end < 0 || this.block[end]) return [];
     if(start===end){const path=[start];path.cost=0;return path;}
     if(CONFIG.terrain&&!this._sameRouteRegion(start,end))return [];
+    // Nearby guards often request exactly the same node pair, including a
+    // failed route. Bounded copies keep callers from mutating cached paths.
+    // Tower edits and earthquakes invalidate them through the nav revision.
+    if(!this._pathCache||this._pathCacheRevision!==this.revision){this._pathCache=new Map();this._pathCacheNodes=0;this._pathCacheRevision=this.revision;}
+    const key=start+':'+end,cached=this._pathCache.get(key);
+    if(cached){const path=cached.slice();if(cached.cost!==undefined)path.cost=cached.cost;return path;}
     if (!this._route || this._route.dist.length !== this.n) this._route = { dist: new Float32Array(this.n), next: new Int32Array(this.n) };
-    this._dijkstra(end, null, { ...this._route, walk: this.walk, cost: this.cost, block: this.block }, start, true);
-    if (!Number.isFinite(this._route.dist[start])) return [];
+    this._dijkstra(end, null, Object.assign(this._route,{walk:this.walk,cost:this.cost,block:this.block}), start, true);
+    if (this._route.seen?.[start]!==this._route.generation || !Number.isFinite(this._route.dist[start])) {this._cachePath(key,[]);return [];}
     const path = [];
     for (let i = start, guard = 0; i >= 0 && guard++ < this.n; i = this._route.next[i]) {
       path.push(i);
       if (i === end) break;
     }
     path.cost = this._route.dist[start];
+    this._cachePath(key,path);
     return path;
+  }
+
+  _cachePath(key,path) {
+    if(path.length>4096)return;
+    while(this._pathCache.size>=128||this._pathCacheNodes+path.length>16384){const oldest=this._pathCache.keys().next().value;this._pathCacheNodes-=this._pathCache.get(oldest).length;this._pathCache.delete(oldest);}
+    const saved=path.slice();if(path.cost!==undefined)saved.cost=path.cost;
+    this._pathCache.set(key,saved);this._pathCacheNodes+=saved.length;
   }
 
   canStep(fromDir, toDir, flying = false, node = -1) {

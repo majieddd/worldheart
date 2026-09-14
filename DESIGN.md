@@ -13,10 +13,19 @@ heart/wave strip and contextual controls replace the desktop HUD. Only direct
 control shows the movement stick and combat buttons. Building, squad orders,
 inventory, settings and checkpoint recovery live in scrollable drawers. Input
 feedback is immediate; no repeated decorative control animation. Buttons use
-48 CSS pixel targets (Attack 64), safe-area insets and opaque navy backplates.
+48 CSS pixel targets for menus; combat uses 80px Attack, 84px Jump, 80x72px
+named abilities, and 64px Aim/Swap. The 136px floating thumb pad anchors under
+the landing finger and follows extended drags. Safe-area insets protect both
+thumb zones. Cooldowns retain the ability name, role and remaining seconds.
+Navy backplates keep labels readable; circular attack/jump surfaces are partly
+transparent. The right corner anchors Jump, with fire and skills immediately
+above/left. Mirroring moves the whole arrangement. On very short landscape
+viewports, perspective switching remains in Menu > Squad to keep targets apart.
 Both orientations and a mirrored thumb layout are supported. Native screen
 zoom remains available outside the gesture-owned canvas. Touch UI does not
-change camera tuning, combat, movement, placement or economy rules.
+change camera tuning, combat, movement, placement or economy rules. A Power tap
+during attack recovery queues one legal activation and temporarily yields held
+basic attacks; opening a menu, losing control or changing family cancels it.
 
 Debug World: owner-selected flat exhibition lanes, with dials 3/3/6. Unit
 animation sequences loop by default, alongside slowly rotating miniature

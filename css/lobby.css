@@ -17,10 +17,13 @@
 .lobby-touch nav button { flex:1 1 120px; font-size:13px; }
 .lobby-touch #lobby-touch { display:block; }
 .lobby-touch.station-open #lobby-touch, .lobby-touch.station-open #approach { display:none; }
-.lobby-touch .touch-stick { position:fixed; left:var(--lobby-safe-left); bottom:calc(var(--lobby-safe-bottom) + 50px); width:112px; height:112px; border:1px solid #91bdbe; border-radius:50%; background:#18373f99; touch-action:none; }
-.lobby-touch .touch-stick-thumb { position:absolute; top:34px; left:34px; width:44px; height:44px; border-radius:50%; border:1px solid var(--accent); background:#1b373c; pointer-events:none; }
+.lobby-touch .touch-stick { position:fixed; left:var(--lobby-safe-left); bottom:calc(var(--lobby-safe-bottom) + 50px); width:min(40vw,210px); height:156px; touch-action:none; }
+.lobby-touch .touch-stick-pad { position:absolute; width:136px; height:136px; left:calc(50% - 68px); top:calc(50% - 68px); border:2px solid #91bdbe; border-radius:50%; background:#18373f99; pointer-events:none; }
+.lobby-touch .touch-stick-active .touch-stick-pad { border-color:var(--accent); }
+.lobby-touch .touch-stick-active small { opacity:0; }
+.lobby-touch .touch-stick-thumb { position:absolute; top:40px; left:40px; width:52px; height:52px; border-radius:50%; border:2px solid var(--accent); background:#1b373c; pointer-events:none; }
 .lobby-touch .touch-stick small { position:absolute; bottom:8px; left:0; right:0; text-align:center; pointer-events:none; }
-.lobby-touch #lobby-jump { position:fixed; right:var(--lobby-safe-right); bottom:calc(var(--lobby-safe-bottom) + 66px); }
+.lobby-touch #lobby-jump { position:fixed; right:var(--lobby-safe-right); bottom:calc(var(--lobby-safe-bottom) + 66px); width:84px; height:84px; border-radius:50%; font-size:16px; border-width:2px; }
 .lobby-touch #approach { bottom:calc(var(--lobby-safe-bottom) + 180px); max-width:90vw; width:max-content; }
 .lobby-touch aside { top:var(--lobby-safe-top); bottom:var(--lobby-safe-bottom); left:var(--lobby-safe-left); right:var(--lobby-safe-right); width:min(440px,calc(100vw - var(--lobby-safe-left) - var(--lobby-safe-right))); max-height:none; margin-left:auto; z-index:6; overflow:auto; overscroll-behavior:contain; }
 .lobby-touch #close-station { position:sticky; top:0; min-width:48px; background:#132b32; }

@@ -1,8 +1,11 @@
 /* Touch adaptation of the existing navy/cyan HUD, not a second skin. */
 :root {
   --touch-target: 48px;
-  --touch-fire: 64px;
-  --touch-stick: 112px;
+  --touch-fire: 80px;
+  --touch-stick: 136px;
+  --touch-skill: 80px;
+  --touch-jump: 84px;
+  --touch-action: 64px;
   --touch-panel: #11182e;
   --touch-line: #7285ac;
   --touch-top: max(8px, env(safe-area-inset-top));
@@ -51,25 +54,36 @@
 .touch-context { position: absolute; top: 57%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: var(--sp-1); }
 .touch-left, .touch-right { display: none; position: absolute; bottom: var(--touch-bottom); }
 .touch-possessed .touch-left, .touch-possessed .touch-right { display: block; }
-.touch-left { left: var(--touch-left); width: var(--touch-stick); height: 170px; }
-.touch-right { right: var(--touch-right); width: 180px; height: 176px; }
+.touch-left { left: var(--touch-left); width: min(40vw,210px); height: 216px; }
+.touch-right { right: var(--touch-right); width: 176px; height: 256px; }
 .touch-stick { position: absolute; bottom: 0; width: var(--touch-stick); height: var(--touch-stick); border: 1px solid var(--touch-line); border-radius: 50%; background: rgba(17,24,46,.38); pointer-events: auto; touch-action: none; }
 .touch-stick-thumb { position: absolute; width: 44px; height: 44px; top: calc(50% - 22px); left: calc(50% - 22px); border: 1px solid var(--accent); background: rgba(17,24,46,.9); border-radius: 50%; pointer-events: none; }
 .touch-stick small { position: absolute; bottom: var(--sp-2); left: 0; right: 0; color: var(--text); text-align: center; font-size: var(--fs-11); pointer-events: none; }
+.touch-stick-floating { width: 100%; height: 156px; border: 0; background: none; border-radius: 0; }
+.touch-stick-pad { position: absolute; width: var(--touch-stick); height: var(--touch-stick); left: calc(50% - var(--touch-stick)/2); top: calc(50% - var(--touch-stick)/2); border: 2px solid var(--touch-line); border-radius: 50%; background: rgba(17,24,46,.28); pointer-events: none; }
+.touch-stick-floating .touch-stick-thumb { width: 52px; height: 52px; top: calc(50% - 26px); left: calc(50% - 26px); border-width: 2px; }
+.touch-stick-active .touch-stick-pad { border-color: var(--accent); }
+.touch-stick-active small { opacity: 0; }
 #touch-sprint { position: absolute; top: 0; left: 0; }
-.touch-right .btn { position: absolute; width: var(--touch-target); padding: var(--sp-1) !important; }
-#touch-fire { width: var(--touch-fire) !important; height: var(--touch-fire); bottom: var(--sp-3); right: 0; border-color: var(--accent) !important; touch-action: none; }
-#touch-jump { bottom: 0; right: 76px; touch-action: none; }
-#touch-aim { bottom: 88px; right: 0; }
-#touch-switch { bottom: 60px; right: 76px; }
-#touch-special { bottom: 120px; right: 64px; }
-#touch-power { bottom: 120px; right: 124px; }
+.touch-right .btn { position: absolute; width: var(--touch-action); height: var(--touch-action); padding: var(--sp-1) !important; font-size: var(--fs-14) !important; }
+#touch-hud #touch-fire { width: var(--touch-fire); height: var(--touch-fire); bottom: 84px; right: 88px; border: 2px solid var(--accent); border-radius: 50%; touch-action: none; background: rgba(17,24,46,.82); }
+#touch-hud #touch-jump { width: var(--touch-jump); height: var(--touch-jump); bottom: 0; right: 0; border-radius: 50%; border-width: 2px; touch-action: none; background: rgba(17,24,46,.82); font-size: var(--fs-16) !important; }
+#touch-aim { bottom: 96px; right: 0; border-radius: 50%; }
+#touch-switch { bottom: 4px; right: 100px; border-radius: 50%; }
+#touch-hud [data-touch-ability] { bottom: 180px; width: var(--touch-skill); height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+#touch-special { right: 88px; }
+#touch-power { right: 0; }
+#touch-hud [data-touch-ability] small { font-size: var(--fs-11); line-height: 1; color: var(--text-muted); }
+#touch-hud [data-touch-ability] strong { font: 600 var(--fs-14)/1.2 var(--font-display); color: var(--text); }
+#touch-hud .touch-cooldown { font-size: var(--fs-12); color: var(--accent); }
+#touch-hud [data-touch-ability]:disabled .touch-cooldown { color: var(--text-muted); }
+#touch-hud .touch-queued { border-color: var(--gold); }
 .touch-vitals { position: absolute; bottom: calc(var(--touch-bottom) + 4px); left: 50%; transform: translateX(-50%); display: grid; gap: 2px; padding: var(--sp-1) var(--sp-2); background: var(--touch-panel); border-radius: var(--r-1); font-size: var(--fs-11); max-width: 130px; text-align: center; }
-.touch-possessed .touch-vitals { bottom: calc(var(--touch-bottom) + 184px); }
+.touch-possessed .touch-vitals { top: calc(var(--touch-top) + 64px); bottom: auto; left: var(--touch-left); transform: none; max-width: 112px; }
 .touch-vitals span { color: var(--text-muted); }
 .touch-placement, .touch-orders { position: absolute; left: 50%; bottom: var(--touch-bottom); transform: translateX(-50%); display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2); background: var(--touch-panel); border: 1px solid var(--hairline-strong); border-radius: var(--r-2); max-width: calc(100% - var(--touch-left) - var(--touch-right)); pointer-events: auto; font-size: var(--fs-12); }
 .touch-placement span, .touch-orders span { min-width: 70px; max-width: 220px; }
-.touch-possessed .touch-placement { bottom: calc(var(--touch-bottom) + 184px); }
+.touch-possessed .touch-placement { bottom: calc(var(--touch-bottom) + 230px); }
 .touch-building .touch-vitals, .touch-building #touch-fire, .touch-building #touch-aim, .touch-building #touch-special, .touch-building #touch-power, .touch-building #touch-switch { display: none; }
 .touch-left-handed .touch-left { left: auto; right: var(--touch-right); }
 .touch-left-handed .touch-right { right: auto; left: var(--touch-left); transform: scaleX(-1); }
@@ -139,21 +153,20 @@
 .touch-mode .worldgen-actions .btn { display: inline-flex; align-items: center; }
 .touch-mode #worldgen-panel:not([open]) { padding-top: 0; padding-bottom: 0; }
 @media (max-width: 440px) {
-  .touch-mode { --touch-stick: 104px; }
   .touch-mode .touch-quick { top: calc(var(--touch-top) + 76px); }
   #touch-menu { padding: var(--sp-3); }
   #touch-menu nav .btn { font-size: var(--fs-12); padding: var(--sp-1); }
   .touch-mode .set-row { gap: var(--sp-2); }
   .touch-mode .overlay-card .o-stats { gap: var(--sp-4); }
-  .touch-mode .touch-right { width: 170px; }
 }
 @media (max-width: 600px) {
   .touch-mode .touch-toasts { top: calc(var(--touch-top) + 136px); width: calc(100vw - var(--touch-left) - var(--touch-right)); }
   .touch-mode .touch-has-boss .touch-toasts { top: calc(var(--touch-top) + 180px); }
 }
 @media (max-height: 440px) and (min-width: 600px) {
-  .touch-mode .touch-quick { top: auto; bottom: calc(var(--touch-bottom) + 184px); right: var(--touch-right); }
-  .touch-mode .touch-possessed .touch-vitals { bottom: var(--touch-bottom); }
+  .touch-mode .touch-quick { top: calc(var(--touch-top) + 64px); bottom: auto; left: var(--touch-left); right: auto; }
+  .touch-left-handed .touch-quick { left: auto; right: var(--touch-right); }
+  .touch-mode .touch-possessed .touch-vitals { top: auto; bottom: var(--touch-bottom); left: 50%; transform: translateX(-50%); max-width: 150px; }
   .touch-mode .touch-context { top: 45%; }
   .touch-mode #hud .world-context { max-height: calc(100dvh - 88px); left: auto !important; right: var(--touch-right); width: 350px; }
   .touch-mode #title-overlay .o-body { display: none; }
@@ -161,3 +174,16 @@
   .touch-mode .overlay-card .o-mark { font-size: var(--fs-26); }
 }
 .touch-mode #touch-hud.touch-has-boss .touch-quick { top: calc(var(--touch-top) + 120px); bottom: auto; }
+@media (max-height: 440px) and (min-width: 600px) {
+  .touch-mode #touch-hud.touch-has-boss .touch-quick { top: calc(var(--touch-top) + 64px); }
+}
+@media (max-height: 360px) and (min-width: 500px) {
+  .touch-mode .touch-quick, .touch-mode #touch-hud.touch-has-boss .touch-quick { top: calc(var(--touch-top) + 64px); bottom: auto; left: var(--touch-left); right: auto; }
+  .touch-mode .touch-quick #touch-camera { display: none; }
+  .touch-mode .touch-possessed .touch-vitals { top: auto; bottom: var(--touch-bottom); left: 50%; transform: translateX(-50%); max-width: 130px; }
+  .touch-mode #touch-sprint { left: auto; right: 0; }
+  .touch-mode .touch-left { height: 212px; }
+  .touch-left-handed .touch-quick, .touch-left-handed #touch-hud.touch-has-boss .touch-quick { left: auto; right: var(--touch-right); }
+  .touch-left-handed #touch-sprint { right: auto; left: 0; }
+}
+#touch-hud .touch-held { background: var(--surface-raised) !important; color: var(--accent); }

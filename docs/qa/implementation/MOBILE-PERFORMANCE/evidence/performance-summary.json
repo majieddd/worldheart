@@ -1,0 +1,55 @@
+{
+  "reference": "102d4a5",
+  "scope": "Same Chrome/GPU session, full visuals, 30 towers/100 replenished enemies, separate native and 4x CPU slowdown. Not physical-phone hardware.",
+  "samples": [
+    {
+      "name": "before",
+      "exit": 1,
+      "bootMs": 33361,
+      "frameMs": {
+        "p50": 62.5,
+        "p95": 145.90000000000873,
+        "p99": 236.10000000000582,
+        "max": 381.90000000000146
+      },
+      "medianFps": 16,
+      "p99Fps": 4.235493434985071,
+      "budgetPassed": false,
+      "faults": []
+    },
+    {
+      "name": "after",
+      "exit": 1,
+      "bootMs": 16861,
+      "frameMs": {
+        "p50": 62.5,
+        "p95": 90.30000000000291,
+        "p99": 111.19999999999709,
+        "max": 132
+      },
+      "medianFps": 16,
+      "p99Fps": 8.992805755395919,
+      "budgetPassed": false,
+      "faults": []
+    },
+    {
+      "name": "native",
+      "exit": 0,
+      "bootMs": 18706,
+      "frameMs": {
+        "p50": 13.69999999999709,
+        "p95": 14,
+        "p99": 14.099999999998545,
+        "max": 41.599999999998545
+      },
+      "medianFps": 72.99270072994251,
+      "p99Fps": 70.92198581561016,
+      "budgetPassed": true,
+      "faults": []
+    }
+  ],
+  "p95Improvement": 0.381082933516124,
+  "pass": true,
+  "medianRegressionGatePassed": true,
+  "analysis": "The median regression gate was added after the sample; evaluated here against the unchanged raw measurements."
+}

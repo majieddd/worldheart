@@ -1,0 +1,83 @@
+{
+  "scope": "Real touch in lobby, launch, Debug and generator. Foundry gets 120 fixture coins; all other choices use normal UI.",
+  "checks": [
+    {
+      "name": "Lobby detects touch and keeps stations collapsed",
+      "ok": true
+    },
+    {
+      "name": "Lobby joystick walks the actual commander",
+      "ok": true
+    },
+    {
+      "name": "Lobby one-finger look turns the camera",
+      "ok": true
+    },
+    {
+      "name": "Lobby pinch zoom changes viewing distance",
+      "ok": true
+    },
+    {
+      "name": "Commander choice persists through touch selection",
+      "ok": true
+    },
+    {
+      "name": "Mount choice is touch accessible",
+      "ok": true
+    },
+    {
+      "name": "Foundry roll spends coins once and adds one tower",
+      "ok": true
+    },
+    {
+      "name": "Lobby launches the selected commander and mount into the campaign",
+      "ok": true
+    },
+    {
+      "name": "Debug leaves most of the portrait viewport to the scene",
+      "ok": true
+    },
+    {
+      "name": "Debug one-finger orbit rotates a real exhibit",
+      "ok": true
+    },
+    {
+      "name": "Debug pinch changes zoom",
+      "ok": true
+    },
+    {
+      "name": "Debug controls open with the first tap after a gesture",
+      "ok": true
+    },
+    {
+      "name": "Exhibit navigation remains available",
+      "ok": true
+    },
+    {
+      "name": "All horizontally scrolling category buttons are reachable",
+      "ok": true
+    },
+    {
+      "name": "Landscape Debug has no horizontal page overflow",
+      "ok": true
+    },
+    {
+      "name": "World generator starts collapsed for touch inspection",
+      "ok": true
+    },
+    {
+      "name": "Worldgen formation selection focuses its actual camera",
+      "ok": true
+    },
+    {
+      "name": "Touch form generates a different world",
+      "ok": true
+    },
+    {
+      "name": "No scene runtime errors",
+      "ok": true,
+      "actual": []
+    }
+  ],
+  "errors": []
+}

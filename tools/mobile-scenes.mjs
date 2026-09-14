@@ -16,7 +16,7 @@ try{
  await page.goto(base+'/lobby.html',{waitUntil:'domcontentloaded',timeout:180000});await page.waitForFunction(()=>window.LOBBY,null,{timeout:180000});
  ck('Lobby detects touch and keeps stations collapsed',await page.evaluate(()=>document.body.classList.contains('lobby-touch')&&getComputedStyle(document.querySelector('nav')).display==='none'));
  await snap('lobby-portrait');const before=await page.evaluate(()=>LOBBY.player.toArray()),r=await page.locator('#lobby-stick').boundingBox();
- await event('touchStart',[{id:1,x:r.x+r.width/2,y:r.y+15}]);await page.waitForTimeout(650);await event('touchEnd',[]);
+ await event('touchStart',[{id:1,x:r.x+r.width/2,y:r.y+70}]);await event('touchMove',[{id:1,x:r.x+r.width/2,y:r.y+15}]);await page.waitForTimeout(650);await event('touchEnd',[]);
  ck('Lobby joystick walks the actual commander',await page.evaluate(old=>LOBBY.player.distanceTo({x:old[0],y:old[1],z:old[2]})>.6,before));
  const yaw=await page.evaluate(()=>LOBBY.view.yaw);await swipe(170,350,65,20);ck('Lobby one-finger look turns the camera',await page.evaluate(old=>Math.abs(LOBBY.view.yaw-old)>.1,yaw));const distance=await page.evaluate(()=>LOBBY.view.distance);await pinch(180,380);ck('Lobby pinch zoom changes viewing distance',await page.evaluate(old=>LOBBY.view.distance<old,distance));
  await station('commanders');await tap('[data-commander="oracle"]');ck('Commander choice persists through touch selection',await page.evaluate(()=>LOBBY.selected.commander==='oracle'));await snap('lobby-commander');await tap('#close-station');
