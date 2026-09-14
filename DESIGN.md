@@ -8,6 +8,16 @@ DESIGN_VARIANCE: 7/10 (memorable showcase, not a daily tool)
 MOTION_INTENSITY: 5/10 (scene carries the motion; HUD stays at 3 and obeys the frequency gate)
 VISUAL_DENSITY: 4/10 (rich scene, lean HUD)
 
+Mobile retains this direction. The scene stays the main surface; a small
+heart/wave strip and contextual controls replace the desktop HUD. Only direct
+control shows the movement stick and combat buttons. Building, squad orders,
+inventory, settings and checkpoint recovery live in scrollable drawers. Input
+feedback is immediate; no repeated decorative control animation. Buttons use
+48 CSS pixel targets (Attack 64), safe-area insets and opaque navy backplates.
+Both orientations and a mirrored thumb layout are supported. Native screen
+zoom remains available outside the gesture-owned canvas. Touch UI does not
+change camera tuning, combat, movement, placement or economy rules.
+
 Debug World: owner-selected flat exhibition lanes, with dials 3/3/6. Unit
 animation sequences loop by default, alongside slowly rotating miniature
 planets. Still/manual controls and OS reduced motion pause the scene. Rig

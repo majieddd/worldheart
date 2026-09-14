@@ -1,0 +1,65 @@
+{
+  "scope": "Three 15-second native rendered touch interaction samples, isolated calm-wave fixture, desktop hardware at 390x844 DPR 3. Not physical-phone or full-battle performance.",
+  "cpu": "13th Gen Intel(R) Core(TM) i9-13900H",
+  "browser": "152.0.7977.84",
+  "samples": [
+    {
+      "mode": "strategy",
+      "frames": 2161,
+      "p50": 6.900000000001455,
+      "p95": 7.099999999998545,
+      "p99": 7.100000000002183,
+      "max": 7.200000000000728,
+      "drawCalls": 139,
+      "triangles": 1773556,
+      "workMs": 2.0164285727909634,
+      "canvas": [
+        683,
+        1477
+      ],
+      "qualityLevels": 4
+    },
+    {
+      "mode": "first-person",
+      "frames": 2161,
+      "p50": 6.900000000001455,
+      "p95": 7.099999999998545,
+      "p99": 7.100000000005821,
+      "max": 7.5,
+      "drawCalls": 72,
+      "triangles": 1756092,
+      "workMs": 2.601428575175149,
+      "canvas": [
+        683,
+        1477
+      ],
+      "qualityLevels": 4
+    },
+    {
+      "mode": "range-preview",
+      "frames": 2156,
+      "p50": 6.900000000001455,
+      "p95": 7.099999999998545,
+      "p99": 7.100000000005821,
+      "max": 20.900000000001455,
+      "drawCalls": 159,
+      "triangles": 1776968,
+      "workMs": 1.9164285608700344,
+      "canvas": [
+        683,
+        1477
+      ],
+      "qualityLevels": 4
+    }
+  ],
+  "faults": [],
+  "bootMs": 14044,
+  "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "controls": {
+    "enabled": true,
+    "contextLost": false,
+    "state": "playing",
+    "paused": false,
+    "build": true
+  }
+}

@@ -27,8 +27,8 @@ export function expeditionControls({ui,game,api,lockedCommander}){
   let last='';
   return {update(){
     dock.hidden=frame.hidden=game.state==='title';const a=api.commander(),m=MOUNTS[a.mountKey||'none'],remaining=api.respawn.remaining,weather=api.weather?.label||'Weather calm';
-    const skills=['commander','weapon'].map(which=>api.abilities.describe(which));
-    const state=[api.forge.balance,api.forge.cost,Math.ceil(a.hp),a.hpMax,a.typeKey,...skills.flatMap(s=>[s.key,Math.ceil(s.remaining)]),Math.ceil(remaining),a.active,m?.name,Math.ceil(api.mounts.energy),api.run.isEndless(),api.run.getPhase(),weather].join('|');
+    const skills=['commander','weapon'].map(which=>api.abilities.describe(which)),touch=!!game.mobile?.enabled;
+    const state=[touch,api.forge.balance,api.forge.cost,Math.ceil(a.hp),a.hpMax,a.typeKey,...skills.flatMap(s=>[s.key,Math.ceil(s.remaining)]),Math.ceil(remaining),a.active,m?.name,Math.ceil(api.mounts.energy),api.run.isEndless(),api.run.getPhase(),weather].join('|');
     endless.hidden=api.run.getPhase()!=='victory'||api.run.isEndless();
     if(state===last)return;last=state;
     frame.querySelector('strong').textContent=COMMANDERS[a.typeKey].name;
@@ -38,10 +38,12 @@ export function expeditionControls({ui,game,api,lockedCommander}){
     el('kit-summary').textContent=` · ${api.forge.balance} scraps${remaining>0?' · '+Math.ceil(remaining)+'s respawn':''}`;
     el('expedition-life').textContent=remaining>0?`Commander returns in ${Math.ceil(remaining)}s. Defend the heart while they recover.`:'Death inside the base: 30s recovery. Death outside: defeat.';
     el('expedition-weather').textContent=weather;
-    el('mount-toggle').textContent=a.mountKey&&a.mountKey!=='none'?'M · Dismount':`M · Ride ${MOUNTS[api.mounts.choice].name}`;
+    el('mount-toggle').textContent=(touch?'':'M · ')+(a.mountKey&&a.mountKey!=='none'?'Dismount':`Ride ${MOUNTS[api.mounts.choice].name}`);
     el('mount-toggle').disabled=!a.active||a.dead;
-    el('mount-info').textContent=a.mountKey==='skyray'?`${Math.ceil(api.mounts.energy)} / 12s flight. Hold Space to rise; release to land.`:m.description;
-    el('craft-tower').textContent=`T · Forge tower (${api.forge.cost} scraps)`;
+    el('mount-info').textContent=a.mountKey==='skyray'?`${Math.ceil(api.mounts.energy)} / 12s flight. Hold ${touch?'Rise':'Space'} to rise; release to land.`:m.description;
+    el('craft-tower').textContent=`${touch?'':'T · '}Forge tower (${api.forge.cost} scraps)`;
+    const notes=dock.querySelectorAll('p:not([id])');notes[0].textContent=`Salvage unwanted weapons in ${touch?'Menu > Weapons':'your inventory (I)'} for scraps. Forge costs rise by 2 each time. Forge within 6m of the heart; the next matching tower is free.`;
+    notes[1].textContent=touch?'First person: tap Aim to zoom in. Skill uses your commander ability; Power uses your weapon ability.':'First person: hold right mouse to aim. Z uses your commander ability; V uses your weapon ability.';
     el('craft-tower').disabled=api.forge.balance<api.forge.cost;
     el('endless-extract').hidden=!api.run.isEndless()||api.run.getPhase()!=='building';
   }};

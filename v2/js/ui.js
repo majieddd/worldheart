@@ -923,6 +923,7 @@ export class HUD {
 
   togglePause() {
     if (this.game.state !== 'playing') return;
+    if(this.game.mobile?.menu.open){this.game.mobile.keepPaused=!this.game.mobile.keepPaused;return;}
     this.game.paused = !this.game.paused;
     this.reflectPause();
     this.audio?.play('click');

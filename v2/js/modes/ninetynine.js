@@ -517,7 +517,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   allies.onAttackReady = a => { previousReady?.(a); if (a===commander && inventory.settle(false)){syncWeapon();persistSalvage();} };
 
   function salvageSnapshot() {
-    return {inventory:inventory.snapshot(),drops:[...loot.entries.values()].map(x=>({item:x.item,dir:x.position.clone().normalize().toArray(),height:x.position.length()-R})),kills:game.kills,score:game.score,lives:Math.max(1,game.lives)};
+    return {inventory:inventory.snapshot(),drops:[...loot.entries.values()].map(x=>({item:x.item,dir:x.position.clone().normalize().toArray(),height:x.position.length()-CONFIG.planetRadius})),kills:game.kills,score:game.score,lives:Math.max(1,game.lives)};
   }
   function persistSalvage() {
     if(campaign?.snapshot().expedition.status==='victory')campaign.commit(s=>updateSalvage(s,assaultId,salvageSnapshot()));
@@ -644,6 +644,24 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     ui.showSelection(0, '');
   }
 
+  function selectUnit(unit,additive=false) {
+    if(!additive)clearSelection();
+    if(!unit?.active||unit.dead||unit.possessed)return;
+    const at=selection.indexOf(unit);
+    if(at<0)selection.push(unit);else if(additive)selection.splice(at,1);
+    for(const a of allies.active)a.selected=selection.includes(a);
+    ui.showSelection(selection.length,selection[0]?.type.name||'');
+  }
+
+  function moveSelection(dir,height) {
+    const node=nav.nearestWalkableNode(dir,true,height);
+    if(node<0){ui.toast('They cannot stand there','warn');return false;}
+    nav.nodeDir(node,_od);let moved=0;
+    for(const a of selection)if(a.active&&!a.dead&&allies.orderMove(a,_od,nav.height[node]))moved++;
+    ui.toast(moved?`${moved} moving out`:'No ground route to that destination.',moved?'info':'warn');
+    if(moved)ui.audio?.play('order');return moved>0;
+  }
+
   rig.dragClaim = (e) => {
     if (e.button !== 0 || e.pointerType !== 'mouse') return false;
     if (game.buildType || (possession && possession.active)) return false;
@@ -693,7 +711,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     if (button === 2 && selection.length && game.cursorValid && !game.buildType) {
       // Snap to ground a unit can actually stand on: an unwalkable destination
       // becomes the unit's post on arrival and would strand it there for good.
-      const node = nav.nearestWalkableNode(game.cursorDir,true,game.cursorPos.length()-R);
+      const node = nav.nearestWalkableNode(game.cursorDir,true,game.cursorPos.length()-CONFIG.planetRadius);
       if (node >= 0) {
         nav.nodeDir(node, _od);
         let n = 0;
@@ -883,6 +901,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     inventory,
     loot,
     unitRoutes,
+    orders: { get selection(){return selection;}, selectIn,selectUnit,clear:clearSelection,move:moveSelection,patrol:setPatrolFrom },
     threats,
     weapons: weaponApi,
     weaponPanel,

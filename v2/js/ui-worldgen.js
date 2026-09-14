@@ -26,7 +26,7 @@ export class WorldgenPanel {
     try { browserStorage.setItem('worldHistory', JSON.stringify(this.history)); } catch { saved = false; }
 
     const panel = this.panel = document.createElement('details');
-    panel.id = 'worldgen-panel'; panel.className = 'panel'; panel.open = true;
+    panel.id = 'worldgen-panel'; panel.className = 'panel'; panel.open = !game.mobile?.enabled;
     panel.innerHTML = `<summary>World generator <small>Inspection sandbox</small></summary>
       <div class="worldgen-controls">
         <p>Roll a world, explore its terrain, then play the seed in a new tab.</p>

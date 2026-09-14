@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {TouchGesture,TouchStick,bindTouchActivation,hasTouch,clamp} from './touch-input.js';
 import { COMMANDERS, commanderStats, MOUNTS } from './run/expedition.js';
 import { preparation, savePreparation } from './preparation.js';
 import { campaignStore } from './modes/campaign-store.js';
@@ -52,13 +53,16 @@ mesh(new THREE.BoxGeometry(7,.7,2),materials.wood,17,.4,15);sign('EXPEDITION REC
 sign(campaignStore.snapshot().account.planetsBeaten+' PLANETS DEFENDED',17,1.8,16.1,'#efd495',6);
 
 let selected=preparation(),profile=campaignStore.snapshot().account,open=null,near=null,moveGoal=null;
+let lobbyStick=null,lobbyGesture=null;
+const touchMove={x:0,y:0};
 const player=new THREE.Vector3(0,0,17),target=new THREE.Vector3(),keys=new Set(),ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),ground=new THREE.Plane(new THREE.Vector3(0,1,0),0),point=new THREE.Vector3();
 const view={yaw:0,distance:44,pitch:.63};let jump=0,vy=0,time=0,last=performance.now(),drag=null;
 function save(){savePreparation(selected);refresh();}
 function refresh(){profile=campaignStore.snapshot().account;el('coins').textContent=profile.coins+' coins';el('loadout-summary').textContent=COMMANDERS[selected.commander].name+' · '+MOUNTS[selected.mount].name+' · '+TOWER_TYPES[profile.loadout].name;el('save-status').textContent=campaignStore.status().saved?'Solo preparation · Progress saved':'Save pending. Keep this tab open and retry before launching.';}
-function close(){open=null;el('station-panel').hidden=true;keys.clear();canvas.focus();}
+function close(){open=null;el('station-panel').hidden=true;keys.clear();document.body.classList.remove('station-open');lobbyStick?.reset();canvas.focus();}
 el('close-station').onclick=close;
 function openStation(key){
+  lobbyStick?.reset();lobbyGesture?.cancel();document.body.classList.add('station-open');document.body.classList.remove('stations-open');el('lobby-prepare')?.setAttribute('aria-expanded','false');
   open=key;keys.clear();moveGoal=null;el('station-panel').hidden=false;el('station-message').textContent='';el('station-title').textContent=stations.find(s=>s.key===key).name.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
   const content=el('station-content');
   if(key==='commanders'){
@@ -97,10 +101,28 @@ canvas.onpointermove=e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-
 canvas.onpointerup=e=>{if(drag&&drag.button===0&&Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)<6){ndc.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(ndc,camera);const hit=ray.intersectObjects(stationHits,false)[0];if(hit)openStation(hit.object.userData.station);else if(ray.ray.intersectPlane(ground,point)&&point.length()<27){close();moveGoal=point.clone();}}drag=null;};canvas.onpointercancel=()=>{drag=null;};
 canvas.addEventListener('wheel',e=>{e.preventDefault();view.distance=Math.max(14,Math.min(50,view.distance*Math.exp(e.deltaY*.001)));},{passive:false});
 function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}addEventListener('resize',resize);resize();refresh();
+const touchHud=document.createElement('div');touchHud.id='lobby-touch';
+touchHud.innerHTML='<div id="lobby-stick" class="touch-stick" role="group" aria-label="Movement joystick"><span class="touch-stick-thumb"></span><small>Move</small></div><button id="lobby-jump">Jump</button>';
+document.body.append(touchHud);
+const prepare=document.createElement('button');prepare.id='lobby-prepare';prepare.textContent='Prepare';prepare.setAttribute('aria-expanded','false');
+prepare.onclick=()=>{const on=document.body.classList.toggle('stations-open');prepare.setAttribute('aria-expanded',String(on));};document.body.append(prepare);
+const useTouch=()=>{document.body.classList.add('lobby-touch');canvas.setAttribute('aria-label','Drag to look. Pinch to zoom. Tap ground to walk or use the movement joystick. Prepare opens all stations.');document.querySelector('footer p').textContent='Drag to look · Pinch to zoom · Tap to walk · Prepare for stations';};
+if(hasTouch())useTouch();
+bindTouchActivation(document,()=>document.body.classList.contains('lobby-touch'));
+lobbyStick=new TouchStick(el('lobby-stick'),(x,y)=>{touchMove.x=x;touchMove.y=y;if(x||y)moveGoal=null;},()=>!open);
+lobbyGesture=new TouchGesture(canvas,{accept:()=>!open,start:useTouch,
+  drag:(dx,dy)=>{view.yaw-=dx*.006;view.pitch=clamp(view.pitch+dy*.005,.2,1.2);},
+  pinch:zoom=>{view.distance=clamp(view.distance*Math.exp(zoom),14,50);},
+  tap:(x,y)=>{ndc.set(x/innerWidth*2-1,-y/innerHeight*2+1);ray.setFromCamera(ndc,camera);const hit=ray.intersectObjects(stationHits,false)[0];if(hit)openStation(hit.object.userData.station);else if(ray.ray.intersectPlane(ground,point)&&point.length()<27)moveGoal=point.clone();}
+});
+el('lobby-jump').onclick=()=>{if(!open&&jump===0)vy=7;};
+const releaseTouch=()=>{lobbyStick.reset();lobbyGesture.cancel();keys.clear();moveGoal=null;};
+for(const name of ['blur','resize','pagehide'])addEventListener(name,releaseTouch);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)releaseTouch();});
 const velocity=new THREE.Vector3();let disposed=false;
 function render(now){
   if(disposed)return;const dt=Math.min((now-last)/1000,.04);last=now;time+=dt;
-  let x=0,z=0;if(!open){x=(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0);z=(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-(keys.has('KeyW')||keys.has('ArrowUp')?1:0);}
+  let x=0,z=0;if(!open){x=touchMove.x+(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0);z=-touchMove.y+(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-(keys.has('KeyW')||keys.has('ArrowUp')?1:0);}
   point.set(x*Math.cos(view.yaw)+z*Math.sin(view.yaw),0,z*Math.cos(view.yaw)-x*Math.sin(view.yaw));if(moveGoal){point.copy(moveGoal).sub(player).setY(0);if(point.length()<.35){moveGoal=null;point.set(0,0,0);}}
   if(point.length()>1)point.normalize();point.multiplyScalar(7.2);velocity.lerp(point,1-Math.exp(-dt*12));player.addScaledVector(velocity,dt);if(player.length()>27)player.setLength(27);
   if(player.length()<3.5){point.copy(player).setY(0).normalize().multiplyScalar(3.5);player.copy(point);}

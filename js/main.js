@@ -495,6 +495,8 @@ async function boot() {
   }
   window.WH.heartPos = heartPos;
   game.context = new WorldContext({game,ui,rig,possession,mode:mode99});
+  const { MobileControls } = await import('./mobile-controls.js');
+  window.WH.mobile = new MobileControls({game,ui,rig,possession,mode:mode99});
   window.WH.portalPositions = portalPositions;
 
   bootFill.style.width = '100%';
@@ -582,6 +584,7 @@ canvas.addEventListener('webglcontextrestored', () => {
 });
 
 function stepFrame(dt, render) {
+  window.WH?.mobile?.beforeFrame();
   // While a unit is possessed the orbit rig stands down entirely and the
   // camera is placed on the unit's eye instead. That is also what lets a
   // possessed unit walk past the frontier: the confine lives on the rig.
@@ -628,6 +631,7 @@ function stepFrame(dt, render) {
   mode99?.renderEffects?.(simDt);
   if (ui) ui.update(dt);
   game?.context?.update();
+  window.WH?.mobile?.update(dt);
   if (fx) {
     // Strategic scale: swell models with zoom, then hand over to icons.
     // Bigger worlds get a stronger swell so a tower stays a landmark even

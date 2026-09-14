@@ -33,7 +33,7 @@ export class WorldContext {
     return !p.active||(p.unit?.active&&!p.unit.dead&&p.allies.worldPos(p.unit,_pos).distanceTo(t.pos)<=14);
   }
   open() {
-    if(!this.target)return;
+    if(!this.target||this.editing)return;
     this.editing=true;this.wasSuspended=this.possession.suspended;
     this.possession.suspend(true);
     this.update();
@@ -86,7 +86,7 @@ export class WorldContext {
     else if(!this.editing&&(!this.target||p.active||!this.panel().matches(':hover'))) {
       const r=this.rig.canvas.getBoundingClientRect();
       this.rig.raycaster(p.active?r.left+r.width/2:this.pointer.x,p.active?r.top+r.height/2:this.pointer.y,this.ray);
-      let next=this._pick(this.ray.ray);
+      let next=game.mobile?.enabled&&!p.active?null:this._pick(this.ray.ray);
       if(!next&&!p.active&&game.selectedTower)next={kind:'tower',object:game.selectedTower};
       if(next?.object!==this.dismissed)this.dismissed=null;
       this.target=next?.object===this.dismissed?null:next;
@@ -97,8 +97,9 @@ export class WorldContext {
     const stamp=tower?`${tower.id}:${tower.tier}:${game.gold}:${this.validTower(tower)}`:'';
     if(game.contextTower!==tower||this.towerStamp!==stamp){game.contextTower=tower;this.towerStamp=stamp;ui.refresh();}
     this.towerPanel.classList.remove('board-off');
-    this.towerPanel.classList.toggle('show',!!tower);
-    this.lootPanel.hidden=this.target?.kind!=='loot';
+    const display=!game.mobile?.enabled||this.editing;
+    this.towerPanel.classList.toggle('show',!!tower&&display);
+    this.lootPanel.hidden=this.target?.kind!=='loot'||!display;
     if(this.target){
       if(tower){
         const valid=this.validTower(tower);
@@ -111,6 +112,7 @@ export class WorldContext {
     this.updateMarkers();
   }
   place(panel,position) {
+    if(this.game.mobile?.enabled){panel.style.transform='';panel.style.visibility='';panel.classList.toggle('context-editing',!!this.editing);return;}
     _screen.copy(position).addScaledVector(_up.copy(position).normalize(),2.2).project(this.rig.camera);
     const r=this.rig.canvas.getBoundingClientRect(),w=panel.offsetWidth,h=panel.offsetHeight;
     const sx=r.left+(_screen.x+1)*r.width/2,sy=r.top+(1-_screen.y)*r.height/2;

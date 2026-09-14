@@ -32,3 +32,17 @@ canvas { display: block; width: 100%; height: 100%; }
   aside label { margin: 6px 0; } h2 { margin: 10px 0; } #viewport { min-height: 180px; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+#debug-inspect { display:none; }
+.debug-touch header { padding-top:max(8px,env(safe-area-inset-top)); padding-left:max(12px,env(safe-area-inset-left)); padding-right:max(12px,env(safe-area-inset-right)); }
+.debug-touch button, .debug-touch select, .debug-touch a { min-height:48px; touch-action:manipulation; }
+.debug-touch header a { display:inline-flex; align-items:center; }
+.debug-touch header h1 { display:none; }
+.debug-touch #debug-inspect { display:block; margin-left:auto; white-space:normal; }
+.debug-touch main { flex-direction:row; }
+.debug-touch aside { display:none; }
+.debug-touch #viewport { min-height:0; }
+.debug-touch.debug-inspecting aside { display:block; position:fixed; top:120px; bottom:max(12px,env(safe-area-inset-bottom)); left:max(12px,env(safe-area-inset-left)); width:min(360px,calc(100vw - 24px)); height:auto; background:#101b29; z-index:4; border:1px solid var(--line); overscroll-behavior:contain; }
+.debug-touch nav { padding-top:4px; padding-bottom:4px; }
+.debug-touch nav button { min-width:max-content; }
+.debug-touch .label { max-width:140px; font-size:11px; }
+@media(max-width:600px) { .debug-touch header { gap:8px; }.debug-touch header a { font-size:11px; }.debug-touch #debug-inspect { font-size:12px; } }

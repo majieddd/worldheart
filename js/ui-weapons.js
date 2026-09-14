@@ -67,7 +67,7 @@ export class WeaponPanel {
     const remainingKeys = owned ? [...controls.slice(focusedAt + 1), ...controls.slice(0, focusedAt).reverse()].map(key) : [];
     const scroll = this.dialog.scrollTop;
     const expanded = new Set([...this.dialog.querySelectorAll('details[open]')].map(d=>d.dataset.item));
-    const inv = this.api.inventory, { name, stats, parts, compatible, trait } = this.rules;
+    const inv = this.api.inventory, { name, stats, parts, compatible, trait } = this.rules, touch=!!this.game.mobile?.enabled;
     const equipped = new Set(inv.slots.filter(Boolean)),banked=new Set(this.api.bankedIds?.()||[]);
     const bag = inv.items.filter(x => !equipped.has(x.id));
     const card = (item, ground = false) => {
@@ -80,10 +80,10 @@ export class WeaponPanel {
     this.dialog.innerHTML = `<header><div><small>COMMANDER LOADOUT</small><h2>Weapons</h2><p>${trait}</p></div><button data-action="close">Resume</button></header>
       <p class="weapon-notice" role="status">${this.notice || 'Solo battle pauses here. Changes during a swing wait until it finishes.'}</p>
       <div class="weapon-actions"><button data-action="select" data-slot="native">Commander technique${inv.active==='native'?' · active':''}</button><button data-action="select" data-slot="basic">Basic sword${inv.active==='basic'?' · active':''}</button></div>
-      <h3>Equipment <small>X to switch</small></h3><div class="weapon-equipment">${inv.slots.map((id,i)=>`<section><h4>Slot ${i+1}${inv.active===i?' · active':''}</h4>${id ? `<div class="weapon-actions"><button data-action="select" data-slot="${i}">Use slot ${i+1}</button><button data-action="unequip" data-slot="${i}" ${bag.length>=12?'disabled title="Make space in the backpack first"':''}>Unequip</button></div>${card(inv.items.find(x=>x.id===id))}` : '<p>Empty. Equip a carried weapon below.</p>'}</section>`).join('')}</div>
+      <h3>Equipment <small>${touch?'Tap Swap in combat':'X to switch'}</small></h3><div class="weapon-equipment">${inv.slots.map((id,i)=>`<section><h4>Slot ${i+1}${inv.active===i?' · active':''}</h4>${id ? `<div class="weapon-actions"><button data-action="select" data-slot="${i}">Use slot ${i+1}</button><button data-action="unequip" data-slot="${i}" ${bag.length>=12?'disabled title="Make space in the backpack first"':''}>Unequip</button></div>${card(inv.items.find(x=>x.id===id))}` : '<p>Empty. Equip a carried weapon below.</p>'}</section>`).join('')}</div>
       <h3>Backpack ${bag.length} / 12 <small>${inv.scrap} salvaged</small></h3>${bag.length ? bag.map(x=>card(x)).join('') : '<p>No carried weapons. Enemy drops have a beam matching their rarity.</p>'}
       <h3>Nearby drops <small>Automatic pickup within 2.8 units</small></h3>${this.api.nearby().map(x=>card(x,true)).join('') || '<p>Nearby weapons enter your backpack while playing. Full backpack? Drops stay on the ground.</p>'}
-      <p class="weapon-footnote">Compatible parts are free to swap in this prototype. ${this.api.campaign?'Three infusions let a favorite weapon catch up to your current planet tier. Extract after victory to bank items and changes; defeat or a mid-assault reload restores the previous checkpoint.':'This single-planet sandbox does not retain weapon loot between runs.'} R pickup and X switch apply while possessing a commander.</p>`;
+      <p class="weapon-footnote">Compatible parts are free to swap in this prototype. ${this.api.campaign?'Three infusions let a favorite weapon catch up to your current planet tier. Extract after victory to bank items and changes; defeat or a mid-assault reload restores the previous checkpoint.':'This single-planet sandbox does not retain weapon loot between runs.'} ${touch?'Use Inspect loot for a nearby drop, or Swap during combat.':'R pickup and X switch apply while possessing a commander.'}</p>`;
     for (const d of this.dialog.querySelectorAll('details')) {
       d.dataset.item = d.querySelector('select').dataset.id;
       if (expanded.has(d.dataset.item)) d.open = true;

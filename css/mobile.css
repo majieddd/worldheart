@@ -1,0 +1,163 @@
+/* Touch adaptation of the existing navy/cyan HUD, not a second skin. */
+:root {
+  --touch-target: 48px;
+  --touch-fire: 64px;
+  --touch-stick: 112px;
+  --touch-panel: #11182e;
+  --touch-line: #7285ac;
+  --touch-top: max(8px, env(safe-area-inset-top));
+  --touch-bottom: max(12px, env(safe-area-inset-bottom));
+  --touch-left: max(12px, env(safe-area-inset-left));
+  --touch-right: max(12px, env(safe-area-inset-right));
+}
+#touch-hud, .touch-only { display: none; }
+.touch-mode #touch-hud { display: block; }
+.touch-mode .touch-only { display: inline-flex; }
+#touch-hud[hidden], .touch-mode [hidden], #touch-menu [hidden] { display: none !important; }
+.touch-mode { overscroll-behavior: none; }
+.touch-mode button, .touch-mode select, .touch-mode summary, .touch-mode input:not([type="checkbox"]) {
+  min-height: var(--touch-target); touch-action: manipulation;
+}
+.touch-mode input[type="checkbox"] { width: 24px; height: 24px; }
+.touch-mode select, .touch-mode input { font-size: var(--fs-16); }
+.touch-mode button, .touch-mode .btn { transition: none; }
+.touch-mode #hud .hud-top-left, .touch-mode #hud .hud-top-center,
+.touch-mode #hud .hud-top-right, .touch-mode .hud-bottom,
+.touch-mode #commander-frame, .touch-mode #btn-inventory, .touch-mode .weapon-cue,
+.touch-mode #fp-panel, .touch-mode #link-warn, .touch-mode #sel-readout,
+.touch-mode .nest-marker { display: none !important; }
+.touch-mode #hud { font-size: var(--fs-14); }
+#touch-hud { position: fixed; inset: 0; pointer-events: none; z-index: 9; }
+#touch-hud .btn { min-width: var(--touch-target); min-height: var(--touch-target); font-size: var(--fs-12); line-height: 1.25; padding: var(--sp-2); background: var(--touch-panel); color: var(--text); border: 1px solid var(--touch-line); pointer-events: auto; white-space: normal; }
+#touch-hud .btn[aria-pressed="true"], #touch-menu nav .btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--surface-raised); }
+#touch-hud .btn:disabled { opacity: 1; color: var(--text-muted); border-color: var(--hairline-strong); }
+.touch-top { position: absolute; top: var(--touch-top); left: var(--touch-left); right: var(--touch-right); display: flex; align-items: flex-start; gap: var(--sp-2); }
+#touch-status { white-space: pre-line !important; text-align: left; min-width: 92px !important; color: var(--gold) !important; }
+.touch-wave { margin: 0 auto; padding: var(--sp-1) var(--sp-2); display: grid; gap: 2px; text-align: center; background: var(--touch-panel); border: 1px solid var(--hairline-strong); border-radius: var(--r-2); font-size: var(--fs-12); max-width: 270px; }
+.touch-wave strong { font-family: var(--font-display); color: var(--text); }
+.touch-wave span { color: var(--text-muted); }
+.touch-wave small { font-size: var(--fs-11); color: var(--danger-text); }
+.touch-wave small:empty { display: none; }
+.touch-boss { position: absolute; top: calc(var(--touch-top) + 74px); left: 50%; transform: translateX(-50%); width: min(210px,42vw); display: grid; padding: var(--sp-1); background: var(--touch-panel); border-radius: var(--r-1); text-align: center; font-size: var(--fs-11); }
+.touch-boss meter { width: 100%; height: 12px; accent-color: var(--danger-text); }
+.touch-has-boss .touch-quick { top: calc(var(--touch-top) + 120px); }
+#touch-status.touch-save-failed { border-color: var(--danger-text) !important; }
+#touch-status.touch-save-failed::after { content: 'Save needs attention'; display: block; color: var(--danger-text); font-size: var(--fs-11); }
+.touch-quick { position: absolute; top: calc(var(--touch-top) + 64px); right: var(--touch-right); display: flex; gap: var(--sp-2); }
+.touch-toasts { position: absolute; top: calc(var(--touch-top) + 64px); left: var(--touch-left); width: min(30vw, 300px); }
+.touch-toasts #toast-anchor { position: static; transform: none; width: 100%; max-height: 66px; overflow: hidden; }
+.touch-toasts .toast { font-size: var(--fs-12); padding: var(--sp-2); line-height: 1.35; text-align: left; background: var(--touch-panel); }
+.touch-toasts .toast:not(:last-child) { display: none; }
+.touch-context { position: absolute; top: 57%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: var(--sp-1); }
+.touch-left, .touch-right { display: none; position: absolute; bottom: var(--touch-bottom); }
+.touch-possessed .touch-left, .touch-possessed .touch-right { display: block; }
+.touch-left { left: var(--touch-left); width: var(--touch-stick); height: 170px; }
+.touch-right { right: var(--touch-right); width: 180px; height: 176px; }
+.touch-stick { position: absolute; bottom: 0; width: var(--touch-stick); height: var(--touch-stick); border: 1px solid var(--touch-line); border-radius: 50%; background: rgba(17,24,46,.38); pointer-events: auto; touch-action: none; }
+.touch-stick-thumb { position: absolute; width: 44px; height: 44px; top: calc(50% - 22px); left: calc(50% - 22px); border: 1px solid var(--accent); background: rgba(17,24,46,.9); border-radius: 50%; pointer-events: none; }
+.touch-stick small { position: absolute; bottom: var(--sp-2); left: 0; right: 0; color: var(--text); text-align: center; font-size: var(--fs-11); pointer-events: none; }
+#touch-sprint { position: absolute; top: 0; left: 0; }
+.touch-right .btn { position: absolute; width: var(--touch-target); padding: var(--sp-1) !important; }
+#touch-fire { width: var(--touch-fire) !important; height: var(--touch-fire); bottom: var(--sp-3); right: 0; border-color: var(--accent) !important; touch-action: none; }
+#touch-jump { bottom: 0; right: 76px; touch-action: none; }
+#touch-aim { bottom: 88px; right: 0; }
+#touch-switch { bottom: 60px; right: 76px; }
+#touch-special { bottom: 120px; right: 64px; }
+#touch-power { bottom: 120px; right: 124px; }
+.touch-vitals { position: absolute; bottom: calc(var(--touch-bottom) + 4px); left: 50%; transform: translateX(-50%); display: grid; gap: 2px; padding: var(--sp-1) var(--sp-2); background: var(--touch-panel); border-radius: var(--r-1); font-size: var(--fs-11); max-width: 130px; text-align: center; }
+.touch-possessed .touch-vitals { bottom: calc(var(--touch-bottom) + 184px); }
+.touch-vitals span { color: var(--text-muted); }
+.touch-placement, .touch-orders { position: absolute; left: 50%; bottom: var(--touch-bottom); transform: translateX(-50%); display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2); background: var(--touch-panel); border: 1px solid var(--hairline-strong); border-radius: var(--r-2); max-width: calc(100% - var(--touch-left) - var(--touch-right)); pointer-events: auto; font-size: var(--fs-12); }
+.touch-placement span, .touch-orders span { min-width: 70px; max-width: 220px; }
+.touch-possessed .touch-placement { bottom: calc(var(--touch-bottom) + 184px); }
+.touch-building .touch-vitals, .touch-building #touch-fire, .touch-building #touch-aim, .touch-building #touch-special, .touch-building #touch-power, .touch-building #touch-switch { display: none; }
+.touch-left-handed .touch-left { left: auto; right: var(--touch-right); }
+.touch-left-handed .touch-right { right: auto; left: var(--touch-left); transform: scaleX(-1); }
+.touch-left-handed .touch-right .btn { transform: scaleX(-1); }
+.touch-left-handed #touch-sprint { left: auto; right: 0; }
+.touch-mode #hud .world-context { position: fixed !important; left: var(--touch-left) !important; right: var(--touch-right); top: auto !important; bottom: var(--touch-bottom) !important; width: min(460px,calc(100vw - var(--touch-left) - var(--touch-right))); max-width: none; max-height: min(60dvh,420px); margin: 0 auto; padding: var(--sp-3); transform: none !important; background: var(--touch-panel); pointer-events: auto; }
+.touch-mode #hud .world-context .t-desc, .touch-mode #hud .world-context .context-hint { display: none; }
+.touch-mode #hud .world-context .t-actions { position: sticky; bottom: calc(0px - var(--sp-3)); background: var(--touch-panel); padding: var(--sp-2) 0; margin-top: var(--sp-2); }
+.touch-mode #hud .world-context .btn { min-width: var(--touch-target); white-space: normal; overflow-wrap: anywhere; }
+.touch-mode #loot-preview { max-width: 100%; overflow: hidden; }
+.touch-mode #loot-stats, .touch-mode #loot-compatibility { font-size: var(--fs-12); line-height: 1.5; }
+#touch-menu { color: var(--text); background: var(--touch-panel); border: 1px solid var(--touch-line); border-radius: var(--r-2); position: fixed; inset: var(--touch-top) var(--touch-right) var(--touch-bottom) var(--touch-left); margin: auto; width: min(660px,calc(100vw - var(--touch-left) - var(--touch-right))); max-height: calc(100dvh - var(--touch-top) - var(--touch-bottom)); padding: var(--sp-4); overflow: auto; overscroll-behavior: contain; font: var(--fs-14)/1.5 var(--font-body); }
+#touch-menu::backdrop { background: rgba(10,14,33,.65); }
+#hud #touch-menu { pointer-events: auto; }
+#touch-menu header { position: sticky; top: calc(0px - var(--sp-4)); background: var(--touch-panel); z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); padding: var(--sp-2) 0; }
+#touch-menu h2 { font: 600 var(--fs-20) var(--font-display); }
+#touch-menu h3 { font: 600 var(--fs-16) var(--font-display); margin: var(--sp-4) 0 var(--sp-2); }
+#touch-menu nav { display: flex; gap: var(--sp-1); overflow-x: auto; padding: var(--sp-1) 0 var(--sp-2); }
+#touch-menu nav .btn { flex: 1; white-space: nowrap; min-width: 60px; }
+#touch-menu .btn { font-size: var(--fs-14); border-color: var(--touch-line); min-height: var(--touch-target); }
+#touch-menu p { font-size: var(--fs-12); line-height: 1.6; color: var(--text-muted); margin: var(--sp-2) 0; }
+#touch-menu #build-bar { position: static; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: var(--sp-2); width: 100%; transform: none; opacity: 1; pointer-events: auto; align-items: stretch; }
+#touch-menu .build-card { width: 100%; transform: none; transition: none; }
+#touch-menu .build-thumb { width: 60px; height: 60px; margin: auto; }
+#touch-menu .build-name { font-size: var(--fs-12); white-space: normal; }
+#touch-menu .build-key, #touch-menu .kbd { display: none; }
+#touch-menu #heart-panel, #touch-menu #crystal-panel, #touch-menu #expedition-tools, #touch-menu #campaign-save, #touch-menu #settings-pop { position: static; display: block; width: 100%; max-width: none; max-height: none; transform: none; opacity: 1; visibility: visible; margin: var(--sp-3) 0; overflow: visible; pointer-events: auto; }
+#touch-menu #heart-panel { text-align: left; padding: var(--sp-3); }
+#touch-menu #settings-pop { border: 0; padding: 0; }
+#touch-menu #settings-pop .marker { font-size: var(--fs-12); }
+#touch-menu .touch-menu-actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+#touch-menu.touch-receipt-menu [data-section="base"] > :not(#campaign-save) { display: none !important; }
+#touch-options-actions .btn { width: auto; min-width: 64px; }
+#touch-options-actions .btn::after { content: attr(aria-label); font-size: var(--fs-11); margin-left: var(--sp-1); }
+.touch-settings label { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); margin: var(--sp-2) 0; font-size: var(--fs-12); }
+.touch-settings select, .touch-settings input[type="range"] { min-width: 0; max-width: 50%; }
+.touch-settings select { color: var(--text); background: var(--ground); border: 1px solid var(--touch-line); padding: var(--sp-1); border-radius: var(--r-1); }
+.touch-pause-choice { display: flex; gap: var(--sp-2); align-items: center; min-height: var(--touch-target); }
+.touch-unit { display: flex; align-items: center; gap: var(--sp-2); border-top: 1px solid var(--hairline-strong); padding: var(--sp-2) 0; }
+.touch-unit span { flex: 1; font-size: var(--fs-12); }
+.touch-help { margin-top: var(--sp-4); border-top: 1px solid var(--hairline-strong); }
+.touch-help summary { color: var(--accent); display: flex; align-items: center; cursor: pointer; }
+.touch-mode .overlay { overflow: auto; padding: var(--touch-top) var(--touch-right) var(--touch-bottom) var(--touch-left); align-items: safe center; }
+.touch-mode .overlay-card { width: min(700px,100%); min-width: 0; max-width: 100%; max-height: calc(100dvh - var(--touch-top) - var(--touch-bottom)); overflow: auto; margin: 0; padding: var(--sp-4); }
+.touch-mode .overlay-card .o-mark { font-size: var(--fs-34); letter-spacing: .03em; overflow-wrap: anywhere; }
+.touch-mode .overlay-card .o-actions { margin-top: var(--sp-3); gap: var(--sp-2); }
+.touch-mode .overlay-card .o-actions .btn { font-size: var(--fs-14); padding: var(--sp-2) var(--sp-3); }
+.touch-mode .map-row { display: flex; flex-wrap: wrap; }
+.touch-mode #title-overlay .o-body { display: none; }
+.touch-world-options { margin-top: var(--sp-3); text-align: left; }
+.touch-world-options summary { display: flex; align-items: center; color: var(--accent); cursor: pointer; }
+.touch-mode .touch-intro { display: block; font-size: var(--fs-12); line-height: 1.6; color: var(--text-muted); text-align: left; }
+.touch-mode .map-card { flex: 1 1 120px; }
+.touch-mode .draft-cards, .touch-mode .talent-row { display: grid; grid-template-columns: 1fr; }
+.touch-mode .draft-card, .touch-mode .talent-node { width: 100%; min-width: 0; text-align: left; }
+.touch-mode .draft-card { padding: var(--sp-3); }
+.touch-mode #weapon-dialog { inset: var(--touch-top) var(--touch-right) var(--touch-bottom) var(--touch-left); width: auto; max-width: 920px; max-height: calc(100dvh - var(--touch-top) - var(--touch-bottom)); padding: var(--sp-3); overscroll-behavior: contain; }
+.touch-mode #weapon-dialog header { position: sticky; top: calc(0px - var(--sp-3)); background: var(--touch-panel); z-index: 2; padding: var(--sp-2) 0; }
+.touch-mode #weapon-dialog header p { display: none; }
+.touch-mode #weapon-dialog header button { min-width: 80px; }
+.touch-mode #weapon-dialog .weapon-equipment { grid-template-columns: 1fr; }
+.touch-mode #weapon-dialog .weapon-actions { flex-wrap: wrap; }
+.touch-mode #weapon-dialog button { min-height: var(--touch-target); }
+.touch-mode #weapon-dialog summary { display: flex; align-items: center; }
+.touch-mode #worldgen-panel { left: var(--touch-left); bottom: var(--touch-bottom); width: min(390px,calc(100vw - var(--touch-left) - var(--touch-right))); max-height: calc(100dvh - var(--touch-top) - var(--touch-bottom)); }
+.touch-mode #worldgen-panel summary { display: flex; align-items: center; flex-wrap: wrap; }
+.touch-mode .worldgen-actions .btn { display: inline-flex; align-items: center; }
+.touch-mode #worldgen-panel:not([open]) { padding-top: 0; padding-bottom: 0; }
+@media (max-width: 440px) {
+  .touch-mode { --touch-stick: 104px; }
+  .touch-mode .touch-quick { top: calc(var(--touch-top) + 76px); }
+  #touch-menu { padding: var(--sp-3); }
+  #touch-menu nav .btn { font-size: var(--fs-12); padding: var(--sp-1); }
+  .touch-mode .set-row { gap: var(--sp-2); }
+  .touch-mode .overlay-card .o-stats { gap: var(--sp-4); }
+  .touch-mode .touch-right { width: 170px; }
+}
+@media (max-width: 600px) {
+  .touch-mode .touch-toasts { top: calc(var(--touch-top) + 136px); width: calc(100vw - var(--touch-left) - var(--touch-right)); }
+  .touch-mode .touch-has-boss .touch-toasts { top: calc(var(--touch-top) + 180px); }
+}
+@media (max-height: 440px) and (min-width: 600px) {
+  .touch-mode .touch-quick { top: auto; bottom: calc(var(--touch-bottom) + 184px); right: var(--touch-right); }
+  .touch-mode .touch-possessed .touch-vitals { bottom: var(--touch-bottom); }
+  .touch-mode .touch-context { top: 45%; }
+  .touch-mode #hud .world-context { max-height: calc(100dvh - 88px); left: auto !important; right: var(--touch-right); width: 350px; }
+  .touch-mode #title-overlay .o-body { display: none; }
+  .touch-mode .overlay-card .map-row { margin-top: var(--sp-2); }
+  .touch-mode .overlay-card .o-mark { font-size: var(--fs-26); }
+}
+.touch-mode #touch-hud.touch-has-boss .touch-quick { top: calc(var(--touch-top) + 120px); bottom: auto; }

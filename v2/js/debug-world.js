@@ -1,4 +1,5 @@
 import {patchScatter} from './terrain/scatter.js';
+import {TouchGesture,bindTouchActivation,hasTouch,clamp} from './touch-input.js';
 import {createTerrainFeatures} from './terrain/features.js';
 import {ACTIVE_FEATURES,DISASTERS} from './run/environment-catalogue.js';
 import {buildActiveFeature} from './terrain/active-features.js';
@@ -282,6 +283,16 @@ export async function startDebugWorld(){
   }
   viewport.onpointermove=e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.x=e.clientX;drag.y=e.clientY;if(drag.pan)pan(dx,dy);else{view.yaw-=dx*.006;view.pitch=Math.max(.12,Math.min(1.5,view.pitch+dy*.006));}};
   viewport.addEventListener('wheel',e=>{e.preventDefault();view.distance=Math.max(8,Math.min(2200,view.distance*Math.exp(e.deltaY*.001)));},{passive:false});
+  new TouchGesture(viewport,{
+    drag:(dx,dy)=>{view.yaw-=dx*.006;view.pitch=clamp(view.pitch+dy*.006,.12,1.5);},
+    pinch:(zoom,dx,dy)=>{view.distance=clamp(view.distance*Math.exp(zoom),8,2200);pan(dx,dy);}
+  });
+  const inspect=document.createElement('button');inspect.id='debug-inspect';inspect.textContent='Exhibits and controls';inspect.setAttribute('aria-expanded','false');
+  inspect.onclick=()=>{const on=document.body.classList.toggle('debug-inspecting');inspect.setAttribute('aria-expanded',String(on));inspect.textContent=on?'Close controls':'Exhibits and controls';};
+  document.querySelector('header').append(inspect);
+  if(hasTouch())document.body.classList.add('debug-touch');
+  bindTouchActivation(document,()=>document.body.classList.contains('debug-touch'));
+  viewport.setAttribute('aria-label','3D Debug World. Drag to orbit. Pinch to zoom. Two fingers drag to pan. Mouse wheel and arrows also work.');
   viewport.onkeydown=e=>{const moves={ArrowLeft:[30,0],ArrowRight:[-30,0],ArrowUp:[0,30],ArrowDown:[0,-30]};if(moves[e.key]){e.preventDefault();pan(...moves[e.key]);}};
   const observer=new ResizeObserver(()=>{const w=viewport.clientWidth,h=viewport.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();});observer.observe(viewport);
   const hash=()=>{let [lane,key]=location.hash.slice(1).split('/');if(lane==='weapons')key=key?.replace(/-(ancient|technological|empowered)$/,(_,era)=>'-'+({ancient:'wood',technological:'diamond',empowered:'onyx'}[era]));if(lane==='formations'&&['geyser','trunks'].includes(key))lane='features';if(lane==='formations'&&key==='amphitheatre')key='arcade';select(lane,key,false);};addEventListener('hashchange',hash);hash();
