@@ -1,6 +1,12 @@
 # 99 Planets development progress
 
-Updated 2026-09-12. This is the collaborator entry point for the owner's new direction.
+Updated 2026-09-13. This is the collaborator entry point for the owner's new direction.
+Active: Codex on `feature/mobile-controls`, U126-U131: comprehensive touch
+controls, compact responsive HUD, preparation/inspection access and mobile QA.
+[Mobile request ledger](qa/implementation/MOBILE-CONTROLS.md). Based on the
+verified preview below and its documentation closeout; desktop input and main
+remain protected. Implementation is not yet published.
+
 Published and publicly verified: V2 `67e14d0`, Codex on
 `feature/natural-bridges-and-storms`, completed U115-U125 in the
 [request ledger](qa/implementation/NATURAL-WORLDS.md): coherent bridge

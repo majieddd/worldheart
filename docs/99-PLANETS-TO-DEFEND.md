@@ -4,6 +4,10 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
+Active U126-U131 adapts the existing game for full touch control and a compact
+mobile HUD. [Mobile controls ledger](qa/implementation/MOBILE-CONTROLS.md)
+tracks action parity, input ownership, responsive menus and browser evidence.
+
 The U115-U125 refinement is published and verified as V2 `67e14d0`, tracked in [Natural worlds](qa/implementation/NATURAL-WORLDS.md).
 Bridges offer real autonomous paths both above and below, with a coherent
 faceted surface. Radiation strikes disable towers, ashfall and cryovolcanic
