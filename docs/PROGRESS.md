@@ -2,6 +2,11 @@
 
 Updated 2026-09-14. This is the collaborator entry point for the owner's direction.
 
+Active: U132-U135, mobile runtime optimization and Roblox-style touch polish,
+Codex on `feature/mobile-performance-polish`. [Request ledger](qa/implementation/MOBILE-PERFORMANCE.md)
+tracks profiling, larger thumb controls, regression checks and V2 publication.
+The owner's new sizing/lag feedback supersedes the prior mobile sizing acceptance.
+
 Published and publicly verified: V2 `102d4a5`, Codex on
 `feature/mobile-controls`, completed U126-U131. Compact touch controls now cover
 combat, strategy, construction, equipment/economy, squad orders, lobby, Debug,
