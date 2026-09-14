@@ -1,0 +1,1865 @@
+{
+  "checkedAt": "2026-09-14T05:41:24.717Z",
+  "build": {
+    "format": 1,
+    "previewBranch": "preview/v2",
+    "previewSha": "102d4a5127b56d97437e76f859d23bc452a7b117",
+    "productionBranch": "main",
+    "productionSha": "1374122d1109919a5fab10b69fefdfb80308eb6e",
+    "productionFiles": 71,
+    "previewFiles": 105,
+    "productionHashes": {
+      "css/style.css": "ad2ce23de733123176d05bed0e7e6b14416410076bf312ed8705e0129e042539",
+      "dist/worldheart.html": "8702e11c8d6a96f6cef084adc69fb29c2317dfe1ad60140b67b266111c881fd4",
+      "index.html": "710df6ae4620a8a9f7acd949e9a68e7abbafce4dd918931717650c7052256989",
+      "js/allies.js": "f70d7d4e32673f565dc8c6b0c3181886ffebb8f815b9185aa5642e41b185df4c",
+      "js/audio.js": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "js/camera.js": "ea20bf891afc6feaab9ee5dc56888a740a9bf7fe90241711e42a4c6edf382ddf",
+      "js/combatfx.js": "2c739f44acd35a1a5902aed6076d3b3634dea8f7f2a481caa01ba549f920494c",
+      "js/config.js": "942b23808098f48050ba3a3a7d5e05e1373f4dc793ce5081bf70cf1c5e94f9bf",
+      "js/effects.js": "bf2c372a599f9477ef9b2ca1a6bf1ea7e69cc77158aca7fe9b50ec5585235b41",
+      "js/enemies.js": "71038674a14eaded530878e8401ac4fff5a9e552044c21e294c278fd1fb5748b",
+      "js/game.js": "0a7e4c8509e877beff2ec50c1c681261a5e27534f07c0b7e5c3753121779d28f",
+      "js/main.js": "4b2906a2149e944156d8f0f52efaf4869e1ee04be3b4b94d3d2e3fcb44eb364a",
+      "js/modes/ninetynine.js": "7630c2b4c67aa8f9af63f8981e8046aad1d2b0300d06f806cd3fefc5a0863357",
+      "js/modes/progress.js": "78f6585855c5557efc12234891042472e2059a4ec6ac3254ea4468da2652cc11",
+      "js/nav.js": "86887ca58c4dd3df79cf4e933f0ce128ce7949d64faffc9d341056c6d2c9f4b8",
+      "js/noise.js": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "js/possess.js": "e15ef2a31c7820af489e291393ec55ae1885b821fdce2e72eeb9bb016b9c7ed2",
+      "js/postfx.js": "f2048ab65b321f6cacc04ad55c44051bdf8275fc4a032846febb652d05c4ce58",
+      "js/rig.js": "beb79b2fda8fe8283055c64ff1011054a15233a7e7fe57cdf14de17af1582b7e",
+      "js/run/draft.js": "be60615d597653b20a89f9865b45b78cb451fb0ee2fb77ec14b2e24568c23f6b",
+      "js/run/frontier.js": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "js/run/modifiers.js": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "js/run/powers.js": "4abd2db4808a90e2b512657811bc2f9fb74107f1b74eb7f015a405796c7efc2c",
+      "js/run/rng.js": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "js/run/run.js": "258fddb92cda8aa29793e74b0bd67fc99e90f8f22168bdaebdb6a73014ac448d",
+      "js/run/schedule.js": "418c06888108e69adecf985a39b07d35f987f5d86f1d6c1611de5c4556ac2c92",
+      "js/run/state.js": "b9422a97330adedb1a1bd87249e305c8368f86e657e0b8209f4397fbd6d6471f",
+      "js/soldier.js": "03ffb3ed08dc7254e68cb749b24ba9a813bc2b76d633e3a34b42700ee5f5bf16",
+      "js/towers.js": "cd926b0a93aa763cd772db068cc01256c588e927646708c69ab27c6ad4e91c93",
+      "js/ui-icons.js": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "js/ui.js": "ffee80551b560d004ce90c904f2efc4d029a6d690d25bf4937aab96df9208a75",
+      "js/viewmodel.js": "f4fdc51ec6fc63340249d733ce13ef963a4d634fb9bd9a76f6f91291243df869",
+      "js/waves.js": "5da1b3516147eff7650fc656e57b5633361beaccb683f4c5f8aca5009deeea27",
+      "js/world.js": "c3441bce4cd0a0ce773ca2d5f23e618d5443dfec47ea7703e776822a93370a2d",
+      "lib/THREE-LICENSE.txt": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "lib/three.core.min.js": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "lib/three.module.min.js": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6"
+    },
+    "previewHashes": {
+      "css/debug.css": "c491f0ef0b89b2ccf22875cc1b74bf21040c5ac9959b97ad3af3a5f8731b3075",
+      "css/lobby.css": "2c0de3276966841e5277f8a58ac14b7117a794e2bb613bbc2bf0acdd2e907031",
+      "css/mobile.css": "c037495e5b45323cb9ec69bd9978b86cdf6fb3556c0b25b75c154c633b4bcecb",
+      "css/style.css": "5c0536e33ba61e7788a7f22b76af9c57d33280b30bb195b7af2a656394f1aa34",
+      "debug.html": "13463b58b096993677fa6c3424059a83991ac20485b33114e6c4fbda3d30411a",
+      "index.html": "080e3084f12d5875df8914cbfa6e53c9ef9b0e0d70f32e084281a3646d72c8b0",
+      "js/abilities.js": "3dbc59c203813944e771ed0e9baf4a53e551c80c548f7a0b0d3e5d457b139dfd",
+      "js/allies.js": "8d754f65f64ba6996d12daab1db39e356fd641a89c1cedfe04b77d6655525ab5",
+      "js/attacks.js": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+      "js/audio.js": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "js/biome-dressing.js": "c1238e9d466a7216f28549f6137b685f26e4b2c76bcfe90927384035485e7de1",
+      "js/biome-visuals.js": "71b5e2663e13cd29d7cc730e98ca256261fc4dbaa9a8294aa6d2d09e026ace33",
+      "js/camera.js": "b78bf3b43a8c859fa5e2ab8dc64faae6a1601621a901217e6285a4d7e2ee33eb",
+      "js/combatfx.js": "8f77a59b15ddd023bf0a929fc30a7dfa49a6e5768e1eaa2dd5185f8afbe91d32",
+      "js/config.js": "15e491ba197549879559dac912ff0938a26fecaed971d9a8f0dd0e33aa774fc1",
+      "js/debug-animation.js": "35272ce2a192f240d6946e399075c180f13072438be19b4c2477a50756324108",
+      "js/debug-planets.js": "5e250dbffef5c4cb37a013bd1328303ebef6a8dc172e86729a312754c590a6c1",
+      "js/debug-world.js": "1cf8ed77d38bced086f92d6cc4e9e0f0fc971e4129d13d8369d27e0ded650846",
+      "js/disaster-art.js": "47c01c388deadd5376bc1400c956b81746f0c77b4c43e0129888856cc2ce03d2",
+      "js/disaster-preview.js": "13a1b9579ad800002277b0218d4bb13ba8e3057778fb68f684bdac5e58782e3a",
+      "js/dotted-path.js": "b88492b61f1045cce0c9f56765d2445ed544da3875fd43b33d4df608bd54b8d4",
+      "js/effects.js": "c97b3626cb455dc63a1f4ce6014676e2930bd4b2c6798a929f6969a8d39f2e99",
+      "js/encounters.js": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+      "js/enemies.js": "0a5a6b4202f4b1f420f43ca29e2d47f14af67b27acd792e610c9b2636a861844",
+      "js/game.js": "468fe1e6c636d4da4e889108f3395caf4b6ce25e629c4907c46e5fd70f59b517",
+      "js/geodesic.js": "18b7a3682366e33241acf13286e03463949d0f6b18cb9724158199fb81d0ccf5",
+      "js/lobby.js": "13defa36e775e00eff41955e49894ff4c965471a412a325ce3c14db8e522cb22",
+      "js/loot-field.js": "bfacf3d49ee69b38a566745574ff64e96428a54f657b37a87cc3555595c01227",
+      "js/main.js": "c94ae2b24bd9d09647e976f86585cfe6b6327d36d5bb24b0669dd18083f1e2fe",
+      "js/mobile-controls.js": "2eae39e2ddc3af59d202af780f05969f9d1d642304b9d69bf859506499b955b9",
+      "js/modes/campaign-launch.js": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+      "js/modes/campaign-store.js": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+      "js/modes/ninetynine.js": "4c0eb4954df1905fa49244d1b36ab00c1c81417b584b678a38a35bce10e2868a",
+      "js/modes/progress.js": "d1e4c4b15484bb4f9a2ed342d68a19c3a243fdc99199794489b3b805fa6b7ef6",
+      "js/mounts.js": "cb9813981fafa439952c7968bb90b83374a6f9c3f9748aaa305a7e7813666e4a",
+      "js/nav.js": "62e10df95f8c9a4fb88a8d3834c721023a522500e5ad0a75611924e8bb1c669e",
+      "js/nest-atlas-view.js": "a4f024fb22b7710aa3170a662306ce53baf8d4e718363287d63bfed4cf1c4350",
+      "js/nest-sites.js": "a11fe90d407e12333a911a92f1f69c80830b0495817e54f60affe5095d935a05",
+      "js/noise.js": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "js/planet-adornment.js": "f694cfc38a5d2b2f3ba3efce463d49383c80332d499ba74ebd0a7c409a492520",
+      "js/possess.js": "e70ce3ffb2d0b7f841cafd2e8dda29127fa351802341cdb1b3c1116e1770ec0d",
+      "js/postfx.js": "2163df8b9633467c99ccc539f44bf08be2a046c204b181c7e308fb956b85ae10",
+      "js/preparation.js": "4923e49151362ee684afc11eec918457d299465d06bda9e03a75ef006e440e00",
+      "js/range-guide.js": "fe8e9045832161b2a50a30ab0446d166f300a88ca2401872306daea82881e444",
+      "js/rewards.js": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+      "js/rig.js": "d6668243b143908d3038bdf768532fe6952fe7c1b239091a64078ecee8a16505",
+      "js/run/abilities.js": "e50971b43249ae3b3a642e54e3ed0f4109d0ce60731fa29f6ea43a3efced0648",
+      "js/run/campaign.js": "69389f8e28aa320043908aa0a9d7979c6af1e7ac8105fbc395ee83cd64a9b9d6",
+      "js/run/crystals.js": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+      "js/run/draft.js": "4e87a1e9e20dcf994338f49979e2aaf54b717491043b4b6b640248f5d96145fd",
+      "js/run/earth-coast.js": "ac7fcf649733ca9a2cff0aec579823c2d63ec85ecfa21e78eda7c1075a33d6fe",
+      "js/run/environment-catalogue.js": "2f06f770a25f0fc43bd2e9310a9d18b7e71cae6f695d228b087ac39730379996",
+      "js/run/expedition.js": "5de02cae1ae34aad3951b7cd84dbf7d04edaab23590863c6060ebd0a9970177a",
+      "js/run/frontier.js": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "js/run/modifiers.js": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "js/run/planet-environments.js": "299d1c3276dc298aa0c37a38ac231ea3c8927f971182334c1489a283e97047d7",
+      "js/run/planets.js": "ab559dfda693c052262f2d61a8902a40e0f76fc68ea4515da293c843cadb89e7",
+      "js/run/powers.js": "8737b19b84326641076eb2908336ecb4e733dda10dd9b44e40201e038808d089",
+      "js/run/rng.js": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "js/run/run.js": "657850c8cd433b9dfda9e213857a54cb865b2b6ace21f67e04a04dca0d9c0929",
+      "js/run/schedule.js": "4ed480e3fc015bb3728184bc40eecaab36a505c7e94a6a0b2245322ee9df6cdc",
+      "js/run/solar-worlds.js": "dab622e381c00525cbd4b5a42152b51d44704be3d238ed1c2743b6d1e6591d9b",
+      "js/run/state.js": "5bd0b2c35bd76c8f3f86af098b15ad3ba4443550795690f8453607e34893aa72",
+      "js/run/weapons.js": "429f3f5925da95852e8f37ef7fcb028fb2484d794101e3f92a13ef88645c6929",
+      "js/run/world-catalogue.js": "ea27d44f66474b93bdb245fb0df38b43ef1236679f02aabe2cfab99e188024b0",
+      "js/soldier.js": "1395861c13fd50d47ddb3fa276eb5352e91a2cdeccded396f3c36777da1a0525",
+      "js/storage.js": "3002fdd1cc70379116894b47f9afb521113b5083bc1776a8c4ab084aeb90e44f",
+      "js/storm-art.js": "285e00dc66039d02dd367aa29d07ee58e62779b516082cc59943277f8aad76c7",
+      "js/terrain/acceptance.js": "f9d27a1cb5f64c83c28973945726f261a0f73f01fce1eac373cead61febce65c",
+      "js/terrain/active-features.js": "d9fae641b24392265fc2263bd58efc995ba949b82c5e6b84d5a3718bab0b0132",
+      "js/terrain/additional-formations.js": "2c9457504f307004f842b9c1526745d52a69364248546ae4adc696b439ca9fe9",
+      "js/terrain/atlas.js": "858bffa19baca19d28d663df718148fb48682807e1ec9d3d0cf46f8cc067de22",
+      "js/terrain/coast-clearance.js": "85f3e91bba97c55eb71888af0574a69e7349357c8abd44ce844c6b4700721321",
+      "js/terrain/ecology.js": "cede19c3e5a076c88866cabe1ea340941a48227cb29772b9da6ecf54ae887427",
+      "js/terrain/exotic-formations.js": "d2535d42f6a3063cb803363268ce366dd056f7793c79e01b16fda1e875b3c449",
+      "js/terrain/features.js": "66a7bfa0acb080368ea43bd16d2c4969518ca7723aa854a45eb5dea1f2facb20",
+      "js/terrain/formations.js": "753b29758ca4a16581cba16423e73e823e0ccc85c6a4c59275f39881161da82b",
+      "js/terrain/geysers.js": "fa2c4d8dbff7993d6697f60467adab4430080c1d23414a2130569ba158d2e890",
+      "js/terrain/landmarks.js": "cf3445372cb084d6cb84c5f697c93b64f8ceedb1d16689eee22be9808f567ad0",
+      "js/terrain/recipes.js": "e822855ca2a40432bd4091b1555320ac332c2719dc856b46f12088e4175cf39c",
+      "js/terrain/rifts.js": "597390c08a9216c36dc47d3e69583f5b8d6b45e13802ef84fb5303585fec1556",
+      "js/terrain/samples.js": "e3e96cf821a625129674eaeb5af1df172c10c471e445001fedc28408ab9d9d67",
+      "js/terrain/scatter.js": "8aa383af30482baa440fc4c643d7ad8bcdc0875b79dae77591fdda1b9b0aba6c",
+      "js/threat-guides.js": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+      "js/touch-input.js": "4bffbc2ad12714f2b740533cebb59b873df9685a20f0ec1ac9f1fcebec8875d4",
+      "js/towers.js": "c23456b97d4b0cf197134f419d3b3fdda76cbf0ef8f8443c8c5b6971f0248a74",
+      "js/traversal.js": "3683bb413958e90c9d52dd9fb1dce87c60b874b2db7d7b7ad484d5b573aa9c8b",
+      "js/ui-campaign.js": "0489bdc0e973ab08ab1c9fa4e2244e0a16d5b3cfd0d369b35fd0aa9f4f14738a",
+      "js/ui-expedition.js": "c0725d54cc8db9040c8fde690982c48e0f567cbfa81193e16d4109cf92efd366",
+      "js/ui-icons.js": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "js/ui-weapons.js": "2010291e0456415dd33c8136a14567f1fb528a72bfc09c6e76f3673246c6c47a",
+      "js/ui-worldgen.js": "fa69819052a64b142ce356bab4a6dd013d9109b9c42f6da2240ec2c64b44dd7e",
+      "js/ui.js": "93bf93711b084073df12ab172750b57b38226f2a4a998b03d24acaee2562d547",
+      "js/unit-routes.js": "77aabde1b59a437983fd04903e2cea8c95b453b0984c63339625dc9183900da6",
+      "js/viewmodel.js": "5fe8d54c85f273468336138c4a50a423005ba8ef721712033dafaedc445e1bc1",
+      "js/waves.js": "dfe8c5cfb89bff6f40e9d543f93deaa13afd6a344d4cb85112c325c297d910b8",
+      "js/weapon-model.js": "8e2c3f9bc82eaf1d280df87dae44b7c5f946275008a804ee923a1c51ae4b9fd5",
+      "js/weather.js": "d82fbd36a07ebd656b6d7cd41766708a2cb295a0920223635d65e05c3512580c",
+      "js/world-context.js": "be77c267ae55464e83b5139038aaf70846902f53d1a1e7bbb3662b3e6078e36e",
+      "js/world.js": "396d802801b0fb7bd0ff5a35f8481a8f2c9502ff5f08c258f14bd8e7f7eefd0e",
+      "js/worldgen.js": "ee013008823cd90aaf8f2d8f88f5ecb7da8a4110ceafd688ac0d3305b97b632d",
+      "lib/THREE-LICENSE.txt": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "lib/three.core.min.js": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "lib/three.module.min.js": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "lobby.html": "89a7328435e424e9b3f5a2b40c5fb1498cb3329e46a36abf6ead0074f53d1d58"
+    }
+  },
+  "checks": [
+    {
+      "path": "css/style.css",
+      "hash": "ad2ce23de733123176d05bed0e7e6b14416410076bf312ed8705e0129e042539",
+      "actual": "ad2ce23de733123176d05bed0e7e6b14416410076bf312ed8705e0129e042539",
+      "ok": true
+    },
+    {
+      "path": "index.html",
+      "hash": "710df6ae4620a8a9f7acd949e9a68e7abbafce4dd918931717650c7052256989",
+      "actual": "710df6ae4620a8a9f7acd949e9a68e7abbafce4dd918931717650c7052256989",
+      "ok": true
+    },
+    {
+      "path": "js/camera.js",
+      "hash": "ea20bf891afc6feaab9ee5dc56888a740a9bf7fe90241711e42a4c6edf382ddf",
+      "actual": "ea20bf891afc6feaab9ee5dc56888a740a9bf7fe90241711e42a4c6edf382ddf",
+      "ok": true
+    },
+    {
+      "path": "js/audio.js",
+      "hash": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "actual": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "ok": true
+    },
+    {
+      "path": "js/allies.js",
+      "hash": "f70d7d4e32673f565dc8c6b0c3181886ffebb8f815b9185aa5642e41b185df4c",
+      "actual": "f70d7d4e32673f565dc8c6b0c3181886ffebb8f815b9185aa5642e41b185df4c",
+      "ok": true
+    },
+    {
+      "path": "js/combatfx.js",
+      "hash": "2c739f44acd35a1a5902aed6076d3b3634dea8f7f2a481caa01ba549f920494c",
+      "actual": "2c739f44acd35a1a5902aed6076d3b3634dea8f7f2a481caa01ba549f920494c",
+      "ok": true
+    },
+    {
+      "path": "js/enemies.js",
+      "hash": "71038674a14eaded530878e8401ac4fff5a9e552044c21e294c278fd1fb5748b",
+      "actual": "71038674a14eaded530878e8401ac4fff5a9e552044c21e294c278fd1fb5748b",
+      "ok": true
+    },
+    {
+      "path": "js/effects.js",
+      "hash": "bf2c372a599f9477ef9b2ca1a6bf1ea7e69cc77158aca7fe9b50ec5585235b41",
+      "actual": "bf2c372a599f9477ef9b2ca1a6bf1ea7e69cc77158aca7fe9b50ec5585235b41",
+      "ok": true
+    },
+    {
+      "path": "js/config.js",
+      "hash": "942b23808098f48050ba3a3a7d5e05e1373f4dc793ce5081bf70cf1c5e94f9bf",
+      "actual": "942b23808098f48050ba3a3a7d5e05e1373f4dc793ce5081bf70cf1c5e94f9bf",
+      "ok": true
+    },
+    {
+      "path": "js/game.js",
+      "hash": "0a7e4c8509e877beff2ec50c1c681261a5e27534f07c0b7e5c3753121779d28f",
+      "actual": "0a7e4c8509e877beff2ec50c1c681261a5e27534f07c0b7e5c3753121779d28f",
+      "ok": true
+    },
+    {
+      "path": "js/main.js",
+      "hash": "4b2906a2149e944156d8f0f52efaf4869e1ee04be3b4b94d3d2e3fcb44eb364a",
+      "actual": "4b2906a2149e944156d8f0f52efaf4869e1ee04be3b4b94d3d2e3fcb44eb364a",
+      "ok": true
+    },
+    {
+      "path": "js/modes/ninetynine.js",
+      "hash": "7630c2b4c67aa8f9af63f8981e8046aad1d2b0300d06f806cd3fefc5a0863357",
+      "actual": "7630c2b4c67aa8f9af63f8981e8046aad1d2b0300d06f806cd3fefc5a0863357",
+      "ok": true
+    },
+    {
+      "path": "js/modes/progress.js",
+      "hash": "78f6585855c5557efc12234891042472e2059a4ec6ac3254ea4468da2652cc11",
+      "actual": "78f6585855c5557efc12234891042472e2059a4ec6ac3254ea4468da2652cc11",
+      "ok": true
+    },
+    {
+      "path": "js/noise.js",
+      "hash": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "actual": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "ok": true
+    },
+    {
+      "path": "js/nav.js",
+      "hash": "86887ca58c4dd3df79cf4e933f0ce128ce7949d64faffc9d341056c6d2c9f4b8",
+      "actual": "86887ca58c4dd3df79cf4e933f0ce128ce7949d64faffc9d341056c6d2c9f4b8",
+      "ok": true
+    },
+    {
+      "path": "js/possess.js",
+      "hash": "e15ef2a31c7820af489e291393ec55ae1885b821fdce2e72eeb9bb016b9c7ed2",
+      "actual": "e15ef2a31c7820af489e291393ec55ae1885b821fdce2e72eeb9bb016b9c7ed2",
+      "ok": true
+    },
+    {
+      "path": "js/run/modifiers.js",
+      "hash": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "actual": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "ok": true
+    },
+    {
+      "path": "js/run/draft.js",
+      "hash": "be60615d597653b20a89f9865b45b78cb451fb0ee2fb77ec14b2e24568c23f6b",
+      "actual": "be60615d597653b20a89f9865b45b78cb451fb0ee2fb77ec14b2e24568c23f6b",
+      "ok": true
+    },
+    {
+      "path": "js/postfx.js",
+      "hash": "f2048ab65b321f6cacc04ad55c44051bdf8275fc4a032846febb652d05c4ce58",
+      "actual": "f2048ab65b321f6cacc04ad55c44051bdf8275fc4a032846febb652d05c4ce58",
+      "ok": true
+    },
+    {
+      "path": "js/rig.js",
+      "hash": "beb79b2fda8fe8283055c64ff1011054a15233a7e7fe57cdf14de17af1582b7e",
+      "actual": "beb79b2fda8fe8283055c64ff1011054a15233a7e7fe57cdf14de17af1582b7e",
+      "ok": true
+    },
+    {
+      "path": "js/run/frontier.js",
+      "hash": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "actual": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "ok": true
+    },
+    {
+      "path": "dist/worldheart.html",
+      "hash": "8702e11c8d6a96f6cef084adc69fb29c2317dfe1ad60140b67b266111c881fd4",
+      "actual": "8702e11c8d6a96f6cef084adc69fb29c2317dfe1ad60140b67b266111c881fd4",
+      "ok": true
+    },
+    {
+      "path": "js/run/run.js",
+      "hash": "258fddb92cda8aa29793e74b0bd67fc99e90f8f22168bdaebdb6a73014ac448d",
+      "actual": "258fddb92cda8aa29793e74b0bd67fc99e90f8f22168bdaebdb6a73014ac448d",
+      "ok": true
+    },
+    {
+      "path": "js/run/powers.js",
+      "hash": "4abd2db4808a90e2b512657811bc2f9fb74107f1b74eb7f015a405796c7efc2c",
+      "actual": "4abd2db4808a90e2b512657811bc2f9fb74107f1b74eb7f015a405796c7efc2c",
+      "ok": true
+    },
+    {
+      "path": "js/run/schedule.js",
+      "hash": "418c06888108e69adecf985a39b07d35f987f5d86f1d6c1611de5c4556ac2c92",
+      "actual": "418c06888108e69adecf985a39b07d35f987f5d86f1d6c1611de5c4556ac2c92",
+      "ok": true
+    },
+    {
+      "path": "js/run/state.js",
+      "hash": "b9422a97330adedb1a1bd87249e305c8368f86e657e0b8209f4397fbd6d6471f",
+      "actual": "b9422a97330adedb1a1bd87249e305c8368f86e657e0b8209f4397fbd6d6471f",
+      "ok": true
+    },
+    {
+      "path": "js/run/rng.js",
+      "hash": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "actual": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "ok": true
+    },
+    {
+      "path": "js/soldier.js",
+      "hash": "03ffb3ed08dc7254e68cb749b24ba9a813bc2b76d633e3a34b42700ee5f5bf16",
+      "actual": "03ffb3ed08dc7254e68cb749b24ba9a813bc2b76d633e3a34b42700ee5f5bf16",
+      "ok": true
+    },
+    {
+      "path": "js/ui-icons.js",
+      "hash": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "actual": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "ok": true
+    },
+    {
+      "path": "js/towers.js",
+      "hash": "cd926b0a93aa763cd772db068cc01256c588e927646708c69ab27c6ad4e91c93",
+      "actual": "cd926b0a93aa763cd772db068cc01256c588e927646708c69ab27c6ad4e91c93",
+      "ok": true
+    },
+    {
+      "path": "js/waves.js",
+      "hash": "5da1b3516147eff7650fc656e57b5633361beaccb683f4c5f8aca5009deeea27",
+      "actual": "5da1b3516147eff7650fc656e57b5633361beaccb683f4c5f8aca5009deeea27",
+      "ok": true
+    },
+    {
+      "path": "js/viewmodel.js",
+      "hash": "f4fdc51ec6fc63340249d733ce13ef963a4d634fb9bd9a76f6f91291243df869",
+      "actual": "f4fdc51ec6fc63340249d733ce13ef963a4d634fb9bd9a76f6f91291243df869",
+      "ok": true
+    },
+    {
+      "path": "js/world.js",
+      "hash": "c3441bce4cd0a0ce773ca2d5f23e618d5443dfec47ea7703e776822a93370a2d",
+      "actual": "c3441bce4cd0a0ce773ca2d5f23e618d5443dfec47ea7703e776822a93370a2d",
+      "ok": true
+    },
+    {
+      "path": "js/ui.js",
+      "hash": "ffee80551b560d004ce90c904f2efc4d029a6d690d25bf4937aab96df9208a75",
+      "actual": "ffee80551b560d004ce90c904f2efc4d029a6d690d25bf4937aab96df9208a75",
+      "ok": true
+    },
+    {
+      "path": "lib/THREE-LICENSE.txt",
+      "hash": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "actual": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "ok": true
+    },
+    {
+      "path": "v2/css/debug.css",
+      "hash": "c491f0ef0b89b2ccf22875cc1b74bf21040c5ac9959b97ad3af3a5f8731b3075",
+      "actual": "c491f0ef0b89b2ccf22875cc1b74bf21040c5ac9959b97ad3af3a5f8731b3075",
+      "ok": true
+    },
+    {
+      "path": "v2/css/lobby.css",
+      "hash": "2c0de3276966841e5277f8a58ac14b7117a794e2bb613bbc2bf0acdd2e907031",
+      "actual": "2c0de3276966841e5277f8a58ac14b7117a794e2bb613bbc2bf0acdd2e907031",
+      "ok": true
+    },
+    {
+      "path": "v2/css/mobile.css",
+      "hash": "c037495e5b45323cb9ec69bd9978b86cdf6fb3556c0b25b75c154c633b4bcecb",
+      "actual": "c037495e5b45323cb9ec69bd9978b86cdf6fb3556c0b25b75c154c633b4bcecb",
+      "ok": true
+    },
+    {
+      "path": "v2/css/style.css",
+      "hash": "5c0536e33ba61e7788a7f22b76af9c57d33280b30bb195b7af2a656394f1aa34",
+      "actual": "5c0536e33ba61e7788a7f22b76af9c57d33280b30bb195b7af2a656394f1aa34",
+      "ok": true
+    },
+    {
+      "path": "lib/three.module.min.js",
+      "hash": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "actual": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "ok": true
+    },
+    {
+      "path": "v2/debug.html",
+      "hash": "13463b58b096993677fa6c3424059a83991ac20485b33114e6c4fbda3d30411a",
+      "actual": "13463b58b096993677fa6c3424059a83991ac20485b33114e6c4fbda3d30411a",
+      "ok": true
+    },
+    {
+      "path": "v2/index.html",
+      "hash": "080e3084f12d5875df8914cbfa6e53c9ef9b0e0d70f32e084281a3646d72c8b0",
+      "actual": "080e3084f12d5875df8914cbfa6e53c9ef9b0e0d70f32e084281a3646d72c8b0",
+      "ok": true
+    },
+    {
+      "path": "v2/js/abilities.js",
+      "hash": "3dbc59c203813944e771ed0e9baf4a53e551c80c548f7a0b0d3e5d457b139dfd",
+      "actual": "3dbc59c203813944e771ed0e9baf4a53e551c80c548f7a0b0d3e5d457b139dfd",
+      "ok": true
+    },
+    {
+      "path": "v2/js/attacks.js",
+      "hash": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+      "actual": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+      "ok": true
+    },
+    {
+      "path": "v2/js/allies.js",
+      "hash": "8d754f65f64ba6996d12daab1db39e356fd641a89c1cedfe04b77d6655525ab5",
+      "actual": "8d754f65f64ba6996d12daab1db39e356fd641a89c1cedfe04b77d6655525ab5",
+      "ok": true
+    },
+    {
+      "path": "lib/three.core.min.js",
+      "hash": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "actual": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "ok": true
+    },
+    {
+      "path": "v2/js/biome-visuals.js",
+      "hash": "71b5e2663e13cd29d7cc730e98ca256261fc4dbaa9a8294aa6d2d09e026ace33",
+      "actual": "71b5e2663e13cd29d7cc730e98ca256261fc4dbaa9a8294aa6d2d09e026ace33",
+      "ok": true
+    },
+    {
+      "path": "v2/js/audio.js",
+      "hash": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "actual": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "ok": true
+    },
+    {
+      "path": "v2/js/combatfx.js",
+      "hash": "8f77a59b15ddd023bf0a929fc30a7dfa49a6e5768e1eaa2dd5185f8afbe91d32",
+      "actual": "8f77a59b15ddd023bf0a929fc30a7dfa49a6e5768e1eaa2dd5185f8afbe91d32",
+      "ok": true
+    },
+    {
+      "path": "v2/js/biome-dressing.js",
+      "hash": "c1238e9d466a7216f28549f6137b685f26e4b2c76bcfe90927384035485e7de1",
+      "actual": "c1238e9d466a7216f28549f6137b685f26e4b2c76bcfe90927384035485e7de1",
+      "ok": true
+    },
+    {
+      "path": "v2/js/camera.js",
+      "hash": "b78bf3b43a8c859fa5e2ab8dc64faae6a1601621a901217e6285a4d7e2ee33eb",
+      "actual": "b78bf3b43a8c859fa5e2ab8dc64faae6a1601621a901217e6285a4d7e2ee33eb",
+      "ok": true
+    },
+    {
+      "path": "v2/js/debug-animation.js",
+      "hash": "35272ce2a192f240d6946e399075c180f13072438be19b4c2477a50756324108",
+      "actual": "35272ce2a192f240d6946e399075c180f13072438be19b4c2477a50756324108",
+      "ok": true
+    },
+    {
+      "path": "v2/js/config.js",
+      "hash": "15e491ba197549879559dac912ff0938a26fecaed971d9a8f0dd0e33aa774fc1",
+      "actual": "15e491ba197549879559dac912ff0938a26fecaed971d9a8f0dd0e33aa774fc1",
+      "ok": true
+    },
+    {
+      "path": "v2/js/debug-planets.js",
+      "hash": "5e250dbffef5c4cb37a013bd1328303ebef6a8dc172e86729a312754c590a6c1",
+      "actual": "5e250dbffef5c4cb37a013bd1328303ebef6a8dc172e86729a312754c590a6c1",
+      "ok": true
+    },
+    {
+      "path": "v2/js/disaster-art.js",
+      "hash": "47c01c388deadd5376bc1400c956b81746f0c77b4c43e0129888856cc2ce03d2",
+      "actual": "47c01c388deadd5376bc1400c956b81746f0c77b4c43e0129888856cc2ce03d2",
+      "ok": true
+    },
+    {
+      "path": "v2/js/debug-world.js",
+      "hash": "1cf8ed77d38bced086f92d6cc4e9e0f0fc971e4129d13d8369d27e0ded650846",
+      "actual": "1cf8ed77d38bced086f92d6cc4e9e0f0fc971e4129d13d8369d27e0ded650846",
+      "ok": true
+    },
+    {
+      "path": "v2/js/dotted-path.js",
+      "hash": "b88492b61f1045cce0c9f56765d2445ed544da3875fd43b33d4df608bd54b8d4",
+      "actual": "b88492b61f1045cce0c9f56765d2445ed544da3875fd43b33d4df608bd54b8d4",
+      "ok": true
+    },
+    {
+      "path": "v2/js/encounters.js",
+      "hash": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+      "actual": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+      "ok": true
+    },
+    {
+      "path": "v2/js/effects.js",
+      "hash": "c97b3626cb455dc63a1f4ce6014676e2930bd4b2c6798a929f6969a8d39f2e99",
+      "actual": "c97b3626cb455dc63a1f4ce6014676e2930bd4b2c6798a929f6969a8d39f2e99",
+      "ok": true
+    },
+    {
+      "path": "v2/js/game.js",
+      "hash": "468fe1e6c636d4da4e889108f3395caf4b6ce25e629c4907c46e5fd70f59b517",
+      "actual": "468fe1e6c636d4da4e889108f3395caf4b6ce25e629c4907c46e5fd70f59b517",
+      "ok": true
+    },
+    {
+      "path": "v2/js/geodesic.js",
+      "hash": "18b7a3682366e33241acf13286e03463949d0f6b18cb9724158199fb81d0ccf5",
+      "actual": "18b7a3682366e33241acf13286e03463949d0f6b18cb9724158199fb81d0ccf5",
+      "ok": true
+    },
+    {
+      "path": "v2/js/lobby.js",
+      "hash": "13defa36e775e00eff41955e49894ff4c965471a412a325ce3c14db8e522cb22",
+      "actual": "13defa36e775e00eff41955e49894ff4c965471a412a325ce3c14db8e522cb22",
+      "ok": true
+    },
+    {
+      "path": "v2/js/enemies.js",
+      "hash": "0a5a6b4202f4b1f420f43ca29e2d47f14af67b27acd792e610c9b2636a861844",
+      "actual": "0a5a6b4202f4b1f420f43ca29e2d47f14af67b27acd792e610c9b2636a861844",
+      "ok": true
+    },
+    {
+      "path": "v2/js/main.js",
+      "hash": "c94ae2b24bd9d09647e976f86585cfe6b6327d36d5bb24b0669dd18083f1e2fe",
+      "actual": "c94ae2b24bd9d09647e976f86585cfe6b6327d36d5bb24b0669dd18083f1e2fe",
+      "ok": true
+    },
+    {
+      "path": "v2/js/loot-field.js",
+      "hash": "bfacf3d49ee69b38a566745574ff64e96428a54f657b37a87cc3555595c01227",
+      "actual": "bfacf3d49ee69b38a566745574ff64e96428a54f657b37a87cc3555595c01227",
+      "ok": true
+    },
+    {
+      "path": "v2/js/disaster-preview.js",
+      "hash": "13a1b9579ad800002277b0218d4bb13ba8e3057778fb68f684bdac5e58782e3a",
+      "actual": "13a1b9579ad800002277b0218d4bb13ba8e3057778fb68f684bdac5e58782e3a",
+      "ok": true
+    },
+    {
+      "path": "v2/js/mobile-controls.js",
+      "hash": "2eae39e2ddc3af59d202af780f05969f9d1d642304b9d69bf859506499b955b9",
+      "actual": "2eae39e2ddc3af59d202af780f05969f9d1d642304b9d69bf859506499b955b9",
+      "ok": true
+    },
+    {
+      "path": "v2/js/modes/campaign-launch.js",
+      "hash": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+      "actual": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+      "ok": true
+    },
+    {
+      "path": "v2/js/modes/progress.js",
+      "hash": "d1e4c4b15484bb4f9a2ed342d68a19c3a243fdc99199794489b3b805fa6b7ef6",
+      "actual": "d1e4c4b15484bb4f9a2ed342d68a19c3a243fdc99199794489b3b805fa6b7ef6",
+      "ok": true
+    },
+    {
+      "path": "v2/js/modes/ninetynine.js",
+      "hash": "4c0eb4954df1905fa49244d1b36ab00c1c81417b584b678a38a35bce10e2868a",
+      "actual": "4c0eb4954df1905fa49244d1b36ab00c1c81417b584b678a38a35bce10e2868a",
+      "ok": true
+    },
+    {
+      "path": "v2/js/modes/campaign-store.js",
+      "hash": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+      "actual": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+      "ok": true
+    },
+    {
+      "path": "v2/js/mounts.js",
+      "hash": "cb9813981fafa439952c7968bb90b83374a6f9c3f9748aaa305a7e7813666e4a",
+      "actual": "cb9813981fafa439952c7968bb90b83374a6f9c3f9748aaa305a7e7813666e4a",
+      "ok": true
+    },
+    {
+      "path": "v2/js/nav.js",
+      "hash": "62e10df95f8c9a4fb88a8d3834c721023a522500e5ad0a75611924e8bb1c669e",
+      "actual": "62e10df95f8c9a4fb88a8d3834c721023a522500e5ad0a75611924e8bb1c669e",
+      "ok": true
+    },
+    {
+      "path": "v2/js/nest-atlas-view.js",
+      "hash": "a4f024fb22b7710aa3170a662306ce53baf8d4e718363287d63bfed4cf1c4350",
+      "actual": "a4f024fb22b7710aa3170a662306ce53baf8d4e718363287d63bfed4cf1c4350",
+      "ok": true
+    },
+    {
+      "path": "v2/js/nest-sites.js",
+      "hash": "a11fe90d407e12333a911a92f1f69c80830b0495817e54f60affe5095d935a05",
+      "actual": "a11fe90d407e12333a911a92f1f69c80830b0495817e54f60affe5095d935a05",
+      "ok": true
+    },
+    {
+      "path": "v2/js/planet-adornment.js",
+      "hash": "f694cfc38a5d2b2f3ba3efce463d49383c80332d499ba74ebd0a7c409a492520",
+      "actual": "f694cfc38a5d2b2f3ba3efce463d49383c80332d499ba74ebd0a7c409a492520",
+      "ok": true
+    },
+    {
+      "path": "v2/js/noise.js",
+      "hash": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "actual": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "ok": true
+    },
+    {
+      "path": "v2/js/possess.js",
+      "hash": "e70ce3ffb2d0b7f841cafd2e8dda29127fa351802341cdb1b3c1116e1770ec0d",
+      "actual": "e70ce3ffb2d0b7f841cafd2e8dda29127fa351802341cdb1b3c1116e1770ec0d",
+      "ok": true
+    },
+    {
+      "path": "v2/js/postfx.js",
+      "hash": "2163df8b9633467c99ccc539f44bf08be2a046c204b181c7e308fb956b85ae10",
+      "actual": "2163df8b9633467c99ccc539f44bf08be2a046c204b181c7e308fb956b85ae10",
+      "ok": true
+    },
+    {
+      "path": "v2/js/preparation.js",
+      "hash": "4923e49151362ee684afc11eec918457d299465d06bda9e03a75ef006e440e00",
+      "actual": "4923e49151362ee684afc11eec918457d299465d06bda9e03a75ef006e440e00",
+      "ok": true
+    },
+    {
+      "path": "v2/js/range-guide.js",
+      "hash": "fe8e9045832161b2a50a30ab0446d166f300a88ca2401872306daea82881e444",
+      "actual": "fe8e9045832161b2a50a30ab0446d166f300a88ca2401872306daea82881e444",
+      "ok": true
+    },
+    {
+      "path": "v2/js/rewards.js",
+      "hash": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+      "actual": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/abilities.js",
+      "hash": "e50971b43249ae3b3a642e54e3ed0f4109d0ce60731fa29f6ea43a3efced0648",
+      "actual": "e50971b43249ae3b3a642e54e3ed0f4109d0ce60731fa29f6ea43a3efced0648",
+      "ok": true
+    },
+    {
+      "path": "v2/js/rig.js",
+      "hash": "d6668243b143908d3038bdf768532fe6952fe7c1b239091a64078ecee8a16505",
+      "actual": "d6668243b143908d3038bdf768532fe6952fe7c1b239091a64078ecee8a16505",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/campaign.js",
+      "hash": "69389f8e28aa320043908aa0a9d7979c6af1e7ac8105fbc395ee83cd64a9b9d6",
+      "actual": "69389f8e28aa320043908aa0a9d7979c6af1e7ac8105fbc395ee83cd64a9b9d6",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/crystals.js",
+      "hash": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+      "actual": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/draft.js",
+      "hash": "4e87a1e9e20dcf994338f49979e2aaf54b717491043b4b6b640248f5d96145fd",
+      "actual": "4e87a1e9e20dcf994338f49979e2aaf54b717491043b4b6b640248f5d96145fd",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/environment-catalogue.js",
+      "hash": "2f06f770a25f0fc43bd2e9310a9d18b7e71cae6f695d228b087ac39730379996",
+      "actual": "2f06f770a25f0fc43bd2e9310a9d18b7e71cae6f695d228b087ac39730379996",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/expedition.js",
+      "hash": "5de02cae1ae34aad3951b7cd84dbf7d04edaab23590863c6060ebd0a9970177a",
+      "actual": "5de02cae1ae34aad3951b7cd84dbf7d04edaab23590863c6060ebd0a9970177a",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/earth-coast.js",
+      "hash": "ac7fcf649733ca9a2cff0aec579823c2d63ec85ecfa21e78eda7c1075a33d6fe",
+      "actual": "ac7fcf649733ca9a2cff0aec579823c2d63ec85ecfa21e78eda7c1075a33d6fe",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/frontier.js",
+      "hash": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "actual": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/planets.js",
+      "hash": "ab559dfda693c052262f2d61a8902a40e0f76fc68ea4515da293c843cadb89e7",
+      "actual": "ab559dfda693c052262f2d61a8902a40e0f76fc68ea4515da293c843cadb89e7",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/modifiers.js",
+      "hash": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "actual": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/planet-environments.js",
+      "hash": "299d1c3276dc298aa0c37a38ac231ea3c8927f971182334c1489a283e97047d7",
+      "actual": "299d1c3276dc298aa0c37a38ac231ea3c8927f971182334c1489a283e97047d7",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/powers.js",
+      "hash": "8737b19b84326641076eb2908336ecb4e733dda10dd9b44e40201e038808d089",
+      "actual": "8737b19b84326641076eb2908336ecb4e733dda10dd9b44e40201e038808d089",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/rng.js",
+      "hash": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "actual": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/run.js",
+      "hash": "657850c8cd433b9dfda9e213857a54cb865b2b6ace21f67e04a04dca0d9c0929",
+      "actual": "657850c8cd433b9dfda9e213857a54cb865b2b6ace21f67e04a04dca0d9c0929",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/schedule.js",
+      "hash": "4ed480e3fc015bb3728184bc40eecaab36a505c7e94a6a0b2245322ee9df6cdc",
+      "actual": "4ed480e3fc015bb3728184bc40eecaab36a505c7e94a6a0b2245322ee9df6cdc",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/solar-worlds.js",
+      "hash": "dab622e381c00525cbd4b5a42152b51d44704be3d238ed1c2743b6d1e6591d9b",
+      "actual": "dab622e381c00525cbd4b5a42152b51d44704be3d238ed1c2743b6d1e6591d9b",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/state.js",
+      "hash": "5bd0b2c35bd76c8f3f86af098b15ad3ba4443550795690f8453607e34893aa72",
+      "actual": "5bd0b2c35bd76c8f3f86af098b15ad3ba4443550795690f8453607e34893aa72",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/weapons.js",
+      "hash": "429f3f5925da95852e8f37ef7fcb028fb2484d794101e3f92a13ef88645c6929",
+      "actual": "429f3f5925da95852e8f37ef7fcb028fb2484d794101e3f92a13ef88645c6929",
+      "ok": true
+    },
+    {
+      "path": "v2/js/run/world-catalogue.js",
+      "hash": "ea27d44f66474b93bdb245fb0df38b43ef1236679f02aabe2cfab99e188024b0",
+      "actual": "ea27d44f66474b93bdb245fb0df38b43ef1236679f02aabe2cfab99e188024b0",
+      "ok": true
+    },
+    {
+      "path": "v2/js/soldier.js",
+      "hash": "1395861c13fd50d47ddb3fa276eb5352e91a2cdeccded396f3c36777da1a0525",
+      "actual": "1395861c13fd50d47ddb3fa276eb5352e91a2cdeccded396f3c36777da1a0525",
+      "ok": true
+    },
+    {
+      "path": "v2/js/storage.js",
+      "hash": "3002fdd1cc70379116894b47f9afb521113b5083bc1776a8c4ab084aeb90e44f",
+      "actual": "3002fdd1cc70379116894b47f9afb521113b5083bc1776a8c4ab084aeb90e44f",
+      "ok": true
+    },
+    {
+      "path": "v2/js/storm-art.js",
+      "hash": "285e00dc66039d02dd367aa29d07ee58e62779b516082cc59943277f8aad76c7",
+      "actual": "285e00dc66039d02dd367aa29d07ee58e62779b516082cc59943277f8aad76c7",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/acceptance.js",
+      "hash": "f9d27a1cb5f64c83c28973945726f261a0f73f01fce1eac373cead61febce65c",
+      "actual": "f9d27a1cb5f64c83c28973945726f261a0f73f01fce1eac373cead61febce65c",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/active-features.js",
+      "hash": "d9fae641b24392265fc2263bd58efc995ba949b82c5e6b84d5a3718bab0b0132",
+      "actual": "d9fae641b24392265fc2263bd58efc995ba949b82c5e6b84d5a3718bab0b0132",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/additional-formations.js",
+      "hash": "2c9457504f307004f842b9c1526745d52a69364248546ae4adc696b439ca9fe9",
+      "actual": "2c9457504f307004f842b9c1526745d52a69364248546ae4adc696b439ca9fe9",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/atlas.js",
+      "hash": "858bffa19baca19d28d663df718148fb48682807e1ec9d3d0cf46f8cc067de22",
+      "actual": "858bffa19baca19d28d663df718148fb48682807e1ec9d3d0cf46f8cc067de22",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/coast-clearance.js",
+      "hash": "85f3e91bba97c55eb71888af0574a69e7349357c8abd44ce844c6b4700721321",
+      "actual": "85f3e91bba97c55eb71888af0574a69e7349357c8abd44ce844c6b4700721321",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/ecology.js",
+      "hash": "cede19c3e5a076c88866cabe1ea340941a48227cb29772b9da6ecf54ae887427",
+      "actual": "cede19c3e5a076c88866cabe1ea340941a48227cb29772b9da6ecf54ae887427",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/exotic-formations.js",
+      "hash": "d2535d42f6a3063cb803363268ce366dd056f7793c79e01b16fda1e875b3c449",
+      "actual": "d2535d42f6a3063cb803363268ce366dd056f7793c79e01b16fda1e875b3c449",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/features.js",
+      "hash": "66a7bfa0acb080368ea43bd16d2c4969518ca7723aa854a45eb5dea1f2facb20",
+      "actual": "66a7bfa0acb080368ea43bd16d2c4969518ca7723aa854a45eb5dea1f2facb20",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/formations.js",
+      "hash": "753b29758ca4a16581cba16423e73e823e0ccc85c6a4c59275f39881161da82b",
+      "actual": "753b29758ca4a16581cba16423e73e823e0ccc85c6a4c59275f39881161da82b",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/geysers.js",
+      "hash": "fa2c4d8dbff7993d6697f60467adab4430080c1d23414a2130569ba158d2e890",
+      "actual": "fa2c4d8dbff7993d6697f60467adab4430080c1d23414a2130569ba158d2e890",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/rifts.js",
+      "hash": "597390c08a9216c36dc47d3e69583f5b8d6b45e13802ef84fb5303585fec1556",
+      "actual": "597390c08a9216c36dc47d3e69583f5b8d6b45e13802ef84fb5303585fec1556",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/samples.js",
+      "hash": "e3e96cf821a625129674eaeb5af1df172c10c471e445001fedc28408ab9d9d67",
+      "actual": "e3e96cf821a625129674eaeb5af1df172c10c471e445001fedc28408ab9d9d67",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/recipes.js",
+      "hash": "e822855ca2a40432bd4091b1555320ac332c2719dc856b46f12088e4175cf39c",
+      "actual": "e822855ca2a40432bd4091b1555320ac332c2719dc856b46f12088e4175cf39c",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/scatter.js",
+      "hash": "8aa383af30482baa440fc4c643d7ad8bcdc0875b79dae77591fdda1b9b0aba6c",
+      "actual": "8aa383af30482baa440fc4c643d7ad8bcdc0875b79dae77591fdda1b9b0aba6c",
+      "ok": true
+    },
+    {
+      "path": "v2/js/threat-guides.js",
+      "hash": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+      "actual": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+      "ok": true
+    },
+    {
+      "path": "v2/js/touch-input.js",
+      "hash": "4bffbc2ad12714f2b740533cebb59b873df9685a20f0ec1ac9f1fcebec8875d4",
+      "actual": "4bffbc2ad12714f2b740533cebb59b873df9685a20f0ec1ac9f1fcebec8875d4",
+      "ok": true
+    },
+    {
+      "path": "v2/js/towers.js",
+      "hash": "c23456b97d4b0cf197134f419d3b3fdda76cbf0ef8f8443c8c5b6971f0248a74",
+      "actual": "c23456b97d4b0cf197134f419d3b3fdda76cbf0ef8f8443c8c5b6971f0248a74",
+      "ok": true
+    },
+    {
+      "path": "v2/js/traversal.js",
+      "hash": "3683bb413958e90c9d52dd9fb1dce87c60b874b2db7d7b7ad484d5b573aa9c8b",
+      "actual": "3683bb413958e90c9d52dd9fb1dce87c60b874b2db7d7b7ad484d5b573aa9c8b",
+      "ok": true
+    },
+    {
+      "path": "v2/js/ui-campaign.js",
+      "hash": "0489bdc0e973ab08ab1c9fa4e2244e0a16d5b3cfd0d369b35fd0aa9f4f14738a",
+      "actual": "0489bdc0e973ab08ab1c9fa4e2244e0a16d5b3cfd0d369b35fd0aa9f4f14738a",
+      "ok": true
+    },
+    {
+      "path": "v2/js/ui-expedition.js",
+      "hash": "c0725d54cc8db9040c8fde690982c48e0f567cbfa81193e16d4109cf92efd366",
+      "actual": "c0725d54cc8db9040c8fde690982c48e0f567cbfa81193e16d4109cf92efd366",
+      "ok": true
+    },
+    {
+      "path": "v2/js/ui-icons.js",
+      "hash": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "actual": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "ok": true
+    },
+    {
+      "path": "v2/js/ui-weapons.js",
+      "hash": "2010291e0456415dd33c8136a14567f1fb528a72bfc09c6e76f3673246c6c47a",
+      "actual": "2010291e0456415dd33c8136a14567f1fb528a72bfc09c6e76f3673246c6c47a",
+      "ok": true
+    },
+    {
+      "path": "v2/js/terrain/landmarks.js",
+      "hash": "cf3445372cb084d6cb84c5f697c93b64f8ceedb1d16689eee22be9808f567ad0",
+      "actual": "cf3445372cb084d6cb84c5f697c93b64f8ceedb1d16689eee22be9808f567ad0",
+      "ok": true
+    },
+    {
+      "path": "v2/js/ui-worldgen.js",
+      "hash": "fa69819052a64b142ce356bab4a6dd013d9109b9c42f6da2240ec2c64b44dd7e",
+      "actual": "fa69819052a64b142ce356bab4a6dd013d9109b9c42f6da2240ec2c64b44dd7e",
+      "ok": true
+    },
+    {
+      "path": "v2/js/ui.js",
+      "hash": "93bf93711b084073df12ab172750b57b38226f2a4a998b03d24acaee2562d547",
+      "actual": "93bf93711b084073df12ab172750b57b38226f2a4a998b03d24acaee2562d547",
+      "ok": true
+    },
+    {
+      "path": "v2/js/unit-routes.js",
+      "hash": "77aabde1b59a437983fd04903e2cea8c95b453b0984c63339625dc9183900da6",
+      "actual": "77aabde1b59a437983fd04903e2cea8c95b453b0984c63339625dc9183900da6",
+      "ok": true
+    },
+    {
+      "path": "v2/js/viewmodel.js",
+      "hash": "5fe8d54c85f273468336138c4a50a423005ba8ef721712033dafaedc445e1bc1",
+      "actual": "5fe8d54c85f273468336138c4a50a423005ba8ef721712033dafaedc445e1bc1",
+      "ok": true
+    },
+    {
+      "path": "v2/js/waves.js",
+      "hash": "dfe8c5cfb89bff6f40e9d543f93deaa13afd6a344d4cb85112c325c297d910b8",
+      "actual": "dfe8c5cfb89bff6f40e9d543f93deaa13afd6a344d4cb85112c325c297d910b8",
+      "ok": true
+    },
+    {
+      "path": "v2/js/weapon-model.js",
+      "hash": "8e2c3f9bc82eaf1d280df87dae44b7c5f946275008a804ee923a1c51ae4b9fd5",
+      "actual": "8e2c3f9bc82eaf1d280df87dae44b7c5f946275008a804ee923a1c51ae4b9fd5",
+      "ok": true
+    },
+    {
+      "path": "v2/js/weather.js",
+      "hash": "d82fbd36a07ebd656b6d7cd41766708a2cb295a0920223635d65e05c3512580c",
+      "actual": "d82fbd36a07ebd656b6d7cd41766708a2cb295a0920223635d65e05c3512580c",
+      "ok": true
+    },
+    {
+      "path": "v2/js/world.js",
+      "hash": "396d802801b0fb7bd0ff5a35f8481a8f2c9502ff5f08c258f14bd8e7f7eefd0e",
+      "actual": "396d802801b0fb7bd0ff5a35f8481a8f2c9502ff5f08c258f14bd8e7f7eefd0e",
+      "ok": true
+    },
+    {
+      "path": "v2/js/world-context.js",
+      "hash": "be77c267ae55464e83b5139038aaf70846902f53d1a1e7bbb3662b3e6078e36e",
+      "actual": "be77c267ae55464e83b5139038aaf70846902f53d1a1e7bbb3662b3e6078e36e",
+      "ok": true
+    },
+    {
+      "path": "v2/js/worldgen.js",
+      "hash": "ee013008823cd90aaf8f2d8f88f5ecb7da8a4110ceafd688ac0d3305b97b632d",
+      "actual": "ee013008823cd90aaf8f2d8f88f5ecb7da8a4110ceafd688ac0d3305b97b632d",
+      "ok": true
+    },
+    {
+      "path": "v2/lib/THREE-LICENSE.txt",
+      "hash": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "actual": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "ok": true
+    },
+    {
+      "path": "v2/lobby.html",
+      "hash": "89a7328435e424e9b3f5a2b40c5fb1498cb3329e46a36abf6ead0074f53d1d58",
+      "actual": "89a7328435e424e9b3f5a2b40c5fb1498cb3329e46a36abf6ead0074f53d1d58",
+      "ok": true
+    },
+    {
+      "path": "v2/lib/three.module.min.js",
+      "hash": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "actual": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "ok": true
+    },
+    {
+      "path": "v2/lib/three.core.min.js",
+      "hash": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "actual": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "ok": true
+    },
+    {
+      "path": "preview-source:css/debug.css",
+      "actual": "c491f0ef0b89b2ccf22875cc1b74bf21040c5ac9959b97ad3af3a5f8731b3075",
+      "hash": "c491f0ef0b89b2ccf22875cc1b74bf21040c5ac9959b97ad3af3a5f8731b3075",
+      "ok": true
+    },
+    {
+      "path": "preview-source:css/lobby.css",
+      "actual": "2c0de3276966841e5277f8a58ac14b7117a794e2bb613bbc2bf0acdd2e907031",
+      "hash": "2c0de3276966841e5277f8a58ac14b7117a794e2bb613bbc2bf0acdd2e907031",
+      "ok": true
+    },
+    {
+      "path": "preview-source:css/mobile.css",
+      "actual": "c037495e5b45323cb9ec69bd9978b86cdf6fb3556c0b25b75c154c633b4bcecb",
+      "hash": "c037495e5b45323cb9ec69bd9978b86cdf6fb3556c0b25b75c154c633b4bcecb",
+      "ok": true
+    },
+    {
+      "path": "preview-source:css/style.css",
+      "actual": "5c0536e33ba61e7788a7f22b76af9c57d33280b30bb195b7af2a656394f1aa34",
+      "hash": "5c0536e33ba61e7788a7f22b76af9c57d33280b30bb195b7af2a656394f1aa34",
+      "ok": true
+    },
+    {
+      "path": "preview-source:debug.html",
+      "actual": "13463b58b096993677fa6c3424059a83991ac20485b33114e6c4fbda3d30411a",
+      "hash": "13463b58b096993677fa6c3424059a83991ac20485b33114e6c4fbda3d30411a",
+      "ok": true
+    },
+    {
+      "path": "preview-source:index.html",
+      "actual": "080e3084f12d5875df8914cbfa6e53c9ef9b0e0d70f32e084281a3646d72c8b0",
+      "hash": "080e3084f12d5875df8914cbfa6e53c9ef9b0e0d70f32e084281a3646d72c8b0",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/abilities.js",
+      "actual": "3dbc59c203813944e771ed0e9baf4a53e551c80c548f7a0b0d3e5d457b139dfd",
+      "hash": "3dbc59c203813944e771ed0e9baf4a53e551c80c548f7a0b0d3e5d457b139dfd",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/allies.js",
+      "actual": "8d754f65f64ba6996d12daab1db39e356fd641a89c1cedfe04b77d6655525ab5",
+      "hash": "8d754f65f64ba6996d12daab1db39e356fd641a89c1cedfe04b77d6655525ab5",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/attacks.js",
+      "actual": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+      "hash": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/audio.js",
+      "actual": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "hash": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/biome-dressing.js",
+      "actual": "c1238e9d466a7216f28549f6137b685f26e4b2c76bcfe90927384035485e7de1",
+      "hash": "c1238e9d466a7216f28549f6137b685f26e4b2c76bcfe90927384035485e7de1",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/biome-visuals.js",
+      "actual": "71b5e2663e13cd29d7cc730e98ca256261fc4dbaa9a8294aa6d2d09e026ace33",
+      "hash": "71b5e2663e13cd29d7cc730e98ca256261fc4dbaa9a8294aa6d2d09e026ace33",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/camera.js",
+      "actual": "b78bf3b43a8c859fa5e2ab8dc64faae6a1601621a901217e6285a4d7e2ee33eb",
+      "hash": "b78bf3b43a8c859fa5e2ab8dc64faae6a1601621a901217e6285a4d7e2ee33eb",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/combatfx.js",
+      "actual": "8f77a59b15ddd023bf0a929fc30a7dfa49a6e5768e1eaa2dd5185f8afbe91d32",
+      "hash": "8f77a59b15ddd023bf0a929fc30a7dfa49a6e5768e1eaa2dd5185f8afbe91d32",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/config.js",
+      "actual": "15e491ba197549879559dac912ff0938a26fecaed971d9a8f0dd0e33aa774fc1",
+      "hash": "15e491ba197549879559dac912ff0938a26fecaed971d9a8f0dd0e33aa774fc1",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/debug-animation.js",
+      "actual": "35272ce2a192f240d6946e399075c180f13072438be19b4c2477a50756324108",
+      "hash": "35272ce2a192f240d6946e399075c180f13072438be19b4c2477a50756324108",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/debug-planets.js",
+      "actual": "5e250dbffef5c4cb37a013bd1328303ebef6a8dc172e86729a312754c590a6c1",
+      "hash": "5e250dbffef5c4cb37a013bd1328303ebef6a8dc172e86729a312754c590a6c1",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/debug-world.js",
+      "actual": "1cf8ed77d38bced086f92d6cc4e9e0f0fc971e4129d13d8369d27e0ded650846",
+      "hash": "1cf8ed77d38bced086f92d6cc4e9e0f0fc971e4129d13d8369d27e0ded650846",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/disaster-art.js",
+      "actual": "47c01c388deadd5376bc1400c956b81746f0c77b4c43e0129888856cc2ce03d2",
+      "hash": "47c01c388deadd5376bc1400c956b81746f0c77b4c43e0129888856cc2ce03d2",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/disaster-preview.js",
+      "actual": "13a1b9579ad800002277b0218d4bb13ba8e3057778fb68f684bdac5e58782e3a",
+      "hash": "13a1b9579ad800002277b0218d4bb13ba8e3057778fb68f684bdac5e58782e3a",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/dotted-path.js",
+      "actual": "b88492b61f1045cce0c9f56765d2445ed544da3875fd43b33d4df608bd54b8d4",
+      "hash": "b88492b61f1045cce0c9f56765d2445ed544da3875fd43b33d4df608bd54b8d4",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/effects.js",
+      "actual": "c97b3626cb455dc63a1f4ce6014676e2930bd4b2c6798a929f6969a8d39f2e99",
+      "hash": "c97b3626cb455dc63a1f4ce6014676e2930bd4b2c6798a929f6969a8d39f2e99",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/encounters.js",
+      "actual": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+      "hash": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/enemies.js",
+      "actual": "0a5a6b4202f4b1f420f43ca29e2d47f14af67b27acd792e610c9b2636a861844",
+      "hash": "0a5a6b4202f4b1f420f43ca29e2d47f14af67b27acd792e610c9b2636a861844",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/game.js",
+      "actual": "468fe1e6c636d4da4e889108f3395caf4b6ce25e629c4907c46e5fd70f59b517",
+      "hash": "468fe1e6c636d4da4e889108f3395caf4b6ce25e629c4907c46e5fd70f59b517",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/geodesic.js",
+      "actual": "18b7a3682366e33241acf13286e03463949d0f6b18cb9724158199fb81d0ccf5",
+      "hash": "18b7a3682366e33241acf13286e03463949d0f6b18cb9724158199fb81d0ccf5",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/lobby.js",
+      "actual": "13defa36e775e00eff41955e49894ff4c965471a412a325ce3c14db8e522cb22",
+      "hash": "13defa36e775e00eff41955e49894ff4c965471a412a325ce3c14db8e522cb22",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/loot-field.js",
+      "actual": "bfacf3d49ee69b38a566745574ff64e96428a54f657b37a87cc3555595c01227",
+      "hash": "bfacf3d49ee69b38a566745574ff64e96428a54f657b37a87cc3555595c01227",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/main.js",
+      "actual": "c94ae2b24bd9d09647e976f86585cfe6b6327d36d5bb24b0669dd18083f1e2fe",
+      "hash": "c94ae2b24bd9d09647e976f86585cfe6b6327d36d5bb24b0669dd18083f1e2fe",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/mobile-controls.js",
+      "actual": "2eae39e2ddc3af59d202af780f05969f9d1d642304b9d69bf859506499b955b9",
+      "hash": "2eae39e2ddc3af59d202af780f05969f9d1d642304b9d69bf859506499b955b9",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/modes/campaign-launch.js",
+      "actual": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+      "hash": "f171366770f77ede02920ec967ed6072a7ef8f06091ac07df730441259ac99cc",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/modes/campaign-store.js",
+      "actual": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+      "hash": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/modes/ninetynine.js",
+      "actual": "4c0eb4954df1905fa49244d1b36ab00c1c81417b584b678a38a35bce10e2868a",
+      "hash": "4c0eb4954df1905fa49244d1b36ab00c1c81417b584b678a38a35bce10e2868a",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/modes/progress.js",
+      "actual": "d1e4c4b15484bb4f9a2ed342d68a19c3a243fdc99199794489b3b805fa6b7ef6",
+      "hash": "d1e4c4b15484bb4f9a2ed342d68a19c3a243fdc99199794489b3b805fa6b7ef6",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/mounts.js",
+      "actual": "cb9813981fafa439952c7968bb90b83374a6f9c3f9748aaa305a7e7813666e4a",
+      "hash": "cb9813981fafa439952c7968bb90b83374a6f9c3f9748aaa305a7e7813666e4a",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/nav.js",
+      "actual": "62e10df95f8c9a4fb88a8d3834c721023a522500e5ad0a75611924e8bb1c669e",
+      "hash": "62e10df95f8c9a4fb88a8d3834c721023a522500e5ad0a75611924e8bb1c669e",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/nest-atlas-view.js",
+      "actual": "a4f024fb22b7710aa3170a662306ce53baf8d4e718363287d63bfed4cf1c4350",
+      "hash": "a4f024fb22b7710aa3170a662306ce53baf8d4e718363287d63bfed4cf1c4350",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/nest-sites.js",
+      "actual": "a11fe90d407e12333a911a92f1f69c80830b0495817e54f60affe5095d935a05",
+      "hash": "a11fe90d407e12333a911a92f1f69c80830b0495817e54f60affe5095d935a05",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/noise.js",
+      "actual": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "hash": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/planet-adornment.js",
+      "actual": "f694cfc38a5d2b2f3ba3efce463d49383c80332d499ba74ebd0a7c409a492520",
+      "hash": "f694cfc38a5d2b2f3ba3efce463d49383c80332d499ba74ebd0a7c409a492520",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/possess.js",
+      "actual": "e70ce3ffb2d0b7f841cafd2e8dda29127fa351802341cdb1b3c1116e1770ec0d",
+      "hash": "e70ce3ffb2d0b7f841cafd2e8dda29127fa351802341cdb1b3c1116e1770ec0d",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/postfx.js",
+      "actual": "2163df8b9633467c99ccc539f44bf08be2a046c204b181c7e308fb956b85ae10",
+      "hash": "2163df8b9633467c99ccc539f44bf08be2a046c204b181c7e308fb956b85ae10",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/preparation.js",
+      "actual": "4923e49151362ee684afc11eec918457d299465d06bda9e03a75ef006e440e00",
+      "hash": "4923e49151362ee684afc11eec918457d299465d06bda9e03a75ef006e440e00",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/range-guide.js",
+      "actual": "fe8e9045832161b2a50a30ab0446d166f300a88ca2401872306daea82881e444",
+      "hash": "fe8e9045832161b2a50a30ab0446d166f300a88ca2401872306daea82881e444",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/rewards.js",
+      "actual": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+      "hash": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/rig.js",
+      "actual": "d6668243b143908d3038bdf768532fe6952fe7c1b239091a64078ecee8a16505",
+      "hash": "d6668243b143908d3038bdf768532fe6952fe7c1b239091a64078ecee8a16505",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/abilities.js",
+      "actual": "e50971b43249ae3b3a642e54e3ed0f4109d0ce60731fa29f6ea43a3efced0648",
+      "hash": "e50971b43249ae3b3a642e54e3ed0f4109d0ce60731fa29f6ea43a3efced0648",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/campaign.js",
+      "actual": "69389f8e28aa320043908aa0a9d7979c6af1e7ac8105fbc395ee83cd64a9b9d6",
+      "hash": "69389f8e28aa320043908aa0a9d7979c6af1e7ac8105fbc395ee83cd64a9b9d6",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/crystals.js",
+      "actual": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+      "hash": "9317af8b4eb50838b85f15b01fadd88600f629ac5b10c25b704aa4f25bc48794",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/draft.js",
+      "actual": "4e87a1e9e20dcf994338f49979e2aaf54b717491043b4b6b640248f5d96145fd",
+      "hash": "4e87a1e9e20dcf994338f49979e2aaf54b717491043b4b6b640248f5d96145fd",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/earth-coast.js",
+      "actual": "ac7fcf649733ca9a2cff0aec579823c2d63ec85ecfa21e78eda7c1075a33d6fe",
+      "hash": "ac7fcf649733ca9a2cff0aec579823c2d63ec85ecfa21e78eda7c1075a33d6fe",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/environment-catalogue.js",
+      "actual": "2f06f770a25f0fc43bd2e9310a9d18b7e71cae6f695d228b087ac39730379996",
+      "hash": "2f06f770a25f0fc43bd2e9310a9d18b7e71cae6f695d228b087ac39730379996",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/expedition.js",
+      "actual": "5de02cae1ae34aad3951b7cd84dbf7d04edaab23590863c6060ebd0a9970177a",
+      "hash": "5de02cae1ae34aad3951b7cd84dbf7d04edaab23590863c6060ebd0a9970177a",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/frontier.js",
+      "actual": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "hash": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/modifiers.js",
+      "actual": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "hash": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/planet-environments.js",
+      "actual": "299d1c3276dc298aa0c37a38ac231ea3c8927f971182334c1489a283e97047d7",
+      "hash": "299d1c3276dc298aa0c37a38ac231ea3c8927f971182334c1489a283e97047d7",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/planets.js",
+      "actual": "ab559dfda693c052262f2d61a8902a40e0f76fc68ea4515da293c843cadb89e7",
+      "hash": "ab559dfda693c052262f2d61a8902a40e0f76fc68ea4515da293c843cadb89e7",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/powers.js",
+      "actual": "8737b19b84326641076eb2908336ecb4e733dda10dd9b44e40201e038808d089",
+      "hash": "8737b19b84326641076eb2908336ecb4e733dda10dd9b44e40201e038808d089",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/rng.js",
+      "actual": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "hash": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/run.js",
+      "actual": "657850c8cd433b9dfda9e213857a54cb865b2b6ace21f67e04a04dca0d9c0929",
+      "hash": "657850c8cd433b9dfda9e213857a54cb865b2b6ace21f67e04a04dca0d9c0929",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/schedule.js",
+      "actual": "4ed480e3fc015bb3728184bc40eecaab36a505c7e94a6a0b2245322ee9df6cdc",
+      "hash": "4ed480e3fc015bb3728184bc40eecaab36a505c7e94a6a0b2245322ee9df6cdc",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/solar-worlds.js",
+      "actual": "dab622e381c00525cbd4b5a42152b51d44704be3d238ed1c2743b6d1e6591d9b",
+      "hash": "dab622e381c00525cbd4b5a42152b51d44704be3d238ed1c2743b6d1e6591d9b",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/state.js",
+      "actual": "5bd0b2c35bd76c8f3f86af098b15ad3ba4443550795690f8453607e34893aa72",
+      "hash": "5bd0b2c35bd76c8f3f86af098b15ad3ba4443550795690f8453607e34893aa72",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/weapons.js",
+      "actual": "429f3f5925da95852e8f37ef7fcb028fb2484d794101e3f92a13ef88645c6929",
+      "hash": "429f3f5925da95852e8f37ef7fcb028fb2484d794101e3f92a13ef88645c6929",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/run/world-catalogue.js",
+      "actual": "ea27d44f66474b93bdb245fb0df38b43ef1236679f02aabe2cfab99e188024b0",
+      "hash": "ea27d44f66474b93bdb245fb0df38b43ef1236679f02aabe2cfab99e188024b0",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/soldier.js",
+      "actual": "1395861c13fd50d47ddb3fa276eb5352e91a2cdeccded396f3c36777da1a0525",
+      "hash": "1395861c13fd50d47ddb3fa276eb5352e91a2cdeccded396f3c36777da1a0525",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/storage.js",
+      "actual": "3002fdd1cc70379116894b47f9afb521113b5083bc1776a8c4ab084aeb90e44f",
+      "hash": "3002fdd1cc70379116894b47f9afb521113b5083bc1776a8c4ab084aeb90e44f",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/storm-art.js",
+      "actual": "285e00dc66039d02dd367aa29d07ee58e62779b516082cc59943277f8aad76c7",
+      "hash": "285e00dc66039d02dd367aa29d07ee58e62779b516082cc59943277f8aad76c7",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/acceptance.js",
+      "actual": "f9d27a1cb5f64c83c28973945726f261a0f73f01fce1eac373cead61febce65c",
+      "hash": "f9d27a1cb5f64c83c28973945726f261a0f73f01fce1eac373cead61febce65c",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/active-features.js",
+      "actual": "d9fae641b24392265fc2263bd58efc995ba949b82c5e6b84d5a3718bab0b0132",
+      "hash": "d9fae641b24392265fc2263bd58efc995ba949b82c5e6b84d5a3718bab0b0132",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/additional-formations.js",
+      "actual": "2c9457504f307004f842b9c1526745d52a69364248546ae4adc696b439ca9fe9",
+      "hash": "2c9457504f307004f842b9c1526745d52a69364248546ae4adc696b439ca9fe9",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/atlas.js",
+      "actual": "858bffa19baca19d28d663df718148fb48682807e1ec9d3d0cf46f8cc067de22",
+      "hash": "858bffa19baca19d28d663df718148fb48682807e1ec9d3d0cf46f8cc067de22",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/coast-clearance.js",
+      "actual": "85f3e91bba97c55eb71888af0574a69e7349357c8abd44ce844c6b4700721321",
+      "hash": "85f3e91bba97c55eb71888af0574a69e7349357c8abd44ce844c6b4700721321",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/ecology.js",
+      "actual": "cede19c3e5a076c88866cabe1ea340941a48227cb29772b9da6ecf54ae887427",
+      "hash": "cede19c3e5a076c88866cabe1ea340941a48227cb29772b9da6ecf54ae887427",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/exotic-formations.js",
+      "actual": "d2535d42f6a3063cb803363268ce366dd056f7793c79e01b16fda1e875b3c449",
+      "hash": "d2535d42f6a3063cb803363268ce366dd056f7793c79e01b16fda1e875b3c449",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/features.js",
+      "actual": "66a7bfa0acb080368ea43bd16d2c4969518ca7723aa854a45eb5dea1f2facb20",
+      "hash": "66a7bfa0acb080368ea43bd16d2c4969518ca7723aa854a45eb5dea1f2facb20",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/formations.js",
+      "actual": "753b29758ca4a16581cba16423e73e823e0ccc85c6a4c59275f39881161da82b",
+      "hash": "753b29758ca4a16581cba16423e73e823e0ccc85c6a4c59275f39881161da82b",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/geysers.js",
+      "actual": "fa2c4d8dbff7993d6697f60467adab4430080c1d23414a2130569ba158d2e890",
+      "hash": "fa2c4d8dbff7993d6697f60467adab4430080c1d23414a2130569ba158d2e890",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/landmarks.js",
+      "actual": "cf3445372cb084d6cb84c5f697c93b64f8ceedb1d16689eee22be9808f567ad0",
+      "hash": "cf3445372cb084d6cb84c5f697c93b64f8ceedb1d16689eee22be9808f567ad0",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/recipes.js",
+      "actual": "e822855ca2a40432bd4091b1555320ac332c2719dc856b46f12088e4175cf39c",
+      "hash": "e822855ca2a40432bd4091b1555320ac332c2719dc856b46f12088e4175cf39c",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/rifts.js",
+      "actual": "597390c08a9216c36dc47d3e69583f5b8d6b45e13802ef84fb5303585fec1556",
+      "hash": "597390c08a9216c36dc47d3e69583f5b8d6b45e13802ef84fb5303585fec1556",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/samples.js",
+      "actual": "e3e96cf821a625129674eaeb5af1df172c10c471e445001fedc28408ab9d9d67",
+      "hash": "e3e96cf821a625129674eaeb5af1df172c10c471e445001fedc28408ab9d9d67",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/terrain/scatter.js",
+      "actual": "8aa383af30482baa440fc4c643d7ad8bcdc0875b79dae77591fdda1b9b0aba6c",
+      "hash": "8aa383af30482baa440fc4c643d7ad8bcdc0875b79dae77591fdda1b9b0aba6c",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/threat-guides.js",
+      "actual": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+      "hash": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/touch-input.js",
+      "actual": "4bffbc2ad12714f2b740533cebb59b873df9685a20f0ec1ac9f1fcebec8875d4",
+      "hash": "4bffbc2ad12714f2b740533cebb59b873df9685a20f0ec1ac9f1fcebec8875d4",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/towers.js",
+      "actual": "c23456b97d4b0cf197134f419d3b3fdda76cbf0ef8f8443c8c5b6971f0248a74",
+      "hash": "c23456b97d4b0cf197134f419d3b3fdda76cbf0ef8f8443c8c5b6971f0248a74",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/traversal.js",
+      "actual": "3683bb413958e90c9d52dd9fb1dce87c60b874b2db7d7b7ad484d5b573aa9c8b",
+      "hash": "3683bb413958e90c9d52dd9fb1dce87c60b874b2db7d7b7ad484d5b573aa9c8b",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/ui-campaign.js",
+      "actual": "0489bdc0e973ab08ab1c9fa4e2244e0a16d5b3cfd0d369b35fd0aa9f4f14738a",
+      "hash": "0489bdc0e973ab08ab1c9fa4e2244e0a16d5b3cfd0d369b35fd0aa9f4f14738a",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/ui-expedition.js",
+      "actual": "c0725d54cc8db9040c8fde690982c48e0f567cbfa81193e16d4109cf92efd366",
+      "hash": "c0725d54cc8db9040c8fde690982c48e0f567cbfa81193e16d4109cf92efd366",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/ui-icons.js",
+      "actual": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "hash": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/ui-weapons.js",
+      "actual": "2010291e0456415dd33c8136a14567f1fb528a72bfc09c6e76f3673246c6c47a",
+      "hash": "2010291e0456415dd33c8136a14567f1fb528a72bfc09c6e76f3673246c6c47a",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/ui-worldgen.js",
+      "actual": "fa69819052a64b142ce356bab4a6dd013d9109b9c42f6da2240ec2c64b44dd7e",
+      "hash": "fa69819052a64b142ce356bab4a6dd013d9109b9c42f6da2240ec2c64b44dd7e",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/ui.js",
+      "actual": "93bf93711b084073df12ab172750b57b38226f2a4a998b03d24acaee2562d547",
+      "hash": "93bf93711b084073df12ab172750b57b38226f2a4a998b03d24acaee2562d547",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/unit-routes.js",
+      "actual": "77aabde1b59a437983fd04903e2cea8c95b453b0984c63339625dc9183900da6",
+      "hash": "77aabde1b59a437983fd04903e2cea8c95b453b0984c63339625dc9183900da6",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/viewmodel.js",
+      "actual": "5fe8d54c85f273468336138c4a50a423005ba8ef721712033dafaedc445e1bc1",
+      "hash": "5fe8d54c85f273468336138c4a50a423005ba8ef721712033dafaedc445e1bc1",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/waves.js",
+      "actual": "dfe8c5cfb89bff6f40e9d543f93deaa13afd6a344d4cb85112c325c297d910b8",
+      "hash": "dfe8c5cfb89bff6f40e9d543f93deaa13afd6a344d4cb85112c325c297d910b8",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/weapon-model.js",
+      "actual": "8e2c3f9bc82eaf1d280df87dae44b7c5f946275008a804ee923a1c51ae4b9fd5",
+      "hash": "8e2c3f9bc82eaf1d280df87dae44b7c5f946275008a804ee923a1c51ae4b9fd5",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/weather.js",
+      "actual": "d82fbd36a07ebd656b6d7cd41766708a2cb295a0920223635d65e05c3512580c",
+      "hash": "d82fbd36a07ebd656b6d7cd41766708a2cb295a0920223635d65e05c3512580c",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/world-context.js",
+      "actual": "be77c267ae55464e83b5139038aaf70846902f53d1a1e7bbb3662b3e6078e36e",
+      "hash": "be77c267ae55464e83b5139038aaf70846902f53d1a1e7bbb3662b3e6078e36e",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/world.js",
+      "actual": "396d802801b0fb7bd0ff5a35f8481a8f2c9502ff5f08c258f14bd8e7f7eefd0e",
+      "hash": "396d802801b0fb7bd0ff5a35f8481a8f2c9502ff5f08c258f14bd8e7f7eefd0e",
+      "ok": true
+    },
+    {
+      "path": "preview-source:js/worldgen.js",
+      "actual": "ee013008823cd90aaf8f2d8f88f5ecb7da8a4110ceafd688ac0d3305b97b632d",
+      "hash": "ee013008823cd90aaf8f2d8f88f5ecb7da8a4110ceafd688ac0d3305b97b632d",
+      "ok": true
+    },
+    {
+      "path": "preview-source:lib/THREE-LICENSE.txt",
+      "actual": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "hash": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "ok": true
+    },
+    {
+      "path": "preview-source:lib/three.core.min.js",
+      "actual": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "hash": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "ok": true
+    },
+    {
+      "path": "preview-source:lib/three.module.min.js",
+      "actual": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "hash": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "ok": true
+    },
+    {
+      "path": "preview-source:lobby.html",
+      "actual": "89a7328435e424e9b3f5a2b40c5fb1498cb3329e46a36abf6ead0074f53d1d58",
+      "hash": "89a7328435e424e9b3f5a2b40c5fb1498cb3329e46a36abf6ead0074f53d1d58",
+      "ok": true
+    },
+    {
+      "path": "main-source:css/style.css",
+      "actual": "ad2ce23de733123176d05bed0e7e6b14416410076bf312ed8705e0129e042539",
+      "hash": "ad2ce23de733123176d05bed0e7e6b14416410076bf312ed8705e0129e042539",
+      "ok": true
+    },
+    {
+      "path": "main-source:dist/worldheart.html",
+      "actual": "8702e11c8d6a96f6cef084adc69fb29c2317dfe1ad60140b67b266111c881fd4",
+      "hash": "8702e11c8d6a96f6cef084adc69fb29c2317dfe1ad60140b67b266111c881fd4",
+      "ok": true
+    },
+    {
+      "path": "main-source:index.html",
+      "actual": "710df6ae4620a8a9f7acd949e9a68e7abbafce4dd918931717650c7052256989",
+      "hash": "710df6ae4620a8a9f7acd949e9a68e7abbafce4dd918931717650c7052256989",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/allies.js",
+      "actual": "f70d7d4e32673f565dc8c6b0c3181886ffebb8f815b9185aa5642e41b185df4c",
+      "hash": "f70d7d4e32673f565dc8c6b0c3181886ffebb8f815b9185aa5642e41b185df4c",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/audio.js",
+      "actual": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "hash": "2c5b605f40d8f72aeb0cfa8a0e25c791e21762e6917d9bdd666196dbce6b073e",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/camera.js",
+      "actual": "ea20bf891afc6feaab9ee5dc56888a740a9bf7fe90241711e42a4c6edf382ddf",
+      "hash": "ea20bf891afc6feaab9ee5dc56888a740a9bf7fe90241711e42a4c6edf382ddf",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/combatfx.js",
+      "actual": "2c739f44acd35a1a5902aed6076d3b3634dea8f7f2a481caa01ba549f920494c",
+      "hash": "2c739f44acd35a1a5902aed6076d3b3634dea8f7f2a481caa01ba549f920494c",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/config.js",
+      "actual": "942b23808098f48050ba3a3a7d5e05e1373f4dc793ce5081bf70cf1c5e94f9bf",
+      "hash": "942b23808098f48050ba3a3a7d5e05e1373f4dc793ce5081bf70cf1c5e94f9bf",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/effects.js",
+      "actual": "bf2c372a599f9477ef9b2ca1a6bf1ea7e69cc77158aca7fe9b50ec5585235b41",
+      "hash": "bf2c372a599f9477ef9b2ca1a6bf1ea7e69cc77158aca7fe9b50ec5585235b41",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/enemies.js",
+      "actual": "71038674a14eaded530878e8401ac4fff5a9e552044c21e294c278fd1fb5748b",
+      "hash": "71038674a14eaded530878e8401ac4fff5a9e552044c21e294c278fd1fb5748b",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/game.js",
+      "actual": "0a7e4c8509e877beff2ec50c1c681261a5e27534f07c0b7e5c3753121779d28f",
+      "hash": "0a7e4c8509e877beff2ec50c1c681261a5e27534f07c0b7e5c3753121779d28f",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/main.js",
+      "actual": "4b2906a2149e944156d8f0f52efaf4869e1ee04be3b4b94d3d2e3fcb44eb364a",
+      "hash": "4b2906a2149e944156d8f0f52efaf4869e1ee04be3b4b94d3d2e3fcb44eb364a",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/modes/ninetynine.js",
+      "actual": "7630c2b4c67aa8f9af63f8981e8046aad1d2b0300d06f806cd3fefc5a0863357",
+      "hash": "7630c2b4c67aa8f9af63f8981e8046aad1d2b0300d06f806cd3fefc5a0863357",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/modes/progress.js",
+      "actual": "78f6585855c5557efc12234891042472e2059a4ec6ac3254ea4468da2652cc11",
+      "hash": "78f6585855c5557efc12234891042472e2059a4ec6ac3254ea4468da2652cc11",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/nav.js",
+      "actual": "86887ca58c4dd3df79cf4e933f0ce128ce7949d64faffc9d341056c6d2c9f4b8",
+      "hash": "86887ca58c4dd3df79cf4e933f0ce128ce7949d64faffc9d341056c6d2c9f4b8",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/noise.js",
+      "actual": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "hash": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/possess.js",
+      "actual": "e15ef2a31c7820af489e291393ec55ae1885b821fdce2e72eeb9bb016b9c7ed2",
+      "hash": "e15ef2a31c7820af489e291393ec55ae1885b821fdce2e72eeb9bb016b9c7ed2",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/postfx.js",
+      "actual": "f2048ab65b321f6cacc04ad55c44051bdf8275fc4a032846febb652d05c4ce58",
+      "hash": "f2048ab65b321f6cacc04ad55c44051bdf8275fc4a032846febb652d05c4ce58",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/rig.js",
+      "actual": "beb79b2fda8fe8283055c64ff1011054a15233a7e7fe57cdf14de17af1582b7e",
+      "hash": "beb79b2fda8fe8283055c64ff1011054a15233a7e7fe57cdf14de17af1582b7e",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/run/draft.js",
+      "actual": "be60615d597653b20a89f9865b45b78cb451fb0ee2fb77ec14b2e24568c23f6b",
+      "hash": "be60615d597653b20a89f9865b45b78cb451fb0ee2fb77ec14b2e24568c23f6b",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/run/frontier.js",
+      "actual": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "hash": "ff3ff3072267e44f404656a8132cc67cc8217a9ae661007c1cfe8905eef10a09",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/run/modifiers.js",
+      "actual": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "hash": "d59187ee0900676320c38facd21674772fef98f542f545aefb3680a38c081c5b",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/run/powers.js",
+      "actual": "4abd2db4808a90e2b512657811bc2f9fb74107f1b74eb7f015a405796c7efc2c",
+      "hash": "4abd2db4808a90e2b512657811bc2f9fb74107f1b74eb7f015a405796c7efc2c",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/run/rng.js",
+      "actual": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "hash": "d52fb1bb71ccb9cf98e8387dee74d47442e7a30d48711cd3911ee65bf8d06a97",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/run/run.js",
+      "actual": "258fddb92cda8aa29793e74b0bd67fc99e90f8f22168bdaebdb6a73014ac448d",
+      "hash": "258fddb92cda8aa29793e74b0bd67fc99e90f8f22168bdaebdb6a73014ac448d",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/run/schedule.js",
+      "actual": "418c06888108e69adecf985a39b07d35f987f5d86f1d6c1611de5c4556ac2c92",
+      "hash": "418c06888108e69adecf985a39b07d35f987f5d86f1d6c1611de5c4556ac2c92",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/run/state.js",
+      "actual": "b9422a97330adedb1a1bd87249e305c8368f86e657e0b8209f4397fbd6d6471f",
+      "hash": "b9422a97330adedb1a1bd87249e305c8368f86e657e0b8209f4397fbd6d6471f",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/soldier.js",
+      "actual": "03ffb3ed08dc7254e68cb749b24ba9a813bc2b76d633e3a34b42700ee5f5bf16",
+      "hash": "03ffb3ed08dc7254e68cb749b24ba9a813bc2b76d633e3a34b42700ee5f5bf16",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/towers.js",
+      "actual": "cd926b0a93aa763cd772db068cc01256c588e927646708c69ab27c6ad4e91c93",
+      "hash": "cd926b0a93aa763cd772db068cc01256c588e927646708c69ab27c6ad4e91c93",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/ui-icons.js",
+      "actual": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "hash": "40b64395cb60652b827497d20e2d1ecf40d2e9baae2d5a9bbd5eead7f087a2a3",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/ui.js",
+      "actual": "ffee80551b560d004ce90c904f2efc4d029a6d690d25bf4937aab96df9208a75",
+      "hash": "ffee80551b560d004ce90c904f2efc4d029a6d690d25bf4937aab96df9208a75",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/viewmodel.js",
+      "actual": "f4fdc51ec6fc63340249d733ce13ef963a4d634fb9bd9a76f6f91291243df869",
+      "hash": "f4fdc51ec6fc63340249d733ce13ef963a4d634fb9bd9a76f6f91291243df869",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/waves.js",
+      "actual": "5da1b3516147eff7650fc656e57b5633361beaccb683f4c5f8aca5009deeea27",
+      "hash": "5da1b3516147eff7650fc656e57b5633361beaccb683f4c5f8aca5009deeea27",
+      "ok": true
+    },
+    {
+      "path": "main-source:js/world.js",
+      "actual": "c3441bce4cd0a0ce773ca2d5f23e618d5443dfec47ea7703e776822a93370a2d",
+      "hash": "c3441bce4cd0a0ce773ca2d5f23e618d5443dfec47ea7703e776822a93370a2d",
+      "ok": true
+    },
+    {
+      "path": "main-source:lib/THREE-LICENSE.txt",
+      "actual": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "hash": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "ok": true
+    },
+    {
+      "path": "main-source:lib/three.core.min.js",
+      "actual": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "hash": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "ok": true
+    },
+    {
+      "path": "main-source:lib/three.module.min.js",
+      "actual": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "hash": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "ok": true
+    }
+  ],
+  "pass": true
+}

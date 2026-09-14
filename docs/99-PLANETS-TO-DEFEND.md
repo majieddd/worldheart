@@ -4,9 +4,7 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
-Active U126-U131 adapts the existing game for full touch control and a compact
-mobile HUD. [Mobile controls ledger](qa/implementation/MOBILE-CONTROLS.md)
-tracks action parity, input ownership, responsive menus and browser evidence.
+U126-U131 is published and publicly verified as V2 `102d4a5`: complete touch controls and a compact phone/tablet HUD. [Mobile controls ledger](qa/implementation/MOBILE-CONTROLS.md) and [acceptance](qa/implementation/MOBILE-CONTROLS/ACCEPTANCE.md) record action parity, retained input defects, full defense/extraction and public checks. Physical-device acceptance remains explicit.
 
 The U115-U125 refinement is published and verified as V2 `67e14d0`, tracked in [Natural worlds](qa/implementation/NATURAL-WORLDS.md).
 Bridges offer real autonomous paths both above and below, with a coherent

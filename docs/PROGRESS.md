@@ -1,11 +1,19 @@
 # 99 Planets development progress
 
-Updated 2026-09-14. This is the collaborator entry point for the owner's new direction.
-Active: Codex on `feature/mobile-controls`, U126-U131: comprehensive touch
-controls, compact responsive HUD, preparation/inspection access and mobile QA.
-[Mobile request ledger](qa/implementation/MOBILE-CONTROLS.md). Based on the
-verified preview below and its documentation closeout; desktop input and main
-remain protected. Local acceptance passed 107 touch cases, seven camera suites, 329 automated tests and a complete ten-wave victory/extraction. Publishing and public verification are next.
+Updated 2026-09-14. This is the collaborator entry point for the owner's direction.
+
+Published and publicly verified: V2 `102d4a5`, Codex on
+`feature/mobile-controls`, completed U126-U131. Compact touch controls now cover
+combat, strategy, construction, equipment/economy, squad orders, lobby, Debug,
+world generation, rewards, Endless, save recovery and campaign extraction.
+[Request ledger](qa/implementation/MOBILE-CONTROLS.md),
+[action map](qa/implementation/MOBILE-CONTROLS/README.md),
+[acceptance and evidence](qa/implementation/MOBILE-CONTROLS/ACCEPTANCE.md).
+107 local touch cases, 329 automated tests, seven camera suites and a legal
+ten-wave victory/extraction passed; V2 passed 61 public touch cases and
+284 identity comparisons. [Draft PR #41](https://github.com/majieddd/worldheart/pull/41).
+Main remains `1374122`. Physical-device input and sustained thermal/GPU behavior
+remain explicit device acceptance, separate from the completed browser work.
 
 Published and publicly verified: V2 `67e14d0`, Codex on
 `feature/natural-bridges-and-storms`, completed U115-U125 in the

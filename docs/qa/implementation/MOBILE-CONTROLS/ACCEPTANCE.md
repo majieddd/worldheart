@@ -1,7 +1,7 @@
 # Mobile acceptance
 
 September 14, 2026. U126-U131, owner Codex, `feature/mobile-controls`.
-Publication is pending. [Action map and input contract](README.md),
+Published and publicly verified as V2 `102d4a5` through [Pages run 34810471276](https://github.com/majieddd/worldheart/actions/runs/34810471276). [PR #41](https://github.com/majieddd/worldheart/pull/41) remains a draft; main stays `1374122`. [Action map and input contract](README.md),
 [request ledger](../MOBILE-CONTROLS.md).
 
 ## Result
@@ -13,10 +13,10 @@ handlers remain responsible for all transactions. The start screen keeps
 commander choice and launch visible, while world settings use a disclosure.
 Settings include touch detection/override, look sensitivity and mirrored thumbs.
 
-The inspected commander HUD occupies about 21.6% of a 360x640 viewport and
-15.6% at 844x390, measured as the sum of control/readout bounding rectangles
-including the translucent joystick. Tablet samples use about 6.6%. These are
-bounded screenshots, not a guarantee for every possible alert or localization.
+The inspected commander HUD occupies about 23.1% of a 360x640 viewport and
+16.7% at 844x390, measured as the sum of control/readout bounding rectangles
+including the translucent joystick. Tablet samples use about 7.0%. These are
+[public viewport measurements](evidence/public/input.json), not a guarantee for every possible alert or localization.
 Tested targets are at least 44 CSS pixels, with the main control token at 48.
 Targets do not overlap and the aiming center remains clear. Contextual tower
 and inventory sheets deliberately take more space while the player interacts.
@@ -33,7 +33,7 @@ and inventory sheets deliberately take more space while the player interacts.
 | Camera regression | [7/7 suites](evidence/cameras.json): pocket, giant, titan, 99 Planets, space, All Planet and Saturn |
 | Full defense | [Ten-wave victory](evidence/defense.json), seed 12345, 20 heart health, 251 kills and six towers. [Victory checkpoint](evidence/victory-checkpoint.json) retained two ground drops; [normal extraction](evidence/arrival.json) carried seven weapons into Planet 2 |
 | Native rendering | [Three 15-second samples](evidence/performance.json) at 390x844, DPR 3: strategy, first person, range preview. Each p95/p99 about 7.1 ms; maximum 20.9 ms. Desktop RTX GPU, isolated calm-wave fixture |
-| Core/build/public | [329/329 tests](evidence/tests.txt), [95/95 modules parse](evidence/syntax.txt), [style passed](evidence/style.txt), [97 bundled modules and 105 mirrors](evidence/deploy.txt). Public verification pending |
+| Core/build/public | [329/329 tests](evidence/tests.txt), [95/95 modules parse](evidence/syntax.txt), [style passed](evidence/style.txt), [97 bundled modules and 105 mirrors](evidence/deploy.txt). [284/284 public and source identity comparisons](evidence/public/identity.json); [42 public input checks](evidence/public/input.json) and [19 public scene checks](evidence/public/scenes.json) |
 
 The full defense ran the touch HUD with a legal instrumented gameplay policy,
 not touch-only manual play. It advanced simulation time and rendered sparsely;
@@ -71,7 +71,7 @@ pickup/equip actions. Those transactions are tested separately above.
 
 [Start](evidence/start.png), [commander](evidence/commander-portrait.png),
 [base menu](evidence/base-menu.png), [tower actions](evidence/tower-actions.png),
-[lobby](evidence/lobby.png), [Debug](evidence/debug.png).
+[lobby](evidence/lobby.png), [Debug](evidence/debug.png). Final published captures: [phone](evidence/public/phone.png), [field menu](evidence/public/base-menu.png), [lobby](evidence/public/lobby.png).
 
 Physical Android/iOS input, thermal behavior and GPU performance have not been
 measured. Browser emulation does not certify them. Full 99-planet balance and
