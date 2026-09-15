@@ -1,0 +1,247 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "checks": [
+    {
+      "name": "No audio downloads or context before a gesture",
+      "ok": true
+    },
+    {
+      "name": "Actual draft button loads and starts the engine",
+      "ok": true
+    },
+    {
+      "name": "Measured non-silent, unclipped output: click",
+      "ok": true,
+      "detail": {
+        "peak": 0.00519119668751955
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: build",
+      "ok": true,
+      "detail": {
+        "peak": 0.24024076759815216
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: meleeHit",
+      "ok": true,
+      "detail": {
+        "peak": 0.24637940526008606
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: enemyHit",
+      "ok": true,
+      "detail": {
+        "peak": 0.24621576070785522
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: blocked",
+      "ok": true,
+      "detail": {
+        "peak": 0.243313729763031
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: rifle",
+      "ok": true,
+      "detail": {
+        "peak": 0.27945923805236816
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: shot",
+      "ok": true,
+      "detail": {
+        "peak": 0.25795620679855347
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: mortar",
+      "ok": true,
+      "detail": {
+        "peak": 0.3635174036026001
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: lob",
+      "ok": true,
+      "detail": {
+        "peak": 0.24639351665973663
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: explosion",
+      "ok": true,
+      "detail": {
+        "peak": 0.3867044448852539
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: step",
+      "ok": true,
+      "detail": {
+        "peak": 0.16228477656841278
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: stepHard",
+      "ok": true,
+      "detail": {
+        "peak": 0.09973961859941483
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: land",
+      "ok": true,
+      "detail": {
+        "peak": 0.21113641560077667
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: coin",
+      "ok": true,
+      "detail": {
+        "peak": 0.14663749933242798
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: upgrade",
+      "ok": true,
+      "detail": {
+        "peak": 0.13794900476932526
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: victory",
+      "ok": true,
+      "detail": {
+        "peak": 0.1910628080368042
+      }
+    },
+    {
+      "name": "One cached bank download across all cue buttons",
+      "ok": true
+    },
+    {
+      "name": "Piano is not fetched with effects",
+      "ok": true
+    },
+    {
+      "name": "Stop during piano loading prevents delayed playback",
+      "ok": true
+    },
+    {
+      "name": "Piano starts only by explicit selection",
+      "ok": true
+    },
+    {
+      "name": "Stop ends music and clears sampled voices",
+      "ok": true
+    },
+    {
+      "name": "Stop cancels the comparison sequence",
+      "ok": true
+    },
+    {
+      "name": "Simultaneous sampled combat at maximum lab volume is bounded and unclipped",
+      "ok": false,
+      "detail": {
+        "peak": 1.2321269512176514,
+        "voices": 12
+      }
+    },
+    {
+      "name": "No persistent bed after stopping",
+      "ok": true,
+      "detail": {
+        "peak": 0
+      }
+    },
+    {
+      "name": "Readable controls at 375px",
+      "ok": true,
+      "detail": {
+        "overflow": false,
+        "small": 0,
+        "nav": 54.6875,
+        "clipped": 0
+      }
+    },
+    {
+      "name": "Readable controls at 768px",
+      "ok": true,
+      "detail": {
+        "overflow": false,
+        "small": 0,
+        "nav": 54.6875,
+        "clipped": 0
+      }
+    },
+    {
+      "name": "Readable controls at 1280px",
+      "ok": true,
+      "detail": {
+        "overflow": false,
+        "small": 0,
+        "nav": 54.6875,
+        "clipped": 0
+      }
+    },
+    {
+      "name": "Computed text contrast passes AA",
+      "ok": true,
+      "detail": {
+        "minimum": 7.726546710231671
+      }
+    },
+    {
+      "name": "Keyboard focus is visible",
+      "ok": true
+    },
+    {
+      "name": "Hidden tab suspends draft audio",
+      "ok": true
+    },
+    {
+      "name": "Visible tab can resume without restarting an ambient bed",
+      "ok": true
+    },
+    {
+      "name": "Disposal closes the context and releases active voices",
+      "ok": true
+    },
+    {
+      "name": "Failed draft download leaves previous playback usable",
+      "ok": true
+    },
+    {
+      "name": "Default play still uses original audio and zero trial downloads",
+      "ok": true
+    },
+    {
+      "name": "Opt-in play installs draft before touch controls begin",
+      "ok": true
+    },
+    {
+      "name": "Game UI and gameplay share the same draft instance",
+      "ok": true
+    },
+    {
+      "name": "Existing game mute works in draft mode",
+      "ok": true
+    },
+    {
+      "name": "Draft game starts no piano automatically",
+      "ok": true
+    },
+    {
+      "name": "No uncaught runtime exceptions",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "hearing": "Unavailable. Output measurements are not listening acceptance."
+}

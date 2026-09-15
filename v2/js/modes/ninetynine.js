@@ -464,7 +464,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     request(op) {
       if (!this.canInteract()) return false;
       const ok = inventory.request(op,busyWeapon());
-      if (ok) { if (possession.unit===commander) possession.firing=false; syncWeapon(); persistSalvage(); ui.audio?.play('equip'); }
+      if (ok) { if (possession.unit===commander) possession.firing=false; syncWeapon(); persistSalvage(); }
       return ok;
     },
     pickup(id,replace=null) {
@@ -474,7 +474,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     salvage(id) {
       if (!this.canInteract() || (inventory.drops.some(x=>x.id===id) && !nearbyLoot().some(x=>x.id===id))) return false;
       if (!inventory.salvage(id)) return false;
-      loot.remove(id); persistSalvage(); ui.audio?.play('salvage'); return true;
+      loot.remove(id); persistSalvage(); ui.audio?.play('coin'); return true;
     },
     bankedIds:()=>campaign?.snapshot().expedition.banked?.items.map(x=>x.id)||[],
     infuse(id){if(!this.canInteract()||busyWeapon()||!inventory.infuse(id,CONFIG.planetIndex))return false;syncWeapon();persistSalvage();return true;},
@@ -512,7 +512,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     }
   };
   const previousProjectile = allies.onProjectileFired;
-  allies.onProjectileFired = (a,bolt) => { previousProjectile?.(a,bolt); if (possession.unit===a) possession.kick = Math.min(.5,possession.kick+bolt.spec.kick); };
+  allies.onProjectileFired = (a,bolt) => { previousProjectile?.(a,bolt); ui.audio?.play('rifle'); if (possession.unit===a) possession.kick = Math.min(.5,possession.kick+bolt.spec.kick); };
   const previousReady = allies.onAttackReady;
   allies.onAttackReady = a => { previousReady?.(a); if (a===commander && inventory.settle(false)){syncWeapon();persistSalvage();} };
 
@@ -813,7 +813,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     const receipt = crystals.deposit({ alive: !!commander?.active && !commander.dead, nearHeart: homeDistance() <= 4.5 });
     if (!receipt.count) { ui.toast('Carry crystals within 4.5 units of the heart to deposit', 'info'); return false; }
     ui.toast(`${receipt.count} crystals delivered: +${receipt.credit} base upgrade credit`, 'info');
-    ui.audio?.play('deposit');
+    ui.audio?.play('upgrade');
     syncFromRun(); updateCrystals();
     return true;
   }
@@ -832,7 +832,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       if (found && crystals.pickup(found.id)) {
         found.taken = true;
         ui.toast(`Crystal carried (${crystals.carried.length}/${CRYSTAL_CAPACITY}). Return to the heart and press C.`, 'info');
-        ui.audio?.play('crystal');
+        ui.audio?.play('coin');
       }
     }
     commander.carryMul = 1 - .1 * crystals.carried.length / CRYSTAL_CAPACITY;
@@ -856,7 +856,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     const tower=forge.craft(homeDistance()<=6,()=>run.craftTower());
     if(!tower){ui.toast(`Forge near the heart with ${forge.cost} scraps and a free card slot.`, 'info');return false;}
     const def=TOWER_TYPES[tower];game.freeTowerCredits.set(def,(game.freeTowerCredits.get(def)||0)+1);
-    persistSalvage();syncFromRun();ui.toast(def.name+' forged. Place the next matching card for free.','info');ui.audio?.play('forge');return tower;
+    persistSalvage();syncFromRun();ui.toast(def.name+' forged. Place the next matching card for free.','info');ui.audio?.play('upgrade');return tower;
   }
   function startEndlessRun(){
     if(run.getPhase()!=='victory'||run.isEndless())return false;
@@ -873,7 +873,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     const events=run.finishEndless();if(!events.length)return false;
     handle(events);return true;
   }
-  const geysers=new GeyserField(world,allies,enemies,ui.audio);
+  const geysers=new GeyserField(world,allies,enemies);
   const weather=new PlanetWeather({scene:game.scene,nav,world,allies,enemies,game,commander:()=>commander,centre,ui});
   const abilities=new CommanderAbilities({game,allies,enemies,commander:()=>commander,ui});
   allies.modifyPlayerStrike=(a,s)=>abilities.modifyStrike(a,s);
@@ -920,7 +920,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       if (run.getPhase() !== 'drafting' && respawn.tick(dt * game.speed)) {
         const old = commander; commander = allies.spawn(fallenKey,centre,centre,12);
         if (!commander) { commander = old; respawn.die(true); }
-        else { ui.audio?.play('respawn'); allies.pool.push(old); weaponSignature=''; syncWeapon(); syncFromRun(); ui.toast('Commander restored at the heart. Click to take control.', 'info'); }
+        else { allies.pool.push(old); weaponSignature=''; syncWeapon(); syncFromRun(); ui.toast('Commander restored at the heart. Click to take control.', 'info'); }
       }
       if(inventory.settle(busyWeapon()))persistSalvage(); syncWeapon();
       collectNearbyWeapons();

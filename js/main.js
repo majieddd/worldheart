@@ -1,8 +1,9 @@
+import { Soundtrack } from './soundtrack.js';
 import * as THREE from 'three';
 import { CONFIG, CAM_TUNE, PALETTE, LIGHTING, PRESENTATION } from './config.js';
 import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
-import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight, TERRAIN_TOP, surfaceElevation, biomeAt } from './world.js';
+import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight, TERRAIN_TOP, surfaceElevation } from './world.js';
 import { NavGraph } from './nav.js';
 import { SIM_RANDOM } from './noise.js';
 import { makeRng } from './run/rng.js';
@@ -17,8 +18,6 @@ import { Game } from './game.js';
 import { WaveDirector, portalCount } from './waves.js';
 import { HUD } from './ui.js';
 import { AudioEngine } from './audio.js';
-import {musicState,ambienceKind} from './audio-catalogue.js';
-const audioFocus=new THREE.Vector3(),audioDir=new THREE.Vector3();let audioSceneTime=0;
 import { WorldContext } from './world-context.js';
 
 const canvas = document.getElementById('view');
@@ -333,12 +332,23 @@ async function boot() {
   towerMgr.world = world;
   game = new Game({ scene, rig, world, nav, enemies, towerMgr, fx });
   const audio = new AudioEngine();
+  // Listening draft is URL-only; normal play retains the restored sound system.
+  if (new URLSearchParams(location.search).get('sound') === 'material') {
+    try {
+      const { adoptMaterialAudio } = await import('./audio-material.js');
+      adoptMaterialAudio(audio);
+    } catch (error) { console.warn('Sound trial unavailable; using original audio', error); }
+  }
   game.audio = audio;
-  window.WH.audio=audio;
   towerMgr.audio = audio;
   waves = new WaveDirector(game, enemies, nav);
   ui = new HUD({ game, waves, world, nav, rig, renderer, audio });
   ui.makeThumbnails();
+  game.soundtrack = new Soundtrack(audio, () => ({ state: game.state,
+    boss: enemies.active.some(e => e.active && !e.dead && e.type.boss),
+    theme: CONFIG.environment?.theme || CONFIG.planetKey || '', planet: CONFIG.planetIndex, wave: waves.wave,
+  }));
+  game.soundtrack.controls(document.getElementById('settings-pop'));
   ui.onQuality = (q) => {
     if (q === 'low') { post.setQuality('low'); pixelRatio = 1.1; setShadowTier('low'); }
     else if (q === 'high') { post.setQuality('high'); pixelRatio = Math.min(devicePixelRatio || 1, PIXEL_RATIO_CAP); setShadowTier('high'); }
@@ -388,7 +398,7 @@ async function boot() {
   // shield eats has to say that too, or a strike doing nothing three times in
   // a row reads as a broken weapon rather than as armour holding.
   const _fpHit = new THREE.Vector3();
-  allies.onStrikeHit = (enemy, landed, primary) => {
+  allies.onStrikeHit = (enemy, landed, primary, attacker, spec) => {
     towerMgr.enemyWorldPos(enemy, _fpHit);
     // Big, popping numbers for the player's own blows. A 14px number beside
     // a body three units away was legible and weightless; the primary hit is
@@ -402,7 +412,11 @@ async function boot() {
     if (primary) {
       ui?.strikeFeedback?.(landed, landed <= 0);
       rig.addTrauma(landed > 0 ? 0.09 : 0.03);
-      audio?.play(landed > 0 ? 'meleeHit' : 'blocked');
+      if (!audio.materialTrial || !spec || spec.kind === 'melee') audio?.play(landed > 0 ? 'meleeHit' : 'blocked', {
+        family: attacker?.weaponFamily || spec?.weaponFamily || 'sword', material: attacker?.weaponMaterial || 'iron',
+        target: enemy.type.armor > 0 ? 'armor' : 'flesh',
+      });
+      if (landed > 0 && audio.materialTrial) audio.play('creatureHit', { creature: enemy.typeKey });
     }
     // Contact: a burst of hot sparks, a shower of obsidian shards off the
     // body and a ring pulse at the wound, so the blade is seen to bite rather
@@ -424,13 +438,9 @@ async function boot() {
   // weight there is: the eye reads the pause as impact, and everything that
   // follows (the shake, the number, the knockback) lands on a still frame.
   // Only the possessed body earns it, and only on a hit that did damage.
-  allies.onSwingStart = (a) => {
-    possession?.swingStarted?.(a);
-    if(!a.strikeSpec||a.strikeSpec.kind==='melee')audio.play(a.weaponFamily==='spear'?'spear':a.weaponFamily==='twinblade'||a.typeKey==='duelist'?'twinblade':'swing',{position:allies.worldPos(a,_fpHit)});
-  };
+  allies.onSwingStart = (a) => possession?.swingStarted?.(a);
   allies.onStrikeResolved = (a, hits, spec) => {
     possession?.strikeResolved?.(a, hits, spec);
-    if(['hitscan','projectile','lob'].includes(spec?.kind))audio.play(spec.kind==='lob'?'lob':'rifle',{position:allies.worldPos(a,_fpHit)});
     if (spec?.kind === 'melee' && hits > 0 && possession && possession.unit === a) game.hitStop = Math.max(game.hitStop || 0, 0.07);
   };
   // Being hit in first person should land on the player, not only on a number.
@@ -636,16 +646,6 @@ function stepFrame(dt, render) {
   }
   if (game) game.update(dt);
   mode99?.renderEffects?.(simDt);
-  if(game?.audio){
-    if(possession?.active)allies.worldPos(possession.unit,audioFocus);else audioFocus.copy(rig.camera.position).normalize().multiplyScalar(rig.focusRadius||R);
-    audioSceneTime+=dt;
-    if(audioSceneTime>=.25){
-      audioSceneTime=0;audioDir.copy(audioFocus).normalize();
-      const localBiome=biomeAt(audioDir,possession?.active?possession.unit.height:audioFocus.length()-R);
-      game.audio.setScene({state:musicState({state:ui?._ended?ui.audioEnding:game.state,paused:game.paused,waveActive:['spawning','combat'].includes(waves.state),boss:enemies.active.some(e=>e.type.boss&&!e.dead),health:game.lives/game.maxLives}),ambience:ambienceKind({theme:localBiome==='classic'?CONFIG.environment?.theme:localBiome}),paused:game.paused,camera:rig.camera,observer:audioFocus});
-    }
-    game.audio.update(dt);
-  }
   if (ui) ui.update(dt);
   game?.context?.update();
   window.WH?.mobile?.update(dt);

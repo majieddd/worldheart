@@ -719,11 +719,3 @@ the same upper surface. Other cave worlds have separate ground and roof nodes. C
 Earth uses public-domain Natural Earth coastlines, geographic mountain belts and regional ecology. Vegetation and active features use seeded clustered density rather than a uniform spherical spiral. Three additional sky mesa families join the sky packs: drifting reefs, crowned islands and hanging shards.
 
 Quakes carve a branching fissure with a red seam on current ground and a translucent forecast of the exact new surface. Lightning uses connected forked arcs. Tsunamis show a continuous foamy bore and warn with a footprint and travel arrow. Radiation storms show purple clouds and arcs: a struck tower stops firing, charging and summoning for eight seconds, with a visible purple power ring. The timer follows simulation time, survives upgrades and recovers normally. Volcanic ashfall and cryovolcanic outburst were removed from scheduling and Debug; the local cryovolcanic jet remains an independent feature.
-
-
-Sound mix is available in settings, the mobile Field menu's Options tab and
-the lobby. Master, music, effects, ambience and interface levels are independent.
-Music follows exploration, combat, danger and the defense outcome; ecological
-beds follow the local biome. Audio starts with a player gesture and suspends
-when the page is hidden. Debug World's Sound studio auditions the full score
-and cue catalogue without changing campaign progress.

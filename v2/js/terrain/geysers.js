@@ -4,7 +4,7 @@ import {ACTIVE_FEATURES,environmentalPulse} from '../run/environment-catalogue.j
 // Timed vents lift real bodies. Allies use their ballistic jump model; enemies
 // retain floor routing while an independent, pooled vertical impulse settles.
 export class GeyserField {
- constructor(world,allies,enemies,audio=null){Object.assign(this,{world,allies,enemies,audio});this.audioPulses=new Map();this.time=0;this.launches=0;this.effects={};}
+ constructor(world,allies,enemies){Object.assign(this,{world,allies,enemies});this.time=0;this.launches=0;this.effects={};}
  update(dt){
   this.time+=dt;this.world.featureArt?.userData.update?.(this.time);
   for(const a of this.allies.active)a.environmentSpeed=1;
@@ -13,8 +13,6 @@ export class GeyserField {
   for(const vent of FEATURES.active.length?FEATURES.active:FEATURES.vents){
    const recipe=ACTIVE_FEATURES[vent.key||'geyser'],time=this.time+vent.phase,pulse=environmentalPulse(recipe,time);if(!pulse.active)continue;
    const stamp=(vent.key||'geyser')+':'+(vent.id??vent.m.id)+':'+pulse.cycle,limit=Math.cos(vent.radius/R);
-   const soundKey=vent.id??vent.m.id;
-   if(this.audio&&this.audioPulses.get(soundKey)!==pulse.cycle){this.audioPulses.set(soundKey,pulse.cycle);const scale=R+vent.height;this.audio.play(vent.key==='geyser'?'geyser':vent.key==='boulder'?'quake':vent.key==='whirlpool'?'tsunami':'feature',{position:{x:vent.dir.x*scale,y:vent.dir.y*scale,z:vent.dir.z*scale},gain:.5});}
    for(const [units,friendly]of [[this.allies.active,true],[this.enemies.active,false]])for(const unit of units){
     if(!unit.active||unit.dead||unit.type.flying||unit.dir.dot(vent.dir)<limit)continue;
     const feet=unit.height+(friendly?(unit.hop||0)+(unit.mountFlight||0):(unit.geyserLift||0));

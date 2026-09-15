@@ -37,7 +37,6 @@ export class MountController {
     if(a.mountFlight>0){this.ui.toast('Land before dismounting. Release Space to descend.','info');return false;}
     a.mountKey=a.mountKey&&a.mountKey!=='none'?'none':this.choice;
     const m=MOUNTS[a.mountKey]||MOUNTS.none;a.mountOffset=m.height;
-    this.ui.audio?.play(a.mountKey==='none'?'dismount':'mount');
     this.ui.toast(a.mountKey==='none'?'Dismounted':`${m.name}: ${m.description}`,'info');return true;
   }
   update(dt){
@@ -49,7 +48,6 @@ export class MountController {
       if(wants&&this.energy>0){this.energy=Math.max(0,this.energy-dt);const feet=surfaceElevation(a.dir,a.height)+(a.hop||0);a.mountFlight=Math.max(0,Math.min(8,a.mountFlight+dt*5,overheadHeight(a.dir,feet+a.mountFlight)-feet-a.mountOffset-1.7));}
       else {const feet=surfaceElevation(a.dir,a.height)+(a.hop||0)+a.mountFlight,h=supportHeight(a.dir,feet);a.mountFlight=Math.max(0,a.mountFlight-dt*5);if(h>a.height+.1&&surfaceElevation(a.dir,a.height)+(a.hop||0)+a.mountFlight<=surfaceElevation(a.dir,h)){a.height=h;a.mountFlight=0;a.hop=0;a.airT=0;a.vertVel=0;}}
       if(!wants&&a.mountFlight===0)this.energy=Math.min(12,this.energy+dt*2);
-      if(a.mountFlight>.65&&!a.mountFlying)this.ui.audio?.play('flight');
       a.mountFlying=a.mountFlight>.65;
     }else{a.mountFlight=0;a.mountFlying=false;}
     const model=this.models[key];if(!model)return;

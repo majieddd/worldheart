@@ -41,7 +41,7 @@ GitHub Pages uses the GitHub Actions publishing source. The workflow in
 .github/workflows/preview-pages.yml checks out main and preview/v2 separately,
 validates the preview and creates one combined artifact with tools/pages-site.mjs.
 All public tracked main files except its old v2 mirror retain their bytes.
-Only index.html, lobby.html, debug.html, js, css, lib and audio from preview source are installed under v2.
+Only index.html, lobby.html, debug.html, audio-lab.html, js, css, lib and audio from preview source are installed under v2.
 No feature code is copied to the stable root. The artifact includes .nojekyll
 and a machine-readable build identity. No deploy branch or force push is needed.
 

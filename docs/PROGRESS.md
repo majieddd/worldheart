@@ -1,14 +1,26 @@
 # 99 Planets development progress
 
-U136-U139 audio implementation is published and publicly verified as V2
+Published U143-U145: [owner audio feedback](qa/implementation/AUDIO-FEEDBACK.md), V2 `023a70b`, Codex on feature/audio-restoration / [PR #44](https://github.com/majieddd/worldheart/pull/44). Six accepted effects are frozen, contextual effects are in the opt-in comparison, and all nine owner tracks are integrated in normal V2/lobby. 340 tests, 66 local + 66 public browser checks and 180 asset/removal checks pass. Listening acceptance remains open.
+
+U140: full audio rollback published and verified as V2 `033d3e3`.
+U141: separate material-effects comparison published and publicly verified as
+V2 `5577df3`. Codex owns `feature/audio-restoration`, [draft PR #44](https://github.com/majieddd/worldheart/pull/44).
+[Restoration ledger](qa/implementation/AUDIO-RESTORATION.md). Normal play retains
+the prior audio. U142 owner listening remains open; automated screening cannot
+substitute for this acceptance.
+[Compare the sounds](https://majieddd.github.io/worldheart/v2/audio-lab.html).
+337 tests, 41 local and 41 public browser checks, and 166 public asset/removal
+comparisons pass. [Pages action](https://github.com/majieddd/worldheart/actions/runs/34948123140).
+
+Rejected historical pass: U136-U139 was published as V2
 `1f2eb75`. Codex owns `feature/yue2-audio-revamp`, [draft PR #43](https://github.com/majieddd/worldheart/pull/43).
-[Audio ledger](qa/implementation/AUDIO-REVAMP.md): six actual local YuE2
-instrumentals, 84 nonvocal effects / 171 variations, bounded spatial feedback,
+[Audio ledger](qa/implementation/AUDIO-REVAMP.md): six local YuE2
+tracks (owner reported vocals), 84 effects / 171 variations, bounded spatial feedback,
 streaming music, compact mix controls and Debug audition. 339 tests, 164 local
 browser checks, seven camera suites, complete ten-wave defense/extraction,
 157 public asset comparisons and 123 public audio checks pass.
 [Pages action 34942144017](https://github.com/majieddd/worldheart/actions/runs/34942144017)
-succeeded. Main remains `1374122`. Final tracks pass automated vocal screening;
+succeeded. These assets have since been removed. Main remains `1374122`. Tracks passed automated vocal screening;
 rejected takes remain in evidence. Human listening and physical-phone acceptance
 remain open because this agent cannot hear audio. The model's noncommercial
 restriction is recorded; commercial rights are not asserted. The closeout adds

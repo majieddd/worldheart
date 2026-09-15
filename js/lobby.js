@@ -1,9 +1,6 @@
+import { AudioEngine } from './audio.js';
+import { Soundtrack } from './soundtrack.js';
 import * as THREE from 'three';
-import {AudioEngine} from './audio.js';
-import {audioSettings} from './audio-settings.js';
-const audio=new AudioEngine();
-const audioPanel=document.createElement('div');audioPanel.className='lobby-audio';document.body.append(audioPanel);audioSettings(audio,audioPanel);
-document.addEventListener('click',e=>{if(e.target.closest('button')&&!e.target.closest('.audio-settings'))audio.play('click');});
 import {TouchGesture,TouchStick,bindTouchActivation,hasTouch,clamp} from './touch-input.js';
 import { COMMANDERS, commanderStats, MOUNTS } from './run/expedition.js';
 import { preparation, savePreparation } from './preparation.js';
@@ -126,7 +123,7 @@ for(const name of ['blur','resize','pagehide'])addEventListener(name,releaseTouc
 document.addEventListener('visibilitychange',()=>{if(document.hidden)releaseTouch();});
 const velocity=new THREE.Vector3();let disposed=false;
 function render(now){
-  if(disposed)return;const dt=Math.min((now-last)/1000,.04);last=now;time+=dt;audio.update(dt);
+  if(disposed)return;const dt=Math.min((now-last)/1000,.04);last=now;time+=dt;
   let x=0,z=0;if(!open){x=touchMove.x+(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0);z=-touchMove.y+(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-(keys.has('KeyW')||keys.has('ArrowUp')?1:0);}
   point.set(x*Math.cos(view.yaw)+z*Math.sin(view.yaw),0,z*Math.cos(view.yaw)-x*Math.sin(view.yaw));if(moveGoal){point.copy(moveGoal).sub(player).setY(0);if(point.length()<.35){moveGoal=null;point.set(0,0,0);}}
   if(point.length()>1)point.normalize();point.multiplyScalar(7.2);velocity.lerp(point,1-Math.exp(-dt*12));player.addScaledVector(velocity,dt);if(player.length()>27)player.setLength(27);
@@ -139,5 +136,9 @@ function render(now){
   target.copy(player).multiplyScalar(.45);target.y=2.5;point.set(target.x+Math.sin(view.yaw)*view.distance*Math.cos(view.pitch),target.y+Math.sin(view.pitch)*view.distance,target.z+Math.cos(view.yaw)*view.distance*Math.cos(view.pitch));camera.position.lerp(point,1-Math.exp(-dt*9));camera.lookAt(target);renderer.render(scene,camera);requestAnimationFrame(render);
 }
 camera.position.set(0,20,40);requestAnimationFrame(render);
-window.LOBBY={audio,scene,camera,renderer,player,stations,openStation,close,view,get selected(){return selected;},get profile(){return campaignStore.snapshot().account;}};
+window.LOBBY={scene,camera,renderer,player,stations,openStation,close,view,get selected(){return selected;},get profile(){return campaignStore.snapshot().account;}};
 addEventListener('pagehide',e=>{if(!e.persisted){disposed=true;renderer.dispose();}});
+
+const lobbySoundtrack = new Soundtrack(new AudioEngine(), () => ({ lobby: true }));
+lobbySoundtrack.controls(document.querySelector('header .account'));
+window.lobbySoundtrack = lobbySoundtrack;
