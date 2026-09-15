@@ -1,0 +1,179 @@
+{
+  "sourceRevision": "a7ade6bb5081ea852128becb42c0e9b14c64d020",
+  "sourceOwner": "majieddd",
+  "usage": "Owner-requested reference assets for a separate Worldheart visual test",
+  "modelAnimation": "Static unrigged assets; no combat or locomotion compatibility claimed",
+  "assets": [
+    {
+      "name": "commander",
+      "path": "lib/painted/commander.gltf",
+      "sha256": "a57aed322e612da9091a5d2d1bd1aeb7b1805b6312b90a0a061d1f71f4c6cb54",
+      "bytes": 1981099,
+      "source": "https://github.com/majieddd/worldheart-styles/blob/a7ade6bb5081ea852128becb42c0e9b14c64d020/models3d_gltf/retroanime_commander.json",
+      "provenance": "Owner reference repository reports Meshy image_to_3d via Higgsfield; reused, not newly generated",
+      "accessors": [
+        {
+          "type": "VEC3",
+          "count": 32530,
+          "min": [
+            -0.6098009347915649,
+            -0.9507840275764465,
+            -0.29894590377807617
+          ],
+          "max": [
+            0.6070849299430847,
+            0.9485539197921753,
+            0.29748305678367615
+          ]
+        },
+        {
+          "type": "VEC2",
+          "count": 32530,
+          "min": [
+            9.999999974752427e-7,
+            0.0000029802322387695312
+          ],
+          "max": [
+            0.9994890093803406,
+            0.9999449849128723
+          ]
+        },
+        {
+          "type": "VEC3",
+          "count": 32530,
+          "min": [
+            -0.9999833703041077,
+            -0.9999998807907104,
+            -0.9999971985816956
+          ],
+          "max": [
+            0.999975323677063,
+            0.9999991655349731,
+            0.9999936819076538
+          ]
+        },
+        {
+          "type": "SCALAR",
+          "count": 88581
+        }
+      ],
+      "images": 1,
+      "materials": 1,
+      "extensions": []
+    },
+    {
+      "name": "enemy",
+      "path": "lib/painted/enemy.gltf",
+      "sha256": "e514ea889c608a26d5cfc77c7f0fd998d29f4562c031dc4b73667aa2499aca60",
+      "bytes": 1710707,
+      "source": "https://github.com/majieddd/worldheart-styles/blob/a7ade6bb5081ea852128becb42c0e9b14c64d020/models3d_gltf/retroanime_enemy.json",
+      "provenance": "Owner reference repository reports Meshy image_to_3d via Higgsfield; reused, not newly generated",
+      "accessors": [
+        {
+          "type": "VEC3",
+          "count": 26377,
+          "min": [
+            -0.9502699971199036,
+            -0.8671550750732422,
+            -0.9095020294189453
+          ],
+          "max": [
+            0.9481239914894104,
+            0.8675789833068848,
+            0.9078150391578674
+          ]
+        },
+        {
+          "type": "VEC2",
+          "count": 26377,
+          "min": [
+            0.000006000000212225132,
+            0.000009000301361083984
+          ],
+          "max": [
+            0.9989920258522034,
+            0.9999740123748779
+          ]
+        },
+        {
+          "type": "VEC3",
+          "count": 26377,
+          "min": [
+            -0.9999798536300659,
+            -0.9999778270721436,
+            -0.9998792409896851
+          ],
+          "max": [
+            0.999792754650116,
+            0.9999915361404419,
+            0.9999847412109375
+          ]
+        },
+        {
+          "type": "SCALAR",
+          "count": 93057
+        }
+      ],
+      "images": 1,
+      "materials": 1,
+      "extensions": []
+    },
+    {
+      "name": "tower",
+      "path": "lib/painted/tower.gltf",
+      "sha256": "1690a96f023964324b15c8f6d892f3193b808ed059cb3bbe74780bc498693e34",
+      "bytes": 1954889,
+      "source": "https://github.com/majieddd/worldheart-styles/blob/a7ade6bb5081ea852128becb42c0e9b14c64d020/models3d_gltf/retroanime_tower.json",
+      "provenance": "Owner reference repository reports Meshy image_to_3d via Higgsfield; reused, not newly generated",
+      "accessors": [
+        {
+          "type": "VEC3",
+          "count": 33216,
+          "min": [
+            -0.9506679177284241,
+            -0.7918519973754883,
+            -0.6919069290161133
+          ],
+          "max": [
+            0.9487839937210083,
+            0.790023922920227,
+            0.6898870468139648
+          ]
+        },
+        {
+          "type": "VEC2",
+          "count": 33216,
+          "min": [
+            0.0000019999999949504854,
+            0.0000010132789611816406
+          ],
+          "max": [
+            0.9999949932098389,
+            1
+          ]
+        },
+        {
+          "type": "VEC3",
+          "count": 33216,
+          "min": [
+            -0.9999994039535522,
+            -1,
+            -0.9999967813491821
+          ],
+          "max": [
+            1,
+            0.9999996423721313,
+            0.9999990463256836
+          ]
+        },
+        {
+          "type": "SCALAR",
+          "count": 85245
+        }
+      ],
+      "images": 1,
+      "materials": 1,
+      "extensions": []
+    }
+  ]
+}
