@@ -1,5 +1,12 @@
 # 99 Planets To Defend: running development blueprint
 
+U161-U163 adds the isolated [Painted frontier](qa/implementation/PAINTED-CEL.md)
+study after the owner preferred anime + ink but requested softer painted
+environments and richer models. The source collection's retroanime models are
+reused with original textures and provenance. The three earlier studies stay
+available. No normal gameplay art migration or rigging is included.
+
+
 Published U158-U160 (V2 `232d31b`, PR #48) adds an isolated [illustration lab](qa/implementation/STYLE-LAB.md)
 to compare retro anime, Borderlands-inspired ink and their hybrid on shared
 simple 3D geometry. This is a graphics test slice, not a production art migration.

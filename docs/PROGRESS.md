@@ -1,5 +1,14 @@
 # 99 Planets development progress
 
+U161-U163 implemented and locally verified: Codex on `feature/painted-cel-ink`.
+The owner prefers anime + ink but finds the first study's shadows too boxy and
+models too simple. [Painted frontier ledger](qa/implementation/PAINTED-CEL.md)
+tracks the fourth study: soft painted light, fine contour, rich vegetation,
+gouache surfaces and three actual textured Meshy models from the supplied site.
+38 browser checks and 361 core tests pass. Public verification follows.
+Art direction acceptance and production rigs remain open.
+
+
 Published U158-U160: V2 `232d31b`, [PR #48](https://github.com/majieddd/worldheart/pull/48), Codex on `feature/illustrative-style-lab` from V2 `496c9a2`.
 Separate illustration lab with retro anime, Borderlands-inspired ink and hybrid
 rendering of identical test terrain, towers and scouts. World/ground/material
