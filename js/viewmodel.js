@@ -444,8 +444,8 @@ export class ViewModel {
   }
 
   // Built lazily, so a run only pays for the archetypes it actually holds.
-  _model(typeKey,era='ancient') {
-    const key=`${typeKey}:${era}`;
+  _model(typeKey,era='ancient',manufacturer=null) {
+    const key=`${typeKey}:${era}:${manufacturer}`;
     if (!this.models.has(key)) {
       const build = BUILD[typeKey] || BUILD.warden;
       const visual={commander:'sword',warden:'spear',marksman:'rifle',bombardier:'mortar',oracle:'staff'}[typeKey];
@@ -453,14 +453,14 @@ export class ViewModel {
       if(typeKey==='duelist'){
         g=new THREE.Group();g.userData.paired=true;g.userData.weaponGroups=[];
         for(const side of [-1,1]){
-          const hand=new THREE.Group(),prop=new THREE.Group(),kit=buildWeapon('twin',era,{...MAT,trim:MAT.steel});
+          const hand=new THREE.Group(),prop=new THREE.Group(),kit=buildWeapon('twin',era,{...MAT,trim:MAT.steel},manufacturer);
           for(const piece of kit.parts)prop.add(mesh(piece.geo,piece.mat));
           hand.name=side>0?'right':'left';hand.position.set(side*1.1,side>0?0:-.04,side>0?0:.1);hand.rotation.y=-side*.35;
           hand.add(prop,arm(hand,side));g.add(hand);g.userData.weaponGroups.push(prop);
         }
         g.userData.blade=[0,0,-.2,0,0,-.92];
       }else if(visual){
-        g=new THREE.Group();const kit=buildWeapon(visual,era,{...MAT,trim:MAT.steel});
+        g=new THREE.Group();const kit=buildWeapon(visual,era,{...MAT,trim:MAT.steel},manufacturer);
         for(const piece of kit.parts)g.add(mesh(piece.geo,piece.mat));
         g.add(arm(g));
         if(kit.support){const support=arm(g,-1,...kit.support);support.userData.supportZ=kit.support[2];g.add(support);}
@@ -481,11 +481,11 @@ export class ViewModel {
     return this.models.get(key);
   }
 
-  show(typeKey,era='ancient') {
+  show(typeKey,era='ancient',manufacturer=null) {
     this.typeKey = typeKey;
-    this.era=era;
+    this.era=era;this.manufacturer=manufacturer;
     if (this.current) this.current.visible = false;
-    this.current = this._model(typeKey,era);
+    this.current = this._model(typeKey,era,manufacturer);
     this.current.visible = true;
     this.grip = GRIP[typeKey] ?? 0.6;
     this.visible = true;
@@ -512,7 +512,7 @@ export class ViewModel {
   update(dt, cam, unit, opts = {}) {
     if (!this.visible || !this.current) return;
     const visual = unit.weaponView || unit.typeKey;
-    if (visual !== this.typeKey || (unit.weaponEra||'ancient')!==this.era) this.show(visual,unit.weaponEra||'ancient');
+    if (visual !== this.typeKey || (unit.weaponEra||'ancient')!==this.era || (unit.weaponManufacturer||null)!==this.manufacturer) this.show(visual,unit.weaponEra||'ancient',unit.weaponManufacturer||null);
     const appearance = `${unit.weaponFamily}:${unit.weaponTint}:${unit.weaponLength}:${unit.weaponEra}:${unit.weaponCore}:${unit.weaponMaterial}`;
     if (this.current.userData.appearance !== appearance) {
       this.current.userData.appearance = appearance;

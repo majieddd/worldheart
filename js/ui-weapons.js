@@ -1,3 +1,5 @@
+import { weaponCard } from './weapon-card.js';
+import { weaponThumbnail } from './weapon-display.js';
 // DOM only. The mode injects item rules and commits each transaction.
 export class WeaponPanel {
   constructor({ game, possession, ui, api, rules }) {
@@ -26,6 +28,7 @@ export class WeaponPanel {
       this.render();
     });
     this.dialog.addEventListener('change', e => {
+      if(e.target.id==='weapon-compare'){this.compareSlot=Number(e.target.value);this.render();return;}
       if (!e.target.matches('select[data-part]')) return;
       const ok = api.request({kind:'part',id:e.target.dataset.id,slot:e.target.dataset.part,part:e.target.value});
       this.notice = ok ? (api.inventory.pending ? 'Part change queued until this attack finishes.' : 'Part fitted.') : 'Part cannot be fitted.'; this.render();
@@ -70,20 +73,24 @@ export class WeaponPanel {
     const inv = this.api.inventory, { name, stats, parts, compatible, trait } = this.rules, touch=!!this.game.mobile?.enabled;
     const equipped = new Set(inv.slots.filter(Boolean)),banked=new Set(this.api.bankedIds?.()||[]);
     const bag = inv.items.filter(x => !equipped.has(x.id));
+    this.compareSlot??=typeof inv.active==='number'?inv.active:0;
+    const comparison=inv.items.find(x=>x.id===inv.slots[this.compareSlot]);
+    const base=comparison?this.rules.inspectStats(comparison):null;
     const card = (item, ground = false) => {
-      const s = stats(item), usable = compatible(item.family);
-      const metrics = s ? s.kind==='beam'?`${s.dps.toFixed(0)} damage / second · ${s.range.toFixed(1)} range · heat-limited beam`:`${s.dmg.toFixed(0)} impact · ${s.cd.toFixed(2)}s cadence · ${s.radius ? `${s.radius.toFixed(1)} reach / ${s.arcDeg.toFixed(0)}° arc` : s.range ? `${s.range.toFixed(1)} range / ${s.speed.toFixed(0)} speed` : `${s.aoe.toFixed(1)} blast / ${s.speed.toFixed(0)} speed`}` : 'Incompatible with this commander';
+      const s = this.rules.inspectStats(item), usable = compatible(item.family);
       const button = (action, label, extra = '') => `<button data-action="${action}" data-id="${item.id}" ${extra}>${label}</button>`;
-      return `<article class="weapon-item rarity-${item.rarity}"><div class="weapon-item-heading"><strong>${name(item)}</strong><span>${item.rarity} · tier ${item.tier}</span></div><p>${metrics}</p><p>${this.api.campaign?(banked.has(item.id)?'Extracted previously; saved version survives defeat.':'Unbanked; extract after victory to keep it.'):''}</p>${!ground&&this.api.campaign?button('infuse',`Infuse to tier ${this.api.planet} (${item.infusions}/3 used)`,item.tier>=this.api.planet||item.infusions>=3?'disabled':''):''}<p class="weapon-parts">${Object.keys(parts).map(k=>parts[k][item.parts[k]].name).join(' / ')}${item.affixes.length ? ' · '+item.affixes.join(', ') : ''}</p>
+      return `<article class="weapon-item" data-item="${item.id}">${weaponCard(item,{stats:s,baseline:comparison?.id!==item.id?base:null,comparison:comparison?.id!==item.id?comparison&&name(comparison):'',image:weaponThumbnail(item)})}
+        ${!usable?'<p>Incompatible with this commander. Stats omit commander bonuses.</p>':''}<p>${this.api.campaign?(banked.has(item.id)?'Extracted previously; saved version survives defeat.':'Unbanked; extract after victory to keep it.'):''}</p>${!ground&&this.api.campaign?button('infuse',`Attune to this planet (${3-item.infusions} uses left)`,item.tier>=this.api.planet||item.infusions>=3?'disabled':''):''}
         ${ground ? `<div class="weapon-actions">${button('pickup','Pick up')}${button('salvage','Salvage drop')}</div>${bag.length >= 12 ? `<label>Replace and salvage a carried item<select data-replace="${item.id}">${bag.map(x=>`<option value="${x.id}">${name(x)} · tier ${x.tier}</option>`).join('')}</select></label>${button('replace','Replace selected')}` : ''}` : `<div class="weapon-actions">${button('equip','Equip 1',`data-slot="0" ${usable?'':'disabled'}`)}${button('equip','Equip 2',`data-slot="1" ${usable?'':'disabled'}`)}${button('salvage','Salvage',equipped.has(item.id)?'disabled':'')}</div><details><summary>Customize parts</summary>${Object.keys(parts).map(slot=>`<label>${slot === 'head' ? 'Head / barrel' : slot === 'grip' ? 'Grip / stock' : 'Power core'}<select data-id="${item.id}" data-part="${slot}">${Object.entries(parts[slot]).filter(([id])=>this.rules.validPart(item.family,slot,id)).map(([id,p])=>`<option value="${id}" ${item.parts[slot]===id?'selected':''}>${p.name}: ${p.note}</option>`).join('')}</select></label>`).join('')}</details>`}</article>`;
     };
     this.dialog.innerHTML = `<header><div><small>COMMANDER LOADOUT</small><h2>Weapons</h2><p>${trait}</p></div><button data-action="close">Resume</button></header>
       <p class="weapon-notice" role="status">${this.notice || 'Solo battle pauses here. Changes during a swing wait until it finishes.'}</p>
-      <div class="weapon-actions"><button data-action="select" data-slot="native">Commander technique${inv.active==='native'?' · active':''}</button><button data-action="select" data-slot="basic">Basic sword${inv.active==='basic'?' · active':''}</button></div>
+      <div class="weapon-controls"><div class="weapon-actions"><button data-action="select" data-slot="native">Commander technique${inv.active==='native'?' · active':''}</button><button data-action="select" data-slot="basic">Basic sword${inv.active==='basic'?' · active':''}</button></div>
+      <div class="weapon-comparison"><label>Compare with<select id="weapon-compare">${inv.slots.map((id,i)=>`<option value="${i}" ${this.compareSlot===i?'selected':''}>Slot ${i+1}${id?'':' (empty)'}</option>`).join('')}</select></label></div></div>
       <h3>Equipment <small>${touch?'Tap Swap in combat':'X to switch'}</small></h3><div class="weapon-equipment">${inv.slots.map((id,i)=>`<section><h4>Slot ${i+1}${inv.active===i?' · active':''}</h4>${id ? `<div class="weapon-actions"><button data-action="select" data-slot="${i}">Use slot ${i+1}</button><button data-action="unequip" data-slot="${i}" ${bag.length>=12?'disabled title="Make space in the backpack first"':''}>Unequip</button></div>${card(inv.items.find(x=>x.id===id))}` : '<p>Empty. Equip a carried weapon below.</p>'}</section>`).join('')}</div>
-      <h3>Backpack ${bag.length} / 12 <small>${inv.scrap} salvaged</small></h3>${bag.length ? bag.map(x=>card(x)).join('') : '<p>No carried weapons. Enemy drops have a beam matching their rarity.</p>'}
+      <h3>Backpack ${bag.length} / 12 <small>${inv.scrap} salvaged</small></h3>${bag.length ? '<div class="weapon-grid">'+bag.map(x=>card(x)).join('')+'</div>' : '<p>No carried weapons. Enemy drops have a beam matching their rarity.</p>'}
       <h3>Nearby drops <small>Automatic pickup within 2.8 units</small></h3>${this.api.nearby().map(x=>card(x,true)).join('') || '<p>Nearby weapons enter your backpack while playing. Full backpack? Drops stay on the ground.</p>'}
-      <p class="weapon-footnote">Compatible parts are free to swap in this prototype. ${this.api.campaign?'Three infusions let a favorite weapon catch up to your current planet tier. Extract after victory to bank items and changes; defeat or a mid-assault reload restores the previous checkpoint.':'This single-planet sandbox does not retain weapon loot between runs.'} ${touch?'Use Inspect loot for a nearby drop, or Swap during combat.':'R pickup and X switch apply while possessing a commander.'}</p>`;
+      <p class="weapon-footnote">Compatible parts are free to swap in this prototype. ${this.api.campaign?'Three infusions let a favorite weapon catch up to your current planet power. Extract after victory to bank items and changes; defeat or a mid-assault reload restores the previous checkpoint.':'This single-planet sandbox does not retain weapon loot between runs.'} ${touch?'Use Inspect loot for a nearby drop, or Swap during combat.':'R pickup and X switch apply while possessing a commander.'}</p>`;
     for (const d of this.dialog.querySelectorAll('details')) {
       d.dataset.item = d.querySelector('select').dataset.id;
       if (expanded.has(d.dataset.item)) d.open = true;

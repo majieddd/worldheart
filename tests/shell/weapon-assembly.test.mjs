@@ -29,6 +29,18 @@ test('all twelve family-era assemblies have finite geometry and distinct silhoue
   assert.equal(new Set(signatures).size,3,`${visual} has three authored shapes`);
  }
 });
+test('manufacturer fittings attach to the original assembly across every family and era',()=>{
+ const id=b=>[...b.min.toArray(),...b.max.toArray()].map(x=>x.toFixed(5)).join(',');
+ for(const visual of ['sword','spear','rifle','mortar','twin','staff'])for(const era of ['ancient','technological','empowered']){
+  const baseline=new Set(buildWeapon(visual,era,mats).parts.flatMap(p=>solidBounds(p.geo)).map(id));
+  for(const maker of ['skibidi','anomalous','bang','rainbow']){
+   const boxes=buildWeapon(visual,era,mats,maker).parts.flatMap(p=>solidBounds(p.geo)),seen=new Set();
+   boxes.forEach((b,i)=>{if(baseline.has(id(b)))seen.add(i);});
+   for(let pass=0;pass<boxes.length;pass++)for(let i=0;i<boxes.length;i++)if(!seen.has(i)&&[...seen].some(j=>boxes[i].clone().expandByScalar(.006).intersectsBox(boxes[j])))seen.add(i);
+   assert.equal(seen.size,boxes.length,`${maker}/${visual}/${era}: an added fitting is detached`);
+  }
+ }
+});
 test('both sword cuts carry the edge sideways through contact without an elbow thrust or pause',()=>{
  const b=buildSoldier('commander',mats,'sword'),a={type:{strike:{kind:'melee'}},swingDur:.85,swingT:0,phase:0};
  for(const side of [-1,1]){

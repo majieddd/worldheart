@@ -19,9 +19,11 @@ try {
     const {surfacePoint,terrainHeight,R}=await import('/js/world.js');
     const make=(id,family)=>{const item=generateWeapon({id,family,seed:42,rng:makeRng(42)});item.parts={head:'balanced',grip:'balanced',core:'tempered'};return item;};
     const stats=(family,key='commander')=>weaponStats(make('fixture',family),key);
+    // Place the fixture on the same support layer, including a sky deck.
+    // terrainHeight alone may be tens of metres below the commander.
     const putEnemy=(unit,distance=2,type='husk')=>{
       const e=W.enemies.spawn(type,W.nav.portalNodes[0],12);
-      e.dir.copy(unit.dir).addScaledVector(unit.fwd,distance/R).normalize();e.height=terrainHeight(e.dir.x,e.dir.y,e.dir.z);e.alt=0;e.swimming=false;
+      e.dir.copy(unit.dir).addScaledVector(unit.fwd,distance/R).normalize();e.height=unit.height;e.alt=0;e.swimming=false;
       e.hp=e.hpMax=1000;return e;
     };
     a.possessed=true;a.swingT=0;

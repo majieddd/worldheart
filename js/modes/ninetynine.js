@@ -433,13 +433,13 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const initialInventory=homeCheckpoint?.inventory || expedition?.assault?.victory?.inventory || expedition?.assault?.start || expedition?.banked;
   const inventory = createInventory(commander.typeKey,initialInventory);
   const lootRng = makeRng((CONFIG.seed ^ 0x19427cb5) >>> 0);
-  const previewModel = item => allies.weaponPreview(FAMILIES[item.family].visual,{era:item.era,core:item.parts.core,material:materialForWeapon(item)},item.parts.head==='long'?1.2:1);
+  const previewModel = item => allies.weaponPreview(FAMILIES[item.family].visual,{era:item.era,core:item.parts.core,material:materialForWeapon(item),manufacturer:item.make?.brand},item.parts.head==='long'?1.2:1);
   const loot = new LootField(game.scene, allies, previewModel);
   const unitRoutes = new UnitRoutes(game.scene,allies,nav);
   const threats = new ThreatGuides(game.scene,enemies);
   let lootSequence = 0, weaponSignature = '';
   const starterFamily = { commander:'sword', duelist:'twinblade', marksman:'carbine', bombardier:'lobber', oracle:'scepter' }[commander.typeKey];
-  const starter = generateWeapon({id:`starter-${CONFIG.seed}`,seed:CONFIG.seed,family:starterFamily,rng:makeRng(CONFIG.seed ^ 0xa42)});
+  const starter = generateWeapon({id:`starter-${CONFIG.seed}`,seed:CONFIG.seed,family:starterFamily,legacy:true,rng:makeRng(CONFIG.seed ^ 0xa42)});
   starter.rarity = 'common'; starter.affixes = []; starter.parts = {head:'balanced',grip:'balanced',core:'tempered'};
   if(!initialInventory){inventory.register(starter); inventory.pickup(starter.id); inventory.request({kind:'equip',id:starter.id,slot:0}); inventory.request({kind:'select',slot:'native'});}
   for(const drop of expedition?.assault?.victory?.drops || [])if(inventory.register(drop.item))loot.add(drop.item,new THREE.Vector3(...drop.dir),drop.height??null);
@@ -458,7 +458,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     commander.baseType = { ...original, speed: 3 * stats.speed, dps: original.dps * stats.power };
     const spec = scaleWeapon(item ? weaponStats(item,commander.typeKey) : original.strike,commander.typeKey,run.getHeartLevel(),commander.mountKey);
     const family = item && FAMILIES[item.family];
-    const appearance=item?{era:item.era,core:item.parts.core,material:materialForWeapon(item)}:null;
+    const appearance=item?{era:item.era,core:item.parts.core,material:materialForWeapon(item),manufacturer:item.make?.brand}:null;
     if (allies.setWeapon(commander,spec,family?.visual,family?.view,0xffffff,item?.parts.head==='long'?1.2:1,appearance)) {
       weaponSignature = signature;
       if (possession.unit === commander) { possession.baseFov = commander.type.strike.fov || 80; ui.showPossession(commander); }

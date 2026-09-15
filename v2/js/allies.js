@@ -395,7 +395,7 @@ export class AllyManager {
 
   _addSpecies(key, typeKey, weapon = null, appearance = null) {
       const mats = this.mats, scene = this.scene;
-      const build = buildSoldier(typeKey, mats, weapon, appearance?.era||'ancient');
+      const build = buildSoldier(typeKey, mats, weapon, appearance?.era||'ancient',appearance?.manufacturer);
       const parts = build.parts.map((p) => {
         const isWeapon=p.at.some(a=>a.joint.name==='weaponR'||a.joint.name==='weaponL');
         const material=weaponAppearanceMaterial(mats,p.mat,isWeapon?appearance:null);
@@ -418,8 +418,8 @@ export class AllyManager {
     a.type = spec ? { ...a.baseType, strike: { ...spec }, reach: spec.radius || spec.range || 14 } : a.baseType;
     a.weaponFamily = spec?.weaponFamily || null;
     a.weaponVisual = visual; a.weaponView = view; a.weaponTint = tint; a.weaponLength = length;
-    a.weaponEra=appearance?.era||null;a.weaponCore=appearance?.core||null;a.weaponMaterial=appearance?.material||null;
-    a.modelKey = visual ? `${a.typeKey}:${visual}${appearance?':'+appearance.era+':'+appearance.core+':'+appearance.material:''}` : a.typeKey;
+    a.weaponManufacturer=appearance?.manufacturer||null;a.weaponEra=appearance?.era||null;a.weaponCore=appearance?.core||null;a.weaponMaterial=appearance?.material||null;
+    a.modelKey = visual ? `${a.typeKey}:${visual}${appearance?':'+appearance.era+':'+appearance.core+':'+appearance.material+':'+(appearance.manufacturer||'legacy'):''}` : a.typeKey;
     if (!this.species[a.modelKey]) this._addSpecies(a.modelKey, a.typeKey, visual,appearance);
     a.heat = 0; a.heatLock = 0; a.beamOn = null; a.beamRamp = 0;
     return true;
@@ -430,7 +430,7 @@ export class AllyManager {
     // and material as an equipped weapon. Replacing a preview discards only
     // its lightweight group; disposing these shared GPU assets would break
     // the equipped model and every matching drop still on the ground.
-    const key=`commander:${visual}:${appearance.era}:${appearance.core}:${appearance.material}`;
+    const key=`commander:${visual}:${appearance.era}:${appearance.core}:${appearance.material}:${appearance.manufacturer||'legacy'}`;
     if(!this.species[key])this._addSpecies(key,'commander',visual,appearance);
     const group=new THREE.Group();
     for(const part of this.species[key].parts)if(part.weapon)for(const at of part.at)if(at.joint.name==='weaponR') {
@@ -973,10 +973,12 @@ export class AllyManager {
     return dealt;
   }
 
-  _weaponEffect(enemy, spec, landed) {
+  _weaponEffect(enemy, spec, landed, owner=null) {
+    if(landed>0&&spec.leech&&owner?.active&&!owner.dead)owner.hp=Math.min(owner.hpMax,owner.hp+Math.min(landed,Math.max(0,enemy.hp+landed))*spec.leech);
     if (!(landed > 0) || !enemy.active || enemy.dead) return;
     if (spec.slow) this.enemies.applySlow(enemy, Math.min(0.7, spec.slow), 2);
     if (spec.burn) this.enemies.applyBurn(enemy, spec.burn, 3);
+    if(spec.knockback&&spec.kind!=='melee'&&owner?.active)this.enemies.knockback(enemy,owner.dir,spec.knockback*(spec.kind==='beam'?Math.min(1,landed/spec.dps):1));
   }
 
   // The player's melee sweep: everything inside the radius and the facing arc
@@ -1001,10 +1003,10 @@ export class AllyManager {
       if (!this._inArc(a, _tmp2, s.arcDeg)) continue;
       const amount = e === primary ? s.dmg : s.dmg * s.cleave;
       const landed = this._dealDamage(a, e, amount, {
-        armorPierce: s.pierce,
+        armorPierce: s.pierce + (s.armorPierce||0),
         capFrac: STRIKE_CAP_FRAC,
       });
-      this._weaponEffect(e, s, landed);
+      this._weaponEffect(e, s, landed, a);
       if (this.onStrikeHit) this.onStrikeHit(e, landed, e === primary, a, s);
       if (s.knockback && e.active && !e.dead) {
         this.enemies.knockback(e, a.dir, s.knockback);
@@ -1092,8 +1094,8 @@ export class AllyManager {
         b.live=false;
       } else if (victim && nearest <= terrainAt) {
         b.pos.copy(b.previous).addScaledVector(_aimV, nearest);
-        const landed = this.enemies.damage(victim, b.spec.dmg, { armorPierce: b.spec.pierce, capFrac: STRIKE_CAP_FRAC });
-        this._weaponEffect(victim, b.spec, landed); this.onStrikeHit?.(victim, landed, true, null, b.spec);
+        const landed = this.enemies.damage(victim, b.spec.dmg, { armorPierce: b.spec.pierce + (b.spec.armorPierce||0), capFrac: STRIKE_CAP_FRAC });
+        this._weaponEffect(victim, b.spec, landed, b.owner?.id===b.ownerId?b.owner:null); this.onStrikeHit?.(victim, landed, true, null, b.spec);
         b.live = false;
       } else if (terrainAt <= step || b.travel >= b.spec.range) b.live = false;
     }
@@ -1123,8 +1125,9 @@ export class AllyManager {
         ? 1 - (1 - s.falloffMul) * Math.min(1, (bestAlong - s.falloffFrom) / (s.range - s.falloffFrom))
         : 1;
       const landed = this.enemies.damage(best, s.dmg * fall, {
-        armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
+        armorPierce: s.pierce + (s.armorPierce||0), capFrac: STRIKE_CAP_FRAC,
       });
+      this._weaponEffect(best,s,landed,a);
       if (this.onStrikeHit) this.onStrikeHit(best, landed, true, a, s);
       hits++;
     }
@@ -1152,6 +1155,7 @@ export class AllyManager {
     sh.live = true;
     sh.t = 0;
     sh.spec = s;
+    sh.owner=a;sh.ownerId=a.id;
     this.worldPos(a, sh.pos);
     sh.pos.addScaledVector(a.dir, 0.6);
     this._aimOf(a, _aimV);
@@ -1183,9 +1187,9 @@ export class AllyManager {
       const d = this.enemyPos(e, _tmp2).distanceTo(sh.pos);
       if (d > s.aoe) continue;
       const landed = this.enemies.damage(e, s.dmg * (1 - 0.5 * Math.min(1, d / s.aoe)), {
-        armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
+        armorPierce: s.pierce + (s.armorPierce||0), capFrac: STRIKE_CAP_FRAC,
       });
-      this._weaponEffect(e, s, landed);
+      this._weaponEffect(e, s, landed, sh.owner?.id===sh.ownerId?sh.owner:null);
       if (this.onStrikeHit) this.onStrikeHit(e, landed, hits === 0, null, s);
       hits++;
     }
@@ -1242,9 +1246,9 @@ export class AllyManager {
     a.beamRamp = Math.min(s.rampTime, a.beamRamp + dt);
     const ramp = 1 + (s.ramp - 1) * (a.beamRamp / s.rampTime);
     const landed = this.enemies.damage(best, s.dps * ramp * dt, {
-      armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
+      armorPierce: s.pierce + (s.armorPierce||0), capFrac: STRIKE_CAP_FRAC,
     });
-    this._weaponEffect(best,s,landed);
+    this._weaponEffect(best,s,landed,a);
     if (this.onBeam) this.onBeam(a, best, landed, _strikeOrigin, bestAlong);
     return 1;
   }

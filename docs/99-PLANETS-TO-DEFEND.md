@@ -4,13 +4,35 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
+Published U154-U157 (V2 `496c9a2`, PR #47) adds a dedicated Homeworld lobby station and manufacturer weapons.
+A stable, fully expanded planet enters the captured catalogue automatically.
+Choosing another home preserves every previous home checkpoint and decoration.
+Homes remain browser saves with export/import; visiting is separate from the active
+expedition. Deliberately captured generator planets also appear in the lobby.
+
+New loot has one of four manufacturers (Skibidi Inc., Anomalous, BANG BANG,
+Rainbow Arms), a fixed procedural modifier with a bounded roll, and one of its
+maker's two active skills. Each maker has a passive tradeoff and attached geometry
+on the shared first-person, third-person and loot model. Six weapon families,
+five material rarities and fitted parts remain. Old saved weapons keep their stats.
+Skill cooldowns remain shared by family, preventing equipment swaps from resetting
+them. Status effects take the strongest burn/slow, rather than stacking indefinitely.
+
+Inventory, ground inspection and Debug World share rarity cards with rendered model
+thumbnails, direct DPS, appropriate combat stats, comparisons, maker traits and
+skills. There are no ammunition, reload or visible level fields. Internal planet
+power and attunement remain compatible with saves. Debug lets collaborators inspect
+manufacturer, seed, modifier, skill and fitted parts without changing player saves.
+[Implementation and verification](qa/implementation/HOMEWORLD-MANUFACTURERS.md).
+
 Published U149-U153 (V2 `9d7a37b`, PR #46) adds claimed home planets after full base expansion. Homes preserve the
 generated planet, defenses, equipment and cosmetic decorations in browser saves,
 with lobby revisit and backup import/export. Peaceful homes use the five approved
 calm arrangements. Incursions start on request, stop after a cleared wave, and
 defeat restores the last peaceful checkpoint. Multiplayer visits remain future
-work. Five new energetic battle arrangements remain in the Audio Lab for listening
-approval; normal play receives revised plasma/blade sounds and the nine locked
+work. The owner rejected the five energetic battle arrangements and reopened melee
+impact feedback; technical verification did not establish listening acceptance.
+Normal play received revised plasma/blade sounds and the nine locked
 approved effects. [Implementation and evidence](qa/implementation/HOMEWORLD-COMBAT-AUDIO.md).
 
 U143-U145 is published as V2 `023a70b` and applies the owner's listening feedback: six accepted clips frozen, contextual combat/rewards and nine owner-provided music tracks. [Current ledger](qa/implementation/AUDIO-FEEDBACK.md). The previous piano sketch has been removed.

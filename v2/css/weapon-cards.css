@@ -1,0 +1,36 @@
+.weapon-card { --rarity:#c6d7df; --maker:#a8dfea; color:#edf2fa; background:#111f31; border:1px solid var(--rarity); border-top:3px solid var(--rarity); font:13px/1.45 system-ui,sans-serif; min-width:0; overflow:hidden; text-align:left; }
+.weapon-card * { box-sizing:border-box; }.wc-uncommon { --rarity:#7fe3ac; }.wc-rare { --rarity:#f3cf7e; }.wc-epic { --rarity:#86e7ed; }.wc-relic { --rarity:#c6a5f0; }
+.wc-heading { padding:12px 14px 0; }.wc-rarity { color:var(--rarity); font-size:10px; text-transform:uppercase; letter-spacing:1.3px; font-weight:700; }
+.weapon-card .wc-heading h3 { color:#edf2fa; font-size:18px; line-height:1.18; margin:5px 0; font-weight:700; letter-spacing:-.3px; }.wc-family { color:#afc9db; font-size:12px; }
+.wc-showcase { display:flex; align-items:center; padding:7px 14px; gap:8px; min-height:108px; background:linear-gradient(115deg,#162b41,#132137); }
+.wc-dps { min-width:78px; flex-shrink:0; display:flex; flex-direction:column; }.wc-dps>strong { font-size:31px; line-height:1.1; font-weight:750; letter-spacing:-1px; }.wc-dps>span { color:#bdd0e2; font-size:10px; text-transform:uppercase; }
+.wc-showcase img { width:calc(100% - 88px); height:auto; min-width:0; object-fit:contain; }
+.wc-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); background:#1b3046; border-block:1px solid #405169; }
+.wc-stats>div { display:flex; flex-direction:column; align-items:center; padding:9px 3px; border-right:1px solid #405169; text-align:center; }.wc-stats>div:last-child { border:0; }
+.weapon-card svg { width:19px; height:19px; fill:none; stroke:#bdd1e5; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+.wc-stat-label { color:#bccdde; font-size:9px; margin:5px 0 2px; }.wc-stats strong { font-size:17px; font-weight:650; }.weapon-card strong small { font-size:10px; margin-left:2px; color:#c5d7e7; }
+.weapon-card .wc-delta { display:block; font-size:10px; font-weight:650; }.weapon-card .wc-up { color:#89eeb4; }.weapon-card .wc-down { color:#ffa1ae; }
+.weapon-card .wc-compare { font-size:10px; color:#c1d2e5; margin:8px 12px; }.wc-traits { padding:4px 13px; }
+.weapon-card .wc-traits p { display:block; font-size:11px; margin:9px 0; }.wc-traits b { color:var(--maker); font-size:12px; }.wc-traits span { display:block; margin-top:2px; color:#c6d6e8; }
+.wc-skill { border-top:1px solid #405169; padding-top:10px; }.wc-skill svg { float:left; margin-right:7px; }.weapon-card .wc-skill small { color:#c5d3e4; font-size:10px; font-weight:400; white-space:nowrap; }
+.weapon-card .wc-parts { color:#b3c7db; font-size:10px; margin:7px 13px; }.weapon-card .wc-flavor { color:#deb4cf; font-style:italic; text-align:center; margin:12px 13px; font-size:11px; }
+.wc-footer { display:flex; gap:8px; align-items:center; padding:8px 12px; background:#20344a; border-top:1px solid #405169; }.wc-footer strong { color:var(--maker); font-size:15px; font-weight:800; }.wc-mark { border:1px solid var(--maker); color:var(--maker); font-size:11px; padding:3px; font-weight:800; }.wc-footer>span:last-child { color:#bdcfe2; margin-left:auto; white-space:nowrap; font-size:10px; }
+.wc-method { display:block; color:#afc4d9; padding:5px 12px; font-size:9px; }.wc-compact .wc-showcase { min-height:78px; }.wc-compact .wc-heading h3 { font-size:16px; }.wc-compact .wc-traits { padding-block:0; }.wc-compact .wc-traits p { margin:6px 0; }
+#weapon-dialog { width:min(1040px,96vw); }.weapon-item { padding:0; border:0; background:transparent; }.weapon-equipment>section { padding:10px; }
+#weapon-dialog .weapon-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }.weapon-actions button,#weapon-dialog button,#weapon-dialog select { min-height:48px; }
+#weapon-dialog .weapon-item>details,#weapon-dialog .weapon-item>p { padding-inline:10px; }#weapon-dialog summary { padding:12px 0; min-height:48px; }
+.weapon-comparison { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }#weapon-dialog .weapon-comparison label { flex:1; min-width:180px; }.weapon-item details { border-top:1px solid #41687b; }.weapon-card .wc-heading h3 { margin:5px 0!important; }
+#loot-inspect { width:340px; max-height:calc(100dvh - 180px); overflow:auto; padding:0; }#loot-name,#loot-preview,#loot-stats { display:none; }#loot-inspect .t-actions,#loot-compatibility,#loot-hint { margin:10px 12px; }#loot-inspect .t-actions { flex-wrap:wrap; }
+#weapon-workbench { padding-top:8px; border-top:1px solid #526679; }#weapon-workbench[hidden] { display:none; }#weapon-workbench input { width:100%; min-height:48px; padding:8px; background:#13263a; color:#edf2fa; border:1px solid #63778c; font:inherit; }#weapon-workbench button { min-height:48px; white-space:normal; }#weapon-workbench .weapon-card { margin-top:16px; }
+@media(max-width:640px) { #weapon-dialog .weapon-grid,.weapon-equipment { grid-template-columns:1fr; }#weapon-dialog { padding:12px; }#loot-inspect { max-width:calc(100vw - 24px); }.wc-heading { padding:10px 11px 0; }.wc-showcase { padding-inline:10px; } }
+
+body.weapon-inspection aside { width:390px; }body.weapon-inspection #core { min-height:48px; }
+@media(max-width:760px) { body.weapon-inspection aside { width:100%; } }
+
+body.weapon-inspection #metrics,body.weapon-inspection #name,body.weapon-inspection #description { display:none; }
+#weapon-dialog .weapon-controls { display:flex; gap:20px; align-items:center; flex-wrap:wrap; }#weapon-dialog .weapon-comparison { flex:1; min-width:160px; }
+#weapon-dialog .weapon-comparison label { margin:0; }#weapon-dialog header p { margin:0; font-size:12px; }#weapon-dialog header h2 { font-size:26px; }
+#weapon-dialog .weapon-controls+.weapon-equipment { margin-top:8px; }#weapon-dialog h3 { margin:14px 0 8px; }
+#weapon-dialog .wc-up { color:#89eeb4; }#weapon-dialog .wc-down { color:#ffa1ae; }#weapon-dialog .wc-compare { margin:8px 12px; }
+#loot-inspect { max-height:calc(100dvh - 245px); }
+@media(max-width:640px) { #weapon-dialog .weapon-controls { gap:4px; } }

@@ -1,5 +1,6 @@
+import { weaponCard } from './weapon-card.js';
+import { weaponThumbnail } from './weapon-display.js';
 import * as THREE from 'three';
-import {PALETTE} from './config.js';
 import {raycastTerrain} from './world.js';
 
 // One owner for world inspection. Merely looking never changes the loadout
@@ -12,7 +13,7 @@ export class WorldContext {
     this.hint=document.createElement('div');this.hint.className='context-hint';this.towerPanel.append(this.hint);
     this.lootPanel=document.createElement('div');this.lootPanel.id='loot-inspect';this.lootPanel.className='panel raised world-context';
     this.lootPanel.hidden=true;ui.root.append(this.lootPanel);
-    this.lootPanel.innerHTML='<div class="t-name" id="loot-name"></div><div id="loot-preview"></div><div id="loot-stats"></div><p id="loot-compatibility"></p><div class="t-actions"><button class="btn primary" id="loot-pickup">Pick up</button><button class="btn" id="loot-equip">Pick up + equip</button><button class="btn ghost" id="loot-close">Close</button></div><div class="context-hint" id="loot-hint"></div>';
+    this.lootPanel.innerHTML='<div id="loot-card"></div><div class="t-name" id="loot-name"></div><div id="loot-preview"></div><div id="loot-stats"></div><p id="loot-compatibility"></p><div class="t-actions"><button class="btn primary" id="loot-pickup">Pick up</button><button class="btn" id="loot-equip">Pick up + equip</button><button class="btn ghost" id="loot-close">Close</button></div><div class="context-hint" id="loot-hint"></div>';
     this.markers=new Map();
     rig.canvas.addEventListener('pointermove',e=>{this.pointer.x=e.clientX;this.pointer.y=e.clientY;});
     this.lootPanel.querySelector('#loot-pickup').onclick=()=>this.pickup(false);
@@ -139,35 +140,14 @@ export class WorldContext {
     const {item}=this.target.object,{rules}=this.mode.weaponPanel,api=this.mode.weapons;
     const stats=rules.inspectStats(item),current=api.inventory.current,baseline=current?rules.stats(current):this.possession.allies.active.find(a=>a.type.commander)?.type.strike;
     const put=(id,value)=>this.lootPanel.querySelector(id).textContent=value;
-    put('#loot-name',`${rules.name(item)} · ${item.rarity} · tier ${item.tier}`);
-    const diff=(key)=>{const n=(stats[key]||0)-(baseline?.[key]||0);return `${n>=0?'+':''}${Math.round(n*10)/10}`;};
-    const rangeKey=stats.radius?'radius':'range',sameReach=stats.kind===baseline?.kind&&baseline?.[rangeKey]>0;
-    const reachCompare=sameReach?` (${diff(rangeKey)}m)`:baseline?.radius||baseline?.range?` · Current ${baseline.kind} reach ${(baseline.radius||baseline.range).toFixed(1)}m`:'';
-    const distance=stats.kind==='lob'?`Blast ${stats.aoe.toFixed(1)}m · Fuse ${stats.fuse}s · Speed ${stats.speed}m/s`:`Reach ${(stats.radius||stats.range).toFixed(1)}m${reachCompare}`;
-    put('#loot-stats',`Damage ${Math.round(stats.dmg||stats.dps||0)} (${diff(stats.dmg?'dmg':'dps')}) · ${stats.cd.toFixed(2)}s cadence (${diff('cd')}s) · ${distance}`);
+    const stamp=JSON.stringify([item,stats,current?.id,baseline]);
+    if(this.lootStamp!==stamp){this.lootStamp=stamp;this.lootPanel.querySelector('#loot-card').innerHTML=weaponCard(item,{stats,baseline,comparison:current?rules.name(current):'commander attack',image:weaponThumbnail(item),compact:true});}
     const usable=rules.compatible(item.family),near=api.nearby().some(x=>x.id===item.id);
     put('#loot-compatibility',`${usable?'Compatible':'Incompatible: item stats without commander bonuses'} · ${item.parts.head} / ${item.parts.grip} / ${item.parts.core}. Compared with ${current?rules.name(current):'current commander attack'}.`);
     const full=api.inventory.items.length-api.inventory.slots.filter(Boolean).length>=12;
     this.lootPanel.querySelector('#loot-pickup').disabled=!near||!api.canInteract();
     this.lootPanel.querySelector('#loot-equip').disabled=!near||!usable||!api.canInteract()||full;
     put('#loot-hint',!near?'Move within 2.8m to pick up':full?'Backpack full. Pick up opens replacement choices.':this.possession.active&&!this.editing?'F: inspect / release pointer':'Choose pickup or equip. Escape resumes.');
-    if(this.previewId!==item.id){this.previewId=item.id;this.preview(item);}
-  }
-  preview(item) {
-    if(!this.previewRenderer){
-      this.previewRenderer=new THREE.WebGLRenderer({alpha:true,antialias:true});this.previewRenderer.setSize(260,100);
-      this.lootPanel.querySelector('#loot-preview').append(this.previewRenderer.domElement);
-      this.previewScene=new THREE.Scene();this.previewScene.add(new THREE.HemisphereLight(PALETTE.sunlight,PALETTE.techBody,3));
-      this.previewCamera=new THREE.OrthographicCamera(-2,2,1,-1,.01,20);this.previewCamera.position.set(0,0,5);this.previewCamera.lookAt(0,0,0);
-    }
-    if(this.previewObject)this.previewScene.remove(this.previewObject);
-    this.previewObject=this.mode.weapons.previewModel(item);this.previewScene.add(this.previewObject);
-    this.previewObject.rotation.set(0,-Math.PI/2,-.25);
-    const box=new THREE.Box3().setFromObject(this.previewObject),size=box.getSize(new THREE.Vector3()),centre=box.getCenter(new THREE.Vector3());
-    this.previewObject.position.sub(centre);
-    const half=Math.max(size.y,size.x/2.6)*.65;
-    this.previewCamera.left=-half*2.6;this.previewCamera.right=half*2.6;this.previewCamera.top=half;this.previewCamera.bottom=-half;this.previewCamera.updateProjectionMatrix();
-    this.previewRenderer.render(this.previewScene,this.previewCamera);
   }
   updateMarkers() {
     if(!this.mode)return;
