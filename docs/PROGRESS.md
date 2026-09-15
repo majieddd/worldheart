@@ -1,6 +1,13 @@
 # 99 Planets development progress
 
-Updated 2026-09-14. This is the collaborator entry point for the owner's direction.
+Active: U136-U139, instrumental-only YuE2 soundtrack and complete sound feedback
+revamp. Codex owns `feature/yue2-audio-revamp` on the latest V2 plus closeout.
+[Audio ledger](qa/implementation/AUDIO-REVAMP.md) records generation provenance,
+event coverage, mobile playback, listening and publication acceptance. Exact
+video workflow verified; local setup is underway. No new audio is live yet.
+The model's noncommercial license is recorded; commercial rights are not asserted.
+
+Updated 2026-09-15. This is the collaborator entry point for the owner's direction.
 
 Published and publicly verified as V2 `309aaa7`: U132-U135, mobile runtime optimization and larger
 Roblox-style thumb controls. Codex on `feature/mobile-performance-polish`,
