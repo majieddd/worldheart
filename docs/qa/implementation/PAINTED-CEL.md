@@ -1,7 +1,7 @@
 # Soft painted cel and ink study
 
 2026-09-15. Owner: Codex, branch `feature/painted-cel-ink`, based on verified
-V2 `232d31b` plus its evidence closeout `1975e9e`. Status: verified locally, publication pending. Usage: unmeasured.
+V2 `232d31b` plus its evidence closeout `1975e9e`. Status: published and verified. Usage: unmeasured.
 
 ## User direction
 The owner prefers anime + ink but rejects the boxy shadows and overly simple
@@ -112,14 +112,14 @@ This is not blind playtesting, physical-device QA or owner aesthetic approval.
 ## Task list
 | Item | State | Acceptance |
 |---|---|---|
-| U161 painted environment | verified locally | Visible surface, lighting and contour differences |
-| U162 textured model integration | verified locally | Three referenced meshes and textures load; hashes match |
-| U163 public checkpoint | active | Pages identity and public browser cases |
+| U161 painted environment | verified | Visible surface, lighting and contour differences |
+| U162 textured model integration | verified | Three referenced meshes and textures load; hashes match |
+| U163 public checkpoint | published | 38 public browser cases and 206 asset identities |
 | Owner art acceptance | open | Owner inspects the fourth direction |
 | Production model adoption | out of scope | Retopology, articulated cannon, LODs and rigs |
 
 ## Where we are
-Implementation and local verification complete; publication follows. Initial
+Implementation and public verification complete. Initial
 runtime images were reviewed and revised to remove flat triangular grass and
 faceted cliff normals. The imported coat contains baked dark paint; lighting
 cannot reconstruct detail absent from its texture. Fine outlines can alias at
@@ -133,3 +133,18 @@ Local closeout: 114/114 modules parse, 169 source/mirror identities, house style
 361 core tests and 14/14 blueprint sections pass. The prior three-style lab passes
 all 39 regression cases. Final native Chrome sample: see local-results.json;
 median about 6.9ms and p95 about 7.1ms. These are desktop frame intervals only.
+
+## Publication
+Published V2 4fcee910ca6fb71771fa8b8ba54d9a5172281a58 after
+[Pages action 35022602468](https://github.com/majieddd/worldheart/actions/runs/35022602468).
+[PR #49](https://github.com/majieddd/worldheart/pull/49) remains a draft stacked
+on the prior illustration study. The root game stays at main 1374122.
+[Open Painted frontier](https://majieddd.github.io/worldheart/v2/painted-lab.html).
+
+All 38 browser cases also pass on the public site. The 206 live/source identities
+include the new loader, model files, pigment texture, page and renderer modules,
+plus the unchanged production assets. Public valley and comparison captures are
+actual browser renders. Public evidence is in PAINTED-CEL/public-results.json,
+public-identity.json, public-valley.png and public-comparison.png.
+Owner art acceptance, physical-phone behavior and production rigging remain open.
+This evidence-only closeout does not change the deployed runtime.

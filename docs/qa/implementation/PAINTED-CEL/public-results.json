@@ -1,0 +1,639 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "Three textured source models load in one live WebGL scene",
+      "ok": true,
+      "detail": {
+        "metrics": {
+          "frames": 2,
+          "calls": 376,
+          "triangles": 592836,
+          "geometries": 298,
+          "textures": 7,
+          "models": 3,
+          "grassBlades": 10716,
+          "flowers": 360,
+          "contexts": 1
+        },
+        "assets": [
+          {
+            "name": "commander",
+            "vertices": 32530,
+            "triangles": 29527,
+            "textures": 1,
+            "sourceDimensions": [
+              1.2168858647346497,
+              1.8993379473686218,
+              0.5964289605617523
+            ],
+            "rigged": false
+          },
+          {
+            "name": "enemy",
+            "vertices": 26377,
+            "triangles": 31019,
+            "textures": 1,
+            "sourceDimensions": [
+              1.898393988609314,
+              1.734734058380127,
+              1.8173170685768127
+            ],
+            "rigged": false
+          },
+          {
+            "name": "tower",
+            "vertices": 33216,
+            "triangles": 28415,
+            "textures": 1,
+            "sourceDimensions": [
+              1.8994519114494324,
+              1.5818759202957153,
+              1.3817939758300781
+            ],
+            "rigged": false
+          }
+        ],
+        "storage": "{}"
+      }
+    },
+    {
+      "name": "Layered environment contains curved grass and flowers",
+      "ok": true,
+      "detail": {
+        "frames": 2,
+        "calls": 376,
+        "triangles": 592836,
+        "geometries": 298,
+        "textures": 7,
+        "models": 3,
+        "grassBlades": 10716,
+        "flowers": 360,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "No campaign simulation is imported",
+      "ok": true
+    },
+    {
+      "name": "commander served bytes match pinned reference",
+      "ok": true,
+      "detail": {
+        "bytes": 1981099,
+        "sha256": "a57aed322e612da9091a5d2d1bd1aeb7b1805b6312b90a0a061d1f71f4c6cb54"
+      }
+    },
+    {
+      "name": "enemy served bytes match pinned reference",
+      "ok": true,
+      "detail": {
+        "bytes": 1710707,
+        "sha256": "e514ea889c608a26d5cfc77c7f0fd998d29f4562c031dc4b73667aa2499aca60"
+      }
+    },
+    {
+      "name": "tower served bytes match pinned reference",
+      "ok": true,
+      "detail": {
+        "bytes": 1954889,
+        "sha256": "1690a96f023964324b15c8f6d892f3193b808ed059cb3bbe74780bc498693e34"
+      }
+    },
+    {
+      "name": "Generated pigment texture serves exact saved bytes",
+      "ok": true
+    },
+    {
+      "name": "Environment animation advances",
+      "ok": true
+    },
+    {
+      "name": "Pause freezes animation and idle rendering",
+      "ok": true
+    },
+    {
+      "name": "Interface text meets AA contrast",
+      "ok": true,
+      "detail": [
+        {
+          "text": "WORLDHEART V2",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "← The first three studies",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "STYLE STUDY 04 / SOFT PAINTED CEL + INK",
+          "ratio": 14.18408804904819,
+          "required": 4.5
+        },
+        {
+          "text": "Painted frontier.",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "Painted stone. Wild meadows. A fine ink ",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "A richer 3D study with the textured comm",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "Valley",
+          "ratio": 8.418981229789951,
+          "required": 4.5
+        },
+        {
+          "text": "Commander",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Cannon",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Invader",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Light Golden hourSoft daylight",
+          "ratio": 8.230483720824555,
+          "required": 4.5
+        },
+        {
+          "text": "Golden hourSoft daylight",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Compare shading",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "04 / SOFT PAINTED + INK",
+          "ratio": 12.991807970169898,
+          "required": 4.5
+        },
+        {
+          "text": "Live 3D · textured Meshy models",
+          "ratio": 12.991807970169898,
+          "required": 4.5
+        },
+        {
+          "text": "Drag to orbit · Scroll to zoom · Arrow k",
+          "ratio": 8.230483720824555,
+          "required": 4.5
+        },
+        {
+          "text": "Fine ink contour",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Painted surfaces",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Play breeze",
+          "ratio": 11.243512404740418,
+          "required": 4.5
+        },
+        {
+          "text": "Reset view",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Save view ↓",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "FROM THE REFERENCE TO THE WORLD",
+          "ratio": 14.18408804904819,
+          "required": 4.5
+        },
+        {
+          "text": "Softer light. More to discover.",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "View the soft painted cel reference ↗",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Paint, instead of flat fill",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Layered pigment, moss-stained stone, flo",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "Soft shapes, selective ink",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "A broad painted light transition and sof",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "The actual reference models",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Textured Meshy models from your collecti",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "Return to the three-way comparison ↗",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        }
+      ]
+    },
+    {
+      "name": "commander preset renders finite scene",
+      "ok": true
+    },
+    {
+      "name": "tower preset renders finite scene",
+      "ok": true
+    },
+    {
+      "name": "enemy preset renders finite scene",
+      "ok": true
+    },
+    {
+      "name": "valley preset renders finite scene",
+      "ok": true
+    },
+    {
+      "name": "Comparison displays two synchronized views",
+      "ok": true
+    },
+    {
+      "name": "Soft and hard cel produce distinct scene pixels",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 4.769752788753659
+      }
+    },
+    {
+      "name": "Pigment toggle changes rendered surfaces",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 2.6241292205197047
+      }
+    },
+    {
+      "name": "Fine contour toggle changes rendered silhouettes",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 0.25542960366586287
+      }
+    },
+    {
+      "name": "Pointer drag changes yaw and elevation",
+      "ok": true
+    },
+    {
+      "name": "Wheel zoom changes distance",
+      "ok": true
+    },
+    {
+      "name": "Keyboard orbit and visible focus work",
+      "ok": true
+    },
+    {
+      "name": "Home restores selected preset",
+      "ok": true
+    },
+    {
+      "name": "Overcast changes visible lighting",
+      "ok": true
+    },
+    {
+      "name": "Save view exports a real scene PNG",
+      "ok": true,
+      "detail": {
+        "width": 1518,
+        "height": 688
+      }
+    },
+    {
+      "name": "Lab leaves browser saves unchanged",
+      "ok": true
+    },
+    {
+      "name": "Responsive comparison 375",
+      "ok": true,
+      "detail": {
+        "body": 375,
+        "controls": [
+          {
+            "text": "Valley",
+            "width": 77,
+            "scroll": 77,
+            "height": 48
+          },
+          {
+            "text": "Commander",
+            "width": 77,
+            "scroll": 77,
+            "height": 48
+          },
+          {
+            "text": "Cannon",
+            "width": 77,
+            "scroll": 77,
+            "height": 48
+          },
+          {
+            "text": "Invader",
+            "width": 77,
+            "scroll": 77,
+            "height": 48
+          },
+          {
+            "text": "Golden hourSoft daylight",
+            "width": 107,
+            "scroll": 107,
+            "height": 48
+          },
+          {
+            "text": "Single view",
+            "width": 74,
+            "scroll": 74,
+            "height": 48
+          },
+          {
+            "text": "Play breeze",
+            "width": 105,
+            "scroll": 105,
+            "height": 48
+          },
+          {
+            "text": "Reset view",
+            "width": 105,
+            "scroll": 105,
+            "height": 48
+          },
+          {
+            "text": "Save view ↓",
+            "width": 105,
+            "scroll": 105,
+            "height": 48
+          }
+        ],
+        "views": [
+          {
+            "w": 349,
+            "h": 440
+          },
+          {
+            "w": 349,
+            "h": 439
+          }
+        ]
+      }
+    },
+    {
+      "name": "Responsive comparison 768",
+      "ok": true,
+      "detail": {
+        "body": 768,
+        "controls": [
+          {
+            "text": "Valley",
+            "width": 64,
+            "scroll": 64,
+            "height": 48
+          },
+          {
+            "text": "Commander",
+            "width": 100,
+            "scroll": 100,
+            "height": 48
+          },
+          {
+            "text": "Cannon",
+            "width": 75,
+            "scroll": 75,
+            "height": 48
+          },
+          {
+            "text": "Invader",
+            "width": 73,
+            "scroll": 73,
+            "height": 48
+          },
+          {
+            "text": "Golden hourSoft daylight",
+            "width": 123,
+            "scroll": 123,
+            "height": 48
+          },
+          {
+            "text": "Single view",
+            "width": 94,
+            "scroll": 94,
+            "height": 48
+          },
+          {
+            "text": "Play breeze",
+            "width": 95,
+            "scroll": 95,
+            "height": 48
+          },
+          {
+            "text": "Reset view",
+            "width": 90,
+            "scroll": 90,
+            "height": 48
+          },
+          {
+            "text": "Save view ↓",
+            "width": 95,
+            "scroll": 95,
+            "height": 48
+          }
+        ],
+        "views": [
+          {
+            "w": 359,
+            "h": 480
+          },
+          {
+            "w": 358,
+            "h": 480
+          }
+        ]
+      }
+    },
+    {
+      "name": "Responsive comparison 1280",
+      "ok": true,
+      "detail": {
+        "body": 1280,
+        "controls": [
+          {
+            "text": "Valley",
+            "width": 64,
+            "scroll": 64,
+            "height": 48
+          },
+          {
+            "text": "Commander",
+            "width": 100,
+            "scroll": 100,
+            "height": 48
+          },
+          {
+            "text": "Cannon",
+            "width": 75,
+            "scroll": 75,
+            "height": 48
+          },
+          {
+            "text": "Invader",
+            "width": 73,
+            "scroll": 73,
+            "height": 48
+          },
+          {
+            "text": "Golden hourSoft daylight",
+            "width": 123,
+            "scroll": 123,
+            "height": 48
+          },
+          {
+            "text": "Single view",
+            "width": 94,
+            "scroll": 94,
+            "height": 48
+          },
+          {
+            "text": "Play breeze",
+            "width": 95,
+            "scroll": 95,
+            "height": 48
+          },
+          {
+            "text": "Reset view",
+            "width": 90,
+            "scroll": 90,
+            "height": 48
+          },
+          {
+            "text": "Save view ↓",
+            "width": 95,
+            "scroll": 95,
+            "height": 48
+          }
+        ],
+        "views": [
+          {
+            "w": 599,
+            "h": 550
+          },
+          {
+            "w": 598,
+            "h": 550
+          }
+        ]
+      }
+    },
+    {
+      "name": "Native desktop renders sustained frames",
+      "ok": true,
+      "detail": {
+        "samples": 875,
+        "median": 6.900000000001455,
+        "p95": 7,
+        "p99": 7.100000000002183,
+        "metrics": {
+          "frames": 974,
+          "calls": 377,
+          "triangles": 593004,
+          "geometries": 300,
+          "textures": 8,
+          "models": 3,
+          "grassBlades": 10716,
+          "flowers": 360,
+          "contexts": 1
+        }
+      }
+    },
+    {
+      "name": "OS reduced motion stops breeze",
+      "ok": true
+    },
+    {
+      "name": "Graphics interruption shows recovery guidance",
+      "ok": true
+    },
+    {
+      "name": "Graphics recovery renders again",
+      "ok": true
+    },
+    {
+      "name": "Shareable link restores model comparison and light",
+      "ok": true
+    },
+    {
+      "name": "Repeated view changes keep GPU allocation stable",
+      "ok": true,
+      "detail": {
+        "frames": 5,
+        "calls": 596,
+        "triangles": 1105536,
+        "geometries": 298,
+        "textures": 8,
+        "models": 3,
+        "grassBlades": 10716,
+        "flowers": 360,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "Missing model shows a recoverable error and disables export",
+      "ok": true
+    },
+    {
+      "name": "Touch selects detailed invader view",
+      "ok": true
+    },
+    {
+      "name": "Real touch swipe orbits the scene",
+      "ok": true
+    },
+    {
+      "name": "No runtime or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

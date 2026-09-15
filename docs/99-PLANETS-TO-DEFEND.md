@@ -1,6 +1,6 @@
 # 99 Planets To Defend: running development blueprint
 
-U161-U163 adds the isolated [Painted frontier](qa/implementation/PAINTED-CEL.md)
+Published U161-U163 (V2 `4fcee91`, PR #49) adds the isolated [Painted frontier](qa/implementation/PAINTED-CEL.md)
 study after the owner preferred anime + ink but requested softer painted
 environments and richer models. The source collection's retroanime models are
 reused with original textures and provenance. The three earlier studies stay

@@ -1,11 +1,11 @@
 # 99 Planets development progress
 
-U161-U163 implemented and locally verified: Codex on `feature/painted-cel-ink`.
+Published U161-U163: V2 `4fcee91`, [PR #49](https://github.com/majieddd/worldheart/pull/49), Codex on `feature/painted-cel-ink`.
 The owner prefers anime + ink but finds the first study's shadows too boxy and
 models too simple. [Painted frontier ledger](qa/implementation/PAINTED-CEL.md)
 tracks the fourth study: soft painted light, fine contour, rich vegetation,
 gouache surfaces and three actual textured Meshy models from the supplied site.
-38 browser checks and 361 core tests pass. Public verification follows.
+38 local and 38 public browser checks, 39 previous-style regressions, 361 core tests, 114 parsed modules, 169 mirrors and 206 public/source identities pass. [Open Painted frontier](https://majieddd.github.io/worldheart/v2/painted-lab.html). Main remains `1374122`.
 Art direction acceptance and production rigs remain open.
 
 
