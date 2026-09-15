@@ -249,11 +249,28 @@ function updateShadowCamera() {
   sun.target.updateMatrixWorld();
 }
 
+let bootChannel;
+function yieldBootTask(){
+  if(globalThis.scheduler?.yield)return globalThis.scheduler.yield();
+  // Message tasks avoid the nested setTimeout clamp on mobile Safari.
+  bootChannel ||= new MessageChannel();
+  return new Promise(resolve=>{bootChannel.port1.onmessage=resolve;bootChannel.port2.postMessage(0);});
+}
+async function finishBootSteps(steps){
+  let step;
+  do{
+    const slice=performance.now();
+    do{step=steps.next();}while(!step.done&&performance.now()-slice<8);
+    if(!step.done)await yieldBootTask();
+  }while(!step.done);
+}
+
 async function boot() {
   resize();
   const totalSteps = world.buildStepCount + 2;
-  let step = 0;
+  let step = 0;const bootStages=[];
   const progress = async (label) => {
+    const now=performance.now();if(bootStages.length)bootStages.at(-1).ms=now-bootStages.at(-1).start;bootStages.push({label,start:now,ms:0});
     bootStatus.textContent = label;
     bootFill.style.width = `${(++step / totalSteps) * 100}%`;
     await nextFrame();
@@ -262,7 +279,7 @@ async function boot() {
   await progress(BOOT_LABELS[0]);
   world.buildStep(0);
   await progress(BOOT_LABELS[1]);
-  nav.build();
+  await finishBootSteps(nav.buildSteps());
   if (CONFIG.terrain) {
     rig.heightProbe = dir => surfaceElevation(dir);
     rig.terrainTop = TERRAIN_TOP;
@@ -277,7 +294,7 @@ async function boot() {
   }
   for (let i = 1; i < world.buildStepCount; i++) {
     await progress(BOOT_LABELS[i + 1]);
-    world.buildStep(i);
+    await finishBootSteps(world.buildSteps(i));
   }
   setupLighting();
   await progress(BOOT_LABELS[7]);
@@ -519,6 +536,8 @@ async function boot() {
   bootFill.style.width = '100%';
   await nextFrame();
 
+  bootStages.at(-1).ms=performance.now()-bootStages.at(-1).start;window.WH.bootStages=bootStages;
+  bootChannel?.port1.close();bootChannel?.port2.close();bootChannel=null;
   document.getElementById('boot').classList.add('done');
   rig.introFlight(heartPos.clone().normalize());
   rig.autoOrbit = rig.confine ? 0 : 0.045;

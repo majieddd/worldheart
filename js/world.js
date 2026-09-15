@@ -115,7 +115,7 @@ export function createTerrainFault(dir,axis,protectedDir){
 export function addTerrainFault(dir,axis,protectedDir,planned=null){
   if(TERRAIN_FAULTS.length>=8)return null;
   const fault=planned||createTerrainFault(dir,axis,protectedDir);
-  TERRAIN_FAULTS.push(fault);return fault;
+  TERRAIN_FAULTS.push(fault);heightValid.fill(0);return fault;
 }
 export function terrainFaultDelta(f,x,y,z){
   const dot=x*f.dir.x+y*f.dir.y+z*f.dir.z;if(dot<f.limit)return 0;
@@ -209,6 +209,7 @@ function initSpaceLayout(seed) {
 }
 
 export function initTerrainField(seed) {
+  heightValid.fill(0);regionalLast.x=NaN;
   R=CONFIG.planetRadius;FEATURES=null;
   FA=R/30;F_ROLL=4.3*FA;F_MOIST=4.6*(1+(FA-1)*.8);
   solarSample=CONFIG.environment?.solar?createSolarSampler(CONFIG.environment.theme):null;
@@ -244,17 +245,23 @@ export function continentalityAt(dx, dy, dz) {
   return fbm3(nBase, dx * F_CONT, dy * F_CONT, dz * F_CONT, 2) + .12;
 }
 const regionalDetail={detailOnly:true,noise:1};
+const regionalLast={x:NaN,y:NaN,z:NaN,h:0,land:0};
 function regionalHeight(dx,dy,dz,includeFine) {
+  let h,land;
+  if(regionalLast.x===dx&&regionalLast.y===dy&&regionalLast.z===dz){h=regionalLast.h;land=regionalLast.land;}
+  else{
   const profile=CONFIG.terrain;
   const c=continentalityAt(dx,dy,dz);
-  const land=smoothstep(-.2+profile.ocean,.18+profile.ocean,c);
+  land=smoothstep(-.2+profile.ocean,.18+profile.ocean,c);
   const inland=smoothstep(-.04+profile.ocean,.5+profile.ocean,c);
   const rolling=fbm3(nDetail,dx*F_ROLL,dy*F_ROLL,dz*F_ROLL,3);
   const relief=FORMATIONS.height(dx,dy,dz,regionalDetail);
-  let h=lerp(-1.65+.5*c,.55,land)+land*rolling*.32*regionalDetail.noise;
+  h=lerp(-1.65+.5*c,.55,land)+land*rolling*.32*regionalDetail.noise;
   // Below-sea incisions begin beyond the shoreline mask. The land between
   // ocean and dry cuts stays above sea level, preventing an exposed water wall.
   h+=relief<0?(c>.3+profile.ocean?Math.max(relief,-coastClearance.sample(dx,dy,dz)*.45):0):inland*relief;
+    Object.assign(regionalLast,{x:dx,y:dy,z:dz,h,land});
+  }
   if(includeFine){
     const fine=fbm3(nDetail,dx*F_FINE+53,dy*F_FINE,dz*F_FINE,2);
     const fine2=nDetail(dx*F_FINE2+17,dy*F_FINE2,dz*F_FINE2);
@@ -287,7 +294,17 @@ export function solidTerrainAt(dir,feet,height){return FEATURES?.intersects(dir.
 
 // includeFine=false gives the gameplay surface: the same terrain minus the
 // cosmetic facet relief, so walkability never fractures on visual noise.
-export function terrainHeight(dx, dy, dz, includeFine = true) {
+// Exact-coordinate memoization: collisions only evict; never quantize the field.
+// Repeated slope/navigation/colour probes share values, including both detail modes.
+const HEIGHT_SLOTS=32768, heightKeys=new Float64Array(HEIGHT_SLOTS*3), heightValues=new Float64Array(HEIGHT_SLOTS*2), heightValid=new Uint8Array(HEIGHT_SLOTS);
+export function terrainHeight(dx,dy,dz,includeFine=true){
+  const i=((Math.imul((dx*1048576)|0,73856093)^Math.imul((dy*1048576)|0,19349663)^Math.imul((dz*1048576)|0,83492791))>>>0)&(HEIGHT_SLOTS-1),at=i*3,bit=includeFine?1:2;
+  if(heightKeys[at]!==dx||heightKeys[at+1]!==dy||heightKeys[at+2]!==dz){heightKeys[at]=dx;heightKeys[at+1]=dy;heightKeys[at+2]=dz;heightValid[i]=0;}
+  const slot=i*2+(includeFine?0:1);
+  if(!(heightValid[i]&bit)){heightValues[slot]=uncachedTerrainHeight(dx,dy,dz,includeFine);heightValid[i]|=bit;}
+  return heightValues[slot];
+}
+function uncachedTerrainHeight(dx, dy, dz, includeFine = true) {
   if(floatingWorld())return -2.2;
   // Space maps have no continents: a deep void with authored rock platforms
   // hanging at their own altitudes.
@@ -736,7 +753,8 @@ export function terrainThermal(dir,h){
 // IcosahedronGeometry treats detail as edge segments (20*(d+1)^2 faces),
 // which is far too coarse here and lets face chords sag below the analytic
 // surface, which in turn poisons shore-depth water into dark rings.
-function buildIcoGeometry(detail) {
+function buildIcoGeometry(...args){const steps=buildIcoGeometrySteps(...args);let step;do{step=steps.next();}while(!step.done);return step.value;}
+function* buildIcoGeometrySteps(detail) {
   const t = (1 + Math.sqrt(5)) / 2;
   let verts = [
     [-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0],
@@ -767,7 +785,7 @@ function buildIcoGeometry(detail) {
       return m;
     };
     const next = [];
-    for (const [a, b, c] of faces) {
+    let face=0;for (const [a, b, c] of faces) {if(face++%2048===0)yield;
       const ab = mid(a, b), bc = mid(b, c), ca = mid(c, a);
       next.push([a, ab, ca], [b, bc, ab], [c, ca, bc], [ab, bc, ca]);
     }
@@ -775,7 +793,7 @@ function buildIcoGeometry(detail) {
   }
   const pos = new Float32Array(faces.length * 9);
   let o = 0;
-  for (const [a, b, c] of faces) {
+  let face=0;for (const [a, b, c] of faces) {if(face++%2048===0)yield;
     for (const vi of [a, b, c]) {
       const v = verts[vi];
       pos[o] = v[0]; pos[o + 1] = v[1]; pos[o + 2] = v[2];
@@ -787,11 +805,12 @@ function buildIcoGeometry(detail) {
   return geo;
 }
 
-function displaceGeometry(geo) {
+function displaceGeometry(...args){const steps=displaceGeometrySteps(...args);let step;do{step=steps.next();}while(!step.done);return step.value;}
+function* displaceGeometrySteps(geo) {
   const pos = geo.attributes.position;
   const cache = new Map();
   const v = new THREE.Vector3();
-  for (let i = 0; i < pos.count; i++) {
+  for (let i = 0; i < pos.count; i++) {if(i%512===0)yield;
     v.fromBufferAttribute(pos, i).normalize();
     const key = ((v.x * 8191.5 + 8192) | 0) * 268435456 + ((v.y * 8191.5 + 8192) | 0) * 16384 + ((v.z * 8191.5 + 8192) | 0);
     let h = cache.get(key);
@@ -804,8 +823,9 @@ function displaceGeometry(geo) {
   return geo;
 }
 
-function buildTerrainMesh() {
-  const geo = displaceGeometry(buildIcoGeometry(CONFIG.terrainDetail));
+function buildTerrainMesh(...args){const steps=buildTerrainMeshSteps(...args);let step;do{step=steps.next();}while(!step.done);return step.value;}
+function* buildTerrainMeshSteps() {
+  const geo = yield* displaceGeometrySteps(yield* buildIcoGeometrySteps(CONFIG.terrainDetail));
   const pos = geo.attributes.position;
   const colors = new Float32Array(pos.count * 3);
   const lava=CONFIG.terrain?new Float32Array(pos.count*2):null;
@@ -813,7 +833,7 @@ function buildTerrainMesh() {
   const cen = new THREE.Vector3(), n = new THREE.Vector3(), col = new THREE.Color();
   const rng = mulberry32(CONFIG.seed ^ 0xC0FFEE);
 
-  for (let i = 0; i < pos.count; i += 3) {
+  for (let i = 0; i < pos.count; i += 3) {if(i%768===0)yield;
     a.fromBufferAttribute(pos, i);
     b.fromBufferAttribute(pos, i + 1);
     c3.fromBufferAttribute(pos, i + 2);
@@ -1499,7 +1519,8 @@ function applySway(mat, uniforms = null) {
   return shared;
 }
 
-function scatterDecor(rng) {
+function scatterDecor(...args){const steps=scatterDecorSteps(...args);let step;do{step=steps.next();}while(!step.done);return step.value;}
+function* scatterDecorSteps(rng) {
   const scatter=ecologyScatter(CONFIG.seed);
   const pineGeo = makePineGeometry();
   const leafGeo = makeBroadleafGeometry();
@@ -1531,7 +1552,7 @@ function scatterDecor(rng) {
   const capMax = Math.min(Math.PI,(CONFIG.map.mode==='ninetynine'?CONFIG.map.fieldTheta:BATTLEFIELD.theta)*1.5);
   let attempts = 0;
   const maxAttempts = 26000 * Math.max(mul, 1);
-  while (attempts++ < maxAttempts && (spots.pine.length < caps.pine || spots.rock.length < caps.rock)) {
+  while (attempts++ < maxAttempts && (spots.pine.length < caps.pine || spots.rock.length < caps.rock)) {if(attempts%64===0)yield;
     if (capC && (!CONFIG.terrain || rng()<.8)) {
       const cosMax = Math.cos(capMax);
       const cz = 1 - rng() * (1 - cosMax);
@@ -1619,7 +1640,7 @@ function scatterDecor(rng) {
   // Global, bounded scenery makes distant hemispheres carry the same theme.
   if(ECOLOGY&&CONFIG.biomeKey==='auto'){
     let total=0;
-    for(let k=0;k<4800&&total<1200;k++){
+    for(let k=0;k<4800&&total<1200;k++){if(k%64===0)yield;
       dir.set(...scatter.point());if(!scatter.accept(dir.toArray()))continue;
       const h=navigationHeight(dir.x,dir.y,dir.z),water=waterDepthAt(dir,h),kind=BIOME_VISUALS[biomeAt(dir,h)]?.decor,list=exoticSpots[kind];
       if(!list||list.length>=500||water>0&&!['coral','coralreef','kelp'].includes(kind)||slopeAt(dir)>.6)continue;
@@ -1842,10 +1863,10 @@ export function buildPortal(pos) {
 
 // Containment perimeter for capped battlefields: a terrain-hugging ribbon of
 // player-tech energy, quiet enough to read as a boundary, not a spectacle.
-export function buildFogVeil(centerDir, theta) {
+export function buildFogVeil(centerDir, theta, surface=null) {
   // Campaign fog follows the terrain, so peaks are covered without being
   // sliced by a low spherical shell. Expansion remains a uniform write.
-  const geo = CONFIG.terrain ? displaceGeometry(buildIcoGeometry(CONFIG.terrainDetail)) : new THREE.SphereGeometry(R + 4.5, 96, 64);
+  const geo = CONFIG.terrain ? (surface?new THREE.BufferGeometry().setAttribute('position',surface.attributes.position.clone()):displaceGeometry(buildIcoGeometry(CONFIG.terrainDetail))) : new THREE.SphereGeometry(R + 4.5, 96, 64);
   if (CONFIG.terrain) {
     const position = geo.attributes.position;
     for (let i = 0; i < position.count; i++) {
@@ -2005,13 +2026,15 @@ export class World {
     this.rng = mulberry32(CONFIG.seed ^ 0xDECAF);
   }
 
-  buildStep(step) {
+  buildStep(step) {for(const _ of this.buildSteps(step)){/* Synchronous tool compatibility. */}}
+
+  *buildSteps(step) {
     switch (step) {
       case 0:
         initTerrainField(CONFIG.seed);
         break;
       case 1:
-        this.terrain = buildTerrainMesh();
+        this.terrain = yield* buildTerrainMeshSteps();
         // Terrain RECEIVES but never CASTS. At terrainDetail 7 the globe is
         // 327,680 triangles, so making it a caster re-renders all of it into
         // the shadow map every frame; and it has no self-shadowing to show at
@@ -2036,7 +2059,7 @@ export class World {
         break;
       }
       case 4: {
-        this.decor = scatterDecor(this.rng);
+        this.decor = yield* scatterDecorSteps(this.rng);
         if(FEATURES){this.featureArt=FEATURES.build({paint:(c,d,h,s)=>faceColor(new THREE.Vector3(...d),h,s*3.2,.5,c),color:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),navigationHeight(...d))]?.rock||0x9b927f,topColor:d=>BIOME_VISUALS[biomeAt(new THREE.Vector3(...d),navigationHeight(...d))]?.color||0x859e63});this.scene.add(this.featureArt);}
         // Decor is instanced, so casting costs one shadow draw per set rather
         // than one per tree. This is most of what sells the diorama read.
@@ -2091,7 +2114,7 @@ export class World {
   }
 
   addFogVeil(centerDir, theta) {
-    this.fogVeil = buildFogVeil(centerDir, theta);
+    this.fogVeil = buildFogVeil(centerDir, theta, this.terrain?.geometry);
     this.scene.add(this.fogVeil.mesh);
     return this.fogVeil;
   }

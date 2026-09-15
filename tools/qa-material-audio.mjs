@@ -16,9 +16,12 @@ try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   page.on('pageerror', e => report.errors.push(String(e)));
   const assets = [];
+  const musicRequests=[];
+  page.on('request',r=>{if(/\/audio\/(soundtrack|auditions)\/.*\.mp3/.test(r.url()))musicRequests.push(r.url());});
   page.on('request', r => { if (r.url().includes('/audio/material/')) assets.push(r.url()); });
   await page.goto(base + '/audio-lab.html');
   await page.waitForFunction(() => !!window.audioLab);
+  check('No soundtrack or draft music downloads before an audition gesture',musicRequests.length===0);
   check('No audio downloads or context before a gesture', assets.length === 0 && await page.evaluate(() => !audioLab.draft.ctx && !audioLab.previous.ctx));
   await page.getByRole('button', { name: 'Draft: Menu click', exact: true }).click();
   await page.waitForFunction(() => !!audioLab.draft.bank);
@@ -42,14 +45,23 @@ try {
     check(`Measured non-silent, unclipped output: ${id}`, peak > .0005 && peak < .99, { peak });
   }
   check('One cached bank download across all cue buttons', assets.filter(x => x.endsWith('impacts.wav')).length === 1);
-  check('Nine owner tracks are available without autoplay', await page.locator('audio').count()===9 && await page.locator('audio').evaluateAll(a=>a.every(x=>x.paused&&x.preload==='none')));
+  check('Nine owner tracks are available without autoplay', await page.locator('#tracks audio').count()===9 && await page.locator('audio').evaluateAll(a=>a.every(x=>x.paused&&x.preload==='none')));
   for(let i=0;i<9;i++) {
-    await page.locator('audio').nth(i).evaluate(a=>a.play());
-    await page.waitForFunction(i=>document.querySelectorAll('audio')[i].currentTime>.1,i);
+    await page.locator('#tracks audio').nth(i).evaluate(a=>a.play());
+    await page.waitForFunction(i=>document.querySelectorAll('#tracks audio')[i].currentTime>.1,i);
     check('Owner track '+(i+1)+' decodes and plays alone',await page.locator('audio').evaluateAll(a=>a.filter(x=>!x.paused).length===1));
   }
   await page.locator('#stop').click();
   check('Stop ends all owner music players',await page.locator('audio').evaluateAll(a=>a.every(x=>x.paused)));
+  check('Five approval drafts are available with lazy loading',await page.locator('#auditions audio').count()===5&&await page.locator('#auditions audio').evaluateAll(a=>a.every(x=>x.preload==='none'&&x.paused)));
+  for(let i=0;i<5;i++){
+    await page.locator('#auditions audio').nth(i).evaluate(a=>a.play());
+    await page.waitForFunction(i=>document.querySelectorAll('#auditions audio')[i].currentTime>.1,i);
+    check('Planet draft '+(i+1)+' decodes a full 90-second audition and plays alone',await page.locator('audio').evaluateAll(a=>a.filter(x=>!x.paused).length===1)&&await page.locator('#auditions audio').nth(i).evaluate(a=>a.duration>=90&&a.duration<=96.15));
+  }
+  await page.locator('#stop').click();
+  check('Stop ends all approval drafts',await page.locator('#auditions audio').evaluateAll(a=>a.every(x=>x.paused)));
+
   check('Rejected piano player removed',await page.locator('#piano').count()===0);
   for(const [family,material,target,expected] of [['spear','iron','flesh','spearFlesh'],['twinblade','iron','flesh','twinFlesh'],['sword','wood','flesh','woodFlesh'],['sword','iron','armor','swordArmor']]) {
     await page.selectOption('#family',family);await page.selectOption('#material',material);await page.selectOption('#target',target);
@@ -129,6 +141,7 @@ try {
   await fail.close();
 
   const game = await browser.newPage({ viewport: { width: 844, height: 390 }, hasTouch: true, isMobile: true });
+  const draftMusicRequests=[];game.on('request',r=>{if(r.url().includes('/audio/auditions/'))draftMusicRequests.push(r.url());});
   game.on('pageerror', e => report.errors.push(String(e)));
   const downloads = []; game.on('request', r => { if (r.url().includes('/audio/material/') || r.url().endsWith('/audio-material.js')) downloads.push(r.url()); });
   // Small original map isolates audio startup without expensive campaign generation.
@@ -166,6 +179,7 @@ try {
   await game.evaluate(()=>WH.game.audio.toggleMute());
   await game.evaluate(()=>WH.game.soundtrack.setEnabled(false));
   check('Music can stop independently of effects',await game.evaluate(()=>WH.game.soundtrack.decks.length===0&&!WH.game.audio.muted));
+  check('Approval music never downloads during game context changes',draftMusicRequests.length===0);
   await game.screenshot({ path: out.replace('.json', '-game.png') });
   await game.close();
   const lobby=await browser.newPage({hasTouch:true,isMobile:true});lobby.on('pageerror',e=>report.errors.push(String(e)));

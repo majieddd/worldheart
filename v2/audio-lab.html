@@ -10,7 +10,7 @@
   <header><a href="./">Worldheart</a><span>Sound comparison</span><a href="debug.html">Debug world</a></header>
   <main>
     <h1>Listen before replacing.</h1>
-    <p>The previous sounds are restored in the game. This revision preserves your six approved effects and updates weapon impacts, creature reactions and rewards.</p>
+    <p>Weapon swings now use a softer, weightier air movement in normal play. Compare sword, Twin Fang and spear below. Your six approved effects stay intact.</p>
     <p class="muted">Compare at a comfortable volume. Both columns play without an ambient bed here so you can isolate the effects. The game now uses your supplied soundtrack. Music is controlled separately in Settings.</p>
     <section aria-label="Listening controls" class="controls">
       <label for="volume">Listening volume <output id="level">55%</output></label>
@@ -27,6 +27,12 @@
         <label>Creature <select id="creature"><option value="husk">Husk</option><option value="mite">Mite</option><option value="aegis">Aegis</option><option value="wisp">Wisp</option><option value="colossus">Colossus</option></select></label>
       </div><div id="cues"></div>
     </section>
+    <section id="planet-drafts" aria-labelledby="draft-music-heading">
+      <h2 id="draft-music-heading">Five planet music auditions</h2>
+      <p>Five planet arrangements based on your supplied songs, each around 90 seconds, with an instrumental-only brief. These are approval drafts; your game soundtrack stays as supplied.</p>
+      <p class="muted">Please judge the musical fit, texture and absence of voices before approving a track. Each player names its planet and reference.</p>
+      <div id="auditions"></div>
+    </section>
     <section aria-labelledby="music-heading">
       <h2 id="music-heading">Your soundtrack</h2>
       <p>Your nine supplied tracks, preserved without re-encoding. The rejected piano sketch has been removed. These players audition the originals; in-game music is level-matched and quieter under the effects.</p>
@@ -34,8 +40,8 @@
     </section>
     <section aria-labelledby="play-heading">
       <h2 id="play-heading">Try the effects in play</h2>
-      <p>The draft link enables the revised effects for this visit only. All other cues retain their original recipes with a gentler treble balance. Returning through the normal link restores the previous sound system.</p>
-      <div class="actions"><a class="button" href="./?map=ninetynine&amp;campaign=0&amp;seed=2919286854&amp;terrain=varied&amp;planet=io&amp;sound=material">Play with draft effects</a><a class="button" href="./?map=ninetynine&amp;campaign=0&amp;seed=2919286854&amp;terrain=varied&amp;planet=io">Play with previous sounds</a></div>
+      <p>The new weapon swings play in both versions. The draft link also enables the revised impacts, creature reactions and rewards for this visit.</p>
+      <div class="actions"><a class="button" href="./?map=ninetynine&amp;campaign=0&amp;seed=2919286854&amp;terrain=varied&amp;planet=io&amp;sound=material">Play with draft effects</a><a class="button" href="./?map=ninetynine&amp;campaign=0&amp;seed=2919286854&amp;terrain=varied&amp;planet=io">Play normal V2</a></div>
     </section>
     <footer>Material samples: <a href="https://kenney.nl/assets/impact-sounds">Kenney Impact Sounds</a>. Blade/cloth samples: <a href="https://kenney.nl/assets/rpg-audio">Kenney RPG Audio</a>. Both CC0. Music supplied by the owner. <a href="audio/material/CREDITS.md">Sources &amp; listening limitations</a>.</footer>
   </main>

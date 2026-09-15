@@ -486,14 +486,13 @@ export function poseSoldier(sk, spec, a, st, t) {
   const dur = a.swingDur || 0.55;
   const p = a.swingT > 0 ? 1 - a.swingT / dur : -1;
   if (p >= 0) {
-    if (kind === 'melee' && twin) twinCut(J, p, a.swingSide || 1);
-    else if (kind === 'melee' && spec.weapon === 'spear') thrust(J, p);
-    else if (kind === 'melee') cleave(J, p, a.swingSide || 1);
+    if (kind === 'melee') { /* Grip-constrained choreography is applied below. */ }
     else if (kind === 'hitscan') recoil(J, p);
     else if (kind === 'projectile') recoil(J, Math.max(0, (p - STRIKE_AT.projectile) / (1 - STRIKE_AT.projectile)));
     else if (kind === 'lob') overhand(J, p);
   }
   if (kind === 'beam') brace(J, a, t);
+  if (kind === 'melee') meleeGrips(J,spec,p,a.swingSide||1,!a.weaponFamily&&twin?STRIKE_AT.twin:STRIKE_AT.melee);
 
   // ---- cape ---------------------------------------------------------------
   if (spec.cape) {
@@ -578,60 +577,46 @@ function hold(J, spec, kind, pitch, a) {
   }
 }
 
-// The heavy cleave: the blade rises back over the shoulder, then sweeps down
-// and across the body with the chest turning into it, overshoots, and
-// recovers slowly. `side` mirrors the sweep so consecutive swings alternate.
-function cleave(J, p, side) {
-  // Set the elbow before the active stroke. Extending it during contact
-  // drove the tip forward like a stab. Chest and shoulder yaw now carry
-  // the edge laterally, with a nearly constant wrist pitch through contact.
-  const at=STRIKE_AT.melee, s=side;
-  // Contact lies inside one uninterrupted sweep, not at an eased key where
-  // angular velocity falls to zero. Anticipation and recovery stay slower.
-  const joint=(rest,wind,hit,follow)=>keyed([[0,rest],[.24,wind],[2*at-.24,follow],[1,rest]],p);
-  const turn=joint(0,-.30*s,0,.30*s);
+// Two-bone arms follow authored grips in chest space. Both segment lengths
+// stay fixed; the wrist counter-rotates so the blade follows its own edge arc.
+const armDown=new THREE.Vector3(0,-1,0),armTarget=new THREE.Vector3(),armDir=new THREE.Vector3(),armPole=new THREE.Vector3(),armElbow=new THREE.Vector3(),armLower=new THREE.Vector3();
+const armUpperQ=new THREE.Quaternion(),armLowerQ=new THREE.Quaternion(),armBladeQ=new THREE.Quaternion(),armLocalQ=new THREE.Quaternion(),armEuler=new THREE.Euler();
+function gripArm(J,side,x,y,z,pitch,yaw,roll=0){
+  const sh=J['shoulder'+side],el=J['elbow'+side],hand=J['hand'+side],sign=side==='R'?1:-1;
+  armTarget.set(x,y,z).sub(sh.pos);const distance=Math.min(.409,Math.max(.035,armTarget.length()));
+  armDir.copy(armTarget).normalize();armTarget.copy(armDir).multiplyScalar(distance);
+  const along=(.21*.21-.20*.20+distance*distance)/(2*distance),bend=Math.sqrt(Math.max(0,.21*.21-along*along));
+  armPole.set(sign*.55,-1,.25).addScaledVector(armDir,-armPole.dot(armDir)).normalize();
+  armElbow.copy(armDir).multiplyScalar(along).addScaledVector(armPole,bend);
+  armUpperQ.setFromUnitVectors(armDown,armLower.copy(armElbow).normalize());
+  armLowerQ.setFromUnitVectors(armDown,armLower.copy(armTarget).sub(armElbow).normalize());
+  sh.rot.setFromQuaternion(armUpperQ);
+  el.rot.setFromQuaternion(armLocalQ.copy(armUpperQ).invert().multiply(armLowerQ));
+  armBladeQ.setFromEuler(armEuler.set(pitch,yaw,roll,'YXZ'));
+  hand.rot.setFromQuaternion(armLocalQ.copy(armLowerQ).invert().multiply(armBladeQ));
+}
+function meleeGrips(J,spec,p,side,at){
+  const active=p>=0;
+  const curve=(rest,wind,follow)=>active?keyed([[0,rest],[.22,wind],[2*at-.22,follow],[1,rest]],p):rest;
+  if(spec.weapon==='spear'){
+    const push=curve(0,-.035,.025),turn=-.528;
+    J.chest.rot.y=turn;J.head.rot.y=-turn*.65;J.pelvis.rot.y=turn*.25;
+    J.pelvis.pos.z-=curve(0,-.025,.09);
+    // Two positions on one straight shaft, separated by a comfortable grip.
+    gripArm(J,'R',.08,-.10,.0-push,0,.528);
+    gripArm(J,'L',-.06,-.10,-.24-push,0,.528);
+    return;
+  }
+  const twin=spec.weapon==='twin',striking=twin?(side>0?'R':'L'):'R',sign=striking==='R'?1:-1;
+  const stroke=twin?sign:side;
+  const turn=curve(0,-.18*stroke,.23*stroke);
   J.chest.rot.y=turn;J.pelvis.rot.y=turn*.35;J.head.rot.y=-turn*.6;
-  J.shoulderR.rot.set(joint(.35,1.02,1.04,1.04),joint(0,-1.05*s,0,1.05*s),joint(.30,.20,.15,.10));
-  J.elbowR.rot.x=joint(2.25,.65,.65,.65);
-  J.handR.rot.x=joint(-.35,-1.66,-1.66,-1.66);
-  J.handR.rot.y=0;
-  J.spine.rot.x=joint(0,.02,-.04,-.06);
-  J.shoulderL.rot.x=joint(-.1,.25,.6,.3);
-  J.elbowL.rot.x=joint(.35,.75,.95,.6);
-}
-
-// Two quick cuts, alternating hands: the striking arm snaps forward from the
-// low guard and returns, the other hand guards.
-function twinCut(J, p, side) {
-  const R = side > 0;
-  const sh = R ? J.shoulderR : J.shoulderL;
-  const el = R ? J.elbowR : J.elbowL;
-  const hd = R ? J.handR : J.handL;
-  const m = R ? 1 : -1;
-  const back = keyed([[0, 0], [0.16, 1], [0.34, 0], [1, 0]], p);
-  const cut = keyed([[0, 0], [0.16, 0], [0.34, 1], [0.5, 0.8], [1, 0]], p);
-  sh.rot.x += -(0.5 * back - 1.9 * cut);
-  sh.rot.y += -((-0.5 * back + 0.9 * cut) * m);
-  sh.rot.z += -0.2 * back * m + 0.15 * cut * m;
-  el.rot.x += -(-0.3 * back + 1.1 * cut);
-  hd.rot.x += -(0.9 * back + 1.5 * cut);
-  J.chest.rot.y += -((0.35 * back - 0.55 * cut) * m);
-  J.spine.rot.x += -(0.25 * cut);
-  J.pelvis.pos.z += -(0.06 * cut);
-}
-
-// A spear thrust: pulled back to the hip, driven forward at full arm.
-function thrust(J, p) {
-  const back = keyed([[0, 0], [0.22, 1], [0.42, 0], [1, 0]], p);
-  const drive = keyed([[0, 0], [0.22, 0], [0.42, 1], [0.6, 0.9], [1, 0]], p);
-  J.shoulderR.rot.x += -(0.5 * back - 1.7 * drive);
-  J.elbowR.rot.x += -(0.8 * back + 1.2 * drive);
-  J.handR.rot.x += -(-0.3 * back - 1.5 * drive);
-  J.shoulderL.rot.x += -(0.3 * back - 1.2 * drive);
-  J.elbowL.rot.x += -(0.4 * back + 0.9 * drive);
-  J.chest.rot.y += -(0.4 * back - 0.5 * drive);
-  J.spine.rot.x += -(0.25 * drive);
-  J.pelvis.pos.z += -(0.08 * drive);
+  for(const hand of twin?['R','L']:['R']){
+    const m=hand==='R'?1:-1,lead=hand===striking;
+    if(!lead){gripArm(J,hand,m*.25,-.13,-.15,.60,-m*.2);continue;}
+    const x=curve(m*.25,(twin?.34:(side>0?.34:.04))*m,(twin?.04:(side>0?.04:.34))*m);
+    gripArm(J,hand,x,curve(-.13,-.04,-.10),curve(-.15,-.08,-.23),curve(.60,.35,.15),curve(-m*.2,-.9*stroke,.95*stroke),curve(0,.08*stroke,-.12*stroke));
+  }
 }
 
 // Rifle recoil: a short kick back into the shoulder, decaying fast.

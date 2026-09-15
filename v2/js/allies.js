@@ -1393,7 +1393,7 @@ export class AllyManager {
         sk.compute(_frame);
         // The weapon's world transform is kept on the body so the blade trail
         // and the strike origin can read it without re-posing.
-        a.weaponM.copy(sk.byName.weaponR.world);
+        a.weaponM.copy(sk.byName[sp.spec.weapon==='twin'&&a.swingSide<0?'weaponL':'weaponR'].world);
 
         // Hit flash brightens every part; the instance colour multiplies the
         // material, so values above one push it toward white.

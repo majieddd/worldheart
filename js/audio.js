@@ -104,6 +104,35 @@ export class AudioEngine {
     src.stop(t + dur + 0.05);
   }
 
+  _weaponSwing({family='sword',duration=.55,contact=.4}={}) {
+    // Air displaced by the blade: a rounded velocity envelope and filtered
+    // turbulence, with no pitched oscillator, metallic ping or noisy tail.
+    const variant=(this._swingVariant=(this._swingVariant||0)+1)%3;
+    const key=family+':'+variant;this._swings ||= new Map();
+    let buffer=this._swings.get(key);
+    if(!buffer){
+      const rate=this.ctx.sampleRate,length=Math.round(rate*.32);buffer=this.ctx.createBuffer(1,length,rate);
+      const data=buffer.getChannelData(0),narrow=family==='spear',light=family==='twinblade';
+      const cutoff=narrow?950:light?1750:1250,a=1-Math.exp(-2*Math.PI*cutoff/rate),lowA=1-Math.exp(-2*Math.PI*95/rate);
+      let random=73471+variant*9137,soft=0,low=0;
+      for(let i=0;i<length;i++){
+        random^=random<<13;random^=random>>>17;random^=random<<5;
+        soft+=(((random>>>0)/2147483648-1)-soft)*a;low+=(soft-low)*lowA;
+        const p=i/(length-1),envelope=Math.sin(Math.PI*p)**3;
+        data[i]=(soft-low)*envelope*(light?.46:narrow?.43:.60);
+      }
+      this._swings.set(key,buffer);
+    }
+    const source=this.ctx.createBufferSource(),gain=this.ctx.createGain(),dur=Math.max(.25,Math.min(1,duration));
+    source.buffer=buffer;source.playbackRate.value=.32/(dur*.44);gain.gain.value=.7;
+    source.connect(gain);gain.connect(this.master);
+    this._swingVoices ||= new Set();const voice={source,gain};this._swingVoices.add(voice);
+    source.onended=()=>{this._swingVoices.delete(voice);source.disconnect();gain.disconnect();};
+    source.start(this.ctx.currentTime+dur*Math.max(0,Math.min(.4,contact-.22)));
+  }
+
+  stopSwingVoices(){for(const voice of this._swingVoices||[]){voice.gain.disconnect();voice.source.stop();}this._swingVoices?.clear();}
+
   _tone(freq, dur, delay, peak = 0.1, type = 'sine') {
     const t = this.ctx.currentTime + delay;
     const g = this.ctx.createGain();
@@ -121,7 +150,7 @@ export class AudioEngine {
 
   // -- recipes --------------------------------------------------------------
 
-  play(name) {
+  play(name, context = {}) {
     if (!this.started || this.muted || !this.ctx) return;
     switch (name) {
       case 'click':
@@ -216,7 +245,7 @@ export class AudioEngine {
       case 'swing':
         // A short airy whoosh: the arc, not the impact.
         if (this._limited('swing', 60)) return;
-        this._noise(0.16, this._env(0.16, 0.08), 2600, 420);
+        this._weaponSwing(context);
         break;
       case 'meleeHit':
         if (this._limited('meleeHit', 45)) return;
