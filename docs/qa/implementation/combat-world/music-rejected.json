@@ -1,0 +1,38 @@
+[
+  {
+    "id": "canopy",
+    "reason": "32-second cover reference followed by long quiet tail; rejected before publication",
+    "promptId": "c67f5011-dea1-4e9e-b115-22e6bcce9e74"
+  },
+  {
+    "id": "dune",
+    "reason": "32-second cover reference followed by long quiet tail; rejected before publication",
+    "promptId": "1406d7af-6e25-44b3-ab11-c49d52502ef4"
+  },
+  {
+    "id": "frozen",
+    "reason": "32-second cover reference followed by long quiet tail; rejected before publication",
+    "promptId": "3aaddd6e-e04a-4d5d-bb58-35b1be9afcab"
+  },
+  {
+    "id": "garden",
+    "reason": "32-second cover reference followed by long quiet tail; rejected before publication",
+    "promptId": "eb995718-680a-46b5-bd41-44b42d103398"
+  },
+  {
+    "id": "molten",
+    "reason": "32-second cover reference followed by long quiet tail; rejected before publication",
+    "promptId": "1bdd2a84-92a0-414e-9acb-bc85a208f8f8"
+  },
+  {
+    "reason": "First lossless export clipped isolated peaks; apply -9 dB before PCM export and regenerate, not merely turn down an already clipped file.",
+    "affected": [
+      "canopy",
+      "dune"
+    ],
+    "sourceFiles": [
+      "canopy_00002.flac",
+      "dune_00002.flac"
+    ]
+  }
+]

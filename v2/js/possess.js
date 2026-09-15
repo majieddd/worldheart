@@ -597,7 +597,7 @@ export class Possession {
   // input is heard the instant it registers.
   swingStarted(u) {
     if (u !== this.unit) return;
-    if (u.type.strike.kind === 'melee') this.audio?.play('swing');
+    if (u.type.strike.kind === 'melee') this.audio?.play('swing',{family:u.weaponFamily||({duelist:'twinblade',warden:'spear'}[u.typeKey]||'sword'),duration:u.swingDur,contact:1-u.strikeAt/u.swingDur});
     this.fovKick = Math.max(this.fovKick, 0.8);
   }
 

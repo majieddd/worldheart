@@ -3,6 +3,7 @@ import { MaterialAudio } from './audio-material.js';
 
 const previous = new AudioEngine();
 previous._ambient = () => {}; // Isolate cue comparison only; normal game unchanged.
+previous._weaponSwing=function(){this._noise(.16,this._env(.16,.08),2600,420);};
 const referenceEnvelopes = new Set();
 const originalEnvelope = previous._env;
 previous._env = function (...args) {
@@ -13,6 +14,7 @@ previous._env = function (...args) {
 };
 const draft = new MaterialAudio();
 const cues = [
+  ['swing','Weapon swing','Rounded air movement timed to the cut; choose sword, Twin Fang or spear'],
   ['click', 'Menu click', 'Small wooden contact'], ['build', 'Build tower', 'Wood body and muted metal latch'],
   ['meleeHit', 'Melee impact', 'Blade contact changes with weapon and target'], ['creatureHit', 'Creature reaction', 'Changes with creature type'],
   ['blocked', 'Blocked strike', 'Lower plate resonance'], ['rifle', 'Rifle', 'Blast body with a short mechanical tail'],
@@ -25,9 +27,9 @@ const cues = [
 const status = document.querySelector('#status');
 let serial = 0, timer, active = null;
 const volume = () => +document.querySelector('#volume').value / 100;
-function silence() {
-  serial++; clearTimeout(timer); draft.stopVoices();
-  for (const media of document.querySelectorAll("audio")) media.pause();
+function silence(exceptMedia = null) {
+  serial++; clearTimeout(timer); draft.stopVoices(); previous.stopSwingVoices();
+  for (const media of document.querySelectorAll("audio")) if(media!==exceptMedia)media.pause();
   for (const gain of referenceEnvelopes) gain.disconnect();
   referenceEnvelopes.clear();
   for (const engine of [previous, draft]) {
@@ -90,9 +92,19 @@ if (musicManifest) for (const track of Object.values(musicManifest.tracks)) {
   const media=document.createElement('audio');media.controls=true;media.preload='none';
   media.src=new URL('audio/soundtrack/'+track.file,document.baseURI).href;
   media.setAttribute('aria-label',track.title);
-  media.onplay=()=>{for(const other of document.querySelectorAll('audio'))if(other!==media)other.pause();};
+  media.onplay=()=>{silence(media);status.textContent='Audition: '+track.title;};
   row.append(label,media);document.querySelector('#tracks').append(row);
 }
+const auditions=await fetch(new URL('audio/auditions/manifest.json',document.baseURI)).then(r=>{if(!r.ok)throw new Error('Unavailable');return r.json();}).catch(()=>null);
+if(auditions)for(const track of auditions.tracks){
+  const row=document.createElement('div');row.className='track';
+  const label=document.createElement('p');label.textContent=track.title+' - '+track.theme;
+  const detail=document.createElement('p');detail.className='muted';const seconds=Math.round(track.duration);detail.textContent='Reference: '+(musicManifest?.tracks[track.reference]?.title||track.reference)+' · '+Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0')+' · Awaiting your approval';
+  const media=document.createElement('audio');media.controls=true;media.preload='none';media.dataset.audition=track.id;
+  media.src=new URL('audio/auditions/'+track.file,document.baseURI).href;media.setAttribute('aria-label',track.title+' approval draft');
+  media.onplay=()=>{silence(media);status.textContent='Audition: '+track.title;};
+  row.append(label,detail,media);document.querySelector('#auditions').append(row);
+}else document.querySelector('#auditions').textContent='Music auditions could not load. Reload to try again.';
 document.addEventListener('visibilitychange', () => { if (document.hidden) silence(); });
 window.addEventListener('pagehide', () => { silence(); draft.dispose(); previous.ctx?.close(); });
 window.audioLab = { previous, draft }; // Explicit QA surface; no automatic playback.

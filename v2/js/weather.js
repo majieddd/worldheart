@@ -37,7 +37,7 @@ export class PlanetWeather {
     if(kind==='quake'){
       this.plannedFault=createTerrainFault(this.dir,this.axis,this.centre);this.warnRoot.visible=false;
       this.plannedFault.strength=this.hostility.scale;
-      this.phase='forecasting';this.game.terrainBusy=true;this.nav.terrainBusy=true;this.shift=this.prepareQuakeSteps();
+      this.phase='forecasting';this.shift=this.prepareQuakeSteps();
     }
     this.position.copy(this.dir).multiplyScalar(R+surfaceElevation(this.dir)+.15);orientOnSurface(this.warnRoot,this.position);this.warnRoot.scale.setScalar(this.hostility.scale);this.group.scale.setScalar(this.hostility.scale);
     if(kind!=='quake'&&kind!=='tornado'){
@@ -50,7 +50,8 @@ export class PlanetWeather {
     if(kind!=='quake')this.ui.toast(`${DISASTERS[kind].name} approaching. Leave the marked area.`,'warn');return true;
   }
   *prepareQuakeSteps(){
-    const fault=this.plannedFault,draft=yield* this.nav.forecastGraphSteps();
+    const fault=this.plannedFault,revision=this.nav.revision,terrainRevision=this.nav.terrainRevision;
+    const draft=yield* this.nav.forecastGraphSteps();
     const protectedNodes=[this.nav.heartNode,...this.enemies.active.filter(e=>!e.type.flying).map(e=>e.node),...this.allies.active.filter(a=>!a.type.flying&&!a.mountFlying).map(a=>this.nav.nearestWalkableNode(a.dir))].filter(n=>n>=0&&Number.isFinite(this.nav.dist[n]));
     for(let attempt=0;attempt<5;attempt++){
       yield* draft.refreshTerrainSteps(fault,true);
@@ -66,13 +67,29 @@ export class PlanetWeather {
       if(protectedNodes.every(n=>Number.isFinite(draft.dist[n]))&&capacity===NEST_SCHEDULE_CAPACITY)break;
       fault.strength=attempt===4?0:fault.strength*.5;
     }
+    if(fault.strength===0)yield* draft.refreshTerrainSteps(fault,true);
+    this.preparedTerrain={draft,revision,terrainRevision,strength:fault.strength};
     yield* this.forecast.showSteps(fault);
     this.ui.toast('Earthquake in 8s. Red predicts the new ground; nests in the disruption will collapse.','danger');
   }
   *quakeSteps(){
     const fault=addTerrainFault(this.dir,this.axis,this.centre,this.plannedFault);if(!fault)return;
     const beforeRevision=this.nav.revision,blocks=this.nav.block;
-    const changed=yield* this.nav.refreshTerrainSteps(fault);
+    const prepared=this.preparedTerrain;this.preparedTerrain=null;
+    // A forecast already solved this exact fault. Reuse it only if no tower,
+    // frontier or navigation edit occurred during the eight-second warning.
+    let changed;
+    const forecastReused=!!(prepared&&prepared.revision===this.nav.revision&&prepared.strength===fault.strength);
+    const terrainReused=!!(prepared&&prepared.terrainRevision===this.nav.terrainRevision&&prepared.strength===fault.strength&&prepared.draft.n===this.nav.n);
+    if(terrainReused&&!forecastReused){
+      // Tower edits change occupancy, not the terrain samples. Solve current
+      // occupancy on the prepared terrain instead of sampling the world again.
+      prepared.draft.block.set(this.nav.block);prepared.draft.heartNode=this.nav.heartNode;
+      yield* prepared.draft.recomputeFlowSteps();
+    }
+    if(terrainReused){
+      changed=yield* this.nav.commitForecastSteps(prepared.draft);
+    }else changed=yield* this.nav.refreshTerrainSteps(fault);
     const vertices=yield* this.world.refreshFaultSteps(fault);
     const disrupted=[];
     for(const p of this.world.portals)if(p.established&&!p.destroyed){
@@ -83,7 +100,7 @@ export class PlanetWeather {
     for(const tower of this.game.towerMgr.towers){this.tmp.copy(tower.pos).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;const height=supportHeight(this.tmp,tower.pos.length()-R+.5);tower.pos.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp,height));orientOnSurface(tower.holder,tower.pos);}
     for(const p of this.world.portals){this.tmp.copy(p.group.position).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;this.position.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp));orientOnSurface(p.group,this.position);}
     this.game._validateT=0;this.game.pathFlow?.setPaths(this.nav.previewPaths());
-    this.events.push({kind:'quake',strength:fault.strength,changedNodes:changed,vertices,disruptedNests:disrupted,revisionBefore:beforeRevision,revisionAfter:this.nav.revision,footprintsPreserved:blocks===this.nav.block});
+    this.events.push({kind:'quake',forecastReused,terrainReused,strength:fault.strength,changedNodes:changed,vertices,disruptedNests:disrupted,revisionBefore:beforeRevision,revisionAfter:this.nav.revision,footprintsPreserved:blocks===this.nav.block});
     this.ui.toast(fault.strength?'A fissure opened. Ground routes now follow the new landscape.':'The tremor subsided; routes held.', 'info');
   }
 

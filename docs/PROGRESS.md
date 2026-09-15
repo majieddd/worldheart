@@ -1,5 +1,8 @@
 # 99 Planets development progress
 
+U146-U148 locally verified, publication in progress: Codex on `feature/combat-world-performance`.
+Grip-constrained weapon motion, family swing audio, world/quake performance and five approval-only music drafts. [Work ledger](qa/implementation/COMBAT-WORLD-PERFORMANCE.md).
+
 Published U143-U145: [owner audio feedback](qa/implementation/AUDIO-FEEDBACK.md), V2 `023a70b`, Codex on feature/audio-restoration / [PR #44](https://github.com/majieddd/worldheart/pull/44). Six accepted effects are frozen, contextual effects are in the opt-in comparison, and all nine owner tracks are integrated in normal V2/lobby. 340 tests, 66 local + 66 public browser checks and 180 asset/removal checks pass. Listening acceptance remains open.
 
 U140: full audio rollback published and verified as V2 `033d3e3`.

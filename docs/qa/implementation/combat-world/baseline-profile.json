@@ -1,0 +1,193 @@
+{
+  "bootMs": 18018,
+  "top": [
+    {
+      "ms": 1805.508,
+      "functionName": "R",
+      "scriptId": "9",
+      "url": "http://127.0.0.1:8141/lib/three.module.min.js",
+      "lineNumber": 5,
+      "columnNumber": 215257
+    },
+    {
+      "ms": 1277.353,
+      "functionName": "evaluate",
+      "scriptId": "40",
+      "url": "http://127.0.0.1:8141/js/terrain/formations.js",
+      "lineNumber": 170,
+      "columnNumber": 19
+    },
+    {
+      "ms": 1057.24,
+      "functionName": "_buildGraph",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8141/js/nav.js",
+      "lineNumber": 254,
+      "columnNumber": 13
+    },
+    {
+      "ms": 892.532,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "ms": 780.019,
+      "functionName": "(garbage collector)",
+      "scriptId": "0",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1
+    },
+    {
+      "ms": 695.563,
+      "functionName": "addEdge",
+      "scriptId": "12",
+      "url": "http://127.0.0.1:8141/js/nav.js",
+      "lineNumber": 357,
+      "columnNumber": 20
+    },
+    {
+      "ms": 683.743,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "ms": 529.58,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "ms": 402.76,
+      "functionName": "evaluate",
+      "scriptId": "40",
+      "url": "http://127.0.0.1:8141/js/terrain/formations.js",
+      "lineNumber": 170,
+      "columnNumber": 19
+    },
+    {
+      "ms": 386.263,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "ms": 290.822,
+      "functionName": "evaluate",
+      "scriptId": "40",
+      "url": "http://127.0.0.1:8141/js/terrain/formations.js",
+      "lineNumber": 170,
+      "columnNumber": 19
+    },
+    {
+      "ms": 285.599,
+      "functionName": "riftSample",
+      "scriptId": "65",
+      "url": "http://127.0.0.1:8141/js/terrain/rifts.js",
+      "lineNumber": 6,
+      "columnNumber": 26
+    },
+    {
+      "ms": 262.064,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "ms": 238.417,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "ms": 225.683,
+      "functionName": "evaluate",
+      "scriptId": "40",
+      "url": "http://127.0.0.1:8141/js/terrain/formations.js",
+      "lineNumber": 170,
+      "columnNumber": 19
+    },
+    {
+      "ms": 191.281,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "ms": 190.056,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "ms": 178.917,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    },
+    {
+      "ms": 167.201,
+      "functionName": "additionalHeight",
+      "scriptId": "64",
+      "url": "http://127.0.0.1:8141/js/terrain/additional-formations.js",
+      "lineNumber": 32,
+      "columnNumber": 32
+    },
+    {
+      "ms": 166.73,
+      "functionName": "noise3",
+      "scriptId": "14",
+      "url": "http://127.0.0.1:8141/js/noise.js",
+      "lineNumber": 46,
+      "columnNumber": 24
+    }
+  ],
+  "quake": {
+    "ms": 9804.199999988079,
+    "max": 11.599999994039536,
+    "parts": [
+      {
+        "phase": "forecasting",
+        "ms": 6134.799999982119
+      },
+      {
+        "phase": "warning",
+        "ms": 70.7000000178814
+      },
+      {
+        "phase": "shifting",
+        "ms": 3598.699999988079
+      }
+    ],
+    "event": {
+      "kind": "quake",
+      "strength": 0.5111378868072642,
+      "changedNodes": 27384,
+      "vertices": 17256,
+      "disruptedNests": [],
+      "revisionBefore": 2,
+      "revisionAfter": 3,
+      "footprintsPreserved": true
+    }
+  }
+}

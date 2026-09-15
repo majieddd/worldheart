@@ -64,7 +64,7 @@ const GRIP = {
 const RESTS = {
   melee: [0.34, -0.30, 0.70, 0.62, 0.60, 1.05],
   twin: [0.05, -0.30, 0.70, 0.35, 0.0, 0.0],
-  spear: [0.38, -0.30, 0.80, 0.25, 0.45, 0.10],
+  spear: [0.29, -0.30, 0.82, 0.10, 0.12, 0.02],
   // Ranged weapons point down the aim, so they sit lower and straighter.
   ranged: [0.26, -0.27, 0.72, 0.06, -0.06, 0.02],
 };
@@ -116,16 +116,16 @@ const ARCS = {
   ],
   // The spear thrust: pulled back to the hip, driven down the aim.
   thrust: [
-    [0.00, 0.38, -0.30, 0.80, 0.25, 0.45, 0.10],
-    [0.22, 0.44, -0.34, 1.00, 0.15, 0.40, 0.12],
-    [0.42, 0.14, -0.20, 0.34, -0.06, 0.08, 0.0],
-    [0.60, 0.20, -0.22, 0.46, 0.0, 0.15, 0.02],
-    [1.00, 0.38, -0.30, 0.80, 0.25, 0.45, 0.10],
+    [0.00, 0.29, -0.30, 0.82, 0.10, 0.12, 0.02],
+    [0.22, 0.32, -0.32, 0.94, 0.10, 0.12, 0.02],
+    [0.48, 0.08, -0.22, 0.40, 0.10, 0.12, 0.02],
+    [0.66, 0.15, -0.26, 0.60, 0.10, 0.12, 0.02],
+    [1.00, 0.29, -0.30, 0.82, 0.10, 0.12, 0.02],
   ],
 };
 
 // Interpolate a six-component pose from an arc at progress p, into `out`.
-// Smoothstep between neighbours, like rig.keyed, but one pass for all six.
+// Cubic tangents carry momentum through contact, with still endpoints.
 const _pose = [0, 0, 0, 0, 0, 0];
 function arcAt(keys, p, out = _pose) {
   let i = 1;
@@ -133,8 +133,12 @@ function arcAt(keys, p, out = _pose) {
   const a = keys[i - 1], b = keys[i];
   let u = (p - a[0]) / Math.max(1e-6, b[0] - a[0]);
   u = u < 0 ? 0 : u > 1 ? 1 : u;
-  u = u * u * (3 - 2 * u);
-  for (let k = 0; k < 6; k++) out[k] = a[k + 1] + (b[k + 1] - a[k + 1]) * u;
+  const prev=keys[Math.max(0,i-2)],next=keys[Math.min(keys.length-1,i+1)],span=b[0]-a[0];
+  for(let k=0;k<6;k++){
+    const m0=i===1?0:(b[k+1]-prev[k+1])/(b[0]-prev[0])*span;
+    const m1=i===keys.length-1?0:(next[k+1]-a[k+1])/(next[0]-a[0])*span;
+    out[k]=(2*u*u*u-3*u*u+1)*a[k+1]+(u*u*u-2*u*u+u)*m0+(-2*u*u*u+3*u*u)*b[k+1]+(u*u*u-u*u)*m1;
+  }
   return out;
 }
 
@@ -454,7 +458,7 @@ export class ViewModel {
           hand.name=side>0?'right':'left';hand.position.set(side*1.1,side>0?0:-.04,side>0?0:.1);hand.rotation.y=-side*.35;
           hand.add(prop,arm(hand,side));g.add(hand);g.userData.weaponGroups.push(prop);
         }
-        g.userData.blade=[1.1,0,-.2,1.1,0,-.92];
+        g.userData.blade=[0,0,-.2,0,0,-.92];
       }else if(visual){
         g=new THREE.Group();const kit=buildWeapon(visual,era,{...MAT,trim:MAT.steel});
         for(const piece of kit.parts)g.add(mesh(piece.geo,piece.mat));
@@ -549,8 +553,8 @@ export class ViewModel {
     // The base pose: the rest, or the point along the melee arc.
     let pose = rest;
     if (p >= 0 && kind === 'melee') {
-      const arc = twin ? (side > 0 ? ARCS.cutR : ARCS.cutL) : spear ? ARCS.thrust : (side > 0 ? ARCS.cleaveR : ARCS.cleaveL);
-      pose = arcAt(arc, p);
+      const arc = spear ? ARCS.thrust : (side > 0 ? ARCS.cleaveR : ARCS.cleaveL);
+      pose = twin ? rest : arcAt(arc, p);
       leftHand = twin && side < 0;
     }
     let ox = pose[0] * g;
@@ -651,15 +655,15 @@ export class ViewModel {
     _lq.setFromEuler(_e);
     this.current.quaternion.copy(_lq);
     this.current.scale.setScalar(VM_SCALE);
-    // The twin blades swap which hand leads: the striking blade is brought to
-    // the centre of the frame, the other stays out at its side.
-    if (this.typeKey === 'duelist') {
-      const r = this.current.getObjectByName('right');
-      const l = this.current.getObjectByName('left');
-      if (r && l) {
-        const lead = p >= 0 ? hump(Math.min(1, p / 0.5)) : 0;
-        r.position.x = 1.1 - (leftHand ? 0 : 0.9) * lead;
-        l.position.x = -1.1 + (leftHand ? 0.9 : 0) * lead;
+    // Each hand owns its cut. The guarding blade never rides the other arm.
+    if (twin) {
+      for(const name of ['right','left']){
+        const hand=this.current.getObjectByName(name);if(!hand)continue;
+        const contact=!unit.weaponFamily?STRIKE_AT.twin:STRIKE_AT.melee;
+        const sign=name==='right'?1:-1,lead=(side>0)===(sign>0);
+        const curve=(rest,wind,follow)=>p>=0&&lead?keyed([[0,rest],[.22,wind],[2*contact-.22,follow],[1,rest]],p):rest;
+        hand.position.set(curve(sign*1.1,sign*1.55,-sign*1.1),curve(0,.35,-.35),curve(0,.1,-.65));
+        hand.rotation.set(curve(0,.15,-.2),curve(-sign*.25,-sign*.8,sign*1.0),curve(0,sign*.1,-sign*.2),'YXZ');
       }
     }
     this.current.updateMatrixWorld(true);
@@ -669,9 +673,9 @@ export class ViewModel {
     const bl = this.current.userData.blade;
     const sweeping = kind === 'melee' && p >= 0.16 && p <= 0.6 && bl;
     if (sweeping) {
-      const m = this.current.userData.weaponGroup.matrixWorld;
+      const m = twin ? this.current.userData.weaponGroups[leftHand?0:1].matrixWorld : this.current.userData.weaponGroup.matrixWorld;
       // From the outer half of the blade only, where the edge moves fastest.
-      const sx = leftHand ? -1 : 1;
+      const sx = 1;
       _base.set(bl[0] * sx + (bl[3] - bl[0]) * sx * 0.5, bl[1] + (bl[4] - bl[1]) * 0.5, bl[2] + (bl[5] - bl[2]) * 0.5).applyMatrix4(m);
       _tip.set(bl[3] * sx, bl[4], bl[5]).applyMatrix4(m);
       this.trail.push(_base, _tip);

@@ -86,6 +86,7 @@ export class MaterialAudio extends AudioEngine {
   }
 
   play(name, context = {}) {
+    if(name==='swing'){super.play(name,context);return;}
     if (this.disposed || !this.started || this.muted || document.hidden || this.ctx?.state !== 'running') return;
     const fallbackName = name;
     if (name === 'meleeHit') name = impactCue(context);
@@ -133,6 +134,7 @@ export class MaterialAudio extends AudioEngine {
   }
 
   stopVoices() {
+    this.stopSwingVoices();
     for (const voice of [...this.voices]) voice.stop();
     for (const gain of this.envelopes) gain.disconnect();
     this.envelopes.clear();

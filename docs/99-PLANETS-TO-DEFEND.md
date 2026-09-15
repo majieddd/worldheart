@@ -634,3 +634,8 @@ continuous-input feel and broader model/choreography review remain open. The
 [implementation record](IMPLEMENTATION.md) carries the current handoff; the
 [frozen blind baseline](qa/2026-09-05/README.md) remains separate. No external
 blueprint-checker pass is claimed because that checker was unavailable.
+
+
+2026-09-15 locally verified follow-up U146-U148: grip-constrained melee choreography and
+family swing audio, measured world/quake optimization, and five instrumental
+reference-conditioned planet music auditions. [Ledger](qa/implementation/COMBAT-WORLD-PERFORMANCE.md).

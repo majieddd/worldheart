@@ -42,14 +42,23 @@ try {
     check(`Measured non-silent, unclipped output: ${id}`, peak > .0005 && peak < .99, { peak });
   }
   check('One cached bank download across all cue buttons', assets.filter(x => x.endsWith('impacts.wav')).length === 1);
-  check('Nine owner tracks are available without autoplay', await page.locator('audio').count()===9 && await page.locator('audio').evaluateAll(a=>a.every(x=>x.paused&&x.preload==='none')));
+  check('Nine owner tracks are available without autoplay', await page.locator('#tracks audio').count()===9 && await page.locator('audio').evaluateAll(a=>a.every(x=>x.paused&&x.preload==='none')));
   for(let i=0;i<9;i++) {
-    await page.locator('audio').nth(i).evaluate(a=>a.play());
-    await page.waitForFunction(i=>document.querySelectorAll('audio')[i].currentTime>.1,i);
+    await page.locator('#tracks audio').nth(i).evaluate(a=>a.play());
+    await page.waitForFunction(i=>document.querySelectorAll('#tracks audio')[i].currentTime>.1,i);
     check('Owner track '+(i+1)+' decodes and plays alone',await page.locator('audio').evaluateAll(a=>a.filter(x=>!x.paused).length===1));
   }
   await page.locator('#stop').click();
   check('Stop ends all owner music players',await page.locator('audio').evaluateAll(a=>a.every(x=>x.paused)));
+  check('Five approval drafts are available with lazy loading',await page.locator('#auditions audio').count()===5&&await page.locator('#auditions audio').evaluateAll(a=>a.every(x=>x.preload==='none'&&x.paused)));
+  for(let i=0;i<5;i++){
+    await page.locator('#auditions audio').nth(i).evaluate(a=>a.play());
+    await page.waitForFunction(i=>document.querySelectorAll('#auditions audio')[i].currentTime>.1,i);
+    check('Planet draft '+(i+1)+' decodes a full 90-second audition and plays alone',await page.locator('audio').evaluateAll(a=>a.filter(x=>!x.paused).length===1)&&await page.locator('#auditions audio').nth(i).evaluate(a=>a.duration>=90&&a.duration<=96.15));
+  }
+  await page.locator('#stop').click();
+  check('Stop ends all approval drafts',await page.locator('#auditions audio').evaluateAll(a=>a.every(x=>x.paused)));
+
   check('Rejected piano player removed',await page.locator('#piano').count()===0);
   for(const [family,material,target,expected] of [['spear','iron','flesh','spearFlesh'],['twinblade','iron','flesh','twinFlesh'],['sword','wood','flesh','woodFlesh'],['sword','iron','armor','swordArmor']]) {
     await page.selectOption('#family',family);await page.selectOption('#material',material);await page.selectOption('#target',target);

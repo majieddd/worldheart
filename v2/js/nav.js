@@ -71,7 +71,9 @@ export class NavGraph {
   // Builds the graph for CONFIG.seed, bumping the seed until the world has a
   // large connected walkable region with valid heart and portal sites. Maps
   // with a battlefield cap also search for a viable cap center per seed.
-  build() {
+  build() {for(const _ of this.buildSteps()){/* Headless/tool compatibility. */}}
+
+  *buildSteps() {
     const theta = CONFIG.map.fieldTheta;
     this.portalTarget = CONFIG.map.portalWakes.length;
 
@@ -81,14 +83,14 @@ export class NavGraph {
     if (CONFIG.map.mode === 'space') {
       const space = WORLD.SPACE;
       this.attempts = 1;
-      this._buildGraph(space.center, theta, true);
+      yield* this._buildGraphSteps(space.center, theta, true);
       const heartSite = space.sites.find((s) => s.kind === 'heart');
       this.heartNode = this.nearestWalkableNode(heartSite.dir);
       this.portalNodes = space.sites
         .filter((s) => s.kind === 'portal')
         .map((s) => this.nearestWalkableNode(s.dir));
       this.fieldCenter = space.center.clone();
-      this.recomputeFlow();
+      yield* this.recomputeFlowSteps();
       return;
     }
 
@@ -113,11 +115,11 @@ export class NavGraph {
       // best seed the neighborhood offers.
       const relax = Math.min(attempt / 8, 1);
       if (!theta && scoutDetail) {
-        this._buildGraph(null, 0, false, scoutDetail, true);
-        if (!this._chooseSites(relax)) continue;
-        this._buildGraph(null, 0, false, DETAIL);
+        yield* this._buildGraphSteps(null, 0, false, scoutDetail, true);
+        if (!(yield* this._chooseSitesSteps(relax))) continue;
+        yield* this._buildGraphSteps(null, 0, false, DETAIL);
         for (let r = relax; r <= 1.0001; r = Math.min(1, r + 0.25)) {
-          if (this._chooseSites(r)) return;
+          if ((yield* this._chooseSitesSteps(r))) return;
           if (r >= 1) break;
         }
         continue;
@@ -125,7 +127,7 @@ export class NavGraph {
       if (theta) {
         const rng = mulberry32(CONFIG.seed ^ 0xCA97);
         for (let c = 0; c < 5; c++) {
-          const center = this._pickCapCenter(rng, relax, theta);
+          const center = yield* this._pickCapCenterSteps(rng, relax, theta);
           // A front that is mostly sea is not a battlefield; try another seed.
           const islands=WORLD.floatingWorld()||CONFIG.terrainKey==='ocean'||CONFIG.environment?.pack==='ocean'&&CONFIG.environment.coverage>=.95;
           if (this.capLandFrac < (islands?.28-relax*.1:.76-relax*.3)) break;
@@ -134,28 +136,28 @@ export class NavGraph {
           // allocating the roughly 190,000-node detailed cap. The accepted cap
           // still passes the unchanged full-resolution certificate below.
           if(WORLD.floatingWorld()&&DETAIL>7){
-            this._buildGraph(center,theta,false,DETAIL-1);
-            if(!this._chooseSites(relax,center,theta))continue;
+            yield* this._buildGraphSteps(center,theta,false,DETAIL-1);
+            if(!(yield* this._chooseSitesSteps(relax,center,theta)))continue;
           }
-          this._buildGraph(center, theta);
-          if (this._chooseSites(relax, center, theta)) {
+          yield* this._buildGraphSteps(center, theta);
+          if ((yield* this._chooseSitesSteps(relax, center, theta))) {
             this.fieldCenter = CONFIG.terrain ? this.nodeDir(this.heartNode, new THREE.Vector3()) : center;
             if (CONFIG.map.mode === 'ninetynine') {
               const heart=this.nodeDir(this.heartNode,new THREE.Vector3());
               const portals=this.portalNodes.map(n=>this.nodeDir(n,new THREE.Vector3()));
               const ico=buildIcosphere(DETAIL,this.fieldCenter,theta,7);
-              this._buildGraph(null,0,false,DETAIL,false,ico);
+              yield* this._buildGraphSteps(null,0,false,DETAIL,false,ico,{...this});
               this.heartNode=this.nearestWalkableNode(heart);
               this.portalNodes=portals.map(d=>this.nearestWalkableNode(d));
               this.global=true;
-              this.recomputeFlow();
+              yield* this.recomputeFlowSteps();
             }
             return;
           }
         }
       } else {
-        this._buildGraph();
-        if (this._chooseSites(relax)) return;
+        yield* this._buildGraphSteps();
+        if ((yield* this._chooseSitesSteps(relax))) return;
       }
     }
     throw new Error('worldgen failed to find a playable seed');
@@ -164,7 +166,9 @@ export class NavGraph {
   // A battlefield must sit on ground the player can actually build on. Sunlit
   // placement alone once dropped the front over open ocean, where most of the
   // visible field refused every tower.
-  _pickCapCenter(rng, relax, theta) {
+  _pickCapCenter(rng,relax,theta){const steps=this._pickCapCenterSteps(rng,relax,theta);let step;do{step=steps.next();}while(!step.done);return step.value;}
+
+  *_pickCapCenterSteps(rng, relax, theta) {
     const datum=WORLD.floatingWorld()?28:CONFIG.environment?.cloud?1.5:0;
     const v = new THREE.Vector3();
     const e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
@@ -172,7 +176,7 @@ export class NavGraph {
     const SAMPLES = 56;
     let best = null, bestLand = -1, bestFrac = -1;
 
-    for (let t = 0; t < 700; t++) {
+    for (let t = 0; t < 700; t++) {if(t%8===0)yield;
       v.set(rng() * 2 - 1, (rng() * 2 - 1) * 0.58, rng() * 2 - 1);
       if (v.lengthSq() > 1 || v.lengthSq() < 0.01) continue;
       v.normalize();
@@ -252,7 +256,9 @@ export class NavGraph {
     return best || SUN_DIR.clone();
   }
 
-  _buildGraph(capCenter = null, capTheta = 0, walkAll = false, detail = DETAIL, coarse = false, supplied = null) {
+  _buildGraph(...args){for(const _ of this._buildGraphSteps(...args)){/* Synchronous tool entry. */}}
+
+  *_buildGraphSteps(capCenter = null, capTheta = 0, walkAll = false, detail = DETAIL, coarse = false, supplied = null, reuse = null) {
     this.floorDatum=WORLD.floatingWorld()?28:CONFIG.environment?.cloud?1.5:0;
     let ico = supplied;
     if (ico) { /* accepted whole-world topology supplied by build() */ }
@@ -266,6 +272,17 @@ export class NavGraph {
       if (!ico) { ico = buildIcosphere(detail); this._icoCache.set(detail, ico); }
     }
     const { verts, faces } = ico;
+    let reused=null;
+    if(reuse?._sourcePoints){
+      reused=new Map();const source=reuse._sourcePoints;
+      for(let i=0;i<source.verts.length;i++){
+        if(i%4096===0)yield;
+        if(source.keep&&!source.keep[i])continue;
+        const v=source.verts[i];
+        if(source.center&&v[0]*source.center.x+v[1]*source.center.y+v[2]*source.center.z<Math.cos(source.theta-4*reuse.spacing/R))continue;
+        reused.set(v.join(','),source.keep?source.oldToNew[i]:i);
+      }
+    }
     const total = verts.length;
 
     let keep = null, oldToNew = null;
@@ -276,6 +293,7 @@ export class NavGraph {
       const cosLimit = Math.cos(capTheta + 0.02);
       n = 0;
       for (let i = 0; i < total; i++) {
+      if(i%256===0)yield;
         const [x, y, z] = verts[i];
         if (x * capCenter.x + y * capCenter.y + z * capCenter.z >= cosLimit) {
           keep[i] = 1;
@@ -290,11 +308,12 @@ export class NavGraph {
     // through its roof. Ordinary cave floors keep their original node IDs.
     const baseCount=n,deckIndex=new Int32Array(n).fill(-1),decks=[];
     if(CONFIG.terrain&&!coarse&&!WORLD.floatingWorld()&&WORLD.FEATURES?.surfaces.length){
-      for(let i=0;i<total;i++){
+      for(let i=0;i<total;i++){if(i%256===0)yield;
         if(keep&&!keep[i])continue;const idx=keep?oldToNew[i]:i,d=verts[i],h=terrainHeight(...d),top=WORLD.FEATURES.support(d,Infinity,h);
         if(top>h+.08&&(top>=0||!WORLD.oceanAt(...d))){deckIndex[idx]=n++;decks.push({idx:deckIndex[idx],base:idx,d,h:top});}
       }
     }
+    const reusedNodes=reused?new Int32Array(n).fill(-1):null;
     this.n = n;this.baseCount=baseCount;this.layer=new Uint8Array(n);this.deckIndex=deckIndex;
     // Node spacing at this resolution (derived from the detail level, since a
     // cap-pruned sphere carries only part of the globe), and the factor that
@@ -318,26 +337,28 @@ export class NavGraph {
     this.airDist = CONFIG.terrain ? new Float32Array(n) : null;
     this.airNext = CONFIG.terrain ? new Int32Array(n) : null;
     this._airReady = false;
-    this.revision = (this.revision || 0) + 1;
+    this.revision = (this.revision || 0) + 1;this.terrainRevision=(this.terrainRevision||0)+1;
 
     for (let i = 0; i < total; i++) {
+      if(i%256===0)yield;
       if (keep && !keep[i]) continue;
       const idx = keep ? oldToNew[i] : i;
       const [x, y, z] = verts[i];
       this.dirs[idx * 3] = x; this.dirs[idx * 3 + 1] = y; this.dirs[idx * 3 + 2] = z;
       _v.set(x, y, z);
-      const h = terrainHeight(x, y, z);
+      const cached=reused?.get(verts[i].join(','));if(cached!==undefined)reusedNodes[idx]=cached;
+      const h = cached===undefined?terrainHeight(x, y, z):reuse.height[cached];
       this.height[idx] = h;
-      this.baseHeight[idx] = CONFIG.terrain ? terrainHeight(x, y, z, false) : h;
+      this.baseHeight[idx] = cached===undefined?(CONFIG.terrain ? terrainHeight(x, y, z, false) : h):reuse.baseHeight[cached];
       this.waterDepth[idx] = WORLD.waterDepthAt(_v,this.baseHeight[idx]);
       if (this.airWalk) this.airWalk[idx] = WORLD.canFlyAt(_v, WORLD.FLIGHT_CLEARANCE + 2) ? 1 : 0;
       const p = (CONFIG.terrain ? WORLD.surfaceElevation(_v,h) : Math.max(h,.03)) + R;
       this.pos[idx * 3] = x * p; this.pos[idx * 3 + 1] = y * p; this.pos[idx * 3 + 2] = z * p;
       // Space flight lanes: the void is pathable, the rocks are not, so the
       // flow field bends every lane around the platforms.
-      this.walk[idx] = walkAll ? (h < 0.55 ? 1 : 0)
+      this.walk[idx] = cached!==undefined?reuse.walk[cached]:walkAll ? (h < 0.55 ? 1 : 0)
         : (coarse ? (isLandDir(_v) ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0));
-      if(this.floorWalk)this.floorWalk[idx]=this.walk[idx]&&isFloorTerrain(this.baseHeight[idx]-this.floorDatum,WORLD.slopeAt(_v),this.waterDepth[idx])?1:0;
+      if(this.floorWalk)this.floorWalk[idx]=cached!==undefined?reuse.floorWalk[cached]:this.walk[idx]&&isFloorTerrain(this.baseHeight[idx]-this.floorDatum,WORLD.slopeAt(_v),this.waterDepth[idx])?1:0;
       // The retained mesh includes a stitching margin outside the wall.
       // It must never become a route that the movement boundary refuses.
       if (CONFIG.terrain && capCenter && _v.dot(capCenter) < Math.cos(capTheta - 0.8 / R)) {
@@ -366,7 +387,7 @@ export class NavGraph {
       edgeSet.add(key);
       deg[a]++; deg[b]++;
     };
-    for (const [a, b, c] of faces) { addEdge(a, b); addEdge(b, c); addEdge(c, a); }
+    let faceIndex=0;for (const [a, b, c] of faces) {if(faceIndex++%2048===0)yield;addEdge(a, b); addEdge(b, c); addEdge(c, a);}
     const groundEdges=[...edgeSet];
     const connect=(a,b)=>{
       if(a<0||b<0||!this.walk[a]||!this.walk[b])return;
@@ -392,7 +413,11 @@ export class NavGraph {
     }
     if (this.airWalk) {
       const centre = new THREE.Vector3(), a = new THREE.Vector3(), b = new THREE.Vector3(), probe = new THREE.Vector3();
-      for (let i = 0; i < n; i++) if (this.airWalk[i]) {
+      for (let i = 0; i < n; i++) {
+        if(i%64===0)yield;
+        if(!this.airWalk[i])continue;
+        const cached=reusedNodes?.[i];
+        if(cached>=0&&reuse._airCertificate){this.airWalk[i]=reuse._airCertificate[cached];continue;}
         let nearRelief = this.baseHeight[i] > WORLD.FLIGHT_CEILING * 0.2;
         for (let e = this.adjOff[i]; !nearRelief && e < this.adjOff[i + 1]; e++) nearRelief = this.baseHeight[this.adj[e]] > WORLD.FLIGHT_CEILING * 0.2;
         if (!nearRelief) continue;
@@ -405,7 +430,7 @@ export class NavGraph {
           if (!WORLD.canFlyAt(probe, WORLD.FLIGHT_CLEARANCE + 1)) { this.airWalk[i] = 0; break; }
         }
       }
-      const safe = this.airWalk.slice();
+      const safe = this.airWalk.slice();this._airCertificate=capCenter?safe:null;
       // Keep the entire steering cell clear of a ceiling-height cliff,
       // including its corners, not merely the height at its centre.
       for (let i = 0; i < n; i++) if (safe[i]) {
@@ -416,6 +441,7 @@ export class NavGraph {
     }
     this._routeHeuristicScale = CONFIG.terrain ? Infinity : 0;
     for (let i = 0; i < n; i++) {
+      if(i%256===0)yield;
       for (let e = this.adjOff[i]; e < this.adjOff[i + 1]; e++) {
         const j = this.adj[e];
         const dx = this.pos[i * 3] - this.pos[j * 3];
@@ -445,11 +471,13 @@ export class NavGraph {
     // Spatial hash on direction cells for nearest-node lookups
     this.cells = new Map();
     for (let i = 0; i < n; i++) {
+      if(i%256===0)yield;
       const key = this._cellKey(this.dirs[i * 3], this.dirs[i * 3 + 1], this.dirs[i * 3 + 2]);
       let arr = this.cells.get(key);
       if (!arr) this.cells.set(key, arr = []);
       arr.push(i);
     }
+    this._sourcePoints=capCenter?{verts,keep,oldToNew,center:capCenter,theta:capTheta}:null;
   }
 
   _cellKey(x, y, z) {
@@ -582,12 +610,14 @@ export class NavGraph {
     return count;
   }
 
-  _chooseSites(relax = 0, capCenter = null, capTheta = 0) {
+  _chooseSites(...args){const steps=this._chooseSitesSteps(...args);let s;do{s=steps.next();}while(!s.done);return s.value;}
+
+  *_chooseSitesSteps(relax = 0, capCenter = null, capTheta = 0) {
     const n = this.n;
     // Connected walkable regions
     const region = new Int32Array(n).fill(-1);
     const sizes = [];
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {if(i%256===0)yield;
       if (!this.walk[i] || region[i] >= 0) continue;
       const id = sizes.length;
       let size = 0;
@@ -595,7 +625,7 @@ export class NavGraph {
       region[i] = id;
       while (stack.length) {
         const a = stack.pop();
-        size++;
+        size++;if(size%1024===0)yield;
         for (let e = this.adjOff[a]; e < this.adjOff[a + 1]; e++) {
           const b = this.adj[e];
           if (this.walk[b] && region[b] < 0) { region[b] = id; stack.push(b); }
@@ -654,13 +684,13 @@ export class NavGraph {
     this.heartNode = heart;
 
     // Graph distances from the heart pick spread-out portal sites
-    this._dijkstra(heart, null);
+    yield* this._dijkstraSteps(heart, null);
     const cands = [];
     let maxD = 0;
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {if(i%256===0)yield;
       if (this.dist[i] < Infinity && this.walk[i]) maxD = Math.max(maxD, this.dist[i]);
     }
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {if(i%256===0)yield;
       if (!this.walk[i] || region[i] !== main) continue;
       if (this.dist[i] === Infinity) continue;
       if (CONFIG.terrain && (this.height[i] < 0.14 || !this.airWalk[i])) continue;
@@ -702,7 +732,7 @@ export class NavGraph {
       portals.push(best);
     }
     this.portalNodes = portals;
-    this.recomputeFlow();
+    yield* this.recomputeFlowSteps();
     if (this.airDist && portals.some(i => !Number.isFinite(this.airDist[i]))) return false;
     if (CONFIG.map.mode === 'ninetynine' && this.march) {
       // A valid original portal route can hide a tiny meadow island. Accept
@@ -815,12 +845,22 @@ export class NavGraph {
   // ownership are untouched until the advertised fault is committed.
   *forecastGraphSteps(){
     const draft=Object.assign(Object.create(Object.getPrototypeOf(this)),this);
-    for(const key of ['height','baseHeight','waterDepth','walk','floorWalk','airWalk','pos','cost','airCost','dist','next','airDist','airNext','flow']){
+    for(const key of ['block','height','baseHeight','waterDepth','walk','floorWalk','airWalk','pos','cost','airCost','dist','next','airDist','airNext','flow']){
       const value=this[key];if(!value)continue;draft[key]=new value.constructor(value.length);yield;
       for(let at=0;at<value.length;at+=65536){draft[key].set(value.subarray(at,at+65536),at);yield;}
     }
     draft._heap=null;draft.march=null;draft._nestSites=null;draft._routeRegions=null;
     return draft;
+  }
+
+  *commitForecastSteps(draft){
+    let changed=0;
+    for(let i=0;i<this.n;i++){if(i%4096===0)yield;if(this.height[i]!==draft.height[i])changed++;}
+    for(const key of ['height','baseHeight','waterDepth','walk','floorWalk','airWalk','pos','cost','airCost','dist','next','airDist','airNext','flow']){
+      if(!this[key])continue;
+      for(let at=0;at<this[key].length;at+=65536){this[key].set(draft[key].subarray(at,at+65536),at);yield;}
+    }
+    this.march=draft.march;this._airReady=draft._airReady;this._routeHeuristicScale=0;this.revision++;this.terrainRevision=(this.terrainRevision||0)+1;return changed;
   }
 
   *refreshTerrainSteps(fault,predicted=false){
@@ -844,10 +884,10 @@ export class NavGraph {
       const horizontal=angle*(R+(WORLD.surfaceElevation(_v,this.baseHeight[i])+WORLD.surfaceElevation(_v2,this.baseHeight[j]))*.5);
       this.cost[e]=travelCost(this.baseHeight[j],this.baseHeight[i],horizontal,this.waterDepth[j],this.waterDepth[i]);
       if(Number.isFinite(this.cost[e])&&!this.bridgeEdgeClear(i,j,predicted?fault:null))this.cost[e]=Infinity;
-      _v.add(_v2).normalize();this.airCost[e]=this.airWalk[i]&&this.airWalk[j]&&WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+3)?angle*R:Infinity;
+      _v.add(_v2).normalize();this.airCost[e]=this.airWalk[i]&&this.airWalk[j]&&(predicted?(WORLD.inBattlefield(_v.x,_v.y,_v.z)&&terrainHeight(_v.x,_v.y,_v.z,false)+WORLD.terrainFaultDelta(fault,_v.x,_v.y,_v.z)+WORLD.FLIGHT_CLEARANCE+3<=WORLD.FLIGHT_CEILING):WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+3))?angle*R:Infinity;
     }}
     // Node identity, adjacency and tower footprint ownership are retained.
-    this.march=null;this._airReady=false;this._routeHeuristicScale=0;yield* this.recomputeFlowSteps();this.revision++;return changed;
+    this.march=null;this._airReady=false;this._routeHeuristicScale=0;yield* this.recomputeFlowSteps();this.revision++;this.terrainRevision=(this.terrainRevision||0)+1;return changed;
   }
 
   sampleAirFlow(node, dir, out) {
