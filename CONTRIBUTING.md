@@ -156,5 +156,12 @@ reasons.
 
 ## Where to start
 
+For art studies, preserve an owner-selected candidate with its renderer, assets,
+dependencies and recorded hashes before iterating. Give experiments separate
+versions and review status. Approval of the parent does not approve its variants.
+Fetch current work and read active contributions before changing shared methods;
+supplement the owning method instead of replacing a collaborator's newer work
+with an older copy. Record overlap and retained behavior in the contribution.
+
 `docs/ROADMAP.md` has a list of work sized small, medium and large, with the
 reason each one matters. The small ones are genuinely self-contained.

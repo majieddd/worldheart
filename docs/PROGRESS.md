@@ -1,5 +1,12 @@
 # 99 Planets development progress
 
+U164-U167: Hard Cel 1.0.0 is now the owner's selected candidate for future use.
+The exact runtime dependencies are saved under tag `art/hard-cel-v1`; the
+[candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md) tracks three separately
+versioned experiments, verification and the additive Aegis contribution.
+`hard-cel-lab.html` provides shared-camera pairs, all-four comparison and full
+width inspection. The variants await owner review.
+
 Published U161-U163: V2 `4fcee91`, [PR #49](https://github.com/majieddd/worldheart/pull/49), Codex on `feature/painted-cel-ink`.
 The owner prefers anime + ink but finds the first study's shadows too boxy and
 models too simple. [Painted frontier ledger](qa/implementation/PAINTED-CEL.md)

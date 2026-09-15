@@ -16,6 +16,9 @@ const shot=async name=>{await settle();return page.locator('#stage').screenshot(
 const difference=async(a,b)=>{const aa=await sharp(a).removeAlpha().raw().toBuffer(),bb=await sharp(b).removeAlpha().raw().toBuffer();if(aa.length!==bb.length)throw Error('Image dimensions differ');let sum=0;for(let i=0;i<aa.length;i++)sum+=Math.abs(aa[i]-bb[i]);return sum/aa.length;};
 const ready=async p=>{await p.waitForFunction(()=>window.PAINTED_LAB?.ready&&!document.querySelector('#loading:not([hidden])'),null,{timeout:60000});};
 try{
+  if(process.argv.includes('--candidates')){
+    await (await import('./probes/hard-cel.mjs')).run({page,browser,base,out,check,shot,settle,difference,sharp,errors,requests});
+  }else{
   await page.goto(base+'/painted-lab.html');await ready(page);
   const initial=await page.evaluate(()=>({metrics:PAINTED_LAB.metrics,assets:PAINTED_LAB.assets,storage:JSON.stringify(localStorage)}));
   check('Three textured source models load in one live WebGL scene',initial.metrics.models===3&&initial.metrics.contexts===1&&initial.assets.every(a=>a.textures===1&&a.vertices>25000&&a.sourceDimensions.every(Number.isFinite)),initial);
@@ -58,6 +61,7 @@ try{
   const failure=await browser.newPage();await failure.route('**/lib/painted/commander.gltf',r=>r.abort());await failure.goto(base+'/painted-lab.html');await failure.waitForFunction(()=>window.PAINTED_LAB_ERROR);check('Missing model shows a recoverable error and disables export',await failure.locator('#loading').isVisible()&&await failure.locator('#export').isDisabled());await failure.close();
   const touch=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:1,reducedMotion:'reduce'}),mobile=await touch.newPage();mobile.on('pageerror',e=>errors.push(String(e)));await mobile.goto(base+'/painted-lab.html');await ready(mobile);await mobile.locator('[data-view="enemy"]').tap();check('Touch selects detailed invader view',await mobile.evaluate(()=>PAINTED_LAB.state.view==='enemy'));await mobile.locator('.viewport:visible').scrollIntoViewIfNeeded();const touchBefore=await mobile.evaluate(()=>PAINTED_LAB.camera.yaw),rect=await mobile.locator('.viewport:visible').boundingBox(),cdp=await touch.newCDPSession(mobile),x=rect.x+rect.width*.4,y=Math.max(100,Math.min(650,rect.y+200));await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+70,y}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});check('Real touch swipe orbits the scene',await mobile.evaluate(n=>PAINTED_LAB.camera.yaw!==n,touchBefore));await mobile.screenshot({path:resolve(out,'touch-enemy.png'),fullPage:true});await touch.close();
   check('No runtime or shader errors',errors.length===0,errors);
+  }
 }catch(error){errors.push(String(error));check('Harness completed',false,String(error));}
 finally{writeFileSync(resolve(out,'results.json'),JSON.stringify({base,checks,errors},null,2)+'\n');await browser.close();}
 console.log(`${checks.filter(c=>c.ok).length}/${checks.length} painted lab checks pass`);if(checks.some(c=>!c.ok)||errors.length)process.exitCode=1;

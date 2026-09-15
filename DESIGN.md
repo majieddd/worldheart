@@ -4,6 +4,14 @@
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
 ## Dials
+The owner selected **Hard Cel 1.0.0** with the detailed models as a candidate for
+future Worldheart adoption. Preserve `art-candidates/hard-cel-v1/` and tag
+`art/hard-cel-v1` exactly. `hard-cel-lab.html` compares it with three unreviewed
+versions: Painted light 1.1, Etched color 1.2 and Atmospheric ink 1.3. Keep the
+selected crisp contour and illustrative surface depth; vary only declared
+rendering parameters against the same archived scene, camera and models.
+This records candidate acceptance, not a production art migration.
+
 Fourth study: `painted-lab.html` follows the owner's preference for anime + ink,
 with softer painted light and richer environments. Dials 4/2/5. Retain fine
 contours; use continuous paint ramps, blurred variance shadows, world-space

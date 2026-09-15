@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "id": "worldheart-hard-cel-v1",
+  "version": "1.0.0",
+  "status": "owner-approved-candidate",
+  "approvedOn": "2026-09-15",
+  "approval": "Owner selected the Hard Cel pane with the detailed assets as a candidate for eventual Worldheart adoption. This is art-direction approval, not a production migration.",
+  "sourceRevision": "4fcee910ca6fb71771fa8b8ba54d9a5172281a58",
+  "entry": "painted-lab.html?view=commander&compare=1",
+  "approvedPane": "right / Hard Cel",
+  "recipe": {
+    "gradientBands": [
+      0.32,
+      0.62,
+      0.96
+    ],
+    "gradientThresholds": [
+      92,
+      165
+    ],
+    "gradientSamples": 256,
+    "gradientFilter": "linear",
+    "contourCssPixels": 1.45,
+    "contourColor": "#292332",
+    "paintAmount": 1,
+    "modelEmissiveIntensity": 0.06,
+    "shadowType": "VSMShadowMap",
+    "shadowRadius": 1,
+    "shadowMapSize": 2048,
+    "shadowBlurSamples": 8,
+    "toneMapping": "ACESFilmic",
+    "exposure": 1,
+    "fogDensity": 0.009,
+    "sceneSeed": 80291
+  },
+  "files": [
+    {
+      "path": "painted-lab.html",
+      "sha256": "26894d8e086a1dddbbaa642d2d113859d1a2095f42383ae956ec66860cfd39a0",
+      "bytes": 4284
+    },
+    {
+      "path": "css/painted-lab.css",
+      "sha256": "0af79759a897cbd229c063cf3fc16ee204c4b13b9d7c3f6256bc4704f629841a",
+      "bytes": 5457
+    },
+    {
+      "path": "js/painted-lab.js",
+      "sha256": "55a66fad7a1c61ec5f459333207f1457cd977ed4bc79bd4ac7e68ecc942e14c0",
+      "bytes": 11080
+    },
+    {
+      "path": "js/painted-materials.js",
+      "sha256": "2b17df578be24f709d8a8df0f22dcbaf1a87114bc57283043c6945b8f73b53ad",
+      "bytes": 3689
+    },
+    {
+      "path": "js/painted-environment.js",
+      "sha256": "b8e4c8d2bd6029ed1530d35a1a03c4033547802e3a77cafde0a577c3dc123cf5",
+      "bytes": 11060
+    },
+    {
+      "path": "lib/three.module.min.js",
+      "sha256": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6",
+      "bytes": 338908
+    },
+    {
+      "path": "lib/three.core.min.js",
+      "sha256": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de",
+      "bytes": 381124
+    },
+    {
+      "path": "lib/THREE-LICENSE.txt",
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "bytes": 1081
+    },
+    {
+      "path": "lib/addons/loaders/GLTFLoader.js",
+      "sha256": "67ac5551fdafa6e349bd80c8f8e5e39c136d6b2fb1ad647db9abb21dc86f9e4a",
+      "bytes": 114739
+    },
+    {
+      "path": "lib/addons/utils/BufferGeometryUtils.js",
+      "sha256": "fda7e946b8e0b5ab39b779206589e7a1079a22eb24efb89d7223e03fdfb1f751",
+      "bytes": 35539
+    },
+    {
+      "path": "lib/painted/commander.gltf",
+      "sha256": "a57aed322e612da9091a5d2d1bd1aeb7b1805b6312b90a0a061d1f71f4c6cb54",
+      "bytes": 1981099
+    },
+    {
+      "path": "lib/painted/enemy.gltf",
+      "sha256": "e514ea889c608a26d5cfc77c7f0fd998d29f4562c031dc4b73667aa2499aca60",
+      "bytes": 1710707
+    },
+    {
+      "path": "lib/painted/tower.gltf",
+      "sha256": "1690a96f023964324b15c8f6d892f3193b808ed059cb3bbe74780bc498693e34",
+      "bytes": 1954889
+    },
+    {
+      "path": "lib/painted/gouache.png",
+      "sha256": "3cf37ea545196e7358c446183839dee36bbf686de2834e110b4aaa7957fc09c7",
+      "bytes": 2949468
+    },
+    {
+      "path": "lib/painted/provenance.json",
+      "sha256": "35be5017e9749d08adc481a35755417cad4c51ea837df6e9bc1b99ad66f5b5b8",
+      "bytes": 4896
+    },
+    {
+      "path": "lib/painted/README.md",
+      "sha256": "56330e0e1e021238a83c6246b5499ca28d7f0a8ab19c5714b83cb57e931b2476",
+      "bytes": 2336
+    }
+  ]
+}

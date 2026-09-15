@@ -1,5 +1,10 @@
 # 99 Planets To Defend: running development blueprint
 
+U164-U167 preserves the owner-selected **Hard Cel 1.0.0** as a real candidate for
+future adoption. [Candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md)
+records its immutable archive, three unreviewed rendering variants and the
+complementary Aegis method. The comparison does not change campaign rendering.
+
 Published U161-U163 (V2 `4fcee91`, PR #49) adds the isolated [Painted frontier](qa/implementation/PAINTED-CEL.md)
 study after the owner preferred anime + ink but requested softer painted
 environments and richer models. The source collection's retroanime models are
