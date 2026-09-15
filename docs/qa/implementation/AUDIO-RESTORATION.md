@@ -1,5 +1,9 @@
 # Audio restoration and material sound retry
 
+The next owner review is implemented in [AUDIO-FEEDBACK.md](AUDIO-FEEDBACK.md),
+V2 023a70b. Its soundtrack and effects supersede the first comparison below;
+the rejected piano sketch has been removed. This ledger retains that history.
+
 Active 2026-09-15. Owner: Codex, `feature/audio-restoration`.
 
 | Item | State | Scope |

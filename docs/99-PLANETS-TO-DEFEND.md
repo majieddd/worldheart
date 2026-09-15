@@ -4,7 +4,7 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
-U143-U145 applies the owner's listening feedback: six accepted clips frozen, contextual combat/rewards and nine owner-provided music tracks. [Current ledger](qa/implementation/AUDIO-FEEDBACK.md). The previous piano sketch has been removed.
+U143-U145 is published as V2 `023a70b` and applies the owner's listening feedback: six accepted clips frozen, contextual combat/rewards and nine owner-provided music tracks. [Current ledger](qa/implementation/AUDIO-FEEDBACK.md). The previous piano sketch has been removed.
 
 Historical U136-U139 audio was rejected by the owner after listening. U140 restores
 the prior sound design (V2 033d3e3). U141 adds a separate opt-in comparison of
