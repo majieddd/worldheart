@@ -1,5 +1,7 @@
 # 99 Planets development progress
 
+Active U143-U145: [owner audio feedback](qa/implementation/AUDIO-FEEDBACK.md), Codex on feature/audio-restoration / PR #44. Six accepted effects are frozen; other effects and the owner soundtrack are being integrated.
+
 U140: full audio rollback published and verified as V2 `033d3e3`.
 U141: separate material-effects comparison published and publicly verified as
 V2 `5577df3`. Codex owns `feature/audio-restoration`, [draft PR #44](https://github.com/majieddd/worldheart/pull/44).

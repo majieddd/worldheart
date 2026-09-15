@@ -51,15 +51,11 @@ test('every sprite segment is in bounds and separated by silence', () => {
   }
 });
 
-test('piano phrases have deliberate quiet gaps and documented instrument sources', () => {
-  const { data, frames } = pcm(manifest.score);
-  assert.equal(frames / 48000, 48);
-  let zeros = 0;
-  for (let i = 0; i < frames; i++) if (data.readInt16LE(i * 2) === 0) zeros++;
-  assert.ok(zeros / frames > .3, 'Quiet spaces occupy at least 30% of the sketch');
-  assert.equal(manifest.pianoSources.length, 5);
-  for (const source of manifest.pianoSources) {
-    assert.match(source.url, /VSCO-2-CE\/440300901dfe9275fd84e0b7763af1f8443ae62e\/Keys\/Upright%20Piano\//);
-    assert.match(source.sha256, /^[a-f0-9]{64}$/);
+test('all six approved effects retain exact PCM identity', () => {
+  const approved=JSON.parse(readFileSync(new URL('approved-clips.json',root)));
+  const {data}=pcm(manifest.bank);
+  for(const [id,hashes] of Object.entries(approved)) {
+    assert.deepEqual(manifest.cues[id].map(c=>createHash('sha256').update(data.subarray(Math.round(c.offset*48000)*2,Math.round((c.offset+c.duration)*48000)*2)).digest('hex')),hashes,id);
   }
+  assert.ok(manifest.cues.coin[0].duration <= .25,'Pickup stays short');
 });

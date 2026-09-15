@@ -14,26 +14,25 @@ previous._env = function (...args) {
 const draft = new MaterialAudio();
 const cues = [
   ['click', 'Menu click', 'Small wooden contact'], ['build', 'Build tower', 'Wood body and muted metal latch'],
-  ['meleeHit', 'Melee impact', 'Weight in the middle of the impact'], ['enemyHit', 'Creature hit', 'Soft body contact'],
-  ['blocked', 'Blocked strike', 'Lower plate resonance'], ['rifle', 'Rifle', 'Compact impact with a mechanical tail'],
-  ['shot', 'Tower shot', 'Wood and punch body'], ['mortar', 'Mortar', 'Slower heavy launch'],
-  ['lob', 'Lobber', 'Rounded mechanical launch'], ['explosion', 'Explosion', 'Staggered material impacts'],
+  ['meleeHit', 'Melee impact', 'Blade contact changes with weapon and target'], ['creatureHit', 'Creature reaction', 'Changes with creature type'],
+  ['blocked', 'Blocked strike', 'Lower plate resonance'], ['rifle', 'Rifle', 'Blast body with a short mechanical tail'],
+  ['shot', 'Tower shot', 'Restored previous tower shot'], ['mortar', 'Mortar', 'Slower heavy launch'],
+  ['lob', 'Lobber', 'Restored previous lobber'], ['explosion', 'Explosion', 'Previous explosion with a deeper body'],
   ['step', 'Grass step', 'Three material variations'], ['stepHard', 'Hard step', 'Three wood variations'],
-  ['land', 'Landing', 'Concrete step and body weight'], ['coin', 'Pickup', 'Two soft piano notes'],
-  ['upgrade', 'Upgrade', 'Rising piano voicing'], ['victory', 'Victory', 'Open piano chord'],
+  ['land', 'Landing', 'Low landing weight, leather and gear settle'], ['coin', 'Pickup', 'Short two-note mallet pickup'],
+  ['upgrade', 'Upgrade', 'Playful ascending reward'], ['victory', 'Victory', 'Short celebratory fanfare'],
 ];
 const status = document.querySelector('#status');
 let serial = 0, timer, active = null;
 const volume = () => +document.querySelector('#volume').value / 100;
 function silence() {
-  serial++; clearTimeout(timer); draft.stopVoices(); draft.setScore(false);
+  serial++; clearTimeout(timer); draft.stopVoices();
+  for (const media of document.querySelectorAll("audio")) media.pause();
   for (const gain of referenceEnvelopes) gain.disconnect();
   referenceEnvelopes.clear();
   for (const engine of [previous, draft]) {
     if (engine.master) engine.master.gain.setTargetAtTime(0, engine.ctx.currentTime, .01);
   }
-  document.querySelector('#piano').setAttribute('aria-pressed', 'false');
-  document.querySelector('#piano').textContent = 'Play piano sketch';
   active = null;
 }
 async function select(engine) {
@@ -48,7 +47,7 @@ async function select(engine) {
 }
 async function play(engine, id, title) {
   if (!await select(engine)) return;
-  engine.play(id); status.textContent = `${engine === draft ? 'Draft' : 'Previous'}: ${title}`;
+  engine.play(engine === previous && id === 'creatureHit' ? 'enemyHit' : id, context()); status.textContent = `${engine === draft ? 'Draft' : 'Previous'}: ${title}`;
 }
 for (const [id, title, detail] of cues) {
   const row = document.createElement('div'); row.className = 'cue';
@@ -69,7 +68,7 @@ async function sequence(engine) {
     if (token !== serial) return;
     if (index === cues.length) { status.textContent = 'Sequence complete.'; return; }
     const [id, title] = cues[index++];
-    engine.play(id); status.textContent = `${engine === draft ? 'Draft' : 'Previous'}: ${title}`;
+    engine.play(engine === previous && id === 'creatureHit' ? 'enemyHit' : id, context()); status.textContent = `${engine === draft ? 'Draft' : 'Previous'}: ${title}`;
     timer = setTimeout(next, id === 'victory' || id === 'upgrade' ? 2800 : 1700);
   };
   next();
@@ -81,17 +80,19 @@ document.querySelector('#volume').oninput = () => {
   document.querySelector('#level').value = `${Math.round(volume()*100)}%`;
   active?.master?.gain.setTargetAtTime(volume(), active.ctx.currentTime, .01);
 };
-document.querySelector('#piano').onclick = async () => {
-  if (draft.scoreEnabled) { silence(); status.textContent = 'Piano stopped.'; return; }
-  if (!await select(draft)) return;
-  const token = serial; status.textContent = 'Loading piano sketch...';
-  await draft.setScore(true);
-  if (token !== serial) return;
-  const ok = !!draft.scoreNode;
-  document.querySelector('#piano').setAttribute('aria-pressed', String(ok));
-  document.querySelector('#piano').textContent = ok ? 'Stop piano sketch' : 'Play piano sketch';
-  status.textContent = ok ? 'Piano sketch playing. Instrument samples only.' : 'Piano could not load. Try again.';
-};
+function context() {
+  return Object.fromEntries(['family','material','target','creature'].map(key=>[key,document.querySelector('#'+key).value]));
+}
+const musicManifest = await fetch(new URL('audio/soundtrack/manifest.json', document.baseURI)).then(r=>r.json()).catch(()=>null);
+if (musicManifest) for (const track of Object.values(musicManifest.tracks)) {
+  const row=document.createElement('div'); row.className='track';
+  const label=document.createElement('p');label.textContent=track.title;
+  const media=document.createElement('audio');media.controls=true;media.preload='none';
+  media.src=new URL('audio/soundtrack/'+track.file,document.baseURI).href;
+  media.setAttribute('aria-label',track.title);
+  media.onplay=()=>{for(const other of document.querySelectorAll('audio'))if(other!==media)other.pause();};
+  row.append(label,media);document.querySelector('#tracks').append(row);
+}
 document.addEventListener('visibilitychange', () => { if (document.hidden) silence(); });
 window.addEventListener('pagehide', () => { silence(); draft.dispose(); previous.ctx?.close(); });
 window.audioLab = { previous, draft }; // Explicit QA surface; no automatic playback.

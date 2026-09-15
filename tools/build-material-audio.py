@@ -17,13 +17,6 @@ ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / 'artifacts/audio-restoration/sources'
 OUT = ROOT / 'audio/material'
 SR = 48000
-PIANO = [(12, 45, '16be23a8378185f1b392600d3fa800a206945543866548640f7573534f76faf2'),
-         (16, 53, 'f1a3a542cf70a13aa865ce130d50d72cd735449e605d1c5a45dc06b5a60b27fd'),
-         (20, 61, '08242e8d1c865c8cdc794cc7921d3d9663bedb5a12bfefe0de13aaa86fd23133'),
-         (24, 69, '916c3ec2d61fb421e74fb4866ef75d3ef17e9d88e9dc858da24159846489d33f'),
-         (28, 77, 'a9fbd1af0703b294d3267f8f88fca4b4366e3b772f7d780acf2de1cbf2056355')]
-REV = '440300901dfe9275fd84e0b7763af1f8443ae62e'
-BASE = f'https://raw.githubusercontent.com/sgossner/VSCO-2-CE/{REV}/'
 CACHE.mkdir(parents=True, exist_ok=True)
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -44,14 +37,6 @@ with zipfile.ZipFile(io.BytesIO(archive)) as z:
             (CACHE / Path(name).name).write_bytes(z.read(name))
 (OUT / 'KENNEY-LICENSE.txt').write_text('\n'.join(line.rstrip() for line in
     (CACHE / 'License.txt').read_text(encoding='utf-8').splitlines()) + '\n', encoding='utf-8', newline='\n')
-(OUT / 'VSCO-LICENSE.txt').write_bytes(fetch(CACHE.parent / 'vsco-LICENSE', BASE + 'LICENSE'))
-provenance = []
-for index, midi, digest in PIANO:
-    name = f'Player_dyn1_rr1_{index:03}.wav'
-    url = BASE + 'Keys/Upright%20Piano/' + name
-    fetch(CACHE / name, url, digest)
-    provenance.append(dict(file=name, midi=midi, sha256=digest, url=url))
-
 decoded = {}
 def sample(name, rate=1):
     if name not in decoded:
@@ -78,14 +63,6 @@ def mix(layers):
         i = int(t * SR)
         out[i:i+len(a)] += a * gain
     return out
-
-def note(midi, duration=2.2):
-    index, root, _ = min(PIANO, key=lambda p: abs(p[1] - midi))
-    a = sample(f'Player_dyn1_rr1_{index:03}.wav', 2 ** ((midi-root)/12))
-    a = finish(a, .34, duration)
-    tail = min(int(.5 * SR), len(a))
-    a[-tail:] *= np.linspace(1, 0, tail)
-    return a
 
 # Low/mid material bodies with soft attacks. Variants change actual source take.
 # No noise oscillator, synthesized pitched transient or artificial ambient bed.
@@ -122,12 +99,69 @@ def add(name, arrays, level):
     cues[name] = entries
 
 for name, recipe in RECIPES.items():
+    if name not in ['click', 'build', 'blocked', 'mortar', 'step', 'stepHard']: continue
     arrays = [mix([(delay, sample(f'{family}_{take:03}.ogg', rate), gain)
                    for family, rate, gain, delay in recipe]) for take in range(3)]
     add(name, arrays, LEVELS.get(name, .42))
-for name, pitches, peak in [('coin', [64, 71], .25), ('upgrade', [55, 62, 67, 71], .33),
-                           ('victory', [48, 55, 64, 67, 74], .43)]:
-    add(name, [mix([(i*.09, note(midi), .85**i) for i, midi in enumerate(pitches)])], peak)
+# New combat/reward cues are authored separately; accepted PCM stays identical.
+rpg = fetch(CACHE.parent / 'rpg.zip',
+    'https://kenney.nl/media/pages/assets/rpg-audio/8e99002d76-1677590336/kenney_rpg-audio.zip',
+    '6dbeaf8544da958d8f2adcb4a4a4b76c1ade34a05f8ab9edccd327da7375f38b')
+with zipfile.ZipFile(io.BytesIO(rpg)) as z:
+    for name in z.namelist():
+        if name.startswith('Audio/') and name.endswith('.ogg'):
+            (CACHE / Path(name).name).write_bytes(z.read(name))
+
+def clean(a, duration=.5):
+    a = np.array(a[:int(duration*SR)], copy=True)
+    # Remove quiet recording tail instead of normalizing room sound upward.
+    block = 240
+    gate=np.ones(len(a))
+    for i in range(0, len(a), block):
+        rms = np.sqrt(np.mean(a[i:i+block]**2))
+        gate[i:i+block] = min(1, (rms / .018)**2)
+    a *= np.convolve(np.pad(gate,(120,120),mode="edge"),np.ones(241)/241,mode="valid")
+    # Smooth gate edges and leave true silence after the one-shot.
+    return finish(a, .5, duration)
+
+def tone(freq, duration, end=None, harmonics=(1,.2,.08)):
+    t=np.arange(int(duration*SR))/SR
+    phase=2*np.pi*(freq*t + ((end or freq)-freq)*t*t/(2*duration))
+    a=sum(h*np.sin((i+1)*phase) for i,h in enumerate(harmonics))
+    return a*np.exp(-t/(duration/4)) * np.minimum(1,t/.006)
+
+def burst(duration, cutoff, seed):
+    rng=np.random.default_rng(seed); a=rng.normal(0,1,int(duration*SR))
+    f=np.fft.rfftfreq(len(a),1/SR)
+    a=np.fft.irfft(np.fft.rfft(a)/(1+(f/cutoff)**6),n=len(a))
+    return a*np.exp(-np.arange(len(a))/(SR*duration/5))
+
+for kind in ['swordFlesh','swordArmor','swordWood','spearFlesh','twinFlesh','woodFlesh']:
+    clips=[]
+    for take in range(3):
+        blade=clean(sample('knifeSlice2.ogg' if take%2 else 'knifeSlice.ogg',1+take*.025),.23)
+        flesh=clean(sample('chop.ogg',.82+take*.035),.23)
+        contact=clean(sample('impactPlate_medium_%03d.ogg'%take,.76),.3) if kind=='swordArmor' else flesh
+        if kind in ['swordWood','woodFlesh']: contact=clean(sample('impactWood_medium_%03d.ogg'%take,.8),.27)
+        layers=[(0,blade,.34 if kind=='woodFlesh' else .7),(.018,contact,.85)]
+        if kind=='spearFlesh': layers=[(0,blade[:int(.09*SR)],.55),(.014,contact,.9)]
+        if kind=='twinFlesh': layers.append((.08,blade,.38))
+        clips.append(mix(layers))
+    add(kind,clips,.43)
+add('swing',[clean(sample('knifeSlice.ogg',1.1),.2),clean(sample('knifeSlice2.ogg',1.05),.2)],.16)
+for name,freq,dur in [('creatureMite',330,.18),('creatureHusk',140,.27),('creatureAegis',85,.3),('creatureWisp',470,.25),('creatureColossus',62,.43)]:
+    clips=[]
+    for i in range(3):
+        t=np.arange(int(dur*SR))/SR
+        cry=tone(freq*(1+i*.025),dur,freq*.62,(1,.35,.12))*(.8+.2*np.sin(2*np.pi*37*t))
+        clips.append(mix([(0,cry,.65),(.008,clean(sample('cloth%d.ogg'%(i+1),.8),dur),.15)]))
+    add(name,clips,.24)
+add('enemyAttack',[clean(sample('chop.ogg',.7+i*.04),.25) for i in range(3)],.32)
+add('rifle',[mix([(0,burst(.15,2300,80+i),1.6),(0,tone(145,.19,54),.65),(.035,clean(sample('metalClick.ogg',.8),.09),.15)]) for i in range(3)],.54)
+add('land',[mix([(0,tone(82,.27,37),.85),(.022,clean(sample('dropLeather.ogg',.83+i*.02),.27),.5),(.085,clean(sample('clothBelt.ogg',.9),.15),.15)]) for i in range(3)],.43)
+# Original short, rounded mallet/brass-like reward motifs; no piano/choir/sample hiss.
+for name,notes,spacing,duration,level in [('coin',[76,83],.07,.13,.26),('upgrade',[60,67,72,76],.09,.24,.34),('victory',[60,64,67,74,72],.15,.48,.43)]:
+    add(name,[mix([(i*spacing,tone(440*2**((m-69)/12),duration,harmonics=(1,.16,.04)),.8**(i*.25)) for i,m in enumerate(notes)])],level)
 
 def wav(path, a):
     assert np.isfinite(a).all() and np.max(np.abs(a)) < 1
@@ -136,21 +170,10 @@ def wav(path, a):
         w.writeframes(np.round(a * 32767).astype('<i2').tobytes())
 
 wav(OUT / 'impacts.wav', np.concatenate(chunks))
-# Original 48-second sketch, short phrases and literal digital silence.
-# Only the five documented upright piano recordings enter the score.
-score = np.zeros(SR * 48)
-events = [(0, 40, .55), (.35, 59, .52), (1.4, 66, .38), (3.0, 64, .44),
-          (8, 43, .55), (8.7, 62, .52), (10, 69, .4), (11.6, 67, .42),
-          (17, 36, .52), (17.8, 55, .45), (19.4, 64, .42), (21, 62, .36),
-          (27, 38, .52), (27.65, 57, .46), (29.3, 64, .4), (30.6, 66, .36),
-          (36, 40, .55), (36.8, 55, .45), (38.2, 59, .42), (40, 64, .33)]
-for t, midi, gain in events:
-    a = note(midi, 2.6) * gain
-    i = int(t * SR); score[i:i+len(a)] += a
-wav(OUT / 'piano-sketch.wav', score)
-manifest = dict(version=1, source='CC0 material samples and upright piano; no vocal model',
-    bank='impacts.wav', score='piano-sketch.wav', cues=cues, voiceLimit=12,
-    pianoSources=provenance, pianoEvents=events, measurements=measurements)
+manifest = dict(version=2, source='CC0 material/RPG samples and original procedural one-shots; no vocal model',
+    bank='impacts.wav', cues=cues, voiceLimit=12, measurements=measurements,
+    approved=list('click build blocked mortar step stepHard'.split()),
+    legacy=['shot','lob'], procedural=['explosion'])
 manifest['files'] = {p.name: dict(bytes=p.stat().st_size, sha256=hashlib.sha256(p.read_bytes()).hexdigest())
                      for p in OUT.glob('*.wav')}
 (OUT / 'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')

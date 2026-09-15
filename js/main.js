@@ -1,3 +1,4 @@
+import { Soundtrack } from './soundtrack.js';
 import * as THREE from 'three';
 import { CONFIG, CAM_TUNE, PALETTE, LIGHTING, PRESENTATION } from './config.js';
 import { OrbitRig } from './camera.js';
@@ -343,6 +344,11 @@ async function boot() {
   waves = new WaveDirector(game, enemies, nav);
   ui = new HUD({ game, waves, world, nav, rig, renderer, audio });
   ui.makeThumbnails();
+  game.soundtrack = new Soundtrack(audio, () => ({ state: game.state,
+    boss: enemies.active.some(e => e.active && !e.dead && e.type.boss),
+    theme: CONFIG.environment?.theme || CONFIG.planetKey || '', planet: CONFIG.planetIndex, wave: waves.wave,
+  }));
+  game.soundtrack.controls(document.getElementById('settings-pop'));
   ui.onQuality = (q) => {
     if (q === 'low') { post.setQuality('low'); pixelRatio = 1.1; setShadowTier('low'); }
     else if (q === 'high') { post.setQuality('high'); pixelRatio = Math.min(devicePixelRatio || 1, PIXEL_RATIO_CAP); setShadowTier('high'); }
@@ -392,7 +398,7 @@ async function boot() {
   // shield eats has to say that too, or a strike doing nothing three times in
   // a row reads as a broken weapon rather than as armour holding.
   const _fpHit = new THREE.Vector3();
-  allies.onStrikeHit = (enemy, landed, primary) => {
+  allies.onStrikeHit = (enemy, landed, primary, attacker, spec) => {
     towerMgr.enemyWorldPos(enemy, _fpHit);
     // Big, popping numbers for the player's own blows. A 14px number beside
     // a body three units away was legible and weightless; the primary hit is
@@ -406,7 +412,11 @@ async function boot() {
     if (primary) {
       ui?.strikeFeedback?.(landed, landed <= 0);
       rig.addTrauma(landed > 0 ? 0.09 : 0.03);
-      audio?.play(landed > 0 ? 'meleeHit' : 'blocked');
+      if (!audio.materialTrial || !spec || spec.kind === 'melee') audio?.play(landed > 0 ? 'meleeHit' : 'blocked', {
+        family: attacker?.weaponFamily || spec?.weaponFamily || 'sword', material: attacker?.weaponMaterial || 'iron',
+        target: enemy.type.armor > 0 ? 'armor' : 'flesh',
+      });
+      if (landed > 0 && audio.materialTrial) audio.play('creatureHit', { creature: enemy.typeKey });
     }
     // Contact: a burst of hot sparks, a shower of obsidian shards off the
     // body and a ring pulse at the wound, so the blade is seen to bite rather

@@ -5,7 +5,7 @@ import { writeFileSync } from 'node:fs';
 const require = createRequire(resolve(process.env.WH_NODE_MODULES, 'package.json'));
 const { chromium } = require('playwright');
 const base = process.env.WH_BASE_URL || 'http://127.0.0.1:8141';
-const out = process.argv[2] || 'artifacts/audio-restoration/material-local.json';
+const out = process.argv[2] || 'artifacts/audio-feedback/local.json';
 const report = { base, checks: [], errors: [], hearing: 'Unavailable. Output measurements are not listening acceptance.' };
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 function check(name, ok, detail) {
@@ -42,20 +42,22 @@ try {
     check(`Measured non-silent, unclipped output: ${id}`, peak > .0005 && peak < .99, { peak });
   }
   check('One cached bank download across all cue buttons', assets.filter(x => x.endsWith('impacts.wav')).length === 1);
-  check('Piano is not fetched with effects', !assets.some(x => x.endsWith('piano-sketch.wav')));
-  await page.route('**/piano-sketch.wav', async route => {
-    await new Promise(r => setTimeout(r, 700)); await route.continue();
-  });
-  await page.getByRole('button', { name: 'Play piano sketch', exact: true }).click();
-  await page.waitForFunction(() => audioLab.draft.scoreEnabled);
+  check('Nine owner tracks are available without autoplay', await page.locator('audio').count()===9 && await page.locator('audio').evaluateAll(a=>a.every(x=>x.paused&&x.preload==='none')));
+  for(let i=0;i<9;i++) {
+    await page.locator('audio').nth(i).evaluate(a=>a.play());
+    await page.waitForFunction(i=>document.querySelectorAll('audio')[i].currentTime>.1,i);
+    check('Owner track '+(i+1)+' decodes and plays alone',await page.locator('audio').evaluateAll(a=>a.filter(x=>!x.paused).length===1));
+  }
   await page.locator('#stop').click();
-  await page.waitForTimeout(1100);
-  check('Stop during piano loading prevents delayed playback', await page.evaluate(() => !audioLab.draft.scoreNode && !audioLab.draft.scoreEnabled));
-  await page.getByRole('button', { name: 'Play piano sketch', exact: true }).click();
-  await page.waitForFunction(() => !!audioLab.draft.scoreNode);
-  check('Piano starts only by explicit selection', assets.filter(x => x.endsWith('piano-sketch.wav')).length === 1);
-  await page.locator('#stop').click();
-  check('Stop ends music and clears sampled voices', await page.evaluate(() => !audioLab.draft.scoreNode && audioLab.draft.voices.size === 0));
+  check('Stop ends all owner music players',await page.locator('audio').evaluateAll(a=>a.every(x=>x.paused)));
+  check('Rejected piano player removed',await page.locator('#piano').count()===0);
+  for(const [family,material,target,expected] of [['spear','iron','flesh','spearFlesh'],['twinblade','iron','flesh','twinFlesh'],['sword','wood','flesh','woodFlesh'],['sword','iron','armor','swordArmor']]) {
+    await page.selectOption('#family',family);await page.selectOption('#material',material);await page.selectOption('#target',target);
+    const before=await page.evaluate(k=>audioLab.draft.variants.get(k)||0,expected);
+    await page.getByRole('button',{name:'Draft: Melee impact',exact:true}).click();
+    check('Context selects '+expected,await page.evaluate(([k,b])=>(audioLab.draft.variants.get(k)||0)>b,[expected,before]));
+    await page.waitForTimeout(90);
+  }
   await page.locator('#sequence-new').click();
   await page.locator('#stop').click();
   await page.waitForTimeout(1900);
@@ -111,7 +113,7 @@ try {
   check('Hidden tab suspends draft audio', true);
   await page.evaluate(() => { delete document.hidden; document.dispatchEvent(new Event('visibilitychange')); });
   await page.waitForFunction(() => audioLab.draft.ctx.state === 'running');
-  check('Visible tab can resume without restarting an ambient bed', await page.evaluate(() => !audioLab.draft.scoreNode && audioLab.draft.voices.size === 0));
+  check('Visible tab can resume without restarting an ambient bed', await page.evaluate(() => audioLab.draft.voices.size === 0));
   await page.evaluate(() => audioLab.draft.dispose());
   await page.waitForFunction(() => audioLab.draft.ctx.state === 'closed');
   check('Disposal closes the context and releases active voices', await page.evaluate(() => audioLab.draft.voices.size === 0));
@@ -145,8 +147,42 @@ try {
   await game.evaluate(() => WH.game.audio.toggleMute());
   await game.waitForTimeout(500);
   check('Draft game starts no piano automatically', !downloads.some(x => x.endsWith('piano-sketch.wav')));
+  const contact=await game.evaluate(()=>{
+    const audio=WH.game.audio;audio._last.clear();
+    const e=WH.enemies.spawn('husk',WH.enemies.nav.portalNodes[0],1);
+    const before=audio.variants.get('spearFlesh')||0;
+    WH.allies.onStrikeHit(e,3,true,{weaponFamily:'spear',weaponMaterial:'iron'},{kind:'melee'});
+    return {impact:(audio.variants.get('spearFlesh')||0)>before,creature:(audio.variants.get('creatureHusk')||0)>0};
+  });
+  check('Combat callback routes the attacking weapon and struck creature',contact.impact&&contact.creature,contact);
+  const contexts=[['title',{state:'title'}],['tropical',{state:'playing',theme:'jungle'}],['boss',{state:'playing',boss:true}],['desertBoss',{state:'playing',boss:true,theme:'desert'}],['cinematicBoss',{state:'playing',boss:true,wave:10}],['playful',{state:'playing',planet:2}]];
+  for(const [key,context] of contexts) {
+    await game.evaluate(c=>{WH.game.soundtrack.read=()=>c;WH.game.soundtrack.update();},context);
+    await game.waitForFunction(k=>WH.game.soundtrack.key===k&&WH.game.soundtrack.decks.some(d=>d.id===k&&d.media.currentTime>.1),key);
+    check('Game music context: '+key,await game.evaluate(()=>WH.game.soundtrack.decks.length<=2));
+  }
+  await game.evaluate(()=>WH.game.audio.toggleMute());await game.waitForTimeout(550);
+  check('Game mute also mutes music',await game.evaluate(()=>WH.game.soundtrack.bus.gain.value<.002));
+  await game.evaluate(()=>WH.game.audio.toggleMute());
+  await game.evaluate(()=>WH.game.soundtrack.setEnabled(false));
+  check('Music can stop independently of effects',await game.evaluate(()=>WH.game.soundtrack.decks.length===0&&!WH.game.audio.muted));
   await game.screenshot({ path: out.replace('.json', '-game.png') });
   await game.close();
+  const lobby=await browser.newPage({hasTouch:true,isMobile:true});lobby.on('pageerror',e=>report.errors.push(String(e)));
+  await lobby.goto(base+'/lobby.html');await lobby.waitForFunction(()=>!!window.lobbySoundtrack);
+  check('Lobby music waits for gesture',await lobby.evaluate(()=>!lobbySoundtrack.started));
+  await lobby.locator('#lobby-view').click({position:{x:600,y:400}});
+  await lobby.waitForFunction(()=>lobbySoundtrack.decks.some(d=>d.id==='lobby1'&&d.media.currentTime>.1));
+  await lobby.evaluate(()=>lobbySoundtrack.decks.at(-1).media.dispatchEvent(new Event('ended')));
+  await lobby.waitForFunction(()=>lobbySoundtrack.decks.some(d=>d.id==='lobby2'&&d.media.currentTime>.1));
+  check('Lobby rotates both owner tracks',true);
+  await lobby.locator('.soundtrack-controls summary').click();
+  await lobby.locator('.soundtrack-controls button').click();
+  check('Lobby music toggle stops streaming',await lobby.evaluate(()=>!lobbySoundtrack.enabled&&lobbySoundtrack.decks.length===0));
+  await lobby.setViewportSize({width:390,height:844});
+  const fit=await lobby.locator('.soundtrack-controls').evaluate(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.bottom<=innerHeight;});
+  check('Lobby music controls fit a phone viewport',fit);
+  await lobby.screenshot({path:out.replace('.json','-lobby.png')});await lobby.close();
   check('No uncaught runtime exceptions', report.errors.length === 0);
 } catch (error) { report.errors.push(String(error)); console.error(error); }
 finally { await browser.close(); writeFileSync(out, JSON.stringify(report, null, 2) + '\n'); }

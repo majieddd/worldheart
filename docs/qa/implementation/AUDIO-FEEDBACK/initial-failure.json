@@ -1,0 +1,329 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "checks": [
+    {
+      "name": "No audio downloads or context before a gesture",
+      "ok": true
+    },
+    {
+      "name": "Actual draft button loads and starts the engine",
+      "ok": true
+    },
+    {
+      "name": "Measured non-silent, unclipped output: click",
+      "ok": true,
+      "detail": {
+        "peak": 0.00983415823429823
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: build",
+      "ok": true,
+      "detail": {
+        "peak": 0.2457716464996338
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: meleeHit",
+      "ok": true,
+      "detail": {
+        "peak": 0.23826059699058533
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: creatureHit",
+      "ok": true,
+      "detail": {
+        "peak": 0.14157240092754364
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: blocked",
+      "ok": true,
+      "detail": {
+        "peak": 0.24456170201301575
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: rifle",
+      "ok": true,
+      "detail": {
+        "peak": 0.2800824046134949
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: shot",
+      "ok": true,
+      "detail": {
+        "peak": 0.021733317524194717
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: mortar",
+      "ok": true,
+      "detail": {
+        "peak": 0.36351656913757324
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: lob",
+      "ok": true,
+      "detail": {
+        "peak": 0.16132131218910217
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: explosion",
+      "ok": true,
+      "detail": {
+        "peak": 0.2230786383152008
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: step",
+      "ok": true,
+      "detail": {
+        "peak": 0.07878609746694565
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: stepHard",
+      "ok": true,
+      "detail": {
+        "peak": 0.09974010288715363
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: land",
+      "ok": true,
+      "detail": {
+        "peak": 0.2521478831768036
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: coin",
+      "ok": true,
+      "detail": {
+        "peak": 0.15115441381931305
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: upgrade",
+      "ok": true,
+      "detail": {
+        "peak": 0.19915562868118286
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: victory",
+      "ok": true,
+      "detail": {
+        "peak": 0.25197577476501465
+      }
+    },
+    {
+      "name": "One cached bank download across all cue buttons",
+      "ok": true
+    },
+    {
+      "name": "Nine owner tracks are available without autoplay",
+      "ok": true
+    },
+    {
+      "name": "Owner track 1 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 2 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 3 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 4 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 5 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 6 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 7 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 8 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 9 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Stop ends all owner music players",
+      "ok": true
+    },
+    {
+      "name": "Rejected piano player removed",
+      "ok": true
+    },
+    {
+      "name": "Context selects spearFlesh",
+      "ok": true
+    },
+    {
+      "name": "Context selects twinFlesh",
+      "ok": true
+    },
+    {
+      "name": "Context selects woodFlesh",
+      "ok": true
+    },
+    {
+      "name": "Context selects swordArmor",
+      "ok": true
+    },
+    {
+      "name": "Stop cancels the comparison sequence",
+      "ok": true
+    },
+    {
+      "name": "Simultaneous sampled combat at maximum lab volume is bounded and unclipped",
+      "ok": true,
+      "detail": {
+        "peak": 0.9243404865264893,
+        "voices": 12
+      }
+    },
+    {
+      "name": "No persistent bed after stopping",
+      "ok": true,
+      "detail": {
+        "peak": 0
+      }
+    },
+    {
+      "name": "Readable controls at 375px",
+      "ok": true,
+      "detail": {
+        "overflow": false,
+        "small": 0,
+        "nav": 54.6875,
+        "clipped": 0
+      }
+    },
+    {
+      "name": "Readable controls at 768px",
+      "ok": true,
+      "detail": {
+        "overflow": false,
+        "small": 0,
+        "nav": 54.6875,
+        "clipped": 0
+      }
+    },
+    {
+      "name": "Readable controls at 1280px",
+      "ok": true,
+      "detail": {
+        "overflow": false,
+        "small": 0,
+        "nav": 54.6875,
+        "clipped": 0
+      }
+    },
+    {
+      "name": "Computed text contrast passes AA",
+      "ok": true,
+      "detail": {
+        "minimum": 7.726546710231671
+      }
+    },
+    {
+      "name": "Keyboard focus is visible",
+      "ok": true
+    },
+    {
+      "name": "Hidden tab suspends draft audio",
+      "ok": true
+    },
+    {
+      "name": "Visible tab can resume without restarting an ambient bed",
+      "ok": true
+    },
+    {
+      "name": "Disposal closes the context and releases active voices",
+      "ok": true
+    },
+    {
+      "name": "Failed draft download leaves previous playback usable",
+      "ok": true
+    },
+    {
+      "name": "Default play still uses original audio and zero trial downloads",
+      "ok": true
+    },
+    {
+      "name": "Opt-in play installs draft before touch controls begin",
+      "ok": true
+    },
+    {
+      "name": "Game UI and gameplay share the same draft instance",
+      "ok": true
+    },
+    {
+      "name": "Existing game mute works in draft mode",
+      "ok": true
+    },
+    {
+      "name": "Draft game starts no piano automatically",
+      "ok": true
+    },
+    {
+      "name": "Game music context: title",
+      "ok": true
+    },
+    {
+      "name": "Game music context: tropical",
+      "ok": true
+    },
+    {
+      "name": "Game music context: boss",
+      "ok": true
+    },
+    {
+      "name": "Game music context: desertBoss",
+      "ok": true
+    },
+    {
+      "name": "Game music context: cinematicBoss",
+      "ok": true
+    },
+    {
+      "name": "Game music context: playful",
+      "ok": true
+    },
+    {
+      "name": "Game mute also mutes music",
+      "ok": true
+    },
+    {
+      "name": "Music can stop independently of effects",
+      "ok": true
+    },
+    {
+      "name": "Lobby music waits for gesture",
+      "ok": true
+    }
+  ],
+  "errors": [
+    "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    - locator resolved to <h1>99 Planets To Defend</h1>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <canvas tabindex=\"0\" width=\"1280\" height=\"720\" id=\"lobby-view\" data-engine=\"three.js r180\" aria-label=\"Walkable preparation courtyard. WASD or arrows move. Right drag turns the camera. E opens a nearby station.\"></canvas> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <canvas tabindex=\"0\" width=\"1280\" height=\"720\" id=\"lobby-view\" data-engine=\"three.js r180\" aria-label=\"Walkable preparation courtyard. WASD or arrows move. Right drag turns the camera. E opens a nearby station.\"></canvas> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    57 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <canvas tabindex=\"0\" width=\"1280\" height=\"720\" id=\"lobby-view\" data-engine=\"three.js r180\" aria-label=\"Walkable preparation courtyard. WASD or arrows move. Right drag turns the camera. E opens a nearby station.\"></canvas> intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+  ],
+  "hearing": "Unavailable. Output measurements are not listening acceptance."
+}

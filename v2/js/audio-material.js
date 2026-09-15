@@ -1,5 +1,6 @@
 // Explicit listening trial only. The default AudioEngine stays unchanged.
 import { AudioEngine } from './audio.js';
+import { impactCue, creatureCue } from './audio-context.js';
 
 const ROOT = new URL('audio/material/', document.baseURI);
 const LIMIT = 12;
@@ -11,10 +12,9 @@ export class MaterialAudio extends AudioEngine {
   _initMaterial() {
     this.materialTrial = true;
     this.voices = new Set();
+    this.envelopes = new Set();
     this.variants = new Map();
     this.bank = null;
-    this.scoreEnabled = false;
-    this.scoreNode = null;
     this.loadError = '';
     this.disposed = false;
     this._visibility = () => {
@@ -85,11 +85,22 @@ export class MaterialAudio extends AudioEngine {
     this.prepare();
   }
 
-  play(name) {
+  play(name, context = {}) {
     if (this.disposed || !this.started || this.muted || document.hidden || this.ctx?.state !== 'running') return;
+    const fallbackName = name;
+    if (name === 'meleeHit') name = impactCue(context);
+    if (name === 'creatureHit') name = creatureCue(context.creature);
+    if (name === 'enemyHit') name = 'enemyAttack';
+    if (name === 'explosion') {
+      if (this._limited(name, 90)) return;
+      this._noise(.42, this._env(.42, .32), 650, 85, .6);
+      this._osc('sine', 72, 26, .46, this._env(.46, .34));
+      return;
+    }
+    if (name.startsWith('creature') && this._limited('creatureReaction', 320)) return;
     const list = this.manifest?.cues[name];
     // Loading/network errors preserve audible original feedback. No queued burst.
-    if (!this.bank || !list) { super.play(name); return; }
+    if (!this.bank || !list) { super.play(fallbackName); return; }
     if (this._limited(name, INTERVAL[name] || 70)) return;
     if (this.voices.size >= LIMIT) {
       // Footsteps never steal a combat voice; other cues replace the oldest.
@@ -115,35 +126,20 @@ export class MaterialAudio extends AudioEngine {
     node.start(now, clip.offset, clip.duration);
   }
 
-  stopVoices() { for (const voice of [...this.voices]) voice.stop(); }
+  _env(...args) {
+    const gain=super._env(...args); this.envelopes.add(gain);
+    setTimeout(()=>{this.envelopes.delete(gain);gain.disconnect();},(args[0]+.2)*1000);
+    return gain;
+  }
 
-  async setScore(enabled) {
-    this.scoreEnabled = enabled;
-    if (!enabled) {
-      if (this.scoreNode) { this.scoreNode.stop(); this.scoreNode.disconnect(); this.scoreNode = null; }
-      return;
-    }
-    this.start();
-    if (!await this.prepare() || this.disposed) return;
-    try {
-      if (!this.scoreBuffer) {
-        // Coalesce rapid on/off/on requests into one download/decode.
-        this.scoreLoading ||= (async () => {
-          const res = await fetch(new URL(this.manifest.score, ROOT));
-          if (!res.ok) throw new Error(`Piano sketch: ${res.status}`);
-          return this.ctx.decodeAudioData(await res.arrayBuffer());
-        })();
-        this.scoreBuffer = await this.scoreLoading;
-      }
-      if (!this.scoreEnabled || this.disposed || this.scoreNode) return;
-      const node = this.ctx.createBufferSource();
-      node.buffer = this.scoreBuffer; node.loop = true; node.connect(this.master);
-      this.scoreNode = node; node.start();
-    } catch (e) { this.scoreLoading = null; this.loadError = String(e); this.scoreEnabled = false; }
+  stopVoices() {
+    for (const voice of [...this.voices]) voice.stop();
+    for (const gain of this.envelopes) gain.disconnect();
+    this.envelopes.clear();
   }
 
   dispose() {
-    this.disposed = true; this.stopVoices(); this.setScore(false);
+    this.disposed = true; this.stopVoices();
     document.removeEventListener('visibilitychange', this._visibility);
     this.ctx?.close().catch(() => {});
   }

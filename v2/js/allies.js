@@ -1005,7 +1005,7 @@ export class AllyManager {
         capFrac: STRIKE_CAP_FRAC,
       });
       this._weaponEffect(e, s, landed);
-      if (this.onStrikeHit) this.onStrikeHit(e, landed, e === primary);
+      if (this.onStrikeHit) this.onStrikeHit(e, landed, e === primary, a, s);
       if (s.knockback && e.active && !e.dead) {
         this.enemies.knockback(e, a.dir, s.knockback);
       }
@@ -1093,7 +1093,7 @@ export class AllyManager {
       } else if (victim && nearest <= terrainAt) {
         b.pos.copy(b.previous).addScaledVector(_aimV, nearest);
         const landed = this.enemies.damage(victim, b.spec.dmg, { armorPierce: b.spec.pierce, capFrac: STRIKE_CAP_FRAC });
-        this._weaponEffect(victim, b.spec, landed); this.onStrikeHit?.(victim, landed, true);
+        this._weaponEffect(victim, b.spec, landed); this.onStrikeHit?.(victim, landed, true, null, b.spec);
         b.live = false;
       } else if (terrainAt <= step || b.travel >= b.spec.range) b.live = false;
     }
@@ -1125,7 +1125,7 @@ export class AllyManager {
       const landed = this.enemies.damage(best, s.dmg * fall, {
         armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
       });
-      if (this.onStrikeHit) this.onStrikeHit(best, landed, true);
+      if (this.onStrikeHit) this.onStrikeHit(best, landed, true, a, s);
       hits++;
     }
     if (this.world) {
@@ -1186,7 +1186,7 @@ export class AllyManager {
         armorPierce: s.pierce, capFrac: STRIKE_CAP_FRAC,
       });
       this._weaponEffect(e, s, landed);
-      if (this.onStrikeHit) this.onStrikeHit(e, landed, hits === 0);
+      if (this.onStrikeHit) this.onStrikeHit(e, landed, hits === 0, null, s);
       hits++;
     }
     if (this.world) {

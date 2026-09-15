@@ -1,8 +1,7 @@
 {
-  "version": 1,
-  "source": "CC0 material samples and upright piano; no vocal model",
+  "version": 2,
+  "source": "CC0 material/RPG samples and original procedural one-shots; no vocal model",
   "bank": "impacts.wav",
-  "score": "piano-sketch.wav",
   "cues": {
     "click": [
       {
@@ -32,314 +31,288 @@
         "duration": 0.4027291666666667
       }
     ],
-    "meleeHit": [
-      {
-        "offset": 2.6208125,
-        "duration": 0.7055
-      },
-      {
-        "offset": 3.3863125,
-        "duration": 0.5825833333333333
-      },
-      {
-        "offset": 4.028895833333333,
-        "duration": 0.4972916666666667
-      }
-    ],
-    "enemyHit": [
-      {
-        "offset": 4.5861875,
-        "duration": 0.5065625
-      },
-      {
-        "offset": 5.15275,
-        "duration": 0.47260416666666666
-      },
-      {
-        "offset": 5.6853541666666665,
-        "duration": 0.6369791666666667
-      }
-    ],
     "blocked": [
       {
-        "offset": 6.382333333333333,
+        "offset": 2.6208125,
         "duration": 0.9093958333333333
       },
       {
-        "offset": 7.351729166666667,
+        "offset": 3.5902083333333334,
         "duration": 0.91975
       },
       {
-        "offset": 8.331479166666666,
+        "offset": 4.569958333333333,
         "duration": 0.7690416666666666
-      }
-    ],
-    "rifle": [
-      {
-        "offset": 9.160520833333333,
-        "duration": 0.6009791666666666
-      },
-      {
-        "offset": 9.8215,
-        "duration": 0.4962708333333333
-      },
-      {
-        "offset": 10.377770833333333,
-        "duration": 0.423625
-      }
-    ],
-    "shot": [
-      {
-        "offset": 10.861395833333333,
-        "duration": 0.48241666666666666
-      },
-      {
-        "offset": 11.4038125,
-        "duration": 0.45035416666666667
-      },
-      {
-        "offset": 11.914166666666667,
-        "duration": 0.6055833333333334
       }
     ],
     "mortar": [
       {
-        "offset": 12.57975,
+        "offset": 5.399,
         "duration": 1.2481666666666666
       },
       {
-        "offset": 13.887916666666667,
+        "offset": 6.707166666666667,
         "duration": 1.2385
       },
       {
-        "offset": 15.186416666666666,
+        "offset": 8.005666666666666,
         "duration": 1.2385
-      }
-    ],
-    "lob": [
-      {
-        "offset": 16.484916666666667,
-        "duration": 0.6944583333333333
-      },
-      {
-        "offset": 17.239375,
-        "duration": 0.6479166666666667
-      },
-      {
-        "offset": 17.94729166666667,
-        "duration": 0.8732708333333333
-      }
-    ],
-    "explosion": [
-      {
-        "offset": 18.8805625,
-        "duration": 1.3521875
-      },
-      {
-        "offset": 20.29275,
-        "duration": 1.265625
-      },
-      {
-        "offset": 21.618375,
-        "duration": 1.265625
       }
     ],
     "step": [
       {
-        "offset": 22.944,
+        "offset": 9.304166666666667,
         "duration": 0.8803333333333333
       },
       {
-        "offset": 23.884333333333334,
+        "offset": 10.2445,
         "duration": 0.7621875
       },
       {
-        "offset": 24.706520833333332,
+        "offset": 11.0666875,
         "duration": 0.7836041666666667
       }
     ],
     "stepHard": [
       {
-        "offset": 25.550125,
+        "offset": 11.910291666666666,
         "duration": 0.295
       },
       {
-        "offset": 25.905125,
+        "offset": 12.265291666666666,
         "duration": 0.27029166666666665
       },
       {
-        "offset": 26.235416666666666,
+        "offset": 12.595583333333334,
         "duration": 0.270125
+      }
+    ],
+    "swordFlesh": [
+      {
+        "offset": 12.925708333333333,
+        "duration": 0.24797916666666667
+      },
+      {
+        "offset": 13.2336875,
+        "duration": 0.24797916666666667
+      },
+      {
+        "offset": 13.541666666666666,
+        "duration": 0.24797916666666667
+      }
+    ],
+    "swordArmor": [
+      {
+        "offset": 13.849645833333334,
+        "duration": 0.31797916666666665
+      },
+      {
+        "offset": 14.227625,
+        "duration": 0.31797916666666665
+      },
+      {
+        "offset": 14.605604166666666,
+        "duration": 0.31797916666666665
+      }
+    ],
+    "swordWood": [
+      {
+        "offset": 14.983583333333334,
+        "duration": 0.2879791666666667
+      },
+      {
+        "offset": 15.3315625,
+        "duration": 0.2879791666666667
+      },
+      {
+        "offset": 15.679541666666667,
+        "duration": 0.2879791666666667
+      }
+    ],
+    "spearFlesh": [
+      {
+        "offset": 16.027520833333334,
+        "duration": 0.244
+      },
+      {
+        "offset": 16.331520833333332,
+        "duration": 0.244
+      },
+      {
+        "offset": 16.635520833333334,
+        "duration": 0.244
+      }
+    ],
+    "twinFlesh": [
+      {
+        "offset": 16.939520833333333,
+        "duration": 0.31
+      },
+      {
+        "offset": 17.309520833333334,
+        "duration": 0.31
+      },
+      {
+        "offset": 17.679520833333335,
+        "duration": 0.31
+      }
+    ],
+    "woodFlesh": [
+      {
+        "offset": 18.049520833333332,
+        "duration": 0.2879791666666667
+      },
+      {
+        "offset": 18.3975,
+        "duration": 0.2879791666666667
+      },
+      {
+        "offset": 18.745479166666666,
+        "duration": 0.2879791666666667
+      }
+    ],
+    "swing": [
+      {
+        "offset": 19.093458333333334,
+        "duration": 0.2
+      },
+      {
+        "offset": 19.353458333333332,
+        "duration": 0.2
+      }
+    ],
+    "creatureMite": [
+      {
+        "offset": 19.613458333333334,
+        "duration": 0.188
+      },
+      {
+        "offset": 19.861458333333335,
+        "duration": 0.188
+      },
+      {
+        "offset": 20.109458333333333,
+        "duration": 0.188
+      }
+    ],
+    "creatureHusk": [
+      {
+        "offset": 20.357458333333334,
+        "duration": 0.278
+      },
+      {
+        "offset": 20.695458333333335,
+        "duration": 0.278
+      },
+      {
+        "offset": 21.033458333333332,
+        "duration": 0.278
+      }
+    ],
+    "creatureAegis": [
+      {
+        "offset": 21.371458333333333,
+        "duration": 0.308
+      },
+      {
+        "offset": 21.739458333333335,
+        "duration": 0.308
+      },
+      {
+        "offset": 22.107458333333334,
+        "duration": 0.308
+      }
+    ],
+    "creatureWisp": [
+      {
+        "offset": 22.475458333333332,
+        "duration": 0.258
+      },
+      {
+        "offset": 22.793458333333334,
+        "duration": 0.258
+      },
+      {
+        "offset": 23.111458333333335,
+        "duration": 0.258
+      }
+    ],
+    "creatureColossus": [
+      {
+        "offset": 23.429458333333333,
+        "duration": 0.438
+      },
+      {
+        "offset": 23.927458333333334,
+        "duration": 0.438
+      },
+      {
+        "offset": 24.425458333333335,
+        "duration": 0.438
+      }
+    ],
+    "enemyAttack": [
+      {
+        "offset": 24.923458333333333,
+        "duration": 0.25
+      },
+      {
+        "offset": 25.233458333333335,
+        "duration": 0.25
+      },
+      {
+        "offset": 25.543458333333334,
+        "duration": 0.25
+      }
+    ],
+    "rifle": [
+      {
+        "offset": 25.853458333333332,
+        "duration": 0.19
+      },
+      {
+        "offset": 26.103458333333332,
+        "duration": 0.19
+      },
+      {
+        "offset": 26.353458333333332,
+        "duration": 0.19
       }
     ],
     "land": [
       {
-        "offset": 26.565541666666668,
-        "duration": 0.6624166666666667
+        "offset": 26.603458333333332,
+        "duration": 0.292
       },
       {
-        "offset": 27.287958333333332,
-        "duration": 0.6180208333333334
+        "offset": 26.955458333333333,
+        "duration": 0.292
       },
       {
-        "offset": 27.965979166666667,
-        "duration": 0.8329583333333334
+        "offset": 27.307458333333333,
+        "duration": 0.292
       }
     ],
     "coin": [
       {
-        "offset": 28.8589375,
-        "duration": 2.29
+        "offset": 27.659458333333333,
+        "duration": 0.2
       }
     ],
     "upgrade": [
       {
-        "offset": 31.2089375,
-        "duration": 2.47
+        "offset": 27.919458333333335,
+        "duration": 0.51
       }
     ],
     "victory": [
       {
-        "offset": 33.7389375,
-        "duration": 2.56
+        "offset": 28.489458333333335,
+        "duration": 1.08
       }
     ]
   },
   "voiceLimit": 12,
-  "pianoSources": [
-    {
-      "file": "Player_dyn1_rr1_012.wav",
-      "midi": 45,
-      "sha256": "16be23a8378185f1b392600d3fa800a206945543866548640f7573534f76faf2",
-      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_012.wav"
-    },
-    {
-      "file": "Player_dyn1_rr1_016.wav",
-      "midi": 53,
-      "sha256": "f1a3a542cf70a13aa865ce130d50d72cd735449e605d1c5a45dc06b5a60b27fd",
-      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_016.wav"
-    },
-    {
-      "file": "Player_dyn1_rr1_020.wav",
-      "midi": 61,
-      "sha256": "08242e8d1c865c8cdc794cc7921d3d9663bedb5a12bfefe0de13aaa86fd23133",
-      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_020.wav"
-    },
-    {
-      "file": "Player_dyn1_rr1_024.wav",
-      "midi": 69,
-      "sha256": "916c3ec2d61fb421e74fb4866ef75d3ef17e9d88e9dc858da24159846489d33f",
-      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_024.wav"
-    },
-    {
-      "file": "Player_dyn1_rr1_028.wav",
-      "midi": 77,
-      "sha256": "a9fbd1af0703b294d3267f8f88fca4b4366e3b772f7d780acf2de1cbf2056355",
-      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_028.wav"
-    }
-  ],
-  "pianoEvents": [
-    [
-      0,
-      40,
-      0.55
-    ],
-    [
-      0.35,
-      59,
-      0.52
-    ],
-    [
-      1.4,
-      66,
-      0.38
-    ],
-    [
-      3.0,
-      64,
-      0.44
-    ],
-    [
-      8,
-      43,
-      0.55
-    ],
-    [
-      8.7,
-      62,
-      0.52
-    ],
-    [
-      10,
-      69,
-      0.4
-    ],
-    [
-      11.6,
-      67,
-      0.42
-    ],
-    [
-      17,
-      36,
-      0.52
-    ],
-    [
-      17.8,
-      55,
-      0.45
-    ],
-    [
-      19.4,
-      64,
-      0.42
-    ],
-    [
-      21,
-      62,
-      0.36
-    ],
-    [
-      27,
-      38,
-      0.52
-    ],
-    [
-      27.65,
-      57,
-      0.46
-    ],
-    [
-      29.3,
-      64,
-      0.4
-    ],
-    [
-      30.6,
-      66,
-      0.36
-    ],
-    [
-      36,
-      40,
-      0.55
-    ],
-    [
-      36.8,
-      55,
-      0.45
-    ],
-    [
-      38.2,
-      59,
-      0.42
-    ],
-    [
-      40,
-      64,
-      0.33
-    ]
-  ],
   "measurements": [
     {
       "cue": "click",
@@ -378,42 +351,6 @@
       "highEnergyFraction": 3.972339932385712e-06
     },
     {
-      "cue": "meleeHit",
-      "peak": 0.42,
-      "rms": 0.04340848235898097,
-      "highEnergyFraction": 6.366921747375252e-06
-    },
-    {
-      "cue": "meleeHit",
-      "peak": 0.42,
-      "rms": 0.044793995819891665,
-      "highEnergyFraction": 2.0796685555399774e-05
-    },
-    {
-      "cue": "meleeHit",
-      "peak": 0.42000000000000004,
-      "rms": 0.056358995786242774,
-      "highEnergyFraction": 9.09034852328585e-07
-    },
-    {
-      "cue": "enemyHit",
-      "peak": 0.42,
-      "rms": 0.05817830785499784,
-      "highEnergyFraction": 4.741244975763023e-06
-    },
-    {
-      "cue": "enemyHit",
-      "peak": 0.42,
-      "rms": 0.0620473631419249,
-      "highEnergyFraction": 1.0182524996261372e-05
-    },
-    {
-      "cue": "enemyHit",
-      "peak": 0.42,
-      "rms": 0.05800089017847448,
-      "highEnergyFraction": 8.383687572679847e-05
-    },
-    {
       "cue": "blocked",
       "peak": 0.42,
       "rms": 0.026138289941224337,
@@ -432,42 +369,6 @@
       "highEnergyFraction": 0.0005068921977494751
     },
     {
-      "cue": "rifle",
-      "peak": 0.48,
-      "rms": 0.04679825673613893,
-      "highEnergyFraction": 9.983476726746116e-06
-    },
-    {
-      "cue": "rifle",
-      "peak": 0.48,
-      "rms": 0.05483521366426454,
-      "highEnergyFraction": 4.183155901544718e-05
-    },
-    {
-      "cue": "rifle",
-      "peak": 0.48,
-      "rms": 0.06230634351955712,
-      "highEnergyFraction": 1.913878007721092e-06
-    },
-    {
-      "cue": "shot",
-      "peak": 0.43999999999999995,
-      "rms": 0.06356487990866691,
-      "highEnergyFraction": 4.991847791565883e-06
-    },
-    {
-      "cue": "shot",
-      "peak": 0.44,
-      "rms": 0.06615679391476323,
-      "highEnergyFraction": 1.204017844791696e-05
-    },
-    {
-      "cue": "shot",
-      "peak": 0.43999999999999995,
-      "rms": 0.06328038950177094,
-      "highEnergyFraction": 8.536805297241778e-05
-    },
-    {
       "cue": "mortar",
       "peak": 0.62,
       "rms": 0.07084333932153301,
@@ -484,42 +385,6 @@
       "peak": 0.62,
       "rms": 0.0627960352649958,
       "highEnergyFraction": 7.086697426549492e-06
-    },
-    {
-      "cue": "lob",
-      "peak": 0.42,
-      "rms": 0.057631882090643266,
-      "highEnergyFraction": 7.667143036029144e-07
-    },
-    {
-      "cue": "lob",
-      "peak": 0.41999999999999993,
-      "rms": 0.059360729060400505,
-      "highEnergyFraction": 2.483460282364575e-06
-    },
-    {
-      "cue": "lob",
-      "peak": 0.42000000000000004,
-      "rms": 0.05300316644634715,
-      "highEnergyFraction": 1.064910290006642e-05
-    },
-    {
-      "cue": "explosion",
-      "peak": 0.66,
-      "rms": 0.067048174152773,
-      "highEnergyFraction": 3.4196781195492708e-06
-    },
-    {
-      "cue": "explosion",
-      "peak": 0.6599999999999999,
-      "rms": 0.061628964080512154,
-      "highEnergyFraction": 2.8282717721334096e-06
-    },
-    {
-      "cue": "explosion",
-      "peak": 0.66,
-      "rms": 0.0848172390045649,
-      "highEnergyFraction": 4.317323882409815e-06
     },
     {
       "cue": "step",
@@ -558,50 +423,307 @@
       "highEnergyFraction": 6.048479443923598e-08
     },
     {
-      "cue": "land",
-      "peak": 0.36,
-      "rms": 0.03415086906584608,
-      "highEnergyFraction": 2.7383293386794488e-06
+      "cue": "swordFlesh",
+      "peak": 0.43,
+      "rms": 0.03691351754697027,
+      "highEnergyFraction": 0.04909694143822134
+    },
+    {
+      "cue": "swordFlesh",
+      "peak": 0.43,
+      "rms": 0.05442587393904553,
+      "highEnergyFraction": 0.04947284470412533
+    },
+    {
+      "cue": "swordFlesh",
+      "peak": 0.43,
+      "rms": 0.039000300672350906,
+      "highEnergyFraction": 0.05231428224152984
+    },
+    {
+      "cue": "swordArmor",
+      "peak": 0.43,
+      "rms": 0.055826641422447365,
+      "highEnergyFraction": 0.06878093504493403
+    },
+    {
+      "cue": "swordArmor",
+      "peak": 0.42999999999999994,
+      "rms": 0.04846389914280632,
+      "highEnergyFraction": 0.053448933164942626
+    },
+    {
+      "cue": "swordArmor",
+      "peak": 0.43000000000000005,
+      "rms": 0.06474764650990542,
+      "highEnergyFraction": 0.06696947636433705
+    },
+    {
+      "cue": "swordWood",
+      "peak": 0.43,
+      "rms": 0.07916114382527768,
+      "highEnergyFraction": 0.05314828895236609
+    },
+    {
+      "cue": "swordWood",
+      "peak": 0.43,
+      "rms": 0.04655433253395637,
+      "highEnergyFraction": 0.04496814002026254
+    },
+    {
+      "cue": "swordWood",
+      "peak": 0.43000000000000005,
+      "rms": 0.0772920671342124,
+      "highEnergyFraction": 0.06264760783806628
+    },
+    {
+      "cue": "spearFlesh",
+      "peak": 0.43,
+      "rms": 0.05500822603517067,
+      "highEnergyFraction": 0.005614302421911722
+    },
+    {
+      "cue": "spearFlesh",
+      "peak": 0.43,
+      "rms": 0.05263052907447957,
+      "highEnergyFraction": 0.030021127381209937
+    },
+    {
+      "cue": "spearFlesh",
+      "peak": 0.43,
+      "rms": 0.04731420957356906,
+      "highEnergyFraction": 0.0065925404710181915
+    },
+    {
+      "cue": "twinFlesh",
+      "peak": 0.43,
+      "rms": 0.03479186034676465,
+      "highEnergyFraction": 0.05894844847157058
+    },
+    {
+      "cue": "twinFlesh",
+      "peak": 0.43,
+      "rms": 0.05005210218092696,
+      "highEnergyFraction": 0.05960049906342612
+    },
+    {
+      "cue": "twinFlesh",
+      "peak": 0.43,
+      "rms": 0.036437809743050366,
+      "highEnergyFraction": 0.06537832909039128
+    },
+    {
+      "cue": "woodFlesh",
+      "peak": 0.43,
+      "rms": 0.06857515051299654,
+      "highEnergyFraction": 0.016708382945601685
+    },
+    {
+      "cue": "woodFlesh",
+      "peak": 0.43000000000000005,
+      "rms": 0.052908283854053856,
+      "highEnergyFraction": 0.011813121647335844
+    },
+    {
+      "cue": "woodFlesh",
+      "peak": 0.43,
+      "rms": 0.06701444928381468,
+      "highEnergyFraction": 0.019661010294929462
+    },
+    {
+      "cue": "swing",
+      "peak": 0.16,
+      "rms": 0.016153410604573277,
+      "highEnergyFraction": 0.13620119043666204
+    },
+    {
+      "cue": "swing",
+      "peak": 0.16,
+      "rms": 0.010795434458560522,
+      "highEnergyFraction": 0.27167610247051394
+    },
+    {
+      "cue": "creatureMite",
+      "peak": 0.24,
+      "rms": 0.04620155852233172,
+      "highEnergyFraction": 5.251733287889764e-07
+    },
+    {
+      "cue": "creatureMite",
+      "peak": 0.23999999999999996,
+      "rms": 0.04606379995017855,
+      "highEnergyFraction": 1.8048005770875105e-06
+    },
+    {
+      "cue": "creatureMite",
+      "peak": 0.23999999999999996,
+      "rms": 0.04616964811836833,
+      "highEnergyFraction": 1.8915022133400108e-05
+    },
+    {
+      "cue": "creatureHusk",
+      "peak": 0.24,
+      "rms": 0.04578393142917405,
+      "highEnergyFraction": 9.89395162079528e-06
+    },
+    {
+      "cue": "creatureHusk",
+      "peak": 0.23999999999999996,
+      "rms": 0.045912040733292546,
+      "highEnergyFraction": 1.2587525299289459e-05
+    },
+    {
+      "cue": "creatureHusk",
+      "peak": 0.2388747303393537,
+      "rms": 0.046892219560834024,
+      "highEnergyFraction": 7.749497593141492e-06
+    },
+    {
+      "cue": "creatureAegis",
+      "peak": 0.24,
+      "rms": 0.04931146977534714,
+      "highEnergyFraction": 9.981466920165929e-06
+    },
+    {
+      "cue": "creatureAegis",
+      "peak": 0.24,
+      "rms": 0.04897126131923437,
+      "highEnergyFraction": 1.2091120870618581e-05
+    },
+    {
+      "cue": "creatureAegis",
+      "peak": 0.24,
+      "rms": 0.048605877555241546,
+      "highEnergyFraction": 7.766004736325157e-06
+    },
+    {
+      "cue": "creatureWisp",
+      "peak": 0.24,
+      "rms": 0.04530789112428799,
+      "highEnergyFraction": 9.53663203769634e-06
+    },
+    {
+      "cue": "creatureWisp",
+      "peak": 0.24,
+      "rms": 0.0455828950292183,
+      "highEnergyFraction": 1.315115420699967e-05
+    },
+    {
+      "cue": "creatureWisp",
+      "peak": 0.24,
+      "rms": 0.04547930741092484,
+      "highEnergyFraction": 8.176547931269561e-06
+    },
+    {
+      "cue": "creatureColossus",
+      "peak": 0.24000000000000002,
+      "rms": 0.057581010015159015,
+      "highEnergyFraction": 8.814770854856811e-06
+    },
+    {
+      "cue": "creatureColossus",
+      "peak": 0.24,
+      "rms": 0.05674322063641954,
+      "highEnergyFraction": 9.549067851207774e-06
+    },
+    {
+      "cue": "creatureColossus",
+      "peak": 0.24,
+      "rms": 0.05618275554108067,
+      "highEnergyFraction": 5.738616868439868e-06
+    },
+    {
+      "cue": "enemyAttack",
+      "peak": 0.32,
+      "rms": 0.04119498791779221,
+      "highEnergyFraction": 0.0010461239813928788
+    },
+    {
+      "cue": "enemyAttack",
+      "peak": 0.32,
+      "rms": 0.039878174918063516,
+      "highEnergyFraction": 0.0019510453460575715
+    },
+    {
+      "cue": "enemyAttack",
+      "peak": 0.32,
+      "rms": 0.0387905845310951,
+      "highEnergyFraction": 0.0028397276249985284
+    },
+    {
+      "cue": "rifle",
+      "peak": 0.4891364164689917,
+      "rms": 0.06881803163611895,
+      "highEnergyFraction": 8.349262166718398e-05
+    },
+    {
+      "cue": "rifle",
+      "peak": 0.5230662020905924,
+      "rms": 0.07690684861770473,
+      "highEnergyFraction": 6.562469534581219e-05
+    },
+    {
+      "cue": "rifle",
+      "peak": 0.5222171363438615,
+      "rms": 0.08002799135346655,
+      "highEnergyFraction": 9.025701598667016e-05
     },
     {
       "cue": "land",
-      "peak": 0.36,
-      "rms": 0.036739947079380914,
-      "highEnergyFraction": 6.592143553598208e-05
+      "peak": 0.42999999999999994,
+      "rms": 0.1105993555354371,
+      "highEnergyFraction": 0.0003078880652000172
     },
     {
       "cue": "land",
-      "peak": 0.36,
-      "rms": 0.03194429562180563,
-      "highEnergyFraction": 9.157975724335294e-05
+      "peak": 0.43000000000000005,
+      "rms": 0.11038959873907646,
+      "highEnergyFraction": 0.00034566862487949644
+    },
+    {
+      "cue": "land",
+      "peak": 0.43,
+      "rms": 0.11115882596659805,
+      "highEnergyFraction": 0.0003364804413332052
     },
     {
       "cue": "coin",
-      "peak": 0.25,
-      "rms": 0.03824442167107733,
-      "highEnergyFraction": 2.106814174313629e-06
+      "peak": 0.26,
+      "rms": 0.07225934481884101,
+      "highEnergyFraction": 2.7039065605863143e-07
     },
     {
       "cue": "upgrade",
-      "peak": 0.33,
-      "rms": 0.04989416070479942,
-      "highEnergyFraction": 1.4842790160910554e-06
+      "peak": 0.34,
+      "rms": 0.10539415921241221,
+      "highEnergyFraction": 1.4377361081124172e-07
     },
     {
       "cue": "victory",
       "peak": 0.43,
-      "rms": 0.08435151759963133,
-      "highEnergyFraction": 9.951351663737608e-07
+      "rms": 0.13108795327787484,
+      "highEnergyFraction": 8.165054366856692e-08
     }
+  ],
+  "approved": [
+    "click",
+    "build",
+    "blocked",
+    "mortar",
+    "step",
+    "stepHard"
+  ],
+  "legacy": [
+    "shot",
+    "lob"
+  ],
+  "procedural": [
+    "explosion"
   ],
   "files": {
     "impacts.wav": {
-      "bytes": 3490502,
-      "sha256": "189dfc54f0c67521032906324989bed8f33ab9083d0a8a8ee507be57d9fc4a99"
-    },
-    "piano-sketch.wav": {
-      "bytes": 4608044,
-      "sha256": "5ee59d90a4a7ab758505e302d9283be8d0bc12091129d58f7789df8aeaa795a9"
+      "bytes": 2844472,
+      "sha256": "0f486f6bb4ebf4175b570baf129fb4469b3e4f6fa13d79fb25fa06e81fb3cb9c"
     }
   }
 }

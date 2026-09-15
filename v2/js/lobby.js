@@ -1,3 +1,5 @@
+import { AudioEngine } from './audio.js';
+import { Soundtrack } from './soundtrack.js';
 import * as THREE from 'three';
 import {TouchGesture,TouchStick,bindTouchActivation,hasTouch,clamp} from './touch-input.js';
 import { COMMANDERS, commanderStats, MOUNTS } from './run/expedition.js';
@@ -136,3 +138,7 @@ function render(now){
 camera.position.set(0,20,40);requestAnimationFrame(render);
 window.LOBBY={scene,camera,renderer,player,stations,openStation,close,view,get selected(){return selected;},get profile(){return campaignStore.snapshot().account;}};
 addEventListener('pagehide',e=>{if(!e.persisted){disposed=true;renderer.dispose();}});
+
+const lobbySoundtrack = new Soundtrack(new AudioEngine(), () => ({ lobby: true }));
+lobbySoundtrack.controls(document.querySelector('header .account'));
+window.lobbySoundtrack = lobbySoundtrack;
