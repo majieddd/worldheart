@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, CAM_TUNE, PALETTE, LIGHTING, PRESENTATION } from './config.js';
 import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
-import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight, TERRAIN_TOP, surfaceElevation, biomeAt } from './world.js';
+import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight, TERRAIN_TOP, surfaceElevation } from './world.js';
 import { NavGraph } from './nav.js';
 import { SIM_RANDOM } from './noise.js';
 import { makeRng } from './run/rng.js';
@@ -17,8 +17,6 @@ import { Game } from './game.js';
 import { WaveDirector, portalCount } from './waves.js';
 import { HUD } from './ui.js';
 import { AudioEngine } from './audio.js';
-import {musicState,ambienceKind} from './audio-catalogue.js';
-const audioFocus=new THREE.Vector3(),audioDir=new THREE.Vector3();let audioSceneTime=0;
 import { WorldContext } from './world-context.js';
 
 const canvas = document.getElementById('view');
@@ -334,7 +332,6 @@ async function boot() {
   game = new Game({ scene, rig, world, nav, enemies, towerMgr, fx });
   const audio = new AudioEngine();
   game.audio = audio;
-  window.WH.audio=audio;
   towerMgr.audio = audio;
   waves = new WaveDirector(game, enemies, nav);
   ui = new HUD({ game, waves, world, nav, rig, renderer, audio });
@@ -424,13 +421,9 @@ async function boot() {
   // weight there is: the eye reads the pause as impact, and everything that
   // follows (the shake, the number, the knockback) lands on a still frame.
   // Only the possessed body earns it, and only on a hit that did damage.
-  allies.onSwingStart = (a) => {
-    possession?.swingStarted?.(a);
-    if(!a.strikeSpec||a.strikeSpec.kind==='melee')audio.play(a.weaponFamily==='spear'?'spear':a.weaponFamily==='twinblade'||a.typeKey==='duelist'?'twinblade':'swing',{position:allies.worldPos(a,_fpHit)});
-  };
+  allies.onSwingStart = (a) => possession?.swingStarted?.(a);
   allies.onStrikeResolved = (a, hits, spec) => {
     possession?.strikeResolved?.(a, hits, spec);
-    if(['hitscan','projectile','lob'].includes(spec?.kind))audio.play(spec.kind==='lob'?'lob':'rifle',{position:allies.worldPos(a,_fpHit)});
     if (spec?.kind === 'melee' && hits > 0 && possession && possession.unit === a) game.hitStop = Math.max(game.hitStop || 0, 0.07);
   };
   // Being hit in first person should land on the player, not only on a number.
@@ -636,16 +629,6 @@ function stepFrame(dt, render) {
   }
   if (game) game.update(dt);
   mode99?.renderEffects?.(simDt);
-  if(game?.audio){
-    if(possession?.active)allies.worldPos(possession.unit,audioFocus);else audioFocus.copy(rig.camera.position).normalize().multiplyScalar(rig.focusRadius||R);
-    audioSceneTime+=dt;
-    if(audioSceneTime>=.25){
-      audioSceneTime=0;audioDir.copy(audioFocus).normalize();
-      const localBiome=biomeAt(audioDir,possession?.active?possession.unit.height:audioFocus.length()-R);
-      game.audio.setScene({state:musicState({state:ui?._ended?ui.audioEnding:game.state,paused:game.paused,waveActive:['spawning','combat'].includes(waves.state),boss:enemies.active.some(e=>e.type.boss&&!e.dead),health:game.lives/game.maxLives}),ambience:ambienceKind({theme:localBiome==='classic'?CONFIG.environment?.theme:localBiome}),paused:game.paused,camera:rig.camera,observer:audioFocus});
-    }
-    game.audio.update(dt);
-  }
   if (ui) ui.update(dt);
   game?.context?.update();
   window.WH?.mobile?.update(dt);

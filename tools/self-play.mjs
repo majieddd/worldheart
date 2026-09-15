@@ -265,7 +265,6 @@ try{
   }
   if(result.state==='defeat'||result.phase==='victory')await page.waitForFunction(()=>getComputedStyle(document.getElementById('end-overlay')).opacity==='1',{},{polling:50});
   await page.screenshot({path:resolve(out,'terminal.png')});
-  result.audio=await page.evaluate(()=>WH.audio?.snapshot()||null);
   result.talentPurchases=purchases;
   result.rendering=sparseRender?'60Hz simulation; one rendered frame per two simulation seconds, plus captures':'60Hz simulation; rendered every 0.1 simulation seconds';
   result.trace=await page.evaluate(()=>__qaTrace);result.faults=[...faults];result.policy={strategy,towerPriority,towerLimit,cautious};result.assault=await page.evaluate(()=>window.__qaAssault?.metrics||null);result.towerStats=await page.evaluate(()=>WH.towers.towers.map(t=>({type:t.typeKey,tier:t.tier,damage:t.damageDealt,kills:t.kills})));result.inputScope=mobile?'Touch HUD enabled; policy uses legal gameplay APIs and scripted UI, not a touch-only manual run':'Desktop policy';result.scope=`Unforced instrumented self-play, legal purchases/cards/placements; deterministic time advance; ${sourceCheckpoint?'resumed exported checkpoint':planet===1?'fresh profile':'continued earned campaign profile'}`;

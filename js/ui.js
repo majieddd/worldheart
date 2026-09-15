@@ -4,7 +4,6 @@ import { TOWER_TYPES, tierCost, buildTowerVisual, TOWER_SCALE, MAT } from './tow
 import { powerSigil } from './ui-icons.js';
 import { TALENTS, loadProfile, buyTalent, isOwned, isReachable, persistProfile } from './modes/progress.js';
 import { worldgenUrl } from './worldgen.js';
-import {audioSettings} from './audio-settings.js';
 
 // DOM HUD. All chrome lives here; the scene renders beneath it. Per the
 // design contract: per-shot and per-kill readouts update with zero animation,
@@ -275,8 +274,6 @@ export class HUD {
       'btn-talents', 'btn-talents-close', 'talent-overlay', 'talent-coins', 'talent-tiers',
     ]) this.el[id] = document.getElementById(id);
     this.el['set-seed'].textContent = String(CONFIG.seed);
-    this.el['settings-pop'].prepend(audioSettings(this.audio,this.el['settings-pop']));
-    this.audio.onSettings=()=>{this.el['btn-sound'].innerHTML=icon(this.audio.muted?'volumeX':'volume');this.el['btn-sound'].setAttribute('aria-pressed',String(this.audio.muted));};this.audio.onSettings();
   }
 
   _buildCards() {
@@ -880,7 +877,7 @@ export class HUD {
     // a 99 Planets win reported "15 waves repelled" instead of the planet it
     // had just taken.
     if (this._ended) return;
-    this._ended = true;this.audioEnding=won?'victory':'defeat';
+    this._ended = true;
     this.el['settings-pop'].classList.remove('show');
     this.el['btn-settings'].setAttribute('aria-expanded','false');
     // Pausing simulation does not release a possessed mouse. The visible

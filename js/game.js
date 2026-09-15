@@ -292,7 +292,7 @@ export class Game {
       this.kills++;
       this.towerMgr.enemyWorldPos(enemy, _v);
       this.fx.floaters.spawn(_v, `+${bounty}`, '#ffc857', 12);
-      this.audio?.play('kill',{position:_v});
+      this.audio?.play('kill');
       this._hud();
     };
     this.enemies.onDeathFx = (e) => {

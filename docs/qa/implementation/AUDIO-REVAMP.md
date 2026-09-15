@@ -1,5 +1,10 @@
 # YuE2 soundtrack and sound feedback
 
+**Superseded: owner listening failed this pass on 2026-09-15.** Reported vocals,
+tinny/sharp effects and static-like ambience require complete rollback. Automated
+checks below are historical and do not establish vocal absence or sound quality.
+Follow [restoration and retry](AUDIO-RESTORATION.md).
+
 Updated 2026-09-15. Codex owns `feature/yue2-audio-revamp`,
 [draft PR #43](https://github.com/majieddd/worldheart/pull/43). Based on V2
 `309aaa7` plus its documentation closeout. Publication remains V2 only.

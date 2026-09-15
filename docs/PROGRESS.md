@@ -1,5 +1,10 @@
 # 99 Planets development progress
 
+Active U140-U142: owner rejected the audio revamp. Restore all pre-revamp audio
+first, then provide a separate warmer comparison. Codex owns `feature/audio-restoration`.
+[Restoration ledger](qa/implementation/AUDIO-RESTORATION.md). Previous automated
+audio acceptance is superseded by the owner's listening failure.
+
 U136-U139 audio implementation is published and publicly verified as V2
 `1f2eb75`. Codex owns `feature/yue2-audio-revamp`, [draft PR #43](https://github.com/majieddd/worldheart/pull/43).
 [Audio ledger](qa/implementation/AUDIO-REVAMP.md): six actual local YuE2
