@@ -1111,8 +1111,13 @@ export class HUD {
         sub = `${left} remaining`;
       }
     }
-    const peacefulHome=this.game.mode99?.home.quiet;
+    const home=this.game.mode99?.home,peacefulHome=home?.quiet;
     if(peacefulHome){label='HOME PLANET';sub='peaceful · incursions paused';showCall=false;}
+    else if(home?.active){
+      label=`INCURSION ${w.state==='countdown'?w.wave+1:w.wave}`;
+      sub=w.state==='countdown'?`nests in ${Math.max(0,Math.ceil(w.countdown))}s`:`${live+w.pendingSpawns} remaining`;
+      showCall=false;
+    }
     if (e['wave-label'].textContent !== label) e['wave-label'].textContent = label;
     if (e['wave-sub'].textContent !== sub) e['wave-sub'].textContent = sub;
     // Live nests: woken breaches outside the frontier, each trickling raids.

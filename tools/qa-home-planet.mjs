@@ -37,6 +37,8 @@ try{
   writeFileSync(out+'/restored.json',JSON.stringify(restored));
   check('Claim reloads the same seed, radius, terrain, anchor and three tower upgrades',JSON.stringify(prepared.snap.world)===JSON.stringify(restored.snapshot.world)&&same(prepared.snap.checkpoint.towers,restored.snapshot.checkpoint.towers),restored.snapshot.world);
   check('Home starts peaceful with full planet ownership',restored.quiet&&restored.phase==='building'&&restored.state==='idle'&&restored.frontier===Math.PI);
+  await page.waitForFunction(()=>WH.game.soundtrack.key==='homegarden'&&WH.game.soundtrack.decks.some(d=>d.id==='homegarden'&&!d.media.paused&&d.media.readyState>=2),null,{timeout:20000});
+  check('Peaceful home actually plays the approved calm arrangement',true);
   await page.evaluate(()=>WH.step(60,10,false));check('Peaceful simulation cannot spawn nests or enemies',await page.evaluate(()=>!WH.enemies.active.length&&!WH.waves.queues.length&&!WH.world.portals.some(p=>p.active)));
   await page.evaluate(()=>WH.mode99.home.open());await page.getByRole('button',{name:'Crystal lantern',exact:true}).click();
   const decor=await page.evaluate(()=>{const h=WH.mode99.home,a=WH.mode99.commander;for(const scale of [6,8,10]){const d=a.dir.clone().addScaledVector(a.fwd,scale/WH.CONFIG.planetRadius).normalize();if(h.place(d,a.height))return h.record.decorations;}return [];});
@@ -77,6 +79,11 @@ try{
   // stored Float32 graph directions. Bound that rounding in world units.
   const heightError=Math.max(...faultCheckpoint.heights.map((h,i)=>Math.abs(h-afterFault.heights[i])));
   check('Quake terrain samples and reseated decorations survive home reload',faultCheckpoint.heights.length===afterFault.heights.length&&heightError<.0001&&same(faultCheckpoint.faults,afterFault.faults)&&same(faultCheckpoint.decor,afterFault.decor),{maximumHeightError:heightError});
+  const backup=await page.evaluate(()=>{const h=WH.mode99.home;h.dirty=true;const copy=structuredClone(h.record);copy.checkpoint.gold+=123;return {version:1,homes:[copy]};});
+  await page.evaluate(()=>WH.mode99.home.open());await page.getByText('Home backup',{exact:true}).click();
+  await page.locator('#home-import').setInputFiles({name:'home-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
+  await page.waitForEvent('framenavigated',{timeout:15000});await ready();await page.locator('#btn-begin').click();
+  check('Importing the active home reloads the backup without an old autosave overwriting it',await page.evaluate(g=>WH.game.gold===g&&WH.mode99.home.record.checkpoint.gold===g,backup.homes[0].checkpoint.gold));
   await page.goto(base+'/lobby.html');await page.waitForFunction(()=>window.lobbySoundtrack);await page.locator('[data-station="mission"]').first().click();
   check('Lobby lists the named home and its checkpoint',await page.locator('.home-lobby a').count()===1&&(await page.locator('.home-lobby a').textContent()).includes('Wave 1'));
   await page.waitForTimeout(400);await page.screenshot({path:out+'/lobby-home.png'});

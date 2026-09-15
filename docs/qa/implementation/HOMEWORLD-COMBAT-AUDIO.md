@@ -6,7 +6,7 @@ fc5299c and its evidence closeout. September 15, 2026. Publish to V2 only.
 | Item | State | Acceptance |
 |---|---|---|
 | U149 Reusable production workflow | Verified, plugin PR published and installed | [Aegis PR #2](https://github.com/majieddd/claude-plugins-custom/pull/2), cb14a65, 3.16.0 local install; 48 workflow tests, 37 runtime checks, 200 source/install files identical |
-| U150 Plasma rifle and blade audio | Implemented, local verification passed | Warm falling plasma pulse; blade contact and swing air envelopes; nine accepted cues PCM-locked; 82 audio browser checks; owner listening remains explicit |
+| U150 Plasma rifle and blade audio | Implemented, local verification passed | Warm falling plasma pulse; blade contact and swing air envelopes; nine accepted cues PCM-locked; 82 local and 82 public audio browser checks; owner listening remains explicit |
 | U151 Five combat arrangements | Exported, awaiting owner listening | Five 96-second battle arrangements in Audio Lab only; 20 technical signal checks; five calm arrangements and nine owner songs byte-identical |
 | U152 Claim and revisit home planets | Implemented, local verification | Full-planet eligibility; saved seed/theme/anchor/defenses/inventory; lobby revisit; quota/corruption refusal and backups; isolated campaign storage |
 | U153 Home incursions and decoration | Verified locally, awaiting V2 publication | Manual start/stop, wave checkpoints, defeat rollback, six free saved decorations, peaceful music and HUD, quake terrain persistence |
@@ -119,8 +119,17 @@ generation brief; owner listening is still required before battle integration.
   and the rejected MP3 remain in the local archive. Five final tracks are 96 seconds,
   approximately -19 LUFS, with controlled peaks and preserved source-file hashes.
 
-The 22 local home checks include real touch events, quake commit/reload, peaceful HUD,
+The final 23 local home checks include real touch events, quake commit/reload, peaceful HUD,
 claim/revisit, defeat rollback and cleared-wave checkpointing. Compact reports and
 phone/lobby captures are in [the evidence folder](HOMEWORLD-COMBAT-AUDIO/).
 Public evidence will be added after deployment.
 Physical-phone acceptance, owner audio approval and future multiplayer are separate.
+
+The first public candidate f0475b7 passed 22 home checks and all 182 deployed
+file comparisons, with main unchanged. Its 82 public audio checks pass after
+a test harness race was fixed: the fallback scenario now waits for the lab
+module to finish loading before reading its handles. The first failing report
+is retained. The final follow-up adds active-home backup reload so pending
+autosave cannot overwrite an imported checkpoint, and incursion HUD labels
+that remain meaningful past wave ten. Full updated home checks are pending
+on that public follow-up.

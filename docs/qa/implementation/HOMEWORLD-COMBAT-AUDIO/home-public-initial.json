@@ -1,5 +1,5 @@
 {
-  "base": "http://127.0.0.1:8141",
+  "base": "https://majieddd.github.io/worldheart/v2",
   "evidenceType": "Instrumented browser fixtures, not natural play",
   "checks": [
     {
@@ -144,10 +144,6 @@
       "detail": {
         "maximumHeightError": 0.00000667572021484375
       }
-    },
-    {
-      "name": "Importing the active home reloads the backup without an old autosave overwriting it",
-      "ok": true
     },
     {
       "name": "Lobby lists the named home and its checkpoint",

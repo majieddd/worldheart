@@ -62,7 +62,16 @@ export class HomePlanet {
     el('home-rotation').onchange=e=>{this.rotation=Number(e.target.value);};
     el('home-remove').onclick=()=>this.choose('remove');
     el('home-export').onclick=()=>{const blob=new Blob([homeStore.export()],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='worldheart-homes.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
-    el('home-import').onchange=async e=>{const file=e.target.files[0];if(!file)return;const result=file.size>4000000?{ok:false,error:'Home backup exceeds 4 MB.'}:homeStore.import(await file.text());this.lastSave=result.ok?'Home backup imported. Revisit from the lobby.':result.error;this.refresh();};
+    el('home-import').onchange=async e=>{
+      const file=e.target.files[0];if(!file)return;
+      const result=file.size>4000000?{ok:false,error:'Home backup exceeds 4 MB.'}:homeStore.import(await file.text());
+      if(result.ok&&this.active){
+        // Reload an imported active home before autosave can write the old
+        // in-memory checkpoint over the backup the player just restored.
+        this.dirty=false;this.visit(this.record.id);return;
+      }
+      this.lastSave=result.ok?'Home backup imported. Revisit from the lobby.':result.error;this.refresh();
+    };
     dialog.addEventListener('close',()=>{if(this.suspended){game.paused=this.wasPaused;possession.suspend(false);this.suspended=false;}});
     const tray=document.createElement('div');tray.id='home-placement';tray.className='panel';tray.hidden=true;
     tray.innerHTML='<span></span><button class="btn" id="home-place-here">Place here</button><button class="btn" id="home-cancel-place">Done</button>';ui.root.append(tray);this.tray=tray;

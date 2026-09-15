@@ -142,6 +142,7 @@ try {
   const fail = await browser.newPage();
   await fail.route('**/audio/material/impacts.wav', r => r.abort());
   await fail.goto(base + '/audio-lab.html');
+  await fail.waitForFunction(()=>!!window.audioLab);
   await fail.getByRole('button', { name: 'Draft: Menu click', exact: true }).click();
   await fail.waitForFunction(() => document.querySelector('#status').textContent.includes('could not load'));
   await fail.getByRole('button', { name: 'Previous: Menu click', exact: true }).click();
