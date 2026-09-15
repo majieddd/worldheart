@@ -6,12 +6,26 @@ fc5299c and its evidence closeout. September 15, 2026. Publish to V2 only.
 | Item | State | Acceptance |
 |---|---|---|
 | U149 Reusable production workflow | Verified, plugin PR published and installed | [Aegis PR #2](https://github.com/majieddd/claude-plugins-custom/pull/2), cb14a65, 3.16.0 local install; 48 workflow tests, 37 runtime checks, 200 source/install files identical |
-| U150 Plasma rifle and blade audio | Verified and published to V2 | Warm falling plasma pulse; blade contact and swing air envelopes; nine accepted cues PCM-locked; 82 local and 82 public audio browser checks; owner listening remains explicit |
-| U151 Five combat arrangements | Published in Audio Lab, awaiting owner listening | Five 96-second battle arrangements in Audio Lab only; 20 technical signal checks; five calm arrangements and nine owner songs byte-identical |
+| U150 Plasma rifle and blade audio | Published; melee impact reopened after owner feedback | Owner reports the impact still sounds the same. Prior technical checks remain valid but do not establish audible improvement; rifle acceptance was not addressed in this feedback |
+| U151 Five combat arrangements | Rejected by owner | All five new battle tracks rejected. They were never selected for gameplay; preserve existing owner soundtrack and approved calm pieces |
 | U152 Claim and revisit home planets | Verified and published to V2 | Full-planet eligibility; saved seed/theme/anchor/defenses/inventory; lobby revisit; quota/corruption refusal and backups; isolated campaign storage |
 | U153 Home incursions and decoration | Verified and published to V2 | Manual start/stop, wave checkpoints, defeat rollback, six free saved decorations, peaceful music and HUD, quake terrain persistence |
 
 ## Owner decisions
+
+- Subsequent feedback rejects every U151 battle arrangement and reopens melee
+  impact. The previous pass changed pitch, timing and layer levels but reused the
+  knife/chop source recordings. This is a likely reason the identity still feels
+  unchanged, not a claim that the agent heard the difference. Source comparison
+  confirms different sword, spear and Twin Fang PCM hashes between 0d375de and
+  9d7a37b; that evidence does not override the owner's listening judgment.
+- Before further audio batches, use a bounded YouTube reference check when repeated
+  feedback warrants it. Record concrete timing/timbre/arrangement targets and review
+  one representative revision first. A relevant primary-source candidate is Halo's
+  [Ask343 Audio Design](https://www.youtube.com/watch?v=EqMyQnNFeRE), paired with
+  [Inside Infinite March 2021](https://www.halowaypoint.com/news/inside-infinite-march-2021).
+  Search located both; direct retrieval failed. Neither was watched or heard in
+  this pass. Keep this boundary explicit rather than calling search verification.
 
 - Pickup, upgrade and victory are approved, alongside the six previously accepted cues.
 - The five U148 arrangements are approved as calm music, not battle music.

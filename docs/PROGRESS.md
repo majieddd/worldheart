@@ -1,5 +1,13 @@
 # 99 Planets development progress
 
+Owner feedback after U149-U153: all five new battle arrangements are **rejected**;
+U151 needs a new direction. U150 melee impact is **reopened** because the owner hears
+no meaningful improvement. Its samples changed, but the underlying knife/chop
+sources were retained, so technical change is not aesthetic acceptance. The nine
+owner songs, approved calm music and approved reward cues remain separate. No new
+audio generation or gameplay audio changes were made in this feedback/summary pass.
+Use the conditional video-reference review in AGENTS.md before another audio batch.
+
 Published U149-U153: V2 `9d7a37b`, [PR #46](https://github.com/majieddd/worldheart/pull/46). [Home planets, combat audio and workflow](qa/implementation/HOMEWORLD-COMBAT-AUDIO.md): claim a fully expanded planet, decorate, revisit, resume incursions and restore checkpoints after defeat. Revised plasma/blade sounds preserve nine approved cues; five approved calm tracks play at home and five battle arrangements await listening approval in Audio Lab. Aegis [PR #2](https://github.com/majieddd/claude-plugins-custom/pull/2) is pushed and locally installed. 23 local + 23 public home/touch cases, 82 local + 82 public audio checks, 349 tests, four classic camera/boot suites, a complete legal ten-wave campaign extraction and 182 final live/source identity checks pass. [Publication evidence](qa/implementation/HOMEWORLD-COMBAT-AUDIO/publication.json). Main remains `1374122`. Listening and physical-device acceptance remain explicit; homes currently save in-browser with backups.
 
 Published U146-U148: V2 `fc5299c`, [PR #45](https://github.com/majieddd/worldheart/pull/45), Codex on `feature/combat-world-performance`. Grip-constrained weapon motion, family swing audio, reduced world/quake stalls and five approval-only planet music arrangements. 340 tests, 74 local + 76 public audio/UI checks, local/public weapon and quake checks, 187 public identity/removal checks pass. Main stays `1374122`. Owner listening/motion acceptance and physical-device coverage remain open. [Work ledger](qa/implementation/COMBAT-WORLD-PERFORMANCE.md). [Audition the songs](https://majieddd.github.io/worldheart/v2/audio-lab.html#planet-drafts).
