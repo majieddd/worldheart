@@ -1,0 +1,550 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "Live 3D boots with three scouts, three towers and one context",
+      "ok": true,
+      "detail": {
+        "frames": 6,
+        "calls": 1185,
+        "triangles": 52044,
+        "contexts": 1,
+        "unitCount": 3,
+        "towerCount": 3,
+        "geometries": 206,
+        "textures": 2
+      }
+    },
+    {
+      "name": "Independent entry does not load campaign simulation",
+      "ok": true
+    },
+    {
+      "name": "Animation advances",
+      "ok": true
+    },
+    {
+      "name": "Pause freezes the shared animation phase",
+      "ok": true
+    },
+    {
+      "name": "Rendered interface text meets AA contrast",
+      "ok": true,
+      "detail": [
+        {
+          "text": "WORLDHEART V2",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "ART DIRECTION / STUDY 01",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Return to the game ↗",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "AN ILLUSTRATED WORLD, IN THREE DIMENSIONS",
+          "ratio": 14.18408804904819,
+          "required": 4.5
+        },
+        {
+          "text": "Same world.Three ways to draw it.",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "A small frontier, a crystal heart, three scouts.",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "An experimental slice for Worldheart's next visu",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "World",
+          "ratio": 8.55751881061709,
+          "required": 4.5
+        },
+        {
+          "text": "Ground level",
+          "ratio": 15.055584820344047,
+          "required": 4.5
+        },
+        {
+          "text": "Materials",
+          "ratio": 15.055584820344047,
+          "required": 4.5
+        },
+        {
+          "text": "Light Red sunsetNeutral daylight",
+          "ratio": 8.393193342698826,
+          "required": 4.5
+        },
+        {
+          "text": "Play motion",
+          "ratio": 12.978709838906374,
+          "required": 4.5
+        },
+        {
+          "text": "Reset view",
+          "ratio": 15.055584820344047,
+          "required": 4.5
+        },
+        {
+          "text": "01 / RETRO ANIME",
+          "ratio": 14.993852169847376,
+          "required": 4.5
+        },
+        {
+          "text": "Inspect ↗",
+          "ratio": 14.993852169847376,
+          "required": 4.5
+        },
+        {
+          "text": "Painted color. Clean cel shadows.",
+          "ratio": 14.96679213175627,
+          "required": 4.5
+        },
+        {
+          "text": "02 / BORDERLANDS-INSPIRED",
+          "ratio": 14.993852169847376,
+          "required": 4.5
+        },
+        {
+          "text": "Inspect ↗",
+          "ratio": 14.993852169847376,
+          "required": 4.5
+        },
+        {
+          "text": "Heavy contours. Etched surfaces.",
+          "ratio": 14.96679213175627,
+          "required": 4.5
+        },
+        {
+          "text": "03 / ANIME + INK",
+          "ratio": 14.993852169847376,
+          "required": 4.5
+        },
+        {
+          "text": "Inspect ↗",
+          "ratio": 14.993852169847376,
+          "required": 4.5
+        },
+        {
+          "text": "Warm light. Violet shadows. Selective ink.",
+          "ratio": 14.96679213175627,
+          "required": 4.5
+        },
+        {
+          "text": "Drag any scene to orbit all three · Scroll to zo",
+          "ratio": 8.393193342698826,
+          "required": 4.5
+        },
+        {
+          "text": "Still frame · synchronized",
+          "ratio": 13.180339593111526,
+          "required": 4.5
+        },
+        {
+          "text": "Ink contours",
+          "ratio": 15.055584820344047,
+          "required": 4.5
+        },
+        {
+          "text": "Surface texture",
+          "ratio": 15.055584820344047,
+          "required": 4.5
+        },
+        {
+          "text": "Save this view ↓",
+          "ratio": 15.055584820344047,
+          "required": 4.5
+        },
+        {
+          "text": "THE VISUAL RECIPE",
+          "ratio": 14.18408804904819,
+          "required": 4.5
+        },
+        {
+          "text": "What changes between the worlds",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "Switch to Materials to inspect stone, armor,foli",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Retro anime",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "A painted background with clean, readable forms.",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Line",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Fine, quiet silhouettes",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Light",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Broad cel shadow + warm rim",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Surface",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Soft pigment and long stone strata",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Borderlands-inspired",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "A graphic, weathered frontier. Bold silhouettes,",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Line",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Heavy contours and hard seams",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Light",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Four rugged tonal steps",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Surface",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Crosshatch, chips and scratched paint",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Anime + ink",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "The supplied references translated into 3D: peac",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Line",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Dark violet contour, lighter interiors",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Light",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Three bands with colored shadows",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Surface",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Painted strata + ink in the darks",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Test geometry and materials. A direction study f",
+          "ratio": 9.032376786994513,
+          "required": 4.5
+        },
+        {
+          "text": "Back to Worldheart ↗",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        }
+      ]
+    },
+    {
+      "name": "anime focus displays exactly one viewport",
+      "ok": true
+    },
+    {
+      "name": "anime world renders finite camera and scene",
+      "ok": true
+    },
+    {
+      "name": "anime ground renders finite camera and scene",
+      "ok": true
+    },
+    {
+      "name": "anime materials renders finite camera and scene",
+      "ok": true
+    },
+    {
+      "name": "ink focus displays exactly one viewport",
+      "ok": true
+    },
+    {
+      "name": "ink world renders finite camera and scene",
+      "ok": true
+    },
+    {
+      "name": "ink ground renders finite camera and scene",
+      "ok": true
+    },
+    {
+      "name": "ink materials renders finite camera and scene",
+      "ok": true
+    },
+    {
+      "name": "hybrid focus displays exactly one viewport",
+      "ok": true
+    },
+    {
+      "name": "hybrid world renders finite camera and scene",
+      "ok": true
+    },
+    {
+      "name": "hybrid ground renders finite camera and scene",
+      "ok": true
+    },
+    {
+      "name": "hybrid materials renders finite camera and scene",
+      "ok": true
+    },
+    {
+      "name": "All styles produce different rendered ground scenes",
+      "ok": true,
+      "detail": {
+        "animeInk": 24.32372418632444,
+        "inkHybrid": 18.1558149181619
+      }
+    },
+    {
+      "name": "Texture toggle changes rendered surfaces",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 2.3128127442184008
+      }
+    },
+    {
+      "name": "Ink toggle changes silhouettes and seams",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 1.5047937616531961
+      }
+    },
+    {
+      "name": "Real pointer drag changes yaw and elevation",
+      "ok": true
+    },
+    {
+      "name": "Wheel zoom changes camera distance",
+      "ok": true
+    },
+    {
+      "name": "Keyboard orbit works with visible focus",
+      "ok": true
+    },
+    {
+      "name": "Reset restores view camera",
+      "ok": true
+    },
+    {
+      "name": "Daylight changes the rendered scene",
+      "ok": true
+    },
+    {
+      "name": "Save view downloads a real PNG",
+      "ok": true,
+      "detail": {
+        "format": "png",
+        "mediaType": "image/png",
+        "width": 1518,
+        "height": 592,
+        "space": "srgb",
+        "channels": 4,
+        "depth": "uchar",
+        "density": 72,
+        "isProgressive": false,
+        "isPalette": false,
+        "bitsPerSample": 8,
+        "hasProfile": false,
+        "hasAlpha": true,
+        "autoOrient": {
+          "width": 1518,
+          "height": 592
+        }
+      }
+    },
+    {
+      "name": "Lab leaves existing browser storage unchanged",
+      "ok": true
+    },
+    {
+      "name": "Responsive layout 375",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "body": 375,
+        "buttons": [],
+        "viewports": [
+          {
+            "width": 341,
+            "height": 430
+          },
+          {
+            "width": 341,
+            "height": 429
+          },
+          {
+            "width": 341,
+            "height": 429
+          }
+        ],
+        "nav": 64
+      }
+    },
+    {
+      "name": "Responsive layout 768",
+      "ok": true,
+      "detail": {
+        "width": 768,
+        "body": 768,
+        "buttons": [],
+        "viewports": [
+          {
+            "width": 239,
+            "height": 410
+          },
+          {
+            "width": 238,
+            "height": 410
+          },
+          {
+            "width": 238,
+            "height": 410
+          }
+        ],
+        "nav": 80
+      }
+    },
+    {
+      "name": "Responsive layout 1280",
+      "ok": true,
+      "detail": {
+        "width": 1280,
+        "body": 1280,
+        "buttons": [],
+        "viewports": [
+          {
+            "width": 399,
+            "height": 474
+          },
+          {
+            "width": 398,
+            "height": 474
+          },
+          {
+            "width": 398,
+            "height": 474
+          }
+        ],
+        "nav": 80
+      }
+    },
+    {
+      "name": "Native desktop renders sustained frames",
+      "ok": true,
+      "detail": {
+        "samples": 356,
+        "median": 6.900000000001455,
+        "p95": 7.099999999999909,
+        "p99": 13.899999999999636
+      }
+    },
+    {
+      "name": "OS reduced motion stops animation",
+      "ok": true
+    },
+    {
+      "name": "Paused scene does not render an idle loop",
+      "ok": true
+    },
+    {
+      "name": "Context loss displays recovery guidance",
+      "ok": true
+    },
+    {
+      "name": "Context restoration resumes a rendered scene",
+      "ok": true
+    },
+    {
+      "name": "Shareable URL restores style, view and light",
+      "ok": true
+    },
+    {
+      "name": "Touch tap opens a single style",
+      "ok": true
+    },
+    {
+      "name": "Real touch swipe orbits",
+      "ok": true
+    },
+    {
+      "name": "No runtime or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

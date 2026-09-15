@@ -1,7 +1,11 @@
 # Illustrative style lab
 
 2026-09-15. Owner: Codex. Branch: `feature/illustrative-style-lab`, from V2 `496c9a2`.
-Status: locally verified; preview publication pending. Usage: unmeasured.
+Status: published and publicly verified at V2 `232d31b`. Usage: unmeasured.
+[Live comparison](https://majieddd.github.io/worldheart/v2/style-lab.html) ·
+[Hybrid close-up](https://majieddd.github.io/worldheart/v2/style-lab.html?style=hybrid&view=ground) ·
+[PR #48](https://github.com/majieddd/worldheart/pull/48) ·
+[Successful Pages action](https://github.com/majieddd/worldheart/actions/runs/35018076525).
 
 ## Reference
 The owner's request is an isolated 3D graphics experiment, not a game overhaul.
@@ -89,7 +93,7 @@ slice; a campaign playthrough is outside its independent entry point.
 |---|---|---|
 | U158 three style recipes | verified | Distinct live render of the same world |
 | U159 comparison and style guide | verified | Synced camera, focus, specimens, controls |
-| U160 verification and preview | active | Local verification passes; public check follows deployment |
+| U160 verification and preview | published | 39 public browser cases and 193 file identities pass |
 | Owner art acceptance | planned | Owner chooses after inspecting the slice |
 
 ## Where we are
@@ -98,7 +102,7 @@ changes. `local/results.json` records 39 passed checks: live geometry, rendered
 differences, full-width inspection, real mouse/keyboard/touch, lighting, texture
 and ink switches, storage isolation, PNG export, computed text contrast,
 responsive 375/768/1280 layouts, reduced motion and graphics context recovery.
-Desktop Chrome sampled 362 intervals: median 6.9ms, p95/p99 7.1ms. This is a
+Desktop Chrome sampled 358 intervals: median 6.9ms, p95/p99 7.1ms. This is a
 small native desktop test, not physical phone or full-campaign performance.
 The core suite passed 361 tests; 111 source modules parse; 156 mirror files match.
 The real blueprint checker passes 14/14 sections. Lobby navigation was exercised
@@ -114,3 +118,12 @@ art. The owner has not yet selected or accepted a direction.
 Resume locally: `node tools/serve.mjs 8152`, then `/style-lab.html`.
 Reproduce browser QA: set `WH_NODE_MODULES` to the external Playwright/Sharp
 runtime, then `node tools/qa-style-lab.mjs artifacts/style-lab/qa`.
+
+Public verification: `public-results.json` passes the same 39 browser cases.
+`public-identity.json` matches all 193 live asset hashes to the exact preview
+and production revisions. V2 is `232d31b5b50b75f9d60b185fe2c0d48635214470`;
+main remains `1374122`. Public frame sample: 356 intervals, median 6.9ms,
+p95 7.1ms, p99 13.9ms. `public-compare.png` and `public-hybrid-ground.png`
+are actual public browser captures. The evidence-only closeout does not change
+the deployed runtime. Existing production rendering and campaign code are
+unchanged; only the V2 lobby gains a link to the separate lab.

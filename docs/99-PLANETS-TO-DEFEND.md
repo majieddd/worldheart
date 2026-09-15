@@ -1,6 +1,6 @@
 # 99 Planets To Defend: running development blueprint
 
-U158-U160 adds an isolated [illustration lab](qa/implementation/STYLE-LAB.md)
+Published U158-U160 (V2 `232d31b`, PR #48) adds an isolated [illustration lab](qa/implementation/STYLE-LAB.md)
 to compare retro anime, Borderlands-inspired ink and their hybrid on shared
 simple 3D geometry. This is a graphics test slice, not a production art migration.
 The owner's three images guide the hybrid's contours, shading and textures.
