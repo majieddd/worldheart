@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Worldheart · Illustration lab</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/style-lab.css">
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="lobby.html">WORLDHEART <span>V2</span></a>
+    <span class="edition">ART DIRECTION / STUDY 01</span>
+    <a class="back" href="lobby.html">Return to the game ↗</a>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">AN ILLUSTRATED WORLD, IN THREE DIMENSIONS</p><h1>Same world.<br><span>Three ways to draw it.</span></h1></div>
+      <div class="intro-note"><p>A small frontier, a crystal heart, three scouts. <br>Explore three live 3D treatments of the same scene.</p><p class="muted">An experimental slice for Worldheart's next visual direction.</p></div>
+    </section>
+    <section class="lab" aria-label="Interactive 3D style comparison">
+      <div class="toolbar">
+        <div class="control-group" role="group" aria-label="Inspection view"><button data-view="world" aria-pressed="true">World</button><button data-view="ground" aria-pressed="false">Ground level</button><button data-view="materials" aria-pressed="false">Materials</button></div>
+        <label class="select-label">Light <select id="lighting"><option value="sunset">Red sunset</option><option value="day">Neutral daylight</option></select></label>
+        <div class="control-group secondary"><button id="motion" aria-pressed="true">Pause motion</button><button id="reset">Reset view</button></div>
+      </div>
+      <div class="stage" id="stage">
+        <canvas id="render" aria-hidden="true"></canvas>
+        <div class="panels">
+          <article class="viewport" data-style="anime" tabindex="0" aria-label="Retro anime 3D view. Drag or use arrow keys to orbit. Use plus and minus to zoom."><div class="view-title"><span>01 / RETRO ANIME</span><button class="focus" data-focus="anime" aria-label="Inspect retro anime full width">Inspect ↗</button></div><div class="view-caption">Painted color. Clean cel shadows.</div></article>
+          <article class="viewport" data-style="ink" tabindex="0" aria-label="Borderlands-inspired 3D view. Drag or use arrow keys to orbit. Use plus and minus to zoom."><div class="view-title"><span>02 / BORDERLANDS-INSPIRED</span><button class="focus" data-focus="ink" aria-label="Inspect Borderlands-inspired full width">Inspect ↗</button></div><div class="view-caption">Heavy contours. Etched surfaces.</div></article>
+          <article class="viewport" data-style="hybrid" tabindex="0" aria-label="Anime and ink hybrid 3D view. Drag or use arrow keys to orbit. Use plus and minus to zoom."><div class="view-title"><span>03 / ANIME + INK</span><button class="focus" data-focus="hybrid" aria-label="Inspect hybrid full width">Inspect ↗</button></div><div class="view-caption">Warm light. Violet shadows. Selective ink.</div></article>
+        </div>
+        <p id="loading" role="status">Preparing the illustration study…</p>
+      </div>
+      <div class="underbar"><span id="gesture-hint">Drag any scene to orbit all three · Scroll to zoom · Arrow keys also work</span><button id="compare" hidden>← Compare all three</button><span id="render-status" role="status">Live 3D</span></div>
+      <div class="options"><div class="checks"><label><input id="outlines" type="checkbox" checked> Ink contours</label><label><input id="textures" type="checkbox" checked> Surface texture</label></div><span>Shared geometry, camera, light and animation.</span><button id="export">Save this view ↓</button></div>
+    </section>
+    <section class="recipes" aria-labelledby="recipe-title">
+      <div class="section-heading"><div><p class="eyebrow">THE VISUAL RECIPE</p><h2 id="recipe-title">What changes between the worlds</h2></div><p>Switch to Materials to inspect stone, armor,<br>foliage and crystal under each treatment.</p></div>
+      <div class="recipe-grid">
+        <article><span class="recipe-number">01</span><h3>Retro anime</h3><p>A painted background with clean, readable forms. Two main shadow masses, a restrained highlight and fine contours keep the world open.</p><div class="palette anime" aria-label="Sand, terra cotta, muted violet, sage"><i></i><i></i><i></i><i></i></div><dl><dt>Line</dt><dd>Fine, quiet silhouettes</dd><dt>Light</dt><dd>Broad cel shadow + warm rim</dd><dt>Surface</dt><dd>Soft pigment and long stone strata</dd></dl></article>
+        <article><span class="recipe-number">02</span><h3>Borderlands-inspired</h3><p>A graphic, weathered frontier. Bold silhouettes, edge seams and dense engraved marks make rock and armor feel deliberately drawn.</p><div class="palette ink" aria-label="Ochre, rust, charcoal, olive"><i></i><i></i><i></i><i></i></div><dl><dt>Line</dt><dd>Heavy contours and hard seams</dd><dt>Light</dt><dd>Four rugged tonal steps</dd><dt>Surface</dt><dd>Crosshatch, chips and scratched paint</dd></dl></article>
+        <article><span class="recipe-number">03</span><h3>Anime + ink</h3><p>The supplied references translated into 3D: peach-lit rock, deep violet shadows and selective hatching. Clear silhouettes carry the scene.</p><div class="palette hybrid" aria-label="Peach, coral, deep violet, dusty sage"><i></i><i></i><i></i><i></i></div><dl><dt>Line</dt><dd>Dark violet contour, lighter interiors</dd><dt>Light</dt><dd>Three bands with colored shadows</dd><dt>Surface</dt><dd>Painted strata + ink in the darks</dd></dl></article>
+      </div>
+    </section>
+    <footer><span>WORLDHEART / ILLUSTRATION LAB</span><p>Test geometry and materials. A direction study for terrain, towers and units.</p><a href="lobby.html">Back to Worldheart ↗</a></footer>
+  </main>
+  <noscript>This 3D comparison needs JavaScript enabled.</noscript>
+  <script type="importmap">{"imports":{"three":"./lib/three.module.min.js"}}</script>
+  <script type="module" src="js/style-lab.js"></script>
+</body>
+</html>

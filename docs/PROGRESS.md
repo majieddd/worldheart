@@ -1,5 +1,19 @@
 # 99 Planets development progress
 
+Published U158-U160: V2 `232d31b`, [PR #48](https://github.com/majieddd/worldheart/pull/48), Codex on `feature/illustrative-style-lab` from V2 `496c9a2`.
+Separate illustration lab with retro anime, Borderlands-inspired ink and hybrid
+rendering of identical test terrain, towers and scouts. World/ground/material
+inspection, synchronized camera, lighting and material toggles. Source ownership:
+`style-lab.html`, `css/style-lab.css`, `js/style-lab*.js`, publication entry lists.
+[Current request and evidence](qa/implementation/STYLE-LAB.md). 39 browser cases,
+361 core tests, 111 parsed modules and 156 source/mirror identities pass.
+[Live illustration lab](https://majieddd.github.io/worldheart/v2/style-lab.html).
+The same 39 browser cases pass publicly, with 193 live/source identities verified
+after [Pages action 35018076525](https://github.com/majieddd/worldheart/actions/runs/35018076525).
+Main remains `1374122`. Owner direction selection and physical-phone acceptance
+remain open; prototype shaders and test geometry do not establish final art quality.
+
+
 Published U154-U157: V2 `496c9a2`, [PR #47](https://github.com/majieddd/worldheart/pull/47), Codex on `feature/homeworld-manufacturers`. Dedicated Homeworld
 lobby selection, manufacturer weapons with procedural traits and skills, shared
 weapon cards and Debug inspection. [Work ledger](qa/implementation/HOMEWORLD-MANUFACTURERS.md).

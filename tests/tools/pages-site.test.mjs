@@ -15,7 +15,7 @@ function fixture(t) {
   const repo = name => {
     const root = join(dir, name); mkdirSync(root);
     const files = {
-      'index.html': name, 'debug.html': name, 'js/main.js': name, 'css/style.css': name,
+      'index.html': name, 'debug.html': name, 'style-lab.html': name, 'js/main.js': name, 'css/style.css': name,
       'lib/three.module.min.js': name, 'dist/worldheart.html': name,
       'v2/obsolete.js': 'stale mirror', '.github/workflows/private.yml': 'workflow',
     };
@@ -39,11 +39,13 @@ test('Pages preserves production bytes and replaces only the v2 game with previe
   assert.equal(readFileSync(join(out, 'v2/js/main.js'), 'utf8'), 'preview');
   assert.equal(readFileSync(join(out, 'v2/debug.html'), 'utf8'), 'preview');
   assert.equal(readFileSync(join(out, 'debug.html'), 'utf8'), 'production');
+  assert.equal(readFileSync(join(out, 'v2/style-lab.html'), 'utf8'), 'preview');
+  assert.equal(readFileSync(join(out, 'style-lab.html'), 'utf8'), 'production');
   assert.equal(existsSync(join(out, 'v2/obsolete.js')), false);
   assert.equal(existsSync(join(out, '.github')), false);
   assert.equal(existsSync(join(out, 'v2/dist')), false);
   assert.equal(JSON.parse(readFileSync(join(out, 'v2/build.json'))).previewSha, build.previewSha);
-  assert.equal(Object.keys(build.previewHashes).length, 5);
+  assert.equal(Object.keys(build.previewHashes).length, 6);
 });
 
 test('Pages refuses stale output or a destination that would contain source', t => {
