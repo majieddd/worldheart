@@ -1,0 +1,607 @@
+{
+  "version": 1,
+  "source": "CC0 material samples and upright piano; no vocal model",
+  "bank": "impacts.wav",
+  "score": "piano-sketch.wav",
+  "cues": {
+    "click": [
+      {
+        "offset": 0.0,
+        "duration": 0.2765416666666667
+      },
+      {
+        "offset": 0.3365416666666667,
+        "duration": 0.2765416666666667
+      },
+      {
+        "offset": 0.6730833333333334,
+        "duration": 0.2765416666666667
+      }
+    ],
+    "build": [
+      {
+        "offset": 1.009625,
+        "duration": 0.6028333333333333
+      },
+      {
+        "offset": 1.6724583333333334,
+        "duration": 0.425625
+      },
+      {
+        "offset": 2.1580833333333334,
+        "duration": 0.4027291666666667
+      }
+    ],
+    "meleeHit": [
+      {
+        "offset": 2.6208125,
+        "duration": 0.7055
+      },
+      {
+        "offset": 3.3863125,
+        "duration": 0.5825833333333333
+      },
+      {
+        "offset": 4.028895833333333,
+        "duration": 0.4972916666666667
+      }
+    ],
+    "enemyHit": [
+      {
+        "offset": 4.5861875,
+        "duration": 0.5065625
+      },
+      {
+        "offset": 5.15275,
+        "duration": 0.47260416666666666
+      },
+      {
+        "offset": 5.6853541666666665,
+        "duration": 0.6369791666666667
+      }
+    ],
+    "blocked": [
+      {
+        "offset": 6.382333333333333,
+        "duration": 0.9093958333333333
+      },
+      {
+        "offset": 7.351729166666667,
+        "duration": 0.91975
+      },
+      {
+        "offset": 8.331479166666666,
+        "duration": 0.7690416666666666
+      }
+    ],
+    "rifle": [
+      {
+        "offset": 9.160520833333333,
+        "duration": 0.6009791666666666
+      },
+      {
+        "offset": 9.8215,
+        "duration": 0.4962708333333333
+      },
+      {
+        "offset": 10.377770833333333,
+        "duration": 0.423625
+      }
+    ],
+    "shot": [
+      {
+        "offset": 10.861395833333333,
+        "duration": 0.48241666666666666
+      },
+      {
+        "offset": 11.4038125,
+        "duration": 0.45035416666666667
+      },
+      {
+        "offset": 11.914166666666667,
+        "duration": 0.6055833333333334
+      }
+    ],
+    "mortar": [
+      {
+        "offset": 12.57975,
+        "duration": 1.2481666666666666
+      },
+      {
+        "offset": 13.887916666666667,
+        "duration": 1.2385
+      },
+      {
+        "offset": 15.186416666666666,
+        "duration": 1.2385
+      }
+    ],
+    "lob": [
+      {
+        "offset": 16.484916666666667,
+        "duration": 0.6944583333333333
+      },
+      {
+        "offset": 17.239375,
+        "duration": 0.6479166666666667
+      },
+      {
+        "offset": 17.94729166666667,
+        "duration": 0.8732708333333333
+      }
+    ],
+    "explosion": [
+      {
+        "offset": 18.8805625,
+        "duration": 1.3521875
+      },
+      {
+        "offset": 20.29275,
+        "duration": 1.265625
+      },
+      {
+        "offset": 21.618375,
+        "duration": 1.265625
+      }
+    ],
+    "step": [
+      {
+        "offset": 22.944,
+        "duration": 0.8803333333333333
+      },
+      {
+        "offset": 23.884333333333334,
+        "duration": 0.7621875
+      },
+      {
+        "offset": 24.706520833333332,
+        "duration": 0.7836041666666667
+      }
+    ],
+    "stepHard": [
+      {
+        "offset": 25.550125,
+        "duration": 0.295
+      },
+      {
+        "offset": 25.905125,
+        "duration": 0.27029166666666665
+      },
+      {
+        "offset": 26.235416666666666,
+        "duration": 0.270125
+      }
+    ],
+    "land": [
+      {
+        "offset": 26.565541666666668,
+        "duration": 0.6624166666666667
+      },
+      {
+        "offset": 27.287958333333332,
+        "duration": 0.6180208333333334
+      },
+      {
+        "offset": 27.965979166666667,
+        "duration": 0.8329583333333334
+      }
+    ],
+    "coin": [
+      {
+        "offset": 28.8589375,
+        "duration": 2.29
+      }
+    ],
+    "upgrade": [
+      {
+        "offset": 31.2089375,
+        "duration": 2.47
+      }
+    ],
+    "victory": [
+      {
+        "offset": 33.7389375,
+        "duration": 2.56
+      }
+    ]
+  },
+  "voiceLimit": 12,
+  "pianoSources": [
+    {
+      "file": "Player_dyn1_rr1_012.wav",
+      "midi": 45,
+      "sha256": "16be23a8378185f1b392600d3fa800a206945543866548640f7573534f76faf2",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_012.wav"
+    },
+    {
+      "file": "Player_dyn1_rr1_016.wav",
+      "midi": 53,
+      "sha256": "f1a3a542cf70a13aa865ce130d50d72cd735449e605d1c5a45dc06b5a60b27fd",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_016.wav"
+    },
+    {
+      "file": "Player_dyn1_rr1_020.wav",
+      "midi": 61,
+      "sha256": "08242e8d1c865c8cdc794cc7921d3d9663bedb5a12bfefe0de13aaa86fd23133",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_020.wav"
+    },
+    {
+      "file": "Player_dyn1_rr1_024.wav",
+      "midi": 69,
+      "sha256": "916c3ec2d61fb421e74fb4866ef75d3ef17e9d88e9dc858da24159846489d33f",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_024.wav"
+    },
+    {
+      "file": "Player_dyn1_rr1_028.wav",
+      "midi": 77,
+      "sha256": "a9fbd1af0703b294d3267f8f88fca4b4366e3b772f7d780acf2de1cbf2056355",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/440300901dfe9275fd84e0b7763af1f8443ae62e/Keys/Upright%20Piano/Player_dyn1_rr1_028.wav"
+    }
+  ],
+  "pianoEvents": [
+    [
+      0,
+      40,
+      0.55
+    ],
+    [
+      0.35,
+      59,
+      0.52
+    ],
+    [
+      1.4,
+      66,
+      0.38
+    ],
+    [
+      3.0,
+      64,
+      0.44
+    ],
+    [
+      8,
+      43,
+      0.55
+    ],
+    [
+      8.7,
+      62,
+      0.52
+    ],
+    [
+      10,
+      69,
+      0.4
+    ],
+    [
+      11.6,
+      67,
+      0.42
+    ],
+    [
+      17,
+      36,
+      0.52
+    ],
+    [
+      17.8,
+      55,
+      0.45
+    ],
+    [
+      19.4,
+      64,
+      0.42
+    ],
+    [
+      21,
+      62,
+      0.36
+    ],
+    [
+      27,
+      38,
+      0.52
+    ],
+    [
+      27.65,
+      57,
+      0.46
+    ],
+    [
+      29.3,
+      64,
+      0.4
+    ],
+    [
+      30.6,
+      66,
+      0.36
+    ],
+    [
+      36,
+      40,
+      0.55
+    ],
+    [
+      36.8,
+      55,
+      0.45
+    ],
+    [
+      38.2,
+      59,
+      0.42
+    ],
+    [
+      40,
+      64,
+      0.33
+    ]
+  ],
+  "measurements": [
+    {
+      "cue": "click",
+      "peak": 0.1052146039364259,
+      "rms": 0.011810335322832667,
+      "highEnergyFraction": 6.915063506834431e-06
+    },
+    {
+      "cue": "click",
+      "peak": 0.08082318073518376,
+      "rms": 0.008892835404274383,
+      "highEnergyFraction": 1.8727365991435538e-07
+    },
+    {
+      "cue": "click",
+      "peak": 0.10201503713779138,
+      "rms": 0.011708827456466954,
+      "highEnergyFraction": 4.964672682554869e-06
+    },
+    {
+      "cue": "build",
+      "peak": 0.42,
+      "rms": 0.03481859191425399,
+      "highEnergyFraction": 2.327335808179121e-06
+    },
+    {
+      "cue": "build",
+      "peak": 0.42,
+      "rms": 0.03971255984942356,
+      "highEnergyFraction": 4.737447232263944e-06
+    },
+    {
+      "cue": "build",
+      "peak": 0.42,
+      "rms": 0.046200760535590524,
+      "highEnergyFraction": 3.972339932385712e-06
+    },
+    {
+      "cue": "meleeHit",
+      "peak": 0.42,
+      "rms": 0.04340848235898097,
+      "highEnergyFraction": 6.366921747375252e-06
+    },
+    {
+      "cue": "meleeHit",
+      "peak": 0.42,
+      "rms": 0.044793995819891665,
+      "highEnergyFraction": 2.0796685555399774e-05
+    },
+    {
+      "cue": "meleeHit",
+      "peak": 0.42000000000000004,
+      "rms": 0.056358995786242774,
+      "highEnergyFraction": 9.09034852328585e-07
+    },
+    {
+      "cue": "enemyHit",
+      "peak": 0.42,
+      "rms": 0.05817830785499784,
+      "highEnergyFraction": 4.741244975763023e-06
+    },
+    {
+      "cue": "enemyHit",
+      "peak": 0.42,
+      "rms": 0.0620473631419249,
+      "highEnergyFraction": 1.0182524996261372e-05
+    },
+    {
+      "cue": "enemyHit",
+      "peak": 0.42,
+      "rms": 0.05800089017847448,
+      "highEnergyFraction": 8.383687572679847e-05
+    },
+    {
+      "cue": "blocked",
+      "peak": 0.42,
+      "rms": 0.026138289941224337,
+      "highEnergyFraction": 0.0005853735072525663
+    },
+    {
+      "cue": "blocked",
+      "peak": 0.4007903429226389,
+      "rms": 0.027307673328345165,
+      "highEnergyFraction": 0.0008337942855395649
+    },
+    {
+      "cue": "blocked",
+      "peak": 0.34837225731202137,
+      "rms": 0.02935680018088268,
+      "highEnergyFraction": 0.0005068921977494751
+    },
+    {
+      "cue": "rifle",
+      "peak": 0.48,
+      "rms": 0.04679825673613893,
+      "highEnergyFraction": 9.983476726746116e-06
+    },
+    {
+      "cue": "rifle",
+      "peak": 0.48,
+      "rms": 0.05483521366426454,
+      "highEnergyFraction": 4.183155901544718e-05
+    },
+    {
+      "cue": "rifle",
+      "peak": 0.48,
+      "rms": 0.06230634351955712,
+      "highEnergyFraction": 1.913878007721092e-06
+    },
+    {
+      "cue": "shot",
+      "peak": 0.43999999999999995,
+      "rms": 0.06356487990866691,
+      "highEnergyFraction": 4.991847791565883e-06
+    },
+    {
+      "cue": "shot",
+      "peak": 0.44,
+      "rms": 0.06615679391476323,
+      "highEnergyFraction": 1.204017844791696e-05
+    },
+    {
+      "cue": "shot",
+      "peak": 0.43999999999999995,
+      "rms": 0.06328038950177094,
+      "highEnergyFraction": 8.536805297241778e-05
+    },
+    {
+      "cue": "mortar",
+      "peak": 0.62,
+      "rms": 0.07084333932153301,
+      "highEnergyFraction": 3.6717101906589042e-06
+    },
+    {
+      "cue": "mortar",
+      "peak": 0.62,
+      "rms": 0.07262276621976706,
+      "highEnergyFraction": 4.619402162102219e-06
+    },
+    {
+      "cue": "mortar",
+      "peak": 0.62,
+      "rms": 0.0627960352649958,
+      "highEnergyFraction": 7.086697426549492e-06
+    },
+    {
+      "cue": "lob",
+      "peak": 0.42,
+      "rms": 0.057631882090643266,
+      "highEnergyFraction": 7.667143036029144e-07
+    },
+    {
+      "cue": "lob",
+      "peak": 0.41999999999999993,
+      "rms": 0.059360729060400505,
+      "highEnergyFraction": 2.483460282364575e-06
+    },
+    {
+      "cue": "lob",
+      "peak": 0.42000000000000004,
+      "rms": 0.05300316644634715,
+      "highEnergyFraction": 1.064910290006642e-05
+    },
+    {
+      "cue": "explosion",
+      "peak": 0.66,
+      "rms": 0.067048174152773,
+      "highEnergyFraction": 3.4196781195492708e-06
+    },
+    {
+      "cue": "explosion",
+      "peak": 0.6599999999999999,
+      "rms": 0.061628964080512154,
+      "highEnergyFraction": 2.8282717721334096e-06
+    },
+    {
+      "cue": "explosion",
+      "peak": 0.66,
+      "rms": 0.0848172390045649,
+      "highEnergyFraction": 4.317323882409815e-06
+    },
+    {
+      "cue": "step",
+      "peak": 0.05958201358875601,
+      "rms": 0.0033482903723714595,
+      "highEnergyFraction": 0.0005684837255016772
+    },
+    {
+      "cue": "step",
+      "peak": 0.07818860615214145,
+      "rms": 0.004996453456228324,
+      "highEnergyFraction": 0.0035961247913838695
+    },
+    {
+      "cue": "step",
+      "peak": 0.07306633343233473,
+      "rms": 0.004358650964186015,
+      "highEnergyFraction": 0.003160702415159426
+    },
+    {
+      "cue": "stepHard",
+      "peak": 0.17,
+      "rms": 0.015992982634553177,
+      "highEnergyFraction": 8.513189178265818e-08
+    },
+    {
+      "cue": "stepHard",
+      "peak": 0.17,
+      "rms": 0.016726634324173126,
+      "highEnergyFraction": 1.0254634597350593e-07
+    },
+    {
+      "cue": "stepHard",
+      "peak": 0.17,
+      "rms": 0.017865159192310246,
+      "highEnergyFraction": 6.048479443923598e-08
+    },
+    {
+      "cue": "land",
+      "peak": 0.36,
+      "rms": 0.03415086906584608,
+      "highEnergyFraction": 2.7383293386794488e-06
+    },
+    {
+      "cue": "land",
+      "peak": 0.36,
+      "rms": 0.036739947079380914,
+      "highEnergyFraction": 6.592143553598208e-05
+    },
+    {
+      "cue": "land",
+      "peak": 0.36,
+      "rms": 0.03194429562180563,
+      "highEnergyFraction": 9.157975724335294e-05
+    },
+    {
+      "cue": "coin",
+      "peak": 0.25,
+      "rms": 0.03824442167107733,
+      "highEnergyFraction": 2.106814174313629e-06
+    },
+    {
+      "cue": "upgrade",
+      "peak": 0.33,
+      "rms": 0.04989416070479942,
+      "highEnergyFraction": 1.4842790160910554e-06
+    },
+    {
+      "cue": "victory",
+      "peak": 0.43,
+      "rms": 0.08435151759963133,
+      "highEnergyFraction": 9.951351663737608e-07
+    }
+  ],
+  "files": {
+    "impacts.wav": {
+      "bytes": 3490502,
+      "sha256": "189dfc54f0c67521032906324989bed8f33ab9083d0a8a8ee507be57d9fc4a99"
+    },
+    "piano-sketch.wav": {
+      "bytes": 4608044,
+      "sha256": "5ee59d90a4a7ab758505e302d9283be8d0bc12091129d58f7789df8aeaa795a9"
+    }
+  }
+}

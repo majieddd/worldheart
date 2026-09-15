@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Worldheart | Sound comparison</title>
+  <link rel="stylesheet" href="css/audio-lab.css">
+</head>
+<body>
+  <header><a href="./">Worldheart</a><span>Sound comparison</span><a href="debug.html">Debug world</a></header>
+  <main>
+    <h1>Listen before replacing.</h1>
+    <p>The previous sounds are restored in the game. This is a separate draft: fuller material impacts, softer attacks and room between sounds.</p>
+    <p class="muted">Compare at a comfortable volume. Both columns play without an ambient bed here so you can isolate the effects. The draft game keeps other existing cues and uses no background music.</p>
+    <section aria-label="Listening controls" class="controls">
+      <label for="volume">Listening volume <output id="level">55%</output></label>
+      <input id="volume" type="range" min="0" max="100" value="55">
+      <div class="actions"><button id="sequence-old">Previous sequence</button><button id="sequence-new">Draft sequence</button><button id="stop">Stop all</button></div>
+      <p id="status" role="status">Nothing plays until you press a button.</p>
+    </section>
+    <section aria-labelledby="effects-heading">
+      <h2 id="effects-heading">Actions &amp; feedback</h2>
+      <div id="cues"></div>
+    </section>
+    <section aria-labelledby="piano-heading">
+      <h2 id="piano-heading">Piano only</h2>
+      <p>An original 48-second sketch assembled from upright piano notes. No singer, choir, voice model or ambient noise track. This is a listening draft, not a replacement soundtrack.</p>
+      <button id="piano" aria-pressed="false">Play piano sketch</button>
+    </section>
+    <section aria-labelledby="play-heading">
+      <h2 id="play-heading">Try the effects in play</h2>
+      <p>The draft link changes these 16 effects for this visit only. All other cues retain their original recipes with a gentler treble balance. Returning through the normal link restores the previous sound system.</p>
+      <div class="actions"><a class="button" href="./?map=ninetynine&amp;campaign=0&amp;seed=2919286854&amp;terrain=varied&amp;planet=io&amp;sound=material">Play with draft effects</a><a class="button" href="./?map=ninetynine&amp;campaign=0&amp;seed=2919286854&amp;terrain=varied&amp;planet=io">Play with previous sounds</a></div>
+    </section>
+    <footer>Material samples: <a href="https://kenney.nl/assets/impact-sounds">Kenney Impact Sounds</a>. Piano: <a href="https://github.com/sgossner/VSCO-2-CE">VSCO 2 Community Edition</a>, Simon Dalzell / Ivy Audio and Versilian Studios. Both CC0. <a href="audio/material/CREDITS.md">Sources &amp; listening limitations</a>.</footer>
+  </main>
+  <script type="module" src="js/audio-lab.js"></script>
+</body>
+</html>

@@ -21,8 +21,8 @@ import { execFileSync } from 'node:child_process';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIRROR = join(ROOT, 'v2');
-const TREES = ['js', 'css', 'lib'];
-const FILES = ['index.html','debug.html','lobby.html'];
+const TREES = ['js', 'css', 'lib', 'audio'];
+const FILES = ['index.html','debug.html','lobby.html','audio-lab.html'];
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
@@ -37,6 +37,7 @@ function walk(dir, out = []) {
 // out CRLF on Windows and a byte compare would report every file as different.
 function sameContent(a, b) {
   if (!existsSync(a) || !existsSync(b)) return false;
+  if (/\.(wav|mp3|ogg|flac)$/i.test(a)) return readFileSync(a).equals(readFileSync(b));
   const norm = (p) => readFileSync(p, 'utf8').replace(/\r\n/g, '\n');
   return norm(a) === norm(b);
 }

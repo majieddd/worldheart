@@ -331,6 +331,13 @@ async function boot() {
   towerMgr.world = world;
   game = new Game({ scene, rig, world, nav, enemies, towerMgr, fx });
   const audio = new AudioEngine();
+  // Listening draft is URL-only; normal play retains the restored sound system.
+  if (new URLSearchParams(location.search).get('sound') === 'material') {
+    try {
+      const { adoptMaterialAudio } = await import('./audio-material.js');
+      adoptMaterialAudio(audio);
+    } catch (error) { console.warn('Sound trial unavailable; using original audio', error); }
+  }
   game.audio = audio;
   towerMgr.audio = audio;
   waves = new WaveDirector(game, enemies, nav);

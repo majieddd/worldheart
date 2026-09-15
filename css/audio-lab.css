@@ -1,0 +1,35 @@
+/* Existing debug exhibition direction; no animated repeated controls. */
+:root {
+  color-scheme: dark;
+  --ground: #0a0e21; --surface: #171d38; --text: #e8ecf8;
+  --muted: #9aa4c4; --accent: #59f2ff; --line: #6e7a9b;
+  --space: 16px; --radius: 6px; --target: 48px;
+  font: 16px/1.55 system-ui, sans-serif;
+  color: var(--text); background: var(--ground);
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+header { display: flex; gap: var(--space); justify-content: space-between; align-items: center; padding: var(--space); border-bottom: 1px solid var(--line); font-size: 14px; }
+main { max-width: 900px; padding: clamp(16px, 4vw, 40px); margin: auto; }
+h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.2; margin: 0 0 var(--space); }
+h2 { font-size: 22px; }
+p { max-width: 72ch; }
+a { color: var(--accent); text-underline-offset: 3px; }
+.muted, footer, #status { color: var(--muted); }
+section { padding-block: var(--space); border-top: 1px solid var(--line); margin-top: calc(var(--space) * 2); }
+button, .button { display: inline-flex; align-items: center; justify-content: center; min-height: var(--target); padding: 10px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; text-decoration: none; }
+button:hover, .button:hover, button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+label { display: block; }
+input[type="range"] { width: min(100%, 420px); min-height: var(--target); accent-color: var(--accent); }
+output { margin-left: var(--space); color: var(--muted); }
+.cue { display: grid; grid-template-columns: 1fr 135px 135px; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.cue small { display: block; color: var(--muted); font-size: 13px; }
+footer { padding-block: calc(var(--space) * 2); font-size: 14px; }
+@media (max-width: 560px) {
+  header span { display: none; }
+  .cue { grid-template-columns: 1fr 1fr; }
+  .cue > div { grid-column: 1 / -1; }
+  .actions > * { flex: 1 1 auto; }
+}

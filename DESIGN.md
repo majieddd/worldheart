@@ -4,6 +4,12 @@
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
 ## Dials
+The opt-in sound comparison follows the existing Debug exhibition component
+direction: navy surfaces, cyan links, system type, 48px buttons and paired
+Previous/Draft rows. Dials 2/1/5. No repeated decorative motion. A single
+column on phones preserves label space and separate tap targets. Its dedicated
+stylesheet repeats these brand tokens so game HUD layout rules cannot leak in.
+
 DESIGN_VARIANCE: 7/10 (memorable showcase, not a daily tool)
 MOTION_INTENSITY: 5/10 (scene carries the motion; HUD stays at 3 and obeys the frequency gate)
 VISUAL_DENSITY: 4/10 (rich scene, lean HUD)
