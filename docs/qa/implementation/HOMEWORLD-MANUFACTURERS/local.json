@@ -1,0 +1,436 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "evidenceType": "Instrumented browser fixtures and rendered inspection; not blind play",
+  "checks": [
+    {
+      "name": "New players see how to capture a home, without a broken visit link",
+      "ok": true
+    },
+    {
+      "name": "Debug starts on a real manufacturer model and card",
+      "ok": true,
+      "detail": {
+        "name": "skibidi",
+        "shown": 1,
+        "meshes": 1
+      }
+    },
+    {
+      "name": "Debug manufacturer skibidi",
+      "ok": true,
+      "detail": {
+        "brand": "skibidi",
+        "skill": "pressure",
+        "vertices": 1224,
+        "overflow": false
+      }
+    },
+    {
+      "name": "Debug manufacturer anomalous",
+      "ok": true,
+      "detail": {
+        "brand": "anomalous",
+        "skill": "siphon",
+        "vertices": 1332,
+        "overflow": false
+      }
+    },
+    {
+      "name": "Debug manufacturer bang",
+      "ok": true,
+      "detail": {
+        "brand": "bang",
+        "skill": "overdrive",
+        "vertices": 1008,
+        "overflow": false
+      }
+    },
+    {
+      "name": "Debug manufacturer rainbow",
+      "ok": true,
+      "detail": {
+        "brand": "rainbow",
+        "skill": "prism",
+        "vertices": 912,
+        "overflow": false
+      }
+    },
+    {
+      "name": "All six weapon families can be inspected",
+      "ok": true,
+      "detail": [
+        {
+          "family": "sword",
+          "valid": true,
+          "visible": true
+        },
+        {
+          "family": "spear",
+          "valid": true,
+          "visible": true
+        },
+        {
+          "family": "twinblade",
+          "valid": true,
+          "visible": true
+        },
+        {
+          "family": "scepter",
+          "valid": true,
+          "visible": true
+        },
+        {
+          "family": "carbine",
+          "valid": true,
+          "visible": true
+        },
+        {
+          "family": "lobber",
+          "valid": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "Same debug roll is deterministic",
+      "ok": true
+    },
+    {
+      "name": "Reroll changes identity without touching saves",
+      "ok": true
+    },
+    {
+      "name": "Debug card fits a phone width",
+      "ok": true
+    },
+    {
+      "name": "Live passive skibidi",
+      "ok": true,
+      "detail": {
+        "name": "Live passive skibidi",
+        "ok": true,
+        "hp": 450,
+        "slow": 0,
+        "burn": 0
+      }
+    },
+    {
+      "name": "Skill pressure",
+      "ok": true,
+      "detail": {
+        "name": "Skill pressure",
+        "ok": true,
+        "damage": 73.06329600000026,
+        "description": "Next attack: +65% reach, triple knockback and +35% impact."
+      }
+    },
+    {
+      "name": "Cooldown survives same-family manufacturer swap pressure",
+      "ok": true,
+      "detail": {
+        "name": "Cooldown survives same-family manufacturer swap pressure",
+        "ok": true
+      }
+    },
+    {
+      "name": "Skill resonance",
+      "ok": true,
+      "detail": {
+        "name": "Skill resonance",
+        "ok": true,
+        "damage": 54.120960000000196,
+        "description": "Next attack: wide coverage, +3 armor penetration and a 45% slow."
+      }
+    },
+    {
+      "name": "Cooldown survives same-family manufacturer swap resonance",
+      "ok": true,
+      "detail": {
+        "name": "Cooldown survives same-family manufacturer swap resonance",
+        "ok": true
+      }
+    },
+    {
+      "name": "Live passive anomalous",
+      "ok": true,
+      "detail": {
+        "name": "Live passive anomalous",
+        "ok": true,
+        "hp": 452.355264,
+        "slow": 0,
+        "burn": 0
+      }
+    },
+    {
+      "name": "Skill siphon",
+      "ok": true,
+      "detail": {
+        "name": "Skill siphon",
+        "ok": true,
+        "damage": 47.105279999999766,
+        "description": "Next attack: heal 25% of direct enemy damage and pierce armor."
+      }
+    },
+    {
+      "name": "Cooldown survives same-family manufacturer swap siphon",
+      "ok": true,
+      "detail": {
+        "name": "Cooldown survives same-family manufacturer swap siphon",
+        "ok": true
+      }
+    },
+    {
+      "name": "Skill containment",
+      "ok": true,
+      "detail": {
+        "name": "Skill containment",
+        "ok": true,
+        "damage": 47.105279999999766,
+        "description": "Next attack: slow targets 60% and burn for 12 damage/s."
+      }
+    },
+    {
+      "name": "Cooldown survives same-family manufacturer swap containment",
+      "ok": true,
+      "detail": {
+        "name": "Cooldown survives same-family manufacturer swap containment",
+        "ok": true
+      }
+    },
+    {
+      "name": "Live passive bang",
+      "ok": true,
+      "detail": {
+        "name": "Live passive bang",
+        "ok": true,
+        "hp": 450,
+        "slow": 0,
+        "burn": 0
+      }
+    },
+    {
+      "name": "Skill overdrive",
+      "ok": true,
+      "detail": {
+        "name": "Skill overdrive",
+        "ok": true
+      }
+    },
+    {
+      "name": "Cooldown survives same-family manufacturer swap overdrive",
+      "ok": true,
+      "detail": {
+        "name": "Cooldown survives same-family manufacturer swap overdrive",
+        "ok": true
+      }
+    },
+    {
+      "name": "Skill demolition",
+      "ok": true,
+      "detail": {
+        "name": "Skill demolition",
+        "ok": true,
+        "damage": 116.25983999999971,
+        "description": "Next attack: double impact and 50% wider coverage."
+      }
+    },
+    {
+      "name": "Cooldown survives same-family manufacturer swap demolition",
+      "ok": true,
+      "detail": {
+        "name": "Cooldown survives same-family manufacturer swap demolition",
+        "ok": true
+      }
+    },
+    {
+      "name": "Live passive rainbow",
+      "ok": true,
+      "detail": {
+        "name": "Live passive rainbow",
+        "ok": true,
+        "hp": 450,
+        "slow": 0.12,
+        "burn": 2
+      }
+    },
+    {
+      "name": "Skill prism",
+      "ok": true,
+      "detail": {
+        "name": "Skill prism",
+        "ok": true,
+        "damage": 46.103039999999964,
+        "description": "Next attack: +50% reach, +6 armor penetration and a searing 10 damage/s burn."
+      }
+    },
+    {
+      "name": "Cooldown survives same-family manufacturer swap prism",
+      "ok": true,
+      "detail": {
+        "name": "Cooldown survives same-family manufacturer swap prism",
+        "ok": true
+      }
+    },
+    {
+      "name": "Skill refraction",
+      "ok": true,
+      "detail": {
+        "name": "Skill refraction",
+        "ok": true,
+        "damage": 73.76486399999976,
+        "description": "Next attack: +60% impact, a 45% slow and armor penetration."
+      }
+    },
+    {
+      "name": "Cooldown survives same-family manufacturer swap refraction",
+      "ok": true,
+      "detail": {
+        "name": "Cooldown survives same-family manufacturer swap refraction",
+        "ok": true
+      }
+    },
+    {
+      "name": "Ranged confirmed damage heals only the active owner",
+      "ok": true,
+      "detail": {
+        "name": "Ranged confirmed damage heals only the active owner",
+        "ok": true
+      }
+    },
+    {
+      "name": "A miss cannot heal",
+      "ok": true,
+      "detail": {
+        "name": "A miss cannot heal",
+        "ok": true
+      }
+    },
+    {
+      "name": "Inventory uses real thumbnails, manufacturer skills and comparisons",
+      "ok": true
+    },
+    {
+      "name": "No weapon ammo or visible level fields",
+      "ok": true
+    },
+    {
+      "name": "Comparison control keeps keyboard focus",
+      "ok": true
+    },
+    {
+      "name": "Inventory cards fit phone without horizontal scrolling",
+      "ok": true
+    },
+    {
+      "name": "First and third person maker model: twinblade",
+      "ok": true,
+      "detail": {
+        "family": "twinblade",
+        "ok": true,
+        "meshes": 16
+      }
+    },
+    {
+      "name": "First and third person maker model: scepter",
+      "ok": true,
+      "detail": {
+        "family": "scepter",
+        "ok": true,
+        "meshes": 12
+      }
+    },
+    {
+      "name": "First and third person maker model: sword",
+      "ok": true,
+      "detail": {
+        "family": "sword",
+        "ok": true,
+        "meshes": 9
+      }
+    },
+    {
+      "name": "First and third person maker model: spear",
+      "ok": true,
+      "detail": {
+        "family": "spear",
+        "ok": true,
+        "meshes": 12
+      }
+    },
+    {
+      "name": "First and third person maker model: carbine",
+      "ok": true,
+      "detail": {
+        "family": "carbine",
+        "ok": true,
+        "meshes": 14
+      }
+    },
+    {
+      "name": "First and third person maker model: lobber",
+      "ok": true,
+      "detail": {
+        "family": "lobber",
+        "ok": true,
+        "meshes": 14
+      }
+    },
+    {
+      "name": "Ground hover uses the shared maker card and actual model",
+      "ok": true
+    },
+    {
+      "name": "Full coverage automatically enters the catalogue without interrupting expedition",
+      "ok": true,
+      "detail": {
+        "id": "home-87bb39c9e0b16b3f0807d493",
+        "homes": 2,
+        "active": false,
+        "url": "http://127.0.0.1:8141/?map=ninetynine&campaign=0&seed=12345&planet=temperate&terrain=varied&commander=marksman"
+      }
+    },
+    {
+      "name": "Captured homes are shared with the generator while expedition saves stay separate",
+      "ok": true
+    },
+    {
+      "name": "Lobby has a reachable fifth Homeworld station and two captured planets",
+      "ok": true
+    },
+    {
+      "name": "Choosing a new Homeworld persists while keeping both captures",
+      "ok": true
+    },
+    {
+      "name": "Homeworld section fits phone width",
+      "ok": true
+    },
+    {
+      "name": "Go to Homeworld loads chosen saved planet peacefully",
+      "ok": true
+    },
+    {
+      "name": "Touch menu opens manufacturer inventory with no stacked menu",
+      "ok": true
+    },
+    {
+      "name": "Real touch inventory keeps 48px actions and contains its cards",
+      "ok": true
+    },
+    {
+      "name": "Closing touch inventory resumes peaceful home",
+      "ok": true
+    },
+    {
+      "name": "Touch Homeworld opens without joystick obstruction",
+      "ok": true
+    },
+    {
+      "name": "No browser runtime exceptions",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

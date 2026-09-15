@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {COMMANDER_ABILITIES,WEAPON_ABILITIES,createAbilityClock} from './run/abilities.js';
+import { MAKER_SKILLS, applyMakeEffects } from './run/manufacturers.js';
 
 const nativeFamily={commander:'sword',duelist:'twinblade',marksman:'carbine',bombardier:'lobber',oracle:'scepter'};
 export class CommanderAbilities {
@@ -8,7 +9,12 @@ export class CommanderAbilities {
     this.point=new THREE.Vector3();this.target=new THREE.Vector3();this.vector=new THREE.Vector3();
   }
   family(){const a=this.commander();return a.weaponFamily||nativeFamily[a.typeKey]||'sword';}
-  describe(which){const key=which==='commander'?this.commander().typeKey:this.family(),def=(which==='commander'?COMMANDER_ABILITIES:WEAPON_ABILITIES)[key];return {...def,key,remaining:this.clock.remaining(which+':'+key)};}
+  describe(which){
+    const key=which==='commander'?this.commander().typeKey:this.family();
+    const skill=which==='weapon'?this.commander().type.strike.weaponSkill:null;
+    const def=MAKER_SKILLS[skill]||(which==='commander'?COMMANDER_ABILITIES:WEAPON_ABILITIES)[key];
+    return {...def,key,skill,remaining:this.clock.remaining(which+':'+key)};
+  }
   activate(which){
     const a=this.commander(),def=this.describe(which);
     if(!def||!a.active||a.dead||this.game.paused||this.game.terrainBusy||this.game.state!=='playing')return false;
@@ -34,6 +40,14 @@ export class CommanderAbilities {
   _buff(a,kind,duration){this.effects.push({a,kind,left:duration});}
   _weapon(a,def,pos){
     const s={...a.type.strike};
+    if(def.skill&&MAKER_SKILLS[def.skill]){
+      if(def.buff){this._buff(a,def.buff,def.duration);return;}
+      applyMakeEffects(s,[def.strike]);
+      // A beam special is a discrete pulse, with normal anticipation and hit
+      // effects, rather than an unbounded replacement for its heat loop.
+      if(s.kind==='beam'){s.kind='hitscan';s.cd=.55;}
+      this.allies._beginStrike(a,Math.max(.35,s.cd),s,null);return;
+    }
     if(def.key==='scepter'){a.heat=0;a.heatLock=0;this.effects.push({a,kind:'fire',left:4,pulse:0,power:s.dps||s.dmg||48});return;}
     if(def.key==='twinblade'){this._buff(a,'dance',5);return;}
     if(def.key==='sword')Object.assign(s,{radius:s.radius*1.6,arcDeg:360,dmg:s.dmg*1.8,cleave:1});
@@ -50,13 +64,15 @@ export class CommanderAbilities {
   }
   modifyStrike(a,s){
     if(a!==this.commander())return s;
-    if(!a.abilityDeadeye&&!a.abilityDance)return s;
+    if(!a.abilityDeadeye&&!a.abilityDance&&!a.abilityRedline)return s;
     const out={...s};if(a.abilityDeadeye){if(out.range)out.range*=2;if(out.radius)out.radius*=1.6;out.pierce=99;}
-    if(a.abilityDance&&s.kind==='melee')out.cd*=.5;return out;
+    if(a.abilityDance&&s.kind==='melee')out.cd*=.5;
+    if(a.abilityRedline){out.cd*=.55;out.kick*=1.35;if(out.kind==='beam'){out.dps*=1.45;out.dmg=out.dps;}}
+    return out;
   }
   update(dt){
     if(dt<=0)return;this.clock.tick(dt);
-    const a=this.commander();a.abilityGuard=false;a.abilitySpeed=1;a.abilityDeadeye=false;a.abilityDance=false;
+    const a=this.commander();a.abilityGuard=false;a.abilitySpeed=1;a.abilityDeadeye=false;a.abilityDance=false;a.abilityRedline=false;
     for(const effect of this.effects){
       if(effect.a!==a||!a.active||a.dead){effect.left=0;continue;}
       effect.left-=dt;if(effect.left<=0)continue;
@@ -64,6 +80,7 @@ export class CommanderAbilities {
       if(effect.kind==='haste')a.abilitySpeed=1.65;
       if(effect.kind==='deadeye')a.abilityDeadeye=true;
       if(effect.kind==='dance')a.abilityDance=true;
+      if(effect.kind==='redline')a.abilityRedline=true;
       if(effect.kind==='dash')this.allies.driveUnit(a,1,0,Math.min(dt,effect.left),4);
       if(effect.kind==='fire'||effect.kind==='renew'){
         effect.pulse-=dt;if(effect.pulse>0)continue;effect.pulse+=.5;

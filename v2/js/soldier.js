@@ -232,7 +232,7 @@ export const ARCHETYPES = {
   oracle: { w: 0.88, helmet: 'crown', crest: 'gem', cape: true, weapon: 'staff', twoHand: true, pauldron: 'small' },
 };
 
-export function buildSoldier(key, mats, weapon = null, era = 'ancient') {
+export function buildSoldier(key, mats, weapon = null, era = 'ancient', manufacturer = null) {
   const spec = { ...ARCHETYPES[key] };
   if (weapon) { spec.weapon = weapon; spec.twoHand = ['spear', 'rifle', 'mortar', 'staff'].includes(weapon); }
   const w = spec.w;
@@ -316,10 +316,10 @@ export function buildSoldier(key, mats, weapon = null, era = 'ancient') {
   // soldier's own elbow and hung behind the body point-down.
   const forward = (g) => spin(g, -Math.PI / 2, 0, 0);
   if(['sword','spear','rifle','mortar','twin','staff'].includes(spec.weapon)){
-    const kit=buildWeapon(spec.weapon,era,mats);spec.blade=kit.blade;
+    const kit=buildWeapon(spec.weapon,era,mats,manufacturer);spec.blade=kit.blade;
     for(const piece of kit.parts)P.one(piece.geo,piece.mat,'weaponR');
   }else for (const piece of weapons[spec.weapon]()) P.one(forward(piece.geo), piece.mat, 'weaponR');
-  if (spec.weapon === 'twin') for (const piece of buildWeapon('twin',era,mats).parts) P.one(piece.geo,piece.mat,'weaponL');
+  if (spec.weapon === 'twin') for (const piece of buildWeapon('twin',era,mats,manufacturer).parts) P.one(piece.geo,piece.mat,'weaponL');
 
   return { skeleton: sk, parts: P.parts, spec };
 }

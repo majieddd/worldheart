@@ -1,5 +1,10 @@
 # 99 Planets development progress
 
+Locally verified U154-U157: Codex on `feature/homeworld-manufacturers`. Dedicated Homeworld
+lobby selection, manufacturer weapons with procedural traits and skills, shared
+weapon cards and Debug inspection. [Work ledger](qa/implementation/HOMEWORLD-MANUFACTURERS.md).
+361 tests, 54 targeted browser checks, 29 combat checks, 23 home regressions, four classic boot/camera suites and a legal ten-wave extraction pass. V2 publication pending. Audio feedback U150/U151 stays open.
+
 Owner feedback after U149-U153: all five new battle arrangements are **rejected**;
 U151 needs a new direction. U150 melee impact is **reopened** because the owner hears
 no meaningful improvement. Its samples changed, but the underlying knife/chop

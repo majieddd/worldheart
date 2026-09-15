@@ -45,7 +45,7 @@ export function weaponAppearanceMaterial(mats,source,appearance){
 // A single grip-space assembly serves the held prop, soldier and loot model.
 // Forward is -Z. Stock, receiver, barrel and attachments overlap physically;
 // an era changes the silhouette, never the location of the firing hand.
-export function buildWeapon(visual,era='ancient',mats) {
+export function buildWeapon(visual,era='ancient',mats,manufacturer=null) {
   const tech=era==='technological',magic=era==='empowered',groups=new Map();
   const add=(geo,key)=>{const mat=mats[key]||mats.dark;if(!groups.has(mat))groups.set(mat,[]);groups.get(mat).push(geo);};
   const block=(w,h,d,x,y,z,key)=>add(shift(box(w,h,d),x,y,z),key);
@@ -116,6 +116,34 @@ export function buildWeapon(visual,era='ancient',mats) {
       for(const z of [-.45,-.70])tube(lob?.17:.057,lob?.17:.057,.05,0,.18,z,'gold');
     }
     support=[-.025,-.055,-.49];
+  }
+  if(manufacturer){
+    const color={skibidi:0x70bdc7,anomalous:0x947acc,bang:0xe68740,rainbow:0x70c794}[manufacturer];
+    if(color){
+      const brand=mats.body.clone();brand.color.setHex(color);brand.metalness=.4;brand.roughness=.4;
+      mats={...mats,brand};
+      const ranged=visual==='rifle'||visual==='mortar',y=ranged?.18:0,z=ranged?-.40:-.22;
+      // Attach at the receiver or guard. The firing grip and support hand
+      // remain exactly where the animation rig expects them.
+      if(manufacturer==='skibidi'){
+        block(.48,.09,.14,0,y,z,'brand');
+        for(const x of [-.19,.19]){tube(.10,.12,.35,x,y,z-.1,'brand');tube(.065,.065,.07,x,y,z-.31,'dark');}
+      }else if(manufacturer==='anomalous'){
+        for(let i=0;i<4;i++){
+          const depth=z-i*.13;block(.24-i*.025,.12,.055,0,y,depth,'brand');
+          tube(.022,.045,.16,(i%2?1:-1)*.105,y,depth-.035,'energy');
+        }
+      }else if(manufacturer==='bang'){
+        block(.38,.21,.32,0,y+.045,z-.1,'brand');
+        for(const x of [-.17,.17])block(.045,.09,.25,x,y+.12,z-.12,'dark');
+        tube(.1,.14,.12,0,y+.1,z-.31,'brand');
+      }else{
+        for(const [i,color]of [0x86d5ef,0xd69cde,0xead37d].entries()){
+          const prism=brand.clone();prism.color.setHex(color);mats['prism'+i]=prism;
+          block(.28-i*.045,.07+i*.055,.16,0,y+.03+i*.0275,z-i*.13,'prism'+i);
+        }
+      }
+    }
   }
   const parts=[...groups].map(([mat,geos])=>{
     const geo=merge(geos),p=geo.attributes.position,n=geo.attributes.normal,uv=new Float32Array(p.count*2);

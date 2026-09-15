@@ -1,3 +1,4 @@
+import { weaponWorkbench } from './debug-weapons.js';
 import {patchScatter} from './terrain/scatter.js';
 import {TouchGesture,bindTouchActivation,hasTouch,clamp} from './touch-input.js';
 import {createTerrainFeatures} from './terrain/features.js';
@@ -244,6 +245,11 @@ export async function startDebugWorld(){
     }
     view.pitch=item.lane==='themes'?.3:['sky','skyreef','skycrown','skyshards','ribbons','valley','grotto','caverns','arcade'].includes(item.key)?.3:.65;frame();
   }
+  const weaponLab=weaponWorkbench((item,assembly)=>{
+    assembly.scale.multiplyScalar(4);assembly.rotation.set(0,-Math.PI/2,-.25);
+    const group=weaponExhibit(assembly);group.position.set(item.x,0,item.z);
+    scene.remove(item.group);item.group=group;scene.add(group);
+  });
   function select(laneKey,key,hash=true){
     const lane=lanes.find(x=>x.key===laneKey)||lanes[0];selected=lane.items.find(x=>x.key===key)||lane.items[0];
     el('exhibit').replaceChildren(...lane.items.map(item=>{const o=new Option(item.name,item.key);o.selected=item===selected;return o;}));
@@ -254,7 +260,7 @@ export async function startDebugWorld(){
     el('core').value=selected.weapon?.core||'tempered';
     if(selected.planet){const a=document.createElement('a');a.textContent='Explore a complete planet';a.href=`./?map=ninetynine&campaign=0&worldgen=1&terrain=varied&seed=${MINIATURE_SEED}&planet=${selected.planet}`;a.target='_blank';a.rel='noopener';el('description').append(document.createElement('br'),a);}
     el('status').textContent=`${lane.name}: ${lane.items.indexOf(selected)+1} of ${lane.items.length}. ${exhibits.length} exhibits across ${lanes.length} lanes.`;
-    focus(selected);if(hash)history.replaceState(null,'',`#${lane.key}/${selected.key}`);
+    weaponLab.select(selected);focus(selected);if(hash)history.replaceState(null,'',`#${lane.key}/${selected.key}`);
   }
   for(const lane of lanes){const b=document.createElement('button');b.textContent=`${lane.name} (${lane.items.length})`;b.dataset.lane=lane.key;b.onclick=()=>select(lane.key);el('lanes').append(b);}
   el('exhibit').onchange=()=>select(selected.lane,el('exhibit').value);
@@ -264,7 +270,7 @@ export async function startDebugWorld(){
   el('overview').onclick=()=>{for(const e of exhibits)e.group.visible=true;const width=Math.max(...lanes.map(l=>l.width));target.set(width/2,0,(lanes[0].z+lanes.at(-1).z)/2);view.distance=width*1.3;view.pitch=1.2;view.yaw=0;};
   el('core').onchange=()=>{if(!selected.weapon)return;const w=selected.weapon,key=el('core').value;
     if(!validPart(w.family,'core',key)){el('core').value=w.core;el('status').textContent='Pulse cores fit ranged weapons only.';return;}
-    w.core=key;
+    w.core=key;weaponLab.refresh();
     const hex={tempered:0xffd399,ember:0xff794d,frost:0x91ddff,pulse:0xa9a0ff}[key];
     // Each weapon owns its energy material; do not recolor the tower/ally kit.
     selected.group.traverse(mesh=>{if(mesh.isMesh&&mesh.userData.energy){mesh.material.color.setHex(hex);mesh.material.emissive.setHex(hex);}});
@@ -313,6 +319,6 @@ export async function startDebugWorld(){
     for(const lane of lanes){projected.set(lane.width/2,0,lane.z+26).project(camera);const visible=view.distance>=190&&projected.z>0&&projected.z<1&&Math.abs(projected.x)<.94&&Math.abs(projected.y)<.95;lane.label.hidden=!visible;if(visible){lane.label.style.left=`${(projected.x*.5+.5)*viewport.clientWidth}px`;lane.label.style.top=`${(-projected.y*.5+.5)*viewport.clientHeight}px`;}}
     requestAnimationFrame(render);
   }
-  window.DEBUG_WORLD={scene,camera,renderer,lanes,exhibits,select,focus,view,target,previewAnimation:(t,mode='cycle')=>{for(const {update}of animated)update(t,mode);},get selected(){return selected;},get time(){return time;}};
+  window.DEBUG_WORLD={scene,camera,renderer,weaponLab,lanes,exhibits,select,focus,view,target,previewAnimation:(t,mode='cycle')=>{for(const {update}of animated)update(t,mode);},get selected(){return selected;},get time(){return time;}};
   addEventListener('pagehide',event=>{if(!event.persisted){disposed=true;observer.disconnect();renderer.dispose();}});requestAnimationFrame(render);
 }

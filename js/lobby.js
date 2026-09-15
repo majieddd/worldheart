@@ -1,6 +1,6 @@
 import { AudioEngine } from './audio.js';
 import { Soundtrack } from './soundtrack.js';
-import { homeStore } from './modes/home-store.js';
+import { homeworldStation } from './lobby-homes.js';
 import * as THREE from 'three';
 import {TouchGesture,TouchStick,bindTouchActivation,hasTouch,clamp} from './touch-input.js';
 import { COMMANDERS, commanderStats, MOUNTS } from './run/expedition.js';
@@ -29,7 +29,7 @@ for(let i=0;i<40;i++){const a=i*Math.PI/20,r=31+(i%3)*1.7;const tree=mesh(i%3?ma
 for(let i=0;i<24;i++){const a=i*Math.PI/12;const rock=mesh(new THREE.DodecahedronGeometry(1.5+(i%3)*.3,0),materials.stone,Math.sin(a)*28,0,Math.cos(a)*28);rock.scale.y=.55;}
 
 function sign(text,x,y,z,color='#ddedcc',width=12){const c=document.createElement('canvas');c.width=1024;c.height=160;const ctx=c.getContext('2d');ctx.fillStyle='#1f3936';ctx.fillRect(0,0,1024,160);ctx.strokeStyle='#8faba0';ctx.lineWidth=8;ctx.strokeRect(5,5,1014,150);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 55px sans-serif';ctx.fillText(text,512,82,980);const texture=new THREE.CanvasTexture(c);texture.colorSpace=THREE.SRGBColorSpace;const o=mesh(new THREE.PlaneGeometry(width,width*160/1024),new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide}),x,y,z);return o;}
-const stations=[{key:'commanders',name:'COMMANDERS',x:-18,z:-7,color:0x8bcbb2},{key:'foundry',name:'TOWER FOUNDRY',x:18,z:-7,color:0xe2ba68},{key:'mounts',name:'MOUNTS',x:-18,z:13,color:0xa6b9df},{key:'mission',name:'MISSION GATE',x:0,z:-23,color:0xc4e4cf}];
+const stations=[{key:'commanders',name:'COMMANDERS',x:-18,z:-7,color:0x8bcbb2},{key:'foundry',name:'TOWER FOUNDRY',x:18,z:-7,color:0xe2ba68},{key:'mounts',name:'MOUNTS',x:-18,z:13,color:0xa6b9df},{key:'homeworld',name:'HOMEWORLD',x:18,z:13,color:0x8cbace},{key:'mission',name:'MISSION GATE',x:0,z:-23,color:0xc4e4cf}];
 const actors=[],mountModels=[],stationHits=[];
 for(const s of stations){
   s.pad=mesh(new THREE.CylinderGeometry(s.key==='mission'?6.7:7,7,.35,8),material(s.color),s.x,.18,s.z);s.pad.userData.station=s.key;stationHits.push(s.pad);
@@ -52,8 +52,8 @@ mesh(new THREE.CylinderGeometry(2.7,3.7,.75,8),materials.trim,0,.38,0);
 const heart=mesh(new THREE.OctahedronGeometry(1.45,0),new THREE.MeshStandardMaterial({color:0x9ce7ca,emissive:0x40aa91,emissiveIntensity:.75,roughness:.4}),0,2.5,0);
 sign('WORLDHEART',0,1.1,3.2,'#e0f5d6',5);
 
-mesh(new THREE.BoxGeometry(7,.7,2),materials.wood,17,.4,15);sign('EXPEDITION RECORD',17,3.1,15,'#d3e8d4',8);
-sign(campaignStore.snapshot().account.planetsBeaten+' PLANETS DEFENDED',17,1.8,16.1,'#efd495',6);
+const homeGlobe=mesh(new THREE.IcosahedronGeometry(2.1,2),material(0x5d9cbd),18,3,13);
+for(const [x,y,z]of [[-.8,.8,1.55],[.9,-.3,1.8],[.2,1.7,.8]])mesh(new THREE.DodecahedronGeometry(.7,0),materials.grass,x,y,z,homeGlobe);
 
 let selected=preparation(),profile=campaignStore.snapshot().account,open=null,near=null,moveGoal=null;
 let lobbyStick=null,lobbyGesture=null;
@@ -83,6 +83,8 @@ function openStation(key){
       const result=campaignStore.commit(s=>{const available=Object.keys(TOWER_TYPES).filter(k=>!s.account.towers.includes(k));if(s.account.coins<60||!available.length)return false;const tower=available[Math.floor(random*available.length)];s.account.coins-=60;s.account.towers.push(tower);return tower;});
       refresh();openStation(key);if(result.ok){featureTower(result.value);el('station-message').textContent='Discovered '+TOWER_TYPES[result.value].name+'. Choose it below to make it your opening card.';}
     };
+  }else if(key==='homeworld'){
+    homeworldStation(content,el('station-message'),()=>openStation('homeworld'));
   }else{
     const e=campaignStore.snapshot().expedition,planet=planetDefinition(e?.planet||1,e?.seed||12345);
     content.innerHTML=`<p><strong>${e?planet.name:'A new galaxy awaits'}</strong><br>Solo expedition · 10 waves per planet<br>Defeat wave ten to extract or continue in Endless.</p><p>${COMMANDERS[selected.commander].name} · ${MOUNTS[selected.mount].name}<br>Opening tower: ${TOWER_TYPES[profile.loadout].name}</p>${e?'<label><input id="fresh-expedition" type="checkbox">Start a fresh expedition. Replace this route and carried arsenal; keep account coins and tower unlocks.</label>':''}<p id="mission-rule"></p><button id="launch" class="primary">${e?'Continue expedition':'Launch expedition'}</button><p>Inside your base: a fallen commander returns after 30 seconds. Outside the base: death ends the attempt.</p>`;
@@ -93,13 +95,7 @@ function openStation(key){
       if(!e||el('fresh-expedition')?.checked){const seed=crypto.getRandomValues(new Uint32Array(1))[0]||12345;const r=campaignStore.commit(s=>startExpedition(s,{seed,limit:99}));if(!r.ok||!r.saved){refresh();return;}}
       const url=new URL('./',location.href);url.searchParams.set('map','ninetynine');url.searchParams.set('campaign','1');url.searchParams.set('commander',selected.commander);url.searchParams.set('mount',selected.mount);location.href=url.href;
     };
-    const homes=homeStore.list(),section=document.createElement('section');section.className='home-lobby';
-    const heading=document.createElement('h3');heading.textContent='Your home planets';section.append(heading);
-    const hint=document.createElement('p');hint.textContent=homes.ok?'Claim a fully expanded planet to keep and decorate it. Homes are saved in this browser.':homes.error;section.append(hint);
-    for(const home of homes.homes){const a=document.createElement('a');a.className='choice';a.textContent=`${home.name} · Wave ${home.checkpoint.run.wavesCleared} checkpoint · ${home.decorations.length} decorations`;a.href=`./?map=ninetynine&campaign=0&home=${encodeURIComponent(home.id)}`;section.append(a);}
-    const label=document.createElement('label');label.textContent='Import home backup ';const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.id='lobby-home-import';label.append(input);section.append(label);
-    input.onchange=async()=>{const file=input.files[0];if(!file)return;const r=file.size>4000000?{ok:false,error:'Home backup exceeds 4 MB.'}:homeStore.import(await file.text());if(r.ok)openStation('mission');else el('station-message').textContent=r.error;};
-    content.append(section);
+
   }
 }
 for(const b of document.querySelectorAll('[data-station]'))b.onclick=()=>{const s=stations.find(s=>s.key===b.dataset.station);player.set(s.x,0,s.z+5);openStation(s.key);};
@@ -143,6 +139,7 @@ function render(now){
   el('approach').hidden=!near||!!open;if(near)el('interact').textContent='E · '+near.name.toLowerCase();
   target.copy(player).multiplyScalar(.45);target.y=2.5;point.set(target.x+Math.sin(view.yaw)*view.distance*Math.cos(view.pitch),target.y+Math.sin(view.pitch)*view.distance,target.z+Math.cos(view.yaw)*view.distance*Math.cos(view.pitch));camera.position.lerp(point,1-Math.exp(-dt*9));camera.lookAt(target);renderer.render(scene,camera);requestAnimationFrame(render);
 }
+if(location.hash==='#homeworld')openStation('homeworld');
 camera.position.set(0,20,40);requestAnimationFrame(render);
 window.LOBBY={scene,camera,renderer,player,stations,openStation,close,view,get selected(){return selected;},get profile(){return campaignStore.snapshot().account;}};
 addEventListener('pagehide',e=>{if(!e.persisted){disposed=true;renderer.dispose();}});

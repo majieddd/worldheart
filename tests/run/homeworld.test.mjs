@@ -16,3 +16,21 @@ test('home save is atomic on refusal and never erases campaign keys',()=>{const 
 test('home backup merges distinct worlds, validates before writing and isolates returned copies',()=>{const map=new Map(),store=createHomeStore({getItem:k=>map.get(k),setItem:(k,v)=>map.set(k,v)});store.save(fixture());const h=fixture();h.id='second';assert.equal(store.import(JSON.stringify({version:1,homes:[h]})).ok,true);assert.equal(store.list().homes.length,2);const before=store.export();assert.equal(store.import(JSON.stringify({version:1,homes:[h,h]})).ok,false);assert.equal(store.export(),before);store.get('second').checkpoint.gold=0;assert.equal(store.get('second').checkpoint.gold,400);});
 test('checkpoint restores escalating forge cost and crystals without duplicate deposits',()=>{const bag=createInventory('commander'),f=createScrapForge(bag,4);assert.equal(f.cost,11);const c=createCrystalLedger();c.register('x');c.pickup('x');c.deposit({alive:true,nearHeart:true});const restored=createCrystalLedger(c.snapshot());restored.register('x');assert.equal(restored.pickup('x'),false);assert.equal(restored.credit,100);assert.equal(restored.deposit({alive:true,nearHeart:true}).count,0);});
 test('RNG checkpoint is reproducible and does not alter the generator sequence',()=>{const a=makeRng(48),b=makeRng(48);assert.equal(a(),b());const saved=a.state();a();b.restore(saved);assert.equal(a(),(b(),b()));});
+test('choosing another captured planet survives reload without erasing either checkpoint',()=>{
+  const values=new Map(),storage={getItem:k=>values.get(k),setItem:(k,v)=>values.set(k,v)},store=createHomeStore(storage);
+  const first=fixture(),second=fixture();second.id='second-home';second.checkpoint.gold=919;
+  store.save(first);store.save(second);assert.equal(store.list().selected,first.id);
+  assert.equal(store.choose(second.id).ok,true);assert.equal(createHomeStore(storage).list().selected,second.id);
+  assert.deepEqual(store.get(first.id),first);assert.deepEqual(store.get(second.id),second);
+  const before=store.export();assert.equal(store.choose('uncaptured').ok,false);assert.equal(store.export(),before);
+});
+test('failed home selection preserves the current home and other saved planets',()=>{
+  const values=new Map();let blocked=false;const storage={getItem:k=>values.get(k),setItem:(k,v)=>{if(blocked)throw Error('quota');values.set(k,v);}},store=createHomeStore(storage);
+  store.save(fixture());const second=fixture();second.id='second';store.save(second);blocked=true;
+  const before=store.export();assert.equal(store.choose('second').ok,false);assert.equal(store.export(),before);
+});
+test('home backups restore selected identity on a new device and reject dangling selections',()=>{
+  const data=new Map(),store=createHomeStore({getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)}),first=fixture(),second=fixture();second.id='other';
+  assert.equal(store.import(JSON.stringify({version:1,homes:[first,second],selected:'other'})).ok,true);assert.equal(store.list().selected,'other');
+  const before=store.export();assert.equal(store.import(JSON.stringify({version:1,homes:[first],selected:'missing'})).ok,false);assert.equal(store.export(),before);
+});

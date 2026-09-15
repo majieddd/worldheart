@@ -45,3 +45,13 @@ header:has(.soundtrack-controls[open]) { z-index:8; }
 .home-lobby { border-top:1px solid var(--line,#8faba0); margin-top:20px; padding-top:12px; }
 .home-lobby .choice { display:block; margin:8px 0; min-height:48px; }
 .home-lobby input { max-width:100%; }
+
+.home-lobby { border:0; margin:0; padding:0; }
+.home-featured { padding:16px; background:#203e47; border:1px solid #91b8ba; border-radius:8px; }
+.home-featured h3 { margin:8px 0; }.home-visit { display:flex; justify-content:center; align-items:center; min-height:48px; border-radius:5px; text-decoration:none; padding:12px; }
+.home-choice { padding:16px 0; border-bottom:1px solid #526d75; }.home-choice p { margin:6px 0; }
+.home-choice button,.home-lobby summary,.home-lobby button,nav button { min-height:48px; }
+.home-choice button[aria-pressed=true] { border-color:var(--accent); color:var(--accent); }.home-lobby details { margin-top:20px; }.home-lobby summary { cursor:pointer; padding:12px 0; }
+
+#station-panel { background:#132b32; }
+@media(max-width:700px) { body:not(.lobby-touch).station-open nav { display:none; }body:not(.lobby-touch).station-open aside { top:138px; max-height:calc(100dvh - 240px); } }

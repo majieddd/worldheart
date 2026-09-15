@@ -85,8 +85,8 @@ try{
   await page.locator('#home-import').setInputFiles({name:'home-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
   await importedNavigation;await ready();await page.locator('#btn-begin').click();
   check('Importing the active home reloads the backup without an old autosave overwriting it',await page.evaluate(g=>WH.game.gold===g&&WH.mode99.home.record.checkpoint.gold===g,backup.homes[0].checkpoint.gold));
-  await page.goto(base+'/lobby.html');await page.waitForFunction(()=>window.lobbySoundtrack);await page.locator('[data-station="mission"]').first().click();
-  check('Lobby lists the named home and its checkpoint',await page.locator('.home-lobby a').count()===1&&(await page.locator('.home-lobby a').textContent()).includes('Wave 1'));
+  await page.goto(base+'/lobby.html');await page.waitForFunction(()=>window.lobbySoundtrack);await page.locator('[data-station="homeworld"]').first().click();
+  check('Lobby lists the named home and its checkpoint',await page.locator('.home-lobby a').count()===1&&(await page.locator('.home-choice').innerText()).includes('Wave 1'));
   await page.waitForTimeout(400);await page.screenshot({path:out+'/lobby-home.png'});
   const homeURL=await page.locator('.home-lobby a').getAttribute('href');
   const phoneContext=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true,storageState:await page.context().storageState()});

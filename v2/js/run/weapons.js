@@ -1,4 +1,5 @@
 // Serializable weapon rules. RNG and identity are supplied by the shell.
+import { rollMake, validMake, makeEffects, applyMakeEffects, MODIFIERS } from './manufacturers.js';
 export const BACKPACK_SIZE = 12;
 export const FAMILIES = {
   twinblade: { name:'Twinfang blades',visual:'twin',view:'duelist',kind:'melee',dmg:25,cd:.43,radius:2.5,arcDeg:90,cleave:.4,pierce:4,knockback:.22,kick:.13,trauma:.1,fov:84 },
@@ -52,10 +53,10 @@ export function validWeapon(item) {
     && Number.isInteger(item.tier) && item.tier >= 1 && item.tier <= 99
     && RARITIES.includes(item.rarity) && Number.isInteger(item.infusions) && item.infusions >= 0 && item.infusions <= 3
     && Object.keys(PARTS).every(slot => validPart(item.family, slot, item.parts?.[slot]))
-    && Array.isArray(item.affixes) && item.affixes.length <= 1 && item.affixes.every(x => ['nimble', 'forceful', 'farseeing'].includes(x));
+    && Array.isArray(item.affixes) && item.affixes.length <= 1 && item.affixes.every(x => ['nimble', 'forceful', 'farseeing'].includes(x)) && validMake(item.make);
 }
 const clone = value => JSON.parse(JSON.stringify(value));
-export function generateWeapon({ id, seed, tier = 1, family = null, rng }) {
+export function generateWeapon({ id, seed, tier = 1, family = null, rng, manufacturer=null, modifier=null, legacy=false }) {
   const keys = Object.keys(FAMILIES), roll = rng();
   family ||= keys[Math.floor(rng() * keys.length)];
   const rarity = roll < 0.68 ? 'common' : roll < 0.9 ? 'uncommon' : roll < 0.975 ? 'rare' : roll < .995 ? 'epic' : 'relic';
@@ -66,6 +67,7 @@ export function generateWeapon({ id, seed, tier = 1, family = null, rng }) {
   }
   const affixes = rarity === 'common' ? [] : [['nimble', 'forceful', 'farseeing'][Math.floor(rng() * 3)]];
   const item = { id, seed: seed >>> 0, tier, family, era: eraForPlanet(tier), rarity, parts, affixes, infusions: 0 };
+  if(!legacy)item.make=rollMake(seed,manufacturer,modifier);
   if (!validWeapon(item)) throw new Error('Invalid generated weapon');
   return item;
 }
@@ -73,7 +75,7 @@ export function shouldDrop({ boss = false, elite = false }, rng) { return boss |
 export function weaponName(item) {
   const eras = { ancient: 'Forged', technological: 'Circuit', empowered: 'Awakened' };
   const material=materialForWeapon(item);
-  return `${material[0].toUpperCase()+material.slice(1)} ${eras[item.era]} ${FAMILIES[item.family].name}`;
+  return `${item.make?MODIFIERS[item.make.perk].name+' ':''}${material[0].toUpperCase()+material.slice(1)} ${eras[item.era]} ${FAMILIES[item.family].name}`;
 }
 export function weaponStats(item, commander, inspect = false) {
   if (!validWeapon(item) || (!inspect && !compatible(commander, item.family))) return null;
@@ -97,6 +99,8 @@ export function weaponStats(item, commander, inspect = false) {
     if (p.slow) s.slow = p.slow * (trait.element || 1);
   }
   s.weaponFamily = item.family;
+  applyMakeEffects(s,makeEffects(item.make));
+  if(item.make){s.weaponSkill=item.make.skill;s.manufacturer=item.make.brand;}
   if(s.kind==='beam')s.dps=s.dmg;
   return s;
 }

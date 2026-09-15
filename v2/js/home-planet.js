@@ -111,15 +111,30 @@ export class HomePlanet {
   rename(){const name=this.el('home-name').value.trim();if(this.record&&name){this.record.name=name;this.dirty=true;}}
   async claim(){
     if(this.active||!canClaimHome(this.run.getHeartLevel(),this.run.getPhase(),this.game.terrainBusy))return false;
+    const id=await this.capture(this.el('home-name').value.trim());if(!id)return false;
+    const chosen=homeStore.choose(id);if(!chosen.ok){this.lastSave=chosen.error;this.refresh();return false;}
+    this.visit(id);return true;
+  }
+  async capture(name=''){
+    if(this.capturePending)return this.capturePending;
+    this.capturePending=this._capture(name);
+    try{return await this.capturePending;}finally{this.capturePending=null;}
+  }
+  async _capture(name){
+    if(this.active||!canClaimHome(this.run.getHeartLevel(),this.run.getPhase(),this.game.terrainBusy)||this.game.state!=='playing'&&this.game.state!=='victory')return null;
     const snap=this.snapshot();if(!snap)return false;
+    snap.checkpoint.run.phase='building';snap.checkpoint.run.endless=true;
     const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(snap.world)));
     const id='home-'+Array.from(new Uint8Array(digest)).slice(0,12).map(n=>n.toString(16).padStart(2,'0')).join('');
-    if(homeStore.get(id)){this.visit(id);return true;}
-    const record={version:HOME_VERSION,id,name:this.el('home-name').value.trim()||'My home planet',world:snap.world,checkpoint:snap.checkpoint,decorations:[]};
+    const existing=homeStore.get(id);
+    if(existing){
+      if(name&&this.createdCapture===id){const saved=homeStore.save({...existing,name,checkpoint:snap.checkpoint});if(!saved.ok){this.lastSave=saved.error;return null;}}
+      this.capturedId=id;return id;
+    }
+    const record={version:HOME_VERSION,id,name:name||`${CONFIG.environment?.name||'Captured planet'} #${CONFIG.seed}`,world:snap.world,checkpoint:snap.checkpoint,decorations:[]};
     record.checkpoint.run.phase='building';record.checkpoint.run.endless=true;
     const saved=homeStore.save(record);if(!saved.ok){this.lastSave=saved.error;this.refresh();return false;}
-    // A separate home route makes ownership independent of campaign retries.
-    this.visit(record.id);return true;
+    this.createdCapture=id;this.capturedId=id;this.ui.toast('Planet captured. Choose it in the lobby Homeworld station.','info');return id;
   }
   visit(id){const url=new URL('./',location.href);url.searchParams.set('map','ninetynine');url.searchParams.set('campaign','0');url.searchParams.set('home',id);location.href=url.href;}
   save(){
@@ -144,7 +159,11 @@ export class HomePlanet {
   update(dt){
     this.button.hidden=this.game.state==='title';
     this.endButton.hidden=!canClaimHome(this.run.getHeartLevel(),this.run.getPhase(),this.game.terrainBusy);
-    if(!this.active)return;
+    if(!this.active){
+      this.captureClock=(this.captureClock||0)+dt;
+      if(!this.capturedId&&this.captureClock>=2){this.captureClock=0;this.capture().catch(error=>{this.lastSave=String(error.message||error);});}
+      return;
+    }
     if(this.due&&this.run.getPhase()==='building'&&!this.game.terrainBusy){
       this.due=false;this.running=false;this.setPeace();this.dirty=true;
       const restart=!this.stopRequested;if(this.save()&&restart){this.running=true;this.armNext();}
