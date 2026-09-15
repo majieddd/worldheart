@@ -1,0 +1,59 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "482 poses per weapon preserve arm lengths and spear grip alignment",
+      "ok": true,
+      "maxSegmentError": 1.3877787807814457e-16,
+      "maxSpearAxis": 0.00007444842629217296
+    },
+    {
+      "name": "twinblade real held attack renders and routes swing audio",
+      "ok": true,
+      "swings": [
+        {
+          "family": "twinblade",
+          "side": -1
+        },
+        {
+          "family": "twinblade",
+          "side": 1
+        }
+      ]
+    },
+    {
+      "name": "spear real held attack renders and routes swing audio",
+      "ok": true,
+      "swings": [
+        {
+          "family": "spear",
+          "side": 1
+        },
+        {
+          "family": "spear",
+          "side": -1
+        }
+      ]
+    },
+    {
+      "name": "sword real held attack renders and routes swing audio",
+      "ok": true,
+      "swings": [
+        {
+          "family": "sword",
+          "side": -1
+        },
+        {
+          "family": "sword",
+          "side": 1
+        }
+      ]
+    },
+    {
+      "name": "No runtime errors during live movement and attacks",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

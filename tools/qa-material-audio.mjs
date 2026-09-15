@@ -16,9 +16,12 @@ try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   page.on('pageerror', e => report.errors.push(String(e)));
   const assets = [];
+  const musicRequests=[];
+  page.on('request',r=>{if(/\/audio\/(soundtrack|auditions)\/.*\.mp3/.test(r.url()))musicRequests.push(r.url());});
   page.on('request', r => { if (r.url().includes('/audio/material/')) assets.push(r.url()); });
   await page.goto(base + '/audio-lab.html');
   await page.waitForFunction(() => !!window.audioLab);
+  check('No soundtrack or draft music downloads before an audition gesture',musicRequests.length===0);
   check('No audio downloads or context before a gesture', assets.length === 0 && await page.evaluate(() => !audioLab.draft.ctx && !audioLab.previous.ctx));
   await page.getByRole('button', { name: 'Draft: Menu click', exact: true }).click();
   await page.waitForFunction(() => !!audioLab.draft.bank);
@@ -138,6 +141,7 @@ try {
   await fail.close();
 
   const game = await browser.newPage({ viewport: { width: 844, height: 390 }, hasTouch: true, isMobile: true });
+  const draftMusicRequests=[];game.on('request',r=>{if(r.url().includes('/audio/auditions/'))draftMusicRequests.push(r.url());});
   game.on('pageerror', e => report.errors.push(String(e)));
   const downloads = []; game.on('request', r => { if (r.url().includes('/audio/material/') || r.url().endsWith('/audio-material.js')) downloads.push(r.url()); });
   // Small original map isolates audio startup without expensive campaign generation.
@@ -175,6 +179,7 @@ try {
   await game.evaluate(()=>WH.game.audio.toggleMute());
   await game.evaluate(()=>WH.game.soundtrack.setEnabled(false));
   check('Music can stop independently of effects',await game.evaluate(()=>WH.game.soundtrack.decks.length===0&&!WH.game.audio.muted));
+  check('Approval music never downloads during game context changes',draftMusicRequests.length===0);
   await game.screenshot({ path: out.replace('.json', '-game.png') });
   await game.close();
   const lobby=await browser.newPage({hasTouch:true,isMobile:true});lobby.on('pageerror',e=>report.errors.push(String(e)));

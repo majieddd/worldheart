@@ -3,7 +3,8 @@
 2026-09-15. Owner: Codex, branch `feature/combat-world-performance`.
 Tracker #1: U146 swing audio and weapon motion; U147 generation and quake
 performance; U148 five instrumental reference-conditioned music auditions.
-Implemented and locally verified; V2 publication and public verification in progress. Main is not a
+Published as V2 `fc5299c`, [PR #45](https://github.com/majieddd/worldheart/pull/45).
+[Pages deployment](https://github.com/majieddd/worldheart/actions/runs/34964348368) succeeded; public behavior and identity verification passed. Main is not a
 release target. Music drafts require owner approval.
 
 ## Findings before edits
@@ -130,6 +131,16 @@ musical quality. U148 remains awaiting the owner's listening approval.
 - [Motion report](combat-world/motion-local.json); [contact pose](combat-world/contact.png),
   [Twin Fang view](combat-world/first-person-duelist.png), [spear view](combat-world/first-person-warden.png).
 - Generated V2: 135 source-identical files, 102-module single-file export.
-- Pending: V2 publish and public checks.
+- [76 public audio/UI checks](combat-world/audio-public.json),
+  [public weapon input/pose checks](combat-world/motion-public.json), and
+  [187 public asset/removal checks](combat-world/public-identity.json) pass.
+  Public checks also confirm zero music requests before audition gestures and
+  zero approval-draft downloads during gameplay music context changes.
+- Main remains `1374122d1109919a5fab10b69fefdfb80308eb6e`. The evidence closeout
+  changes documents and QA only; deployed runtime identity remains `fc5299c`.
+- [Public earthquake check](combat-world/quake-public.json) passes the direct
+  rebuild oracle, ongoing combat, disrupted-nest collapse, edited-footprint
+  exclusion and resumed simulation. Prepared commit 0.36 s; occupancy refresh
+  1.41 s in this repeat.
 - Open acceptance: owner listening and motion feel, physical mobile devices,
   broader seed/hardware coverage and the separate full-campaign QA backlog.

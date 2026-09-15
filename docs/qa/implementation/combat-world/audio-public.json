@@ -1,0 +1,394 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "No soundtrack or draft music downloads before an audition gesture",
+      "ok": true
+    },
+    {
+      "name": "No audio downloads or context before a gesture",
+      "ok": true
+    },
+    {
+      "name": "Actual draft button loads and starts the engine",
+      "ok": true
+    },
+    {
+      "name": "Measured non-silent, unclipped output: swing",
+      "ok": true,
+      "detail": {
+        "peak": 0.028936490416526794
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: click",
+      "ok": true,
+      "detail": {
+        "peak": 0.07768844068050385
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: build",
+      "ok": true,
+      "detail": {
+        "peak": 0.24628528952598572
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: meleeHit",
+      "ok": true,
+      "detail": {
+        "peak": 0.23826059699058533
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: creatureHit",
+      "ok": true,
+      "detail": {
+        "peak": 0.14156699180603027
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: blocked",
+      "ok": true,
+      "detail": {
+        "peak": 0.24477049708366394
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: rifle",
+      "ok": true,
+      "detail": {
+        "peak": 0.27844929695129395
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: shot",
+      "ok": true,
+      "detail": {
+        "peak": 0.022084863856434822
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: mortar",
+      "ok": true,
+      "detail": {
+        "peak": 0.36351656913757324
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: lob",
+      "ok": true,
+      "detail": {
+        "peak": 0.12754349410533905
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: explosion",
+      "ok": true,
+      "detail": {
+        "peak": 0.21726658940315247
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: step",
+      "ok": true,
+      "detail": {
+        "peak": 0.07708229869604111
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: stepHard",
+      "ok": true,
+      "detail": {
+        "peak": 0.09974010288715363
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: land",
+      "ok": true,
+      "detail": {
+        "peak": 0.2521478831768036
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: coin",
+      "ok": true,
+      "detail": {
+        "peak": 0.15115441381931305
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: upgrade",
+      "ok": true,
+      "detail": {
+        "peak": 0.19915562868118286
+      }
+    },
+    {
+      "name": "Measured non-silent, unclipped output: victory",
+      "ok": true,
+      "detail": {
+        "peak": 0.2516496777534485
+      }
+    },
+    {
+      "name": "One cached bank download across all cue buttons",
+      "ok": true
+    },
+    {
+      "name": "Nine owner tracks are available without autoplay",
+      "ok": true
+    },
+    {
+      "name": "Owner track 1 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 2 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 3 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 4 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 5 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 6 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 7 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 8 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Owner track 9 decodes and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Stop ends all owner music players",
+      "ok": true
+    },
+    {
+      "name": "Five approval drafts are available with lazy loading",
+      "ok": true
+    },
+    {
+      "name": "Planet draft 1 decodes a full 90-second audition and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Planet draft 2 decodes a full 90-second audition and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Planet draft 3 decodes a full 90-second audition and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Planet draft 4 decodes a full 90-second audition and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Planet draft 5 decodes a full 90-second audition and plays alone",
+      "ok": true
+    },
+    {
+      "name": "Stop ends all approval drafts",
+      "ok": true
+    },
+    {
+      "name": "Rejected piano player removed",
+      "ok": true
+    },
+    {
+      "name": "Context selects spearFlesh",
+      "ok": true
+    },
+    {
+      "name": "Context selects twinFlesh",
+      "ok": true
+    },
+    {
+      "name": "Context selects woodFlesh",
+      "ok": true
+    },
+    {
+      "name": "Context selects swordArmor",
+      "ok": true
+    },
+    {
+      "name": "Stop cancels the comparison sequence",
+      "ok": true
+    },
+    {
+      "name": "Simultaneous sampled combat at maximum lab volume is bounded and unclipped",
+      "ok": true,
+      "detail": {
+        "peak": 0.9292100667953491,
+        "voices": 12
+      }
+    },
+    {
+      "name": "No persistent bed after stopping",
+      "ok": true,
+      "detail": {
+        "peak": 0
+      }
+    },
+    {
+      "name": "Readable controls at 375px",
+      "ok": true,
+      "detail": {
+        "overflow": false,
+        "small": 0,
+        "nav": 54.6875,
+        "clipped": 0
+      }
+    },
+    {
+      "name": "Readable controls at 768px",
+      "ok": true,
+      "detail": {
+        "overflow": false,
+        "small": 0,
+        "nav": 54.6875,
+        "clipped": 0
+      }
+    },
+    {
+      "name": "Readable controls at 1280px",
+      "ok": true,
+      "detail": {
+        "overflow": false,
+        "small": 0,
+        "nav": 54.6875,
+        "clipped": 0
+      }
+    },
+    {
+      "name": "Computed text contrast passes AA",
+      "ok": true,
+      "detail": {
+        "minimum": 7.726546710231671
+      }
+    },
+    {
+      "name": "Keyboard focus is visible",
+      "ok": true
+    },
+    {
+      "name": "Hidden tab suspends draft audio",
+      "ok": true
+    },
+    {
+      "name": "Visible tab can resume without restarting an ambient bed",
+      "ok": true
+    },
+    {
+      "name": "Disposal closes the context and releases active voices",
+      "ok": true
+    },
+    {
+      "name": "Failed draft download leaves previous playback usable",
+      "ok": true
+    },
+    {
+      "name": "Default play still uses original audio and zero trial downloads",
+      "ok": true
+    },
+    {
+      "name": "Opt-in play installs draft before touch controls begin",
+      "ok": true
+    },
+    {
+      "name": "Game UI and gameplay share the same draft instance",
+      "ok": true
+    },
+    {
+      "name": "Existing game mute works in draft mode",
+      "ok": true
+    },
+    {
+      "name": "Draft game starts no piano automatically",
+      "ok": true
+    },
+    {
+      "name": "Combat callback routes the attacking weapon and struck creature",
+      "ok": true,
+      "detail": {
+        "impact": true,
+        "creature": true
+      }
+    },
+    {
+      "name": "Game music context: title",
+      "ok": true
+    },
+    {
+      "name": "Game music context: tropical",
+      "ok": true
+    },
+    {
+      "name": "Game music context: boss",
+      "ok": true
+    },
+    {
+      "name": "Game music context: desertBoss",
+      "ok": true
+    },
+    {
+      "name": "Game music context: cinematicBoss",
+      "ok": true
+    },
+    {
+      "name": "Game music context: playful",
+      "ok": true
+    },
+    {
+      "name": "Game mute also mutes music",
+      "ok": true
+    },
+    {
+      "name": "Music can stop independently of effects",
+      "ok": true
+    },
+    {
+      "name": "Approval music never downloads during game context changes",
+      "ok": true
+    },
+    {
+      "name": "Lobby music waits for gesture",
+      "ok": true
+    },
+    {
+      "name": "Lobby rotates both owner tracks",
+      "ok": true
+    },
+    {
+      "name": "Lobby music toggle stops streaming",
+      "ok": true
+    },
+    {
+      "name": "Lobby music controls fit a phone viewport",
+      "ok": true
+    },
+    {
+      "name": "No uncaught runtime exceptions",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "hearing": "Unavailable. Output measurements are not listening acceptance."
+}
