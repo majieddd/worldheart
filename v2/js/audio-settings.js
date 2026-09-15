@@ -23,7 +23,7 @@ export function audioSettings(audio,parent,{audition=false}={}){
     label.append(select);body.append(label);
     let voice=null;const play=document.createElement('button');play.className='btn';play.textContent='Play cue';play.id='audio-play';
     play.onclick=async()=>{audio.start();await audio.ctx?.resume();if(voice)audio._stop(voice);voice=audio.play(select.value,{audition:true});};
-    const stop=document.createElement('button');stop.className='btn';stop.textContent='Stop audition';stop.onclick=()=>{audio._stopVoices();audio.setVolume('music',0);body.querySelector('[data-audio-bus="music"]').value=0;body.querySelector('[data-audio-bus="music"]').dispatchEvent(new Event('input'));};body.append(play,stop);
+    const stop=document.createElement('button');stop.className='btn';stop.id='audio-stop';stop.textContent='Stop audition';stop.onclick=()=>{audio._stopVoices();audio.setScene({state:'none'});tracks.value='';};body.append(play,stop);
     const musicLabel=document.createElement('label');musicLabel.textContent='Instrumental score';const tracks=document.createElement('select');tracks.id='audio-track';
     tracks.append(new Option('Choose a track',''));for(const [key,track]of Object.entries(MUSIC_TRACKS))tracks.append(new Option(track.title,key));
     tracks.onchange=()=>{if(!tracks.value)return;audio.start();audio.setScene({state:tracks.value});};musicLabel.append(tracks);body.append(musicLabel);

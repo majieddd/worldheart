@@ -1,0 +1,1978 @@
+{
+  "scope": "Automated vocal-risk screen, not a guarantee of no voice and not subjective listening acceptance.",
+  "model": "MIT/ast-finetuned-audioset-10-10-0.4593",
+  "revision": "f826b80d28226b62986cc218e5cec390b1096902",
+  "threshold": 0.12,
+  "files": [
+    {
+      "file": "audio/lobby.mp3",
+      "sha256": "0071c7b6470ad4bda70de097896602934148ebe4f700cd294ad9da37f1fb22ad",
+      "seconds": 57.8,
+      "windows": [
+        {
+          "start": 0.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.001349782571196556,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7873198986053467
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.3425764739513397
+            },
+            {
+              "label": "Clarinet",
+              "score": 0.29720863699913025
+            },
+            {
+              "label": "Brass instrument",
+              "score": 0.2752625346183777
+            },
+            {
+              "label": "Classical music",
+              "score": 0.2667616009712219
+            },
+            {
+              "label": "French horn",
+              "score": 0.2101961225271225
+            }
+          ]
+        },
+        {
+          "start": 5.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0011540392879396677,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.6808517575263977
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.2194603830575943
+            },
+            {
+              "label": "Organ",
+              "score": 0.19122759997844696
+            },
+            {
+              "label": "Flute",
+              "score": 0.1144154816865921
+            },
+            {
+              "label": "Keyboard (musical)",
+              "score": 0.11229706555604935
+            },
+            {
+              "label": "Clarinet",
+              "score": 0.1091541275382042
+            }
+          ]
+        },
+        {
+          "start": 10.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.04034889116883278,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7129533886909485
+            },
+            {
+              "label": "Sad music",
+              "score": 0.19593654572963715
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.08447176963090897
+            },
+            {
+              "label": "New-age music",
+              "score": 0.07731271535158157
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.07569524645805359
+            },
+            {
+              "label": "Violin, fiddle",
+              "score": 0.06497375667095184
+            }
+          ]
+        },
+        {
+          "start": 15.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.07115249335765839,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8865306973457336
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.38033559918403625
+            },
+            {
+              "label": "Sad music",
+              "score": 0.12272084504365921
+            },
+            {
+              "label": "Tender music",
+              "score": 0.08877819776535034
+            },
+            {
+              "label": "Singing",
+              "score": 0.07115249335765839
+            },
+            {
+              "label": "Music for children",
+              "score": 0.06883614510297775
+            }
+          ]
+        },
+        {
+          "start": 20.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.07241614162921906,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9021282196044922
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.6680270433425903
+            },
+            {
+              "label": "Music for children",
+              "score": 0.15975087881088257
+            },
+            {
+              "label": "Singing",
+              "score": 0.07241614162921906
+            },
+            {
+              "label": "Christmas music",
+              "score": 0.030379192903637886
+            },
+            {
+              "label": "Tender music",
+              "score": 0.025866812095046043
+            }
+          ]
+        },
+        {
+          "start": 25.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.06739427894353867,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9002923369407654
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.7180066108703613
+            },
+            {
+              "label": "Music for children",
+              "score": 0.1652926355600357
+            },
+            {
+              "label": "Singing",
+              "score": 0.06739427894353867
+            },
+            {
+              "label": "Christmas music",
+              "score": 0.033515967428684235
+            },
+            {
+              "label": "Tender music",
+              "score": 0.027274074032902718
+            }
+          ]
+        },
+        {
+          "start": 30.0,
+          "vocalLabel": "Humming",
+          "vocalScore": 0.09158097207546234,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8577539324760437
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.6849476099014282
+            },
+            {
+              "label": "Humming",
+              "score": 0.09158097207546234
+            },
+            {
+              "label": "Singing",
+              "score": 0.05983738601207733
+            },
+            {
+              "label": "Tender music",
+              "score": 0.03395086154341698
+            },
+            {
+              "label": "Mantra",
+              "score": 0.0312790721654892
+            }
+          ]
+        },
+        {
+          "start": 35.0,
+          "vocalLabel": "Humming",
+          "vocalScore": 0.10763874650001526,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8391233682632446
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.5134376287460327
+            },
+            {
+              "label": "Humming",
+              "score": 0.10763874650001526
+            },
+            {
+              "label": "Singing",
+              "score": 0.06799665093421936
+            },
+            {
+              "label": "New-age music",
+              "score": 0.03974511846899986
+            },
+            {
+              "label": "Christmas music",
+              "score": 0.02818344160914421
+            }
+          ]
+        },
+        {
+          "start": 40.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.08176993578672409,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8953667879104614
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.6753935217857361
+            },
+            {
+              "label": "Singing",
+              "score": 0.08176993578672409
+            },
+            {
+              "label": "Christmas music",
+              "score": 0.050230786204338074
+            },
+            {
+              "label": "Female singing",
+              "score": 0.04944545775651932
+            },
+            {
+              "label": "Humming",
+              "score": 0.047492850571870804
+            }
+          ]
+        },
+        {
+          "start": 45.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.09131067991256714,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8775826692581177
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.6963209509849548
+            },
+            {
+              "label": "Singing",
+              "score": 0.09131067991256714
+            },
+            {
+              "label": "Christmas music",
+              "score": 0.07018393278121948
+            },
+            {
+              "label": "Female singing",
+              "score": 0.038870669901371
+            },
+            {
+              "label": "Humming",
+              "score": 0.03793829306960106
+            }
+          ]
+        },
+        {
+          "start": 50.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.060491885989904404,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7368605732917786
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.5100067853927612
+            },
+            {
+              "label": "Singing",
+              "score": 0.060491885989904404
+            },
+            {
+              "label": "Glockenspiel",
+              "score": 0.05784576013684273
+            },
+            {
+              "label": "Marimba, xylophone",
+              "score": 0.03737284243106842
+            },
+            {
+              "label": "Ding-dong",
+              "score": 0.0363842137157917
+            }
+          ]
+        },
+        {
+          "start": 55.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.010123863816261292,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.4092952311038971
+            },
+            {
+              "label": "Marimba, xylophone",
+              "score": 0.08617392927408218
+            },
+            {
+              "label": "Glockenspiel",
+              "score": 0.07423142343759537
+            },
+            {
+              "label": "Mallet percussion",
+              "score": 0.051542311906814575
+            },
+            {
+              "label": "Ding",
+              "score": 0.05089245364069939
+            },
+            {
+              "label": "Ding-dong",
+              "score": 0.04496346414089203
+            }
+          ]
+        }
+      ],
+      "flagged": false
+    },
+    {
+      "file": "audio/explore.mp3",
+      "sha256": "6f1133b173954d2248a05932cc1ed74acb05e35b9e9031f628237a4c3f4dcbad",
+      "seconds": 70.4,
+      "windows": [
+        {
+          "start": 0.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.0021059378050267696,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9276232123374939
+            },
+            {
+              "label": "Acoustic guitar",
+              "score": 0.4601821005344391
+            },
+            {
+              "label": "Guitar",
+              "score": 0.4497930407524109
+            },
+            {
+              "label": "Plucked string instrument",
+              "score": 0.3959876596927643
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.37547269463539124
+            },
+            {
+              "label": "Strum",
+              "score": 0.2211351990699768
+            }
+          ]
+        },
+        {
+          "start": 5.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.0018537730211392045,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9236128926277161
+            },
+            {
+              "label": "Guitar",
+              "score": 0.46562135219573975
+            },
+            {
+              "label": "Plucked string instrument",
+              "score": 0.44978147745132446
+            },
+            {
+              "label": "Acoustic guitar",
+              "score": 0.44601571559906006
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.4269375503063202
+            },
+            {
+              "label": "Strum",
+              "score": 0.2112531214952469
+            }
+          ]
+        },
+        {
+          "start": 10.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0017793591832742095,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8996119499206543
+            },
+            {
+              "label": "Guitar",
+              "score": 0.3702816963195801
+            },
+            {
+              "label": "Plucked string instrument",
+              "score": 0.37025636434555054
+            },
+            {
+              "label": "Acoustic guitar",
+              "score": 0.36062493920326233
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.3476617634296417
+            },
+            {
+              "label": "Strum",
+              "score": 0.1771695464849472
+            }
+          ]
+        },
+        {
+          "start": 15.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.10279299318790436,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9199218153953552
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.29342135787010193
+            },
+            {
+              "label": "Singing",
+              "score": 0.10279299318790436
+            },
+            {
+              "label": "Tender music",
+              "score": 0.08792353421449661
+            },
+            {
+              "label": "Sad music",
+              "score": 0.06416746228933334
+            },
+            {
+              "label": "Acoustic guitar",
+              "score": 0.04190348461270332
+            }
+          ]
+        },
+        {
+          "start": 20.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.06530491262674332,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9578835964202881
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.4802423417568207
+            },
+            {
+              "label": "Tender music",
+              "score": 0.07307898253202438
+            },
+            {
+              "label": "Singing",
+              "score": 0.06530491262674332
+            },
+            {
+              "label": "Sad music",
+              "score": 0.06510113179683685
+            },
+            {
+              "label": "New-age music",
+              "score": 0.03970364108681679
+            }
+          ]
+        },
+        {
+          "start": 25.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.05552012845873833,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9590435028076172
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.5955811738967896
+            },
+            {
+              "label": "Tender music",
+              "score": 0.08416880667209625
+            },
+            {
+              "label": "Sad music",
+              "score": 0.07005820423364639
+            },
+            {
+              "label": "Singing",
+              "score": 0.05552012845873833
+            },
+            {
+              "label": "New-age music",
+              "score": 0.04102855548262596
+            }
+          ]
+        },
+        {
+          "start": 30.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.054491251707077026,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9557684063911438
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.5283868312835693
+            },
+            {
+              "label": "Tender music",
+              "score": 0.09155931323766708
+            },
+            {
+              "label": "Sad music",
+              "score": 0.054777197539806366
+            },
+            {
+              "label": "Singing",
+              "score": 0.054491251707077026
+            },
+            {
+              "label": "Christmas music",
+              "score": 0.039346396923065186
+            }
+          ]
+        },
+        {
+          "start": 35.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.05010277405381203,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9475851058959961
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.4746796488761902
+            },
+            {
+              "label": "Tender music",
+              "score": 0.09619443863630295
+            },
+            {
+              "label": "Christmas music",
+              "score": 0.06743130087852478
+            },
+            {
+              "label": "Sad music",
+              "score": 0.06081866845488548
+            },
+            {
+              "label": "Singing",
+              "score": 0.05010277405381203
+            }
+          ]
+        },
+        {
+          "start": 40.0,
+          "vocalLabel": "Mantra",
+          "vocalScore": 0.1186009868979454,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9146233797073364
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.28055307269096375
+            },
+            {
+              "label": "Tender music",
+              "score": 0.1289127767086029
+            },
+            {
+              "label": "Mantra",
+              "score": 0.1186009868979454
+            },
+            {
+              "label": "Sad music",
+              "score": 0.06120789796113968
+            },
+            {
+              "label": "Singing",
+              "score": 0.06080736219882965
+            }
+          ]
+        },
+        {
+          "start": 45.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0021439366973936558,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9300947189331055
+            },
+            {
+              "label": "Guitar",
+              "score": 0.3959912657737732
+            },
+            {
+              "label": "Acoustic guitar",
+              "score": 0.3759485185146332
+            },
+            {
+              "label": "Plucked string instrument",
+              "score": 0.3735804259777069
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.3501474857330322
+            },
+            {
+              "label": "Strum",
+              "score": 0.2090913951396942
+            }
+          ]
+        },
+        {
+          "start": 50.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0017478041118010879,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.928054928779602
+            },
+            {
+              "label": "Acoustic guitar",
+              "score": 0.3417784869670868
+            },
+            {
+              "label": "Guitar",
+              "score": 0.3332775831222534
+            },
+            {
+              "label": "Plucked string instrument",
+              "score": 0.32434895634651184
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.3043758273124695
+            },
+            {
+              "label": "Strum",
+              "score": 0.17729701101779938
+            }
+          ]
+        },
+        {
+          "start": 55.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.001711515011265874,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9012856483459473
+            },
+            {
+              "label": "Acoustic guitar",
+              "score": 0.2585884630680084
+            },
+            {
+              "label": "Plucked string instrument",
+              "score": 0.23806045949459076
+            },
+            {
+              "label": "Guitar",
+              "score": 0.2352510392665863
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.22938209772109985
+            },
+            {
+              "label": "Strum",
+              "score": 0.12562920153141022
+            }
+          ]
+        },
+        {
+          "start": 60.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.08546866476535797,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9261495471000671
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.28753775358200073
+            },
+            {
+              "label": "Tender music",
+              "score": 0.1543564796447754
+            },
+            {
+              "label": "Singing",
+              "score": 0.08546866476535797
+            },
+            {
+              "label": "Sad music",
+              "score": 0.07232090830802917
+            },
+            {
+              "label": "Christmas music",
+              "score": 0.06410037726163864
+            }
+          ]
+        },
+        {
+          "start": 65.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.057950709015131,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9230983257293701
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.28636133670806885
+            },
+            {
+              "label": "Tender music",
+              "score": 0.1647420972585678
+            },
+            {
+              "label": "Sad music",
+              "score": 0.061178673058748245
+            },
+            {
+              "label": "Singing",
+              "score": 0.057950709015131
+            },
+            {
+              "label": "Christmas music",
+              "score": 0.0341172032058239
+            }
+          ]
+        }
+      ],
+      "flagged": false
+    },
+    {
+      "file": "audio/battle.mp3",
+      "sha256": "b7cd036eef6741f9f7dfeadaa885f8b658fa0da4cc279552c9064f3120c11c18",
+      "seconds": 62.4,
+      "windows": [
+        {
+          "start": 0.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.021284738555550575,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7154480218887329
+            },
+            {
+              "label": "Sad music",
+              "score": 0.3572481572628021
+            },
+            {
+              "label": "Violin, fiddle",
+              "score": 0.07015704363584518
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.06447459012269974
+            },
+            {
+              "label": "Tender music",
+              "score": 0.06027165427803993
+            },
+            {
+              "label": "Cello",
+              "score": 0.05755281448364258
+            }
+          ]
+        },
+        {
+          "start": 5.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.006201712414622307,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8129565119743347
+            },
+            {
+              "label": "Theme music",
+              "score": 0.27156323194503784
+            },
+            {
+              "label": "Background music",
+              "score": 0.17736081779003143
+            },
+            {
+              "label": "Sad music",
+              "score": 0.17565660178661346
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.0843149945139885
+            },
+            {
+              "label": "Video game music",
+              "score": 0.08041676133871078
+            }
+          ]
+        },
+        {
+          "start": 10.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0027889872435480356,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7882564663887024
+            },
+            {
+              "label": "Theme music",
+              "score": 0.21236449480056763
+            },
+            {
+              "label": "Background music",
+              "score": 0.12589623034000397
+            },
+            {
+              "label": "Sad music",
+              "score": 0.0839250236749649
+            },
+            {
+              "label": "Video game music",
+              "score": 0.07392874360084534
+            },
+            {
+              "label": "Violin, fiddle",
+              "score": 0.07240927219390869
+            }
+          ]
+        },
+        {
+          "start": 15.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.005733512807637453,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8276063203811646
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.13514523208141327
+            },
+            {
+              "label": "Background music",
+              "score": 0.08835110813379288
+            },
+            {
+              "label": "Violin, fiddle",
+              "score": 0.0820983275771141
+            },
+            {
+              "label": "Theme music",
+              "score": 0.0781451016664505
+            },
+            {
+              "label": "Video game music",
+              "score": 0.07681208103895187
+            }
+          ]
+        },
+        {
+          "start": 20.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.014243438839912415,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8206860423088074
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.17927958071231842
+            },
+            {
+              "label": "Video game music",
+              "score": 0.11476624011993408
+            },
+            {
+              "label": "Background music",
+              "score": 0.11309898644685745
+            },
+            {
+              "label": "Violin, fiddle",
+              "score": 0.08018616586923599
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.06427327543497086
+            }
+          ]
+        },
+        {
+          "start": 25.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.019114889204502106,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.9128918647766113
+            },
+            {
+              "label": "Background music",
+              "score": 0.13663023710250854
+            },
+            {
+              "label": "Video game music",
+              "score": 0.12130674719810486
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.07690470665693283
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.0707688257098198
+            },
+            {
+              "label": "Theme music",
+              "score": 0.06667755544185638
+            }
+          ]
+        },
+        {
+          "start": 30.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.02848217636346817,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7816838622093201
+            },
+            {
+              "label": "Video game music",
+              "score": 0.09289785474538803
+            },
+            {
+              "label": "Background music",
+              "score": 0.0911189392209053
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.07790418714284897
+            },
+            {
+              "label": "Gospel music",
+              "score": 0.06797561794519424
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.05396120622754097
+            }
+          ]
+        },
+        {
+          "start": 35.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.07627599686384201,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7385914921760559
+            },
+            {
+              "label": "Singing",
+              "score": 0.07627599686384201
+            },
+            {
+              "label": "Gospel music",
+              "score": 0.07529868930578232
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.06680130958557129
+            },
+            {
+              "label": "Opera",
+              "score": 0.051139406859874725
+            },
+            {
+              "label": "Choir",
+              "score": 0.04894974082708359
+            }
+          ]
+        },
+        {
+          "start": 40.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.041836101561784744,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.6785208582878113
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.0876566469669342
+            },
+            {
+              "label": "Singing",
+              "score": 0.041836101561784744
+            },
+            {
+              "label": "Progressive rock",
+              "score": 0.032996766269207
+            },
+            {
+              "label": "Opera",
+              "score": 0.027733780443668365
+            },
+            {
+              "label": "Speech",
+              "score": 0.02687191776931286
+            }
+          ]
+        },
+        {
+          "start": 45.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.02215534634888172,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.6568854451179504
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.12028743326663971
+            },
+            {
+              "label": "Organ",
+              "score": 0.07255849987268448
+            },
+            {
+              "label": "Keyboard (musical)",
+              "score": 0.05957617610692978
+            },
+            {
+              "label": "Piano",
+              "score": 0.047953009605407715
+            },
+            {
+              "label": "Video game music",
+              "score": 0.043828725814819336
+            }
+          ]
+        },
+        {
+          "start": 50.0,
+          "vocalLabel": "Choir",
+          "vocalScore": 0.040899138897657394,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.6376185417175293
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.09836138784885406
+            },
+            {
+              "label": "Drum",
+              "score": 0.0529436357319355
+            },
+            {
+              "label": "Drum kit",
+              "score": 0.04968583956360817
+            },
+            {
+              "label": "Organ",
+              "score": 0.0443299226462841
+            },
+            {
+              "label": "Keyboard (musical)",
+              "score": 0.04239290952682495
+            }
+          ]
+        },
+        {
+          "start": 55.0,
+          "vocalLabel": "Choir",
+          "vocalScore": 0.07919730246067047,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.6070507764816284
+            },
+            {
+              "label": "Choir",
+              "score": 0.07919730246067047
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.05810540169477463
+            },
+            {
+              "label": "Singing",
+              "score": 0.03976329416036606
+            },
+            {
+              "label": "Gospel music",
+              "score": 0.03354918956756592
+            },
+            {
+              "label": "Mantra",
+              "score": 0.0329427532851696
+            }
+          ]
+        },
+        {
+          "start": 60.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.06851912289857864,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.44695448875427246
+            },
+            {
+              "label": "Singing",
+              "score": 0.06851912289857864
+            },
+            {
+              "label": "Choir",
+              "score": 0.05309293046593666
+            },
+            {
+              "label": "Speech",
+              "score": 0.04376407712697983
+            },
+            {
+              "label": "Gospel music",
+              "score": 0.02995840273797512
+            },
+            {
+              "label": "Sound effect",
+              "score": 0.029559047892689705
+            }
+          ]
+        }
+      ],
+      "flagged": false
+    },
+    {
+      "file": "audio/danger.mp3",
+      "sha256": "73fdb77005f7a19f91a5d696807c5e04dbe8e781465e49cabf09a88fd2396a3c",
+      "seconds": 54.4,
+      "windows": [
+        {
+          "start": 0.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.005842167884111404,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7355055212974548
+            },
+            {
+              "label": "Flute",
+              "score": 0.30980440974235535
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.09061761200428009
+            },
+            {
+              "label": "Wind instrument, woodwind instrument",
+              "score": 0.07539945840835571
+            },
+            {
+              "label": "Clarinet",
+              "score": 0.05099828913807869
+            },
+            {
+              "label": "Background music",
+              "score": 0.046565454453229904
+            }
+          ]
+        },
+        {
+          "start": 5.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.003709444310516119,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8260216116905212
+            },
+            {
+              "label": "Background music",
+              "score": 0.10653869807720184
+            },
+            {
+              "label": "Video game music",
+              "score": 0.09815897047519684
+            },
+            {
+              "label": "Flute",
+              "score": 0.09558974951505661
+            },
+            {
+              "label": "Theme music",
+              "score": 0.08116034418344498
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.058541666716337204
+            }
+          ]
+        },
+        {
+          "start": 10.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0023457801435142756,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.769259512424469
+            },
+            {
+              "label": "Background music",
+              "score": 0.09031856060028076
+            },
+            {
+              "label": "Video game music",
+              "score": 0.06303215771913528
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.05979911983013153
+            },
+            {
+              "label": "Theme music",
+              "score": 0.05209432914853096
+            },
+            {
+              "label": "New-age music",
+              "score": 0.049611903727054596
+            }
+          ]
+        },
+        {
+          "start": 15.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0037983402144163847,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.792739748954773
+            },
+            {
+              "label": "Background music",
+              "score": 0.1357049196958542
+            },
+            {
+              "label": "Video game music",
+              "score": 0.12066198140382767
+            },
+            {
+              "label": "Theme music",
+              "score": 0.11918995529413223
+            },
+            {
+              "label": "Sad music",
+              "score": 0.0650377869606018
+            },
+            {
+              "label": "Tender music",
+              "score": 0.06015511602163315
+            }
+          ]
+        },
+        {
+          "start": 20.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0032375541049987078,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8171004056930542
+            },
+            {
+              "label": "Background music",
+              "score": 0.14797040820121765
+            },
+            {
+              "label": "Theme music",
+              "score": 0.13032649457454681
+            },
+            {
+              "label": "Sad music",
+              "score": 0.12079823017120361
+            },
+            {
+              "label": "New-age music",
+              "score": 0.08019029349088669
+            },
+            {
+              "label": "Tender music",
+              "score": 0.07988633215427399
+            }
+          ]
+        },
+        {
+          "start": 25.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0025346786715090275,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8085755109786987
+            },
+            {
+              "label": "Background music",
+              "score": 0.15533369779586792
+            },
+            {
+              "label": "Theme music",
+              "score": 0.11461889743804932
+            },
+            {
+              "label": "Sad music",
+              "score": 0.07774800807237625
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.0662514865398407
+            },
+            {
+              "label": "Tender music",
+              "score": 0.05732317268848419
+            }
+          ]
+        },
+        {
+          "start": 30.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0032528871670365334,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8728969693183899
+            },
+            {
+              "label": "Background music",
+              "score": 0.1441466063261032
+            },
+            {
+              "label": "Theme music",
+              "score": 0.12477847188711166
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.08284154534339905
+            },
+            {
+              "label": "Video game music",
+              "score": 0.07441911101341248
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.06979886442422867
+            }
+          ]
+        },
+        {
+          "start": 35.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.003777262754738331,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8807946443557739
+            },
+            {
+              "label": "Background music",
+              "score": 0.1128448024392128
+            },
+            {
+              "label": "Theme music",
+              "score": 0.09608721733093262
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.08033114671707153
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.07413806021213531
+            },
+            {
+              "label": "Video game music",
+              "score": 0.06916940212249756
+            }
+          ]
+        },
+        {
+          "start": 40.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.00516496179625392,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8654873371124268
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.11172207444906235
+            },
+            {
+              "label": "Background music",
+              "score": 0.07471108436584473
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.04506015032529831
+            },
+            {
+              "label": "Electronic music",
+              "score": 0.041260726749897
+            },
+            {
+              "label": "Synthesizer",
+              "score": 0.04099012166261673
+            }
+          ]
+        },
+        {
+          "start": 45.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.010264847427606583,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8844215869903564
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.1323617547750473
+            },
+            {
+              "label": "Background music",
+              "score": 0.06632829457521439
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.05995521694421768
+            },
+            {
+              "label": "Drum machine",
+              "score": 0.05377188324928284
+            },
+            {
+              "label": "Electronica",
+              "score": 0.050876181572675705
+            }
+          ]
+        },
+        {
+          "start": 50.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.04241006448864937,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7538666129112244
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.07212235033512115
+            },
+            {
+              "label": "Speech",
+              "score": 0.04241006448864937
+            },
+            {
+              "label": "Soundtrack music",
+              "score": 0.03963521867990494
+            },
+            {
+              "label": "Video game music",
+              "score": 0.03734986111521721
+            },
+            {
+              "label": "Electronic music",
+              "score": 0.03465783968567848
+            }
+          ]
+        }
+      ],
+      "flagged": false
+    },
+    {
+      "file": "audio/victory.mp3",
+      "sha256": "b01ca4b45801f600ebd34f95e2e630c95cede8fefd81255bd492e8d36e652f08",
+      "seconds": 30.4,
+      "windows": [
+        {
+          "start": 0.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.004064300563186407,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7985954284667969
+            },
+            {
+              "label": "Flute",
+              "score": 0.521709144115448
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.12070730328559875
+            },
+            {
+              "label": "Wind instrument, woodwind instrument",
+              "score": 0.12049388885498047
+            },
+            {
+              "label": "Violin, fiddle",
+              "score": 0.0900239646434784
+            },
+            {
+              "label": "Theme music",
+              "score": 0.05229228734970093
+            }
+          ]
+        },
+        {
+          "start": 5.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.005143601447343826,
+          "top": [
+            {
+              "label": "Flute",
+              "score": 0.803486704826355
+            },
+            {
+              "label": "Music",
+              "score": 0.7962644696235657
+            },
+            {
+              "label": "Wind instrument, woodwind instrument",
+              "score": 0.29620328545570374
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.10902290791273117
+            },
+            {
+              "label": "Clarinet",
+              "score": 0.04569448530673981
+            },
+            {
+              "label": "Tender music",
+              "score": 0.036268625408411026
+            }
+          ]
+        },
+        {
+          "start": 10.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.005180017556995153,
+          "top": [
+            {
+              "label": "Flute",
+              "score": 0.8937157988548279
+            },
+            {
+              "label": "Music",
+              "score": 0.7937116026878357
+            },
+            {
+              "label": "Wind instrument, woodwind instrument",
+              "score": 0.37112462520599365
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.10641960799694061
+            },
+            {
+              "label": "Clarinet",
+              "score": 0.023967117071151733
+            },
+            {
+              "label": "Tender music",
+              "score": 0.02300543151795864
+            }
+          ]
+        },
+        {
+          "start": 15.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.004289083648473024,
+          "top": [
+            {
+              "label": "Flute",
+              "score": 0.7966448664665222
+            },
+            {
+              "label": "Music",
+              "score": 0.771899402141571
+            },
+            {
+              "label": "Wind instrument, woodwind instrument",
+              "score": 0.24191473424434662
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.06868616491556168
+            },
+            {
+              "label": "Tender music",
+              "score": 0.04831449314951897
+            },
+            {
+              "label": "Background music",
+              "score": 0.035265181213617325
+            }
+          ]
+        },
+        {
+          "start": 20.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.005055316723883152,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8019419312477112
+            },
+            {
+              "label": "Flute",
+              "score": 0.6013659834861755
+            },
+            {
+              "label": "Wind instrument, woodwind instrument",
+              "score": 0.11306439340114594
+            },
+            {
+              "label": "New-age music",
+              "score": 0.09932222217321396
+            },
+            {
+              "label": "Tender music",
+              "score": 0.08960753679275513
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.07927736639976501
+            }
+          ]
+        },
+        {
+          "start": 25.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.016989417374134064,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.6842014789581299
+            },
+            {
+              "label": "Flute",
+              "score": 0.2978898584842682
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.08290093392133713
+            },
+            {
+              "label": "Wind instrument, woodwind instrument",
+              "score": 0.046596966683864594
+            },
+            {
+              "label": "Tender music",
+              "score": 0.041176095604896545
+            },
+            {
+              "label": "Violin, fiddle",
+              "score": 0.036832090467214584
+            }
+          ]
+        }
+      ],
+      "flagged": false
+    },
+    {
+      "file": "audio/defeat.mp3",
+      "sha256": "4d15f9f173d9abbbd730d698c804bf0fd1ac4cd2ebe7382d8b786c286b07ace0",
+      "seconds": 30.4,
+      "windows": [
+        {
+          "start": 0.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.0019037423189729452,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8704885244369507
+            },
+            {
+              "label": "New-age music",
+              "score": 0.3798850178718567
+            },
+            {
+              "label": "Sad music",
+              "score": 0.25370877981185913
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.08413822203874588
+            },
+            {
+              "label": "Tender music",
+              "score": 0.07698167115449905
+            },
+            {
+              "label": "Electric piano",
+              "score": 0.053402092307806015
+            }
+          ]
+        },
+        {
+          "start": 5.0,
+          "vocalLabel": "Singing",
+          "vocalScore": 0.0012538125738501549,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8817735314369202
+            },
+            {
+              "label": "New-age music",
+              "score": 0.3877573609352112
+            },
+            {
+              "label": "Sad music",
+              "score": 0.256952166557312
+            },
+            {
+              "label": "Tender music",
+              "score": 0.09424526989459991
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.08035381883382797
+            },
+            {
+              "label": "Background music",
+              "score": 0.05942403897643089
+            }
+          ]
+        },
+        {
+          "start": 10.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0017996878596022725,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.8748290538787842
+            },
+            {
+              "label": "Sad music",
+              "score": 0.4457654654979706
+            },
+            {
+              "label": "New-age music",
+              "score": 0.1727687269449234
+            },
+            {
+              "label": "Tender music",
+              "score": 0.11255218833684921
+            },
+            {
+              "label": "Background music",
+              "score": 0.09023638069629669
+            },
+            {
+              "label": "Lullaby",
+              "score": 0.04960886016488075
+            }
+          ]
+        },
+        {
+          "start": 15.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.0021385899744927883,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.7872967720031738
+            },
+            {
+              "label": "Cello",
+              "score": 0.31109267473220825
+            },
+            {
+              "label": "Sad music",
+              "score": 0.3071744740009308
+            },
+            {
+              "label": "Double bass",
+              "score": 0.14539480209350586
+            },
+            {
+              "label": "Bowed string instrument",
+              "score": 0.11509191989898682
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.06859984993934631
+            }
+          ]
+        },
+        {
+          "start": 20.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.002869223477318883,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.6737963557243347
+            },
+            {
+              "label": "Cello",
+              "score": 0.560735821723938
+            },
+            {
+              "label": "Double bass",
+              "score": 0.3905450701713562
+            },
+            {
+              "label": "Bowed string instrument",
+              "score": 0.25646689534187317
+            },
+            {
+              "label": "Sad music",
+              "score": 0.12625840306282043
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.11563795059919357
+            }
+          ]
+        },
+        {
+          "start": 25.0,
+          "vocalLabel": "Speech",
+          "vocalScore": 0.010660659521818161,
+          "top": [
+            {
+              "label": "Music",
+              "score": 0.6444054841995239
+            },
+            {
+              "label": "Cello",
+              "score": 0.39355579018592834
+            },
+            {
+              "label": "Double bass",
+              "score": 0.2565964460372925
+            },
+            {
+              "label": "Bowed string instrument",
+              "score": 0.19597294926643372
+            },
+            {
+              "label": "Sad music",
+              "score": 0.0713295191526413
+            },
+            {
+              "label": "Musical instrument",
+              "score": 0.06502266973257065
+            }
+          ]
+        }
+      ],
+      "flagged": false
+    }
+  ]
+}

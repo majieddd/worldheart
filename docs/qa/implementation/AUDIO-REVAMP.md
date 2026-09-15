@@ -1,67 +1,120 @@
 # YuE2 soundtrack and sound feedback
 
-Active 2026-09-15. Owner: Codex. Branch: `feature/yue2-audio-revamp`, based on
-V2 `309aaa7` plus the prior documentation closeout. Publication remains V2 only.
+Updated 2026-09-15. Codex owns `feature/yue2-audio-revamp`,
+[draft PR #43](https://github.com/majieddd/worldheart/pull/43). Based on V2
+`309aaa7` plus its documentation closeout. Publication remains V2 only.
 
 | Item | Scope | Status | Acceptance |
 |---|---|---|---|
-| U136 | Exact video workflow, isolated local YuE2 generation, soundtrack and provenance | Active | Pinned runtime/model, actual instrumentals, no vocals, listening/waveform checks, documented rights |
-| U137 | Responsive engine, buses, bounded voices, spatial feedback and mechanic cues | Implemented; targeted verification passed | Audible coverage, clean lifecycle, no duplicate feedback, measured combat cost |
-| U138 | Music transitions, ambience, mobile unlock, mix controls and Debug audition | Implemented; generated score acceptance pending | Browser interaction, pause/visibility recovery, settings persistence, compact touch layout |
-| U139 | Asset delivery, adversarial regression and V2 publication | Planned | Repository gates, classic/campaign boot, complete defense, live identity and audio checks |
+| U136 | Exact video workflow, local YuE2 soundtrack and provenance | Implemented; automated checks passed | Six delivered instrumentals screened; human listening remains open |
+| U137 | Engine, buses, bounded voices and mechanic cues | Verified locally | Cached bank, spatial feedback, input timing, lifecycle and combat checks |
+| U138 | Music transitions, ambience, touch mixer and Debug audition | Verified locally | Actual media output, loops, stream retirement, gesture unlock and settings |
+| U139 | Delivery, adversarial regression and V2 publication | Active | Final repository gates and public identity/playback verification |
 
-## Direction and evidence boundaries
+## Delivered implementation
 
-Music uses the YuE2 model demonstrated in the
-[owner's video](https://www.youtube.com/watch?v=9RtywbN--QE): native ComfyUI YuE2
-nodes, score generation, semantic conditioning, 32-step sampling and tiled VAE
-decoding. Short effects use authored sound design and must not be labelled
-YuE2-generated. No speech, singing, vocal chops or lyrical material belongs in
-the catalogue. Creature and commander feedback remains nonverbal.
+- Six original YuE2 pieces: lobby, exploration, battle, danger, victory and
+  defeat. 305.8 seconds of delivered music, 7.35 MB total, streamed as 48 kHz
+  stereo MP3. There is no inference or model download on a player's device.
+- 84 original nonvocal effects, 171 baked variations in a 3.08 MB bank. Weapons,
+  hits, creatures, character movement, mounts, powers, construction, inventory,
+  rewards, weather, local ecology and interface actions have dedicated cues.
+  Effects are authored sound design, not falsely attributed to YuE2.
+- Two music decks crossfade with combat state. Alerts and important rewards
+  briefly duck music. One cached effects buffer, distance attenuation, stereo
+  positioning, per-cue rate limits and a 24-active-voice budget limit combat
+  work. Stolen voices have a short release tail; the cap describes logical
+  active voices, not an absolute count of every releasing Web Audio node.
+- Master, music, effects, ambience and interface sliders plus mute are in the
+  existing game settings, mobile Field menu and lobby. Debug's Sound studio
+  auditions every cue and track. Stop preserves volume and permits replay.
+- Gesture unlock, interruption recovery, hidden-page suspension, disposal and
+  failed-asset fallback keep input feedback responsive. Audio state remains
+  outside the deterministic simulation; gameplay rules are unchanged.
+- `audio/` is included in V2 publication and generated mirrors. The local
+  single-file build embeds the same delivery assets. Stable main remains separate.
 
-The existing engine synthesizes short cues and a continuous pad/wind bed. It has
-no imported soundtrack. Preserve immediate feedback while avoiding per-shot
-synthesis graphs and unbounded loading on mobile.
+## Exact generation and rights
 
-Model source: [Comfy-Org/YuE2](https://huggingface.co/Comfy-Org/YuE2), revision
-`8e6fcf0f23252ed188b634bd50d44f4b01fba890`. The card declares CC BY-NC 4.0
-weights; upstream code uses Apache 2.0. Record this noncommercial restriction
-with preview assets. Commercial distribution rights are not asserted. No
-copyrighted reference song or vocal performance is supplied as generation input.
+The [owner's video](https://www.youtube.com/watch?v=9RtywbN--QE) and its linked
+workflow were inspected before setup. The runtime uses stock native ComfyUI
+YuE2 ABC score generation, music conditioning, 32-step dpm_2 sampling and tiled
+VAE decoding. No reference song, voice or copyrighted performance was supplied.
+Inputs are original instrumental style and bracketed arrangement instructions.
 
-Current evidence: video metadata/transcript and linked workflow inspected;
-native ComfyUI YuE2 source inspected. Isolated runtime/model setup is underway.
-No new audio is live yet. Generation, listening, runtime, performance and
-physical-device acceptance are separate gates.
+The [Comfy-Org/YuE2](https://huggingface.co/Comfy-Org/YuE2) BF16 checkpoint,
+revision `8e6fcf0f23252ed188b634bd50d44f4b01fba890`, was downloaded locally and
+matched SHA-256 `33765adbf9813c9a50318218760b2fd819a319862460a04884607581961c6fee`.
+The isolated ComfyUI checkout is `36da3ff763687eab86a35e1019995dd1fb369b0d`,
+with Python 3.12 and CUDA PyTorch 2.10 on the author's RTX 4080 Laptop GPU.
+[Runtime versions](AUDIO-REVAMP/runtime-freeze.txt),
+[repeatable authoring instructions](../../../tools/audio/README.md),
+[delivered provenance](../../../audio/music-provenance.json).
+The model stays outside Git in the sibling authoring directory.
 
-## Effects checkpoint, local verification
+Model weights use **CC BY-NC 4.0**; upstream code uses Apache 2.0. The preview
+records that noncommercial restriction and does not assert commercial output
+rights. Attribution ships with the assets in `audio/README.md`.
 
-Draft [PR #43](https://github.com/majieddd/worldheart/pull/43) retains the review.
-The full BF16 checkpoint downloaded and matched its published SHA-256. An
-isolated Python 3.12 / CUDA PyTorch 2.10 runtime is being installed outside the
-repository. The soundtrack has not yet been generated or published.
+Pristine FLACs were retained before bounded eight-second phrase leveling,
+1.6-second equal-power wraps and two-pass loudness normalization. Actual final
+levels are -20.26 to -20.27 LUFS, with true peaks from -7.76 to -2.84 dBTP.
+These are measured values; musical phrase quality still needs listening.
 
-- 84 authored nonvocal cues, 171 baked variations. One 3.08 MB MP3 bank decodes
-  to 36,902,452 bytes on the reference browser, below the 40 MiB budget.
-- 99 initial browser checks; refined tests verify visible 48px mobile sliders
-  through the actual Field menu, plus touch unlock, mute and storage recovery.
-- 16 lifecycle fixtures cover two-deck streaming, fade cleanup, real output
-  analyser energy, spatial direction/attenuation, hide/show, disposal and failed
-  asset recovery. The fixture score is synthetic test media, never shipped or
-  represented as YuE2. [Fixture evidence](AUDIO-REVAMP/lifecycle-fixtures.json).
-- 338 automated tests and syntax/style gates pass. A legal instrumented
-  ten-wave defense retains 20 heart health, defeats 254 enemies and extracts six
-  items to Planet 2. It exercised 39 cue types without unknown names or audio
-  errors. [Defense](AUDIO-REVAMP/defense.json), [arrival](AUDIO-REVAMP/arrival.json).
-  Time is accelerated; it does not prove natural audio pacing or listening feel.
+Three first takes and the second exploration take exceeded the preregistered
+0.12 vocal-event screening threshold. They were replaced, not waived. The
+final exploration arrangement uses detached guitar, piano and woodblock.
+[First screen](AUDIO-REVAMP/retained-first-score-screen.json),
+[second screen](AUDIO-REVAMP/retained-second-score-screen.json),
+[accepted final hashes and screens](AUDIO-REVAMP/accepted-vocal-screen.json).
+The score's original and delivery hashes, seed, processing and successful
+request/history receipts are retained for each track. Scores are classifier
+outputs, not calibrated probabilities or proof that no vocal artifact exists.
 
-The retained first slider fixture counted hidden controls; that claim was
-superseded by actual visible geometry. The next Debug fixture omitted opening
-its mobile inspector and timed out; the corrected test uses the real inspector.
-Both records remain beside the passing evidence. These were fixture defects.
+## Runtime and adversarial evidence
 
-Native audio input is unavailable to this agent: an attempted local WAV audition
-returned an explicit unsupported-audio response. Waveform and browser output
-checks are objective evidence, not a listening claim. Automated vocal screening
-will supplement the generated music review; final subjective listening and
-physical-phone audio remain explicitly separate owner/device acceptance.
+339 automated tests, 100/100 source syntax checks and the house style gate pass.
+The generated V2 mirror matches all 120 source files; the standalone build is
+16.54 MB with 102 modules and embedded audio.
+
+- 100 actual game/lobby/Debug browser checks: all 84 decoded cues, bounded burst
+  behavior, native touch sliders, mobile geometry, persistence, mute, context
+  recovery and no exceptions. [Report](AUDIO-REVAMP/effects-browser.json).
+  The final decoded bank is 36,902,452 bytes, below the 40 MiB budget.
+- 23 real-score component checks: six media hashes/MIME/durations, actual
+  isolated music output, loop wrap, one remaining stream after each crossfade,
+  Stop/replay and no errors. [Report](AUDIO-REVAMP/score-browser.json).
+- 16 lifecycle fault fixtures: two-deck unlocking, rapid transitions, spatial
+  output, visibility, disposal and failed-download recovery. This suite uses
+  intercepted synthetic test media, never shipped or described as generated
+  music. [Report](AUDIO-REVAMP/lifecycle-fixtures.json).
+- Four standalone checks verify classic-map boot, embedded music playback,
+  bank decode and no external audio requests. [Report](AUDIO-REVAMP/bundle.json).
+- 21 production mechanic fixtures cover each weapon family, weapon power, all five
+  commander abilities, mounts and silence while the scepter is overheated.
+  [Report](AUDIO-REVAMP/mechanics.json).
+- The final score completed an instrumented ten-wave defense with 20 heart
+  health, 251 defeated enemies and seven items extracted to Planet 2. It played
+  841 cues across 39 identities, including storms and earthquake, without audio
+  errors or unknown names; music reached victory. [Run](AUDIO-REVAMP/score-defense.json),
+  [arrival](AUDIO-REVAMP/score-arrival.json). Legal purchases and movement policy,
+  accelerated simulation and sparse rendering: not blind play or a phone benchmark.
+- The earlier effects checkpoint also passed a complete defense and all seven
+  camera/map suites. [Prior run](AUDIO-REVAMP/defense.json),
+  [camera evidence](AUDIO-REVAMP/cameras.json).
+
+Retained fixture corrections: initial slider counting included hidden controls;
+the next Debug fixture omitted its mobile inspector. Both were corrected to
+use the actual visible interface. The first new weapon fixture tried a carbine
+on the incompatible Bulwark commander; the game correctly refused that loadout.
+The refined fixture uses a compatible production body for each family. None of
+these failed fixtures is evidence of a product regression.
+
+## Remaining acceptance
+
+Native audio input is unavailable to this agent: an attempted WAV audition
+returned an explicit unsupported-audio response. This record does not claim
+subjective listening, guaranteed vocal absence, physical-phone speaker quality,
+or Safari/iOS hardware acceptance. Final owner listening in Sound studio and
+real-device play remain open, along with the already tracked full-campaign work.
+A public preview is reviewable implementation, not commercial release approval.

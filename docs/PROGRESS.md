@@ -1,14 +1,16 @@
 # 99 Planets development progress
 
-Active: U136-U139, instrumental-only YuE2 soundtrack and complete sound feedback
-revamp. Codex owns `feature/yue2-audio-revamp` on the latest V2 plus closeout.
-[Audio ledger](qa/implementation/AUDIO-REVAMP.md) records generation provenance,
-event coverage, mobile playback, listening and publication acceptance. Exact
-video workflow and BF16 checkpoint hash verified. Effects and mixer are implemented;
-338 tests, browser audio fixtures and a legal ten-wave defense pass. [PR #43](https://github.com/majieddd/worldheart/pull/43).
-Local generation setup is finishing; score and listening acceptance remain open.
+Active U136-U139: YuE2 audio revamp is implemented and locally verified;
+V2 publication is in progress. Codex owns `feature/yue2-audio-revamp`,
+[draft PR #43](https://github.com/majieddd/worldheart/pull/43).
+[Audio ledger](qa/implementation/AUDIO-REVAMP.md): six actual local instrumentals,
+84 effects / 171 variations, bounded spatial audio, streaming music, compact mix
+controls and Debug audition. Final tracks passed automated vocal screening;
+rejected takes remain in evidence. Browser output, touch/lifecycle checks and a
+complete ten-wave defense/extraction passed. Human listening and physical-phone
+acceptance remain open because this agent cannot hear audio. The model's
+noncommercial restriction is recorded; commercial rights are not asserted.
 No new audio is live yet.
-The model's noncommercial license is recorded; commercial rights are not asserted.
 
 Updated 2026-09-15. This is the collaborator entry point for the owner's direction.
 

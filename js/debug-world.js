@@ -162,7 +162,7 @@ function biomeTile(key,theme=null){
 
 export async function startDebugWorld(){
   const el=id=>document.getElementById(id),viewport=el('viewport'),labels=el('labels');
-  const audio=new AudioEngine();audio.ambience='none';window.WH_AUDIO=audio;audioSettings(audio,document.querySelector('aside'),{audition:true});
+  const audio=new AudioEngine();audio.ambience='none';audio.state='none';window.WH_AUDIO=audio;audioSettings(audio,document.querySelector('aside'),{audition:true});
   const renderer=new THREE.WebGLRenderer({antialias:true});renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setClearColor(0x152334);viewport.prepend(renderer.domElement);
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,10000);
   scene.add(new THREE.HemisphereLight(0xdbecff,0x566276,2.4));

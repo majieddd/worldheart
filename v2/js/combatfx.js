@@ -374,7 +374,7 @@ export class CombatFx {
     // Heavier the more it caught, so a shell dropped into a pack feels like
     // more than one dropped on open ground.
     this.rig.addTrauma(0.16 + 0.04 * Math.min(hits, 3));
-    this.audio?.play('explosion');
+    this.audio?.play('explosion',{position:sh.pos});
   }
 
   _drawShells(dt) {

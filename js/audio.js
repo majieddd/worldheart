@@ -102,7 +102,8 @@ export class AudioEngine {
   }
   _syncMusic(){
     if(this.disposed||!this.started||!this.ctx||this.muted||document.hidden)return;
-    const track=MUSIC_TRACKS[this.state];if(!track)return;
+    const track=MUSIC_TRACKS[this.state];
+    if(!track){for(const d of this.decks){d.target=0;d.gain.gain.setTargetAtTime(0,this.ctx.currentTime,.08);d.element.pause();}this.stats.music='stopped';return;}
     if(this.decks.some(d=>d.key===this.state&&d.target===1)){this._resumeMusic();return;}
     let chosen=this.decks.find(d=>d.key===this.state);
     if(!chosen){chosen=this.decks.find(d=>!d.target)||this.decks[0];chosen.element.pause();chosen.key=this.state;chosen.element.src=audioAsset(track.file);chosen.element.loop=true;}
@@ -118,7 +119,7 @@ export class AudioEngine {
     if(this._ambientVoice?.name===this.ambience&&this.voices.has(this._ambientVoice))return;
     if(this._ambientVoice)this._stop(this._ambientVoice,.25);
     this._ambientVoice=null;
-    if(this.started&&this.buffer&&!this.muted&&!document.hidden)this._ambientVoice=this.play(this.ambience,{loop:true});
+    if(this.started&&this.buffer&&!this.muted&&!document.hidden&&AUDIO_CUES[this.ambience]?.bus==='ambience')this._ambientVoice=this.play(this.ambience,{loop:true});
   }
   _stop(voice,fade=.012){
     if(!voice||voice.stopping)return;voice.stopping=true;

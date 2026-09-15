@@ -30,17 +30,25 @@ export function renderCue(key,family,variant=0){
     else if(key==='equip'){noise(0,.055,.5,{low:4200});tone(.035,.22,540,.2,{metal:.8});noise(.07,.07,.5,{low:1800});}
     else {tone(0,.075,key==='aim'?640:1150,.23,{end:key==='aim'?800:950});noise(0,.028,.2,{low:4200});if(key==='order'||key==='rally')tone(.09,.2,1450,.17);}
   }else if(family==='reward'){
-    const notes=key==='defeat'?[294,233,196]:key==='victory'?[392,494,587,784,988]:key==='coin'?[1320,1760]:key==='crystal'?[1175,1568,2350]:key==='deposit'?[784,988,1175,1568]:key==='waveClear'?[523,659,784]:[392,587,784];
+    const notes=({build:[294,440],upgrade:[440,554,659,880],forge:[330,495,660],sell:[784,587,392],talent:[659,880,1109],begin:[294,392,587],waveStart:[294,330,440],reconnect:[392,523,784]})[key]||(key==='defeat'?[294,233,196]:key==='victory'?[392,494,587,784,988]:key==='coin'?[1320,1760]:key==='crystal'?[1175,1568,2350]:key==='deposit'?[784,988,1175,1568]:key==='waveClear'?[523,659,784]:[392,587,784]);
     chime(notes,key==='coin'?.19:.26);
     if(['build','upgrade','forge','sell'].includes(key)){
       noise(0,.25,.65,{low:1400});tone(0,.4,key==='forge'?110:175,.38,{end:70,metal:.75});
       for(let j=0;j<3;j++)tone(j*.09,.28,620+j*157,.08,{metal:.5});
+      if(key==='forge'){for(const t of [0,.19,.38]){noise(t,.065,.55,{low:5200,high:700});tone(t,.36,740,.23,{metal:.8,decay:4});}}
+      if(key==='build')noise(.17,.24,.6,{low:700,high:40});
     }
   }else if(family==='weapon'){
     if(['swing','spear','twinblade'].includes(key)){
       noise(0,.32,key==='spear'?.7:.85,{low:key==='twinblade'?6500:4200,high:350,attack:.04,decay:3});tone(.015,.21,180,.2,{end:55});if(key==='twinblade')noise(.12,.28,.5,{low:5400,high:600,attack:.02});
     }else if(['rifle','shot','lob','mortar'].includes(key)){
-      const heavy=key==='lob'||key==='mortar';noise(0,.025,.9,{low:heavy?4000:10000,high:300});tone(0,heavy?.65:.24,heavy?170:330,.65,{end:heavy?45:90,decay:7,rough:.1});noise(.014,heavy?.65:.27,.7,{low:heavy?950:3800,decay:6});tone(.1,.18,heavy?280:1900,.1,{metal:.7});noise(.13,.07,.12,{low:6000});
+      const profiles={rifle:[10000,330,90,.24,3800,.27],shot:[6400,760,210,.2,2700,.19],lob:[3200,235,95,.42,1700,.4],mortar:[4800,115,32,.78,650,.78]};
+      const [crack,body,end,tail,dust,spread]=profiles[key];
+      noise(0,.025,.9,{low:crack,high:300});tone(0,tail,body,.65,{end,decay:7,rough:.1});noise(.014,spread,.7,{low:dust,decay:6});
+      if(key==='rifle'){noise(.085,.055,.32,{low:5800,high:1700});tone(.09,.12,2100,.08,{metal:.8});}
+      if(key==='shot'){tone(.015,.24,2100,.2,{end:420,metal:.2});noise(.04,.15,.2,{low:5500,pulse:60});}
+      if(key==='lob'){noise(.025,.23,.5,{low:1200,high:200,attack:.012});tone(.035,.2,520,.12,{end:200});}
+      if(key==='mortar'){tone(.065,.72,58,.3,{end:31,decay:4});noise(.17,.5,.28,{low:450,high:25});}
     }else if(key==='fire'){
       noise(0,.47,.95,{low:3100,high:180,attack:.025,decay:1.8,pulse:33});tone(0,.42,120,.26,{end:65,rough:.35});for(let i=0;i<6;i++)noise(random()*.32,.023,.2,{low:7500});
     }else if(key==='cryo'){

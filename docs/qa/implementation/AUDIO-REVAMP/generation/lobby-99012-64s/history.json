@@ -1,0 +1,170 @@
+{
+  "prompt": [
+    7,
+    "0faf74f9-3f75-4ff2-b752-5ed92b95720c",
+    {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "yue2_3b_bf16.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "YuE2GenerateABC",
+        "inputs": {
+          "clip": [
+            "1",
+            1
+          ],
+          "style": "Warm adventurous fantasy strategy game courtyard music, 96 BPM, D major. Pizzicato strings, hand-played marimba, celesta, gentle orchestral woodwinds, brushed hand percussion and warm analog synth bass. Playful and welcoming, with an instantly memorable four-note rising motif. Small ensemble, delicate rather than bombastic. Original video game instrumental score. Only musical instruments. No vocals, no singing, no speech, no choir, no humming, no vocal samples. Clear melodic phrases, restrained dynamics, spacious clean production, gentle high frequencies, controlled bass, seamless flowing arrangement.",
+          "lyrics": "[Instrumental introduction: celesta and pizzicato strings state a rising four-note melody]\n[Instrumental A section: marimba joins the woodwind melody with light hand percussion]\n[Instrumental B section: warm strings and a gentle countermelody]\n[Instrumental reprise: return to the opening melody and a soft sustained instrumental ending]",
+          "seed": 99012,
+          "mode": "full",
+          "max_abc_tokens": 2048,
+          "temperature": 0.7,
+          "top_p": 0.9,
+          "top_k": 30,
+          "repetition_penalty": 1.005,
+          "penalty_window": 100
+        }
+      },
+      "3": {
+        "class_type": "YuE2GenerateMusic",
+        "inputs": {
+          "clip": [
+            "1",
+            1
+          ],
+          "style": "Warm adventurous fantasy strategy game courtyard music, 96 BPM, D major. Pizzicato strings, hand-played marimba, celesta, gentle orchestral woodwinds, brushed hand percussion and warm analog synth bass. Playful and welcoming, with an instantly memorable four-note rising motif. Small ensemble, delicate rather than bombastic. Original video game instrumental score. Only musical instruments. No vocals, no singing, no speech, no choir, no humming, no vocal samples. Clear melodic phrases, restrained dynamics, spacious clean production, gentle high frequencies, controlled bass, seamless flowing arrangement.",
+          "lyrics": "[Instrumental introduction: celesta and pizzicato strings state a rising four-note melody]\n[Instrumental A section: marimba joins the woodwind melody with light hand percussion]\n[Instrumental B section: warm strings and a gentle countermelody]\n[Instrumental reprise: return to the opening melody and a soft sustained instrumental ending]",
+          "abc": [
+            "2",
+            0
+          ],
+          "seed": 99013,
+          "mode": "full",
+          "max_duration": 64.0,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 100,
+          "repetition_penalty": 1.2
+        }
+      },
+      "4": {
+        "class_type": "EmptyYuE2LatentAudio",
+        "inputs": {
+          "seconds": [
+            "3",
+            1
+          ],
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "3",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 99014,
+          "steps": 32,
+          "cfg": 1.0,
+          "sampler_name": "dpm_2",
+          "scheduler": "sgm_uniform",
+          "denoise": 1.0
+        }
+      },
+      "6": {
+        "class_type": "VAEDecodeAudioTiled",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ],
+          "tile_size": 512,
+          "overlap": 64
+        }
+      },
+      "7": {
+        "class_type": "SaveAudio",
+        "inputs": {
+          "audio": [
+            "6",
+            0
+          ],
+          "filename_prefix": "worldheart/lobby-99012"
+        }
+      }
+    },
+    {
+      "create_time": 1789456332454
+    },
+    [
+      "7"
+    ]
+  ],
+  "outputs": {
+    "7": {
+      "audio": [
+        {
+          "filename": "lobby-99012_00001.flac",
+          "subfolder": "worldheart",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "0faf74f9-3f75-4ff2-b752-5ed92b95720c",
+          "timestamp": 1789456332455
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "0faf74f9-3f75-4ff2-b752-5ed92b95720c",
+          "timestamp": 1789456332457
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "0faf74f9-3f75-4ff2-b752-5ed92b95720c",
+          "timestamp": 1789456400916
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "7": {
+      "node_id": "7",
+      "display_node": "7",
+      "parent_node": null,
+      "real_node_id": "7"
+    }
+  }
+}
