@@ -1,5 +1,11 @@
 # 99 Planets To Defend: running development blueprint
 
+U158-U160 adds an isolated [illustration lab](qa/implementation/STYLE-LAB.md)
+to compare retro anime, Borderlands-inspired ink and their hybrid on shared
+simple 3D geometry. This is a graphics test slice, not a production art migration.
+The owner's three images guide the hybrid's contours, shading and textures.
+
+
 Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.

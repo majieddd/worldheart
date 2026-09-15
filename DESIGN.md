@@ -4,6 +4,14 @@
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
 ## Dials
+Illustration lab is an isolated three-direction experiment at `style-lab.html`.
+Dials 4/2/4. It retains navy/cyan interface tokens and uses warm painted scene
+palettes. Retro anime has fine contours and broad cel shadows; the ink study
+has heavier seams, hatching and wear; the hybrid has peach light, violet shadows
+and selective marks guided by the owner's three references. Synchronized
+world/ground/material views and ink/texture switches expose each recipe.
+None of these experiments selects or replaces the production art direction.
+
 The opt-in sound comparison follows the existing Debug exhibition component
 direction: navy surfaces, cyan links, system type, 48px buttons and paired
 Previous/Draft rows. Dials 2/1/5. No repeated decorative motion. A single

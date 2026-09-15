@@ -1,5 +1,15 @@
 # 99 Planets development progress
 
+Locally verified U158-U160: Codex on `feature/illustrative-style-lab` from V2 `496c9a2`.
+Separate illustration lab with retro anime, Borderlands-inspired ink and hybrid
+rendering of identical test terrain, towers and scouts. World/ground/material
+inspection, synchronized camera, lighting and material toggles. Source ownership:
+`style-lab.html`, `css/style-lab.css`, `js/style-lab*.js`, publication entry lists.
+[Current request and evidence](qa/implementation/STYLE-LAB.md). 39 browser cases,
+361 core tests, 111 parsed modules and 156 source/mirror identities pass.
+Preview publication in progress. Owner direction selection remains open.
+
+
 Locally verified U154-U157: Codex on `feature/homeworld-manufacturers`. Dedicated Homeworld
 lobby selection, manufacturer weapons with procedural traits and skills, shared
 weapon cards and Debug inspection. [Work ledger](qa/implementation/HOMEWORLD-MANUFACTURERS.md).

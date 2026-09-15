@@ -9,6 +9,7 @@ alongside the stable game without merging gameplay PRs into main.
 | [V2 preview](https://majieddd.github.io/worldheart/v2/) | preview/v2 | Latest integrated, verified work; opens the preparation lobby |
 | [Campaign](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=1) | preview/v2 | Direct entry to the saved 99-planet campaign |
 | [Debug World](https://majieddd.github.io/worldheart/v2/debug.html) | preview/v2 | Production models, mounts, formations, combined terrain, biomes, active features, disasters and theme globes; no save access |
+| [Illustration lab](https://majieddd.github.io/worldheart/v2/style-lab.html) | preview/v2 | Separate three-style 3D graphics experiment; no campaign save access |
 | [Live build identity](https://majieddd.github.io/worldheart/v2/build.json) | Deployment artifact | Exact preview/main commits and preview asset hashes |
 | /worldheart/dist/worldheart.html | main | Stable single-file download |
 
@@ -41,7 +42,7 @@ GitHub Pages uses the GitHub Actions publishing source. The workflow in
 .github/workflows/preview-pages.yml checks out main and preview/v2 separately,
 validates the preview and creates one combined artifact with tools/pages-site.mjs.
 All public tracked main files except its old v2 mirror retain their bytes.
-Only index.html, lobby.html, debug.html, audio-lab.html, js, css, lib and audio from preview source are installed under v2.
+Only index.html, lobby.html, debug.html, audio-lab.html, style-lab.html, js, css, lib and audio from preview source are installed under v2.
 No feature code is copied to the stable root. The artifact includes .nojekyll
 and a machine-readable build identity. No deploy branch or force push is needed.
 
