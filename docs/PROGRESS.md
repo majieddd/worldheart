@@ -1,6 +1,20 @@
 # 99 Planets development progress
 
-Updated 2026-09-14. This is the collaborator entry point for the owner's direction.
+U136-U139 audio implementation is published and publicly verified as V2
+`1f2eb75`. Codex owns `feature/yue2-audio-revamp`, [draft PR #43](https://github.com/majieddd/worldheart/pull/43).
+[Audio ledger](qa/implementation/AUDIO-REVAMP.md): six actual local YuE2
+instrumentals, 84 nonvocal effects / 171 variations, bounded spatial feedback,
+streaming music, compact mix controls and Debug audition. 339 tests, 164 local
+browser checks, seven camera suites, complete ten-wave defense/extraction,
+157 public asset comparisons and 123 public audio checks pass.
+[Pages action 34942144017](https://github.com/majieddd/worldheart/actions/runs/34942144017)
+succeeded. Main remains `1374122`. Final tracks pass automated vocal screening;
+rejected takes remain in evidence. Human listening and physical-phone acceptance
+remain open because this agent cannot hear audio. The model's noncommercial
+restriction is recorded; commercial rights are not asserted. The closeout adds
+only evidence and a test correction for GitHub's audio/mp3 MIME spelling.
+
+Updated 2026-09-15. This is the collaborator entry point for the owner's direction.
 
 Published and publicly verified as V2 `309aaa7`: U132-U135, mobile runtime optimization and larger
 Roblox-style thumb controls. Codex on `feature/mobile-performance-polish`,

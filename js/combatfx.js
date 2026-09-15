@@ -305,6 +305,7 @@ export class CombatFx {
   // ---- oracle -------------------------------------------------------------
 
   _beam(a, target, landed, origin, along) {
+    this.audio?.play('fire',{position:origin});
     let slot = null;
     for (const b of this.beams) if (b.a === a) { slot = b; break; }
     if (!slot) {
@@ -373,7 +374,7 @@ export class CombatFx {
     // Heavier the more it caught, so a shell dropped into a pack feels like
     // more than one dropped on open ground.
     this.rig.addTrauma(0.16 + 0.04 * Math.min(hits, 3));
-    this.audio?.play('explosion');
+    this.audio?.play('explosion',{position:sh.pos});
   }
 
   _drawShells(dt) {
@@ -414,6 +415,7 @@ export class CombatFx {
   _windUp(e, victim) {
     this.enemies.enemyPos(e, _v);
     const player = this._isPlayer(victim);
+    this.audio?.play(e.type.flying?'flier':e.type.boss||e.type.radius>1.2?'brute':'crawler',{position:_v});
     // The ring is the tell you can dodge, so it lasts the wind-up and grows to
     // the reach the blow will cover. It is drawn for a hit on the player's own
     // body and for anything near the camera; a whole wave winding up on a far
@@ -430,7 +432,7 @@ export class CombatFx {
     this.allies.worldPos(victim, _v);
     this.fx.impactSpark(_v, PALETTE.voidHot);
     this.fx.burstGlow(_v, PALETTE.voidEmissive, 6, 2.6, 0.32, 0.5, 2);
-    this.audio?.play('enemyHit');
+    this.audio?.play('enemyHit',{position:_v,gain:this._isPlayer(victim)?1:.45});
     if (!this._isPlayer(victim)) return;
     // Being hit in first person lands on the player: onHurt already scales a
     // small shake by the damage, this is the blow itself on top of it, plus

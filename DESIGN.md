@@ -135,3 +135,12 @@ System icons are vendored Lucide paths (ISC license) inlined as SVG: play, pause
 - No content radius above 12px; no card-in-card nesting.
 - No mood-first descriptions: mechanics first, flavor in italics below.
 - No unpooled allocation inside the frame loop (vectors, arrays, geometries).
+
+
+## Audio mixer component (2026-09-15)
+
+Reuse the established palette, font and button primitives. Sound mix is a closed
+settings disclosure during play; mobile uses Field menu > Options. The lobby
+uses a closed disclosure and Debug adds a sound audition section. Five 40px-high
+sliders sit in rows at least 44px high; no animation is added. Component dials:
+variance 2, motion 1, density 5. No permanent gameplay overlay is added.

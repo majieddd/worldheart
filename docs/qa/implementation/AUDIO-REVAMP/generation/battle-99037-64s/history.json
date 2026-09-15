@@ -1,0 +1,172 @@
+{
+  "prompt": [
+    3,
+    "01a0f06c-48f0-4657-a88f-662055618546",
+    {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "yue2_3b_bf16.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "YuE2GenerateABC",
+        "inputs": {
+          "clip": [
+            "1",
+            1
+          ],
+          "style": "Energetic instrumental tower defense combat music, 120 BPM, E minor. Tight staccato strings, punchy toms, taiko accents, melodic brass instruments, rhythmic marimba and a crisp analog arpeggiator. Heroic, determined, playful and satisfying. Strong groove with space for weapon sound effects; no distorted wall of sound. A memorable rising heroic motif. Original video game instrumental score. Only musical instruments. No vocals, no singing, no speech, no choir, no humming, no vocal samples. Clear melodic phrases, restrained dynamics, spacious clean production, gentle high frequencies, controlled bass, seamless flowing arrangement.",
+          "lyrics": "[Instrumental intro: tight tom groove and staccato strings]\n[Instrumental battle A: heroic brass melody with marimba rhythm]\n[Instrumental battle B: ascending analog arpeggios and answering strings]\n[Instrumental reprise: full heroic motif, then a clean instrumental resolution]",
+          "seed": 99037,
+          "mode": "full",
+          "max_abc_tokens": 2048,
+          "temperature": 0.7,
+          "top_p": 0.9,
+          "top_k": 30,
+          "repetition_penalty": 1.005,
+          "penalty_window": 100
+        }
+      },
+      "3": {
+        "class_type": "YuE2GenerateMusic",
+        "inputs": {
+          "clip": [
+            "1",
+            1
+          ],
+          "style": "Energetic instrumental tower defense combat music, 120 BPM, E minor. Tight staccato strings, punchy toms, taiko accents, melodic brass instruments, rhythmic marimba and a crisp analog arpeggiator. Heroic, determined, playful and satisfying. Strong groove with space for weapon sound effects; no distorted wall of sound. A memorable rising heroic motif. Original video game instrumental score. Only musical instruments. No vocals, no singing, no speech, no choir, no humming, no vocal samples. Clear melodic phrases, restrained dynamics, spacious clean production, gentle high frequencies, controlled bass, seamless flowing arrangement.",
+          "lyrics": "[Instrumental intro: tight tom groove and staccato strings]\n[Instrumental battle A: heroic brass melody with marimba rhythm]\n[Instrumental battle B: ascending analog arpeggios and answering strings]\n[Instrumental reprise: full heroic motif, then a clean instrumental resolution]",
+          "abc": [
+            "2",
+            0
+          ],
+          "seed": 99038,
+          "mode": "full",
+          "max_duration": 64.0,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 100,
+          "repetition_penalty": 1.2
+        }
+      },
+      "4": {
+        "class_type": "EmptyYuE2LatentAudio",
+        "inputs": {
+          "seconds": [
+            "3",
+            1
+          ],
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "3",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 99039,
+          "steps": 32,
+          "cfg": 1.0,
+          "sampler_name": "dpm_2",
+          "scheduler": "sgm_uniform",
+          "denoise": 1.0
+        }
+      },
+      "6": {
+        "class_type": "VAEDecodeAudioTiled",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ],
+          "tile_size": 512,
+          "overlap": 64
+        }
+      },
+      "7": {
+        "class_type": "SaveAudio",
+        "inputs": {
+          "audio": [
+            "6",
+            0
+          ],
+          "filename_prefix": "worldheart/battle-99037"
+        }
+      }
+    },
+    {
+      "create_time": 1789454356565
+    },
+    [
+      "7"
+    ]
+  ],
+  "outputs": {
+    "7": {
+      "audio": [
+        {
+          "filename": "battle-99037_00001.flac",
+          "subfolder": "worldheart",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "01a0f06c-48f0-4657-a88f-662055618546",
+          "timestamp": 1789454356566
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1"
+          ],
+          "prompt_id": "01a0f06c-48f0-4657-a88f-662055618546",
+          "timestamp": 1789454356568
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "01a0f06c-48f0-4657-a88f-662055618546",
+          "timestamp": 1789454431101
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "7": {
+      "node_id": "7",
+      "display_node": "7",
+      "parent_node": null,
+      "real_node_id": "7"
+    }
+  }
+}

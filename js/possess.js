@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { surfaceElevation, R, terrainHeight, surfacePoint } from './world.js';
+import { surfaceElevation, R, terrainHeight, surfacePoint, biomeAt } from './world.js';
 import { PALETTE, CAM_TUNE, PRESENTATION } from './config.js';
 import { SIM_RANDOM } from './noise.js';
 import { BladeTrail } from './viewmodel.js';
@@ -584,8 +584,7 @@ export class Possession {
     // the target; only the instant kinds land here.
     if (n > 0 && kind !== 'melee') {
       const s = this.unit.type.strike;
-      if (kind === 'hitscan') this.audio?.play('rifle');
-      else if (kind === 'lob') this.audio?.play('lob');
+      // Firing audio belongs to the resolved strike callback.
       // A weapon that does not move when it fires does not feel like a weapon.
       this.kick = Math.min(0.5, this.kick + (s.kick || 0));
       this.rig.addTrauma(s.trauma || 0.05);
@@ -597,7 +596,7 @@ export class Possession {
   // input is heard the instant it registers.
   swingStarted(u) {
     if (u !== this.unit) return;
-    if (u.type.strike.kind === 'melee') this.audio?.play('swing');
+    // The shared swing callback also covers unpossessed commanders.
     this.fovKick = Math.max(this.fovKick, 0.8);
   }
 
@@ -605,8 +604,7 @@ export class Possession {
   // and the lens snap all belong to the moment of contact, not the click.
   strikeResolved(u, hits, spec) {
     if (u !== this.unit || !spec) return;
-    if (spec.kind === 'hitscan') this.audio?.play('rifle');
-    if (spec.kind === 'lob') this.audio?.play('lob');
+    // Shared strike audio fires once, including missed shots.
     this.kick = Math.min(0.5, this.kick + (spec.kick || 0) * (hits > 0 ? 1 : 0.5));
     this.rig.addTrauma((spec.trauma || 0.05) * (hits > 0 ? 1 : 0.4));
     if (hits > 0) this.fovKick = Math.max(this.fovKick, 2);
@@ -663,6 +661,7 @@ export class Possession {
     // body/weapon visibility before either path can place an inside-head eye.
     this.boom += (this.boomWant - this.boom) * (1 - Math.exp(-dt * TP_EASE));
     if (this.boomWant > .35 || !simRunning || this.suspended || this.game.buildType) this.aiming = false;
+    if(this.aiming&&!this._audioAiming)this.audio?.play('aim');this._audioAiming=this.aiming;
     this.aimT += ((this.aiming ? 1 : 0) - this.aimT) * (1 - Math.exp(-dt * 18));
     u.hidden = this.boom <= 0.35;
     if (this.viewModel) this.viewModel.visible = u.hidden && !!this.viewModel.current;
@@ -730,7 +729,8 @@ export class Possession {
       const half = Math.floor(this.stride / Math.PI);
       if (half !== this.stepPhase) {
         this.stepPhase = half;
-        this.audio?.play(this.sprintT > 0.5 ? 'stepHard' : 'step');
+        const surface=biomeAt(u.dir,u.height);
+        this.audio?.play(u.swimming?'stepWater':/ice|alpine|tundra|frozen|snow/.test(surface)?'stepIce':u.mountKey&&u.mountKey!=='none'||/stone|volcan|basalt|regolith/.test(surface)?'stepHard':'step');
       }
     }
 

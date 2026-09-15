@@ -1,0 +1,174 @@
+{
+  "scope": "Fixed-state fixtures exercise actual attack and ability methods and observe emitted audio. Not a natural run.",
+  "checks": [
+    {
+      "name": "sword emits one timed attack cue",
+      "ok": true,
+      "actual": {
+        "before": 0,
+        "after": 1
+      }
+    },
+    {
+      "name": "sword special has feedback",
+      "ok": true
+    },
+    {
+      "name": "spear emits one timed attack cue",
+      "ok": true,
+      "actual": {
+        "before": 0,
+        "after": 1
+      }
+    },
+    {
+      "name": "spear special has feedback",
+      "ok": true
+    },
+    {
+      "name": "twinblade emits one timed attack cue",
+      "ok": true,
+      "actual": {
+        "before": 0,
+        "after": 1
+      }
+    },
+    {
+      "name": "twinblade special has feedback",
+      "ok": true
+    },
+    {
+      "name": "carbine emits one timed attack cue",
+      "ok": true,
+      "actual": {
+        "before": 0,
+        "after": 1
+      }
+    },
+    {
+      "name": "carbine special has feedback",
+      "ok": true
+    },
+    {
+      "name": "lobber emits one timed attack cue",
+      "ok": true,
+      "actual": {
+        "before": 0,
+        "after": 1
+      }
+    },
+    {
+      "name": "lobber special has feedback",
+      "ok": true
+    },
+    {
+      "name": "scepter emits one timed attack cue",
+      "ok": true,
+      "actual": {
+        "before": 0,
+        "after": 1
+      }
+    },
+    {
+      "name": "scepter special has feedback",
+      "ok": true
+    },
+    {
+      "name": "Overheated scepter cannot emit false firing feedback",
+      "ok": true
+    },
+    {
+      "name": "commander ability has its own cue",
+      "ok": true
+    },
+    {
+      "name": "duelist ability has its own cue",
+      "ok": true
+    },
+    {
+      "name": "marksman ability has its own cue",
+      "ok": true
+    },
+    {
+      "name": "bombardier ability has its own cue",
+      "ok": true
+    },
+    {
+      "name": "oracle ability has its own cue",
+      "ok": true
+    },
+    {
+      "name": "Mounting emits feedback",
+      "ok": true
+    },
+    {
+      "name": "Dismounting emits feedback",
+      "ok": true
+    },
+    {
+      "name": "Mechanics emit no unknown cues or audio errors",
+      "ok": true,
+      "actual": {
+        "played": 28,
+        "dropped": 20,
+        "stolen": 0,
+        "peakVoices": 7,
+        "bank": "ready",
+        "music": "stopped",
+        "errors": [],
+        "decodedBytes": 36902452,
+        "cueCounts": {
+          "begin": 1,
+          "feature": 1,
+          "geyser": 1,
+          "tsunami": 1,
+          "quake": 1,
+          "forest": 1,
+          "possess": 1,
+          "swing": 2,
+          "weaponPower": 6,
+          "spear": 2,
+          "twinblade": 1,
+          "rifle": 1,
+          "lob": 1,
+          "fire": 1,
+          "guard": 1,
+          "haste": 1,
+          "deadeye": 1,
+          "barrage": 1,
+          "renew": 1,
+          "mount": 1,
+          "dismount": 1
+        },
+        "unknownCues": {},
+        "voices": 7,
+        "state": "none",
+        "muted": false,
+        "context": "running",
+        "settings": {
+          "master": 0.7,
+          "music": 0.42,
+          "effects": 0.85,
+          "ambience": 0.55,
+          "ui": 0.7,
+          "muted": false
+        },
+        "decks": [
+          {
+            "key": "lobby",
+            "target": 0,
+            "paused": true,
+            "time": 0.197962
+          },
+          {
+            "key": "explore",
+            "target": 0,
+            "paused": true,
+            "time": 0.107374
+          }
+        ]
+      }
+    }
+  ],
+  "faults": []
+}

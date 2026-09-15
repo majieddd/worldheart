@@ -1,0 +1,867 @@
+{
+  "scope": "Actual delivered music and production controls in a touch browser component fixture. Objective playback, not listening or physical iOS acceptance.",
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "Six distinct score states available",
+      "ok": true
+    },
+    {
+      "name": "Music transfers wait for user input",
+      "ok": true,
+      "detail": [
+        "https://majieddd.github.io/worldheart/v2/audio/feedback-bank.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/lobby.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/lobby.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/lobby.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/explore.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/explore.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/explore.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/battle.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/battle.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/danger.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/danger.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/victory.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/victory.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/defeat.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/defeat.mp3",
+        "https://majieddd.github.io/worldheart/v2/audio/lobby.mp3"
+      ]
+    },
+    {
+      "name": "lobby asset hash, MIME and duration",
+      "ok": false,
+      "detail": {
+        "key": "lobby",
+        "mime": "audio/mp3",
+        "bytes": 1388781,
+        "hash": "0071c7b6470ad4bda70de097896602934148ebe4f700cd294ad9da37f1fb22ad",
+        "expected": {
+          "title": "A Small Light Between Stars",
+          "file": "lobby.mp3",
+          "seconds": 57.8,
+          "sha256": "0071c7b6470ad4bda70de097896602934148ebe4f700cd294ad9da37f1fb22ad",
+          "bytes": 1388781
+        },
+        "duration": 57.8,
+        "time": 5.938667,
+        "peak": 0.08005539327859879,
+        "rms": 0.02421397764459498,
+        "playing": 1,
+        "snapshot": {
+          "played": 0,
+          "dropped": 0,
+          "stolen": 0,
+          "peakVoices": 0,
+          "bank": "ready",
+          "music": "playing",
+          "errors": [],
+          "decodedBytes": 36902452,
+          "cueCounts": {},
+          "unknownCues": {},
+          "voices": 0,
+          "state": "lobby",
+          "muted": false,
+          "context": "running",
+          "settings": {
+            "master": 0.7,
+            "music": 0.42,
+            "effects": 0.85,
+            "ambience": 0.55,
+            "ui": 0.7,
+            "muted": false
+          },
+          "decks": [
+            {
+              "key": "lobby",
+              "target": 1,
+              "paused": false,
+              "time": 5.938667
+            },
+            {
+              "key": null,
+              "target": 0,
+              "paused": true,
+              "time": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "lobby produces music output and retires faded deck",
+      "ok": true
+    },
+    {
+      "name": "lobby wraps and keeps playing",
+      "ok": true
+    },
+    {
+      "name": "explore asset hash, MIME and duration",
+      "ok": false,
+      "detail": {
+        "key": "explore",
+        "mime": "audio/mp3",
+        "bytes": 1691181,
+        "hash": "6f1133b173954d2248a05932cc1ed74acb05e35b9e9031f628237a4c3f4dcbad",
+        "expected": {
+          "title": "Footprints on a New World",
+          "file": "explore.mp3",
+          "seconds": 70.4,
+          "sha256": "6f1133b173954d2248a05932cc1ed74acb05e35b9e9031f628237a4c3f4dcbad",
+          "bytes": 1691181
+        },
+        "duration": 70.4,
+        "time": 6.08,
+        "peak": 0.20794853568077087,
+        "rms": 0.05068178818894423,
+        "playing": 1,
+        "snapshot": {
+          "played": 0,
+          "dropped": 0,
+          "stolen": 0,
+          "peakVoices": 0,
+          "bank": "ready",
+          "music": "playing",
+          "errors": [],
+          "decodedBytes": 36902452,
+          "cueCounts": {},
+          "unknownCues": {},
+          "voices": 0,
+          "state": "explore",
+          "muted": false,
+          "context": "running",
+          "settings": {
+            "master": 0.7,
+            "music": 0.42,
+            "effects": 0.85,
+            "ambience": 0.55,
+            "ui": 0.7,
+            "muted": false
+          },
+          "decks": [
+            {
+              "key": "lobby",
+              "target": 0,
+              "paused": true,
+              "time": 4.32
+            },
+            {
+              "key": "explore",
+              "target": 1,
+              "paused": false,
+              "time": 6.08
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "explore produces music output and retires faded deck",
+      "ok": true
+    },
+    {
+      "name": "explore wraps and keeps playing",
+      "ok": true
+    },
+    {
+      "name": "battle asset hash, MIME and duration",
+      "ok": false,
+      "detail": {
+        "key": "battle",
+        "mime": "audio/mp3",
+        "bytes": 1498797,
+        "hash": "b7cd036eef6741f9f7dfeadaa885f8b658fa0da4cc279552c9064f3120c11c18",
+        "expected": {
+          "title": "Hold the Worldheart",
+          "file": "battle.mp3",
+          "seconds": 62.4,
+          "sha256": "b7cd036eef6741f9f7dfeadaa885f8b658fa0da4cc279552c9064f3120c11c18",
+          "bytes": 1498797
+        },
+        "duration": 62.4,
+        "time": 5.701333,
+        "peak": 0.07268379628658295,
+        "rms": 0.024214354622301,
+        "playing": 1,
+        "snapshot": {
+          "played": 0,
+          "dropped": 0,
+          "stolen": 0,
+          "peakVoices": 0,
+          "bank": "ready",
+          "music": "playing",
+          "errors": [],
+          "decodedBytes": 36902452,
+          "cueCounts": {},
+          "unknownCues": {},
+          "voices": 0,
+          "state": "battle",
+          "muted": false,
+          "context": "running",
+          "settings": {
+            "master": 0.7,
+            "music": 0.42,
+            "effects": 0.85,
+            "ambience": 0.55,
+            "ui": 0.7,
+            "muted": false
+          },
+          "decks": [
+            {
+              "key": "battle",
+              "target": 1,
+              "paused": false,
+              "time": 5.701333
+            },
+            {
+              "key": "explore",
+              "target": 0,
+              "paused": true,
+              "time": 4.28
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "battle produces music output and retires faded deck",
+      "ok": true
+    },
+    {
+      "name": "battle wraps and keeps playing",
+      "ok": true
+    },
+    {
+      "name": "danger asset hash, MIME and duration",
+      "ok": false,
+      "detail": {
+        "key": "danger",
+        "mime": "audio/mp3",
+        "bytes": 1306989,
+        "hash": "73fdb77005f7a19f91a5d696807c5e04dbe8e781465e49cabf09a88fd2396a3c",
+        "expected": {
+          "title": "The Breach Answers",
+          "file": "danger.mp3",
+          "seconds": 54.4,
+          "sha256": "73fdb77005f7a19f91a5d696807c5e04dbe8e781465e49cabf09a88fd2396a3c",
+          "bytes": 1306989
+        },
+        "duration": 54.4,
+        "time": 5.941333,
+        "peak": 0.07766807079315186,
+        "rms": 0.0292071660186377,
+        "playing": 1,
+        "snapshot": {
+          "played": 0,
+          "dropped": 0,
+          "stolen": 0,
+          "peakVoices": 0,
+          "bank": "ready",
+          "music": "playing",
+          "errors": [],
+          "decodedBytes": 36902452,
+          "cueCounts": {},
+          "unknownCues": {},
+          "voices": 0,
+          "state": "danger",
+          "muted": false,
+          "context": "running",
+          "settings": {
+            "master": 0.7,
+            "music": 0.42,
+            "effects": 0.85,
+            "ambience": 0.55,
+            "ui": 0.7,
+            "muted": false
+          },
+          "decks": [
+            {
+              "key": "battle",
+              "target": 0,
+              "paused": true,
+              "time": 4.327133
+            },
+            {
+              "key": "danger",
+              "target": 1,
+              "paused": false,
+              "time": 5.941333
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "danger produces music output and retires faded deck",
+      "ok": true
+    },
+    {
+      "name": "danger wraps and keeps playing",
+      "ok": true
+    },
+    {
+      "name": "victory asset hash, MIME and duration",
+      "ok": false,
+      "detail": {
+        "key": "victory",
+        "mime": "audio/mp3",
+        "bytes": 730989,
+        "hash": "b01ca4b45801f600ebd34f95e2e630c95cede8fefd81255bd492e8d36e652f08",
+        "expected": {
+          "title": "Another Dawn Defended",
+          "file": "victory.mp3",
+          "seconds": 30.4,
+          "sha256": "b01ca4b45801f600ebd34f95e2e630c95cede8fefd81255bd492e8d36e652f08",
+          "bytes": 730989
+        },
+        "duration": 30.4,
+        "time": 5.667078,
+        "peak": 0.09974254667758942,
+        "rms": 0.026339629177551938,
+        "playing": 1,
+        "snapshot": {
+          "played": 0,
+          "dropped": 0,
+          "stolen": 0,
+          "peakVoices": 0,
+          "bank": "ready",
+          "music": "playing",
+          "errors": [],
+          "decodedBytes": 36902452,
+          "cueCounts": {},
+          "unknownCues": {},
+          "voices": 0,
+          "state": "victory",
+          "muted": false,
+          "context": "running",
+          "settings": {
+            "master": 0.7,
+            "music": 0.42,
+            "effects": 0.85,
+            "ambience": 0.55,
+            "ui": 0.7,
+            "muted": false
+          },
+          "decks": [
+            {
+              "key": "victory",
+              "target": 1,
+              "paused": false,
+              "time": 5.667078
+            },
+            {
+              "key": "danger",
+              "target": 0,
+              "paused": true,
+              "time": 4.328
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "victory produces music output and retires faded deck",
+      "ok": true
+    },
+    {
+      "name": "victory wraps and keeps playing",
+      "ok": true
+    },
+    {
+      "name": "defeat asset hash, MIME and duration",
+      "ok": false,
+      "detail": {
+        "key": "defeat",
+        "mime": "audio/mp3",
+        "bytes": 730989,
+        "hash": "4d15f9f173d9abbbd730d698c804bf0fd1ac4cd2ebe7382d8b786c286b07ace0",
+        "expected": {
+          "title": "An Ember Remains",
+          "file": "defeat.mp3",
+          "seconds": 30.4,
+          "sha256": "4d15f9f173d9abbbd730d698c804bf0fd1ac4cd2ebe7382d8b786c286b07ace0",
+          "bytes": 730989
+        },
+        "duration": 30.4,
+        "time": 9.530667,
+        "peak": 0.06201682239770889,
+        "rms": 0.01938484239030619,
+        "playing": 1,
+        "snapshot": {
+          "played": 0,
+          "dropped": 0,
+          "stolen": 0,
+          "peakVoices": 0,
+          "bank": "ready",
+          "music": "playing",
+          "errors": [],
+          "decodedBytes": 36902452,
+          "cueCounts": {},
+          "unknownCues": {},
+          "voices": 0,
+          "state": "defeat",
+          "muted": false,
+          "context": "running",
+          "settings": {
+            "master": 0.7,
+            "music": 0.42,
+            "effects": 0.85,
+            "ambience": 0.55,
+            "ui": 0.7,
+            "muted": false
+          },
+          "decks": [
+            {
+              "key": "victory",
+              "target": 0,
+              "paused": true,
+              "time": 4.269333
+            },
+            {
+              "key": "defeat",
+              "target": 1,
+              "paused": false,
+              "time": 9.530667
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "defeat produces music output and retires faded deck",
+      "ok": true
+    },
+    {
+      "name": "defeat wraps and keeps playing",
+      "ok": true
+    },
+    {
+      "name": "Stop audition preserves mix and pauses streams",
+      "ok": true
+    },
+    {
+      "name": "Track can be selected again after Stop",
+      "ok": true
+    },
+    {
+      "name": "No audio or browser errors",
+      "ok": true,
+      "detail": {
+        "played": 0,
+        "dropped": 0,
+        "stolen": 0,
+        "peakVoices": 0,
+        "bank": "ready",
+        "music": "playing",
+        "errors": [],
+        "decodedBytes": 36902452,
+        "cueCounts": {},
+        "unknownCues": {},
+        "voices": 0,
+        "state": "lobby",
+        "muted": false,
+        "context": "running",
+        "settings": {
+          "master": 0.7,
+          "music": 0.42,
+          "effects": 0.85,
+          "ambience": 0.55,
+          "ui": 0.7,
+          "muted": false
+        },
+        "decks": [
+          {
+            "key": "lobby",
+            "target": 1,
+            "paused": false,
+            "time": 0.209583
+          },
+          {
+            "key": "defeat",
+            "target": 0,
+            "paused": true,
+            "time": 0.130667
+          }
+        ]
+      }
+    }
+  ],
+  "files": [
+    {
+      "key": "lobby",
+      "mime": "audio/mp3",
+      "bytes": 1388781,
+      "hash": "0071c7b6470ad4bda70de097896602934148ebe4f700cd294ad9da37f1fb22ad",
+      "expected": {
+        "title": "A Small Light Between Stars",
+        "file": "lobby.mp3",
+        "seconds": 57.8,
+        "sha256": "0071c7b6470ad4bda70de097896602934148ebe4f700cd294ad9da37f1fb22ad",
+        "bytes": 1388781
+      },
+      "duration": 57.8,
+      "time": 5.938667,
+      "peak": 0.08005539327859879,
+      "rms": 0.02421397764459498,
+      "playing": 1,
+      "snapshot": {
+        "played": 0,
+        "dropped": 0,
+        "stolen": 0,
+        "peakVoices": 0,
+        "bank": "ready",
+        "music": "playing",
+        "errors": [],
+        "decodedBytes": 36902452,
+        "cueCounts": {},
+        "unknownCues": {},
+        "voices": 0,
+        "state": "lobby",
+        "muted": false,
+        "context": "running",
+        "settings": {
+          "master": 0.7,
+          "music": 0.42,
+          "effects": 0.85,
+          "ambience": 0.55,
+          "ui": 0.7,
+          "muted": false
+        },
+        "decks": [
+          {
+            "key": "lobby",
+            "target": 1,
+            "paused": false,
+            "time": 5.938667
+          },
+          {
+            "key": null,
+            "target": 0,
+            "paused": true,
+            "time": 0
+          }
+        ]
+      }
+    },
+    {
+      "key": "explore",
+      "mime": "audio/mp3",
+      "bytes": 1691181,
+      "hash": "6f1133b173954d2248a05932cc1ed74acb05e35b9e9031f628237a4c3f4dcbad",
+      "expected": {
+        "title": "Footprints on a New World",
+        "file": "explore.mp3",
+        "seconds": 70.4,
+        "sha256": "6f1133b173954d2248a05932cc1ed74acb05e35b9e9031f628237a4c3f4dcbad",
+        "bytes": 1691181
+      },
+      "duration": 70.4,
+      "time": 6.08,
+      "peak": 0.20794853568077087,
+      "rms": 0.05068178818894423,
+      "playing": 1,
+      "snapshot": {
+        "played": 0,
+        "dropped": 0,
+        "stolen": 0,
+        "peakVoices": 0,
+        "bank": "ready",
+        "music": "playing",
+        "errors": [],
+        "decodedBytes": 36902452,
+        "cueCounts": {},
+        "unknownCues": {},
+        "voices": 0,
+        "state": "explore",
+        "muted": false,
+        "context": "running",
+        "settings": {
+          "master": 0.7,
+          "music": 0.42,
+          "effects": 0.85,
+          "ambience": 0.55,
+          "ui": 0.7,
+          "muted": false
+        },
+        "decks": [
+          {
+            "key": "lobby",
+            "target": 0,
+            "paused": true,
+            "time": 4.32
+          },
+          {
+            "key": "explore",
+            "target": 1,
+            "paused": false,
+            "time": 6.08
+          }
+        ]
+      }
+    },
+    {
+      "key": "battle",
+      "mime": "audio/mp3",
+      "bytes": 1498797,
+      "hash": "b7cd036eef6741f9f7dfeadaa885f8b658fa0da4cc279552c9064f3120c11c18",
+      "expected": {
+        "title": "Hold the Worldheart",
+        "file": "battle.mp3",
+        "seconds": 62.4,
+        "sha256": "b7cd036eef6741f9f7dfeadaa885f8b658fa0da4cc279552c9064f3120c11c18",
+        "bytes": 1498797
+      },
+      "duration": 62.4,
+      "time": 5.701333,
+      "peak": 0.07268379628658295,
+      "rms": 0.024214354622301,
+      "playing": 1,
+      "snapshot": {
+        "played": 0,
+        "dropped": 0,
+        "stolen": 0,
+        "peakVoices": 0,
+        "bank": "ready",
+        "music": "playing",
+        "errors": [],
+        "decodedBytes": 36902452,
+        "cueCounts": {},
+        "unknownCues": {},
+        "voices": 0,
+        "state": "battle",
+        "muted": false,
+        "context": "running",
+        "settings": {
+          "master": 0.7,
+          "music": 0.42,
+          "effects": 0.85,
+          "ambience": 0.55,
+          "ui": 0.7,
+          "muted": false
+        },
+        "decks": [
+          {
+            "key": "battle",
+            "target": 1,
+            "paused": false,
+            "time": 5.701333
+          },
+          {
+            "key": "explore",
+            "target": 0,
+            "paused": true,
+            "time": 4.28
+          }
+        ]
+      }
+    },
+    {
+      "key": "danger",
+      "mime": "audio/mp3",
+      "bytes": 1306989,
+      "hash": "73fdb77005f7a19f91a5d696807c5e04dbe8e781465e49cabf09a88fd2396a3c",
+      "expected": {
+        "title": "The Breach Answers",
+        "file": "danger.mp3",
+        "seconds": 54.4,
+        "sha256": "73fdb77005f7a19f91a5d696807c5e04dbe8e781465e49cabf09a88fd2396a3c",
+        "bytes": 1306989
+      },
+      "duration": 54.4,
+      "time": 5.941333,
+      "peak": 0.07766807079315186,
+      "rms": 0.0292071660186377,
+      "playing": 1,
+      "snapshot": {
+        "played": 0,
+        "dropped": 0,
+        "stolen": 0,
+        "peakVoices": 0,
+        "bank": "ready",
+        "music": "playing",
+        "errors": [],
+        "decodedBytes": 36902452,
+        "cueCounts": {},
+        "unknownCues": {},
+        "voices": 0,
+        "state": "danger",
+        "muted": false,
+        "context": "running",
+        "settings": {
+          "master": 0.7,
+          "music": 0.42,
+          "effects": 0.85,
+          "ambience": 0.55,
+          "ui": 0.7,
+          "muted": false
+        },
+        "decks": [
+          {
+            "key": "battle",
+            "target": 0,
+            "paused": true,
+            "time": 4.327133
+          },
+          {
+            "key": "danger",
+            "target": 1,
+            "paused": false,
+            "time": 5.941333
+          }
+        ]
+      }
+    },
+    {
+      "key": "victory",
+      "mime": "audio/mp3",
+      "bytes": 730989,
+      "hash": "b01ca4b45801f600ebd34f95e2e630c95cede8fefd81255bd492e8d36e652f08",
+      "expected": {
+        "title": "Another Dawn Defended",
+        "file": "victory.mp3",
+        "seconds": 30.4,
+        "sha256": "b01ca4b45801f600ebd34f95e2e630c95cede8fefd81255bd492e8d36e652f08",
+        "bytes": 730989
+      },
+      "duration": 30.4,
+      "time": 5.667078,
+      "peak": 0.09974254667758942,
+      "rms": 0.026339629177551938,
+      "playing": 1,
+      "snapshot": {
+        "played": 0,
+        "dropped": 0,
+        "stolen": 0,
+        "peakVoices": 0,
+        "bank": "ready",
+        "music": "playing",
+        "errors": [],
+        "decodedBytes": 36902452,
+        "cueCounts": {},
+        "unknownCues": {},
+        "voices": 0,
+        "state": "victory",
+        "muted": false,
+        "context": "running",
+        "settings": {
+          "master": 0.7,
+          "music": 0.42,
+          "effects": 0.85,
+          "ambience": 0.55,
+          "ui": 0.7,
+          "muted": false
+        },
+        "decks": [
+          {
+            "key": "victory",
+            "target": 1,
+            "paused": false,
+            "time": 5.667078
+          },
+          {
+            "key": "danger",
+            "target": 0,
+            "paused": true,
+            "time": 4.328
+          }
+        ]
+      }
+    },
+    {
+      "key": "defeat",
+      "mime": "audio/mp3",
+      "bytes": 730989,
+      "hash": "4d15f9f173d9abbbd730d698c804bf0fd1ac4cd2ebe7382d8b786c286b07ace0",
+      "expected": {
+        "title": "An Ember Remains",
+        "file": "defeat.mp3",
+        "seconds": 30.4,
+        "sha256": "4d15f9f173d9abbbd730d698c804bf0fd1ac4cd2ebe7382d8b786c286b07ace0",
+        "bytes": 730989
+      },
+      "duration": 30.4,
+      "time": 9.530667,
+      "peak": 0.06201682239770889,
+      "rms": 0.01938484239030619,
+      "playing": 1,
+      "snapshot": {
+        "played": 0,
+        "dropped": 0,
+        "stolen": 0,
+        "peakVoices": 0,
+        "bank": "ready",
+        "music": "playing",
+        "errors": [],
+        "decodedBytes": 36902452,
+        "cueCounts": {},
+        "unknownCues": {},
+        "voices": 0,
+        "state": "defeat",
+        "muted": false,
+        "context": "running",
+        "settings": {
+          "master": 0.7,
+          "music": 0.42,
+          "effects": 0.85,
+          "ambience": 0.55,
+          "ui": 0.7,
+          "muted": false
+        },
+        "decks": [
+          {
+            "key": "victory",
+            "target": 0,
+            "paused": true,
+            "time": 4.269333
+          },
+          {
+            "key": "defeat",
+            "target": 1,
+            "paused": false,
+            "time": 9.530667
+          }
+        ]
+      }
+    }
+  ],
+  "faults": [],
+  "final": {
+    "played": 0,
+    "dropped": 0,
+    "stolen": 0,
+    "peakVoices": 0,
+    "bank": "ready",
+    "music": "playing",
+    "errors": [],
+    "decodedBytes": 36902452,
+    "cueCounts": {},
+    "unknownCues": {},
+    "voices": 0,
+    "state": "lobby",
+    "muted": false,
+    "context": "running",
+    "settings": {
+      "master": 0.7,
+      "music": 0.42,
+      "effects": 0.85,
+      "ambience": 0.55,
+      "ui": 0.7,
+      "muted": false
+    },
+    "decks": [
+      {
+        "key": "lobby",
+        "target": 1,
+        "paused": false,
+        "time": 0.209583
+      },
+      {
+        "key": "defeat",
+        "target": 0,
+        "paused": true,
+        "time": 0.130667
+      }
+    ]
+  }
+}
