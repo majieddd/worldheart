@@ -10,7 +10,7 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
-U154-U157 implements a dedicated Homeworld lobby station and manufacturer weapons.
+Published U154-U157 (V2 `496c9a2`, PR #47) adds a dedicated Homeworld lobby station and manufacturer weapons.
 A stable, fully expanded planet enters the captured catalogue automatically.
 Choosing another home preserves every previous home checkpoint and decoration.
 Homes remain browser saves with export/import; visiting is separate from the active
