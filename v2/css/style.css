@@ -5,6 +5,7 @@
 .terrain-choice span { flex-basis: 100%; color: var(--text-muted); font-size: 12px; }
 
 :root {
+  --home-dialog-width: 560px;
   --ground: #0a0e21;
   --surface: rgba(15, 20, 40, 0.84);
   --surface-raised: rgba(23, 29, 56, 0.92);
@@ -686,3 +687,19 @@ body.end-open #fp-hud, body.end-open .weapon-cue, body.end-open .nest-marker { v
 .soundtrack-controls label { display: flex; gap: 8px; align-items: center; font-size: 12px; }
 .soundtrack-controls input { width: 100px; min-height: 48px; }
 .soundtrack-controls button { min-height: 48px; }
+
+/* Home tools reuse the expedition drawer and only open a modal on request. */
+.home-planet-dialog { margin:auto; inset:0; box-sizing:border-box; width:min(var(--home-dialog-width),calc(100vw - 24px)); max-height:calc(100dvh - 32px); overflow:auto; padding:20px; background:var(--surface-raised); color:var(--text); border:1px solid var(--accent); border-radius:8px; }
+.home-planet-dialog::backdrop { background:rgba(10,14,33,.7); }
+.home-planet-dialog h2 { font-size:20px; margin:0 0 16px; }
+.home-planet-dialog p { color:var(--text); line-height:1.5; }
+.home-planet-dialog label { display:block; margin:12px 0; }
+.home-planet-dialog input,.home-planet-dialog select { box-sizing:border-box; max-width:100%; min-height:48px; padding:8px; color:var(--text); background:var(--ground); border:1px solid var(--hairline); font:inherit; }
+.home-planet-dialog .btn { min-height:48px; white-space:normal; }
+.home-planet-dialog fieldset { border:1px solid var(--hairline); margin:16px 0; }
+.home-actions,.home-palette { display:flex; flex-wrap:wrap; gap:8px; }
+.home-close { float:right; margin:0 0 8px 12px; }
+#home-placement { position:fixed; z-index:36; bottom:24px; left:50%; transform:translateX(-50%); max-width:calc(100vw - 24px); display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; padding:10px; pointer-events:auto; }
+#home-placement[hidden] { display:none; }
+#home-placement .btn { min-height:48px; }
+body.touch-enabled #home-placement { bottom:210px; width:calc(100vw - 40px); }

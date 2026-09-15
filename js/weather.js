@@ -18,6 +18,11 @@ export class PlanetWeather {
     this.warning=new THREE.Mesh(new THREE.RingGeometry(7.6,8,48),new THREE.MeshBasicMaterial({color:0xffb463,transparent:true,opacity:.8,side:THREE.DoubleSide,depthWrite:false}));this.warning.rotation.x=-Math.PI/2;this.warnRoot=new THREE.Group();this.warnRoot.add(this.warning);scene.add(this.warnRoot);this.warnRoot.visible=false;
   }
   get label(){return this.phase==='forecasting'?'Seismic activity building.':this.phase==='shifting'?'The ground is shifting. Combat resumes as the tremor settles.':this.phase==='warning'?`${DISASTERS[this.kind].name} in ${Math.ceil(this.remaining)}s. ${this.kind==='quake'?'Red shows the predicted ground shift; disrupted nests will collapse.':'Move clear of the marked area.'}`:this.phase==='active'?`${DISASTERS[this.kind].name} · ${Math.ceil(this.remaining)}s`:`Weather calm · hostility ${this.hostility.value.toFixed(2)}`;}
+  stop(){
+    if(this.game.terrainBusy)return false;
+    this.shift=null;this.preparedTerrain=null;this.phase='calm';this.kind=null;this.remaining=0;
+    this.group.visible=false;this.warnRoot.visible=false;if(this.hazardArt)this.hazardArt.visible=false;this.forecast.hide();return true;
+  }
   wave(number){this.waveNumber=number;}
   trigger(kind,dir=null){
     if(this.phase!=='calm'||!compatibleDisasters(this.environment).includes(kind)||kind==='quake'&&(TERRAIN_FAULTS.length>=8||floatingWorld()))return false;
@@ -100,6 +105,7 @@ export class PlanetWeather {
     for(const tower of this.game.towerMgr.towers){this.tmp.copy(tower.pos).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;const height=supportHeight(this.tmp,tower.pos.length()-R+.5);tower.pos.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp,height));orientOnSurface(tower.holder,tower.pos);}
     for(const p of this.world.portals){this.tmp.copy(p.group.position).normalize();if(this.tmp.dot(fault.dir)<fault.limit)continue;this.position.copy(this.tmp).multiplyScalar(R+surfaceElevation(this.tmp));orientOnSurface(p.group,this.position);}
     this.game._validateT=0;this.game.pathFlow?.setPaths(this.nav.previewPaths());
+    this.game.mode99?.home.reseat(fault);
     this.events.push({kind:'quake',forecastReused,terrainReused,strength:fault.strength,changedNodes:changed,vertices,disruptedNests:disrupted,revisionBefore:beforeRevision,revisionAfter:this.nav.revision,footprintsPreserved:blocks===this.nav.block});
     this.ui.toast(fault.strength?'A fissure opened. Ground routes now follow the new landscape.':'The tremor subsided; routes held.', 'info');
   }

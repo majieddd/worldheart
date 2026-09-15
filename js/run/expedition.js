@@ -39,8 +39,8 @@ export function createRespawn() {
 }
 export const FORGE_COST = 3;
 export function forgeCost(forged = 0) { return FORGE_COST + Math.max(0, Math.floor(forged)) * 2; }
-export function createScrapForge(inventory) {
-  let forged = 0;
+export function createScrapForge(inventory, initialForged = 0) {
+  let forged = Math.max(0,Math.floor(initialForged));
   return {
     get balance() { return inventory.scrap; },
     get forged() { return forged; },

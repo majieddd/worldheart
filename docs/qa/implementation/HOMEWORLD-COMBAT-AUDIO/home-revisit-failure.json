@@ -1,0 +1,19 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "evidenceType": "Instrumented browser fixtures, not natural play",
+  "checks": [
+    {
+      "name": "Claim unavailable before full expansion",
+      "ok": true
+    },
+    {
+      "name": "Fixture buys all ten real base upgrades and places three defenses",
+      "ok": true,
+      "detail": 10
+    }
+  ],
+  "errors": [
+    "TimeoutError: page.waitForFunction: Timeout 240000ms exceeded."
+  ],
+  "pass": false
+}

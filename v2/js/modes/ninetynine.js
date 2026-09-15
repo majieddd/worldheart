@@ -1,3 +1,5 @@
+import { HomePlanet } from '../home-planet.js';
+import { TERRAIN_FAULTS } from '../world.js';
 import {GeyserField} from '../terrain/geysers.js';
 // The 99 Planets shell. The ONLY file that knows both the pure run core and
 // Three.js. The core decides WHAT happened; this file decides what it looks
@@ -38,6 +40,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // handed to the core as a plain object, because js/run may not know that
   // storage exists.
   const profile = loadProfile();
+  const homeCheckpoint=CONFIG.homeSnapshot?.checkpoint;
+  let home=null;
   const campaign=CONFIG.campaign ? campaignStore : null;
   const expedition=campaign?.snapshot().expedition;
   const restoredVictory=expedition && ['victory','complete'].includes(expedition.status);
@@ -50,11 +54,12 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     draftSeconds: null,
     restoredVictory:!!restoredVictory,
   });
+  if(homeCheckpoint&&!run.restoreCheckpoint(homeCheckpoint.run))throw Error('Home run checkpoint is incompatible. Your save is unchanged.');
   // A seeded stream for shell-side choices, kept separate from the core's so
   // that adding a roll here cannot shift the run's own sequence.
   const rng = makeRng((CONFIG.seed ^ 0x5bf03635) >>> 0);
   const crystalRng = makeRng((CONFIG.seed ^ 0x73d16e2b) >>> 0);
-  const crystals = createCrystalLedger();
+  const crystals = createCrystalLedger(homeCheckpoint?.crystals);
   if (caches) {
     caches.kind = 'crystal';
     caches.mesh.material.color.setHex(0x91b7ff);
@@ -227,7 +232,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         ui.hideDraft();
         ui.toast(`${e.power.name} taken`, 'info');
       } else if (e.type === 'waveCleared') {
-        if (e.coins) {
+        // Home retries restore local gold, cards and loot. Account coins stay
+        // campaign rewards so a rollback cannot pay the same wave repeatedly.
+        if (e.coins && !home?.active) {
           if(campaign)campaign.commit(s=>awardWave(s,assaultId,e.wave,e.coins));else bankCoins(e.coins);
           ui.toast(`+${e.coins} coins`, 'info');
           ui.audio?.play('coin');
@@ -284,6 +291,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     waves.state = 'idle';
     if (run.getPhase() !== 'building') { pendingClears++; return; }
     handle(run.completeWave());
+    home?.waveCleared();
   };
 
   enemies.spawnNodeOverride = node => node;
@@ -385,6 +393,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // leader until the player explicitly starts a fresh route.
   const COMMANDERS = ['commander', 'duelist', 'marksman', 'bombardier', 'oracle'];
   function pickCommander() {
+    if(homeCheckpoint)return homeCheckpoint.commander;
     if(expedition?.commander)return expedition.commander;
     const chosen = new URLSearchParams(location.search).get('commander');
     return COMMANDERS.includes(chosen) ? chosen : preparation().commander;
@@ -421,7 +430,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   }
 
   // ---- weapons ----------------------------------------------------------
-  const initialInventory=expedition?.assault?.victory?.inventory || expedition?.assault?.start || expedition?.banked;
+  const initialInventory=homeCheckpoint?.inventory || expedition?.assault?.victory?.inventory || expedition?.assault?.start || expedition?.banked;
   const inventory = createInventory(commander.typeKey,initialInventory);
   const lootRng = makeRng((CONFIG.seed ^ 0x19427cb5) >>> 0);
   const previewModel = item => allies.weaponPreview(FAMILIES[item.family].visual,{era:item.era,core:item.parts.core,material:materialForWeapon(item)},item.parts.head==='long'?1.2:1);
@@ -520,6 +529,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     return {inventory:inventory.snapshot(),drops:[...loot.entries.values()].map(x=>({item:x.item,dir:x.position.clone().normalize().toArray(),height:x.position.length()-CONFIG.planetRadius})),kills:game.kills,score:game.score,lives:Math.max(1,game.lives)};
   }
   function persistSalvage() {
+    if(home?.quiet)home.dirty=true;
     if(campaign?.snapshot().expedition.status==='victory')campaign.commit(s=>updateSalvage(s,assaultId,salvageSnapshot()));
     campaignPanel?.update();
   }
@@ -847,9 +857,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       distance, direction, swimming: commander.swimming, canDeposit: distance <= 4.5 && !game.paused && crystals.carried.length > 0 });
   }
 
-  const requestedMount=new URLSearchParams(location.search).get('mount');
+  const requestedMount=homeCheckpoint?.mount||new URLSearchParams(location.search).get('mount');
   const mounts=new MountController({scene:game.scene,allies,possession,commander:()=>commander,choice:Object.hasOwn(MOUNTS,requestedMount)?requestedMount:preparation().mount,ui});
-  const forge=createScrapForge(inventory);
+  const forge=createScrapForge(inventory,homeCheckpoint?.forged||0);
   game.freeTowerCredits=new Map();
   function craft(){
     if(game.state!=='playing'||game.paused||game.terrainBusy||run.getPhase()!=='building')return false;
@@ -868,6 +878,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     syncFromRun();campaignPanel?.update();ui.toast('Endless begins. Leave through Expedition kit at the heart when ready.', 'info');return true;
   }
   function finishEndlessRun(){
+    if(home?.active){home.requestStop();return true;}
     if(game.terrainBusy)return false;
     if(game.paused||homeDistance()>6){ui.toast('Return within 6m of the heart to finish Endless.', 'info');return false;}
     const events=run.finishEndless();if(!events.length)return false;
@@ -884,15 +895,53 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     if(possession.unit!==commander){possession.enter(commander);possession.boomWant=4;}
     possession._lock();
   }
+  function homeSnapshot(){
+    if(!commander.active||commander.dead||busyWeapon()||inventory.pending||game.terrainBusy||run.getPhase()==='drafting')return null;
+    const state=run.checkpoint();
+    return {world:{seed:CONFIG.seed,radius:CONFIG.planetRadius,terrain:CONFIG.terrainKey,
+      environment:structuredClone(CONFIG.environment),planetIndex:CONFIG.planetIndex,centre:nav.fieldCenter.toArray(),
+      heart:centre.toArray(),portals:sourcePortals.map(n=>nav.nodeDir(n,new THREE.Vector3()).toArray())},
+      checkpoint:{run:state,commander:commander.typeKey,mount:mounts.choice,inventory:inventory.snapshot(),
+        gold:game.gold,lives:Math.max(1,game.lives),maxLives:game.maxLives,kills:game.kills,score:game.score,forged:forge.forged,
+        lootSequence,loot:salvageSnapshot().drops,crystals:crystals.snapshot(),caches:caches?.caches.map(c=>({id:c.id,node:c.node,dir:c.dir.toArray(),taken:!!c.taken,gold:c.gold||0}))||[],
+        rng:rng.state(),crystalRng:crystalRng.state(),lootRng:lootRng.state(),simRng:SIM_RANDOM.next.state?.(),
+        credits:[...game.freeTowerCredits].map(([def,n])=>[Object.keys(TOWER_TYPES).find(k=>TOWER_TYPES[k]===def),n]),
+        towers:game.towerMgr.towers.map(t=>({type:t.typeKey,dir:t.pos.clone().normalize().toArray(),height:t.pos.length()-CONFIG.planetRadius,
+          tier:t.tier,terrain:t.terrain,invested:t.invested,kills:t.kills,damageDealt:t.damageDealt,patrol:t.patrolDir?.toArray()})),
+        faults:TERRAIN_FAULTS.map(f=>({...f,...Object.fromEntries(['dir','axis','side','protectedDir'].map(k=>[k,f[k].toArray()]))}))}};
+  }
+  home=new HomePlanet({game,ui,world,nav,rig,possession,run,weather,snapshot:homeSnapshot});
+  if(homeCheckpoint){
+    game.gold=homeCheckpoint.gold;game.lives=homeCheckpoint.lives;game.maxLives=homeCheckpoint.maxLives;
+    game.kills=homeCheckpoint.kills;game.score=homeCheckpoint.score;lootSequence=homeCheckpoint.lootSequence||0;
+    for(const [key,n]of homeCheckpoint.credits||[])if(TOWER_TYPES[key])game.freeTowerCredits.set(TOWER_TYPES[key],n);
+    for(const saved of homeCheckpoint.towers){
+      const pos=new THREE.Vector3(...saved.dir).multiplyScalar(CONFIG.planetRadius+saved.height);
+      const t=game.towerMgr.place(saved.type,pos);t.tier=saved.tier;t.invested=saved.invested;t.terrain=saved.terrain;
+      t.kills=saved.kills||0;t.damageDealt=saved.damageDealt||0;if(saved.patrol)t.patrolDir=new THREE.Vector3(...saved.patrol);
+      t._buildVisual();nav.blockNodes(pos,game._fp(t.def),t.id);world.crushDecorNear(pos,game._fp(t.def)+.5);
+    }
+    nav.recomputeFlow();
+    for(const drop of homeCheckpoint.loot||[])if(inventory.register(drop.item))loot.add(drop.item,new THREE.Vector3(...drop.dir),drop.height);
+    if(caches&&homeCheckpoint.caches){caches.caches=homeCheckpoint.caches.map(c=>({...c,dir:new THREE.Vector3(...c.dir)}));for(const c of caches.caches)crystals.register(c.id);caches._render();}
+    rng.restore(homeCheckpoint.rng);crystalRng.restore(homeCheckpoint.crystalRng);lootRng.restore(homeCheckpoint.lootRng);SIM_RANDOM.next.restore(homeCheckpoint.simRng);
+    ui.onBegin=()=>{
+      game.state='playing';game.paused=false;ui.el['title-overlay'].classList.remove('show');rig.autoOrbit=0;
+      rig.flyTo(world.heart.group.position,rig.defaultDist,.5);ui.audio?.start();home.setPeace();ui.refresh();return false;
+    };
+    game.onGameEnd=()=>home.defeat();
+  }
+  if(CONFIG.homeMissing)ui.onBegin=()=>{ui.toast('This home save is unavailable in this browser. Return to the lobby or import its backup.','warn');return false;};
   const started=waves.onWaveStart;waves.onWaveStart=(n,comp)=>{started?.(n,comp);weather.wave(n);};
   const expeditionUi=expeditionControls({ui,game,lockedCommander:expedition?.commander,api:{commander:()=>commander,run,respawn,mounts,forge,weather,abilities,focusCommander,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun}});
 
+  home.mountControls();
   seedCaches(run.getFrontierTheta());
   syncFromRun();
   updateCrystals();
 
   return {
-    run,
+    run,home,
     get commander() { return commander; },
     respawn,
     mounts,forge,weather,geysers,abilities,focusCommander,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
@@ -912,8 +961,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     upgradeHeart: tryUpgradeHeart,
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
+      home.update(dt);
       const activeDt=run.getPhase()==='building'?dt*game.speed:0;
-      mounts.update(activeDt);weather.update(activeDt);
+      mounts.update(activeDt);if(!home.quiet)weather.update(activeDt);
       if(game.terrainBusy)return;
       abilities.update(activeDt);
       geysers.update(activeDt);
@@ -945,6 +995,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       // Scaled by paceMul like the director's own breather: this path was
       // dead until the director stopped unparking itself (see waves.js), so
       // the unscaled value here had never actually been played.
+      if(home.quiet)return;
       if (waves.state === 'idle') {
         if (waves.timedNests) waves.state = waves.wave ? (waves.queues.length ? 'spawning' : 'combat') : 'countdown';
         else { waves.state = 'countdown'; waves.countdown = CONFIG.waves.prepTime * waves.paceMul; }

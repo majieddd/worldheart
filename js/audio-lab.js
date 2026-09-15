@@ -17,7 +17,7 @@ const cues = [
   ['swing','Weapon swing','Rounded air movement timed to the cut; choose sword, Twin Fang or spear'],
   ['click', 'Menu click', 'Small wooden contact'], ['build', 'Build tower', 'Wood body and muted metal latch'],
   ['meleeHit', 'Melee impact', 'Blade contact changes with weapon and target'], ['creatureHit', 'Creature reaction', 'Changes with creature type'],
-  ['blocked', 'Blocked strike', 'Lower plate resonance'], ['rifle', 'Rifle', 'Blast body with a short mechanical tail'],
+  ['blocked', 'Blocked strike', 'Lower plate resonance'], ['rifle', 'Rifle', 'Layered plasma discharge with a warm body and falling energy tail'],
   ['shot', 'Tower shot', 'Restored previous tower shot'], ['mortar', 'Mortar', 'Slower heavy launch'],
   ['lob', 'Lobber', 'Restored previous lobber'], ['explosion', 'Explosion', 'Previous explosion with a deeper body'],
   ['step', 'Grass step', 'Three material variations'], ['stepHard', 'Hard step', 'Three wood variations'],
@@ -86,7 +86,7 @@ function context() {
   return Object.fromEntries(['family','material','target','creature'].map(key=>[key,document.querySelector('#'+key).value]));
 }
 const musicManifest = await fetch(new URL('audio/soundtrack/manifest.json', document.baseURI)).then(r=>r.json()).catch(()=>null);
-if (musicManifest) for (const track of Object.values(musicManifest.tracks)) {
+if (musicManifest) for (const track of Object.values(musicManifest.tracks).filter(t=>t.role!=='calm')) {
   const row=document.createElement('div'); row.className='track';
   const label=document.createElement('p');label.textContent=track.title;
   const media=document.createElement('audio');media.controls=true;media.preload='none';
@@ -108,3 +108,11 @@ if(auditions)for(const track of auditions.tracks){
 document.addEventListener('visibilitychange', () => { if (document.hidden) silence(); });
 window.addEventListener('pagehide', () => { silence(); draft.dispose(); previous.ctx?.close(); });
 window.audioLab = { previous, draft }; // Explicit QA surface; no automatic playback.
+
+const combat=await fetch(new URL('audio/combat-drafts/manifest.json',document.baseURI)).then(r=>r.ok?r.json():null).catch(()=>null);
+if(combat)for(const track of combat.tracks){
+  const row=document.createElement('div');row.className='track';const label=document.createElement('p');label.textContent=track.title+' - '+track.theme;
+  const detail=document.createElement('p');detail.className='muted';detail.textContent=track.bpm+' BPM brief · Orchestral ensemble + Jungle / Garage / Drum and Bass · '+Math.round(track.duration)+'s · Reference: '+(musicManifest?.tracks[track.reference]?.title||track.reference);
+  const media=document.createElement('audio');media.controls=true;media.preload='none';media.src=new URL('audio/combat-drafts/'+track.file,document.baseURI).href;media.setAttribute('aria-label',track.title);
+  media.onplay=()=>{silence(media);status.textContent='Battle audition: '+track.title;};row.append(label,detail,media);document.querySelector('#combat-auditions').append(row);
+}

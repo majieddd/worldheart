@@ -156,6 +156,19 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
     getDraft: () => draft,
     isBossWave: () => isBossWave(state.wavesCleared + 1),
     serialise: () => serialise(state),
+    checkpoint: () => ({...JSON.parse(serialise(state)), rngState:rng.state()}),
+    restoreCheckpoint(saved) {
+      if (!saved || saved.phase !== 'building' || !Number.isInteger(saved.wavesCleared)
+        || saved.heartLevel !== MAX_HEART_LEVEL || !saved.endless || !Array.isArray(saved.powers)
+        || saved.powers.some(id=>!POWER_BY_ID[id]) || !Array.isArray(saved.hand)
+        || saved.hand.some(id=>![STARTING_TOWER,...UNLOCKABLE_TOWERS].includes(id))) return false;
+      Object.assign(state,JSON.parse(JSON.stringify(saved)));draft=null;
+      rng.restore(saved.rngState ?? saved.seed);refreshModifiers();return true;
+    },
+    claimHome() {
+      if(state.heartLevel!==MAX_HEART_LEVEL||!['building','victory'].includes(state.phase))return false;
+      state.phase='building';state.endless=true;draft=null;return true;
+    },
 
     // ---- transitions ----
 

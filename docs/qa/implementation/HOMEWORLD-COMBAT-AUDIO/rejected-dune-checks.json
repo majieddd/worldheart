@@ -1,0 +1,236 @@
+{
+  "status": "fail",
+  "scope": "Technical measurements only. No listening, voice-absence, genre or perceived-quality certification.",
+  "checks": [
+    {
+      "name": "canopy-battle decoded duration, finite PCM, headroom and sustained content",
+      "status": "pass",
+      "sha256": "78bab4e63497537e81b22ee40c8bda1408e8168efddcb2dbbb9bb7d7fd801ea7",
+      "seconds": 96.0,
+      "peak": 0.5977858304977417,
+      "quietOneSecondWindows": 1,
+      "measuredLUFS": -19.03,
+      "truePeakDBTP": -5.18
+    },
+    {
+      "name": "dune-battle decoded duration, finite PCM, headroom and sustained content",
+      "status": "fail",
+      "sha256": "8e1859e8c7ffb3a2a2368e54da16c42cddcf8f27b869c5646c54112cb0708484",
+      "seconds": 96.0,
+      "peak": 0.7730103731155396,
+      "quietOneSecondWindows": 12,
+      "measuredLUFS": -19.0,
+      "truePeakDBTP": -5.33
+    },
+    {
+      "name": "frozen-battle decoded duration, finite PCM, headroom and sustained content",
+      "status": "pass",
+      "sha256": "2c43e1b5f3a0762d39e6f75ed34e5b15cc35705e6730ab38885b9aba0039fa03",
+      "seconds": 96.0,
+      "peak": 0.6743679046630859,
+      "quietOneSecondWindows": 2,
+      "measuredLUFS": -19.0,
+      "truePeakDBTP": -4.69
+    },
+    {
+      "name": "garden-battle decoded duration, finite PCM, headroom and sustained content",
+      "status": "pass",
+      "sha256": "56216e645071dfd08ceb7618cd54196287ee4d4e70e88ed18ffbfe5a3c5f37f5",
+      "seconds": 96.0,
+      "peak": 0.6206064224243164,
+      "quietOneSecondWindows": 2,
+      "measuredLUFS": -19.0,
+      "truePeakDBTP": -5.29
+    },
+    {
+      "name": "molten-battle decoded duration, finite PCM, headroom and sustained content",
+      "status": "pass",
+      "sha256": "03ddaef71ece2f1884d7e2cd81208f6059d8d26a24f7f7056a4f1fc2f4bb95db",
+      "seconds": 96.0,
+      "peak": 0.5336990356445312,
+      "quietOneSecondWindows": 3,
+      "measuredLUFS": -18.98,
+      "truePeakDBTP": -6.23
+    },
+    {
+      "name": "click owner-approved PCM unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "build owner-approved PCM unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "blocked owner-approved PCM unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "mortar owner-approved PCM unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "step owner-approved PCM unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "stepHard owner-approved PCM unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "coin owner-approved PCM unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "upgrade owner-approved PCM unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "victory owner-approved PCM unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "rifle bounded peak and treble energy",
+      "status": "pass",
+      "variants": [
+        {
+          "cue": "rifle",
+          "peak": 0.54,
+          "rms": 0.0875105261557315,
+          "highEnergyFraction": 0.0013796497663523845
+        },
+        {
+          "cue": "rifle",
+          "peak": 0.54,
+          "rms": 0.08690638885084427,
+          "highEnergyFraction": 0.0014139278061594044
+        },
+        {
+          "cue": "rifle",
+          "peak": 0.54,
+          "rms": 0.08495444969932095,
+          "highEnergyFraction": 0.001390428064222554
+        }
+      ]
+    },
+    {
+      "name": "swordFlesh bounded peak and treble energy",
+      "status": "pass",
+      "variants": [
+        {
+          "cue": "swordFlesh",
+          "peak": 0.43,
+          "rms": 0.0649682580760457,
+          "highEnergyFraction": 0.019108260010635737
+        },
+        {
+          "cue": "swordFlesh",
+          "peak": 0.43,
+          "rms": 0.06391841854373842,
+          "highEnergyFraction": 0.0186129190723857
+        },
+        {
+          "cue": "swordFlesh",
+          "peak": 0.43,
+          "rms": 0.05218438223340286,
+          "highEnergyFraction": 0.019495165274276787
+        }
+      ]
+    },
+    {
+      "name": "swordArmor bounded peak and treble energy",
+      "status": "pass",
+      "variants": [
+        {
+          "cue": "swordArmor",
+          "peak": 0.42999999999999994,
+          "rms": 0.06961781476908639,
+          "highEnergyFraction": 0.02741944396491724
+        },
+        {
+          "cue": "swordArmor",
+          "peak": 0.43,
+          "rms": 0.053786297272657525,
+          "highEnergyFraction": 0.018629701022115384
+        },
+        {
+          "cue": "swordArmor",
+          "peak": 0.43,
+          "rms": 0.06393560143429297,
+          "highEnergyFraction": 0.024801540807865303
+        }
+      ]
+    },
+    {
+      "name": "swordWood bounded peak and treble energy",
+      "status": "pass",
+      "variants": [
+        {
+          "cue": "swordWood",
+          "peak": 0.43,
+          "rms": 0.07263758020386021,
+          "highEnergyFraction": 0.018666977923302734
+        },
+        {
+          "cue": "swordWood",
+          "peak": 0.43,
+          "rms": 0.06969953121748443,
+          "highEnergyFraction": 0.013725765033529846
+        },
+        {
+          "cue": "swordWood",
+          "peak": 0.42999999999999994,
+          "rms": 0.07100624025003853,
+          "highEnergyFraction": 0.022424170098270885
+        }
+      ]
+    },
+    {
+      "name": "spearFlesh bounded peak and treble energy",
+      "status": "pass",
+      "variants": [
+        {
+          "cue": "spearFlesh",
+          "peak": 0.43,
+          "rms": 0.04872594230253903,
+          "highEnergyFraction": 0.0029721018113311125
+        },
+        {
+          "cue": "spearFlesh",
+          "peak": 0.43,
+          "rms": 0.06111993015360212,
+          "highEnergyFraction": 0.025844360102034475
+        },
+        {
+          "cue": "spearFlesh",
+          "peak": 0.43,
+          "rms": 0.04157667353036653,
+          "highEnergyFraction": 0.004969976556758469
+        }
+      ]
+    },
+    {
+      "name": "twinFlesh bounded peak and treble energy",
+      "status": "pass",
+      "variants": [
+        {
+          "cue": "twinFlesh",
+          "peak": 0.43,
+          "rms": 0.05467110678952728,
+          "highEnergyFraction": 0.05018120209630672
+        },
+        {
+          "cue": "twinFlesh",
+          "peak": 0.43,
+          "rms": 0.06056109459283216,
+          "highEnergyFraction": 0.05325958520608552
+        },
+        {
+          "cue": "twinFlesh",
+          "peak": 0.43,
+          "rms": 0.05090781303485625,
+          "highEnergyFraction": 0.056482347045314366
+        }
+      ]
+    }
+  ]
+}

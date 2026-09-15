@@ -86,6 +86,7 @@ export class MaterialAudio extends AudioEngine {
   }
 
   play(name, context = {}) {
+    if(this.approvedOnly&&!['click','build','blocked','mortar','step','stepHard','coin','upgrade','victory','rifle','meleeHit','swing'].includes(name)){super.play(name,context);return;}
     if(name==='swing'){super.play(name,context);return;}
     if (this.disposed || !this.started || this.muted || document.hidden || this.ctx?.state !== 'running') return;
     const fallbackName = name;
@@ -147,10 +148,10 @@ export class MaterialAudio extends AudioEngine {
   }
 }
 
-export function adoptMaterialAudio(audio) {
+export function adoptMaterialAudio(audio, {approvedOnly=false}={}) {
   // boot() awaits this before sharing the engine with input/combat/UI callbacks.
   if (audio.started || audio.ctx) throw new Error('Install the sound trial before audio starts');
   Object.setPrototypeOf(audio, MaterialAudio.prototype);
-  audio._initMaterial();
+  audio._initMaterial();audio.approvedOnly=approvedOnly;
   return audio;
 }

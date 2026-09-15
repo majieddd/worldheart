@@ -1111,13 +1111,15 @@ export class HUD {
         sub = `${left} remaining`;
       }
     }
+    const peacefulHome=this.game.mode99?.home.quiet;
+    if(peacefulHome){label='HOME PLANET';sub='peaceful · incursions paused';showCall=false;}
     if (e['wave-label'].textContent !== label) e['wave-label'].textContent = label;
     if (e['wave-sub'].textContent !== sub) e['wave-sub'].textContent = sub;
     // Live nests: woken breaches outside the frontier, each trickling raids.
     // Beside the wave readout because they are the wave's other half, and
     // hidden entirely at zero so the classic maps never grow a stray divider.
     const nests = w.liveNestCount || 0;
-    const showNests = nests || (w.timedNests && w.wave > 0);
+    const showNests = !peacefulHome && (nests || (w.timedNests && w.wave > 0));
     const bodies = live + w.pendingSpawns;
     const nestText = showNests ? `${nests} ${nests === 1 ? 'nest' : 'nests'}${w.timedNests ? ` / ${bodies} ${bodies === 1 ? 'mob' : 'mobs'}` : ''}` : '';
     if (e['nest-count'].textContent !== nestText) {

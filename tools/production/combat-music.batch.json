@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "id": "combat-music",
+  "revision": 1,
+  "toolchain": {
+    "provider": "ComfyUI",
+    "model": "ACE-Step 1.5 turbo reference subset",
+    "version": "bca0bfde54bc7177dc5939ca9e4fc94314b919f084044cd647347cdeac9bbd47",
+    "comfyCommit": "36da3ff763687eab86a35e1019995dd1fb369b0d"
+  },
+  "pilot": "molten-battle",
+  "approvedAssets": [
+    {
+      "path": "audio/soundtrack/boss.mp3",
+      "sha256": "5e02358365c2bd6e5d5272e78c1e6e6285a9f723b724210ec674afe6d8608607"
+    },
+    {
+      "path": "audio/soundtrack/cinematicBoss.mp3",
+      "sha256": "b7b27edcf9288d052e32af1d292ff088d3be361b5207e58403a8e67125fd2e9c"
+    },
+    {
+      "path": "audio/soundtrack/desertBoss.mp3",
+      "sha256": "a55f3c02b74db9fe9e03f5db73b995857ed18b332071bcd477bc0e2ce9a2e538"
+    },
+    {
+      "path": "audio/soundtrack/lobby1.mp3",
+      "sha256": "cef9b04537e4ac8abb5adebeda52d6e68c159c9993a548deac07b4a1cd1ce5ee"
+    },
+    {
+      "path": "audio/soundtrack/lobby2.mp3",
+      "sha256": "7f57f10c49d9f9271de15db2b4be41c8d40459a46671b81eb4fd65c5651e260c"
+    },
+    {
+      "path": "audio/soundtrack/planet.mp3",
+      "sha256": "6f31a38d291d6bd4f566a35ca64b0e3b378d2f7ebeb0f9aaca263b300ac4b881"
+    },
+    {
+      "path": "audio/soundtrack/playful.mp3",
+      "sha256": "c11a6f2286964622179796f55f80dcacbb7bd08b358910609968b2af937e7ad9"
+    },
+    {
+      "path": "audio/soundtrack/title.mp3",
+      "sha256": "0b838a32a7fd6655f9540024852ccbef4d40335dd5b967862e02fc8e5f9a9530"
+    },
+    {
+      "path": "audio/soundtrack/tropical.mp3",
+      "sha256": "33a6c57c5434a9ff79e53a92fe9086c076cadbafd43b80af7993242c45af6487"
+    },
+    {
+      "path": "audio/auditions/canopy.mp3",
+      "sha256": "5e974c0cacabe11a005d063b3457338d756a7b28c839e47ec4ab90b2fb0d3c14"
+    },
+    {
+      "path": "audio/auditions/dune.mp3",
+      "sha256": "aefe6cf0d5958917afbc7cdf0dba1053c67ce01c4a92ce5197e98b181cd97a2c"
+    },
+    {
+      "path": "audio/auditions/frozen.mp3",
+      "sha256": "71b7ac02cea6e5756021a90db114840ef3e70381ea2f37341a4bbc97794925d1"
+    },
+    {
+      "path": "audio/auditions/garden.mp3",
+      "sha256": "5fd4ca9f6e7f6a636d231e170a80532787ee9811e64234fed0a2a66b51df5a2c"
+    },
+    {
+      "path": "audio/auditions/molten.mp3",
+      "sha256": "4862508903410dae9385e7280cb7fad845215cb199b08d91d6908715035b0878"
+    }
+  ],
+  "items": [
+    {
+      "id": "garden-battle",
+      "recipe": {
+        "id": "garden-battle",
+        "title": "Orchard Vanguard",
+        "theme": "Garden World",
+        "reference": "boss",
+        "bpm": 174,
+        "key": "D major",
+        "seed": 991601,
+        "tags": "Instrumental high-energy combat video game soundtrack, 174 BPM, orchestral drum and bass with jungle breakbeats and UK garage swing. heroic French horn and trumpet fanfares, agile violin spiccato, playful marimba, live funk bass guitar; exuberant major-key victory momentum. Short grand orchestral opening, explosive drum break enters within eight seconds, sustained fast syncopated kick and snare groove, recurring heroic instrumental theme, varied fills every eight bars, contrasting ensemble bridge and energetic full-band return. Acoustic orchestral depth and modern electronic rhythm, crisp clear high-definition studio mix, rich bass, controlled cymbals, no hiss, no static, no harsh clipping. Strictly instruments only. No vocals, no singing, no spoken words, no choir, no chants, no vocal chops, no vocal samples.",
+        "seconds": 96,
+        "preExportGainDB": -9,
+        "role": "combat-approval"
+      },
+      "inputs": [
+        "audio/soundtrack/boss.mp3",
+        "tools/generate-planet-auditions.py",
+        "tools/master-planet-auditions.py"
+      ],
+      "outputs": [
+        "audio/combat-drafts/garden-battle.mp3"
+      ]
+    },
+    {
+      "id": "canopy-battle",
+      "recipe": {
+        "id": "canopy-battle",
+        "title": "Canopy Chase",
+        "theme": "Canopy World",
+        "reference": "tropical",
+        "bpm": 170,
+        "key": "G minor",
+        "seed": 991602,
+        "tags": "Instrumental high-energy combat video game soundtrack, 170 BPM, orchestral drum and bass with jungle breakbeats and UK garage swing. polyrhythmic congas and timbales, bright marimba runs, flute calls, punchy brass band and warm electric bass; syncopated tropical jungle breakbeats. Short grand orchestral opening, explosive drum break enters within eight seconds, sustained fast syncopated kick and snare groove, recurring heroic instrumental theme, varied fills every eight bars, contrasting ensemble bridge and energetic full-band return. Acoustic orchestral depth and modern electronic rhythm, crisp clear high-definition studio mix, rich bass, controlled cymbals, no hiss, no static, no harsh clipping. Strictly instruments only. No vocals, no singing, no spoken words, no choir, no chants, no vocal chops, no vocal samples.",
+        "seconds": 96,
+        "preExportGainDB": -9,
+        "role": "combat-approval"
+      },
+      "inputs": [
+        "audio/soundtrack/tropical.mp3",
+        "tools/generate-planet-auditions.py",
+        "tools/master-planet-auditions.py"
+      ],
+      "outputs": [
+        "audio/combat-drafts/canopy-battle.mp3"
+      ]
+    },
+    {
+      "id": "dune-battle",
+      "recipe": {
+        "id": "dune-battle",
+        "title": "Dunes of Defiance",
+        "theme": "Dune World",
+        "reference": "boss",
+        "bpm": 172,
+        "key": "D minor",
+        "seed": 991703,
+        "tags": "Instrumental high-energy combat video game soundtrack, 172 BPM, orchestral drum and bass with jungle breakbeats and UK garage swing. oud tremolo, low cello ostinato, modal oboe melody, thunderous taiko and frame drums, cinematic brass; dark rolling reese bass and shuffled garage percussion. Short grand orchestral opening, explosive drum break enters within eight seconds, sustained fast syncopated kick and snare groove, recurring heroic instrumental theme, varied fills every eight bars, contrasting ensemble bridge and energetic full-band return. Acoustic orchestral depth and modern electronic rhythm, crisp clear high-definition studio mix, rich bass, controlled cymbals, no hiss, no static, no harsh clipping. Strictly instruments only. No vocals, no singing, no spoken words, no choir, no chants, no vocal chops, no vocal samples. Continuous driving rhythm through the end; no ambient break or long quiet ending.",
+        "seconds": 96,
+        "preExportGainDB": -9,
+        "role": "combat-approval"
+      },
+      "inputs": [
+        "audio/soundtrack/boss.mp3",
+        "tools/generate-planet-auditions.py",
+        "tools/master-planet-auditions.py"
+      ],
+      "outputs": [
+        "audio/combat-drafts/dune-battle.mp3"
+      ]
+    },
+    {
+      "id": "frozen-battle",
+      "recipe": {
+        "id": "frozen-battle",
+        "title": "Aurora Interceptor",
+        "theme": "Cryosphere",
+        "reference": "boss",
+        "bpm": 168,
+        "key": "A minor",
+        "seed": 991604,
+        "tags": "Instrumental high-energy combat video game soundtrack, 168 BPM, orchestral drum and bass with jungle breakbeats and UK garage swing. crystalline celesta arpeggios, expansive string orchestra, bass clarinet and majestic horn melody; liquid drum and bass, clean deep sub bass, sparkling syncopated mallets. Short grand orchestral opening, explosive drum break enters within eight seconds, sustained fast syncopated kick and snare groove, recurring heroic instrumental theme, varied fills every eight bars, contrasting ensemble bridge and energetic full-band return. Acoustic orchestral depth and modern electronic rhythm, crisp clear high-definition studio mix, rich bass, controlled cymbals, no hiss, no static, no harsh clipping. Strictly instruments only. No vocals, no singing, no spoken words, no choir, no chants, no vocal chops, no vocal samples.",
+        "seconds": 96,
+        "preExportGainDB": -9,
+        "role": "combat-approval"
+      },
+      "inputs": [
+        "audio/soundtrack/boss.mp3",
+        "tools/generate-planet-auditions.py",
+        "tools/master-planet-auditions.py"
+      ],
+      "outputs": [
+        "audio/combat-drafts/frozen-battle.mp3"
+      ]
+    },
+    {
+      "id": "molten-battle",
+      "recipe": {
+        "id": "molten-battle",
+        "title": "Corebreaker",
+        "theme": "Molten World",
+        "reference": "cinematicBoss",
+        "bpm": 176,
+        "key": "E minor",
+        "seed": 991605,
+        "tags": "Instrumental high-energy combat video game soundtrack, 176 BPM, orchestral drum and bass with jungle breakbeats and UK garage swing. bold trombones and French horns, driving low strings and orchestral toms, distorted electric bass with clean sub layer, intense chopped jungle drums; defiant volcanic battle. Short grand orchestral opening, explosive drum break enters within eight seconds, sustained fast syncopated kick and snare groove, recurring heroic instrumental theme, varied fills every eight bars, contrasting ensemble bridge and energetic full-band return. Acoustic orchestral depth and modern electronic rhythm, crisp clear high-definition studio mix, rich bass, controlled cymbals, no hiss, no static, no harsh clipping. Strictly instruments only. No vocals, no singing, no spoken words, no choir, no chants, no vocal chops, no vocal samples.",
+        "seconds": 96,
+        "preExportGainDB": -9,
+        "role": "combat-approval"
+      },
+      "inputs": [
+        "audio/soundtrack/cinematicBoss.mp3",
+        "tools/generate-planet-auditions.py",
+        "tools/master-planet-auditions.py"
+      ],
+      "outputs": [
+        "audio/combat-drafts/molten-battle.mp3"
+      ]
+    }
+  ]
+}

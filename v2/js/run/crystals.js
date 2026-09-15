@@ -3,10 +3,13 @@
 export const CRYSTAL_CAPACITY = 3;
 export const CRYSTAL_CREDIT = 100;
 
-export function createCrystalLedger() {
+export function createCrystalLedger(initial=null) {
   const registered = new Set(), claimed = new Set(), deposited = new Set();
   const carried = [];
-  let credit = 0;
+  let credit = initial?.credit || 0;
+  for(const id of initial?.claimed||[])claimed.add(id);
+  for(const id of initial?.deposited||[])deposited.add(id);
+  carried.push(...(initial?.carried||[]).slice(0,CRYSTAL_CAPACITY));
   return {
     register(id) { if (typeof id === 'string' && id) registered.add(id); },
     pickup(id) {

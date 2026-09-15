@@ -76,6 +76,17 @@ export class NavGraph {
   *buildSteps() {
     const theta = CONFIG.map.fieldTheta;
     this.portalTarget = CONFIG.map.portalWakes.length;
+    // A claimed planet keeps its accepted seed and anchor. Searching again can
+    // move the heart after a quake and strand the saved defenses elsewhere.
+    if(CONFIG.homeSnapshot){
+      const w=CONFIG.homeSnapshot.world;this.attempts=1;this.fieldCenter=new THREE.Vector3(...w.centre);
+      const ico=buildIcosphere(DETAIL,this.fieldCenter,theta,7);
+      yield* this._buildGraphSteps(null,0,false,DETAIL,false,ico);
+      this.heartNode=this.nearestWalkableNode(new THREE.Vector3(...w.heart));
+      this.portalNodes=w.portals.map(d=>this.nearestWalkableNode(new THREE.Vector3(...d)));
+      if(this.heartNode<0||this.portalNodes.some(n=>n<0))throw Error('Saved home terrain cannot restore its anchors. The save has been preserved.');
+      this.global=true;yield* this.recomputeFlowSteps();return;
+    }
 
     // Space Battlefields are authored, not searched: the platform layout is
     // deterministic per seed, the whole cap is flight space (pathable), and

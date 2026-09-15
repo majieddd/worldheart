@@ -9,7 +9,7 @@ const out=resolve(process.argv[2]||'artifacts/regression');mkdirSync(out,{recurs
 const browser=await chromium.launch({channel:process.env.WH_BROWSER||'chrome',headless:true});
 const results=[];
 try{
-  for(const map of ['pocket','giant','titan','ninetynine','reach']){
+  for(const map of (process.argv.includes('--classic')?['pocket','giant','titan','reach']:['pocket','giant','titan','ninetynine','reach'])){
     const page=await browser.newPage({viewport:{width:1280,height:720}}),faults=[];
     page.on('pageerror',e=>faults.push(String(e)));
     page.on('console',m=>{if(m.type()==='error')faults.push(m.text());});

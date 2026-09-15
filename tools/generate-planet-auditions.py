@@ -61,26 +61,34 @@ def main():
     parser.add_argument("--url", default="http://127.0.0.1:8189")
     parser.add_argument("--model", default="ace_step_1.5_turbo_reference.safetensors")
     parser.add_argument("--only")
+    parser.add_argument("--recipes", type=Path)
+    parser.add_argument("--out", type=Path, default=ROOT/"artifacts/planet-auditions")
     parser.add_argument("--seconds", type=float, default=96)
     args = parser.parse_args()
-    out = ROOT/"artifacts/planet-auditions"
+    out = args.out
+    recipes = json.loads(args.recipes.read_text(encoding="utf-8")) if args.recipes else RECIPES
     out.mkdir(parents=True, exist_ok=True)
-    for recipe in RECIPES:
+    for recipe in recipes:
         if args.only and recipe["id"] != args.only:
             continue
         result_path = out/(recipe["id"]+"-result.json")
-        if result_path.exists():
-            print(recipe["id"], "already generated; keeping original result", flush=True)
-            continue
         source = ROOT/"audio/soundtrack"/(recipe["reference"]+".mp3")
+        identity = hashlib.sha256(json.dumps(dict(recipe=recipe, model=args.model, seconds=args.seconds,
+            source=hashlib.sha256(source.read_bytes()).hexdigest(), graph=graph(recipe,args.model,"reference",args.seconds)),sort_keys=True).encode()).hexdigest()
+        if result_path.exists():
+            prior=json.loads(result_path.read_text(encoding="utf-8"))
+            if prior.get("recipeIdentity") != identity:
+                raise ValueError("Changed recipe with existing receipt. Use a fresh --out for a reviewable new take: "+recipe["id"])
+            print(recipe["id"], "matching generated receipt; mastering/listening status remains separate", flush=True)
+            continue
         reference = "worldheart-reference-"+recipe["id"]+".wav"
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "16", "-i", str(source), "-t", str(args.seconds),
                         "-ar", "48000", "-ac", "2", str(args.comfy/"input"/reference)], check=True)
         prompt = graph(recipe, args.model, reference, args.seconds)
-        record = dict(recipe=recipe, model=args.model, seconds=args.seconds,
+        record = dict(recipeIdentity=identity, recipe=recipe, model=args.model, seconds=args.seconds,
                       referenceSHA256=hashlib.sha256(source.read_bytes()).hexdigest(), referenceStart=16, referenceSeconds=args.seconds,
                       prompt=prompt, status="approval-only; not integrated into game music")
-        (out/(recipe["id"]+"-recipe.json")).write_text(json.dumps(record, indent=2))
+        (out/(recipe["id"]+"-recipe.json")).write_text(json.dumps(record, indent=2), encoding="utf-8")
         submitted = request(args.url+"/prompt", {"prompt": prompt, "client_id": "worldheart-planet-auditions"})
         prompt_id = submitted["prompt_id"]
         print(recipe["id"], "submitted", prompt_id, flush=True)
@@ -91,9 +99,9 @@ def main():
                 record["elapsedSeconds"] = round(time.time()-started, 2)
                 record["history"] = history
                 if history.get("status", {}).get("status_str") == "error":
-                    (out/(recipe["id"]+"-error.json")).write_text(json.dumps(record, indent=2))
+                    (out/(recipe["id"]+"-error.json")).write_text(json.dumps(record, indent=2), encoding="utf-8")
                     raise RuntimeError(str(history["status"]))
-                result_path.write_text(json.dumps(record, indent=2))
+                result_path.write_text(json.dumps(record, indent=2), encoding="utf-8")
                 print(recipe["id"], "completed", record["elapsedSeconds"], history.get("outputs"), flush=True)
                 break
             time.sleep(5)
