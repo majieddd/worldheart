@@ -8,6 +8,8 @@ U136-U139 audio was rejected by the owner after listening. U140 restores
 the prior sound design (V2 033d3e3). U141 adds a separate opt-in comparison of
 16 material effects and an instrument-source piano sketch, inspired by Tears
 of the Kingdom. The draft has no voice model or continuous ambient bed.
+The comparison is published separately at V2 `5577df3`; normal play retains
+the restored sounds. U142 listening acceptance remains open.
 [Restoration ledger](qa/implementation/AUDIO-RESTORATION.md). Machine screening
 must not substitute for listening acceptance.
 

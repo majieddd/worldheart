@@ -1,11 +1,14 @@
 # 99 Planets development progress
 
 U140: full audio rollback published and verified as V2 `033d3e3`.
-U141: separate material-effects comparison implemented and locally verified;
-publication pending. Codex owns `feature/audio-restoration`.
+U141: separate material-effects comparison published and publicly verified as
+V2 `5577df3`. Codex owns `feature/audio-restoration`, [draft PR #44](https://github.com/majieddd/worldheart/pull/44).
 [Restoration ledger](qa/implementation/AUDIO-RESTORATION.md). Normal play retains
 the prior audio. U142 owner listening remains open; automated screening cannot
 substitute for this acceptance.
+[Compare the sounds](https://majieddd.github.io/worldheart/v2/audio-lab.html).
+337 tests, 41 local and 41 public browser checks, and 166 public asset/removal
+comparisons pass. [Pages action](https://github.com/majieddd/worldheart/actions/runs/34948123140).
 
 Rejected historical pass: U136-U139 was published as V2
 `1f2eb75`. Codex owns `feature/yue2-audio-revamp`, [draft PR #43](https://github.com/majieddd/worldheart/pull/43).

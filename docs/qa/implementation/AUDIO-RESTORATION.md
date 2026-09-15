@@ -5,7 +5,7 @@ Active 2026-09-15. Owner: Codex, `feature/audio-restoration`.
 | Item | State | Scope |
 |---|---|---|
 | U140 | Published / verified | Restore every pre-revamp runtime, asset and audio UI change; V2 033d3e3 |
-| U141 | Locally verified / publication pending | Separate warmer material-based comparison, with instrument-only piano sketch |
+| U141 | Published / verified | Separate material-based comparison, with instrument-only piano sketch; V2 5577df3 |
 | U142 | Open | Owner listening acceptance; do not treat classifier scores as proof of no vocals or pleasant sound |
 
 The owner rejected U136-U139 after listening: vocals, sharp/tinny effects and
@@ -72,3 +72,19 @@ U142 remains open: owner listening on speakers/headphones and a physical phone,
 perceived warmth/impact, comfortable relative levels, absence of perceived
 voice-like content and whether this direction merits expanding beyond 16 cues.
 Waveform tests and source provenance are not substitutes for this listening.
+
+## Publication and handoff
+
+Published V2 commit: `5577df38512785007e5e2abdcbf076636660694e`.
+[Successful Pages action 34948123140](https://github.com/majieddd/worldheart/actions/runs/34948123140),
+[draft PR #44](https://github.com/majieddd/worldheart/pull/44),
+[live sound comparison](https://majieddd.github.io/worldheart/v2/audio-lab.html).
+The default game continues to use its restored audio. Main is still `1374122`.
+
+Final gates: 337 tests, 98 source modules, style, 116 generated mirrors, 41 local
+and 41 public instrumented browser checks. Public verification also compared
+every published preview asset and recorded production runtime hash to its Git
+blob, and verified all 13 removed audio assets/modules return 404: 166 checks.
+Reports: `AUDIO-RESTORATION/material-local.json`, `material-public.json` and
+`public-identity.json`. The evidence-only closeout commit does not alter the
+deployed runtime. No subjective listening or physical-device approval is claimed.
