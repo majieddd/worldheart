@@ -4,10 +4,10 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
-Active U136-U139: [YuE2 audio revamp](qa/implementation/AUDIO-REVAMP.md).
+Published U136-U139 audio implementation, V2 `1f2eb75`: [YuE2 audio revamp](qa/implementation/AUDIO-REVAMP.md).
 Instrumental score, distinct nonverbal action feedback, bounded mobile audio,
 separate mix controls and reviewable generation provenance replace the old pad
-and shared synthesized cues. Six local YuE2 pieces and the effects/mixer pass automated screening and runtime checks. V2 publication is in progress; human listening and physical-device acceptance remain explicitly open.
+and shared synthesized cues. Six local YuE2 pieces and the effects/mixer pass automated screening and runtime checks. Public asset identity and 123 public audio checks pass; human listening and physical-device acceptance remain explicitly open.
 
 U132-U135 is published and publicly verified as V2 `309aaa7`: [mobile performance and control polish](qa/implementation/MOBILE-PERFORMANCE.md). Larger floating thumb controls and named skills preserve contextual mechanic coverage. Route reuse and conservative visible geometry reduce unnecessary work without lowering authored detail or changing rules. [Acceptance](qa/implementation/MOBILE-PERFORMANCE/ACCEPTANCE.md) records bounded frame gains, 125 local and 125 public touch cases, 286 live/source identity comparisons and a complete ten-wave defense; phone hardware acceptance remains separate.
 

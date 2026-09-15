@@ -29,7 +29,7 @@ try{
       A.buses.music.disconnect(analyser);analyser.disconnect();
       return {key:k,mime,bytes:bytes.byteLength,hash,expected:track,duration:d.element.duration,time:d.element.currentTime,peak,rms:Math.sqrt(energy/(4096*8)),playing:A.decks.filter(d=>!d.element.paused).length,snapshot:A.snapshot()};
     },key);report.files.push(result);
-    check(key+' asset hash, MIME and duration',result.hash===result.expected.sha256&&result.bytes===result.expected.bytes&&result.mime.includes('audio/mpeg')&&Math.abs(result.duration-result.expected.seconds)<.2,result);
+    check(key+' asset hash, MIME and duration',result.hash===result.expected.sha256&&result.bytes===result.expected.bytes&&/^audio\/(?:mpeg|mp3)(?:;|$)/i.test(result.mime)&&Math.abs(result.duration-result.expected.seconds)<.2,result);
     check(key+' produces music output and retires faded deck',result.peak>.0005&&result.peak<1&&result.rms>.0001&&result.playing===1);
     await page.evaluate(k=>{const d=A.decks.find(d=>d.key===k&&d.target===1);d.element.currentTime=d.element.duration-.3;},key);
     await page.waitForFunction(k=>{const e=A.decks.find(d=>d.key===k&&d.target===1)?.element;return e&&!e.paused&&e.currentTime>.1&&e.currentTime<3;},key,{timeout:12000});

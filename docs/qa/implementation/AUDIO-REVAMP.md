@@ -9,7 +9,7 @@ Updated 2026-09-15. Codex owns `feature/yue2-audio-revamp`,
 | U136 | Exact video workflow, local YuE2 soundtrack and provenance | Implemented; automated checks passed | Six delivered instrumentals screened; human listening remains open |
 | U137 | Engine, buses, bounded voices and mechanic cues | Verified locally | Cached bank, spatial feedback, input timing, lifecycle and combat checks |
 | U138 | Music transitions, ambience, touch mixer and Debug audition | Verified locally | Actual media output, loops, stream retirement, gesture unlock and settings |
-| U139 | Delivery, adversarial regression and V2 publication | Active | Final repository gates and public identity/playback verification |
+| U139 | Delivery, adversarial regression and V2 publication | Published and publicly verified | V2 `1f2eb75`, successful Pages action, 157 asset comparisons and 123 public browser checks |
 
 ## Delivered implementation
 
@@ -108,7 +108,10 @@ the next Debug fixture omitted its mobile inspector. Both were corrected to
 use the actual visible interface. The first new weapon fixture tried a carbine
 on the incompatible Bulwark commander; the game correctly refused that loadout.
 The refined fixture uses a compatible production body for each family. None of
-these failed fixtures is evidence of a product regression.
+these failed fixtures is evidence of a product regression. The first public
+score check also required exactly `audio/mpeg`; GitHub serves `audio/mp3`.
+All six assets already matched their hashes, durations and output checks. The
+refined check accepts both MP3 MIME spellings and retains the initial report.
 
 ## Remaining acceptance
 
@@ -118,3 +121,26 @@ subjective listening, guaranteed vocal absence, physical-phone speaker quality,
 or Safari/iOS hardware acceptance. Final owner listening in Sound studio and
 real-device play remain open, along with the already tracked full-campaign work.
 A public preview is reviewable implementation, not commercial release approval.
+
+
+## Publication, 2026-09-15
+
+Published V2 is `1f2eb7593f639aa4399b832f59f1043cc0d264d8`.
+[Pages action 34942144017](https://github.com/majieddd/worldheart/actions/runs/34942144017)
+passed build validation and deployment. Main remains
+`1374122d1109919a5fab10b69fefdfb80308eb6e`; no gameplay branch was merged into it.
+
+All 157 manifest-listed public assets match both the deployment manifest and
+exact Git source, including seven compressed audio files and both stable and
+preview route assets. [Identity](AUDIO-REVAMP/public-identity.json).
+The public site passes all 23 real-score checks and 100 game/lobby/Debug audio
+checks. [Public score](AUDIO-REVAMP/public-score.json),
+[public mixer](AUDIO-REVAMP/public-mixer.json). This confirms actual live music
+output, looping, touch mix controls and persistence; it does not replace listening.
+
+Play [V2](https://majieddd.github.io/worldheart/v2/) or open
+[Debug World](https://majieddd.github.io/worldheart/v2/debug.html), expand Sound
+studio in its controls and select an instrumental track or cue. On mobile,
+open Exhibits and controls first. The separate authoring runtime is installed
+for future work; its server has been stopped and GPU cache released after generation.
+The documentation/test closeout does not change deployed runtime asset bytes.
