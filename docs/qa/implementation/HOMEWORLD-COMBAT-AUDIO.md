@@ -6,10 +6,10 @@ fc5299c and its evidence closeout. September 15, 2026. Publish to V2 only.
 | Item | State | Acceptance |
 |---|---|---|
 | U149 Reusable production workflow | Verified, plugin PR published and installed | [Aegis PR #2](https://github.com/majieddd/claude-plugins-custom/pull/2), cb14a65, 3.16.0 local install; 48 workflow tests, 37 runtime checks, 200 source/install files identical |
-| U150 Plasma rifle and blade audio | Implemented, local verification passed | Warm falling plasma pulse; blade contact and swing air envelopes; nine accepted cues PCM-locked; 82 local and 82 public audio browser checks; owner listening remains explicit |
-| U151 Five combat arrangements | Exported, awaiting owner listening | Five 96-second battle arrangements in Audio Lab only; 20 technical signal checks; five calm arrangements and nine owner songs byte-identical |
-| U152 Claim and revisit home planets | Implemented, local verification | Full-planet eligibility; saved seed/theme/anchor/defenses/inventory; lobby revisit; quota/corruption refusal and backups; isolated campaign storage |
-| U153 Home incursions and decoration | Verified locally, awaiting V2 publication | Manual start/stop, wave checkpoints, defeat rollback, six free saved decorations, peaceful music and HUD, quake terrain persistence |
+| U150 Plasma rifle and blade audio | Verified and published to V2 | Warm falling plasma pulse; blade contact and swing air envelopes; nine accepted cues PCM-locked; 82 local and 82 public audio browser checks; owner listening remains explicit |
+| U151 Five combat arrangements | Published in Audio Lab, awaiting owner listening | Five 96-second battle arrangements in Audio Lab only; 20 technical signal checks; five calm arrangements and nine owner songs byte-identical |
+| U152 Claim and revisit home planets | Verified and published to V2 | Full-planet eligibility; saved seed/theme/anchor/defenses/inventory; lobby revisit; quota/corruption refusal and backups; isolated campaign storage |
+| U153 Home incursions and decoration | Verified and published to V2 | Manual start/stop, wave checkpoints, defeat rollback, six free saved decorations, peaceful music and HUD, quake terrain persistence |
 
 ## Owner decisions
 
@@ -122,7 +122,7 @@ generation brief; owner listening is still required before battle integration.
 The final 23 local home checks include real touch events, quake commit/reload, peaceful HUD,
 claim/revisit, defeat rollback and cleared-wave checkpointing. Compact reports and
 phone/lobby captures are in [the evidence folder](HOMEWORLD-COMBAT-AUDIO/).
-Public evidence will be added after deployment.
+Final public evidence is linked below.
 Physical-phone acceptance, owner audio approval and future multiplayer are separate.
 
 The first public candidate f0475b7 passed 22 home checks and all 182 deployed
@@ -131,5 +131,20 @@ a test harness race was fixed: the fallback scenario now waits for the lab
 module to finish loading before reading its handles. The first failing report
 is retained. The final follow-up adds active-home backup reload so pending
 autosave cannot overwrite an imported checkpoint, and incursion HUD labels
-that remain meaningful past wave ten. Full updated home checks are pending
-on that public follow-up.
+that remain meaningful past wave ten. The final follow-up passed all 23 public home checks, including active-home import.
+
+## Published checkpoint
+
+V2 `9d7a37b07e0e2b432aa62e65a5884bdfc607b521`, [PR #46](https://github.com/majieddd/worldheart/pull/46),
+[successful Pages action](https://github.com/majieddd/worldheart/actions/runs/35002122390).
+23 local and 23 public home cases pass; the final 182 live/source hashes match.
+The 82 public audio checks ran on f0475b7; all audio assets and audio modules are
+byte-identical in the follow-up. A targeted HUD fixture also verifies HOME PLANET,
+INCURSION 1 and INCURSION 11. Main remains 1374122.
+[Machine-readable publication record](HOMEWORLD-COMBAT-AUDIO/publication.json).
+
+Counts are explicit: the first local home report had 21 checks, the first public
+report added calm playback for 22, and backup restoration brought the final suite
+to 23. Earlier prose saying 22 local checks referred to the developing suite; the
+retained JSON reports are authoritative. The closing commit changes only evidence
+and a test navigation wait, not deployed gameplay.

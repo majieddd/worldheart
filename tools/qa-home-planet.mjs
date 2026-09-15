@@ -81,8 +81,9 @@ try{
   check('Quake terrain samples and reseated decorations survive home reload',faultCheckpoint.heights.length===afterFault.heights.length&&heightError<.0001&&same(faultCheckpoint.faults,afterFault.faults)&&same(faultCheckpoint.decor,afterFault.decor),{maximumHeightError:heightError});
   const backup=await page.evaluate(()=>{const h=WH.mode99.home;h.dirty=true;const copy=structuredClone(h.record);copy.checkpoint.gold+=123;return {version:1,homes:[copy]};});
   await page.evaluate(()=>WH.mode99.home.open());await page.getByText('Home backup',{exact:true}).click();
+  const importedNavigation=page.waitForEvent('framenavigated',{timeout:15000});
   await page.locator('#home-import').setInputFiles({name:'home-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(backup))});
-  await page.waitForEvent('framenavigated',{timeout:15000});await ready();await page.locator('#btn-begin').click();
+  await importedNavigation;await ready();await page.locator('#btn-begin').click();
   check('Importing the active home reloads the backup without an old autosave overwriting it',await page.evaluate(g=>WH.game.gold===g&&WH.mode99.home.record.checkpoint.gold===g,backup.homes[0].checkpoint.gold));
   await page.goto(base+'/lobby.html');await page.waitForFunction(()=>window.lobbySoundtrack);await page.locator('[data-station="mission"]').first().click();
   check('Lobby lists the named home and its checkpoint',await page.locator('.home-lobby a').count()===1&&(await page.locator('.home-lobby a').textContent()).includes('Wave 1'));
