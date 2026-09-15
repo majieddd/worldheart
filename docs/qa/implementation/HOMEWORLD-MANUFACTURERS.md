@@ -1,14 +1,14 @@
 # Homeworld lobby and weapon manufacturers
 
 Owner: Codex. Branch: `feature/homeworld-manufacturers`, based on preview
-`fbea3a0`. Status: locally verified; V2 publication pending. Main is not a deployment target.
+`fbea3a0`. Status: verified and published to V2 as `496c9a2` ([PR #47](https://github.com/majieddd/worldheart/pull/47)). Main is not a deployment target.
 
 | Item | Status | Acceptance |
 | --- | --- | --- |
-| U154 Homeworld lobby | Verified locally | Dedicated station, captured planet catalogue, selected home persists, visit/import and empty states, desktop and touch |
-| U155 Manufacturer weapons | Verified locally | Four distinct manufacturers, deterministic modifiers, real combat skills, old inventory/save compatibility |
-| U156 Weapon cards and inspection | Verified locally | Reference-inspired cards, actual model preview, comparison, no ammo or level fields, Debug World combinations |
-| U157 Verification and V2 | Local checks pass; publishing next | Pure tests, browser combat/save checks, visual and responsive inspection, published build identity |
+| U154 Homeworld lobby | Verified and published | Dedicated station, captured planet catalogue, selected home persists, visit/import and empty states, desktop and touch |
+| U155 Manufacturer weapons | Verified and published | Four distinct manufacturers, deterministic modifiers, real combat skills, old inventory/save compatibility |
+| U156 Weapon cards and inspection | Verified and published | Reference-inspired cards, actual model preview, comparison, no ammo or level fields, Debug World combinations |
+| U157 Verification and V2 | Verified and published | Pure tests, browser combat/save checks, visual and responsive inspection, published build identity |
 
 Captured means full Worldheart coverage, preserving the existing claim rule.
 Selection must preserve the previously owned planet and its checkpoint.
@@ -35,7 +35,7 @@ and tradeoffs rather than untestable combinatorial claims.
 - 23 [existing home checks](HOMEWORLD-MANUFACTURERS/home-regression.json): peaceful/active waves, defeat rollback, decoration, terrain fault persistence, import and touch.
 - 29 [weapon checks](HOMEWORLD-MANUFACTURERS/weapon-regression.json) and all four [classic boot/camera suites](HOMEWORLD-MANUFACTURERS/classic.json).
 - A [complete legal expedition](HOMEWORLD-MANUFACTURERS/expedition.json), seed 12345: ten-wave victory, 20 lives, six defenses, 266 kills and extraction to planet two. This is an instrumented policy with sparse rendering, not blind play or a frame-rate measurement. The policy's weapon loop was not completed; direct manufacturer combat is covered by the targeted fixtures.
-- 108 modules parse; 151 generated mirror files match source. The single-file build includes the shared card stylesheet. House style and diff checks pass. Public build verification follows publication.
+- 108 modules parse; 151 generated mirror files match source. The single-file build includes the shared card stylesheet. House style and diff checks pass. All 188 [public/source identity comparisons](HOMEWORLD-MANUFACTURERS/publication.json) pass, and the same 54 [browser checks pass on V2](HOMEWORLD-MANUFACTURERS/public.json). [Pages deployment](https://github.com/majieddd/worldheart/actions/runs/35011495212) succeeded. Main remains `1374122`.
 
 ## Adversarial findings and corrections
 
@@ -74,4 +74,3 @@ Debug options: `js/debug-weapons.js`. Captures and selection: `js/home-planet.js
 items remain Worldheart originals with unchanged stats and inventory identity.
 Home selection and backups preserve prior planets; a deliberately captured test
 world is accessible from the normal lobby without sharing its expedition save.
-

@@ -1,9 +1,9 @@
 # 99 Planets development progress
 
-Locally verified U154-U157: Codex on `feature/homeworld-manufacturers`. Dedicated Homeworld
+Published U154-U157: V2 `496c9a2`, [PR #47](https://github.com/majieddd/worldheart/pull/47), Codex on `feature/homeworld-manufacturers`. Dedicated Homeworld
 lobby selection, manufacturer weapons with procedural traits and skills, shared
 weapon cards and Debug inspection. [Work ledger](qa/implementation/HOMEWORLD-MANUFACTURERS.md).
-361 tests, 54 targeted browser checks, 29 combat checks, 23 home regressions, four classic boot/camera suites and a legal ten-wave extraction pass. V2 publication pending. Audio feedback U150/U151 stays open.
+361 tests, 54 targeted browser checks, 29 combat checks, 23 home regressions, four classic boot/camera suites and a legal ten-wave extraction pass. The same 54 browser checks pass publicly; all 188 live/source identity checks pass. Main remains `1374122`. Audio feedback U150/U151 stays open.
 
 Owner feedback after U149-U153: all five new battle arrangements are **rejected**;
 U151 needs a new direction. U150 melee impact is **reopened** because the owner hears
