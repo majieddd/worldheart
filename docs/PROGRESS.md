@@ -1,11 +1,17 @@
 # 99 Planets development progress
 
-U164-U167: Hard Cel 1.0.0 is now the owner's selected candidate for future use.
+Published U164-U167: V2 `307f2a6`, [PR #50](https://github.com/majieddd/worldheart/pull/50).
+Hard Cel 1.0.0 is now the owner's selected candidate for future use.
 The exact runtime dependencies are saved under tag `art/hard-cel-v1`; the
 [candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md) tracks three separately
 versioned experiments, verification and the additive Aegis contribution.
 `hard-cel-lab.html` provides shared-camera pairs, all-four comparison and full
 width inspection. The variants await owner review.
+56 local and 56 public browser cases, 38 prior-study regressions, 364 core tests,
+117 parsed modules, 195 mirrors and 232 public/source identities pass.
+[Compare all four](https://majieddd.github.io/worldheart/v2/hard-cel-lab.html?layout=all).
+Aegis 3.18.1 method supplement is merged in its PR #7, preserving collaborators'
+newer methods and documenting complementary contributions. Main remains 1374122.
 
 Published U161-U163: V2 `4fcee91`, [PR #49](https://github.com/majieddd/worldheart/pull/49), Codex on `feature/painted-cel-ink`.
 The owner prefers anime + ink but finds the first study's shadows too boxy and
