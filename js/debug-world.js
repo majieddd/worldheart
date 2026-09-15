@@ -1,3 +1,5 @@
+import {AudioEngine} from './audio.js';
+import {audioSettings} from './audio-settings.js';
 import {patchScatter} from './terrain/scatter.js';
 import {TouchGesture,bindTouchActivation,hasTouch,clamp} from './touch-input.js';
 import {createTerrainFeatures} from './terrain/features.js';
@@ -160,6 +162,7 @@ function biomeTile(key,theme=null){
 
 export async function startDebugWorld(){
   const el=id=>document.getElementById(id),viewport=el('viewport'),labels=el('labels');
+  const audio=new AudioEngine();audio.ambience='none';window.WH_AUDIO=audio;audioSettings(audio,document.querySelector('aside'),{audition:true});
   const renderer=new THREE.WebGLRenderer({antialias:true});renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setClearColor(0x152334);viewport.prepend(renderer.domElement);
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,10000);
   scene.add(new THREE.HemisphereLight(0xdbecff,0x566276,2.4));
@@ -299,7 +302,7 @@ export async function startDebugWorld(){
   reduced.addEventListener('change',()=>{if(reduced.matches)el('motion').value='still';});
   const projected=new THREE.Vector3();
   function render(now){
-    if(disposed)return;const dt=Math.min(1/30,(now-last)/1000);last=now;
+    if(disposed)return;const dt=Math.min(1/30,(now-last)/1000);last=now;audio.update(dt);
     const motion=reduced.matches?'still':el('motion').value;if(motion!=='still')time+=dt;
     frame();
     for(const item of exhibits)for(const root of item.details)root.visible=item.group.visible&&view.distance<160;

@@ -4,7 +4,10 @@ Active: U136-U139, instrumental-only YuE2 soundtrack and complete sound feedback
 revamp. Codex owns `feature/yue2-audio-revamp` on the latest V2 plus closeout.
 [Audio ledger](qa/implementation/AUDIO-REVAMP.md) records generation provenance,
 event coverage, mobile playback, listening and publication acceptance. Exact
-video workflow verified; local setup is underway. No new audio is live yet.
+video workflow and BF16 checkpoint hash verified. Effects and mixer are implemented;
+338 tests, browser audio fixtures and a legal ten-wave defense pass. [PR #43](https://github.com/majieddd/worldheart/pull/43).
+Local generation setup is finishing; score and listening acceptance remain open.
+No new audio is live yet.
 The model's noncommercial license is recorded; commercial rights are not asserted.
 
 Updated 2026-09-15. This is the collaborator entry point for the owner's direction.

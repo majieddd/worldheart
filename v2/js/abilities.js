@@ -19,7 +19,7 @@ export class CommanderAbilities {
       this.game.fx.burstGlow(pos,def.color||0xffd68c,12,3,.5,.6);
       if(which==='commander')this._commander(a,def,pos);else this._weapon(a,def,pos);
       this.events.push({which,key:def.key,unit:a.id});if(this.events.length>64)this.events.shift();
-      this.ui.toast(def.name,'info');this.ui.audio?.play('upgrade');return true;
+      this.ui.toast(def.name,'info');this.ui.audio?.play(which==='weapon'?'weaponPower':({commander:'guard',duelist:'haste',marksman:'deadeye',bombardier:'barrage',oracle:'renew'}[def.key]),{position:pos});return true;
     });
   }
   _commander(a,def,pos){

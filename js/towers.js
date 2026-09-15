@@ -634,7 +634,7 @@ export class Tower {
       if (st.crit && SIM_RANDOM.next() < st.crit) { dmg *= 2.2; crit = true; }
       this.manager.fireBolt(this, _v, t, dmg, crit);
       fx.glow.emit(_v.x, _v.y, _v.z, 0, 0, 0, PALETTE.energy, 2.6, 0.12, 0.55, 0);
-      this.manager.audio?.play('shot');
+      this.manager.audio?.play('shot',{position:this.pos});
     }
   }
 
@@ -657,7 +657,7 @@ export class Tower {
       this.head.getWorldPosition(_v);
       _v.addScaledVector(_v3.copy(this.pos).normalize(), 0.8);
       fx.burstGlow(_v, 0x8f96a8, 5, 1.6, 0.5, 0.5, 0.8);
-      this.manager.audio?.play('mortar');
+      this.manager.audio?.play('mortar',{position:this.pos});
     }
   }
 
@@ -681,7 +681,7 @@ export class Tower {
     if (t && cf >= 1 && this.cooldown <= 0) {
       this.cooldown = 0.25 / (MODS.current?.rateMul || 1);
       this.charge = 0;
-      this.manager.audio?.play('zap');
+      this.manager.audio?.play('zap',{position:this.pos});
       // chain
       let current = t;
       let from = _v.copy(this.pos).addScaledVector(_v3.copy(this.pos).normalize(), (this.refs.topY + 0.15) * TOWER_SCALE);
@@ -721,6 +721,7 @@ export class Tower {
     if (this.pulseT <= 0) {
       this.pulseT = 2.2;
       fx.rings.spawn(this.pos, 0x9fe8f2, st.range, 1.1);
+      this.manager.audio?.play('cryo',{position:this.pos,gain:.55});
     }
     const r2 = st.range * st.range;
     for (const e of enemies) {
@@ -777,7 +778,7 @@ export class Tower {
     const t = this._acquire(enemies);
     if (t !== prevTarget) {
       this.rampT = 0;
-      if (t) this.manager.audio?.play('beam');
+      if (t) this.manager.audio?.play('beam',{position:this.pos});
     }
 
     for (let i = 0; i < rings.length; i++) {

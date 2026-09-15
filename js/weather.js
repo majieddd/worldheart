@@ -47,6 +47,7 @@ export class PlanetWeather {
       this.hazardArt=buildDisasterArt(kind,ground);this.hazardArt.scale.setScalar(this.hostility.scale);this.hazardArt.position.copy(this.position);this.bearing.crossVectors(this.axis,this.dir).normalize();this.hazardArt.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(this.axis,this.dir,this.bearing));this.scene.add(this.hazardArt);this.hazardArt.userData.update(0,true);this.warnRoot.visible=false;
     }
     this.eventTime=0;this.nextEvent=this.clock+this.hostility.interval;
+    if(kind!=='quake')this.ui.audio?.play('warning');this._audioPulse=-1;
     if(kind!=='quake')this.ui.toast(`${DISASTERS[kind].name} approaching. Leave the marked area.`,'warn');return true;
   }
   *prepareQuakeSteps(){
@@ -67,9 +68,11 @@ export class PlanetWeather {
       fault.strength=attempt===4?0:fault.strength*.5;
     }
     yield* this.forecast.showSteps(fault);
+    this.ui.audio?.play('warning');
     this.ui.toast('Earthquake in 8s. Red predicts the new ground; nests in the disruption will collapse.','danger');
   }
   *quakeSteps(){
+    this.ui.audio?.play('quake',{position:this.position});
     const fault=addTerrainFault(this.dir,this.axis,this.centre,this.plannedFault);if(!fault)return;
     const beforeRevision=this.nav.revision,blocks=this.nav.block;
     const changed=yield* this.nav.refreshTerrainSteps(fault);
@@ -125,6 +128,7 @@ export class PlanetWeather {
       this.dir.addScaledVector(this.axis,activeDt*1.4/R).normalize();this.axis.addScaledVector(this.dir,-this.axis.dot(this.dir)).normalize();
       this.position.copy(this.dir).multiplyScalar(R+surfaceElevation(this.dir));orientOnSurface(this.group,this.position);
       this.group.userData.update(this.clock);
+      const pulse=Math.floor(this.clock/2);if(pulse!==this._audioPulse){this._audioPulse=pulse;this.ui.audio?.play('tornado',{position:this.position});}
       for(const unit of this.allies.active)this.sweep(unit,activeDt,true);for(const unit of this.enemies.active)this.sweep(unit,activeDt,false);
       if(this.remaining<=0){this.phase='calm';this.group.visible=false;}
     }else{
@@ -134,6 +138,8 @@ export class PlanetWeather {
     if(this.phase==='active'&&this.kind!=='tornado'){
       const recipe=DISASTERS[this.kind],scale=this.hostility.scale;this.eventTime+=activeDt;
       this.hazardArt.userData.update(this.eventTime);
+      const soundPulse=environmentalPulse(recipe,this.eventTime),soundCycle=recipe.period<2?Math.floor(this.eventTime/2):soundPulse.cycle;
+      if(soundPulse.active&&soundCycle!==this._audioPulse){this._audioPulse=soundCycle;this.ui.audio?.play(this.kind==='solar'?'radiation':this.kind,{position:this.position});}
       this.bearing.crossVectors(this.axis,this.dir).normalize();
       for(const [units,friendly]of [[this.allies.active,true],[this.enemies.active,false]])for(const a of units){
         if(!a.active||a.dead||a.dir.dot(this.dir)<Math.cos(recipe.radius*scale/R))continue;

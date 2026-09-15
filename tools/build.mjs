@@ -92,8 +92,12 @@ async function build() {
     imports[key] = toDataUri(rewriteSpecifiers(src, key));
   }
 
-  const css = await readText(root, 'css', 'style.css') + '\n' + await readText(root, 'css', 'mobile.css');
+  const css = await readText(root, 'css', 'style.css') + '\n' + await readText(root, 'css', 'mobile.css') + '\n' + await readText(root, 'css', 'audio.css');
   let html = await readText(root, 'index.html');
+  const audioAssets={};
+  for(const file of await readdir(join(root,'audio')))if(file.endsWith('.mp3'))audioAssets[file]='data:audio/mpeg;base64,'+(await readFile(join(root,'audio',file))).toString('base64');
+  html=html.replace('<body>','<body><script>globalThis.WH_AUDIO_ASSETS='+JSON.stringify(audioAssets)+'</script>');
+  html=html.replace('<link rel="stylesheet" href="css/audio.css">','');
   html = html.replace('<link rel="stylesheet" href="css/mobile.css">', '');
 
   html = html.replace(
