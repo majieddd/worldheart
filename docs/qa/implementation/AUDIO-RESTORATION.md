@@ -18,3 +18,10 @@ The retry takes inspiration from Tears of the Kingdom's material texture,
 satisfying repeatable interactions, space and believable distance. It will not
 copy Nintendo recordings or melodies. The restored game remains the default;
 the new direction must be separately auditionable before another broad replacement.
+
+Rollback local verification: 334 tests, 96 source modules, style gate, all 106
+default runtime assets matching c872a07, generated mirrors and six browser
+checks on the reported Io/seed configuration pass. The fixture followed the
+world inspector's Play this seed link to its actual start controls. V2 publication
+is next. Retained local fixture failures were a stopped server and an attempt
+to press the hidden Begin button while still in the world inspector.
