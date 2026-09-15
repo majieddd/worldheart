@@ -14,6 +14,14 @@ published. Close work only with the acceptance evidence it requires. Natural
 play, instrumented fixtures and source inspection are different evidence types.
 Correct disproven audit conclusions openly; do not rewrite frozen observations.
 
+When repeated owner feedback shows that an output misses the target, use a bounded
+reference-verification pass before another batch: search relevant YouTube creator
+breakdowns or demonstrations, inspect accessible material, record the concrete
+mismatch and check one representative revision against it. Use this when it resolves
+uncertainty, not as a ritual for every edit. A transcript or waveform measurement
+does not prove that audio was heard or that its sound was approved. If a video is
+inaccessible, record that limitation and do not claim to have watched it.
+
 The optional personal `implementation-tracker` skill provides this general
 workflow. These repository instructions remain sufficient for collaborators
 who do not have that skill installed. No additional approval gate is implied.

@@ -17,7 +17,7 @@ try {
   page.on('pageerror', e => report.errors.push(String(e)));
   const assets = [];
   const musicRequests=[];
-  page.on('request',r=>{if(/\/audio\/(soundtrack|auditions)\/.*\.mp3/.test(r.url()))musicRequests.push(r.url());});
+  page.on('request',r=>{if(/\/audio\/(soundtrack|auditions|combat-drafts)\/.*\.mp3/.test(r.url()))musicRequests.push(r.url());});
   page.on('request', r => { if (r.url().includes('/audio/material/')) assets.push(r.url()); });
   await page.goto(base + '/audio-lab.html');
   await page.waitForFunction(() => !!window.audioLab);
@@ -61,6 +61,14 @@ try {
   }
   await page.locator('#stop').click();
   check('Stop ends all approval drafts',await page.locator('#auditions audio').evaluateAll(a=>a.every(x=>x.paused)));
+  check('Five combat arrangements are lazy and awaiting approval',await page.locator('#combat-auditions audio').count()===5&&await page.locator('#combat-auditions audio').evaluateAll(a=>a.every(x=>x.paused&&x.preload==='none')));
+  for(let i=0;i<5;i++){
+    await page.locator('#combat-auditions audio').nth(i).evaluate(a=>a.play());
+    await page.waitForFunction(i=>document.querySelectorAll('#combat-auditions audio')[i].currentTime>.1,i);
+    check('Combat draft '+(i+1)+' decodes and plays alone',await page.locator('audio').evaluateAll(a=>a.filter(x=>!x.paused).length===1)&&await page.locator('#combat-auditions audio').nth(i).evaluate(a=>a.duration>=90&&a.duration<=96.2));
+  }
+  await page.locator('#stop').click();
+
 
   check('Rejected piano player removed',await page.locator('#piano').count()===0);
   for(const [family,material,target,expected] of [['spear','iron','flesh','spearFlesh'],['twinblade','iron','flesh','twinFlesh'],['sword','wood','flesh','woodFlesh'],['sword','iron','armor','swordArmor']]) {
@@ -134,6 +142,7 @@ try {
   const fail = await browser.newPage();
   await fail.route('**/audio/material/impacts.wav', r => r.abort());
   await fail.goto(base + '/audio-lab.html');
+  await fail.waitForFunction(()=>!!window.audioLab);
   await fail.getByRole('button', { name: 'Draft: Menu click', exact: true }).click();
   await fail.waitForFunction(() => document.querySelector('#status').textContent.includes('could not load'));
   await fail.getByRole('button', { name: 'Previous: Menu click', exact: true }).click();
@@ -148,7 +157,7 @@ try {
   await game.goto(base + '/?map=pocket&seed=77');
   await game.waitForFunction(() => window.WH?.game?.audio && document.querySelector('#boot.done'), null, { timeout: 180000 });
   await game.locator('#btn-begin').tap();
-  check('Default play still uses original audio and zero trial downloads', downloads.length === 0 && await game.evaluate(() => !WH.game.audio.materialTrial));
+  check('Normal play installs only approved cues and the requested plasma/blade revision', await game.evaluate(() => WH.game.audio.materialTrial&&WH.game.audio.approvedOnly));
   await game.goto(base + '/?map=pocket&seed=77&sound=material');
   await game.waitForFunction(() => window.WH?.game?.audio && document.querySelector('#boot.done'), null, { timeout: 180000 });
   await game.locator('#btn-begin').tap();

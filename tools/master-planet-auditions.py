@@ -20,15 +20,18 @@ def measure(path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--comfy", type=Path, required=True)
+    parser.add_argument("--input", type=Path, default=ROOT/"artifacts/planet-auditions")
+    parser.add_argument("--output", type=Path, default=ROOT/"audio/auditions")
+    parser.add_argument("--expected", type=int, default=5)
     args = parser.parse_args()
-    output = ROOT/"audio/auditions"
+    output = args.output
     output.mkdir(parents=True, exist_ok=True)
     manifest = dict(version=1, status="Awaiting owner listening approval; never selected by in-game music",
                     model="ACE-Step 1.5 turbo, reference-conditioned cover/arrangement, audio-code planner disabled",
                     modelSHA256="bca0bfde54bc7177dc5939ca9e4fc94314b919f084044cd647347cdeac9bbd47",
                     sourceCommit="694a9723ff772285c73f0700caacf944d3f02f8d", tracks=[])
-    for result in sorted((ROOT/"artifacts/planet-auditions").glob("*-result.json")):
-        record = json.loads(result.read_text())
+    for result in sorted(args.input.glob("*-result.json")):
+        record = json.loads(result.read_text(encoding="utf-8"))
         recipe = record["recipe"]
         generated = record["history"]["outputs"]["11"]["audio"][0]
         raw = args.comfy/"output"/generated["subfolder"]/generated["filename"]
@@ -72,9 +75,9 @@ def main():
             preExportGainDB=pre_gain, quietGapsOverFourSeconds=quiet,
             listeningStatus="Not auditioned by agent; owner must confirm musical fit and absence of voices"))
         print(recipe["id"], final["input_i"], "LUFS", final["input_tp"], "dBTP", flush=True)
-    if len(manifest["tracks"]) != 5:
-        raise ValueError("Expected all five completed drafts")
-    (output/"manifest.json").write_text(json.dumps(manifest, indent=2)+"\n")
+    if len(manifest["tracks"]) != args.expected:
+        raise ValueError("Completed draft count differs from --expected")
+    (output/"manifest.json").write_text(json.dumps(manifest, indent=2)+"\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

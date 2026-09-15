@@ -113,12 +113,14 @@ export class AudioEngine {
     if(!buffer){
       const rate=this.ctx.sampleRate,length=Math.round(rate*.32);buffer=this.ctx.createBuffer(1,length,rate);
       const data=buffer.getChannelData(0),narrow=family==='spear',light=family==='twinblade';
-      const cutoff=narrow?950:light?1750:1250,a=1-Math.exp(-2*Math.PI*cutoff/rate),lowA=1-Math.exp(-2*Math.PI*95/rate);
+      const cutoff=narrow?1050:light?2100:1650,lowA=1-Math.exp(-2*Math.PI*110/rate);
       let random=73471+variant*9137,soft=0,low=0;
       for(let i=0;i<length;i++){
         random^=random<<13;random^=random>>>17;random^=random<<5;
+        const p=i/(length-1),velocity=Math.sin(Math.PI*p)**2;
+        const a=1-Math.exp(-2*Math.PI*(250+cutoff*velocity)/rate);
         soft+=(((random>>>0)/2147483648-1)-soft)*a;low+=(soft-low)*lowA;
-        const p=i/(length-1),envelope=Math.sin(Math.PI*p)**3;
+        const envelope=velocity*velocity*(1-.2*p);
         data[i]=(soft-low)*envelope*(light?.46:narrow?.43:.60);
       }
       this._swings.set(key,buffer);

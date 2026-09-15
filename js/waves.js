@@ -174,7 +174,7 @@ export class WaveDirector {
     this.endless = false;
   }
 
-  get limit() { return this.endless ? Infinity : CONFIG.waves.count; }
+  get limit() { return this.homeWaveLimit ?? (this.endless ? Infinity : CONFIG.waves.count); }
 
   begin() {
     this.wave = 0;

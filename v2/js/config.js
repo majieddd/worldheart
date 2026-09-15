@@ -4,6 +4,7 @@ import {TERRAIN_PACKS} from './run/world-catalogue.js';
 
 import { PLANET_THEMES, planetEnvironment } from './run/planet-environments.js';
 import { campaignLaunch } from './modes/campaign-launch.js';
+import { homeStore } from './modes/home-store.js';
 import { browserStorage, isPreviewPath } from './storage.js';
 const url = new URLSearchParams(location.search);
 const worldgen = url.get('worldgen') === '1' || /\/(debug|lobby)\.html$/.test(location.pathname || '');
@@ -118,26 +119,29 @@ const R0 = MAP.radius;
 export const TERRAIN_PROFILES = Object.fromEntries(Object.entries(TERRAIN_PACKS).map(([key,p])=>[key,{name:p.name,range:p.range,canyon:p.canyon,snow:p.snow,ocean:p.ocean,flightCeiling:p.flight,noise:p.noise}]));
 const rawSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
 const requestedSeed=worldgen&&(!Number.isInteger(rawSeed)||rawSeed<1||rawSeed>0xffffffff)?20260830:rawSeed;
-const campaign=campaignLaunch(!worldgen&&mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':preview),requestedSeed);
-const terrainKey = campaign?.terrain || url.get('terrain') || 'varied';
+const homeSnapshot=url.has('home')?homeStore.get(url.get('home')):null;
+const campaign=campaignLaunch(!homeSnapshot&&!url.has('home')&&!worldgen&&mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':preview),requestedSeed);
+const terrainKey = homeSnapshot?.world.terrain || campaign?.terrain || url.get('terrain') || 'varied';
 const planetKey=!campaign&&Object.hasOwn(PLANET_THEMES,url.get('planet'))?url.get('planet'):'auto';
-let environment=MAP.mode==='ninetynine'?campaign?.environment||planetEnvironment((requestedSeed>>>0)||1,planetKey):null;
+let environment=MAP.mode==='ninetynine'?homeSnapshot?.world.environment||campaign?.environment||planetEnvironment((requestedSeed>>>0)||1,planetKey):null;
 if(environment&&!environment.pack){const recipe=planetEnvironment(environment.seed,environment.theme);environment={...environment,pack:recipe.pack,coverage:recipe.coverage,biomes:recipe.biomes};}
 const terrainProfile=TERRAIN_PROFILES[terrainKey]||TERRAIN_PROFILES.varied;
 
 export const CONFIG = {
   worldgen,
+  homeSnapshot,
+  homeMissing:url.has('home')&&!homeSnapshot,
   hostility:url.has('hostility')?Math.max(0,Math.min(2,Number(url.get('hostility')))):null,
   requestedSeed,
   biomeKey: 'auto',
   planetKey,
   environment,
-  seed: campaign?.seed || requestedSeed,
+  seed: homeSnapshot?.world.seed || campaign?.seed || requestedSeed,
   campaign,
-  planetIndex:campaign?.index || 1,
+  planetIndex:homeSnapshot?.world.planetIndex || campaign?.index || 1,
   mapKey,
   map: MAP,
-  planetRadius: environment?.radius||R0,
+  planetRadius: homeSnapshot?.world.radius||environment?.radius||R0,
   terrainDetail: MAP.terrainDetail,
   navDetail: MAP.navDetail,
   terrainKey: TERRAIN_PROFILES[terrainKey] ? terrainKey : 'varied',

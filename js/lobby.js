@@ -1,5 +1,6 @@
 import { AudioEngine } from './audio.js';
 import { Soundtrack } from './soundtrack.js';
+import { homeStore } from './modes/home-store.js';
 import * as THREE from 'three';
 import {TouchGesture,TouchStick,bindTouchActivation,hasTouch,clamp} from './touch-input.js';
 import { COMMANDERS, commanderStats, MOUNTS } from './run/expedition.js';
@@ -92,6 +93,13 @@ function openStation(key){
       if(!e||el('fresh-expedition')?.checked){const seed=crypto.getRandomValues(new Uint32Array(1))[0]||12345;const r=campaignStore.commit(s=>startExpedition(s,{seed,limit:99}));if(!r.ok||!r.saved){refresh();return;}}
       const url=new URL('./',location.href);url.searchParams.set('map','ninetynine');url.searchParams.set('campaign','1');url.searchParams.set('commander',selected.commander);url.searchParams.set('mount',selected.mount);location.href=url.href;
     };
+    const homes=homeStore.list(),section=document.createElement('section');section.className='home-lobby';
+    const heading=document.createElement('h3');heading.textContent='Your home planets';section.append(heading);
+    const hint=document.createElement('p');hint.textContent=homes.ok?'Claim a fully expanded planet to keep and decorate it. Homes are saved in this browser.':homes.error;section.append(hint);
+    for(const home of homes.homes){const a=document.createElement('a');a.className='choice';a.textContent=`${home.name} · Wave ${home.checkpoint.run.wavesCleared} checkpoint · ${home.decorations.length} decorations`;a.href=`./?map=ninetynine&campaign=0&home=${encodeURIComponent(home.id)}`;section.append(a);}
+    const label=document.createElement('label');label.textContent='Import home backup ';const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.id='lobby-home-import';label.append(input);section.append(label);
+    input.onchange=async()=>{const file=input.files[0];if(!file)return;const r=file.size>4000000?{ok:false,error:'Home backup exceeds 4 MB.'}:homeStore.import(await file.text());if(r.ok)openStation('mission');else el('station-message').textContent=r.error;};
+    content.append(section);
   }
 }
 for(const b of document.querySelectorAll('[data-station]'))b.onclick=()=>{const s=stations.find(s=>s.key===b.dataset.station);player.set(s.x,0,s.z+5);openStation(s.key);};

@@ -214,6 +214,10 @@ export function initTerrainField(seed) {
   FA=R/30;F_ROLL=4.3*FA;F_MOIST=4.6*(1+(FA-1)*.8);
   solarSample=CONFIG.environment?.solar?createSolarSampler(CONFIG.environment.theme):null;
   TERRAIN_FAULTS.length=0;
+  for(const saved of CONFIG.homeSnapshot?.checkpoint.faults||[]){
+    const f={...saved};for(const key of ['dir','axis','side','protectedDir'])f[key]=new THREE.Vector3(...saved[key]);
+    TERRAIN_FAULTS.push(f);
+  }
   nWarp = makeNoise3D(seed ^ 0x9e3779b9);
   nBase = makeNoise3D(seed);
   nDetail = makeNoise3D(seed ^ 0x51ab3c);

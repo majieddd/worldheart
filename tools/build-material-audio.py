@@ -140,12 +140,13 @@ for kind in ['swordFlesh','swordArmor','swordWood','spearFlesh','twinFlesh','woo
     clips=[]
     for take in range(3):
         blade=clean(sample('knifeSlice2.ogg' if take%2 else 'knifeSlice.ogg',1+take*.025),.23)
-        flesh=clean(sample('chop.ogg',.82+take*.035),.23)
+        flesh=clean(sample('chop.ogg',.73+take*.035),.19)
         contact=clean(sample('impactPlate_medium_%03d.ogg'%take,.76),.3) if kind=='swordArmor' else flesh
         if kind in ['swordWood','woodFlesh']: contact=clean(sample('impactWood_medium_%03d.ogg'%take,.8),.27)
-        layers=[(0,blade,.34 if kind=='woodFlesh' else .7),(.018,contact,.85)]
+        layers=[(0,blade,.22 if kind=='woodFlesh' else .56),(.006,contact,.95),
+                (.003,tone(118 if kind=='swordArmor' else 91,.14,49,(1,.1)),.22)]
         if kind=='spearFlesh': layers=[(0,blade[:int(.09*SR)],.55),(.014,contact,.9)]
-        if kind=='twinFlesh': layers.append((.08,blade,.38))
+        if kind=='twinFlesh': layers=[(0,blade,.7),(.004,contact,.75)]
         clips.append(mix(layers))
     add(kind,clips,.43)
 add('swing',[clean(sample('knifeSlice.ogg',1.1),.2),clean(sample('knifeSlice2.ogg',1.05),.2)],.16)
@@ -157,7 +158,19 @@ for name,freq,dur in [('creatureMite',330,.18),('creatureHusk',140,.27),('creatu
         clips.append(mix([(0,cry,.65),(.008,clean(sample('cloth%d.ogg'%(i+1),.8),dur),.15)]))
     add(name,clips,.24)
 add('enemyAttack',[clean(sample('chop.ogg',.7+i*.04),.25) for i in range(3)],.32)
-add('rifle',[mix([(0,burst(.15,2300,80+i),1.6),(0,tone(145,.19,54),.65),(.035,clean(sample('metalClick.ogg',.8),.09),.15)]) for i in range(3)],.54)
+# A plasma discharge: a rounded low body and a falling, harmonically rich
+# energy pulse. There is no long noise tail or high-pitched saw oscillator.
+def plasma(take):
+    t=np.arange(int(.31*SR))/SR
+    f=205+620*np.exp(-t/.047)
+    phase=2*np.pi*np.cumsum(f)/SR
+    mod=(2.3*np.exp(-t/.065)+.15)*np.sin(phase*1.48)
+    pulse=np.sin(phase+mod)*np.exp(-t/.064)*np.minimum(1,t/.0035)
+    tail=.18*np.sin(phase*.51)*np.exp(-t/.095)*np.minimum(1,t/.012)
+    charge=finish(pulse+tail,.5,.31)
+    return mix([(0,charge,1),(.002,tone(142+take*4,.23,48,(1,.12)),.55),
+                (.004,burst(.035,1400,198+take),.16)])
+add('rifle',[plasma(i) for i in range(3)],.54)
 add('land',[mix([(0,tone(82,.27,37),.85),(.022,clean(sample('dropLeather.ogg',.83+i*.02),.27),.5),(.085,clean(sample('clothBelt.ogg',.9),.15),.15)]) for i in range(3)],.43)
 # Original short, rounded mallet/brass-like reward motifs; no piano/choir/sample hiss.
 for name,notes,spacing,duration,level in [('coin',[76,83],.07,.13,.26),('upgrade',[60,67,72,76],.09,.24,.34),('victory',[60,64,67,74,72],.15,.48,.43)]:
@@ -169,10 +182,15 @@ def wav(path, a):
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
         w.writeframes(np.round(a * 32767).astype('<i2').tobytes())
 
+final_pcm=np.round(np.concatenate(chunks)*32767).astype('<i2').tobytes()
+locks=json.loads((ROOT/'tools/approved-audio-locks.json').read_text(encoding='utf-8'))
+for cue,expected in locks.items():
+    actual=[hashlib.sha256(final_pcm[round(c['offset']*SR)*2:round((c['offset']+c['duration'])*SR)*2]).hexdigest() for c in cues[cue]]
+    if actual!=expected: raise ValueError('Approved cue would change: '+cue)
 wav(OUT / 'impacts.wav', np.concatenate(chunks))
 manifest = dict(version=2, source='CC0 material/RPG samples and original procedural one-shots; no vocal model',
     bank='impacts.wav', cues=cues, voiceLimit=12, measurements=measurements,
-    approved=list('click build blocked mortar step stepHard'.split()),
+    approved=list('click build blocked mortar step stepHard coin upgrade victory'.split()),
     legacy=['shot','lob'], procedural=['explosion'])
 manifest['files'] = {p.name: dict(bytes=p.stat().st_size, sha256=hashlib.sha256(p.read_bytes()).hexdigest())
                      for p in OUT.glob('*.wav')}

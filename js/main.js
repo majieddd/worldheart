@@ -349,19 +349,18 @@ async function boot() {
   towerMgr.world = world;
   game = new Game({ scene, rig, world, nav, enemies, towerMgr, fx });
   const audio = new AudioEngine();
-  // Listening draft is URL-only; normal play retains the restored sound system.
-  if (new URLSearchParams(location.search).get('sound') === 'material') {
-    try {
-      const { adoptMaterialAudio } = await import('./audio-material.js');
-      adoptMaterialAudio(audio);
-    } catch (error) { console.warn('Sound trial unavailable; using original audio', error); }
-  }
+  // Owner-approved cues plus the requested plasma/blade revision enter normal
+  // play. Other comparison cues stay opt-in until separately accepted.
+  try {
+    const { adoptMaterialAudio } = await import('./audio-material.js');
+    adoptMaterialAudio(audio,{approvedOnly:new URLSearchParams(location.search).get('sound')!=='material'});
+  } catch (error) { console.warn('Sound bank unavailable; using procedural feedback',error); }
   game.audio = audio;
   towerMgr.audio = audio;
   waves = new WaveDirector(game, enemies, nav);
   ui = new HUD({ game, waves, world, nav, rig, renderer, audio });
   ui.makeThumbnails();
-  game.soundtrack = new Soundtrack(audio, () => ({ state: game.state,
+  game.soundtrack = new Soundtrack(audio, () => ({ state: game.state, homeQuiet:game.mode99?.home.quiet,
     boss: enemies.active.some(e => e.active && !e.dead && e.type.boss),
     theme: CONFIG.environment?.theme || CONFIG.planetKey || '', planet: CONFIG.planetIndex, wave: waves.wave,
   }));
@@ -526,6 +525,7 @@ async function boot() {
     const { createNinetyNine } = await import('./modes/ninetynine.js');
     mode99 = createNinetyNine({ game, waves, world, nav, rig, ui, enemies, allies, possession, caches });
     window.WH.mode99 = mode99;
+    game.mode99=mode99;game.waves=waves;
   }
   window.WH.heartPos = heartPos;
   game.context = new WorldContext({game,ui,rig,possession,mode:mode99});

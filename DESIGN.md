@@ -113,6 +113,13 @@ Frequency gate: per-shot, per-kill, per-coin HUD changes are instant text/state 
 Reduced motion: `prefers-reduced-motion` read in CSS and JS. Drops screen shake, camera kicks, grain flicker, and decorative particles; keeps informational color and opacity changes.
 
 ## Primitives
+Home controls live inside Expedition kit / the mobile Base menu. The on-request
+dialog uses existing surface, accent and text tokens, a 560px maximum width,
+48px touch targets and internal viewport-bounded scrolling. Decoration placement
+uses a compact contextual tray; there is no permanent extra HUD panel. A peaceful
+home replaces the wave countdown with its peaceful status. The lobby's mission
+gate lists saved homes with names and checkpoint numbers.
+
 | Primitive | Variants |
 |---|---|
 | .btn | primary, ghost, icon, danger, disabled |

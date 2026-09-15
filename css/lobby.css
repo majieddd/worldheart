@@ -41,3 +41,7 @@
 .account .soundtrack-options { position:absolute; right:0; top:100%; width:250px; padding:12px; background:#132b32; border:1px solid #647e79; border-radius:7px; }
 .soundtrack-controls summary:focus-visible { outline:3px solid var(--gold); outline-offset:3px; }
 header:has(.soundtrack-controls[open]) { z-index:8; }
+
+.home-lobby { border-top:1px solid var(--line,#8faba0); margin-top:20px; padding-top:12px; }
+.home-lobby .choice { display:block; margin:8px 0; min-height:48px; }
+.home-lobby input { max-width:100%; }
