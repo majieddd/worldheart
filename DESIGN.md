@@ -4,6 +4,14 @@
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
 ## Dials
+Fourth study: `painted-lab.html` follows the owner's preference for anime + ink,
+with softer painted light and richer environments. Dials 4/2/5. Retain fine
+contours; use continuous paint ramps, blurred variance shadows, world-space
+gouache pigment, curved grass, irregular stone and layered foliage. Preserve
+the original three comparisons. Meshy models are reused from the owner's
+reference collection, with textures and source provenance. Static art specimens
+do not establish production animation or final aesthetic acceptance.
+
 Illustration lab is an isolated three-direction experiment at `style-lab.html`.
 Dials 4/2/4. It retains navy/cyan interface tokens and uses warm painted scene
 palettes. Retro anime has fine contours and broad cel shadows; the ink study
