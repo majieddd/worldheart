@@ -1,0 +1,115 @@
+# 99 Planets modern-Earth art direction
+
+Owner: Codex. Branch: `feature/99-planets-art-direction`. Scope: U205-U208.
+Status: implemented, local review package verified; final checks and V2 publication in progress.
+Owner visual selection is pending. Usage: unmeasured.
+
+## Request and boundaries
+
+The owner moves the previous frontier collection into a possible medieval planet,
+starts the game's real modern-Earth brand foundation, specifies five manufacturers,
+assigns the accepted robot to Axiom and asks for current-model redraws and game-like
+Roblox UI concepts. The collection supplements the running blueprint and current
+Paintline reference. It does not change saves, campaign gameplay or production main.
+
+The modern opening uses Apophis's real safe April 13, 2029 flyby. Orbit entry and
+impact are not real predictions. Interception, alien pods and sleeper activation
+are the fictional divergence. The alien glyph name is a fictional cipher for
+"ayy lmao", not an authenticated Adamic translation.
+
+## Plan and acceptance
+
+| Work | State | Acceptance / evidence | Usage |
+| --- | --- | --- | --- |
+| U205 replay and source foundation | verified, bounded | Current public game was played; observations below and replay screenshots | unmeasured |
+| U206 modern catalogue and medieval archive | verified locally | Nine new original plates, hashes/prompts, old originals retained; owner art acceptance pending | unmeasured |
+| U207 three UI compositions | verified locally | Field/Arcade/Signal, Combat/Build/Loadout, desktop/mobile render and input checks; owner choice pending | unmeasured |
+| U208 design kit and review publication | active | Foundation, scope record, canonical QA extension; public verification follows integration | unmeasured |
+
+## What was played
+
+Public `https://majieddd.github.io/worldheart/`, release `6133d07`, fresh isolated
+Chrome profile, real browser keyboard/pointer actions. No save or simulation state
+injected. Commanders, tower foundry, mission gate and Debug World were also inspected.
+
+- Planet-one Hearthwild expedition, Bolt placement and direct defense. First attempt
+  ended naturally at wave 4, with 25 kills and score 520. Some time was unattended
+  during research; this is not a tuned balance trial or full campaign evaluation.
+- Retry exercised commander movement, jumping, mouse attack, V Cyclone Slash,
+  Z Aegis Ward, inventory and pause. Current loadout has two equipped weapons and
+  twelve backpack positions. No ammunition counter or reload system was invented.
+- Inspected Bulwark, Longsight, Bolt Sentinel and the tower model lane. These source
+  silhouettes informed the five-commander and six-tower redraws.
+
+Play captures are retained under this ledger's `99-ART-DIRECTION/` evidence folder.
+The long local browser recording remains in ignored `artifacts/art-direction/replay-video/`;
+it is not a packaged replay or an end-to-end campaign certification.
+
+## Visual judgment
+
+The Earth plate puts a recognizable contemporary street behind Roblox proportions,
+solid colored shadows and crisp contours. A first turret interpretation drifted
+into masonry; a targeted image edit restored the actual twin-rail Bolt silhouette.
+The faction sheets vary material and mechanism rather than recoloring one object.
+The accepted Axiom robot keeps its broad head, binocular eyes and ochre body.
+
+Field emphasizes a compact lower control strip, Arcade emphasizes slot ownership,
+Signal uses a quieter orbit indicator and pale loadout. All three protect the
+center of the game image. Actual rendered desktop and mobile states were inspected;
+these are real HTML compositions over a shared illustration, not screenshots of a
+new playable 3D Earth level. Image/source identities and generation prompts are
+saved in `lib/99-art/catalogue.json`. The backing image model was not exposed.
+
+One webpage per subject is addressed through a dedicated `?page=` URL. The shell
+has a quiet navigation column, large artwork and short functional copy. It avoids
+the earlier slogan-heavy hero and mixed-subject presentation.
+
+## Failures retained and corrected
+
+- Initial draft probe hit a strict-selector collision with the scene's `data-mode`.
+  The probe now scopes that locator to actual buttons; no product failure was hidden.
+- Draft run 2: 41/42 checks passed; the remaining console error was an absent favicon.
+  All three drafts now declare an empty favicon.
+- Visible and keyboard ability mappings in initial drafts reversed Z/V. Corrected
+  to Z ward, V slash and checked through actual key input.
+- Field kept an old equip confirmation after changing faction sample. It now resets
+  the help text with the sample selection.
+- Initial blueprint check found the missing Decided table and no mechanic blocks.
+  The foundation now includes explicit six-field mechanics and status/evidence rows.
+
+## Shared tooling and collaborator safety
+
+Canonical runner: `tools/qa-painted-lab.mjs --99-art`, with one added probe module.
+No new recurring QA launcher. Use `--99-drafts --save-ui-previews` to recapture the
+three browser composition thumbnails after actual layout changes. Generated art
+originals are separate from these derived UI screenshots.
+
+The installed Aegis was refreshed by another contributor during this turn. The
+current verified manifest is `3.18.3+codex.20260916153720`; its Huashu, blueprint
+and content-feedback guidance were reread. The original content batch predates
+its new preparation-ticket helpers, so no preparation receipts are fabricated.
+The saved catalogue identifies actual inputs, prompts and output bytes. Current
+content-feedback guidance recommends append-only comments for active trackers;
+that matches this work's tracker updates. No collaborator plugin files were replaced.
+
+Huashu requires showing three real first drafts and ending the turn for the owner's
+selection. This package stops at that review boundary. No `direction-approved.md`
+exists because the owner has not chosen a new UI composition.
+
+The shared preview advanced to `f22e3b2` while this collection was built. Integrate
+that terrain work, preserve the new `--guided-game` probe and regenerate mirrors
+before publishing. Never force-push shared preview or replace production main.
+
+## Reproduction
+
+```text
+node tools/serve.mjs 8157
+WH_NODE_MODULES=<runtime node_modules> WH_BASE_URL=http://127.0.0.1:8157
+node tools/qa-painted-lab.mjs artifacts/art-direction/final --99-art
+node tools/syntax.mjs
+node tools/test.mjs
+node tools/style.mjs
+node tools/deploy.mjs
+```
+
+Public source identity and browser receipts are recorded below after deployment.

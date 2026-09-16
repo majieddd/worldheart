@@ -19,6 +19,16 @@ collaborator's Paintline direction with proposed Roblox concepts and saved promp
 For FPS input, test simultaneous mouse buttons: pointer events alone do not report
 every button in a chord. Inspect complete ADS, fire, slide and recovery cycles.
 
+The owner has moved the earlier artboard to a future medieval-planet study.
+Preserve its originals. The new [99 Planets art collection](99-art.html) and
+[design foundation](lib/99-art/design-foundation.md) start with modern Earth and
+five owner-defined factions: the native alien glyph name, Brainshot, RainBOOM,
+Anomalous and Axiom. The accepted demo robot belongs to Axiom. The three UI
+compositions are first drafts awaiting owner selection, not approved replacements.
+Keep concept art, current runtime models and future mesh-production work labeled.
+Read the [scope and evidence ledger](docs/qa/implementation/99-ART-DIRECTION.md)
+before changing this collection; supplement collaborators' work in a scoped branch.
+
 The current owner-directed work is tracked in **[docs/PROGRESS.md](docs/PROGRESS.md)**:
 the blind QA baseline, the **[99 Planets To Defend blueprint](docs/99-PLANETS-TO-DEFEND.md)**,
 linked issues, dependencies and evidence. Start there when joining campaign development.

@@ -16,7 +16,9 @@ const shot=async name=>{await settle();return page.locator('#stage').screenshot(
 const difference=async(a,b)=>{const aa=await sharp(a).removeAlpha().raw().toBuffer(),bb=await sharp(b).removeAlpha().raw().toBuffer();if(aa.length!==bb.length)throw Error('Image dimensions differ');let sum=0;for(let i=0;i<aa.length;i++)sum+=Math.abs(aa[i]-bb[i]);return sum/aa.length;};
 const ready=async p=>{await p.waitForFunction(()=>window.PAINTED_LAB?.ready&&!document.querySelector('#loading:not([hidden])'),null,{timeout:60000});};
 try{
-  if(process.argv.includes('--procgen')){
+  if(process.argv.includes('--99-art')||process.argv.includes('--99-drafts')){
+    await (await import('./probes/99-art-direction.mjs')).run({page,browser,base,out,check,settle,sharp,errors,requests,httpFailures});
+  }else if(process.argv.includes('--procgen')){
     await (await import('./probes/procgen-kit.mjs')).run({page,browser,base,out,check,shot,settle,difference,sharp,errors,requests});
   }else if(process.argv.includes('--artboard')){
     await (await import('./probes/ink-artboard.mjs')).run({page,browser,base,out,check,shot,settle,difference,sharp,errors,requests});
