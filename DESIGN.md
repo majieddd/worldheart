@@ -1,5 +1,7 @@
 # DESIGN.md (WORLDHEART brand contract)
 
+Latest owner direction, 2026-09-16: **Painted-Anime-Inkline** names the concept art style. Combine lush, whimsical painted anime environments with confident ink contours, deep colored cel shadows, material wear and darker comic grit. The earlier built-in paintings and Paintline/Inked Cel source remain binding references; the later Higgsfield batch is retained as a catalogue study, not a replacement of that preference. The unified artbook uses five top-level tabs, quiet warm-white surfaces, Barlow type and large unframed illustrations. Dials: variance 4, motion 1, density 5. Existing Atmospheric Ink 1.3.1, Vivid Paint and selected B UI composition remain preserved. See docs/art/99-planets/unified-artbook.md.
+
 ## North star
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
