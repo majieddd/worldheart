@@ -1,5 +1,12 @@
 # 99 Planets development progress
 
+U195-U198 locally verified, publication pending: Codex on `feature/procgen-guided-kit`.
+Full-span video research and a seeded current/guided terrain A/B are complete.
+383 automated tests, 21 browser checks and all 54 guided approaches across 18
+local fixtures pass. Selective cliff/landmark adoption is recommended; no campaign
+replacement is included. V2 only, main stays `6133d07`.
+[Scope, visual judgment and evidence](qa/implementation/PROCGEN-GUIDED-KIT.md).
+
 U194 published and publicly verified: main and V2 now serve release `6133d07`,
 promoting V2 snapshot `4ca722b` unchanged. [Release PR #57](https://github.com/majieddd/worldheart/pull/57)
 is merged. All 379 automated tests, 11 local and 11 public browser checks, and

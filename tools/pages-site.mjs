@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 const hash = file => createHash('sha256').update(readFileSync(file)).digest('hex');
 const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim();
 const publicPath = path => !path.split('/').some(part => part.startsWith('.'));
-const previewPath = path => (path === 'index.html' || path === 'debug.html' || path === 'lobby.html' || path === 'audio-lab.html' || path === 'style-lab.html' || path === 'painted-lab.html' || path === 'hard-cel-lab.html' || path === 'style-playground.html' || path === 'atmospheric-arena.html' || path === 'asset-stage.html' || path === 'artboard.html') || /^(js|css|lib|audio|art-candidates)\//.test(path);
+const previewPath = path => (path === 'index.html' || path === 'debug.html' || path === 'lobby.html' || path === 'audio-lab.html' || path === 'style-lab.html' || path === 'painted-lab.html' || path === 'hard-cel-lab.html' || path === 'style-playground.html' || path === 'atmospheric-arena.html' || path === 'asset-stage.html' || path === 'artboard.html' || path === 'procgen-lab.html') || /^(js|css|lib|audio|art-candidates)\//.test(path);
 
 export function composeSite(production, preview, output) {
   production = resolve(production); preview = resolve(preview); output = resolve(output);

@@ -1,5 +1,10 @@
 # 99 Planets To Defend: running development blueprint
 
+U195-U198 explores a local irregular-grid terrain kit over the current formation
+field. Shared-corner profiles, route clearance and fitted landmarks are compared
+in an isolated seeded demo before any campaign adoption. Main remains the released
+game. [Experiment contract](qa/implementation/PROCGEN-GUIDED-KIT.md).
+
 U184-U188 extends the approved 1.3.1 demo with two screenshot presets, reliable
 fallback attacks, crisp held weapons and an asset/animation inspection stage.
 Paintline is the owner's future 2D reference; the current 3D style stays selected.
