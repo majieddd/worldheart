@@ -14,6 +14,6 @@ test('The live baseline recipe retains the approved Hard Cel values',()=>{
   assert.deepEqual(v.bands,baseline.gradientBands);assert.deepEqual(v.thresholds,baseline.gradientThresholds);assert.equal(v.line,baseline.contourCssPixels);assert.equal(v.ink,baseline.contourColor);assert.equal(v.pigment,baseline.paintAmount);assert.equal(v.emissive*.1,baseline.modelEmissiveIntensity);assert.equal(v.shadowRadius,baseline.shadowRadius);assert.equal(v.fog,baseline.fogDensity);assert.equal(v.tint,0);assert.equal(v.hatch,0);assert.equal(v.rim,0);
 });
 test('Each proposed version has a unique recipe and does not inherit owner approval',()=>{
-  const s=JSON.parse(readFileSync(new URL('../../art-candidates/hard-cel-study.json',import.meta.url)));assert.equal(s.variants.length,3);assert.equal(new Set(s.variants.map(v=>v.version)).size,3);assert.equal(new Set(s.variants.map(v=>JSON.stringify(v.recipe))).size,3);
+  const s=JSON.parse(readFileSync(new URL('../../art-candidates/hard-cel-study.json',import.meta.url)));assert.equal(s.variants.length,4);assert.equal(new Set(s.variants.map(v=>v.version)).size,4);assert.equal(new Set(s.variants.map(v=>JSON.stringify(v.recipe))).size,4);
   for(const v of s.variants){assert.equal(v.status,'unreviewed');assert.equal(v.parent,'worldheart-hard-cel-v1');assert.ok(v.entry.includes(v.id));assert.ok(v.hypothesis.length>30);}
 });

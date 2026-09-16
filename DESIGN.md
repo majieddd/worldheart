@@ -12,6 +12,11 @@ selected crisp contour and illustrative surface depth; vary only declared
 rendering parameters against the same archived scene, camera and models.
 This records candidate acceptance, not a production art migration.
 
+The owner reaffirmed 1.0.0 as preferred overall. Atmospheric Ink 1.3.1 refines
+the best-liked variation: fog density .017 to .0115, deeper .29/.61/.99 cel bands,
+cooler colored shadow depth and 1.16 surface saturation. Preserve 1.3.0 as the
+before reference. The revised treatment still awaits aesthetic acceptance.
+
 Fourth study: `painted-lab.html` follows the owner's preference for anime + ink,
 with softer painted light and richer environments. Dials 4/2/5. Retain fine
 contours; use continuous paint ramps, blurred variance shadows, world-space
