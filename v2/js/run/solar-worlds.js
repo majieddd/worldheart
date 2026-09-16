@@ -54,13 +54,18 @@ function earthRelief(lng,lat){let height=0;for(let b=0;b<mountainBelts.length;b+
  }return height;}
 export function createSolarSampler(theme){
  const cache=new Map();
+ let lastX=NaN,lastY=NaN,lastZ=NaN,lastValue;
  return (x,y,z)=>{
+  // Height, geology and biome probes often ask for the exact same direction
+  // consecutively. Avoid another large-Map lookup for that immediate reuse.
+  if(x===lastX&&y===lastY&&z===lastZ)return lastValue;
+  lastX=x;lastY=y;lastZ=z;
   // Millimetre-scale angular quantisation shares geology between height,
   // ecology and rendering queries without moving a visible coastline.
   const qx=Math.round((x+1)*65535),qy=Math.round((y+1)*65535),qz=Math.round((z+1)*65535),key=qx*17179869184+qy*131072+qz;
-  if(cache.has(key))return cache.get(key);
+  if(cache.has(key))return lastValue=cache.get(key);
   const a=qx/65535-1,b=qy/65535-1,c=qz/65535-1,length=Math.hypot(a,b,c)||1,g=solarGeography(theme,a/length,b/length,c/length);
-  if(cache.size>=131072)cache.clear();cache.set(key,g);return g;
+  if(cache.size>=131072)cache.clear();cache.set(key,g);return lastValue=g;
  };
 }
 export function solarGeography(theme,x,y,z){

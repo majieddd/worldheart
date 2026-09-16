@@ -1,5 +1,10 @@
 # 99 Planets To Defend: running development blueprint
 
+U200-U204 locally verified, 2026-09-16: the owner requested full-game adoption of approved
+Guided Terrain Kit 1.0.0. New V2 planets use spherical shared-corner terrain,
+floor-following passages and fitted overlooks, preserving planet composition and
+old saved-world geometry. [Implementation and acceptance](qa/implementation/GUIDED-PLANET-INTEGRATION.md).
+
 U199, owner decision 2026-09-16: **Guided Terrain Kit 1.0.0 is selected and locked**.
 Use its shared-corner cliff shelves, readable routes and fitted landmarks as the
 terrain baseline for V2. Preserve the exact reviewed demo and compare subsequent

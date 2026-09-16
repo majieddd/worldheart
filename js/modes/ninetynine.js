@@ -589,7 +589,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         const v=expedition.assault?.victory;if(v){game.kills=v.kills;game.score=v.score;game.lives=v.lives;}
         showCampaignReceipt();return false;
       }
-      const result=campaign.commit(s=>beginAssault(s,{commander:commander.typeKey,inventory:inventory.snapshot(),effectiveSeed:CONFIG.seed}));
+      const result=campaign.commit(s=>beginAssault(s,{commander:commander.typeKey,inventory:inventory.snapshot(),effectiveSeed:CONFIG.seed,terrainVersion:CONFIG.terrainVersion}));
       if(!result.ok)return false;assaultId=result.value;campaignPanel.update();return true;
     };
     game.onGameEnd=won=>{
@@ -918,7 +918,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   function homeSnapshot(){
     if(!commander.active||commander.dead||busyWeapon()||inventory.pending||game.terrainBusy||run.getPhase()==='drafting')return null;
     const state=run.checkpoint();
-    return {world:{seed:CONFIG.seed,radius:CONFIG.planetRadius,terrain:CONFIG.terrainKey,
+    return {world:{seed:CONFIG.seed,terrainVersion:CONFIG.terrainVersion,radius:CONFIG.planetRadius,terrain:CONFIG.terrainKey,
       environment:structuredClone(CONFIG.environment),planetIndex:CONFIG.planetIndex,centre:nav.fieldCenter.toArray(),
       heart:centre.toArray(),portals:sourcePortals.map(n=>nav.nodeDir(n,new THREE.Vector3()).toArray())},
       checkpoint:{run:state,commander:commander.typeKey,mount:mounts.choice,inventory:inventory.snapshot(),

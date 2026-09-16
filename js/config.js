@@ -1,4 +1,5 @@
 import {TERRAIN_PACKS} from './run/world-catalogue.js';
+import {CURRENT_TERRAIN_VERSION,savedTerrainVersion} from './run/terrain-version.js';
 // WORLDHEART: single source of tuning. Scene palette here is canonical for WebGL;
 // css/style.css :root is canonical for the DOM HUD. Keep the two in sync with DESIGN.md.
 
@@ -130,6 +131,7 @@ const terrainProfile=TERRAIN_PROFILES[terrainKey]||TERRAIN_PROFILES.varied;
 export const CONFIG = {
   worldgen,
   homeSnapshot,
+  terrainVersion:homeSnapshot?savedTerrainVersion(homeSnapshot.world):campaign?.terrainVersion??CURRENT_TERRAIN_VERSION,
   homeMissing:url.has('home')&&!homeSnapshot,
   hostility:url.has('hostility')?Math.max(0,Math.min(2,Number(url.get('hostility')))):null,
   requestedSeed,

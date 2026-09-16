@@ -1,5 +1,13 @@
 # 99 Planets development progress
 
+U200-U204 locally verified, publication pending: Codex on
+`feature/guided-planet-integration`. The approved Guided Terrain Kit now drives
+new V2 planets, with versioned saves and shared navigation/rendering geometry.
+393 automated tests, initial 17-case browser pass, 10-case lifecycle follow-up,
+quake oracle and 250 mirrors pass. Loading costs and device limits are recorded.
+[Plan and evidence](qa/implementation/GUIDED-PLANET-INTEGRATION.md).
+The approved demo stays frozen; main remains `6133d07`.
+
 U199: owner approved and locked **Guided Terrain Kit 1.0.0** as the terrain
 direction for future V2 development. Exact reviewed runtime `2fb6ddf`, tag
 `terrain/guided-kit-v1.0.0`. [Approval and preservation contract](../terrain-baselines/GUIDED-KIT.md).
