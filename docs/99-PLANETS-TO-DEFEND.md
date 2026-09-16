@@ -1,6 +1,6 @@
 # 99 Planets To Defend: running development blueprint
 
-U213-U215 verified locally, U216 publishing: the owner selected B / Arcade and
+U213-U216 published and publicly verified at V2 `6b85808` ([PR #62](https://github.com/majieddd/worldheart/pull/62)): the owner selected B / Arcade and
 requested a six-faction Painted Inkline expansion. Robloxian joins the roster;
 Axiom becomes pristine white robotics; Anomalous draws on Animal Hospital.
 24 concept plates cover 90 assets, six homeworlds and 54 active powers/icons.

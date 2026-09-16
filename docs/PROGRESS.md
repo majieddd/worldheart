@@ -1,10 +1,12 @@
 # 99 Planets development progress
 
-U213-U215 verified locally; U216 publishing: Codex on `feature/99-faction-catalogue`.
+U213-U216 published and publicly verified at **6b85808**, [PR #62](https://github.com/majieddd/worldheart/pull/62): Codex on `feature/99-faction-catalogue`.
 Owner selected B / Arcade. Refined B removes planet/date information and adds
 tactile Roblox-like controls. Six faction pages include 24 plates, 18 commanders,
 18 units, 36 weapons, 18 towers, six homeworlds and 54 active powers with icons.
-203 catalogue/UI checks, 84 previous-art checks and 397 automated tests pass.
+203 local and public catalogue/UI checks, 84 local and public previous-art checks,
+397 automated tests and 604 live/source identities pass. Two transient hosting
+503 responses recovered on targeted/relevant retries; first failures are retained.
 [Scope, evidence and concept-only limits](qa/implementation/99-FACTION-CATALOGUE.md).
 Collaborator runtime and publication receipts through `cc62311` are retained.
 

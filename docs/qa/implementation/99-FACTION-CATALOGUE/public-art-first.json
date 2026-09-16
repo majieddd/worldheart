@@ -1,0 +1,544 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "field desktop fits viewport",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "scroll": 1440
+      }
+    },
+    {
+      "name": "field Z selects Aegis Ward",
+      "ok": true
+    },
+    {
+      "name": "field V selects Cyclone Slash",
+      "ok": true
+    },
+    {
+      "name": "field build placement control changes feedback",
+      "ok": true
+    },
+    {
+      "name": "field displays alien equipment",
+      "ok": true
+    },
+    {
+      "name": "field displays brainshot equipment",
+      "ok": true
+    },
+    {
+      "name": "field displays rainboom equipment",
+      "ok": true
+    },
+    {
+      "name": "field displays anomalous equipment",
+      "ok": true
+    },
+    {
+      "name": "field displays axiom equipment",
+      "ok": true
+    },
+    {
+      "name": "Field explicitly equips backpack into selected slot",
+      "ok": true
+    },
+    {
+      "name": "field Escape returns to combat",
+      "ok": true
+    },
+    {
+      "name": "field mobile has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "field mobile equipment images load",
+      "ok": true,
+      "detail": [
+        {
+          "src": "../../lib/99-art/earth.webp",
+          "loaded": true
+        },
+        {
+          "src": "../../lib/99-art/rainboom.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "field mobile loadout has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "arcade desktop fits viewport",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "scroll": 1440
+      }
+    },
+    {
+      "name": "arcade Z selects Aegis Ward",
+      "ok": true
+    },
+    {
+      "name": "arcade V selects Cyclone Slash",
+      "ok": true
+    },
+    {
+      "name": "arcade build placement control changes feedback",
+      "ok": true
+    },
+    {
+      "name": "arcade displays alien equipment",
+      "ok": true
+    },
+    {
+      "name": "arcade displays brainshot equipment",
+      "ok": true
+    },
+    {
+      "name": "arcade displays rainboom equipment",
+      "ok": true
+    },
+    {
+      "name": "arcade displays anomalous equipment",
+      "ok": true
+    },
+    {
+      "name": "arcade displays axiom equipment",
+      "ok": true
+    },
+    {
+      "name": "Arcade explicitly swaps backpack into selected slot",
+      "ok": true
+    },
+    {
+      "name": "arcade Escape returns to combat",
+      "ok": true
+    },
+    {
+      "name": "arcade mobile has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "arcade mobile equipment images load",
+      "ok": true,
+      "detail": [
+        {
+          "src": "../../lib/99-art/earth.webp",
+          "loaded": true
+        },
+        {
+          "src": "../../lib/99-art/factions/rainboom-arsenal.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "arcade mobile loadout has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "signal desktop fits viewport",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "scroll": 1440
+      }
+    },
+    {
+      "name": "signal Z selects Aegis Ward",
+      "ok": true
+    },
+    {
+      "name": "signal V selects Cyclone Slash",
+      "ok": true
+    },
+    {
+      "name": "signal build placement control changes feedback",
+      "ok": true
+    },
+    {
+      "name": "signal displays alien equipment",
+      "ok": true
+    },
+    {
+      "name": "signal displays brainshot equipment",
+      "ok": true
+    },
+    {
+      "name": "signal displays rainboom equipment",
+      "ok": true
+    },
+    {
+      "name": "signal displays anomalous equipment",
+      "ok": true
+    },
+    {
+      "name": "signal displays axiom equipment",
+      "ok": true
+    },
+    {
+      "name": "Signal explicit equip updates combat maker",
+      "ok": true
+    },
+    {
+      "name": "signal Escape returns to combat",
+      "ok": true
+    },
+    {
+      "name": "signal mobile has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "signal mobile equipment images load",
+      "ok": true,
+      "detail": [
+        {
+          "src": "../../lib/99-art/earth.webp",
+          "loaded": true
+        },
+        {
+          "src": "../../lib/99-art/rainboom.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "signal mobile loadout has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "earth has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/earth.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "story has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/story.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "ui has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/ui-field.webp",
+          "loaded": true
+        },
+        {
+          "src": "lib/99-art/ui-arcade.webp",
+          "loaded": true
+        },
+        {
+          "src": "lib/99-art/ui-signal.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "units has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/units.webp",
+          "loaded": true
+        },
+        {
+          "src": "lib/99-art/references/current-bulwark.png",
+          "loaded": true
+        },
+        {
+          "src": "lib/99-art/references/inkcel_commander.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "towers has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/towers.webp",
+          "loaded": true
+        },
+        {
+          "src": "lib/99-art/references/current-bolt.png",
+          "loaded": true
+        },
+        {
+          "src": "lib/99-art/references/inkcel_tower.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "alien has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/alien.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "brainshot has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/brainshot.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "rainboom has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/rainboom.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "anomalous has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/anomalous.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "axiom has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/axiom.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "principles has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "brand has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/99-art/references/paintline_clash.webp",
+          "loaded": true
+        },
+        {
+          "src": "lib/99-art/references/paintline_buildgrid.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "archive has dedicated URL, content and loaded art",
+      "ok": true,
+      "detail": [
+        {
+          "src": "lib/artboard/frontier.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "Alien mark preserves repeated-letter cipher",
+      "ok": true
+    },
+    {
+      "name": "Full-size plate opens as a modal",
+      "ok": true
+    },
+    {
+      "name": "Downloaded original matches saved identity",
+      "ok": true
+    },
+    {
+      "name": "Escape closes full-size plate and restores focus",
+      "ok": true
+    },
+    {
+      "name": "Opening separates safe flyby fact from fictional invasion",
+      "ok": true
+    },
+    {
+      "name": "Axiom live reference loads a real WebGL asset",
+      "ok": true
+    },
+    {
+      "name": "History restores topic",
+      "ok": true
+    },
+    {
+      "name": "earth collection mobile fits screen",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "ui collection mobile fits screen",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "brand collection mobile fits screen",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "alien collection mobile fits screen",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "earth original served byte-identical",
+      "ok": true
+    },
+    {
+      "name": "rainboom original served byte-identical",
+      "ok": true
+    },
+    {
+      "name": "axiom original served byte-identical",
+      "ok": true
+    },
+    {
+      "name": "alien original served byte-identical",
+      "ok": true
+    },
+    {
+      "name": "brainshot original served byte-identical",
+      "ok": true
+    },
+    {
+      "name": "anomalous original served byte-identical",
+      "ok": true
+    },
+    {
+      "name": "units original served byte-identical",
+      "ok": true
+    },
+    {
+      "name": "towers original served byte-identical",
+      "ok": true
+    },
+    {
+      "name": "story original served byte-identical",
+      "ok": true
+    },
+    {
+      "name": "Design foundation download exists",
+      "ok": true
+    },
+    {
+      "name": "Medieval original preserved: frontier",
+      "ok": true
+    },
+    {
+      "name": "Medieval original preserved: defenders",
+      "ok": true
+    },
+    {
+      "name": "Medieval original preserved: rainbow",
+      "ok": true
+    },
+    {
+      "name": "Medieval original preserved: doors",
+      "ok": true
+    },
+    {
+      "name": "Medieval original preserved: tide",
+      "ok": true
+    },
+    {
+      "name": "Medieval original preserved: interface",
+      "ok": true
+    },
+    {
+      "name": "Earlier collection is clearly archived",
+      "ok": true
+    },
+    {
+      "name": "No JavaScript or resource errors",
+      "ok": false,
+      "detail": {
+        "errors": [
+          "Failed to load resource: the server responded with a status of 503 ()"
+        ],
+        "httpFailures": [
+          {
+            "url": "https://majieddd.github.io/worldheart/v2/design-demos/99-planets/arcade-refinement.js",
+            "status": 503
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 503 ()"
+  ],
+  "httpFailures": [
+    {
+      "url": "https://majieddd.github.io/worldheart/v2/design-demos/99-planets/arcade-refinement.js",
+      "status": 503
+    }
+  ]
+}
