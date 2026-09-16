@@ -164,7 +164,7 @@ export class PlanetWeather {
         if(Number.isFinite(overheadHeight(a.dir,h+2))&&this.kind!=='solar')continue;
         if(!disasterExposure(this.kind,u,v,h,this.eventTime,scale))continue;
         this.effectCounts[this.kind]=(this.effectCounts[this.kind]||0)+1;
-        if(recipe.damage)(friendly?this.allies:this.enemies).damage(a,recipe.damage*activeDt*scale,{armorPierce:99});
+        if(recipe.damage)(friendly?this.allies:this.enemies).damage(a,recipe.damage*activeDt*scale,{armorPierce:99,environment:this.kind,dt:activeDt});
         if(recipe.slow<1){if(friendly)a.weatherSpeed=recipe.slow;else this.enemies.applySlow(a,1-recipe.slow,.3);}
         if(recipe.lift){const stamp=this.kind+':'+this.events.length+':'+Math.floor(this.eventTime/recipe.period);if(a.geyserStamp!==stamp){a.geyserStamp=stamp;if(friendly){a.vertVel=Math.max(a.vertVel,recipe.lift*scale);a.airT=Math.max(.001,a.airT);}else a.geyserVelocity=recipe.lift*scale;}}
       }

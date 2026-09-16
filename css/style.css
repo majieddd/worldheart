@@ -701,5 +701,8 @@ body.end-open #fp-hud, body.end-open .weapon-cue, body.end-open .nest-marker { v
 .home-close { float:right; margin:0 0 8px 12px; }
 #home-placement { position:fixed; z-index:36; bottom:24px; left:50%; transform:translateX(-50%); max-width:calc(100vw - 24px); display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; padding:10px; pointer-events:auto; }
 #home-placement[hidden] { display:none; }
+#home-wave-toggle { min-height:48px; pointer-events:auto; }
+#home-wave-toggle[hidden] { display:none; }
+.touch-wave #home-wave-toggle { margin-top:4px; width:100%; font-size:12px; }
 #home-placement .btn { min-height:48px; }
 body.touch-enabled #home-placement { bottom:210px; width:calc(100vw - 40px); }

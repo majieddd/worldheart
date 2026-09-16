@@ -404,7 +404,7 @@ export class Possession {
     });
   }
 
-  enter(unit) {
+  enter(unit, {lock=true} = {}) {
     if (!unit || !unit.active || unit.dead) return false;
     if (this.unit) this.exit();
     this.unit = unit;
@@ -430,7 +430,7 @@ export class Possession {
     this.boomAllow = 1;
     this.suspended = false;
     this.pitchQueue = 0;
-    this._lock();
+    if(lock)this._lock();
     // Each archetype sees the world a little differently: a Bulwark is close
     // and heavy at 74, a Twinfang wide and quick at 84.
     const cam = this.rig.camera;

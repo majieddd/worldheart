@@ -22,8 +22,25 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
+U168-U171 updates the home contract: Earth is unlocked on a new device. Visiting
+any home bypasses the title screen and starts beside the heart in third person,
+with clear visibility and a visible Start waves control. Maximum base coverage
+on an expedition schedules the next wave as a Planet Sovereign: 2.25x normal
+current-wave boss health and 1.35x boss attack, with regular nest-based summons.
+Defeating it disperses escorts, captures the world and stops waves automatically.
+Existing captured homes remain valid.
+
+Home incursions are optional and endless. Peaceful resumes save normally; a
+separate defense checkpoint advances at cleared waves 10, 20, 30 and onward,
+with the original capture as its initial checkpoint. Defeat restores that defense
+snapshot while retaining current inventory, equipment, scraps, forge escalation
+and the loot identity/RNG stream. Old ground drops are discarded to avoid replay
+of already salvaged gear. Home drops are Common through Rare; brought-in higher
+rarity gear is preserved. Home drafts settle automatically after ten seconds
+unless chosen sooner. [Verification ledger](qa/implementation/HOMEWORLD-BOSS-PROGRESSION.md).
+
 Published U154-U157 (V2 `496c9a2`, PR #47) adds a dedicated Homeworld lobby station and manufacturer weapons.
-A stable, fully expanded planet enters the captured catalogue automatically.
+Historical behavior: stable full expansion captured immediately; U169 now requires the sovereign victory described above.
 Choosing another home preserves every previous home checkpoint and decoration.
 Homes remain browser saves with export/import; visiting is separate from the active
 expedition. Deliberately captured generator planets also appear in the lobby.

@@ -78,7 +78,7 @@ export class NavGraph {
     this.portalTarget = CONFIG.map.portalWakes.length;
     // A claimed planet keeps its accepted seed and anchor. Searching again can
     // move the heart after a quake and strand the saved defenses elsewhere.
-    if(CONFIG.homeSnapshot){
+    if(CONFIG.homeSnapshot&&!CONFIG.homeSnapshot.starter){
       const w=CONFIG.homeSnapshot.world;this.attempts=1;this.fieldCenter=new THREE.Vector3(...w.centre);
       const ico=buildIcosphere(DETAIL,this.fieldCenter,theta,7);
       yield* this._buildGraphSteps(null,0,false,DETAIL,false,ico);

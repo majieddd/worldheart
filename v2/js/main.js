@@ -465,9 +465,12 @@ async function boot() {
   allies.onLand = (a) => {
     if (possession && possession.unit === a) { audio?.play('land'); possession.landed(a); }
   };
-  allies.onHurt = (a, amount) => {
+  let weatherHurtClock=0;
+  allies.onHurt = (a, amount, context = {}) => {
     if (!possession || possession.unit !== a) return;
-    rig.addTrauma(Math.min(0.22, 0.05 + amount / 260));
+    // Continuous weather damage must not add a whole melee jolt each frame.
+    if(context.environment){weatherHurtClock+=Math.max(0,context.dt||0);if(weatherHurtClock<.65)return;weatherHurtClock%=.65;rig.addTrauma(.08);}
+    else rig.addTrauma(Math.min(0.22, 0.05 + amount / 260));
   };
 
   caches = new CacheField(scene);
@@ -542,6 +545,7 @@ async function boot() {
   rig.introFlight(heartPos.clone().normalize());
   rig.autoOrbit = rig.confine ? 0 : 0.045;
   ui.showTitle();
+  if(CONFIG.homeSnapshot)mode99.enterHome();
   if (CONFIG.worldgen) {
     const { WorldgenPanel } = await import('./ui-worldgen.js');
     window.WH.worldgen = new WorldgenPanel({ui, game, world, nav, rig, possession, scene});
@@ -893,11 +897,18 @@ function camTest() {
     rig.targetDist = rig.distMin + ((rig.distMax - rig.distMin) * i) / 60;
     settle(3);
     const p = project(_cref);
-    worstDrift = Math.max(worstDrift, Math.hypot(p[0] - W * 0.5, p[1] - H * 0.5));
+    // Full ownership intentionally transitions to the planet centre above
+    // 65% zoom. Measure the ground lock only before that overview transition.
+    if(!(rig.frontierTheta>1.4&&rig.zoomT>.65))worstDrift = Math.max(worstDrift, Math.hypot(p[0] - W * 0.5, p[1] - H * 0.5));
   }
   add('view stays centred through a full zoom', Number.isFinite(worstDrift) && worstDrift < 6, {
     worstDriftPx: +worstDrift.toFixed(2),
   });
+  if(rig.frontierTheta>=Math.PI-.001){
+    rig.targetDist=rig.dist=rig.distMax;settle(120);
+    const p=project(_cprobe.set(0,0,0)),error=Math.hypot(p[0]-W*.5,p[1]-H*.5);
+    add('full-planet overview centres the globe',error<6,{errorPx:+error.toFixed(2)});
+  }
 
   // 2d. The view angle must open steadily from grounded to look-down across
   // the zoom. It used to sag into a grazing near-flat look about a fifth of
@@ -942,12 +953,12 @@ function camTest() {
 
   // 3. Zoom clamps and stays finite.
   for (let i = 0; i < 40; i++) rig.zoomBy(-0.6);
-  settle(30);
+  settle(120);
   const zMin = rig.dist;
   for (let i = 0; i < 60; i++) rig.zoomBy(0.6);
-  settle(40);
+  settle(120);
   const zMax = rig.dist;
-  add('zoom clamps to tuned height limits', zMin >= rig.distMin - 0.6 && zMax <= rig.distMax + 0.6, {
+  add('zoom clamps to tuned height limits', Math.abs(zMin-rig.distMin)<0.6 && Math.abs(zMax-rig.distMax)<0.6, {
     reachedMin: +zMin.toFixed(1), reachedMax: +zMax.toFixed(1),
     limits: [+rig.distMin.toFixed(1), +rig.distMax.toFixed(1)],
   });

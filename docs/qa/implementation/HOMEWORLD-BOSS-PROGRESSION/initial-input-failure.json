@@ -1,0 +1,183 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "checks": [
+    {
+      "name": "Fresh lobby offers unlocked Earth",
+      "ok": true
+    },
+    {
+      "name": "Home visit skips title and starts peaceful in commander third person",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Earth uses Earth theme, full base and clear fog",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Maximum base retains close zoom and whole-planet overview",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Start waves is visible on the HUD",
+      "ok": true
+    },
+    {
+      "name": "Earth initialization persists accepted anchors and remains direct entry",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Start waves creates physical home nests",
+      "ok": true
+    },
+    {
+      "name": "Stopping wave one returns to peace without advancing ten-wave checkpoint",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 2,
+        "cleared": 1,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Commander death returns to wave-zero defense checkpoint in third person",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Death retains new equipment including pre-existing rarity above Rare",
+      "ok": true
+    },
+    {
+      "name": "Tenth defended wave creates the next checkpoint",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 11,
+        "cleared": 10,
+        "checkpoint": 10,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    }
+  ],
+  "errors": []
+}

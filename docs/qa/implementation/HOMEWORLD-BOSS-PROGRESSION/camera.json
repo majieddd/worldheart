@@ -1,0 +1,121 @@
+{
+  "map": "ninetynine",
+  "pass": true,
+  "checks": [
+    {
+      "name": "grabbed point stays under cursor under rotation",
+      "ok": true,
+      "worstErrorPx": 0.01,
+      "meanErrorPx": 0.01,
+      "dragLengthPx": 40,
+      "worstCase": {
+        "yaw": 0,
+        "drag": [
+          40,
+          0
+        ]
+      },
+      "samples": 64,
+      "skippedAtBoundary": 0
+    },
+    {
+      "name": "cursor tracking holds across zoom",
+      "ok": true,
+      "errorPxByZoom": [
+        0.02,
+        0,
+        0,
+        0.01,
+        0.01
+      ]
+    },
+    {
+      "name": "dragging past the horizon stays bounded",
+      "ok": true,
+      "largestSingleStepRad": 0.1564
+    },
+    {
+      "name": "view stays centred through a full zoom",
+      "ok": true,
+      "worstDriftPx": 0
+    },
+    {
+      "name": "full-planet overview centres the globe",
+      "ok": true,
+      "errorPx": 0
+    },
+    {
+      "name": "view angle opens steadily through the zoom",
+      "ok": true,
+      "worstSagDeg": 0,
+      "flattestDeg": 48
+    },
+    {
+      "name": "zoom clamps to tuned height limits",
+      "ok": true,
+      "reachedMin": 6,
+      "reachedMax": 1148.5,
+      "limits": [
+        6,
+        1148.6
+      ]
+    },
+    {
+      "name": "lens and view angle match the tuned endpoints",
+      "ok": true,
+      "fov": [
+        82.8,
+        37.2
+      ],
+      "viewDeg": [
+        48,
+        66
+      ],
+      "tuned": {
+        "fov": [
+          83,
+          37
+        ],
+        "view": [
+          48,
+          66
+        ]
+      }
+    },
+    {
+      "name": "keyboard pan moves and releases without drift",
+      "ok": true,
+      "movedRad": 0.74697,
+      "residualVelocity": 0
+    },
+    {
+      "name": "view rotation applies and click-resets",
+      "ok": true,
+      "yawAfterDrag": -0.78,
+      "tiltAfterDrag": 0.252
+    },
+    {
+      "name": "flick inertia settles",
+      "ok": true,
+      "launchVelocity": 18.8855,
+      "after2s": 0.000048
+    },
+    {
+      "name": "camera stays inside the battlefield",
+      "ok": true,
+      "aimAngle": 1.922,
+      "limit": 3.142
+    },
+    {
+      "name": "camera state finite",
+      "ok": true
+    },
+    {
+      "name": "sim + camera step under 6ms",
+      "ok": true,
+      "msNear": 1.275,
+      "msFar": 0.83
+    }
+  ],
+  "failed": []
+}

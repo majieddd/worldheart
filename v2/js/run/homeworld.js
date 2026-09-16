@@ -4,6 +4,8 @@ import { createInventory, validWeapon } from './weapons.js';
 import { POWER_BY_ID } from './powers.js';
 import { PLANET_THEMES } from './planet-environments.js';
 import { TERRAIN_PACKS } from './world-catalogue.js';
+import { planetEnvironment } from './planet-environments.js';
+import { createRunState } from './state.js';
 export const HOME_VERSION = 1;
 export const DECORATIONS = {
   lantern: { name: 'Crystal lantern', color: 0x59f2ff },
@@ -13,13 +15,35 @@ export const DECORATIONS = {
   arch: { name: 'Garden arch', color: 0x91ac8d },
   monument: { name: 'Heart monument', color: 0x91c9d8 },
 };
-export const canClaimHome = (level, phase, busy = false) => level >= MAX_HEART_LEVEL
-  && ['building','victory'].includes(phase) && !busy;
+export const canClaimHome = (level, phase, busy = false, conquered = false) => level >= MAX_HEART_LEVEL
+  && ['building','victory'].includes(phase) && !busy && conquered;
+export const HOME_CHECKPOINT_INTERVAL=10;
+export const EARTH_HOME_ID='home-earth';
+export function starterEarthHome(){
+  const seed=12345,environment=planetEnvironment(seed,'earth'),run=createRunState({seed,playerIds:['solo']});
+  Object.assign(run,{heartLevel:MAX_HEART_LEVEL,frontierSteps:10,endless:true,conquest:'won',hand:['bolt','cryo','mortar'],unlockedTowers:['bolt','cryo','mortar','tesla','helios','warden'],coins:0,rngState:seed});
+  // The starter world's certified anchors avoid repeating the expensive seed
+  // search on every new device. Same Earth recipe and navigation as a saved home.
+  const centre=[.9078024509717959,.15408265393676962,-.3900682578285518];
+  const portals=[[.6801780331007379,.6080736400562928,-.40939503118125603],[.8955682196225241,-.34300387963419166,-.2833829609521985],[.9667618343511912,.23208756910083342,.10727029370140632],[.6846683613657987,.059442877702197174,-.7264267197970857],[.837718025117125,.5415445664233771,-.07041301705778767]];
+  return {version:HOME_VERSION,id:EARTH_HOME_ID,name:'Earth',starter:false,decorations:[],
+    world:{seed,radius:environment.radius,terrain:'varied',environment,planetIndex:1,centre,heart:[...centre],portals},
+    checkpoint:{run,commander:'commander',mount:'none',inventory:createInventory('commander').snapshot(),gold:650,lives:20,maxLives:20,kills:0,score:0,forged:0,lootSequence:0,towers:[],faults:[]}};
+}
+// Equipment survives a defense rollback. The loot stream/sequence continue,
+// and old ground drops are discarded so salvaged checkpoint loot cannot duplicate.
+export function homeDefeatCheckpoint(saved,gear){
+  const restored=JSON.parse(JSON.stringify(saved));
+  for(const key of ['inventory','lootSequence','lootRng','forged'])if(gear[key]!==undefined)restored[key]=JSON.parse(JSON.stringify(gear[key]));
+  restored.loot=[];return restored;
+}
 export function unitVector(v) {
   return Array.isArray(v) && v.length === 3 && v.every(Number.isFinite) && Math.abs(Math.hypot(...v)-1)<.002;
 }
 const finite = (n, min=0, max=1e12) => Number.isFinite(n) && n>=min && n<=max;
 export function validateHome(home) {
+  if(home?.starter!==undefined&&home.starter!==false&&(home.starter!==true||home.id!==EARTH_HOME_ID))return false;
+  if(home?.defenseCheckpoint&&!validateHome({...home,checkpoint:home.defenseCheckpoint,defenseCheckpoint:undefined}))return false;
   const c=home?.checkpoint,w=home?.world,s=c?.run;
   if(home?.version!==HOME_VERSION || typeof home.id!=='string' || !/^[a-z0-9-]{1,80}$/.test(home.id))return false;
   if(typeof home.name!=='string'||home.name.length>60||!home.name.trim())return false;

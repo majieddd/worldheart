@@ -1117,6 +1117,11 @@ export class HUD {
       label=`INCURSION ${w.state==='countdown'?w.wave+1:w.wave}`;
       sub=w.state==='countdown'?`nests in ${Math.max(0,Math.ceil(w.countdown))}s`:`${live+w.pendingSpawns} remaining`;
       showCall=false;
+    }else if(w.conquestWave){
+      const next=w.wave<w.conquestWave;
+      label=next?'SOVEREIGN NEXT':'PLANET SOVEREIGN';
+      sub=next?`wave ${w.conquestWave} in ${Math.max(0,Math.ceil(w.countdown))}s`:'Defeat the sovereign to unlock this homeworld';
+      showCall=next&&!this.game.paused&&w.state!=='idle'&&!w.siteBlocked;
     }
     if (e['wave-label'].textContent !== label) e['wave-label'].textContent = label;
     if (e['wave-sub'].textContent !== sub) e['wave-sub'].textContent = sub;

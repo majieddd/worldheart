@@ -1,5 +1,10 @@
 # 99 Planets development progress
 
+Verified locally, publishing U168-U171: Codex on `feature/homeworld-boss-progression`, based on V2
+`307f2a6`. Earth starter home, boss-gated planet capture, ten-wave home checkpoints,
+safe gear, direct third-person visits, fog, zoom and hail shake.
+[Scope and acceptance](qa/implementation/HOMEWORLD-BOSS-PROGRESSION.md).
+
 U164-U167: Hard Cel 1.0.0 is now the owner's selected candidate for future use.
 The exact runtime dependencies are saved under tag `art/hard-cel-v1`; the
 [candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md) tracks three separately

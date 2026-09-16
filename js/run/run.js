@@ -138,6 +138,16 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
     // Compatibility query: territory no longer accumulates wave debt.
     getHeldRings: () => 0, // retained query for older integrations; no wave debt
     getHeartLevel: () => state.heartLevel,
+    hasConquered: () => state.conquest === 'won',
+    getConquestWave: () => state.conquestWave || null,
+    queueConquest(wave) {
+      if (state.heartLevel !== MAX_HEART_LEVEL || state.conquest || !Number.isInteger(wave) || wave <= state.wavesCleared) return false;
+      state.conquest='pending';state.conquestWave=wave;state.endless=true;return true;
+    },
+    defeatConquestBoss(wave) {
+      if(state.conquest!=='pending'||state.conquestWave!==wave)return false;
+      state.conquest='defeated';return true;
+    },
     getHeartCost: () => heartCost(state.heartLevel),
     getTierCap: () => tierCapForHeart(state.heartLevel),
     getUnlockedTowers: () => [...state.unlockedTowers],
@@ -162,12 +172,13 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
         || saved.heartLevel !== MAX_HEART_LEVEL || !saved.endless || !Array.isArray(saved.powers)
         || saved.powers.some(id=>!POWER_BY_ID[id]) || !Array.isArray(saved.hand)
         || saved.hand.some(id=>![STARTING_TOWER,...UNLOCKABLE_TOWERS].includes(id))) return false;
-      Object.assign(state,JSON.parse(JSON.stringify(saved)));draft=null;
+      Object.assign(state,JSON.parse(JSON.stringify(saved)),{conquest:'won'});draft=null;
+      draftSeconds=10;
       rng.restore(saved.rngState ?? saved.seed);refreshModifiers();return true;
     },
     claimHome() {
-      if(state.heartLevel!==MAX_HEART_LEVEL||!['building','victory'].includes(state.phase))return false;
-      state.phase='building';state.endless=true;draft=null;return true;
+      if(state.heartLevel!==MAX_HEART_LEVEL||state.conquest!=='won'||!['building','victory'].includes(state.phase))return false;
+      state.phase='building';state.endless=true;draft=null;draftSeconds=10;return true;
     },
 
     // ---- transitions ----
@@ -177,11 +188,16 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
       if (state.phase !== 'building') return [];
 
       const wave = state.wavesCleared + 1;
+      if(wave===state.conquestWave&&state.conquest==='pending')return [];
       const events = [];
       state.wavesCleared += 1;
       const coins = coinsForWave(wave, isBossWave(wave));
       state.coins += coins;
       events.push({ type: 'waveCleared', wave, coins });
+
+      if(wave===state.conquestWave&&state.conquest==='defeated'){
+        state.conquest='won';events.push({type:'planetConquered',wave});return events;
+      }
 
       if (wave === TOTAL_WAVES && !state.endless) {
         if (unlocksTowerAt(wave)) unlockRandomTower(events);

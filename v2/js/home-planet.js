@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CONFIG } from './config.js';
-import { DECORATIONS, HOME_VERSION, canClaimHome } from './run/homeworld.js';
+import { DECORATIONS, HOME_VERSION, canClaimHome, HOME_CHECKPOINT_INTERVAL, homeDefeatCheckpoint } from './run/homeworld.js';
 import { homeStore } from './modes/home-store.js';
 import { orientOnSurface, surfaceElevation, supportHeight } from './world.js';
 
@@ -40,15 +40,19 @@ function decorationModel(kind) {
 // One controller owns claim, peaceful edits and the next incursion boundary.
 // Decoration never occupies navigation cells or changes defensive statistics.
 export class HomePlanet {
-  constructor({game,ui,world,nav,rig,possession,run,weather,snapshot}) {
-    Object.assign(this,{game,ui,world,nav,rig,possession,run,weather,snapshot});
+  constructor({game,ui,world,nav,rig,possession,run,weather,snapshot,equipment}) {
+    Object.assign(this,{game,ui,world,nav,rig,possession,run,weather,snapshot,equipment});
     this.record=CONFIG.homeSnapshot?structuredClone(CONFIG.homeSnapshot):null;
+    if(this.record&&!this.record.defenseCheckpoint)this.record.defenseCheckpoint=structuredClone(this.record.checkpoint);
     this.running=false;this.stopRequested=false;this.due=false;this.lastSave='';this.dirty=false;this.saveClock=0;
     this.models=[];this.tool=null;this.rotation=0;
     this.group=new THREE.Group();game.scene.add(this.group);
     if(this.record)this.rebuild();
     this.button=document.createElement('button');this.button.id='home-planet-open';this.button.className='btn';
     this.button.textContent=this.record?'Home planet':'Claim a home planet';this.button.onclick=()=>this.open();
+    this.waveButton=document.createElement('button');this.waveButton.id='home-wave-toggle';this.waveButton.className='btn primary';this.waveButton.hidden=true;
+    this.waveButton.onclick=()=>{this.running?this.requestStop():this.start();this.refresh();};
+    ui.root.querySelector('.hud-top-center').append(this.waveButton);
     this.endButton=this.button.cloneNode(true);this.endButton.id='home-planet-end';this.endButton.onclick=()=>this.open();
     ui.el['end-card'].querySelector('.o-actions').append(this.endButton);
     const dialog=document.createElement('dialog');dialog.id='home-planet-dialog';dialog.className='home-planet-dialog';
@@ -57,11 +61,14 @@ export class HomePlanet {
     const el=id=>dialog.querySelector('#'+id);this.el=el;
     for(const [key,d]of Object.entries(DECORATIONS)){const b=document.createElement('button');b.className='btn';b.textContent=d.name;b.onclick=()=>this.choose(key);dialog.querySelector('.home-palette').append(b);}
     el('home-claim').onclick=()=>this.claim();
-    el('home-save').onclick=()=>{this.rename();this.save();this.refresh();};
-    el('home-incursion').onclick=()=>{this.running?this.requestStop():this.start();this.refresh();};
+    el('home-save').onclick=()=>{
+      if(this.recovery){const result=homeStore.save(this.recovery);if(result.ok){this.recovery=null;this.visit(this.record.id);}else{this.lastSave=result.error;this.refresh();}return;}
+      this.rename();this.save();this.refresh();
+    };
+    el('home-incursion').onclick=()=>{const started=this.running?this.requestStop():this.start();this.refresh();if(started)dialog.close();};
     el('home-rotation').onchange=e=>{this.rotation=Number(e.target.value);};
     el('home-remove').onclick=()=>this.choose('remove');
-    el('home-export').onclick=()=>{const blob=new Blob([homeStore.export()],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='worldheart-homes.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+    el('home-export').onclick=()=>{const blob=new Blob([this.backup()],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='worldheart-homes.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
     el('home-import').onchange=async e=>{
       const file=e.target.files[0];if(!file)return;
       const result=file.size>4000000?{ok:false,error:'Home backup exceeds 4 MB.'}:homeStore.import(await file.text());
@@ -88,10 +95,21 @@ export class HomePlanet {
       game._hover(x,y);if(game.cursorValid)this.place(game.cursorDir.clone(),game.cursorPos.length()-CONFIG.planetRadius);
     };
     const hud=game._hud.bind(game);game._hud=()=>{hud();if(this.record&&!this.running)this.dirty=true;};
-    addEventListener('pagehide',()=>{if(this.record&&!this.running&&this.dirty)this.save();});
+    addEventListener('pagehide',()=>{if(this.record){if(this.running)this.preserveGear();else if(this.dirty)this.save();}});
   }
   get active(){return !!this.record;}
   get quiet(){return this.active&&!this.running;}
+  get eligible(){return canClaimHome(this.run.getHeartLevel(),this.run.getPhase(),this.game.terrainBusy,this.run.hasConquered());}
+  backup(){
+    if(!this.recovery)return homeStore.export();
+    const saved=homeStore.list(),homes=saved.homes.filter(h=>h.id!==this.recovery.id);homes.push(this.recovery);
+    return JSON.stringify({version:HOME_VERSION,homes,selected:this.recovery.id});
+  }
+  clearFog(){
+    if(this.world.fogVeil)this.world.fogVeil.mesh.visible=false;
+    if(this.world.cloudDeck)this.world.cloudDeck.mesh.visible=false;
+    this.game.scene.fog=null;this.possession._prevFog=null;
+  }
   mountControls(){document.querySelector('#expedition-tools')?.append(this.button);}
   open(){
     if(this.dialog.open)return;this.game.mobile?.closeMenu();this.wasPaused=this.game.paused;this.game.paused=true;this.possession.suspend(true);this.suspended=true;
@@ -99,18 +117,18 @@ export class HomePlanet {
     this.refresh();this.dialog.showModal();
   }
   refresh(){
-    const eligible=canClaimHome(this.run.getHeartLevel(),this.run.getPhase(),this.game.terrainBusy);
-    this.el('home-status').textContent=this.lastSave||(this.active?`${this.record.name} · Checkpoint: wave ${this.record.checkpoint.run.wavesCleared} cleared. ${this.running?(this.stopRequested?'Returning to peace after this wave.':'Incursions active. Defeat restores the checkpoint.'):'Peaceful. Explore and decorate, or start incursions when ready.'} Home waves earn local gold, cards and weapon drops. Account coins come from expeditions.`:'Fully upgrade the Worldheart to cover the entire planet, then claim it. Claiming disperses the swarm and preserves this world.');
+    const eligible=this.eligible;
+    this.el('home-status').textContent=this.lastSave||(this.active?`${this.record.name} · Defense checkpoint: wave ${this.record.defenseCheckpoint?.run.wavesCleared??0}. ${this.running?(this.stopRequested?'Returning to peace after this wave.':'Waves active. Defeat restores the checkpoint and keeps your equipment.'):'Peaceful. Explore and decorate, or start waves when ready.'} Checkpoints every 10 waves. Weapon drops stop at Rare. Account coins come from expeditions.`:'Fully upgrade the Worldheart, then defeat the planet sovereign to unlock this homeworld. It summons minions during the fight.');
     this.el('home-claim').hidden=this.active;this.el('home-claim').disabled=!eligible;
     this.el('home-save').hidden=this.el('home-incursion').hidden=this.el('home-decor').hidden=!this.active;
     this.el('home-save').disabled=this.running||this.game.terrainBusy;
     this.el('home-decor').disabled=this.running;
-    this.el('home-incursion').textContent=this.running?(this.stopRequested?'Stopping after this wave':'Stop after this wave'):'Start incursions';
+    this.el('home-incursion').textContent=this.running?(this.stopRequested?'Stopping after this wave':'Stop after this wave'):'Start waves';
     this.el('home-incursion').disabled=this.stopRequested||this.game.terrainBusy;
   }
   rename(){const name=this.el('home-name').value.trim();if(this.record&&name){this.record.name=name;this.dirty=true;}}
   async claim(){
-    if(this.active||!canClaimHome(this.run.getHeartLevel(),this.run.getPhase(),this.game.terrainBusy))return false;
+    if(this.active||!this.eligible)return false;
     const id=await this.capture(this.el('home-name').value.trim());if(!id)return false;
     const chosen=homeStore.choose(id);if(!chosen.ok){this.lastSave=chosen.error;this.refresh();return false;}
     this.visit(id);return true;
@@ -121,7 +139,7 @@ export class HomePlanet {
     try{return await this.capturePending;}finally{this.capturePending=null;}
   }
   async _capture(name){
-    if(this.active||!canClaimHome(this.run.getHeartLevel(),this.run.getPhase(),this.game.terrainBusy)||this.game.state!=='playing'&&this.game.state!=='victory')return null;
+    if(this.active||!this.eligible||this.game.state!=='playing'&&this.game.state!=='victory')return null;
     const snap=this.snapshot();if(!snap)return false;
     snap.checkpoint.run.phase='building';snap.checkpoint.run.endless=true;
     const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(snap.world)));
@@ -140,28 +158,45 @@ export class HomePlanet {
   save(){
     if(!this.active||this.running||this.game.terrainBusy)return false;
     const snapshot=this.snapshot();if(!snapshot){this.lastSave='Finish the attack and let the commander recover before saving.';return false;}
-    const candidate={...this.record,checkpoint:snapshot.checkpoint};const saved=homeStore.save(candidate);
+    const candidate={...this.record,starter:false,world:snapshot.world,checkpoint:snapshot.checkpoint};
+    const cleared=snapshot.checkpoint.run.wavesCleared;
+    if(!candidate.defenseCheckpoint||cleared%HOME_CHECKPOINT_INTERVAL===0||cleared===candidate.defenseCheckpoint.run.wavesCleared)candidate.defenseCheckpoint=structuredClone(snapshot.checkpoint);
+    const saved=homeStore.save(candidate);
     this.lastSave=saved.ok?'Home saved in this browser.':`Save failed: ${saved.error}`;
     if(saved.ok){this.record=candidate;this.dirty=false;}else this.ui.toast(this.lastSave,'warn');return saved.ok;
   }
   start(){
     if(!this.active||this.running||this.game.state!=='playing'||this.game.terrainBusy)return false;
-    this.rename();if(!this.save()){this.refresh();return false;}
+    if(this.dialog.open)this.rename();if(!this.save()){this.refresh();return false;}
     this.running=true;this.lastSave='';this.stopRequested=false;this.cancelTool();this.armNext();return true;
   }
   armNext(){
     const waves=this.game.waves;waves.homeWaveLimit=this.run.getWave();waves.endless=true;
+    waves.conquestWave=null;
     waves.wave=waves.clearedWaves=this.run.getWave()-1;waves.victoryFired=false;
     waves.countdown=10;waves.state='countdown';this.weather.nextEvent=this.weather.clock+this.weather.hostility.interval;
   }
-  requestStop(){if(!this.running)return false;this.stopRequested=true;this.lastSave='Finish this wave to save your next peaceful checkpoint.';return true;}
+  requestStop(){if(!this.running)return false;this.stopRequested=true;this.lastSave='Finish this wave to return to peace. Defense checkpoints advance every 10 waves.';return true;}
   waveCleared(){if(this.running)this.due=true;}
   update(dt){
     this.button.hidden=this.game.state==='title';
-    this.endButton.hidden=!canClaimHome(this.run.getHeartLevel(),this.run.getPhase(),this.game.terrainBusy);
+    this.endButton.hidden=!this.eligible;
+    this.waveButton.hidden=!this.active||this.game.state!=='playing';
+    this.waveButton.textContent=this.running?(this.stopRequested?'Stopping after wave':'Stop after wave'):'Start waves';
+    this.waveButton.disabled=this.stopRequested||this.game.terrainBusy;
+    const parent=document.body.classList.contains('touch-mode')?document.querySelector('.touch-wave'):this.ui.root.querySelector('.hud-top-center');
+    if(parent&&this.waveButton.parentNode!==parent)parent.append(this.waveButton);
     if(!this.active){
       this.captureClock=(this.captureClock||0)+dt;
-      if(!this.capturedId&&this.captureClock>=2){this.captureClock=0;this.capture().catch(error=>{this.lastSave=String(error.message||error);});}
+      if(!this.capturedId&&this.eligible&&this.captureClock>=.2){this.captureClock=0;this.setPeace();this.capture().then(id=>{
+        if(!id)return;
+        // Recapturing the same seed must not replace an established home's
+        // defenses and inventory with a fresh expedition's smaller setup.
+        if(this.createdCapture!==id){homeStore.choose(id);this.visit(id);return;}
+        this.run.claimHome();this.record=homeStore.get(id);this.record.defenseCheckpoint=structuredClone(this.record.checkpoint);
+        homeStore.choose(id);this.running=false;this.dirty=true;this.clearFog();this.button.textContent='Home planet';this.save();this.refresh();
+        this.ui.banner('HOMEWORLD UNLOCKED','The sovereign has fallen. Waves are stopped. Start them whenever you are ready.',false);
+      }).catch(error=>{this.lastSave=String(error.message||error);});}
       return;
     }
     if(this.due&&this.run.getPhase()==='building'&&!this.game.terrainBusy){
@@ -178,8 +213,18 @@ export class HomePlanet {
     waves.destroyedNodes?.clear();waves.raiderIds.clear();waves.nestClocks?.clear();
     this.weather.stop();
   }
+  preserveGear(){
+    if(!this.active)return false;
+    const gear=this.equipment();const candidate={...this.record,checkpoint:homeDefeatCheckpoint(this.record.checkpoint,gear)};
+    const saved=homeStore.save(candidate);if(saved.ok)this.record=candidate;return saved.ok;
+  }
   defeat(){
     if(!this.active)return false;
+    const checkpoint=homeDefeatCheckpoint(this.record.defenseCheckpoint||this.record.checkpoint,this.equipment());
+    const candidate={...this.record,checkpoint,defenseCheckpoint:structuredClone(checkpoint)};
+    const saved=homeStore.save(candidate);
+    if(!saved.ok){this.running=false;this.dirty=false;this.recovery=candidate;this.game.paused=true;this.lastSave=`Could not save equipment: ${saved.error}. Save home retries; Export homes includes your recovered gear.`;this.open();return true;}
+    this.record=candidate;
     this.running=false;this.game.state='defeat';this.game.paused=true;this.dirty=false;this.possession.exit(true);
     this.ui.toast('Home defended to its checkpoint. Restoring your saved planet...', 'info');
     setTimeout(()=>this.visit(this.record.id),900);return true;

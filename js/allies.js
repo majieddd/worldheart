@@ -486,13 +486,13 @@ export class AllyManager {
     this.pool.push(a);
   }
 
-  damage(a, amount) {
+  damage(a, amount, context = {}) {
     if (!a.active || a.dead) return 0;
     if (a.abilityGuard) amount *= .25;
     a.hp -= amount;
     a.flashT = 0.1;
     a.hurtT = REGEN_DELAY;
-    if (this.onHurt) this.onHurt(a, amount);
+    if (this.onHurt) this.onHurt(a, amount, context);
     if (a.hp <= 0) {
       a.dead = true;
       const wasCommander = a.type.commander;

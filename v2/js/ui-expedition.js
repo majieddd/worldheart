@@ -36,7 +36,7 @@ export function expeditionControls({ui,game,api,lockedCommander}){
     frame.querySelector('meter').value=Math.max(0,a.hp/a.hpMax);
     skills.forEach((s,i)=>{const b=frame.querySelector(i?'#weapon-ability':'#commander-ability');b.textContent=`${i?'V':'Z'} · ${s.name}${s.remaining>0?' · '+Math.ceil(s.remaining)+'s':''}`;b.title=s.description;b.disabled=s.remaining>0||!a.active||a.dead;});
     el('kit-summary').textContent=` · ${api.forge.balance} scraps${remaining>0?' · '+Math.ceil(remaining)+'s respawn':''}`;
-    el('expedition-life').textContent=remaining>0?`Commander returns in ${Math.ceil(remaining)}s. Defend the heart while they recover.`:'Death inside the base: 30s recovery. Death outside: defeat.';
+    el('expedition-life').textContent=game.mode99?.home.active?'Home defeat returns to your ten-wave checkpoint. Your equipment is kept.':remaining>0?`Commander returns in ${Math.ceil(remaining)}s. Defend the heart while they recover.`:'Death inside the base: 30s recovery. Death outside: defeat.';
     el('expedition-weather').textContent=weather;
     el('mount-toggle').textContent=(touch?'':'M · ')+(a.mountKey&&a.mountKey!=='none'?'Dismount':`Ride ${MOUNTS[api.mounts.choice].name}`);
     el('mount-toggle').disabled=!a.active||a.dead;
