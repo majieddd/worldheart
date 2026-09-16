@@ -1,7 +1,7 @@
 # 99 Planets modern-Earth art direction
 
 Owner: Codex. Branch: `feature/99-planets-art-direction`. Scope: U205-U208.
-Status: implemented and locally verified after integrating shared terrain; V2 publication in progress.
+Status: published and publicly verified as a first-draft review package at `ec7320d`.
 Owner visual selection is pending. Usage: unmeasured.
 
 ## Request and boundaries
@@ -24,7 +24,7 @@ are the fictional divergence. The alien glyph name is a fictional cipher for
 | U205 replay and source foundation | verified, bounded | Current public game was played; observations below and replay screenshots | unmeasured |
 | U206 modern catalogue and medieval archive | verified locally | Nine new original plates, hashes/prompts, old originals retained; owner art acceptance pending | unmeasured |
 | U207 three UI compositions | verified locally | Field/Arcade/Signal, Combat/Build/Loadout, desktop/mobile render and input checks; owner choice pending | unmeasured |
-| U208 design kit and review publication | locally verified | Foundation, scope record, canonical QA extension; public verification pending | unmeasured |
+| U208 design kit and review publication | published and publicly verified | 84 public browser cases and 536 source/deployed identities; final art/UI acceptance pending | unmeasured |
 
 ## What was played
 
@@ -132,4 +132,24 @@ node tools/style.mjs
 node tools/deploy.mjs
 ```
 
-Public source identity and browser receipts are recorded below after deployment.
+## Publication receipt
+
+- Runtime checkpoint: `ec7320d29c5d526844be9f56e586b32282801f8e`.
+- [Pages run 35118313459](https://github.com/majieddd/worldheart/actions/runs/35118313459): successful.
+- [Draft PR #60](https://github.com/majieddd/worldheart/pull/60), based on the
+  collaborator's guided terrain branch to keep the review scoped.
+- [Public collection](https://majieddd.github.io/worldheart/v2/99-art.html).
+- [UI comparison](https://majieddd.github.io/worldheart/v2/99-art.html?page=ui).
+- `public-browser.json`: **84/84** public checks pass with no runtime/resource errors.
+- `public-identity.json`: **536/536** live/source identities pass, including
+  unchanged main `6133d07`. All nine new originals and six older originals verify.
+
+After publication, collaborator receipt commit `e527859` was merged as `8a2d67b`.
+Its public terrain evidence and corrected inspection wait are preserved. This
+follow-up changes documentation and QA only; published user-facing runtime files
+remain byte-identical to `ec7320d`. The shared preview is not rewritten for receipts.
+
+Next action belongs to the owner: choose Field, Arcade or Signal (or a specific
+combination) before developing the final composition. Asset and brand acceptance
+remains separate from machine checks. Future production meshes and the Roblox port
+are explicitly not claimed by this concept package.

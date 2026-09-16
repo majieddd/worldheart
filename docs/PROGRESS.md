@@ -4,15 +4,15 @@ U209-U211 locally verified; U212 publishing: Codex on `feature/procgen-performan
 Research-led exact sampling/graph optimizations cut median generation loading
 by 19% Garden, 40% Io and 37% Deep Canyons across three matched trials each.
 All 15 final comparisons across nine configurations preserve generated arrays;
-397 tests, real movement/save checks, quake oracle and 251 mirrors pass.
+397 tests, real movement/save checks, quake oracle and 294 mirrors pass.
 [Scope and evidence](qa/implementation/PROCGEN-PERFORMANCE.md). V2 only.
 
-U205-U208: Codex on `feature/99-planets-art-direction`. Modern-Earth concept
+U205-U208 published and publicly verified at **ec7320d**, [PR #60](https://github.com/majieddd/worldheart/pull/60): Codex on `feature/99-planets-art-direction`. Modern-Earth concept
 collection for **99 Planets To Defend**, five owner-defined manufacturers, nine
 new art plates, five commander and six tower redraws, and three interactive UI
 compositions. Previous artboard is preserved as a medieval-planet study.
-Integrated checks pass: 84 browser cases, 393 automated tests and the blueprint
-gate. V2 publication/public verification pending.
+Integrated checks pass: 84 local / 84 public browser cases, 393 automated tests,
+536 deployed/source identities and the blueprint gate.
 Owner UI selection is pending. [Scope and evidence](qa/implementation/99-ART-DIRECTION.md)
 and [downloadable design foundation](../lib/99-art/design-foundation.md).
 The collaborator's guided terrain integration is retained; main is unchanged.

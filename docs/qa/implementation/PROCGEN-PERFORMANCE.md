@@ -149,3 +149,15 @@ Integration note: preview advanced to `ec7320d` with the separate art collection
 and UI review routes. Preserve those additions and merge their deployment
 manifest before publication. Performance tracker IDs were moved from U205-U208
 to U209-U212 because the concurrent art work used the same range.
+
+Combined integration verification: 397 tests, 143 parsed source modules, style,
+294 mirrored files and the 145-module bundle pass. Three real-game route and
+placement checks plus all 84 art-review browser cases pass.
+[Preservation hashes](PROCGEN-PERFORMANCE/integration-preservation.json) verify
+all 142 pre-existing optimized runtime modules and 44 collaborator art files
+unchanged. [Game](PROCGEN-PERFORMANCE/combined-game.json) and
+[art](PROCGEN-PERFORMANCE/combined-art.json) reports retain errors and requests.
+Latest art publication receipts from `f3a7763` are integrated as well.
+The initial asset hash helper exceeded Node default output buffering for a PNG;
+rerunning with a bounded 32 MB buffer completed all comparisons. This was a
+verification-harness failure, not a game resource failure.
