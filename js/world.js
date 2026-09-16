@@ -5,6 +5,7 @@ import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './b
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import { createFormationField } from './terrain/formations.js';
+import {createGuidedSurface,protectedLandforms} from './terrain/spherical-kit.js';
 import {createTerrainFeatures} from './terrain/features.js';
 import {placeActiveFeatures} from './terrain/active-features.js';
 import { formationHeightLimit, formationDepthLimit } from './terrain/recipes.js';
@@ -106,6 +107,7 @@ export function inBattlefield(dx, dy, dz, margin = 0) {
 
 let nWarp, nBase, nDetail, nRidge, nMoist, nRange, nCanyon, nGap;
 export let FORMATIONS = null;
+export let GUIDED = null;
 export let ECOLOGY = null;
 export const TERRAIN_FAULTS = [];
 export function createTerrainFault(dir,axis,protectedDir){
@@ -210,7 +212,7 @@ function initSpaceLayout(seed) {
 
 export function initTerrainField(seed) {
   heightValid.fill(0);regionalLast.x=NaN;
-  R=CONFIG.planetRadius;FEATURES=null;
+  R=CONFIG.planetRadius;FEATURES=null;GUIDED=null;
   FA=R/30;F_ROLL=4.3*FA;F_MOIST=4.6*(1+(FA-1)*.8);
   solarSample=CONFIG.environment?.solar?createSolarSampler(CONFIG.environment.theme):null;
   TERRAIN_FAULTS.length=0;
@@ -230,6 +232,7 @@ export function initTerrainField(seed) {
   FORMATIONS = CONFIG.terrain ? createFormationField(seed,R,CONFIG.terrain,CONFIG.terrainKey,
     {...authored,...(CONFIG.terrainKey==='varied'?{composition:CONFIG.environment}:{}),weights:{...authored?.weights}}) : null;
   coastClearance=CONFIG.terrain?createCoastClearance(R,(x,y,z)=>continentalityAt(x,y,z)<.37+CONFIG.terrain.ocean):null;
+  if(CONFIG.terrain&&CONFIG.terrainVersion===1&&!floatingWorld())GUIDED=createGuidedSurface(seed,R,(x,y,z)=>basePlanetHeight(x,y,z,false),{water:oceanAt,protectedSites:protectedLandforms(FORMATIONS)});
   ECOLOGY = CONFIG.terrain ? createEcology(seed,CONFIG.biomeKey,CONFIG.environment,FORMATIONS,solarSample) : null;
   FEATURES=FORMATIONS?createTerrainFeatures(FORMATIONS,R,(x,y,z)=>terrainHeight(x,y,z,false),{seed,theme:CONFIG.environment?.theme,biome:biomeAt,water:oceanAt,floating:floatingWorld()}):null;
   if(FEATURES&&floatingWorld()){
@@ -332,7 +335,13 @@ function uncachedTerrainHeight(dx, dy, dz, includeFine = true) {
     }
     return h;
   }
-  if(CONFIG.terrain){const h=regionalHeight(dx,dy,dz,includeFine);if(solarSample){const g=solarSample(dx,dy,dz);if(CONFIG.environment.theme==='earth'){const coast=(g.land-.3)/.08;return (coast<0?Math.max(-5,coast*.65):Math.max(.08,smoothstep(0,1,coast)*(.55+h*g.relief)+g.extra))+faultHeight(dx,dy,dz);}return (oceanAt(dx,dy,dz)&&h<0?h:h*g.relief)+g.extra+faultHeight(dx,dy,dz);}return h+faultHeight(dx,dy,dz);}
+  if(CONFIG.terrain){
+    if(!GUIDED)return basePlanetHeight(dx,dy,dz,includeFine)+faultHeight(dx,dy,dz);
+    const raw=basePlanetHeight(dx,dy,dz,false),h=GUIDED.height(dx,dy,dz,raw);
+    // Fine relief is cosmetic, not input to the kit. Dynamic faults are last so
+    // a quake changes the real surface without rebuilding the static grid.
+    return h+(includeFine?basePlanetHeight(dx,dy,dz,true)-raw:0)+faultHeight(dx,dy,dz);
+  }
   const w = 0.26;
   const wx = dx + nWarp(dx * F_WARP + 7.7, dy * F_WARP, dz * F_WARP) * w;
   const wy = dy + nWarp(dx * F_WARP, dy * F_WARP + 3.1, dz * F_WARP) * w;
@@ -415,6 +424,17 @@ function uncachedTerrainHeight(dx, dy, dz, includeFine = true) {
     }
   }
   return h;
+}
+
+function basePlanetHeight(dx,dy,dz,includeFine){
+  const h=regionalHeight(dx,dy,dz,includeFine);
+  if(!solarSample)return h;
+  const g=solarSample(dx,dy,dz);
+  if(CONFIG.environment.theme==='earth'){
+    const coast=(g.land-.3)/.08;
+    return coast<0?Math.max(-5,coast*.65):Math.max(.08,smoothstep(0,1,coast)*(.55+h*g.relief)+g.extra);
+  }
+  return (oceanAt(dx,dy,dz)&&h<0?h:h*g.relief)+g.extra;
 }
 
 export function moistureAt(dx, dy, dz) {

@@ -1,5 +1,26 @@
 # 99 Planets To Defend: running development blueprint
 
+U200-U204 published and publicly verified at V2 `f22e3b2`, 2026-09-16:
+the owner requested full-game adoption of approved
+Guided Terrain Kit 1.0.0. New V2 planets use spherical shared-corner terrain,
+floor-following passages and fitted overlooks, preserving planet composition and
+old saved-world geometry. 393 automated tests and 18 distinct public browser
+cases pass. [Implementation and acceptance](qa/implementation/GUIDED-PLANET-INTEGRATION.md).
+
+U199, owner decision 2026-09-16: **Guided Terrain Kit 1.0.0 is selected and locked**.
+Use its shared-corner cliff shelves, readable routes and fitted landmarks as the
+terrain baseline for V2. Preserve the exact reviewed demo and compare subsequent
+integration against it. [Versioned approval](../terrain-baselines/GUIDED-KIT.md).
+Next: carry this approved approach onto spherical planets and production traversal,
+while retaining theme diversity and validating seams, placement and device cost.
+
+U195-U198, published at V2 `2fb6ddf` (PR #58), explores a local irregular-grid terrain kit over the current formation
+field. Shared-corner profiles, route clearance and fitted landmarks are compared
+in an isolated seeded demo before any campaign adoption. Main remains the released
+game. All 21 public browser checks and 491 deployment identities pass. Visual
+judgment recorded tradeoffs before the U199 approval above; campaign integration
+remains an engineering milestone. [Experiment contract](qa/implementation/PROCGEN-GUIDED-KIT.md).
+
 U184-U188 extends the approved 1.3.1 demo with two screenshot presets, reliable
 fallback attacks, crisp held weapons and an asset/animation inspection stage.
 Paintline is the owner's future 2D reference; the current 3D style stays selected.

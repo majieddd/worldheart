@@ -1,0 +1,14 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "Harness completed",
+      "ok": false,
+      "detail": "Error: page.evaluate: TypeError: Cannot read properties of undefined (reading 'landmarks')\n    at eval (eval at evaluate (:311:30), <anonymous>:3:392)\n    at async <anonymous>:337:30"
+    }
+  ],
+  "errors": [
+    "Error: page.evaluate: TypeError: Cannot read properties of undefined (reading 'landmarks')\n    at eval (eval at evaluate (:311:30), <anonymous>:3:392)\n    at async <anonymous>:337:30"
+  ],
+  "httpFailures": []
+}
