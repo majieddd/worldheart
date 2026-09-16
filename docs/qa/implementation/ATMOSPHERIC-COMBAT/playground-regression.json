@@ -1,0 +1,499 @@
+{
+  "base": "http://127.0.0.1:8154",
+  "checks": [
+    {
+      "name": "Playground interface text meets AA contrast",
+      "ok": true,
+      "detail": [
+        {
+          "text": "WORLDHEART STYLE PLAYGROUND",
+          "ratio": 15.819528568474976,
+          "required": 4.5
+        },
+        {
+          "text": "Hard Cel 1.0.0",
+          "ratio": 7.094716350304628,
+          "required": 4.5
+        },
+        {
+          "text": "1.0.0",
+          "ratio": 5.987387020699432,
+          "required": 4.5
+        },
+        {
+          "text": "Atmospheric Ink 1.3.1",
+          "ratio": 12.422128549456245,
+          "required": 4.5
+        },
+        {
+          "text": "1.3.1",
+          "ratio": 8.086952523246794,
+          "required": 4.5
+        },
+        {
+          "text": "Pause",
+          "ratio": 12.422128549456245,
+          "required": 4.5
+        },
+        {
+          "text": "Reset",
+          "ratio": 12.422128549456245,
+          "required": 4.5
+        },
+        {
+          "text": "Photo ↓",
+          "ratio": 12.422128549456245,
+          "required": 4.5
+        },
+        {
+          "text": "LIVE ART & MOTION STUDY",
+          "ratio": 9.452729279543744,
+          "required": 4.5
+        },
+        {
+          "text": "Painted training ground.",
+          "ratio": 12.322107358985058,
+          "required": 3
+        },
+        {
+          "text": "Walk the meadow. Meet the sentinels. Try",
+          "ratio": 7.977365944460286,
+          "required": 4.5
+        },
+        {
+          "text": "Meadow",
+          "ratio": 11.017377928726832,
+          "required": 4.5
+        },
+        {
+          "text": "Stream",
+          "ratio": 11.017377928726832,
+          "required": 4.5
+        },
+        {
+          "text": "Cannon range",
+          "ratio": 11.017377928726832,
+          "required": 4.5
+        },
+        {
+          "text": "YOUR SENTINEL",
+          "ratio": 9.654909566892371,
+          "required": 4.5
+        },
+        {
+          "text": "Idle",
+          "ratio": 12.515886921105583,
+          "required": 4.5
+        },
+        {
+          "text": "Training invader 1 · 5.0 m",
+          "ratio": 8.147990331474782,
+          "required": 4.5
+        },
+        {
+          "text": "Land a strike to see the paint move.",
+          "ratio": 9.654909566892371,
+          "required": 4.5
+        },
+        {
+          "text": "Hard Cel 1.0.0 · live motion study",
+          "ratio": 12.203379487388686,
+          "required": 4.5
+        },
+        {
+          "text": "New FPS proving ground ↗",
+          "ratio": 15.819528568474976,
+          "required": 4.5
+        },
+        {
+          "text": "Model & animation credits ↗",
+          "ratio": 15.819528568474976,
+          "required": 4.5
+        }
+      ]
+    },
+    {
+      "name": "Authored rig and four skinned hand primitives load",
+      "ok": true,
+      "detail": {
+        "speeds": {
+          "Walking": 1.767341896235553,
+          "Running": 2.247546303264186
+        },
+        "clips": [
+          "Dance",
+          "Death",
+          "Idle",
+          "Jump",
+          "No",
+          "Punch",
+          "Running",
+          "Sitting",
+          "Standing",
+          "ThumbsUp",
+          "Walking",
+          "WalkJump",
+          "Wave",
+          "Yes"
+        ],
+        "metrics": {
+          "calls": 389,
+          "triangles": 637802,
+          "geometries": 338,
+          "textures": 17,
+          "effects": 0,
+          "emitted": 0
+        },
+        "storage": "{}"
+      }
+    },
+    {
+      "name": "Stance calibration yields finite walk and run speeds",
+      "ok": true,
+      "detail": {
+        "Walking": 1.767341896235553,
+        "Running": 2.247546303264186
+      }
+    },
+    {
+      "name": "Pinned authored character serves exact saved bytes",
+      "ok": true,
+      "detail": {
+        "sourceRevision": "8f24439631c052231f9661b81633e7ab514f25a5",
+        "source": "https://github.com/mrdoob/three.js/tree/8f24439631c052231f9661b81633e7ab514f25a5/examples/models/gltf/RobotExpressive",
+        "author": "Tomas Laulhe / Quaternius",
+        "modifications": "Don McCurdy; runtime palette and toon material adapted locally",
+        "license": "CC0-1.0",
+        "path": "lib/playground/RobotExpressive.glb",
+        "sha256": "047f5e5fb3bb6d378bd1df16ca6137f2a596c99b3a1b5690b4020c05aaf6f319",
+        "authoredClips": 14,
+        "aiGeneratedThisSession": false
+      }
+    },
+    {
+      "name": "Live art treatments produce distinct pixels",
+      "ok": true
+    },
+    {
+      "name": "Style switching preserves camera, position and animation phase",
+      "ok": true
+    },
+    {
+      "name": "Pause freezes simulation",
+      "ok": true
+    },
+    {
+      "name": "Real WASD walks forward with Walking clip",
+      "ok": true,
+      "detail": {
+        "pos": [
+          0,
+          0.525753020332606,
+          7.994426724089554
+        ],
+        "clip": "Walking",
+        "speed": [
+          0,
+          0,
+          -1.7673416298772244
+        ],
+        "feet": [
+          [
+            -0.3173301393339587,
+            0.5582089124909194,
+            7.837892998716857
+          ],
+          [
+            0.3206108514824649,
+            0.8769993698221727,
+            8.476064263425323
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Release settles to Idle",
+      "ok": true
+    },
+    {
+      "name": "Real strike produces one contact and a target hit",
+      "ok": true,
+      "detail": {
+        "style": "v5",
+        "paused": false,
+        "ink": true,
+        "paint": true,
+        "light": "golden",
+        "hits": 1,
+        "strikes": 1,
+        "pulses": 0,
+        "jumps": 0,
+        "contacts": 1
+      }
+    },
+    {
+      "name": "Pulse creates world effects at authored contact",
+      "ok": true
+    },
+    {
+      "name": "Pulse recovery prevents repeated activation",
+      "ok": true
+    },
+    {
+      "name": "Jump lifts the animated character",
+      "ok": true
+    },
+    {
+      "name": "Jump lands and returns to Idle",
+      "ok": true
+    },
+    {
+      "name": "Sprint uses the Running clip at greater travel speed",
+      "ok": true,
+      "detail": {
+        "pos": [
+          2.8767752079363693,
+          0.5601184490618907,
+          10
+        ],
+        "clip": "Running",
+        "velocity": [
+          2.9218070464115993,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Right drag orbits camera",
+      "ok": true
+    },
+    {
+      "name": "Wheel zooms camera",
+      "ok": true
+    },
+    {
+      "name": "Cannon station places player in the demonstration area",
+      "ok": true
+    },
+    {
+      "name": "Cannon fires and impact follows the projectile",
+      "ok": true
+    },
+    {
+      "name": "Complete walk and run cycles contain continuous articulated motion",
+      "ok": true,
+      "detail": {
+        "clips": {
+          "Walking": {
+            "frozenMoving": 0,
+            "duration": 0.9583333134651184,
+            "movingFrames": 120,
+            "medianPoseStep": 0.014018564939091321,
+            "seam": 0.01762128269223489,
+            "wrapRatio": 1.2569961881830891,
+            "hipVerticalRange": 0.14381010447465425,
+            "footTravel": 0.7420274472524486
+          },
+          "Running": {
+            "frozenMoving": 0,
+            "duration": 0.9583333134651184,
+            "movingFrames": 120,
+            "medianPoseStep": 0.026537232197559,
+            "seam": 0.026537232345671475,
+            "wrapRatio": 1.0000000055813083,
+            "hipVerticalRange": 0.4034207097310367,
+            "footTravel": 0.9820898896992896
+          },
+          "Punch": {
+            "frozenMoving": 0,
+            "duration": 0.8333333134651184,
+            "movingFrames": 120,
+            "medianPoseStep": 0.015016364683813937,
+            "seam": 0.0007985060940687296,
+            "wrapRatio": 0.05317572600840171,
+            "hipVerticalRange": 0.053025802449425674,
+            "footTravel": 0
+          },
+          "Jump": {
+            "frozenMoving": 0,
+            "duration": 0.7083333134651184,
+            "movingFrames": 120,
+            "medianPoseStep": 0.013757125149585821,
+            "seam": 0.005646803846094816,
+            "wrapRatio": 0.41046394393415997,
+            "hipVerticalRange": 0.9433090066643883,
+            "footTravel": 4.973799150320701e-14
+          }
+        },
+        "frozenControl": {
+          "movingFrames": 0
+        },
+        "groundSpeeds": {
+          "Walking": 1.767341896235553,
+          "Running": 2.247546303264186
+        }
+      }
+    },
+    {
+      "name": "Locomotion loop wrap stays within two typical sampled pose steps",
+      "ok": true,
+      "detail": {
+        "Walking": {
+          "frozenMoving": 0,
+          "duration": 0.9583333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.014018564939091321,
+          "seam": 0.01762128269223489,
+          "wrapRatio": 1.2569961881830891,
+          "hipVerticalRange": 0.14381010447465425,
+          "footTravel": 0.7420274472524486
+        },
+        "Running": {
+          "frozenMoving": 0,
+          "duration": 0.9583333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.026537232197559,
+          "seam": 0.026537232345671475,
+          "wrapRatio": 1.0000000055813083,
+          "hipVerticalRange": 0.4034207097310367,
+          "footTravel": 0.9820898896992896
+        },
+        "Punch": {
+          "frozenMoving": 0,
+          "duration": 0.8333333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.015016364683813937,
+          "seam": 0.0007985060940687296,
+          "wrapRatio": 0.05317572600840171,
+          "hipVerticalRange": 0.053025802449425674,
+          "footTravel": 0
+        },
+        "Jump": {
+          "frozenMoving": 0,
+          "duration": 0.7083333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.013757125149585821,
+          "seam": 0.005646803846094816,
+          "wrapRatio": 0.41046394393415997,
+          "hipVerticalRange": 0.9433090066643883,
+          "footTravel": 4.973799150320701e-14
+        }
+      }
+    },
+    {
+      "name": "Authored hips translate and feet travel through both cycles",
+      "ok": true,
+      "detail": {
+        "Walking": {
+          "frozenMoving": 0,
+          "duration": 0.9583333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.014018564939091321,
+          "seam": 0.01762128269223489,
+          "wrapRatio": 1.2569961881830891,
+          "hipVerticalRange": 0.14381010447465425,
+          "footTravel": 0.7420274472524486
+        },
+        "Running": {
+          "frozenMoving": 0,
+          "duration": 0.9583333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.026537232197559,
+          "seam": 0.026537232345671475,
+          "wrapRatio": 1.0000000055813083,
+          "hipVerticalRange": 0.4034207097310367,
+          "footTravel": 0.9820898896992896
+        },
+        "Punch": {
+          "frozenMoving": 0,
+          "duration": 0.8333333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.015016364683813937,
+          "seam": 0.0007985060940687296,
+          "wrapRatio": 0.05317572600840171,
+          "hipVerticalRange": 0.053025802449425674,
+          "footTravel": 0
+        },
+        "Jump": {
+          "frozenMoving": 0,
+          "duration": 0.7083333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.013757125149585821,
+          "seam": 0.005646803846094816,
+          "wrapRatio": 0.41046394393415997,
+          "hipVerticalRange": 0.9433090066643883,
+          "footTravel": 4.973799150320701e-14
+        }
+      }
+    },
+    {
+      "name": "The same motion detector rejects a deliberately frozen control",
+      "ok": true
+    },
+    {
+      "name": "Repeated effects keep GPU geometry allocation bounded",
+      "ok": true
+    },
+    {
+      "name": "Photo exports a PNG",
+      "ok": true
+    },
+    {
+      "name": "Measured renderer frame sample is valid",
+      "ok": true,
+      "detail": {
+        "frames": 840,
+        "p50": 6.900000000001455,
+        "p95": 7.099999999998545,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "metrics": {
+          "calls": 389,
+          "triangles": 637802,
+          "geometries": 344,
+          "textures": 18,
+          "effects": 19,
+          "emitted": 212
+        }
+      }
+    },
+    {
+      "name": "Context interruption displays a recovery state",
+      "ok": true
+    },
+    {
+      "name": "Restored context renders again",
+      "ok": true
+    },
+    {
+      "name": "No campaign code or saves used",
+      "ok": true
+    },
+    {
+      "name": "Mobile has no horizontal overflow and touch controls fit",
+      "ok": true
+    },
+    {
+      "name": "Real touch joystick moves the character",
+      "ok": true
+    },
+    {
+      "name": "Touch strike drives authored attack",
+      "ok": true
+    },
+    {
+      "name": "Touch style switch and reduced-motion preference work",
+      "ok": true
+    },
+    {
+      "name": "Missing character shows retry and disables export",
+      "ok": true
+    },
+    {
+      "name": "No JavaScript or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

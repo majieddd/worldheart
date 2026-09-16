@@ -1,5 +1,12 @@
 # 99 Planets To Defend: running development blueprint
 
+U172-U177: the owner selects Atmospheric Ink 1.3.1 and asks to lock it. The standalone
+[proving-ground blueprint](qa/implementation/ATMOSPHERIC-COMBAT.md) covers the exact
+archive, surface anchoring, FPS weapons, moving units, additional environments,
+infinite-life rounds, flight and adjustable graphics. Published at V2 `576e229`
+with 53 public browser checks and 251 identity checks passing. Earlier art
+preference entries below record prior decisions.
+
 U168 refines Atmospheric Ink to 1.3.1 with reduced haze and stronger shadow/color.
 Hard Cel 1.0.0 remains preferred. U169-U171 adds a separate walkable style
 playground: authored locomotion/attacks, three field stations, training targets,

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {GLTFLoader} from '../art-candidates/hard-cel-v1/lib/addons/loaders/GLTFLoader.js';
-import {createCandidateMaterials} from './hard-cel-materials.js';
+import {createSurfaceMaterials as createCandidateMaterials} from './arena-materials.js';
 import {VERSIONS} from './hard-cel-versions.js';
 import {createPaintedEnvironment} from '../art-candidates/hard-cel-v1/js/painted-environment.js';
 import {createActor} from './playground-actor.js';

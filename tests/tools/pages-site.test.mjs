@@ -15,7 +15,7 @@ function fixture(t) {
   const repo = name => {
     const root = join(dir, name); mkdirSync(root);
     const files = {
-      'index.html': name, 'debug.html': name, 'style-lab.html': name, 'painted-lab.html': name, 'hard-cel-lab.html': name, 'style-playground.html': name, 'art-candidates/hard-cel-v1/candidate.json': name, 'js/main.js': name, 'css/style.css': name,
+      'index.html': name, 'debug.html': name, 'style-lab.html': name, 'painted-lab.html': name, 'hard-cel-lab.html': name, 'style-playground.html': name, 'atmospheric-arena.html': name, 'art-candidates/hard-cel-v1/candidate.json': name, 'js/main.js': name, 'css/style.css': name,
       'lib/three.module.min.js': name, 'dist/worldheart.html': name,
       'v2/obsolete.js': 'stale mirror', '.github/workflows/private.yml': 'workflow',
     };
@@ -49,7 +49,7 @@ test('Pages preserves production bytes and replaces only the v2 game with previe
   assert.equal(existsSync(join(out, '.github')), false);
   assert.equal(existsSync(join(out, 'v2/dist')), false);
   assert.equal(JSON.parse(readFileSync(join(out, 'v2/build.json'))).previewSha, build.previewSha);
-  assert.equal(Object.keys(build.previewHashes).length, 10);
+  assert.equal(Object.keys(build.previewHashes).length, 11);
 });
 
 test('Pages refuses stale output or a destination that would contain source', t => {

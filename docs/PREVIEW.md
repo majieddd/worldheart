@@ -13,6 +13,7 @@ alongside the stable game without merging gameplay PRs into main.
 | [Painted frontier](https://majieddd.github.io/worldheart/v2/painted-lab.html) | preview/v2 | Fourth graphics study: soft painted cel, fine ink, textured Meshy reference models |
 | [Hard Cel candidates](https://majieddd.github.io/worldheart/v2/hard-cel-lab.html) | preview/v2 | Preserved owner-selected 1.0 and three separately versioned experiments |
 | [Painted training ground](https://majieddd.github.io/worldheart/v2/style-playground.html) | preview/v2 | Walkable Hard Cel / Atmospheric Ink movement and effects study |
+| [Atmospheric Ink proving ground](https://majieddd.github.io/worldheart/v2/atmospheric-arena.html) | preview/v2 | Locked 1.3.1, FPS sword/plasma, moving units, three environments, infinite-life rounds, flight and graphics tuning |
 | [Live build identity](https://majieddd.github.io/worldheart/v2/build.json) | Deployment artifact | Exact preview/main commits and preview asset hashes |
 | /worldheart/dist/worldheart.html | main | Stable single-file download |
 
@@ -45,7 +46,7 @@ GitHub Pages uses the GitHub Actions publishing source. The workflow in
 .github/workflows/preview-pages.yml checks out main and preview/v2 separately,
 validates the preview and creates one combined artifact with tools/pages-site.mjs.
 All public tracked main files except its old v2 mirror retain their bytes.
-Only index.html, lobby.html, debug.html, audio-lab.html, style-lab.html, painted-lab.html, hard-cel-lab.html, style-playground.html, js, css, lib, audio and art-candidates from preview source are installed under v2.
+Only index.html, lobby.html, debug.html, audio-lab.html, style-lab.html, painted-lab.html, hard-cel-lab.html, style-playground.html, atmospheric-arena.html, js, css, lib, audio and art-candidates from preview source are installed under v2.
 No feature code is copied to the stable root. The artifact includes .nojekyll
 and a machine-readable build identity. No deploy branch or force push is needed.
 
