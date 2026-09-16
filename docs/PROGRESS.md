@@ -1,9 +1,23 @@
 # 99 Planets development progress
 
-U194 verified locally, publishing: owner-authorized main release of V2 `4ca722b`. Codex on
-`release/promote-v2-2026-09-16`. Runtime is promoted unchanged, with previous main
-preserved for rollback and V2 retained for future development. Release checks and
-public identity are tracked in [MAIN-PROMOTION](qa/implementation/MAIN-PROMOTION.md).
+U199: owner approved and locked **Guided Terrain Kit 1.0.0** as the terrain
+direction for future V2 development. Exact reviewed runtime `2fb6ddf`, tag
+`terrain/guided-kit-v1.0.0`. [Approval and preservation contract](../terrain-baselines/GUIDED-KIT.md).
+The demo and prior evidence stay unchanged. Spherical campaign integration is
+the next engineering milestone; visual direction is now selected.
+
+U195-U198 published and publicly verified at `2fb6ddf`, [PR #58](https://github.com/majieddd/worldheart/pull/58): Codex on `feature/procgen-guided-kit`.
+Full-span video research and a seeded current/guided terrain A/B are complete.
+383 automated tests, 21 local / 21 public browser checks, 491 public identities
+and all 54 guided approaches across 18 local fixtures pass. Selective cliff/landmark adoption is recommended; no campaign
+replacement is included. V2 only, main stays `6133d07`.
+[Scope, visual judgment and evidence](qa/implementation/PROCGEN-GUIDED-KIT.md).
+
+U194 published and publicly verified: main and V2 now serve release `6133d07`,
+promoting V2 snapshot `4ca722b` unchanged. [Release PR #57](https://github.com/majieddd/worldheart/pull/57)
+is merged. All 379 automated tests, 11 local and 11 public browser checks, and
+485 deployed/source identities pass. The original main is preserved as a rollback
+tag; V2 remains the development route. [Release evidence](qa/implementation/MAIN-PROMOTION.md).
 
 U189-U193 locally verified, publication pending: Codex on `feature/ink-fps-handling`. New owner Vivid Paint
 default, connected foliage, FPS pace/slide/ADS and a Roblox-focused concept
