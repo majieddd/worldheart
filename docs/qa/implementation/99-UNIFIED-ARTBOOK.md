@@ -6,13 +6,13 @@ performance work are retained. Main 6133d07 remains separate.
 
 ## Scope and status
 
-- U217 verified locally: exactly five main tabs; native faction inspector;
+- U217 published and publicly verified: exactly five main tabs; native faction inspector;
   searchable/filterable 59-image Media gallery; old links preserve context.
-- U218 verified locally: eight built-in image_gen paintings, five environments
+- U218 published and publicly verified: eight built-in image_gen paintings, five environments
   with scenario/faction mixes, revised six-panel comic and Xeno sheets.
-- U219 verified locally: Xeno name, Physical/Mars and Void-first canon, five
+- U219 published and publicly verified: Xeno name, Physical/Mars and Void-first canon, five
   elemental silhouettes and complete 26-glyph fictional Adamic-inspired cipher.
-- U220 local verification complete; public preview verification pending.
+- U220 published and publicly verified. Runtime d96576d1eac852c360fd7a1b5696ff5bdb57bda7, [PR #63](https://github.com/majieddd/worldheart/pull/63).
 
 Selected B keeps its composition and now uses the Void arrival scene and Xeno
 label. Original B, A/C, the nine earlier built-in paintings, 24 Higgsfield plates,
@@ -44,6 +44,23 @@ main artbook, retaining faction, category and asset selection.
 Earlier local runs are retained in artifacts/artbook/local-first and
 factions-first. They passed their then-current scope before the eighth image
 and final canon refinements. Final acceptance uses the reports above.
+
+## Public verification
+
+[Successful deployment](https://github.com/majieddd/worldheart/actions/runs/35141745405).
+[93 unified-page cases](99-UNIFIED-ARTBOOK/public.json),
+[204 faction/B cases](99-UNIFIED-ARTBOOK/public-factions.json) and
+[627 live/source identities](99-UNIFIED-ARTBOOK/public-identity.json) pass.
+Main remains 6133d0713f4e93e6fc743c35d9dd0fd1834bc98f.
+
+Retained first reports: [iframe probe race](99-UNIFIED-ARTBOOK/public-first.json)
+and [large PNG download timeout](99-UNIFIED-ARTBOOK/public-factions-first.json).
+The first probe looked up the iframe before its navigation had established the URL.
+It now waits for the embedded stage readiness before inspecting the frame. The
+other attempt received HTTP 200 but exceeded the request download deadline while
+identity verification was running concurrently. Its complete affected pass succeeded
+on retry. Final public reports have zero script or resource errors. These are
+probe/transfer corrections, not changes to the published application.
 
 ## Reproduce
 
