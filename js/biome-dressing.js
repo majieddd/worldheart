@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../lib/three.module.min.js';
 import {NEW_BIOMES} from './run/world-catalogue.js';
 
 // Each added habitat owns a silhouette, not just a tint of the same tree.

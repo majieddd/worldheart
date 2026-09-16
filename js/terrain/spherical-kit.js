@@ -176,5 +176,5 @@ export function createGuidedSurface(seed,radius,source,{water=()=>false,landmark
     if(nearby)for(const l of nearby)h=stamp(l,x,y,z,h);
     return h;
   }
-  return {version:1,grid,index,heights,levels,landmarks:fitted,height,base,metrics:{quads:grid.quads.length,vertices:grid.points.length,landmarks:fitted.length}};
+  return {upperBound:Math.max(datum+Math.max(...levels)*step,...fitted.map(l=>Math.max(l.height,l.entryHeight))),version:1,grid,index,heights,levels,landmarks:fitted,height,base,metrics:{quads:grid.quads.length,vertices:grid.points.length,landmarks:fitted.length}};
 }

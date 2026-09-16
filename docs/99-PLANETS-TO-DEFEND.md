@@ -1,5 +1,9 @@
 # 99 Planets To Defend: running development blueprint
 
+U217-U219 verified as an opt-in experiment; U220 publishing: Codex on `feature/procgen-fast-sandbox`. Research and
+exact-output experiments target under 5 s generation, 10 s for stretch cases,
+with visual sandbox comparisons. [Scope and evidence](qa/implementation/PROCGEN-FAST.md).
+
 U213-U215 verified locally, U216 publishing: the owner selected B / Arcade and
 requested a six-faction Painted Inkline expansion. Robloxian joins the roster;
 Axiom becomes pristine white robotics; Anomalous draws on Animal Hospital.

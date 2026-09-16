@@ -1,5 +1,9 @@
 # 99 Planets development progress
 
+U217-U219 verified as an opt-in experiment; U220 publishing: Codex on `feature/procgen-fast-sandbox`. Research and
+exact-output experiments target under 5 s generation, 10 s for stretch cases,
+with visual sandbox comparisons. [Scope and evidence](qa/implementation/PROCGEN-FAST.md).
+
 U213-U215 verified locally; U216 publishing: Codex on `feature/99-faction-catalogue`.
 Owner selected B / Arcade. Refined B removes planet/date information and adds
 tactile Roblox-like controls. Six faction pages include 24 plates, 18 commanders,
