@@ -1,5 +1,9 @@
 # 99 Planets To Defend: running development blueprint
 
+U168 refines Atmospheric Ink to 1.3.1 with reduced haze and stronger shadow/color.
+Hard Cel 1.0.0 remains preferred. A separate walkable style playground is next:
+third-person movement, attacks and art-matched feedback in both treatments.
+
 U164-U167 preserves the owner-selected **Hard Cel 1.0.0** as a real candidate for
 future adoption. [Candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md)
 records its immutable archive, three unreviewed rendering variants and the
@@ -22,7 +26,7 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
-U168-U171 updates the home contract: Earth is unlocked on a new device. Visiting
+U180-U183 updates the home contract: Earth is unlocked on a new device. Visiting
 any home bypasses the title screen and starts beside the heart in third person,
 with clear visibility and a visible Start waves control. Maximum base coverage
 on an expedition schedules the next wave as a Planet Sovereign: 2.25x normal
@@ -40,7 +44,7 @@ rarity gear is preserved. Home drafts settle automatically after ten seconds
 unless chosen sooner. [Verification ledger](qa/implementation/HOMEWORLD-BOSS-PROGRESSION.md).
 
 Published U154-U157 (V2 `496c9a2`, PR #47) adds a dedicated Homeworld lobby station and manufacturer weapons.
-Historical behavior: stable full expansion captured immediately; U169 now requires the sovereign victory described above.
+Historical behavior: stable full expansion captured immediately; U181 now requires the sovereign victory described above.
 Choosing another home preserves every previous home checkpoint and decoration.
 Homes remain browser saves with export/import; visiting is separate from the active
 expedition. Deliberately captured generator planets also appear in the lobby.

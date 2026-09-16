@@ -1,16 +1,31 @@
 # 99 Planets development progress
 
-Verified locally, publishing U168-U171: Codex on `feature/homeworld-boss-progression`, based on V2
+Verified locally, publishing U180-U183: Codex on `feature/homeworld-boss-progression`, based on V2
 `307f2a6`. Earth starter home, boss-gated planet capture, ten-wave home checkpoints,
 safe gear, direct third-person visits, fog, zoom and hail shake.
 [Scope and acceptance](qa/implementation/HOMEWORLD-BOSS-PROGRESSION.md).
 
-U164-U167: Hard Cel 1.0.0 is now the owner's selected candidate for future use.
+U168 implemented and locally verified: Atmospheric Ink 1.3.1 reduces haze and
+deepens shadow/color while preserving the preferred Hard Cel 1.0.0 and previous
+atmosphere 1.3.0. 61 browser cases, 364 core tests and the updated Aegis identity
+gate pass. Aegis 3.18.2 is installed locally with current upstream contributions
+and the existing production workflow retained; all 320 installed files match.
+See the [candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md).
+Next owner request: a walkable Hard Cel/Atmospheric Ink demo with fluid character
+and attack animation plus illustrative visual feedback. This is a separate slice.
+
+Published U164-U167: V2 `307f2a6`, [PR #50](https://github.com/majieddd/worldheart/pull/50).
+Hard Cel 1.0.0 is now the owner's selected candidate for future use.
 The exact runtime dependencies are saved under tag `art/hard-cel-v1`; the
 [candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md) tracks three separately
 versioned experiments, verification and the additive Aegis contribution.
 `hard-cel-lab.html` provides shared-camera pairs, all-four comparison and full
 width inspection. The variants await owner review.
+56 local and 56 public browser cases, 38 prior-study regressions, 364 core tests,
+117 parsed modules, 195 mirrors and 232 public/source identities pass.
+[Compare all four](https://majieddd.github.io/worldheart/v2/hard-cel-lab.html?layout=all).
+Aegis 3.18.1 method supplement is merged in its PR #7, preserving collaborators'
+newer methods and documenting complementary contributions. Main remains 1374122.
 
 Published U161-U163: V2 `4fcee91`, [PR #49](https://github.com/majieddd/worldheart/pull/49), Codex on `feature/painted-cel-ink`.
 The owner prefers anime + ink but finds the first study's shadows too boxy and

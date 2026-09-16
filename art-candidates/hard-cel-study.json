@@ -4,7 +4,7 @@
   "baselineManifest": "art-candidates/hard-cel-v1/candidate.json",
   "baselineManifestSha256": "0a9aa83c42b7096027b1f082cafd4dbfce821881a778f1cf90a082ba907b06d3",
   "baselineEntry": "hard-cel-lab.html?version=v1&layout=single",
-  "variantCount": 3,
+  "variantCount": 4,
   "controls": [
     "geometry",
     "assets",
@@ -95,6 +95,36 @@
         "tint": 0.27,
         "hatch": 0,
         "rim": 0.2
+      }
+    },
+    {
+      "id": "v5",
+      "version": "1.3.1",
+      "parent": "worldheart-hard-cel-v1",
+      "status": "unreviewed",
+      "hypothesis": "Less haze reveals richer painted color. Deeper cool shadows and restrained warm edges keep the landscape clear.",
+      "entry": "hard-cel-lab.html?version=v5&layout=pair",
+      "recipe": {
+        "bands": [
+          0.29,
+          0.61,
+          0.99
+        ],
+        "thresholds": [
+          92,
+          167
+        ],
+        "line": 1.4,
+        "ink": "#293146",
+        "pigment": 1.18,
+        "emissive": 0.75,
+        "shadowRadius": 1.6,
+        "fog": 0.0115,
+        "tint": 0.32,
+        "hatch": 0,
+        "rim": 0.16,
+        "saturation": 1.16,
+        "shadowDepth": 0.1
       }
     }
   ]

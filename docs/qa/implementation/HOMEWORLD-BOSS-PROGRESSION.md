@@ -5,10 +5,10 @@ Owner: Codex. Branch: `feature/homeworld-boss-progression`, based on preview
 
 | Item | Work | Acceptance |
 | --- | --- | --- |
-| U168 | Earth unlocked by default; direct third-person home entry, clear fog, visible wave control | Fresh and existing saves, lobby visit, desktop/touch runtime |
-| U169 | Maximum base schedules a stronger planet boss with minions; defeat unlocks home and stops waves | No early claim, current-wave scaling, actual boss/minions and completion |
-| U170 | Endless homes: checkpoints every 10 waves, retained gear on death, rare drop ceiling | Boundary rollback, gear/identity persistence, rarity sampling |
-| U171 | Close minimum zoom at maximum base; reduce hail shake | Camera suite, bounded hail shake fixture, classic regression |
+| U180 | Earth unlocked by default; direct third-person home entry, clear fog, visible wave control | Fresh and existing saves, lobby visit, desktop/touch runtime |
+| U181 | Maximum base schedules a stronger planet boss with minions; defeat unlocks home and stops waves | No early claim, current-wave scaling, actual boss/minions and completion |
+| U182 | Endless homes: checkpoints every 10 waves, retained gear on death, rare drop ceiling | Boundary rollback, gear/identity persistence, rarity sampling |
+| U183 | Close minimum zoom at maximum base; reduce hail shake | Camera suite, bounded hail shake fixture, classic regression |
 
 The targeted progression, fog, zoom and hail checks pass. All 23 backup/terrain/touch regressions and the single-file home boot also pass. Public verification is pending. Main remains unchanged. This work does not
 close the open audio acceptance items U150/U151.
@@ -93,3 +93,7 @@ Use `WH_BASE_URL` for the public V2 origin. `--conquest-only` isolates the boss;
 `--home-only --from-camera` isolates entry, zoom and touch. Existing
 `tools/qa-home-planet.mjs` retains backup, quake and decoration regression coverage.
 No audio assets or selected art-candidate files changed.
+
+Publication integration preserves concurrent V2 art update `12c1664`. The home
+items are renumbered U180-U183 to avoid the independently claimed art item U168.
+The original claim comment is retained for audit; no requested work was removed.
