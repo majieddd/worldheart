@@ -9,4 +9,5 @@ for(const rev of revisions){const req=requests.find(r=>r.index===rev.index),plat
  plate.sourcePromptSha256=plate.promptSha256;plate.prompt=req.prompt;plate.promptSha256=createHash('sha256').update(req.prompt).digest('hex');plate.revisionReason='Exact six-figure roster and consistent row mapping; replaces duplicate/spanning figures.';
  const i=jobs.findIndex(j=>j.index===plate.index);jobs[i]={...rev,index:plate.index};
 }
+for(const req of requests){const plate=cat.plates.find(p=>p.id===req.id);plate.sourceReference||=plate.reference;plate.reference='fa124a38-76f3-4141-bd4c-88f579eb9743';plate.referenceKind='Higgsfield completed Axiom roster job, used for six-cell layout and contour consistency';}
 writeFileSync(root+'/catalogue.json',JSON.stringify(cat,null,2)+'\n');writeFileSync(root+'/jobs.json',JSON.stringify(jobs,null,2)+'\n');
