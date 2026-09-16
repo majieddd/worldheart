@@ -1,5 +1,10 @@
 # 99 Planets development progress
 
+U184-U188 locally verified, publishing: Codex on `feature/ink-asset-stage`. Exact screenshot presets,
+denied-cursor-capture swing repair, close-up weapon paint, Paintline tower and
+a 17-specimen asset/animation/effects stage. 48 targeted, 53 arena and 374 automated
+checks pass, plus a full real-time assisted-input demo round. [Scope and acceptance](qa/implementation/INK-ASSET-STAGE.md).
+
 U172-U177 published and publicly verified at `576e229`, [PR #54](https://github.com/majieddd/worldheart/pull/54): Codex on `feature/atmospheric-combat`.
 The owner now selects **Atmospheric Ink 1.3.1**. Its exact prior slice is archived
 and tagged; mesh-attached pigment fixes moving texture projection. A separate FPS

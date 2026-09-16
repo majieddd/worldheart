@@ -1,0 +1,653 @@
+{
+  "base": "http://127.0.0.1:8154",
+  "checks": [
+    {
+      "name": "Arena boots with pinned rig and three loadouts",
+      "ok": true
+    },
+    {
+      "name": "Arena interface text meets AA contrast",
+      "ok": true,
+      "detail": [
+        {
+          "text": "WORLDHEART ATMOSPHERIC INK / 1.3.1 ",
+          "ratio": 14.476699016955408,
+          "required": 4.5
+        },
+        {
+          "text": "ATMOSPHERIC INK / 1.3.1 LOCKED",
+          "ratio": 11.792335798426317,
+          "required": 4.5
+        },
+        {
+          "text": "Meadow",
+          "ratio": 7.626465755831722,
+          "required": 4.5
+        },
+        {
+          "text": "Canyon",
+          "ratio": 11.938434752751164,
+          "required": 4.5
+        },
+        {
+          "text": "Ruins",
+          "ratio": 11.938434752751164,
+          "required": 4.5
+        },
+        {
+          "text": "Start round",
+          "ratio": 11.938434752751164,
+          "required": 4.5
+        },
+        {
+          "text": "Graphics",
+          "ratio": 11.938434752751164,
+          "required": 4.5
+        },
+        {
+          "text": "Asset stage",
+          "ratio": 15.014644885547838,
+          "required": 4.5
+        },
+        {
+          "text": "Controls",
+          "ratio": 11.938434752751164,
+          "required": 4.5
+        },
+        {
+          "text": "0 hits · 0 respawns",
+          "ratio": 9.248003507217934,
+          "required": 4.5
+        },
+        {
+          "text": "1Sable edgeThree-cut combo · RMB gu",
+          "ratio": 7.626465755831722,
+          "required": 4.5
+        },
+        {
+          "text": "Three-cut combo · RMB guard",
+          "ratio": 5.8737186905676895,
+          "required": 4.5
+        },
+        {
+          "text": "2Pulse carbineHold fire · RMB aim ·",
+          "ratio": 11.830474194308461,
+          "required": 4.5
+        },
+        {
+          "text": "Hold fire · RMB aim · R vent",
+          "ratio": 8.214547499729493,
+          "required": 4.5
+        },
+        {
+          "text": "AN INTERACTIVE ART & COMBAT STUDY",
+          "ratio": 10.21025045506619,
+          "required": 4.5
+        },
+        {
+          "text": "Step into the ink.",
+          "ratio": 12.534473682936548,
+          "required": 3
+        },
+        {
+          "text": "Three environments. Moving sentinel",
+          "ratio": 8.703372980782726,
+          "required": 4.5
+        },
+        {
+          "text": "Mouse look captures the cursor. Esc",
+          "ratio": 8.703372980782726,
+          "required": 4.5
+        },
+        {
+          "text": "Download the locked 1.3.1 reference",
+          "ratio": 10.21025045506619,
+          "required": 4.5
+        }
+      ]
+    },
+    {
+      "name": "Initial graphics match selected 1.3.1 recipe",
+      "ok": true,
+      "detail": {
+        "line": 1.4,
+        "fog": 0.0115,
+        "shadowDepth": 0.1,
+        "saturation": 1.16,
+        "texture": 1,
+        "exposure": 1,
+        "resolution": 1.25,
+        "fov": 78,
+        "bob": 0.35,
+        "shake": 0.45,
+        "sensitivity": 1
+      }
+    },
+    {
+      "name": "Download serves exact locked archive",
+      "ok": true,
+      "detail": {
+        "digest": "d7345568cd200fc376213436d5261947c1a38db2d3a2fe78a3eac94a5f8ed521",
+        "expected": "d7345568cd200fc376213436d5261947c1a38db2d3a2fe78a3eac94a5f8ed521"
+      }
+    },
+    {
+      "name": "Enter captures pointer and starts live simulation",
+      "ok": true
+    },
+    {
+      "name": "Real WASD moves player with visible walking patrols",
+      "ok": true,
+      "detail": {
+        "pos": [
+          0,
+          0.48065587164278567,
+          8.91529795388137
+        ],
+        "clips": [
+          "Idle",
+          "Walking",
+          "Walking"
+        ]
+      }
+    },
+    {
+      "name": "Pointer-locked mouse changes view immediately",
+      "ok": true
+    },
+    {
+      "name": "Jump has upward motion",
+      "ok": true
+    },
+    {
+      "name": "Jump settles on terrain",
+      "ok": true
+    },
+    {
+      "name": "Flight ascends with Space",
+      "ok": true
+    },
+    {
+      "name": "Landing restores grounded controller",
+      "ok": true
+    },
+    {
+      "name": "Sword anticipation cannot damage a target",
+      "ok": true
+    },
+    {
+      "name": "One sword swing hits once through its active blade path",
+      "ok": true,
+      "detail": {
+        "hits": 1,
+        "events": [
+          {
+            "time": 3.687399999999986,
+            "combo": 0,
+            "kind": "sword-start"
+          },
+          {
+            "time": 3.8957333333333186,
+            "id": 0,
+            "source": "sword",
+            "hp": 23,
+            "kind": "hit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Articulated arms remain finite with fixed limb lengths through cut",
+      "ok": true,
+      "detail": {
+        "maxStep": 0.07045411388117258,
+        "maxLengthError": 1.6653345369377348e-16
+      }
+    },
+    {
+      "name": "Out-of-range sword swing misses",
+      "ok": true
+    },
+    {
+      "name": "Held plasma fires repeatedly and swept bolts hit at range",
+      "ok": true,
+      "detail": {
+        "shots": 4,
+        "hits": 3,
+        "joints": [
+          [
+            -0.48,
+            -0.37,
+            0.07
+          ],
+          [
+            -0.2677757694405474,
+            -0.45421637303220147,
+            -0.3177737465027118
+          ],
+          [
+            0.03515950505773413,
+            -0.42261516447619535,
+            -0.6353136386146332
+          ],
+          [
+            0.48,
+            -0.37,
+            0.07
+          ],
+          [
+            0.6165069073871464,
+            -0.5626105897599238,
+            -0.31310184670389074
+          ],
+          [
+            0.32,
+            -0.43,
+            -0.6099150629784282
+          ]
+        ]
+      }
+    },
+    {
+      "name": "R visibly vents a warm rifle",
+      "ok": true
+    },
+    {
+      "name": "Vent returns the weapon to ready",
+      "ok": true
+    },
+    {
+      "name": "Round starts with all three first-wave enemies",
+      "ok": true
+    },
+    {
+      "name": "Hostile units navigate toward the player",
+      "ok": true
+    },
+    {
+      "name": "Hostile and tower attacks produce timed contacts and projectiles",
+      "ok": true,
+      "detail": [
+        {
+          "time": 19.812399999999514,
+          "id": 1,
+          "source": "tower",
+          "kind": "kill"
+        },
+        {
+          "time": 19.845733333332845,
+          "tower": "cannon",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 19.97906666666617,
+          "id": 2,
+          "source": "tower",
+          "hp": 85,
+          "kind": "hit"
+        },
+        {
+          "time": 20.97073333333278,
+          "tower": "plasma",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 21.354066666666093,
+          "id": 2,
+          "source": "tower",
+          "hp": 75,
+          "kind": "hit"
+        },
+        {
+          "time": 21.55406666666608,
+          "tower": "cannon",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 21.61239999999941,
+          "id": 2,
+          "source": "tower",
+          "hp": 65,
+          "kind": "hit"
+        },
+        {
+          "time": 22.27906666666604,
+          "tower": "plasma",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 22.620733333332687,
+          "id": 2,
+          "source": "tower",
+          "hp": 55,
+          "kind": "hit"
+        },
+        {
+          "time": 23.262399999999317,
+          "tower": "cannon",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 23.320733333332647,
+          "id": 2,
+          "source": "tower",
+          "hp": 45,
+          "kind": "hit"
+        },
+        {
+          "time": 23.5873999999993,
+          "tower": "plasma",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 23.895733333332615,
+          "id": 2,
+          "source": "tower",
+          "hp": 35,
+          "kind": "hit"
+        },
+        {
+          "time": 24.895733333332558,
+          "tower": "plasma",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 24.970733333332554,
+          "tower": "cannon",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 25.07906666666588,
+          "id": 2,
+          "source": "tower",
+          "hp": 25,
+          "kind": "hit"
+        },
+        {
+          "time": 25.170733333332542,
+          "id": 2,
+          "source": "tower",
+          "hp": 15,
+          "kind": "hit"
+        },
+        {
+          "time": 25.504066666665857,
+          "id": 2,
+          "kind": "enemy-windup"
+        },
+        {
+          "time": 26.03739999999916,
+          "health": 81,
+          "kind": "player-hit"
+        },
+        {
+          "time": 26.03739999999916,
+          "id": 2,
+          "kind": "enemy-contact"
+        },
+        {
+          "time": 26.204066666665817,
+          "tower": "plasma",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 26.462399999999136,
+          "id": 2,
+          "source": "tower",
+          "hp": 5,
+          "kind": "hit"
+        },
+        {
+          "time": 26.67906666666579,
+          "tower": "cannon",
+          "kind": "tower-fire"
+        },
+        {
+          "time": 26.79573333333245,
+          "id": 2,
+          "source": "tower",
+          "hp": -5,
+          "kind": "hit"
+        },
+        {
+          "time": 26.79573333333245,
+          "id": 2,
+          "source": "tower",
+          "kind": "kill"
+        }
+      ]
+    },
+    {
+      "name": "Lethal damage starts free respawn",
+      "ok": true
+    },
+    {
+      "name": "Respawn restores health and keeps the same round",
+      "ok": true
+    },
+    {
+      "name": "Controlled lifecycle clears all 15 enemies and all three waves",
+      "ok": true,
+      "detail": {
+        "phase": "complete",
+        "wave": 3,
+        "kills": 15,
+        "total": 15,
+        "remaining": 0,
+        "delay": -0.008333333333326953,
+        "respawns": 1,
+        "elapsed": 28.60833333333235
+      }
+    },
+    {
+      "name": "Completed round can restart cleanly",
+      "ok": true
+    },
+    {
+      "name": "canyon renders and resets patrol state",
+      "ok": true
+    },
+    {
+      "name": "ruins renders and resets patrol state",
+      "ok": true
+    },
+    {
+      "name": "meadow renders and resets patrol state",
+      "ok": true
+    },
+    {
+      "name": "Every wave in all three environments spawns outside obstacles",
+      "ok": true,
+      "detail": [
+        {
+          "world": "meadow",
+          "wave": 1,
+          "blocked": []
+        },
+        {
+          "world": "meadow",
+          "wave": 2,
+          "blocked": []
+        },
+        {
+          "world": "meadow",
+          "wave": 3,
+          "blocked": []
+        },
+        {
+          "world": "canyon",
+          "wave": 1,
+          "blocked": []
+        },
+        {
+          "world": "canyon",
+          "wave": 2,
+          "blocked": []
+        },
+        {
+          "world": "canyon",
+          "wave": 3,
+          "blocked": []
+        },
+        {
+          "world": "ruins",
+          "wave": 1,
+          "blocked": []
+        },
+        {
+          "world": "ruins",
+          "wave": 2,
+          "blocked": []
+        },
+        {
+          "world": "ruins",
+          "wave": 3,
+          "blocked": []
+        }
+      ]
+    },
+    {
+      "name": "Contour slider changes actual rendered silhouettes",
+      "ok": true
+    },
+    {
+      "name": "Reset restores every locked default without mutating recipe",
+      "ok": true
+    },
+    {
+      "name": "Saved custom graphics preset reloads",
+      "ok": true
+    },
+    {
+      "name": "texture changes rendered world pixels",
+      "ok": true,
+      "detail": {
+        "delta": 2.1159749090909092
+      }
+    },
+    {
+      "name": "saturation changes rendered world pixels",
+      "ok": true,
+      "detail": {
+        "delta": 10.414708
+      }
+    },
+    {
+      "name": "shadowDepth changes rendered world pixels",
+      "ok": true,
+      "detail": {
+        "delta": 2.526360484848485
+      }
+    },
+    {
+      "name": "fog changes rendered world pixels",
+      "ok": true,
+      "detail": {
+        "delta": 7.789232363636364
+      }
+    },
+    {
+      "name": "exposure changes rendered world pixels",
+      "ok": true,
+      "detail": {
+        "delta": 15.057644121212121
+      }
+    },
+    {
+      "name": "fov changes rendered world pixels",
+      "ok": true,
+      "detail": {
+        "delta": 26.880380727272726
+      }
+    },
+    {
+      "name": "Repeated environment changes keep GPU allocation stable",
+      "ok": true,
+      "detail": {
+        "calls": 1048,
+        "triangles": 701107,
+        "geometries": 1055,
+        "textures": 39,
+        "bolts": 0,
+        "effects": 0,
+        "enemies": 3
+      }
+    },
+    {
+      "name": "Escape releases pointer, pauses and clears held movement",
+      "ok": true
+    },
+    {
+      "name": "Responsive HUD 390",
+      "ok": true
+    },
+    {
+      "name": "Responsive HUD 768",
+      "ok": true
+    },
+    {
+      "name": "Responsive HUD 1600",
+      "ok": true
+    },
+    {
+      "name": "Mesh translation preserves pigment; world-projected control visibly swims",
+      "ok": true,
+      "detail": {
+        "surface": 0,
+        "worldControl": 0.6075553385416667
+      }
+    },
+    {
+      "name": "Native desktop combat renders sustained frames",
+      "ok": true,
+      "detail": {
+        "samples": 300,
+        "median": 6.900000000001455,
+        "p95": 7.100000000002183,
+        "metrics": {
+          "calls": 972,
+          "triangles": 690624,
+          "geometries": 1063,
+          "textures": 39,
+          "bolts": 0,
+          "effects": 1,
+          "enemies": 2
+        }
+      }
+    },
+    {
+      "name": "Standalone arena leaves campaign saves untouched",
+      "ok": true
+    },
+    {
+      "name": "No campaign modules imported",
+      "ok": true
+    },
+    {
+      "name": "Graphics interruption pauses and shows recovery guidance",
+      "ok": true
+    },
+    {
+      "name": "Graphics restoration resumes rendering with entry control",
+      "ok": true
+    },
+    {
+      "name": "Missing model offers a readable retry instead of a blank canvas",
+      "ok": true
+    },
+    {
+      "name": "Real touch swipe turns camera",
+      "ok": true
+    },
+    {
+      "name": "Touch attack starts sword action",
+      "ok": true
+    },
+    {
+      "name": "No browser or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

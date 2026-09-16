@@ -1,0 +1,168 @@
+{
+  "base": "http://127.0.0.1:8154",
+  "checks": [
+    {
+      "name": "Denied cursor capture: actual mouse click starts one sword cut",
+      "ok": true
+    },
+    {
+      "name": "Fallback drag turns without attacking",
+      "ok": true
+    },
+    {
+      "name": "A recovery click queues the next cut",
+      "ok": true
+    },
+    {
+      "name": "Fallback click also fires the plasma weapon",
+      "ok": true
+    },
+    {
+      "name": "Arena preset exactly matches default",
+      "ok": true,
+      "detail": {
+        "line": 1.4,
+        "fog": 0.0115,
+        "shadowDepth": 0.1,
+        "saturation": 1.16,
+        "texture": 1,
+        "exposure": 1,
+        "resolution": 1.25,
+        "fov": 78,
+        "bob": 0.35,
+        "shake": 0.45,
+        "sensitivity": 1
+      }
+    },
+    {
+      "name": "Arena preset exactly matches vivid",
+      "ok": true,
+      "detail": {
+        "line": 1.74,
+        "fog": 0.0185,
+        "shadowDepth": 0.35,
+        "saturation": 1.65,
+        "texture": 1.77,
+        "exposure": 1.19,
+        "resolution": 1,
+        "fov": 80,
+        "bob": 0.44,
+        "shake": 0.45,
+        "sensitivity": 1
+      }
+    },
+    {
+      "name": "Arena preset exactly matches deep",
+      "ok": true,
+      "detail": {
+        "line": 2.8,
+        "fog": 0.021,
+        "shadowDepth": 0.3,
+        "saturation": 1.5,
+        "texture": 1.69,
+        "exposure": 0.84,
+        "resolution": 1.25,
+        "fov": 81,
+        "bob": 0.45,
+        "shake": 0.45,
+        "sensitivity": 1
+      }
+    },
+    {
+      "name": "Slider edit clears named preset selection",
+      "ok": true
+    },
+    {
+      "name": "Held weapon uses dedicated fine paint density",
+      "ok": true,
+      "detail": [
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4
+      ]
+    },
+    {
+      "name": "Asset stage loads 17 named live specimens",
+      "ok": true
+    },
+    {
+      "name": "Fresh stage has finite positive time and no ghost effects",
+      "ok": true,
+      "detail": {
+        "time": 0.05,
+        "metrics": {
+          "calls": 2327,
+          "triangles": 1303242,
+          "geometries": 896,
+          "textures": 28,
+          "effects": 0
+        }
+      }
+    },
+    {
+      "name": "Stage preset matches arena default",
+      "ok": true
+    },
+    {
+      "name": "Stage preset matches arena vivid",
+      "ok": true
+    },
+    {
+      "name": "Stage preset matches arena deep",
+      "ok": true
+    },
+    {
+      "name": "Harness completed",
+      "ok": false,
+      "detail": "Error: locator.fill: Error: Malformed value\nCall log:\n\u001b[2m  - waiting for locator('#scrub')\u001b[22m\n\u001b[2m    - locator resolved to <input min=\"0\" value=\"0\" id=\"scrub\" type=\"range\" step=\"0.001\" max=\"0.9583333134651184\"/>\u001b[22m\n\u001b[2m    - fill(\".4\")\u001b[22m\n\u001b[2m  - attempting fill action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and editable\u001b[22m\n"
+    }
+  ],
+  "errors": [
+    "Error: locator.fill: Error: Malformed value\nCall log:\n\u001b[2m  - waiting for locator('#scrub')\u001b[22m\n\u001b[2m    - locator resolved to <input min=\"0\" value=\"0\" id=\"scrub\" type=\"range\" step=\"0.001\" max=\"0.9583333134651184\"/>\u001b[22m\n\u001b[2m    - fill(\".4\")\u001b[22m\n\u001b[2m  - attempting fill action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and editable\u001b[22m\n"
+  ]
+}

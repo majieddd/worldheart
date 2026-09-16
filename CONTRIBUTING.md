@@ -9,6 +9,10 @@ Hard Cel archive. Complement collaborators' existing work, methods and evidence;
 add a scoped extension or separately versioned experiment instead of replacing
 their branch, approved baseline or contribution record. Refresh shared preview
 and the current Aegis release before integrating changes.
+For art debugging, inspect full motion cycles, test both captured and denied
+cursor input, and distinguish texture resolution from its scale on the model.
+Use the shared asset stage and runtime builders so inspection fixes carry into
+the demo. Keep source posters, static meshes and animated adaptations identified.
 
 The current owner-directed work is tracked in **[docs/PROGRESS.md](docs/PROGRESS.md)**:
 the blind QA baseline, the **[99 Planets To Defend blueprint](docs/99-PLANETS-TO-DEFEND.md)**,

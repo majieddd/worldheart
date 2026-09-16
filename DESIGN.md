@@ -4,6 +4,12 @@
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
 ## Dials
+The Paintline column on the collaborator board is the future 2D reference:
+painted color masses, clean contours and readable dark shadow blocks. It
+supplements the approved 3D direction below. Asset stage uses the existing
+navy/mint exhibition interface; 17 specimens share live demo builders. Named
+Vivid paint / Deep ink settings preserve both owner screenshots as comparisons.
+
 Current owner decision: **Atmospheric Ink 1.3.1 is the selected art direction**.
 Preserve its exact prior slice ZIP, manifest and `art/atmospheric-ink-v1.3.1` tag.
 `atmospheric-arena.html` is the expanded FPS test: mesh-attached pigment, three
