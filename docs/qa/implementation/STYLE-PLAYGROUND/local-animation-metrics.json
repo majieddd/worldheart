@@ -1,0 +1,51 @@
+{
+  "clips": {
+    "Walking": {
+      "frozenMoving": 0,
+      "duration": 0.9583333134651184,
+      "movingFrames": 120,
+      "medianPoseStep": 0.014018564939091321,
+      "seam": 0.01762128269223489,
+      "wrapRatio": 1.2569961881830891,
+      "hipVerticalRange": 0.14381010447465425,
+      "footTravel": 0.7420274472524486
+    },
+    "Running": {
+      "frozenMoving": 0,
+      "duration": 0.9583333134651184,
+      "movingFrames": 120,
+      "medianPoseStep": 0.026537232197559,
+      "seam": 0.026537232345671475,
+      "wrapRatio": 1.0000000055813083,
+      "hipVerticalRange": 0.4034207097310367,
+      "footTravel": 0.9820898896992896
+    },
+    "Punch": {
+      "frozenMoving": 0,
+      "duration": 0.8333333134651184,
+      "movingFrames": 120,
+      "medianPoseStep": 0.015016364683813937,
+      "seam": 0.0007985060940687296,
+      "wrapRatio": 0.05317572600840171,
+      "hipVerticalRange": 0.053025802449425674,
+      "footTravel": 0
+    },
+    "Jump": {
+      "frozenMoving": 0,
+      "duration": 0.7083333134651184,
+      "movingFrames": 120,
+      "medianPoseStep": 0.013757125149585821,
+      "seam": 0.005646803846094816,
+      "wrapRatio": 0.41046394393415997,
+      "hipVerticalRange": 0.9433090066643883,
+      "footTravel": 4.973799150320701e-14
+    }
+  },
+  "frozenControl": {
+    "movingFrames": 0
+  },
+  "groundSpeeds": {
+    "Walking": 1.767341896235553,
+    "Running": 2.247546303264186
+  }
+}
