@@ -4,6 +4,11 @@ U195-U198. Codex on `feature/procgen-guided-kit`, 2026-09-16. Published at
 `2fb6ddf297a64edcb6c9257156d0fe78f99eccd0`; public identities and runtime verified.
 Tracker: GitHub issue #1. V2 only; main remains release `6133d07`.
 
+U199 owner decision, 2026-09-16: the guided approach is approved and locked as
+**Guided Terrain Kit 1.0.0**. [Preserved baseline](../../../terrain-baselines/GUIDED-KIT.md).
+The analysis below records the pre-approval experiment and retains its measured
+tradeoffs. Visual acceptance is complete; full campaign integration is separate.
+
 ## Reference review
 
 [Game Dev Buddies, How One Guy FIXED Procedural Generation](https://www.youtube.com/watch?v=Y19Mw5YsgjI),
@@ -147,8 +152,8 @@ reservations. Before campaign integration, transfer those constraints to the
 spherical surface, use slope-limited floor-following corridors, integrate the
 actual nest/tower/commander navigation contracts, add locality/invalidation tests,
 and measure representative real mobile hardware. WFC and whole-planet tile
-replacement are not justified by this bounded experiment. Owner visual acceptance
-is still pending; the demo exists to make that judgment concrete.
+replacement were not justified by this bounded experiment. Owner visual acceptance
+was pending at publication and is now recorded above as approved in U199.
 
 ## Publication
 

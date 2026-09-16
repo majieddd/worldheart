@@ -1,5 +1,11 @@
 # 99 Planets development progress
 
+U199: owner approved and locked **Guided Terrain Kit 1.0.0** as the terrain
+direction for future V2 development. Exact reviewed runtime `2fb6ddf`, tag
+`terrain/guided-kit-v1.0.0`. [Approval and preservation contract](../terrain-baselines/GUIDED-KIT.md).
+The demo and prior evidence stay unchanged. Spherical campaign integration is
+the next engineering milestone; visual direction is now selected.
+
 U195-U198 published and publicly verified at `2fb6ddf`, [PR #58](https://github.com/majieddd/worldheart/pull/58): Codex on `feature/procgen-guided-kit`.
 Full-span video research and a seeded current/guided terrain A/B are complete.
 383 automated tests, 21 local / 21 public browser checks, 491 public identities

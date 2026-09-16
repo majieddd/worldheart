@@ -3,6 +3,12 @@
 This is the front door. If you are new to the repo, read this page first, then
 `CLAUDE.md`, then whichever document below matches what you are about to touch.
 
+Terrain contributors: the owner selected [Guided Terrain Kit 1.0.0](terrain-baselines/GUIDED-KIT.md)
+on 2026-09-16. Preserve its reference tag and manifest. Future V2 terrain work
+should carry its approved shelves, connected passages and irregular shared-corner
+shapes into the game, with separately versioned comparisons for major revisions.
+The existing evidence distinguishes visual approval from spherical gameplay QA.
+
 Art contributors: Atmospheric Ink 1.3.1 is now the selected direction. Preserve
 its [locked archive and recipe](art-candidates/ATMOSPHERIC-INK.md) and the previous
 Hard Cel archive. Complement collaborators' existing work, methods and evidence;
