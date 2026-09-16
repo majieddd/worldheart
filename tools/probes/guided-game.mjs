@@ -10,6 +10,8 @@ export async function run({page,browser,base,out,check,settle,errors}){
   const fixtures=process.argv.includes('--lifecycle-only')?[]:process.argv.includes('--quick')?[['varied','temperate',12345]]:[['varied','temperate',12345],['canyon','arid',9137],['alpine','frozen',44021],['ocean','oceanic',12345],['varied','io',2919286854],['sky','skyarchipelago',12345]];
   for(const [terrain,planet,seed] of fixtures){
     const start=Date.now();await page.goto(`${base}/?map=ninetynine&campaign=0&worldgen=1&terrain=${terrain}&planet=${planet}&seed=${seed}`);await ready();
+    // The inspector is a deferred import after the game's boot-complete marker.
+    await page.waitForFunction(()=>window.WH?.worldgen,null,{timeout:60000});
     const data=await page.evaluate(async()=>{
       const W=await import(new URL('js/world.js',location.href)),n=WH.nav;
       return {seed:WH.CONFIG.seed,version:WH.CONFIG.terrainVersion,theme:WH.CONFIG.environment.theme,stages:WH.bootStages,attempts:n.attempts,nodes:n.n,kit:W.GUIDED?.metrics,floating:W.floatingWorld(),surfaces:W.FEATURES.surfaces.length,routes:n.portalNodes.map(i=>({ground:Number.isFinite(n.dist[i]),air:Number.isFinite(n.airDist[i])})),maxTask:Math.max(...longTasks),overlooks:WH.worldgen.landmarks.filter(l=>l.label).length};

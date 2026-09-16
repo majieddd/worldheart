@@ -1,10 +1,11 @@
 # 99 Planets development progress
 
-U200-U204 locally verified, publication pending: Codex on
+U200-U204 published and publicly verified at **f22e3b2**, [PR #59](https://github.com/majieddd/worldheart/pull/59): Codex on
 `feature/guided-planet-integration`. The approved Guided Terrain Kit now drives
 new V2 planets, with versioned saves and shared navigation/rendering geometry.
-393 automated tests, initial 17-case browser pass, 10-case lifecycle follow-up,
-quake oracle and 250 mirrors pass. Loading costs and device limits are recorded.
+393 automated tests, 18 distinct public browser cases, 493 live identities,
+quake oracle and 250 mirrors pass. Three sampled worlds deliver 45/45 test
+enemies. Loading costs, the retried CDN 503 and device limits are recorded.
 [Plan and evidence](qa/implementation/GUIDED-PLANET-INTEGRATION.md).
 The approved demo stays frozen; main remains `6133d07`.
 
