@@ -1,11 +1,9 @@
 # 99 Planets development progress
 
-U194 active: owner-authorized main release of verified V2 `0e8723e`. Codex on
+U194 verified locally, publishing: owner-authorized main release of V2 `4ca722b`. Codex on
 `release/promote-v2-2026-09-16`. Runtime is promoted unchanged, with previous main
 preserved for rollback and V2 retained for future development. Release checks and
 public identity are tracked in [MAIN-PROMOTION](qa/implementation/MAIN-PROMOTION.md).
-
-U184-U188 locally verified, publishing: Codex on `feature/ink-asset-stage`. Exact screenshot presets,
 
 U189-U193 locally verified, publication pending: Codex on `feature/ink-fps-handling`. New owner Vivid Paint
 default, connected foliage, FPS pace/slide/ADS and a Roblox-focused concept

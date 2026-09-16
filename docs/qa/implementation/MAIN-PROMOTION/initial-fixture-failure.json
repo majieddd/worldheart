@@ -1,0 +1,48 @@
+{
+  "base": "http://127.0.0.1:8141/",
+  "checks": [
+    {
+      "name": "Bare main route opens its own preparation lobby",
+      "ok": true,
+      "actual": "http://127.0.0.1:8141/lobby.html"
+    },
+    {
+      "name": "Released lobby offers default Earth and correct capacity",
+      "ok": true
+    },
+    {
+      "name": "Homeworld link stays on production",
+      "ok": true,
+      "actual": "./?map=ninetynine&campaign=0&home=home-earth"
+    },
+    {
+      "name": "Root Earth starts directly in clear third person",
+      "ok": true,
+      "actual": {
+        "playing": "playing",
+        "home": true,
+        "quiet": true,
+        "possessed": true,
+        "boom": 4,
+        "theme": "earth",
+        "veil": false,
+        "title": false
+      }
+    },
+    {
+      "name": "Root Start waves runs the real nest-based wave director",
+      "ok": true
+    },
+    {
+      "name": "Root saves a home without altering the V2 profile",
+      "ok": true,
+      "actual": {
+        "root": true,
+        "previewHomes": true,
+        "previewCampaign": true
+      }
+    }
+  ],
+  "errors": [],
+  "scope": "Production route and save-isolation smoke. Wave time accelerated; mission destination intercepted after real UI launch."
+}

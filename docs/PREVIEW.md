@@ -2,7 +2,8 @@
 
 ## Production promotion, 2026-09-16
 
-The owner authorized the current verified V2 snapshot `0e8723e` for main. The
+The owner authorized promoting the verified V2 game to main. The final snapshot
+is `4ca722b`, including the collaborator update published during preparation. The
 release record is [MAIN-PROMOTION](qa/implementation/MAIN-PROMOTION.md). After this
 release `/worldheart/` serves that modern game and preparation lobby. V2 remains
 the development route; subsequent preview publication still preserves main.
