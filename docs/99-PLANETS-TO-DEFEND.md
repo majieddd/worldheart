@@ -1,9 +1,11 @@
 # 99 Planets To Defend: running development blueprint
 
-U195-U198 explores a local irregular-grid terrain kit over the current formation
+U195-U198, published at V2 `2fb6ddf` (PR #58), explores a local irregular-grid terrain kit over the current formation
 field. Shared-corner profiles, route clearance and fitted landmarks are compared
 in an isolated seeded demo before any campaign adoption. Main remains the released
-game. [Experiment contract](qa/implementation/PROCGEN-GUIDED-KIT.md).
+game. All 21 public browser checks and 491 deployment identities pass. Visual
+judgment favors selective cliff and landmark adoption, with campaign integration
+left for owner review. [Experiment contract](qa/implementation/PROCGEN-GUIDED-KIT.md).
 
 U184-U188 extends the approved 1.3.1 demo with two screenshot presets, reliable
 fallback attacks, crisp held weapons and an asset/animation inspection stage.
