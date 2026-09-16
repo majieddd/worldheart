@@ -8,7 +8,7 @@ export function homeworldStation(content,message,refresh){
   const catalogue=homeStore.list();content.replaceChildren();
   const add=(tag,text,parent=content)=>{const e=document.createElement(tag);e.textContent=text;parent.append(e);return e;};
   const section=add('section','');section.className='home-lobby';
-  add('p','Your own corner of the galaxy. Visit a captured planet to build, decorate or start an incursion.',section);
+  add('p','Earth is yours from the start. Expand other planets fully and defeat their sovereigns to unlock more homeworlds. Build, decorate, or start endless waves whenever you choose.',section);
   if(!catalogue.ok)add('p',catalogue.error,section);
   const selected=catalogue.homes.find(h=>h.id===catalogue.selected);
   if(selected){
@@ -18,14 +18,14 @@ export function homeworldStation(content,message,refresh){
   }else{
     const empty=add('div','',section);empty.className='home-featured';
     add('h3','A planet to call home',empty);
-    add('p','Expand your Worldheart until its base covers a whole planet. It will appear here automatically, even if you continue the expedition.',empty);
+    add('p','Expand your Worldheart until its base covers a whole planet, then defeat its sovereign to unlock it.',empty);
   }
-  add('h3',`Captured planets · ${catalogue.homes.length} / 99`,section);
+  add('h3',`Home planets · ${catalogue.homes.length} / 100`,section);
   for(const home of catalogue.homes){
     const card=add('article','',section);card.className='home-choice';card.dataset.home=home.id;
     add('strong',home.name,card);
     add('p',`${PLANET_THEMES[home.world.environment.theme]?.name||home.world.environment.theme} · ${TERRAIN_PACKS[home.world.terrain]?.name||home.world.terrain}`,card);
-    add('p',`Wave ${home.checkpoint.run.wavesCleared} checkpoint · ${home.decorations.length} decorations · ${home.checkpoint.towers.length} towers`,card);
+    add('p',`Wave ${home.defenseCheckpoint?.run.wavesCleared??home.checkpoint.run.wavesCleared} checkpoint · ${home.decorations.length} decorations · ${home.checkpoint.towers.length} towers`,card);
     const b=add('button',home.id===catalogue.selected?'Current Homeworld':'Make Homeworld',card);b.type='button';b.dataset.chooseHome=home.id;b.setAttribute('aria-pressed',String(home.id===catalogue.selected));
     b.onclick=()=>{const result=homeStore.choose(home.id);if(result.ok){refresh();message.textContent=`${home.name} is your Homeworld. Your other planets are preserved.`;content.querySelector(`[data-choose-home="${home.id}"]`)?.focus();}else message.textContent=result.error;};
   }

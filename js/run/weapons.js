@@ -56,10 +56,11 @@ export function validWeapon(item) {
     && Array.isArray(item.affixes) && item.affixes.length <= 1 && item.affixes.every(x => ['nimble', 'forceful', 'farseeing'].includes(x)) && validMake(item.make);
 }
 const clone = value => JSON.parse(JSON.stringify(value));
-export function generateWeapon({ id, seed, tier = 1, family = null, rng, manufacturer=null, modifier=null, legacy=false }) {
+export function generateWeapon({ id, seed, tier = 1, family = null, rng, manufacturer=null, modifier=null, legacy=false, maxRarity='relic' }) {
   const keys = Object.keys(FAMILIES), roll = rng();
   family ||= keys[Math.floor(rng() * keys.length)];
-  const rarity = roll < 0.68 ? 'common' : roll < 0.9 ? 'uncommon' : roll < 0.975 ? 'rare' : roll < .995 ? 'epic' : 'relic';
+  const rolled = roll < 0.68 ? 'common' : roll < 0.9 ? 'uncommon' : roll < 0.975 ? 'rare' : roll < .995 ? 'epic' : 'relic';
+  const rarity=RARITIES[Math.min(RARITIES.indexOf(rolled),Math.max(0,RARITIES.indexOf(maxRarity)))];
   const parts = {};
   for (const slot of Object.keys(PARTS)) {
     const pool = Object.keys(PARTS[slot]).filter(key => validPart(family, slot, key));

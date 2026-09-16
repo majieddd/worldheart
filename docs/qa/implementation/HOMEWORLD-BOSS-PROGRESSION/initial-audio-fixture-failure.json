@@ -1,0 +1,102 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "evidenceType": "Instrumented browser fixtures, not natural play",
+  "checks": [
+    {
+      "name": "Claim unavailable before full expansion",
+      "ok": true
+    },
+    {
+      "name": "Fixture buys all ten real base upgrades and places three defenses",
+      "ok": true,
+      "detail": 10
+    },
+    {
+      "name": "Claim reloads the same seed, radius, terrain, anchor and three tower upgrades",
+      "ok": true,
+      "detail": {
+        "seed": 36102,
+        "radius": 240,
+        "terrain": "varied",
+        "environment": {
+          "version": 5,
+          "solar": false,
+          "cloud": false,
+          "rings": false,
+          "tilt": 0,
+          "radius": 240,
+          "showcase": false,
+          "tags": null,
+          "exclusive": false,
+          "pack": "varied",
+          "coverage": 0,
+          "biomes": null,
+          "seed": 12345,
+          "key": "temperate",
+          "theme": "temperate",
+          "name": "Garden world",
+          "star": {
+            "type": "G",
+            "name": "Yellow star",
+            "luminosity": 1,
+            "color": 16771524
+          },
+          "orbitAU": 1,
+          "relativeOrbit": 1,
+          "flux": 1,
+          "warmth": 0,
+          "wetness": -0.0031300720060244203,
+          "tectonics": 0.15283568607643247,
+          "oceanShift": 0,
+          "weights": {}
+        },
+        "planetIndex": 1,
+        "centre": [
+          0.04765856564488313,
+          0.2852714315428485,
+          0.9572611302388531
+        ],
+        "heart": [
+          0.04765856564488313,
+          0.2852714315428485,
+          0.9572611302388531
+        ],
+        "portals": [
+          [
+            -0.44548767803124983,
+            0.3185640871383616,
+            0.8366944789515632
+          ],
+          [
+            0.5324940004642136,
+            0.23691099522778164,
+            0.8126028056866407
+          ],
+          [
+            0.04174202024075459,
+            0.7193370018007685,
+            0.6934060005411704
+          ],
+          [
+            0.016693316116343646,
+            -0.09458385247176809,
+            0.9953769276252281
+          ],
+          [
+            0.3851047086970681,
+            -0.09123407135441808,
+            0.9183521696840723
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Home starts peaceful with full planet ownership",
+      "ok": true
+    }
+  ],
+  "errors": [
+    "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+  ],
+  "pass": false
+}

@@ -348,7 +348,8 @@ export class OrbitRig {
     // Floored in absolute units. A frontier-scaled camScale shrinks with a
     // small circle, and 0.04 of a 26-unit scale put the camera about a metre
     // off the ground - inside the towers it was meant to be looking at.
-    return Math.max(this.camScale * CAM_TUNE.minAlt, MIN_CAM_HEIGHT);
+    const closeScale=this.frontierTheta!=null?Math.min(this.camScale,CONFIG.planetRadius*.05*2.2):this.camScale;
+    return Math.max(closeScale * CAM_TUNE.minAlt, MIN_CAM_HEIGHT);
   }
 
   /* The FAR limit is measured against the planet radius, not camScale, and the

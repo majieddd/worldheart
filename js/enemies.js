@@ -205,6 +205,7 @@ class Enemy {
     this._frzStamp = -1;
     this._frzOk = true;
     this.phase = Math.random() * Math.PI * 2;
+    this.conquestWave=null;this.summonClock=0;
     this.hopPrev = 0;
     this.plates = 6;
     // How far the body actually marched this frame, in world units per

@@ -4,12 +4,13 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright');
 const base=(process.env.WH_BASE_URL||'http://127.0.0.1:8141').replace(/\/$/,''),out=resolve(process.argv[2]||'artifacts/manufacturers/local');mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:1440,height:1000}}),checks=[],errors=[];
+page.setDefaultNavigationTimeout(180000);
 page.on('pageerror',e=>errors.push(String(e)));
 const check=(name,ok,detail)=>{checks.push({name,ok:!!ok,detail});console.log((ok?'PASS ':'FAIL ')+name);};
 const ready=async()=>{await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'),null,{timeout:180000});};
 try{
   await page.goto(base+'/lobby.html#homeworld');await page.waitForFunction(()=>window.LOBBY);
-  check('New players see how to capture a home, without a broken visit link',await page.evaluate(()=>document.querySelector('#station-content').textContent.includes('covers a whole planet')&&!document.querySelector('.home-visit')));
+  check('New players have an unlocked Earth home and a working visit link',await page.evaluate(()=>document.querySelector('.home-featured').textContent.includes('Earth')&&!!document.querySelector('.home-visit')));
   await page.goto(base+'/debug.html#weapons/carbine-gold');await page.waitForFunction(()=>window.DEBUG_WORLD,null,{timeout:180000});
   const debug=await page.evaluate(()=>{const d=DEBUG_WORLD;return {name:d.weaponLab.item.make.brand,shown:document.querySelectorAll('#debug-weapon-card img').length,meshes:d.selected.group.children.length};});
   check('Debug starts on a real manufacturer model and card',debug.name==='skibidi'&&debug.shown===1,debug);
@@ -95,24 +96,25 @@ try{
   await page.evaluate(()=>{
     WH.game.gold=30000;for(let i=0;i<10;i++)WH.mode99.upgradeHeart();WH.waves.state='idle';WH.mode99.commander.swingT=0;WH.mode99.commander.strikePending=false;
   });
-  await page.waitForFunction(()=>WH.mode99.home.capturedId,null,{timeout:30000});
+  await page.evaluate(()=>{const r=WH.mode99.run;const wave=r.getConquestWave();r.defeatConquestBoss(wave);while(r.checkpoint().wavesCleared<wave){r.completeWave();if(r.getDraft()){r.vote('solo',0);r.tick(0);}}});
+  await page.waitForFunction(()=>WH.mode99.home.active,null,{timeout:30000});
   const captures=await page.evaluate(async()=>{
     const id=WH.mode99.home.capturedId;
     const {homeStore}=await import(new URL('js/modes/home-store.js',location.href)),first=homeStore.get(id),second=structuredClone(first);second.id='home-second-test';second.name='QA Moon Haven';second.world.environment.theme='moon';second.world.seed=12346;
     first.name='QA Verdant Home';homeStore.save(first);
     homeStore.save(second);return {id,homes:homeStore.list().homes.length,active:WH.mode99.home.active,url:location.href};
-  });check('Full coverage automatically enters the catalogue without interrupting expedition',captures.homes===2&&!captures.active&&!captures.url.includes('home='),captures);
+  });check('Completed conquest automatically enters the catalogue and adopts the home',captures.homes===3&&captures.active&&!captures.url.includes('home='),captures);
   await page.goto(base+'/lobby.html?worldgen=1#homeworld');await page.waitForFunction(()=>window.LOBBY);
-  check('Captured homes are shared with the generator while expedition saves stay separate',await page.locator('[data-home]').count()===2);
+  check('Captured homes are shared with the generator while expedition saves stay separate',await page.locator('[data-home]').count()===3);
   await page.goto(base+'/lobby.html#homeworld');await page.waitForFunction(()=>window.LOBBY);await page.screenshot({animations:'disabled',path:out+'/homeworld-desktop.png'});
-  check('Lobby has a reachable fifth Homeworld station and two captured planets',await page.evaluate(()=>LOBBY.stations.some(s=>s.key==='homeworld')&&document.querySelectorAll('[data-home]').length===2));
+  check('Lobby has a reachable fifth Homeworld station and Earth plus two captured planets',await page.evaluate(()=>LOBBY.stations.some(s=>s.key==='homeworld')&&document.querySelectorAll('[data-home]').length===3));
   await page.locator('[data-choose-home="home-second-test"]').click();await page.reload();await page.waitForFunction(()=>window.LOBBY);
-  check('Choosing a new Homeworld persists while keeping both captures',await page.evaluate(()=>document.querySelector('.home-featured h3').textContent==='QA Moon Haven'&&document.querySelectorAll('[data-home]').length===2));
+  check('Choosing a new Homeworld persists while keeping both captures',await page.evaluate(()=>document.querySelector('.home-featured h3').textContent==='QA Moon Haven'&&document.querySelectorAll('[data-home]').length===3));
   await page.setViewportSize({width:390,height:844});await page.screenshot({animations:'disabled',path:out+'/homeworld-phone.png'});
   check('Homeworld section fits phone width',await page.evaluate(()=>{const p=document.querySelector('#station-panel');return p.scrollWidth<=p.clientWidth&&p.getBoundingClientRect().right<=innerWidth;}));
   await page.locator('.home-visit').click();await ready();check('Go to Homeworld loads chosen saved planet peacefully',await page.evaluate(()=>WH.mode99.home.record.id==='home-second-test'&&WH.mode99.home.quiet));
   const homeURL=page.url(),phoneContext=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true,storageState:await page.context().storageState()}),phone=await phoneContext.newPage();
-  phone.on('pageerror',e=>errors.push(String(e)));await phone.goto(homeURL);await phone.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'),null,{timeout:180000});await phone.locator('#btn-begin').tap();
+  phone.on('pageerror',e=>errors.push(String(e)));await phone.goto(homeURL);await phone.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'),null,{timeout:180000});
   await phone.locator('#touch-status').tap();await phone.locator('#touch-weapons').tap();
   check('Touch menu opens manufacturer inventory with no stacked menu',await phone.evaluate(()=>document.querySelector('#weapon-dialog').open&&!document.querySelector('#touch-menu').open&&!!document.querySelector('#weapon-dialog .wc-footer')));
   await phone.locator('#weapon-dialog .weapon-card').first().scrollIntoViewIfNeeded();await phone.screenshot({path:out+'/inventory-real-touch.png',animations:'disabled'});

@@ -51,7 +51,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     playerIds: ['solo'],
     startGold: CONFIG.economy.startGold + (profile.bonuses.interest ? 150 : 0),
     profile,
-    draftSeconds: null,
+    draftSeconds: homeCheckpoint?10:null,
     restoredVictory:!!restoredVictory,
   });
   if(homeCheckpoint&&!run.restoreCheckpoint(homeCheckpoint.run))throw Error('Home run checkpoint is incompatible. Your save is unchanged.');
@@ -224,6 +224,13 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       } else if (e.type === 'heartUpgraded') {
         ui.toast(`Worldheart raised to level ${e.level}: towers may reach mark ${run.getTierCap()}`, 'info');
         ui.audio?.play('upgrade');
+        if(e.level===MAX_HEART_LEVEL&&!home?.active&&run.queueConquest(waves.wave+1)){
+          waves.conquestWave=run.getConquestWave();waves.endless=true;
+          ui.banner('PLANET SOVEREIGN','Full base coverage. The next wave brings this planet\'s strongest guardian and its minions.',false);
+        }
+      } else if(e.type==='planetConquered'){
+        home?.setPeace();
+        if(campaign){inventory.settle(false);campaign.commit(s=>resolveAssault(s,assaultId,'victory',salvageSnapshot()));}
       } else if (e.type === 'draftOpened') {
         ui.showDraft(e.offers, (i) => {
           if (run.vote('solo', i)) handle(run.tick(0));
@@ -327,7 +334,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     const count = newNestCount(wave);
     const fresh = world.portals.filter(p => p.established && p.sourceWave === wave);
     for (let i=fresh.length; i<count; i++) {
-      const guardian = wave % TOTAL_WAVES === 0;
+      const guardian = wave % TOTAL_WAVES === 0 || wave===waves.conquestWave;
       const p = establishNest(world.portals.filter(p => p.established).length, wave, guardian);
       if (!p) {
         // One healthy nest still starts a milestone wave. If none can fit,
@@ -349,11 +356,17 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   };
   waves.onNestSpawn = (q, enemy) => {
     if (q.type !== 'colossus') return;
-    for (const p of world.portals) p.guardianPending=false;
+    for (const p of world.portals) if(p.node===q.portal)p.guardianPending=!!q.conquest;
     enemy.guardianNest=q.portal;
+    if(q.conquest){enemy.conquestWave=q.wave;enemy.summonClock=0;enemy.type={...enemy.type,name:'Planet Sovereign',atk:enemy.type.atk*1.35};}
+  };
+  waves.relocateGuardian=wave=>{
+    const p=establishNest(world.portals.filter(p=>p.established).length,wave,true);
+    if(!p)return null;waves.guardianNode=p.node;waves.nestSources.push(p.node);return p.node;
   };
   enemies.reinforcementSource = parent => {
     const sources=waves.activePortals();
+    if(parent.conquestWave&&!sources.length){const node=waves.relocateGuardian(parent.conquestWave);if(node!==null)parent.sourceNest=node;return node??-1;}
     return sources.includes(parent.sourceNest)?parent.sourceNest:(sources[0]??-1);
   };
   enemies.onReinforcement = (child,parent,node) => {
@@ -416,6 +429,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       // Hold this dead identity outside the generic pool until its replacement is spawned.
       const pooled = allies.pool.indexOf(dead); if (pooled >= 0) allies.pool.splice(pooled,1);
       fallenKey = dead.typeKey; crystals.loseCarried();
+      if(home?.active){home.defeat();return;}
       if (respawn.die(inside) === 'respawning') { ui.toast('Commander fell inside the base. Respawning in 30 seconds.', 'warn'); return; }
       if(!run.loseRun())return;
       crystals.loseCarried();
@@ -510,8 +524,14 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const previousKill = enemies.onKill;
   enemies.onKill = e => {
     previousKill?.(e);
+    if(e.conquestWave&&run.defeatConquestBoss(e.conquestWave)){
+      for(const p of world.portals)p.guardianPending=false;
+      // The sovereign's death wins the planet; escorts do not delay the unlock.
+      waves.queues=[];waves.raidQueue=[];waves.pendingSpawns=0;
+      for(const other of [...enemies.active])if(other!==e)enemies._release(other);
+    }
     if (!shouldDrop({boss:!!e.type.boss,elite:e.typeKey === 'aegis'},lootRng)) return;
-    const item = generateWeapon({id:`weapon-${assaultId || CONFIG.seed}-${++lootSequence}`,seed:(lootRng()*0x100000000)>>>0,tier:CONFIG.planetIndex || 1,rng:lootRng});
+    const item = generateWeapon({id:`weapon-${assaultId || CONFIG.seed}-${++lootSequence}`,seed:(lootRng()*0x100000000)>>>0,tier:CONFIG.planetIndex || 1,rng:lootRng,maxRarity:home?.active?'rare':'relic'});
     if (inventory.register(item)) {
       let node = nav.nearestWalkableNode(e.dir,true,e.height);
       if (node < 0 || !Number.isFinite(nav.dist[node])) node = nav.heartNode;
@@ -910,7 +930,9 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
           tier:t.tier,terrain:t.terrain,invested:t.invested,kills:t.kills,damageDealt:t.damageDealt,patrol:t.patrolDir?.toArray()})),
         faults:TERRAIN_FAULTS.map(f=>({...f,...Object.fromEntries(['dir','axis','side','protectedDir'].map(k=>[k,f[k].toArray()]))}))}};
   }
-  home=new HomePlanet({game,ui,world,nav,rig,possession,run,weather,snapshot:homeSnapshot});
+  home=new HomePlanet({game,ui,world,nav,rig,possession,run,weather,snapshot:homeSnapshot,equipment:()=>{
+    inventory.settle(false);return {inventory:inventory.snapshot(),lootSequence,lootRng:lootRng.state(),forged:forge.forged};
+  }});
   if(homeCheckpoint){
     game.gold=homeCheckpoint.gold;game.lives=homeCheckpoint.lives;game.maxLives=homeCheckpoint.maxLives;
     game.kills=homeCheckpoint.kills;game.score=homeCheckpoint.score;lootSequence=homeCheckpoint.lootSequence||0;
@@ -924,12 +946,29 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     nav.recomputeFlow();
     for(const drop of homeCheckpoint.loot||[])if(inventory.register(drop.item))loot.add(drop.item,new THREE.Vector3(...drop.dir),drop.height);
     if(caches&&homeCheckpoint.caches){caches.caches=homeCheckpoint.caches.map(c=>({...c,dir:new THREE.Vector3(...c.dir)}));for(const c of caches.caches)crystals.register(c.id);caches._render();}
-    rng.restore(homeCheckpoint.rng);crystalRng.restore(homeCheckpoint.crystalRng);lootRng.restore(homeCheckpoint.lootRng);SIM_RANDOM.next.restore(homeCheckpoint.simRng);
-    ui.onBegin=()=>{
-      game.state='playing';game.paused=false;ui.el['title-overlay'].classList.remove('show');rig.autoOrbit=0;
-      rig.flyTo(world.heart.group.position,rig.defaultDist,.5);ui.audio?.start();home.setPeace();ui.refresh();return false;
-    };
-    game.onGameEnd=()=>home.defeat();
+    if(homeCheckpoint.rng!==undefined)rng.restore(homeCheckpoint.rng);
+    if(homeCheckpoint.crystalRng!==undefined)crystalRng.restore(homeCheckpoint.crystalRng);
+    if(homeCheckpoint.lootRng!==undefined)lootRng.restore(homeCheckpoint.lootRng);
+    if(homeCheckpoint.simRng!==undefined)SIM_RANDOM.next.restore(homeCheckpoint.simRng);
+    ui.onBegin=()=>{enterHome();return false;};
+  }
+  const previousEnd=game.onGameEnd;game.onGameEnd=won=>{if(!won&&home.active){home.defeat();return;}previousEnd?.(won);};
+  const previousLeak=enemies.onLeak;enemies.onLeak=e=>{
+    // A sovereign reaching the heart is a loss, never a free capture.
+    if(e.conquestWave)game.lives=0;previousLeak?.(e);
+  };
+  function enterHome(){
+    if(!home.active)return false;
+    game.state='playing';game.paused=false;ui.el['title-overlay'].classList.remove('show');rig.autoOrbit=0;
+    home.setPeace();home.clearFog();
+    // Spawn beside the crystal, not inside its enlarged full-base model.
+    const arrival=centre.clone().addScaledVector(commander.fwd,8/CONFIG.planetRadius).normalize();
+    const node=nav.nearestWalkableNode(arrival);
+    if(node>=0){nav.nodeDir(node,commander.dir);commander.height=nav.height[node];commander.moveNode=node;
+      commander.fwd.addScaledVector(commander.dir,-commander.fwd.dot(commander.dir)).normalize();
+      commander.renderDir?.copy(commander.dir);}
+    possession.enter(commander,{lock:false});possession.boom=possession.boomWant=4;
+    ui.audio?.start();ui.refresh();home.dirty=true;home.save();return true;
   }
   if(CONFIG.homeMissing)ui.onBegin=()=>{ui.toast('This home save is unavailable in this browser. Return to the lobby or import its backup.','warn');return false;};
   const started=waves.onWaveStart;waves.onWaveStart=(n,comp)=>{started?.(n,comp);weather.wave(n);};
@@ -941,7 +980,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   updateCrystals();
 
   return {
-    run,home,
+    run,home,enterHome,
     get commander() { return commander; },
     respawn,
     mounts,forge,weather,geysers,abilities,focusCommander,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
@@ -963,6 +1002,10 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     update(dt) {
       home.update(dt);
       const activeDt=run.getPhase()==='building'?dt*game.speed:0;
+      for(const e of enemies.active)if(e.conquestWave&&!e.dead){
+        e.summonClock+=activeDt;
+        if(e.summonClock>=12){e.summonClock%=12;for(let i=0;i<3;i++)enemies._spawnReinforcement(e);}
+      }
       mounts.update(activeDt);if(!home.quiet)weather.update(activeDt);
       if(game.terrainBusy)return;
       abilities.update(activeDt);
@@ -995,7 +1038,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       // Scaled by paceMul like the director's own breather: this path was
       // dead until the director stopped unparking itself (see waves.js), so
       // the unscaled value here had never actually been played.
-      if(home.quiet)return;
+      if(home.quiet||run.hasConquered()&&!home.active)return;
       if (waves.state === 'idle') {
         if (waves.timedNests) waves.state = waves.wave ? (waves.queues.length ? 'spawning' : 'combat') : 'countdown';
         else { waves.state = 'countdown'; waves.countdown = CONFIG.waves.prepTime * waves.paceMul; }

@@ -1,0 +1,81 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "checks": [
+    {
+      "name": "Max base schedules next boss at current multiplier and cannot claim early",
+      "ok": true,
+      "detail": {
+        "wave": 23,
+        "limit": 23,
+        "claim": null,
+        "level": 10
+      }
+    },
+    {
+      "name": "Fixture disrupts the queued sovereign nest through the quake destruction path",
+      "ok": true,
+      "detail": {
+        "node": 115651,
+        "destroyed": true
+      }
+    },
+    {
+      "name": "Planet Sovereign actually spawns stronger than current-wave ordinary boss",
+      "ok": true,
+      "detail": {
+        "wave": 23,
+        "scale": 8.04375,
+        "expected": 8.04375,
+        "name": "Planet Sovereign",
+        "protected": true,
+        "waveNow": 23,
+        "source": 115648
+      }
+    },
+    {
+      "name": "Sovereign summons minions at its physical nest with assault ancestry",
+      "ok": true,
+      "detail": {
+        "added": 3,
+        "children": 3
+      }
+    },
+    {
+      "name": "Sovereign defeat disperses minions, captures the planet and automatically stops waves",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 24,
+        "cleared": 23,
+        "checkpoint": 23,
+        "possessed": false,
+        "boom": 0,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 36102,
+        "theme": "temperate",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Captured home remains selectable alongside Earth",
+      "ok": true
+    },
+    {
+      "name": "Newly captured home can immediately restart endless beyond conquest wave",
+      "ok": true
+    },
+    {
+      "name": "No browser exceptions",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

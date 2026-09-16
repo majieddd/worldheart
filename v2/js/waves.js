@@ -174,7 +174,7 @@ export class WaveDirector {
     this.endless = false;
   }
 
-  get limit() { return this.homeWaveLimit ?? (this.endless ? Infinity : CONFIG.waves.count); }
+  get limit() { return this.conquestWave ?? this.homeWaveLimit ?? (this.endless ? Infinity : CONFIG.waves.count); }
 
   begin() {
     this.wave = 0;
@@ -224,7 +224,8 @@ export class WaveDirector {
     if (!this.nestOnly && nowPortals > prevPortals && this.wave > 1 && this.onPortalWake) {
       this.onPortalWake(nowPortals - 1);
     }
-    const comp = planetGroups(waveComp(this.wave),CONFIG.campaign);
+    const conquest=this.wave===this.conquestWave;
+    const comp = planetGroups(waveComp(conquest?10:this.wave),CONFIG.campaign);
     const scale = hpScale(this.wave)*(CONFIG.campaign?.enemyHealth||1);
     // Enemy melee grows with the wave so a garrison does not stay free forever,
     // but on a much shallower slope than health does and with a ceiling, so a
@@ -243,7 +244,7 @@ export class WaveDirector {
         const portal = portals[i % portals.length];
         this.queues.push({
           t: this.clock + (1.2 + i * g.gap + SIM_RANDOM.next() * 0.3) * this.paceMul + (this.nestOnly ? 3 : 0),
-          type: g.type, portal, scale, wave: this.wave,
+          type: g.type, portal, scale:scale*(conquest&&g.type==='colossus'?2.25:1), wave: this.wave, conquest:conquest&&g.type==='colossus',
         });
       }
     }
@@ -260,7 +261,7 @@ export class WaveDirector {
     if (this.timedNests) this.countdown = this.wave < this.limit ? nestWaveInterval(this.wave) : 0;
     this.state = 'spawning';
     this.refreshNests();
-    if (this.onWaveStart) this.onWaveStart(this.wave, waveComp(this.wave));
+    if (this.onWaveStart) this.onWaveStart(this.wave, comp);
     return true;
   }
 
@@ -424,12 +425,17 @@ export class WaveDirector {
       if (this.nestOnly) {
         // Cancellation is earned by destroying the visible source. Existing
         // enemies remain owed; the protected guardian queue cannot vanish.
-        this.queues = this.queues.filter(q => !this.destroyedNodes?.has(q.portal));
+        this.queues = this.queues.filter(q => q.conquest || !this.destroyedNodes?.has(q.portal));
         this.pendingSpawns = this.queues.length;
       }
       this.clock += dt;
       while (this.queues.length && this.queues[0].t <= this.clock) {
         const q = this.queues[0];
+        if(q.conquest&&this.destroyedNodes?.has(q.portal)){
+          const node=this.relocateGuardian?.(q.wave);
+          if(node==null)break;
+          q.portal=node;
+        }
         // Pool pressure delays a spawn; it must not erase an owed enemy and
         // make a crowded campaign wave pay out before it has been defended.
         const enemy = this.enemies.spawn(q.type,q.portal,q.scale);
