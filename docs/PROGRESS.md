@@ -1,9 +1,32 @@
 # 99 Planets development progress
 
-U195-U198 locally verified, publication pending: Codex on `feature/procgen-guided-kit`.
+U205-U208: Codex on `feature/99-planets-art-direction`. Modern-Earth concept
+collection for **99 Planets To Defend**, five owner-defined manufacturers, nine
+new art plates, five commander and six tower redraws, and three interactive UI
+compositions. Previous artboard is preserved as a medieval-planet study.
+Initial browser review passes 76/76; integrated verification/publication pending.
+Owner UI selection is pending. [Scope and evidence](qa/implementation/99-ART-DIRECTION.md)
+and [downloadable design foundation](../lib/99-art/design-foundation.md).
+The collaborator's guided terrain integration is retained; main is unchanged.
+
+U200-U204 locally verified, publication pending: Codex on
+`feature/guided-planet-integration`. The approved Guided Terrain Kit now drives
+new V2 planets, with versioned saves and shared navigation/rendering geometry.
+393 automated tests, initial 17-case browser pass, 10-case lifecycle follow-up,
+quake oracle and 250 mirrors pass. Loading costs and device limits are recorded.
+[Plan and evidence](qa/implementation/GUIDED-PLANET-INTEGRATION.md).
+The approved demo stays frozen; main remains `6133d07`.
+
+U199: owner approved and locked **Guided Terrain Kit 1.0.0** as the terrain
+direction for future V2 development. Exact reviewed runtime `2fb6ddf`, tag
+`terrain/guided-kit-v1.0.0`. [Approval and preservation contract](../terrain-baselines/GUIDED-KIT.md).
+The demo and prior evidence stay unchanged. Spherical campaign integration is
+the next engineering milestone; visual direction is now selected.
+
+U195-U198 published and publicly verified at `2fb6ddf`, [PR #58](https://github.com/majieddd/worldheart/pull/58): Codex on `feature/procgen-guided-kit`.
 Full-span video research and a seeded current/guided terrain A/B are complete.
-383 automated tests, 21 browser checks and all 54 guided approaches across 18
-local fixtures pass. Selective cliff/landmark adoption is recommended; no campaign
+383 automated tests, 21 local / 21 public browser checks, 491 public identities
+and all 54 guided approaches across 18 local fixtures pass. Selective cliff/landmark adoption is recommended; no campaign
 replacement is included. V2 only, main stays `6133d07`.
 [Scope, visual judgment and evidence](qa/implementation/PROCGEN-GUIDED-KIT.md).
 

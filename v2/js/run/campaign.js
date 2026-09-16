@@ -1,4 +1,5 @@
 import { createInventory, COMPATIBILITY } from './weapons.js';
+import {CURRENT_TERRAIN_VERSION,validTerrainVersion} from './terrain-version.js';
 
 export const SAVE_VERSION = 1;
 const clone = x => JSON.parse(JSON.stringify(x));
@@ -36,7 +37,7 @@ export function validSave(s) {
   if (['ready','complete'].includes(e.status)) return a===null;
   if (!a || a.id!==`${e.id}-${e.planet}-${e.attempt}` || !integer(a.paid,0,32767)
     || !integer(a.coins,0,1e9) || !integer(a.effectiveSeed,1,0xffffffff)
-    || !validInventory(e.commander,a.start)) return false;
+    || !validTerrainVersion(a.terrainVersion) || !validInventory(e.commander,a.start)) return false;
   if(a.endlessPaid!==undefined&&!integer(a.endlessPaid,15,1e6))return false;
   if(e.status!=='victory')return a.victory===null;
   const v=a.victory;
@@ -59,13 +60,13 @@ export function extendExpedition(s,limit) {
   if(e.status==='complete'){e.status='ready';e.planet=e.completed+1;}
   return true;
 }
-export function beginAssault(s,{commander,inventory,effectiveSeed}) {
+export function beginAssault(s,{commander,inventory,effectiveSeed,terrainVersion=CURRENT_TERRAIN_VERSION}) {
   const e=s.expedition;if(!e||!['ready','assault','defeat'].includes(e.status))return false;
   if(e.status==='assault')return e.assault.id;
-  if(!Object.hasOwn(COMPATIBILITY,commander)||!validInventory(commander,inventory)||!integer(effectiveSeed,1,0xffffffff))return false;
+  if(!validTerrainVersion(terrainVersion)||!Object.hasOwn(COMPATIBILITY,commander)||!validInventory(commander,inventory)||!integer(effectiveSeed,1,0xffffffff))return false;
   if(e.commander&&e.commander!==commander)return false;
   e.commander=commander;e.banked ||= clone(inventory);e.attempt++;
-  e.assault={id:`${e.id}-${e.planet}-${e.attempt}`,paid:0,coins:0,effectiveSeed,start:clone(e.banked),victory:null};
+  e.assault={id:`${e.id}-${e.planet}-${e.attempt}`,paid:0,coins:0,effectiveSeed,terrainVersion,start:clone(e.banked),victory:null};
   e.status='assault';return e.assault.id;
 }
 export function awardWave(s,id,wave,coins) {

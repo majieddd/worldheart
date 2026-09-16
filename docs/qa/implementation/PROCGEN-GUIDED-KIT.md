@@ -1,8 +1,13 @@
 # Guided terrain kit experiment
 
-U195-U198. Codex on `feature/procgen-guided-kit`, 2026-09-16. Locally verified,
-publication pending.
+U195-U198. Codex on `feature/procgen-guided-kit`, 2026-09-16. Published at
+`2fb6ddf297a64edcb6c9257156d0fe78f99eccd0`; public identities and runtime verified.
 Tracker: GitHub issue #1. V2 only; main remains release `6133d07`.
+
+U199 owner decision, 2026-09-16: the guided approach is approved and locked as
+**Guided Terrain Kit 1.0.0**. [Preserved baseline](../../../terrain-baselines/GUIDED-KIT.md).
+The analysis below records the pre-approval experiment and retains its measured
+tradeoffs. Visual acceptance is complete; full campaign integration is separate.
 
 ## Reference review
 
@@ -58,7 +63,7 @@ successful V2 Pages identity and runtime verification. Reject or qualify failure
 - U195: complete reference analysis and architecture comparison. Done.
 - U196: seeded comparison core, input-driven local demo. Verified.
 - U197: adversarial seeds, rendering and interaction review. Verified.
-- U198: publish isolated V2 slice and verify public identities/runtime. In progress.
+- U198: publish isolated V2 slice and verify public identities/runtime. Complete.
 
 ## Implemented slice
 
@@ -147,5 +152,19 @@ reservations. Before campaign integration, transfer those constraints to the
 spherical surface, use slope-limited floor-following corridors, integrate the
 actual nest/tower/commander navigation contracts, add locality/invalidation tests,
 and measure representative real mobile hardware. WFC and whole-planet tile
-replacement are not justified by this bounded experiment. Owner visual acceptance
-is still pending; the demo exists to make that judgment concrete.
+replacement were not justified by this bounded experiment. Owner visual acceptance
+was pending at publication and is now recorded above as approved in U199.
+
+## Publication
+
+[V2 terrain workshop](https://majieddd.github.io/worldheart/v2/procgen-lab.html?seed=12345&terrain=varied)
+is published from `2fb6ddf`. [PR #58](https://github.com/majieddd/worldheart/pull/58)
+is open for review, not merged. The [Pages action](https://github.com/majieddd/worldheart/actions/runs/35069534695)
+succeeded. [All 21 public browser checks](PROCGEN-GUIDED-KIT/public.json) pass,
+including real-input movement and the complete scout traversal. The public
+[comparison render](PROCGEN-GUIDED-KIT/public-comparison.png) was inspected.
+Main remains `6133d0713f4e93e6fc743c35d9dd0fd1834bc98f`.
+[All 491 public/source identity checks](PROCGEN-GUIDED-KIT/public-identity.json)
+pass for the combined deployment, including the stable root and the new preview
+entry/modules. This closing evidence is committed to the review branch; the
+published runtime remains the tested `2fb6ddf` snapshot.

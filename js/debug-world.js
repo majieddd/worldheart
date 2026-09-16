@@ -107,7 +107,7 @@ function terrainPaint(c,dir,h,slope){
 
 function terrainTile(type,seed){
   const sample=formationSample(type,seed),n=type==='grand'||type==='labyrinth'?128:96,half=sample.half;
-  const features=createTerrainFeatures(sample.field,240,(x,y,z)=>sample.field.height(x,y,z)),a=sample.anchor;
+  const features=createTerrainFeatures(sample.field,240,sample.surface),a=sample.anchor;
   const geo=new THREE.PlaneGeometry(half*2*SCALE,half*2*SCALE,n,n);geo.rotateX(-Math.PI/2);
   const p=geo.attributes.position;let low=0,high=0;
   for(let i=0;i<p.count;i++){const h=sample.height(p.getX(i)/SCALE,p.getZ(i)/SCALE);p.setY(i,h*SCALE);low=Math.min(low,h);high=Math.max(high,h);}

@@ -18,6 +18,8 @@ const ready=async p=>{await p.waitForFunction(()=>window.PAINTED_LAB?.ready&&!do
 try{
   if(process.argv.includes('--99-art')||process.argv.includes('--99-drafts')){
     await (await import('./probes/99-art-direction.mjs')).run({page,browser,base,out,check,settle,sharp,errors,requests,httpFailures});
+  }else if(process.argv.includes('--guided-game')){
+    await (await import('./probes/guided-game.mjs')).run({page,browser,base,out,check,settle,errors});
   }else if(process.argv.includes('--procgen')){
     await (await import('./probes/procgen-kit.mjs')).run({page,browser,base,out,check,shot,settle,difference,sharp,errors,requests});
   }else if(process.argv.includes('--artboard')){
