@@ -1,6 +1,7 @@
 # 99 Planets To Defend: running development blueprint
 
-U205-U208, 2026-09-16: the owner directs a modern-Earth visual foundation under
+U205-U208, published and publicly verified at V2 `ec7320d` (PR #60), 2026-09-16:
+the owner directs a modern-Earth visual foundation under
 the **99 Planets To Defend** title. Five factions are the native alien glyph name,
 Brainshot, RainBOOM, Anomalous and Axiom; the accepted robot is now Axiom's design.
 Paintline / Inked Cel remains the 2D reference, without hatched 3D shadows. The
