@@ -1,12 +1,12 @@
 # 99 Planets To Defend: faction expansion
 
-This supplements the earlier design foundation. The owner selected B / Arcade and requested six faction catalogues in Painted Inkline. The earlier sheets and original B remain available as historical comparisons.
+This supplements the earlier design foundation. The owner selected B / Arcade and requested six faction catalogues in Painted-Anime-Inkline. The earlier sheets and original B remain available as historical comparisons.
 
 ## Content contract
 
 Each faction has three commanders, three regular units, six weapons, three towers and a homeworld. The six weapon families match the current game's family identifiers: twinblade, sword, spear, carbine, scepter and lobber. Every commander and weapon has a named active, a legible icon, an activation window, a visual cue and a stated limitation.
 
-The catalogue contains 90 asset concepts and 54 actives. The 24 approved review plates are generated illustrations, not new meshes or implemented abilities. Existing gameplay and its accepted Atmospheric Ink rendering recipe remain the browser proof for a later Roblox port.
+The catalogue contains 90 asset concepts and 54 actives. The 24 retained review plates are generated illustrations, not new meshes or implemented abilities. Existing gameplay and its accepted Atmospheric Ink rendering recipe remain the browser proof for a later Roblox port.
 
 ## Factions
 
@@ -15,13 +15,13 @@ The catalogue contains 90 asset concepts and 54 actives. The 24 approved review 
 - Anomalous: Barney, Stalker and Dr. Harlow draw from Animal Hospital. Dr. Harlow's anomaly status is uncertain in the source; his support role here is explicitly a crossover interpretation. Clinical objects with one unsettling detail replace the earlier abstract glitch hardware.
 - Brainshot: Tralalero Tralala, Ballerina Cappuccina and Tung Tung Tung Sahur are recognizable character concepts. Their game roles are new proposals. The visual references do not imply current availability in every source game.
 - Robloxian: Noob, Guest and classic Builderman anchor the faction. Builderman uses the older construction avatar, not the current account outfit. Brickguard, Builder crew and Bacon runner supply normal unit roles.
-- Invader: the Herald, Broodwarden and Riftwalker are original characters. The previously proposed fictional glyph cipher encoding ayy lmao remains the manufacturer mark; Invader is the readable catalogue label.
+- Xeno: Herald and Broodwarden belong to the brown Physical Martian lineage. Riftwalker and Skitter are purple Void scouts; Shellback is Physical and Sporeeye is a proposed Poison support unit. The current roster is a new built-in painting. The complete fictional A-Z cipher retains the maker mark ayy lmao.
 
-All homeworlds and abilities are this parallel universe's proposals. Original equipment names remain working names for the owner to revise.
+Mars is the owner-defined habitat of brown Physical Xeno; purple Void scouts teleport onto Earth first. Other homeworlds and abilities are this parallel universe's proposals. Original equipment names remain working names for the owner to revise.
 
 ## Balance language
 
-Bars are ordinal comparison targets from minimal to very high, not damage, hit points or cooldown seconds. Compare within one category. Commander power, movement speed and health share a ten-point internal drafting budget; units use nine. Weapon power, handling speed and reach share ten. Tower power, firing/activation speed and health share ten. Complexity measures handling demand and is excluded from strength budgets.
+Bars are ordinal comparison targets from minimal to very high, not damage, hit points or cooldown seconds. Compare within one category. Most commander power, movement speed and health profiles share a ten-point internal drafting budget; units use nine. Riftwalker explicitly falls below that physical budget because the owner defines Void as physically weak with strong elemental resistance and teleportation. Weapon power, handling speed and reach share ten. Tower power, firing/activation speed and health share ten. Complexity measures handling demand and is excluded from strength budgets.
 
 These budgets prevent a simple across-the-board stronger draft. They do not price healing, control, summons, area damage, range geometry, uptime or movement immunity. Each active therefore also has an explicit tell, condition and counterplay limitation. Testing those dimensions in a playable slice is required before tuning can be called balanced. No balance outcome is claimed from illustrations.
 

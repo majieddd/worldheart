@@ -1,8 +1,8 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "title": "99 Planets To Defend / faction concepts",
-  "direction": "Painted Inkline",
-  "balance": "Qualitative concept targets only. Equal basic role budgets are a consistency guard, not evidence of playtested balance. Complexity is handling demand, not strength. Abilities need cooldown, uptime and counterplay tests before game integration.",
+  "direction": "Painted-Anime-Inkline",
+  "balance": "Qualitative concept targets only. Basic role budgets guide tradeoffs; elemental resistance and abilities require separate testing. The fragile Void scout intentionally trades physical durability for resistance and teleportation. Complexity means handling demand. These profiles are not evidence of playtested balance.",
   "factions": [
     {
       "id": "rainboom",
@@ -1641,23 +1641,23 @@
     },
     {
       "id": "alien",
-      "name": "Invader",
-      "origin": "Original invading faction",
-      "color": "#c5d984",
-      "motto": "The meteor was a door.",
-      "identity": "An original glyph cipher encodes ayy lmao. Rust chitin, hooked ivory brow plates and lime channels unify a living invasion force.",
-      "materials": "Rusted red chitin, ivory bone, deep plum shadow and narrow lime bioluminescent channels.",
+      "name": "Xeno",
+      "origin": "Original invading species",
+      "color": "#c9b1ec",
+      "motto": "The scouts arrive before the stone.",
+      "identity": "Layered living chitin and an ivory hooked brow unite five elemental forms. Purple Void scouts arrive first; reddish-brown Physical Xeno endure Mars and travel inside meteors.",
+      "materials": "Element-colored chitin, an ivory hooked brow and contained capillary light. Brown Physical shells are heavy; purple Void armor is thin and narrow.",
       "source": null,
       "world": {
-        "name": "The hollow arrival",
-        "terrain": "Meteor craters expose living basalt beneath a rust-colored crust. Bone-like arches span broad dry gullies and luminous channels trace routes toward buried hives.",
-        "play": "Crater rims offer elevation. Wide gullies carry readable attack lanes. Lime channels mark dangerous ground rather than fogging the whole scene.",
+        "name": "Mars / The meteor dwellers",
+        "terrain": "Reddish-brown Physical Xeno inhabit Martian canyons and shelter inside hollow meteors. Layered rust rock, deep cool shadows and enormous natural cavities establish their weight and endurance. Void scouts use a separate teleportation system; their homeworld remains undefined.",
+        "play": "Narrow canyon approaches favor slow armored defenders; side passages expose their turning weakness. Open craters offer construction space, with meteor cavities as visible threat sources.",
         "look": "Alien homeworld of enormous broken meteor shells, rust-red desert crust and deep plum basalt craters, hooked ivory arches across broad dry gullies, sparse narrow lime glowing channels, living hive spires carved into far cliffs, foreground flat traversable crater shelf, immense pale planet in dusky orange sky, small four-legged chitin creatures for scale. Illustrative atmosphere but clear foreground shadows."
       },
       "commanders": [
         {
           "name": "The Herald",
-          "role": "Original invasion captain",
+          "role": "Physical vanguard",
           "look": "Original angular rust-chitin alien with broad ivory hooked brow, narrow lime eyes, two articulated arms, backward-jointed legs, long split red shoulder plates and a dark plum core.",
           "active": {
             "name": "Breach call",
@@ -1676,11 +1676,11 @@
             "Health": 4,
             "Complexity": 3
           },
-          "canon": "Original character concept."
+          "canon": "Original Xeno commander proposal. Physical lineage; brown meteor-dweller material study."
         },
         {
           "name": "Broodwarden",
-          "role": "Original heavy guardian",
+          "role": "Physical brood guardian",
           "look": "Original huge low quadrupedal alien beetle with rust-red shell, ivory mandible shield, many small lime eyes, heavy segmented legs and small back spines.",
           "active": {
             "name": "Carapace wall",
@@ -1699,36 +1699,36 @@
             "Health": 5,
             "Complexity": 2
           },
-          "canon": "Original character concept."
+          "canon": "Original Xeno commander proposal. Slow Physical endurance specialist from the Martian lineage."
         },
         {
           "name": "Riftwalker",
-          "role": "Original strike leader",
+          "role": "Void scout commander",
           "look": "Original slender tall alien with a split ivory mask, long rust-red insect limbs, narrow waist, two floating chitin shoulder fins, lime tendon glow and hooked feet.",
           "active": {
             "name": "Slip between",
             "icon": "scan-line",
-            "effect": "Blink a short distance to a visible target point after a clear tell.",
-            "limit": "Cannot cross sealed geometry; arrival has a short vulnerable pause.",
-            "cue": "A thin lime cut peels open with rust-colored ink fragments.",
+            "effect": "Teleport to a visible nearby scouting position after a clear departure tell.",
+            "limit": "Physically fragile and briefly exposed on reappearance; elemental resistance does not stop physical attacks.",
+            "cue": "A sharp violet aperture collapses to a thin outline at the landing point.",
             "window": "Deliberate activation; medium recovery"
           },
           "complexity": 4,
           "id": "alien-commander-2",
           "cell": 2,
           "stats": {
-            "Power": 3,
+            "Power": 1,
             "Speed": 5,
-            "Health": 2,
+            "Health": 1,
             "Complexity": 4
           },
-          "canon": "Original character concept."
+          "canon": "Original Xeno commander proposal. Purple, physically fragile and element-resistant. The updated roster and elemental lineup establish the current appearance."
         }
       ],
       "units": [
         {
           "name": "Skitter",
-          "role": "Swarm scout",
+          "role": "Void recon unit",
           "look": "Small rust-red four-legged insect alien, hooked ivory brow, sharp lime eyes and compact dark plum underside.",
           "active": null,
           "complexity": 3,
@@ -1740,12 +1740,12 @@
             "Health": 2,
             "Complexity": 1
           },
-          "tradeoff": "Low health and vulnerable to wide attack arcs.",
-          "behavior": "Rush exposed targets in small, readable groups."
+          "tradeoff": "Very weak to physical pressure; teleport recovery leaves the scout exposed.",
+          "behavior": "Scout ahead and briefly teleport between exposed approach positions after a visible tell."
         },
         {
           "name": "Shellback",
-          "role": "Armored breaker",
+          "role": "Physical defender",
           "look": "Broad low six-legged alien with layered rust chitin, huge ivory frontal shield and small lime vents.",
           "active": null,
           "complexity": 3,
@@ -1762,7 +1762,7 @@
         },
         {
           "name": "Spore eye",
-          "role": "Ranged support",
+          "role": "Poison ranged support",
           "look": "Floating rust-chitin seedpod creature with one lime lens, ivory hooked fins and three thin articulated tendrils.",
           "active": null,
           "complexity": 3,
@@ -1774,8 +1774,8 @@
             "Health": 3,
             "Complexity": 3
           },
-          "tradeoff": "Fragile at close range and easy to reveal.",
-          "behavior": "Float behind the swarm and lob small plasma seeds."
+          "tradeoff": "Little immediate damage; mobile enemies can leave the marked pools.",
+          "behavior": "Float behind the frontline and lob small, outlined toxin pools that shape an approach."
         }
       ],
       "towers": [

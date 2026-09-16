@@ -19,7 +19,7 @@ in `99-art.html`. Three interactive UI compositions await owner selection.
   owner's revised demo default. The original 1.3.1 archive remains immutable.
 - New working title: **99 Planets To Defend**. This collection uses the new name;
   changing campaign branding everywhere is a later integration decision.
-- Platform sequence: browser proof first, Roblox production port after approval.
+- Development sequence: use the browser for efficient staging today; port confirmed checkpoints to Roblox. Shift development to Roblox when it becomes the more efficient build-and-validation environment.
 
 Current-game observation: commander lobby, tower foundry, mission gate, a live
 planet-one defense attempt ending at wave four, a second direct-control attempt,
@@ -31,11 +31,9 @@ not a complete campaign or balance evaluation. No gameplay state was injected.
 1. **A place worth defending.** Familiar modern Earth makes the initial invasion
    tangible. Each later planet should have a memorable ecology and defensible place.
 2. **Protect, venture, return.** Leaving the Worldheart offers useful equipment and
-   resources while exposing the base. Building and direct combat support each other.
-3. **Readable crossover identity.** Shared proportions, contour and shadow rules
-   unify factions. Their silhouettes, materials and feedback remain distinct.
-4. **Sincere stakes, strange tools.** The invasion matters. Humor comes from equipment,
-   character reactions and timing, without making danger incomprehensible.
+   resources while exposing the base. At campaign scale, protect and claim a planet, venture to new planets, then return home to store loot or establish the new planet as home.
+3. **Scenario gives a planet context.** Terrain, native inhabitants and the active conflict explain who the player encounters. A RainBOOM-native garden and an Axiom settlement invaded by anomalies have different reasons to defend and explore.
+4. **Seriously Funny Vibes.** A semi-serious invasion story coexists with goofy Roblox characters. Their equipment, personalities and reactions supply humor without erasing the stakes.
 5. **Responsive actions.** Input, animation and impact should explain the same event.
    A swing cannot connect before its visible blade reaches the target.
 
@@ -44,7 +42,7 @@ not a complete campaign or balance evaluation. No gameplay state was injected.
 Prepare a commander and deliberately equip two weapons. Enter an expedition,
 establish defenses around the Worldheart, fight directly, collect useful gear and
 crystals, then return to strengthen the base. Complete the expedition and pursue
-the existing homeworld/progression loop. The browser campaign currently uses ten
+the homeworld/progression loop: protect and claim, venture to the next planet, return to store loot or make the captured planet the new home. The browser campaign currently uses ten
 waves per expedition. This art pass does not rebalance its economy or difficulty.
 
 Three UI states express the loop: Combat protects the sightline; Build explains
@@ -57,14 +55,16 @@ changes. Switching context changes information priority rather than stacking men
 
 | Faction / maker | Identity | Surface and form grammar | Proposed feedback |
 | --- | --- | --- | --- |
-| Alien glyph name | Native invading enemy | Rust chitin, ivory hooked brow, lime capillary channels; grown mechanisms | Contained pulses followed by sharp discharges |
+| Xeno | Original invading species | Element-colored chitin and ivory hooked brow; brown Physical, purple Void, blue Frost, orange Fire, green Poison | Heavy contact for Physical, clear teleport apertures for Void, bounded element effects |
 | Brainshot | Brainrot-inspired | Shark/sneaker carbine, banana blade, espresso staff; enamel, screws, rubber | One clear object-related action per weapon, such as steam from the coffee emitter |
 | RainBOOM | Rainbow Friends-inspired | Cobalt shell, crown antenna, button-eye gauges, separate pigment chambers | Bold colored impact fragments and short trails |
 | Anomalous | Animal Hospital crossover | Animal silhouettes, unsettling faces, mint clinical enamel and one impossible detail | Clearly different dormant, arming and triggered states |
 | Axiom | Neutral autonomous robots | Pristine white ceramic, graphite articulation, paired cyan optics and balanced forms | Symmetrical closures and measured corrective pulses |
 | Robloxian | Classic Roblox | Yellow plastic, blue studded receivers, green molded bases and practical construction parts | Crisp brick-shaped impacts and readable snap-together effects |
 
-The alien identity is an original fictional five-glyph cipher encoding **ayy lmao**.
+The Xeno maker mark encodes **ayy lmao** in a complete original A-Z glyph cipher.
+The five existing shapes are preserved; the other 21 are proposals. Each glyph has
+a Latin key and a fictional reading. This is an alphabet, not a complete grammar.
 Repeated letters repeat the same glyph. The Adamic-language premise is inspiration,
 not a claim of an authenticated historical translation. Anomalous now draws on the
 owner's Animal Hospital reference. The weapon and character
@@ -89,16 +89,17 @@ The previously accepted broad-headed, binocular-eyed robot belongs to **Axiom**.
 - Helios Lance: focusing tube and sustained beam path.
 - Warden Barracks: deployable shelter with a visible unit exit.
 
-The heavy native invader, low skitterer and meteor nest establish the first enemy
-shape family. Completing the existing Mite/Husk/Aegis/Wisp/Colossus roster needs
+The hooked brow and layered chitin establish the Xeno species. Brown Physical forms are slow, strong and enduring Martian meteor dwellers. Purple Void forms are physically fragile, element-resistant teleport scouts that arrive first. Frost, Fire and Poison forms add proposed control, burst and denial roles. Completing the existing Mite/Husk/Aegis/Wisp/Colossus roster needs
 separate production specifications after the family direction is approved.
 
 ## Concept and visual baseline
 
-Nine new original concept plates: modern Earth, four-panel opening storyboard,
+The preserved first collection contains nine original concept plates: modern Earth, four-panel opening storyboard,
 five commanders, six tower families and five faction/equipment sheets. PNG originals,
 full-resolution WebP previews, generation prompts and SHA-256 identities are saved
 in `lib/99-art/catalogue.json`. The generator did not expose a backing model identity.
+
+Current direction: **Painted-Anime-Inkline**, joining Studio Ghibli-like whimsical painted worlds with Borderlands-like darker comic realism and grit. Eight new built-in paintings under painted-anime-inkline/ cover five environments, an updated six-panel opening, five elemental Xeno and their six-character roster. media.json joins all 59 illustrations, references and UI captures. The exact backing generation model is not exposed; these are not certified model-identity receipts.
 
 **Paint recipe:** strong outer contour, finer broken interior marks, broad painted
 local color, deep colored cel shadows, selective chips at exposed edges and contact
@@ -196,19 +197,17 @@ predicted to enter Earth orbit or strike Earth. NASA describes the safe encounte
 https://science.nasa.gov/solar-system/asteroids/apophis-facts/
 
 **Fiction:** humanity attempts to intercept the approaching object; its shell breaks;
-alien pods rain down; a sleeper agent receives activation. The storyboard's large
+brown Physical Xeno are revealed inside the meteor. Purple Void scouts teleport onto Earth first; a sleeper agent receives activation. The storyboard's large
 object and visible trail are cinematic devices, not an astronomical reconstruction.
 
-Opening beats: expected flyby → fictional interception → pods unfolding over ordinary
-streets → private activation signal → control handed to the player. Keep the first
-threat sincere. Let a small human reaction or absurd tool introduce the comic register.
+Opening beats: expected flyby → fictional interception → brown meteor inhabitants revealed → purple scouts teleport onto Earth → private activation signal → first defense. Brown Xeno are canonically Martian; Void scouts use a separate teleportation system. Keep the stakes sincere and the crossover characters funny.
 
 Later planets can vary tone and architecture. The prior medieval collection is retained
 for that possibility; no planet index or story placement has been assigned to it.
 
 ## Interface and HUD
 
-Three first drafts share the same illustrated Earth scene so composition can be compared:
+The original three UI drafts shared one Earth image. Selected B now uses the purple-scout arrival, with its approved framing preserved:
 
 - **Field:** compact field controls, ivory/amber labels, separate equipment column.
 - **Arcade B, selected:** tactile rounded controls and strong ownership of the two weapon slots. Planet/date block removed; six current faction arsenals supported.
@@ -230,7 +229,7 @@ are saved locally. The title treatment is a draft, not an approved final logo.
 
 ## Build order and milestones
 
-1. Owner selects the preferred UI composition and gives art/narrative corrections.
+1. B / Arcade is selected. Review the new environmental references, Xeno concepts and narrative corrections.
 2. Develop that composition with actual combat/build/loadout states and representative motion.
 3. Produce one modern commander, one held weapon, one turret and one native invader
    using the approved plates. Preserve named identities and attachment rules.
@@ -256,11 +255,9 @@ new GLBs or Roblox models; the mesh-production step follows visual acceptance.
 
 ## Decided
 
-Owner decisions: new title, modern Earth opening, five faction identities, accepted
-robot assigned to Axiom, Paintline/Ink Cel inspiration, no hatched 3D shadows,
-previous medieval direction preserved for later, browser before Roblox.
+Owner decisions: new title, modern Earth opening, six factions, Xeno elemental lineages and Void-first invasion; Axiom pristine white robotics; B UI composition; Painted-Anime-Inkline style name and Ghibli/Borderlands direction; no hatched 3D shadows; medieval archive; efficient browser staging and Roblox ports at confirmed checkpoints.
 
-Pending owner decisions: refined B surface treatment, expanded faction concepts, final alien glyph shape, final weapon names,
+Pending owner decisions: refined B surface treatment, expanded faction concepts, new glyph shapes and fictional readings, final weapon names,
 faction trigger tuning, character costume refinements, final logo and production meshes.
 
 | Decision | Status | Evidence |
@@ -273,11 +270,15 @@ faction trigger tuning, character costume refinements, final logo and production
 
 ## Task list
 
+U217-U220: unified navigation and Media; eight style/canon references; Xeno name, elements and alphabet; browser verification and V2 publication. Usage unmeasured. No elemental gameplay or Roblox port is claimed.
+
 U205: replay and source/fiction foundation. U206: modern concept catalogue and archive.
 U207: three rendered interactive UI drafts. U208: durable design kit, browser evidence,
 collaborator handoff and V2 review publication. Main game replacement is out of scope.
 
 ## Where we are
+
+Current owner revision: one five-tab artbook at 99-art.html. The faction data and original prompts stay durable; old page links resolve to the new tabs. The scenario and maker identity should explain both the appearance and proposed behavior. Development uses whichever environment validates the next change most efficiently without sacrificing quality.
 
 2026-09-16: This collection is a concrete first-draft review package. Approving an image does not
 automatically approve gameplay tuning, UI composition or a 3D implementation. Collaborators

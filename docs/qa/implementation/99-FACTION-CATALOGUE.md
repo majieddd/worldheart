@@ -20,7 +20,25 @@ DESIGN_VARIANCE 4; MOTION_INTENSITY 2; VISUAL_DENSITY 5. One dark graphite page 
 
 ## Evidence
 
-Status: U213-U215 verified locally; U216 publishing.
+Status: U213-U216 published and publicly verified. [PR #62](https://github.com/majieddd/worldheart/pull/62).
+
+Runtime: `6b85808b7556fbd94a5803f9ddfbe48f67645899`.
+[Successful deployment](https://github.com/majieddd/worldheart/actions/runs/35126489362).
+[Faction pages](https://majieddd.github.io/worldheart/v2/99-factions.html) and
+[refined B](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/arcade.html).
+Main remains `6133d0713f4e93e6fc743c35d9dd0fd1834bc98f`.
+
+Final public checks: **203/203** catalogue/UI cases, **84/84** earlier-art cases,
+and **604/604** live/source identities. The first identity pass was 603/604 due
+to a 503 for unchanged `js/soldier.js`; a single targeted retry returned 200 and
+the exact expected hash. The first art regression pass was 83/84 due to a 503
+for `arcade-refinement.js`; HTTP recheck returned 200 and the complete affected
+browser suite then passed. Both initial reports are retained beside final receipts.
+The final public browser reports contain no JavaScript or resource errors.
+
+Current applied Aegis skill bundle: `3.18.4+codex.20260916160137`. The new work
+supplements the selected direction and collaborator runtime; no existing approved
+style baseline or simulation contract was replaced.
 
 - 203/203 catalogue and selected-B browser checks. Covers all 90 asset selections, 54 active icons, 30 faction/subject routes, 48 served image identities, responsive layout, text contrast, keyboard modal/focus behavior, touch selection and retained equipment/build controls.
 - 84/84 previous art-collection and UI-draft checks, including the original PNG identities, archive and live Axiom reference.

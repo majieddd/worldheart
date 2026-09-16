@@ -1,14 +1,16 @@
 # 99 Planets development progress
 
-U217-U219 verified as an opt-in experiment; U220 publishing: Codex on `feature/procgen-fast-sandbox`. Research and
-exact-output experiments target under 5 s generation, 10 s for stretch cases,
-with visual sandbox comparisons. [Scope and evidence](qa/implementation/PROCGEN-FAST.md).
+U221-U223 verified as an opt-in experiment; U224 publishing: Codex on `feature/procgen-fast-sandbox`. Exact-output generation experiments cut measured median loading by 16% Garden, 44% Io and 60% Deep Canyons. The under-5 / under-10-second targets remain OPEN. Visual comparison sandbox and retained counterexamples: [scope and evidence](qa/implementation/PROCGEN-FAST.md). Originally claimed U217-U220; renumbered on integration to preserve the concurrent artbook records.
 
-U213-U215 verified locally; U216 publishing: Codex on `feature/99-faction-catalogue`.
+U217-U220 verified locally; V2 publication pending on feature/99-unified-artbook. The owner consolidates the collection into Summary, Storyline, Factions, Media and Design Principles. Painted-Anime-Inkline is the style name: Studio Ghibli-like painted wonder with Borderlands-like comic grit. Eight new built-in paintings cover five environments/scenarios, the opening comic, five Xeno elements and the updated Xeno roster. The catalogue is embedded in the main page. Physical Xeno are brown Martian meteor dwellers; purple Void scouts teleport onto Earth first. The 26-glyph script is fictional and Adamic-inspired. See [scope and evidence](qa/implementation/99-UNIFIED-ARTBOOK.md).
+
+U213-U216 published and publicly verified at **6b85808**, [PR #62](https://github.com/majieddd/worldheart/pull/62): Codex on `feature/99-faction-catalogue`.
 Owner selected B / Arcade. Refined B removes planet/date information and adds
 tactile Roblox-like controls. Six faction pages include 24 plates, 18 commanders,
 18 units, 36 weapons, 18 towers, six homeworlds and 54 active powers with icons.
-203 catalogue/UI checks, 84 previous-art checks and 397 automated tests pass.
+203 local and public catalogue/UI checks, 84 local and public previous-art checks,
+397 automated tests and 604 live/source identities pass. Two transient hosting
+503 responses recovered on targeted/relevant retries; first failures are retained.
 [Scope, evidence and concept-only limits](qa/implementation/99-FACTION-CATALOGUE.md).
 Collaborator runtime and publication receipts through `cc62311` are retained.
 

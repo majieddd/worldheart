@@ -4,10 +4,10 @@ Owner: Codex. Branch `feature/procgen-fast-sandbox`. Baseline `6b85808`.
 
 | Item | State | Acceptance |
 |---|---|---|
-| U217 Research and profiles | Verified | Locate remaining work and evaluate primary-source methods |
-| U218 Exact-output experiments | Verified fixtures | Preserve every generated geometry/navigation value |
-| U219 Visual sandbox and benchmarks | Verified; numeric target OPEN | Paired renders, matched trials, target under 5 s normally and 10 s for stretch cases |
-| U220 Integration and public verification | Publishing | Verified V2 only, preserve main and collaborator content |
+| U221 Research and profiles | Verified | Locate remaining work and evaluate primary-source methods |
+| U222 Exact-output experiments | Verified fixtures | Preserve every generated geometry/navigation value |
+| U223 Visual sandbox and benchmarks | Verified; numeric target OPEN | Paired renders, matched trials, target under 5 s normally and 10 s for stretch cases |
+| U224 Integration and public verification | Publishing | Verified V2 only, preserve main and collaborator content |
 
 The targets are goals, not measured claims. Cold generation must be reported
 separately from cached revisits and rendering/shader startup. Rejected methods
@@ -75,3 +75,5 @@ Visual capture correction: the first canyon/sky pairs caught different points in
 Further visual QA: settling the orbit rig was insufficient because the route transports its heading. Fixed-camera captures now have exactly matching position/quaternion/FOV for canyon and sky. The raw first attempts remain retained. Later sky capture runs were faster; that variability reinforces why its first regression is retained without a general claim.
 
 The local direct-runtime check (no source interception) matches the canyon oracle, activates 36 worker batches without failures, and compares clearance with/without the shortcut at 1,049 graph points both before and after a terrain fault. No differences; fault activation disables all shortcuts. Camera checks also pass. Desktop and 390px comparison UI checks pass with both images decoded, keyboard-operable wipe and no horizontal overflow.
+
+Integration: the concurrent artbook used U217-U220 too. This experiment is renumbered U221-U224; earlier issue comments retain their original historical IDs. Preview d96576d is preserved in full. Generated dist conflicts are rebuilt from the combined source, not hand-merged.
