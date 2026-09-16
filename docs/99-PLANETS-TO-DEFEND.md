@@ -1,5 +1,13 @@
 # 99 Planets To Defend: running development blueprint
 
+U213-U215 verified locally, U216 publishing: the owner selected B / Arcade and
+requested a six-faction Painted Inkline expansion. Robloxian joins the roster;
+Axiom becomes pristine white robotics; Anomalous draws on Animal Hospital.
+24 concept plates cover 90 assets, six homeworlds and 54 active powers/icons.
+Five-step bars are qualitative proposals, not tested gameplay balance.
+[Current supplement](../lib/99-art/factions/foundation.md) and
+[implementation evidence](qa/implementation/99-FACTION-CATALOGUE.md).
+
 U209-U212 published and publicly verified at V2 `f43ca42` (PR #61): generation
 optimizations reduce measured loading by 19-40% across Garden, Io and Deep
 Canyons. Fifteen final comparisons across nine configurations preserve terrain,

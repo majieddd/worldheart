@@ -1,0 +1,2504 @@
+{
+  "version": "0.2.0",
+  "title": "99 Planets To Defend / faction concepts",
+  "direction": "Painted Inkline",
+  "balance": "Qualitative concept targets only. Equal basic role budgets are a consistency guard, not evidence of playtested balance. Complexity is handling demand, not strength. Abilities need cooldown, uptime and counterplay tests before game integration.",
+  "factions": [
+    {
+      "id": "rainboom",
+      "name": "RainBOOM",
+      "origin": "Rainbow Friends",
+      "color": "#83c9ef",
+      "motto": "Make a mess. Hold the line.",
+      "identity": "Cobalt mascot shapes, crown silhouettes and separate pigment chambers. Paint impacts form crisp ink-edged splashes.",
+      "materials": "Painted cobalt plastic, soft mascot fabric, rubber hoses, yellow and pink pigment tanks.",
+      "source": "https://rainbow-friends.fandom.com/wiki/Blue",
+      "world": {
+        "name": "Odd World after hours",
+        "terrain": "Amusement-park service roads wind between grassy knolls, flooded ride channels and oversized mascot buildings. A rollercoaster silhouettes the horizon. Keep open combat lanes beneath the colorful scenery.",
+        "play": "Ride pylons provide cover. Paint channels create slow routes. Service bridges give long sightlines.",
+        "look": "A sprawling deserted Roblox amusement park on rolling green hills at late afternoon, immense blue mascot head gate with gold crown, pastel separated paint reservoirs, orange rollercoaster weaving between cliffs, cracked service roads, blue river rides, chunky hedges, wide traversable foreground service-road junction and a small Worldheart beacon. No characters close to camera."
+      },
+      "commanders": [
+        {
+          "name": "Blue",
+          "role": "Frontline protector",
+          "look": "Blue from Rainbow Friends: large rounded cobalt body, gold crown, one X-button eye, other round white eye, crooked drooling smile. No armor.",
+          "active": {
+            "name": "Crown crash",
+            "icon": "crown",
+            "effect": "Slam the ground to knock enemies away from nearby allies.",
+            "limit": "A long wind-up exposes Blue to ranged attacks.",
+            "cue": "A crown-shaped yellow impact ring with heavy blue ink fragments.",
+            "window": "Commit to a slam; long recovery"
+          },
+          "complexity": 1,
+          "id": "rainboom-commander-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 1
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        },
+        {
+          "name": "Green",
+          "role": "Lane controller",
+          "look": "Green from Rainbow Friends: very tall thin green fuzzy body, extremely long flexible arms, googly eyes, open toothy mouth. No armor.",
+          "active": {
+            "name": "Color snare",
+            "icon": "lasso",
+            "effect": "Stretch both arms across a lane and briefly hold smaller enemies.",
+            "limit": "Green stays rooted; heavy enemies break free quickly.",
+            "cue": "Two green outlined ribbons connect to a visible anchor.",
+            "window": "Hold a lane; long recovery"
+          },
+          "complexity": 3,
+          "id": "rainboom-commander-1",
+          "cell": 1,
+          "stats": {
+            "Power": 3,
+            "Speed": 2,
+            "Health": 5,
+            "Complexity": 3
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        },
+        {
+          "name": "Orange",
+          "role": "Flanking runner",
+          "look": "Orange from Rainbow Friends: small orange dinosaur-lizard with long toothy jaw, outward-facing eyes, stubby arms and tail, sprinting pose.",
+          "active": {
+            "name": "Feeding frenzy",
+            "icon": "footprints",
+            "effect": "Dash along a chosen route, leaving a short burst of pigment at its end.",
+            "limit": "The marked route cannot be steered once the dash starts.",
+            "cue": "An orange dotted route becomes solid before the burst.",
+            "window": "Choose a route; medium recovery"
+          },
+          "complexity": 2,
+          "id": "rainboom-commander-2",
+          "cell": 2,
+          "stats": {
+            "Power": 3,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 2
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        }
+      ],
+      "units": [
+        {
+          "name": "Lookie courier",
+          "role": "Fast support",
+          "look": "Original red round one-eyed Lookie-inspired helper with small cobalt pigment canister harness.",
+          "active": null,
+          "complexity": 3,
+          "id": "rainboom-unit-0",
+          "cell": 3,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 1
+          },
+          "tradeoff": "Very fragile; carrying pigment slows the courier.",
+          "behavior": "Carry pigment to allied towers, then retreat to resupply."
+        },
+        {
+          "name": "Crown shieldcart",
+          "role": "Mobile cover",
+          "look": "Original squat cobalt two-wheel shield drone, crown-shaped front shield, separate yellow reservoir.",
+          "active": null,
+          "complexity": 3,
+          "id": "rainboom-unit-1",
+          "cell": 4,
+          "stats": {
+            "Power": 4,
+            "Speed": 1,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "The rear and flanks remain exposed.",
+          "behavior": "Project a short moving shield toward the nearest threat."
+        },
+        {
+          "name": "Hosehand",
+          "role": "Ranged support",
+          "look": "Original thin green mascot helper with two paint hoses, utility harness and broad rubber boots.",
+          "active": null,
+          "complexity": 3,
+          "id": "rainboom-unit-2",
+          "cell": 5,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "Little direct damage; hoses need clear line of sight.",
+          "behavior": "Spray a narrow slowing lane from behind the frontline."
+        }
+      ],
+      "towers": [
+        {
+          "name": "Pigment popper",
+          "role": "Area denial",
+          "look": "Short round cobalt paint turret on yellow industrial tripod, three clearly separate pink yellow cyan chambers, single wide splatter nozzle.",
+          "active": null,
+          "complexity": 3,
+          "id": "rainboom-tower-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Low armor penetration and a visible flight time.",
+          "behavior": "Splash clustered targets with slow pigment rounds."
+        },
+        {
+          "name": "Crown prism",
+          "role": "Focused beam",
+          "look": "Tall gold crown-shaped reflector ring above a stout cobalt plinth, rotating separated colored glass prisms and narrow beam emitter.",
+          "active": null,
+          "complexity": 3,
+          "id": "rainboom-tower-1",
+          "cell": 1,
+          "stats": {
+            "Power": 2,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 3
+          },
+          "tradeoff": "Needs time to focus and loses value against swarms.",
+          "behavior": "Focus a narrow beam on one marked enemy."
+        },
+        {
+          "name": "Box ambush",
+          "role": "Close-range trap",
+          "look": "Oversized slightly battered corrugated hiding box on low blue turntable, toothy hinged lid and three spring-loaded paint pistons.",
+          "active": null,
+          "complexity": 3,
+          "id": "rainboom-tower-2",
+          "cell": 2,
+          "stats": {
+            "Power": 3,
+            "Speed": 4,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "Long reset; cannot reach enemies outside the trap.",
+          "behavior": "Spring open when an enemy enters its short trigger zone."
+        }
+      ],
+      "weapons": [
+        {
+          "id": "rainboom-twinblade",
+          "name": "Twin splashers",
+          "look": "Two short asymmetric curved cobalt knives with crown guards and separate pink/yellow paint cartridges.",
+          "active": {
+            "name": "Crossfade",
+            "icon": "shuffle",
+            "effect": "Cross both blades to fling a short fan of paint at a nearby cluster.",
+            "limit": "Needs close range; the fan does not pierce armor.",
+            "cue": "Two colored arcs cross into a sharp ink star.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "twinblade",
+          "role": "Twin daggers",
+          "cell": 0,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "rainboom-sword",
+          "name": "Crown cleaver",
+          "look": "Broad cobalt sword, gold crown guard, orange paint reservoir in spine.",
+          "active": {
+            "name": "Royal splash",
+            "icon": "sparkles",
+            "effect": "Send a ground-hugging paint wave after a committed heavy swing.",
+            "limit": "A narrow travel path rewards careful alignment.",
+            "cue": "Gold crown teeth outline the traveling blue wave.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "sword",
+          "role": "Sword",
+          "cell": 1,
+          "stats": {
+            "Power": 4,
+            "Speed": 3,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "rainboom-spear",
+          "name": "Color lance",
+          "look": "Long segmented green spear with cobalt crown collar and a yellow conical nozzle tip.",
+          "active": {
+            "name": "Color tether",
+            "icon": "link",
+            "effect": "Tag one enemy and briefly slow it while staying within reach.",
+            "limit": "The tether breaks when either target leaves the short leash.",
+            "cue": "A segmented green line visibly stretches and snaps.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "spear",
+          "role": "Spear",
+          "cell": 2,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        },
+        {
+          "id": "rainboom-carbine",
+          "name": "Pigment carbine",
+          "look": "Chunky cobalt plasma rifle with gold crown rear sight, three physically separate bright pigment chambers, readable stock grip and barrel.",
+          "active": {
+            "name": "Paintburst",
+            "icon": "spray-can",
+            "effect": "The next direct hit bursts into a compact splash that marks nearby targets.",
+            "limit": "Splash damage is low; missed shots spend the charge.",
+            "cue": "Three separate paint droplets converge on the impact.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "carbine",
+          "role": "Plasma rifle",
+          "cell": 3,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Reach": 4,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "rainboom-scepter",
+          "name": "Prism scepter",
+          "look": "White-and-cobalt staff with gold crown cage holding three separate floating colored pigment spheres.",
+          "active": {
+            "name": "Spectrum sweep",
+            "icon": "rainbow",
+            "effect": "Sweep a short cone of colored energy to stagger light enemies.",
+            "limit": "Cannot focus its full force on one distant target.",
+            "cue": "Three flat color bands follow one clean outlined sweep.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "scepter",
+          "role": "Ember scepter",
+          "cell": 4,
+          "stats": {
+            "Power": 3,
+            "Speed": 2,
+            "Reach": 5,
+            "Complexity": 4
+          }
+        },
+        {
+          "id": "rainboom-lobber",
+          "name": "Confetti lobber",
+          "look": "Squat blue drum grenade launcher with toy-factory hinges, yellow drum and pink paint shell.",
+          "active": {
+            "name": "Party pop",
+            "icon": "party-popper",
+            "effect": "Launch a delayed paint shell that breaks into several small area bursts.",
+            "limit": "Visible fuse lets fast targets leave the area.",
+            "cue": "A crown fuse ticks down before crisp confetti stars.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "lobber",
+          "role": "Lobber",
+          "cell": 5,
+          "stats": {
+            "Power": 5,
+            "Speed": 1,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "axiom",
+      "name": "Axiom",
+      "origin": "Original neutral automata",
+      "color": "#acdcd9",
+      "motto": "Restore the balance.",
+      "identity": "Pristine white ceramic shells, smoked glass and exposed graphite articulation. Twin optical lamps retain the familiar robot identity.",
+      "materials": "White ceramic, satin titanium, graphite joints, restrained ice-cyan status light. No gold or ochre armor.",
+      "source": null,
+      "world": {
+        "name": "The Equilibrium",
+        "terrain": "White causeways cross black tidal water beneath monumental circular machines. Wild grasses colonize the seams. Clean silhouettes and deep water separate movement routes.",
+        "play": "Narrow causeways create defense lanes. Circular plazas provide build space. Water establishes a clear boundary.",
+        "look": "A pristine white robotic civilization on basalt islands, monumental ceramic rings and tiered white terraces across deep black-blue water, minimalist clean white towers with graphite seams, small natural reed patches in cracks, broad white traversable causeway in foreground, low sun and hard blue-gray shadows, tiny white service robots for scale, no busy cyberpunk city."
+      },
+      "commanders": [
+        {
+          "name": "Custodian",
+          "role": "Original guardian",
+          "look": "Broad-shouldered pristine white ceramic robot, wide rectangular head with expressive paired cyan binocular optics, graphite spine and visible knee joints, integrated forearm shield.",
+          "active": {
+            "name": "Equalize",
+            "icon": "shield-half",
+            "effect": "Absorb a limited burst of damage for nearby allies with a directional shield.",
+            "limit": "The back stays exposed; sustained fire exhausts the shield.",
+            "cue": "Twin cyan brackets close into a white shield outline.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "complexity": 2,
+          "id": "axiom-commander-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "canon": "Original character concept."
+        },
+        {
+          "name": "Vector",
+          "role": "Original interceptor",
+          "look": "Lean white ceramic athletic robot with tapered limbs, smoked-glass narrow visor, exposed black ankle mechanisms and split fin shoulders.",
+          "active": {
+            "name": "Vector step",
+            "icon": "move-up-right",
+            "effect": "Dash to a visible nearby location and intercept the next incoming projectile.",
+            "limit": "No travel through walls and no immunity after arrival.",
+            "cue": "Three clean white afterimages converge into one figure.",
+            "window": "Choose a landing point; medium recovery"
+          },
+          "complexity": 3,
+          "id": "axiom-commander-1",
+          "cell": 1,
+          "stats": {
+            "Power": 3,
+            "Speed": 4,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "canon": "Original character concept."
+        },
+        {
+          "name": "Mender",
+          "role": "Original support",
+          "look": "Small floating white ceramic robot with round body, two articulated repair arms, broad binocular optic face, graphite gimbal and a tiny cyan core.",
+          "active": {
+            "name": "Reconstruct",
+            "icon": "heart-pulse",
+            "effect": "Project a small repair field for allied units and one nearby tower.",
+            "limit": "Cannot repair while moving; damage interrupts the field.",
+            "cue": "White ceramic petal marks stitch into a cyan cross.",
+            "window": "Stay still to channel; long recovery"
+          },
+          "complexity": 3,
+          "id": "axiom-commander-2",
+          "cell": 2,
+          "stats": {
+            "Power": 1,
+            "Speed": 4,
+            "Health": 5,
+            "Complexity": 3
+          },
+          "canon": "Original character concept."
+        }
+      ],
+      "units": [
+        {
+          "name": "Surveyor",
+          "role": "Reconnaissance",
+          "look": "Small white two-legged optical robot with tripod binocular head, thin graphite legs and a scanning fin.",
+          "active": null,
+          "complexity": 3,
+          "id": "axiom-unit-0",
+          "cell": 3,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 1
+          },
+          "tradeoff": "Low damage and little protection if caught.",
+          "behavior": "Reveal approaching enemies ahead of the main force."
+        },
+        {
+          "name": "Bastion frame",
+          "role": "Heavy defender",
+          "look": "Pristine white broad humanoid robot with rounded chest shell, solid forearm plates and black articulated joints.",
+          "active": null,
+          "complexity": 3,
+          "id": "axiom-unit-1",
+          "cell": 4,
+          "stats": {
+            "Power": 4,
+            "Speed": 1,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Easy to flank; cannot chase retreating enemies.",
+          "behavior": "Advance slowly while shielding lighter allies."
+        },
+        {
+          "name": "Link drone",
+          "role": "Support drone",
+          "look": "Floating white torus robot with two graphite arms and an exposed small cyan light at center.",
+          "active": null,
+          "complexity": 3,
+          "id": "axiom-unit-2",
+          "cell": 5,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "Tether breaks on separation; almost no direct damage.",
+          "behavior": "Maintain one short repair tether to a nearby ally."
+        }
+      ],
+      "towers": [
+        {
+          "name": "Parity rail",
+          "role": "Precision fire",
+          "look": "Pristine white ceramic long-rail turret, twin straight graphite barrel rails on circular white pedestal with exposed black pivot.",
+          "active": null,
+          "complexity": 3,
+          "id": "axiom-tower-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Slow target reacquisition makes swarms dangerous.",
+          "behavior": "Fire precise armor-piercing rail pulses along a narrow line."
+        },
+        {
+          "name": "Balance array",
+          "role": "Support field",
+          "look": "Three white ceramic curved fins suspended above a low graphite circular plinth, tiny cyan diagnostic core, no weapon barrel.",
+          "active": null,
+          "complexity": 3,
+          "id": "axiom-tower-1",
+          "cell": 1,
+          "stats": {
+            "Power": 2,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 3
+          },
+          "tradeoff": "Provides no direct damage and cannot stack on itself.",
+          "behavior": "Strengthen one nearby allied shield at a time."
+        },
+        {
+          "name": "Correction well",
+          "role": "Area control",
+          "look": "Low white three-legged dish around a recessed dark gravity lens, pristine broad curved plates, concentric articulated titanium rings.",
+          "active": null,
+          "complexity": 3,
+          "id": "axiom-tower-2",
+          "cell": 2,
+          "stats": {
+            "Power": 3,
+            "Speed": 4,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "Heavy targets resist; control ends between pulses.",
+          "behavior": "Pull light enemies toward a fixed, clearly marked center."
+        }
+      ],
+      "weapons": [
+        {
+          "id": "axiom-twinblade",
+          "name": "Split vectors",
+          "look": "Matched short white ceramic daggers with graphite spine, open circular guards and thin cyan inner edge.",
+          "active": {
+            "name": "Converge",
+            "icon": "git-merge",
+            "effect": "Snap both blades toward one marked enemy after a short sidestep.",
+            "limit": "Single target only; consumes the sidestep charge.",
+            "cue": "Two precise cyan lines meet at a white diamond.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "twinblade",
+          "role": "Twin daggers",
+          "cell": 0,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "axiom-sword",
+          "name": "Parity blade",
+          "look": "Pristine white ceramic long sword with inset graphite blade channel, circular guard and small cyan seam.",
+          "active": {
+            "name": "Countermeasure",
+            "icon": "shield-check",
+            "effect": "Brace briefly; a timed block empowers the next normal swing.",
+            "limit": "Activating too early gives no damage bonus.",
+            "cue": "A white bracket flashes closed only on a successful block.",
+            "window": "Time the block; medium recovery"
+          },
+          "family": "sword",
+          "role": "Sword",
+          "cell": 1,
+          "stats": {
+            "Power": 4,
+            "Speed": 3,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "axiom-spear",
+          "name": "Survey lance",
+          "look": "Long white robotic spear with two split ceramic tip fins around a cyan beam tip and graphite shaft joints.",
+          "active": {
+            "name": "Measure line",
+            "icon": "ruler",
+            "effect": "Release a narrow thrust that pierces enemies standing in a straight line.",
+            "limit": "Slow preparation and a very narrow hit corridor.",
+            "cue": "A thin cyan range line appears before release.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "spear",
+          "role": "Spear",
+          "cell": 2,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        },
+        {
+          "id": "axiom-carbine",
+          "name": "Vector carbine",
+          "look": "Clean white ergonomic plasma rifle with graphite receiver, two parallel floating white barrel shrouds, cyan core and compact stock.",
+          "active": {
+            "name": "Corrective shot",
+            "icon": "crosshair",
+            "effect": "Charge a precise shot that strips a small portion of enemy armor.",
+            "limit": "Charge locks sprinting and is lost on weapon swap.",
+            "cue": "Two white sight brackets align around a small cyan point.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "carbine",
+          "role": "Plasma rifle",
+          "cell": 3,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Reach": 4,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "axiom-scepter",
+          "name": "Restoration scepter",
+          "look": "Pristine white staff with three symmetrical ceramic petals enclosing a cyan energy core, graphite articulated grip.",
+          "active": {
+            "name": "Stabilize",
+            "icon": "activity",
+            "effect": "Convert the beam to a short healing tether for one ally.",
+            "limit": "No damage while healing; tether breaks with distance.",
+            "cue": "A calm cyan pulse travels along a white tether.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "scepter",
+          "role": "Ember scepter",
+          "cell": 4,
+          "stats": {
+            "Power": 3,
+            "Speed": 2,
+            "Reach": 5,
+            "Complexity": 4
+          }
+        },
+        {
+          "id": "axiom-lobber",
+          "name": "Orbit lobber",
+          "look": "Compact white robotic lobber with graphite cylindrical shell chamber inside white concentric orbital gimbal.",
+          "active": {
+            "name": "Gravity correction",
+            "icon": "orbit",
+            "effect": "Lob a temporary gravity pocket that draws light enemies inward.",
+            "limit": "Heavy enemies resist; the pocket itself deals little damage.",
+            "cue": "Three crisp white rings contract toward one dark center.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "lobber",
+          "role": "Lobber",
+          "cell": 5,
+          "stats": {
+            "Power": 5,
+            "Speed": 1,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "anomalous",
+      "name": "Anomalous",
+      "origin": "Animal Hospital crossover",
+      "color": "#c3d9a3",
+      "motto": "Something is wrong with this patient.",
+      "identity": "Animal silhouettes, unsettling faces and familiar hospital objects with one impossible detail. Readable horror rather than abstract glitch hardware.",
+      "materials": "Faded mint enamel, cream fur, worn hospital fabric, dark eye sockets, red emergency lamps. Keep effects non-gory.",
+      "source": "https://animal-hospital.fandom.com/wiki/Anomalies",
+      "world": {
+        "name": "The endless night shift",
+        "terrain": "A hospital campus stretches into pine-covered hills. Corridors open onto outdoor courtyards; asphalt ambulance roads return to doors that should not connect.",
+        "play": "Lit doorways telegraph safe exits. Courtyards let players read threats. Impossible rooms are landmarks, not random navigation tricks.",
+        "look": "Roblox animal hospital campus at blue-hour dusk, faded mint and cream low buildings, dark pine forest hills, crooked but traversable asphalt ambulance road and broad tiled courtyard in foreground, lit check-in windows, enormous distant hospital wing folded at one impossible right angle, red emergency lamps, clearly readable terrain, ominous but non-gory, no characters close to camera."
+      },
+      "commanders": [
+        {
+          "name": "Barney",
+          "role": "Close-range deceiver",
+          "look": "Barney from Animal Hospital: white rabbit-like creature, long ears, brown hat, small mustache, brown plaid trousers, huge dark eyes with white pinpoints, disturbing sharp-toothed smile, coffee cup in one hand and small knife in the other. Non-gory.",
+          "active": {
+            "name": "Friendly visit",
+            "icon": "coffee",
+            "effect": "Send a harmless coffee-bearing decoy toward a target; reactivate to trade places.",
+            "limit": "Decoy breaks on damage and cannot pass through walls.",
+            "cue": "A coffee steam curl bends into a rabbit-ear silhouette.",
+            "window": "Place then reactivate; long recovery"
+          },
+          "complexity": 4,
+          "id": "anomalous-commander-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 4,
+            "Health": 2,
+            "Complexity": 4
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        },
+        {
+          "name": "Stalker",
+          "role": "Ambush controller",
+          "look": "The Stalker from Animal Hospital: very tall thin black rat creature, round large ears, large white eyes, long wide grin, long narrow limbs and tail, peeking posture.",
+          "active": {
+            "name": "Corner of the eye",
+            "icon": "eye-off",
+            "effect": "Mark a corner and briefly appear there to frighten nearby light enemies.",
+            "limit": "Bright open ground prevents the ambush; bosses resist fear.",
+            "cue": "A long rat shadow peeks out before the white eyes appear.",
+            "window": "Requires nearby cover; long recovery"
+          },
+          "complexity": 4,
+          "id": "anomalous-commander-1",
+          "cell": 1,
+          "stats": {
+            "Power": 3,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 4
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        },
+        {
+          "name": "Dr. Harlow",
+          "role": "Crossover support interpretation",
+          "look": "Dr. Harlow from Animal Hospital: light orange deer, large muted-orange antlers, white doctor coat over blue scrubs, blue mask, black stethoscope, forehead mirror with brown band, black case marked with a small red warning rectangle.",
+          "active": {
+            "name": "Second opinion",
+            "icon": "clipboard-plus",
+            "effect": "Diagnose one ally, removing a single negative condition after a short channel.",
+            "limit": "Does not heal raw damage; interrupted channels do nothing.",
+            "cue": "A mint diagnostic frame closes around a white check.",
+            "window": "Channel on an ally; medium recovery"
+          },
+          "complexity": 3,
+          "id": "anomalous-commander-2",
+          "cell": 2,
+          "stats": {
+            "Power": 2,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 3
+          },
+          "canon": "Dr. Harlow is a source character whose anomaly status is uncertain. This support commander is a parallel-universe interpretation."
+        }
+      ],
+      "units": [
+        {
+          "name": "Head Banger",
+          "role": "Disruption",
+          "look": "Animal Hospital patient anomaly interpreted as pale rabbit in mint patient gown, hollow black eyes and open frown, long arms and hunched posture.",
+          "active": null,
+          "complexity": 3,
+          "id": "anomalous-unit-0",
+          "cell": 3,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 1
+          },
+          "tradeoff": "Requires close contact and can be distracted.",
+          "behavior": "Interrupt enemy use of a nearby doorway or cover point."
+        },
+        {
+          "name": "Hider",
+          "role": "Ambush scout",
+          "look": "Animal Hospital-inspired small black rat silhouette with a wide grin and large pale eyes, hiding behind a mint folded screen.",
+          "active": null,
+          "complexity": 3,
+          "id": "anomalous-unit-1",
+          "cell": 4,
+          "stats": {
+            "Power": 4,
+            "Speed": 1,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Weak on open ground and easy to remove once revealed.",
+          "behavior": "Wait beside cover, then briefly expose a marked target."
+        },
+        {
+          "name": "Twitch patient",
+          "role": "Unstable skirmisher",
+          "look": "Original cream cat patient in a hospital gown, unnaturally stretched neck, offset head and crooked drawn smile, limbs bent at odd but readable angles.",
+          "active": null,
+          "complexity": 3,
+          "id": "anomalous-unit-2",
+          "cell": 5,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "Missed lunges leave a long punish window.",
+          "behavior": "Lunge unpredictably after a visible neck-twitch tell."
+        }
+      ],
+      "towers": [
+        {
+          "name": "Check-in shutter",
+          "role": "Lane trap",
+          "look": "A freestanding mint hospital check-in window on chunky cream foundations with steel sliding shutters, single red emergency lamp and watchful eyes behind glass.",
+          "active": null,
+          "complexity": 3,
+          "id": "anomalous-tower-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Cannot permanently block a route; slow reset.",
+          "behavior": "Slam a shutter across a short lane to stagger the front enemy."
+        },
+        {
+          "name": "Witness camera",
+          "role": "Reveal and mark",
+          "look": "Old cream security camera with enormous black pupil lens on a mint articulated hospital lamp pedestal, film coil and warning triangle.",
+          "active": null,
+          "complexity": 3,
+          "id": "anomalous-tower-1",
+          "cell": 1,
+          "stats": {
+            "Power": 2,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 3
+          },
+          "tradeoff": "No direct damage; needs an unobstructed view.",
+          "behavior": "Reveal concealed enemies and mark one for allied fire."
+        },
+        {
+          "name": "Bedside visitor",
+          "role": "Close-range defense",
+          "look": "Small empty cream hospital bed on heavy mint wheeled plinth, raised white pillow, dark long cartoon rat hands emerging from underneath, red alarm clock; no gore.",
+          "active": null,
+          "complexity": 3,
+          "id": "anomalous-tower-2",
+          "cell": 2,
+          "stats": {
+            "Power": 3,
+            "Speed": 4,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "One target at a time and very short reach.",
+          "behavior": "Reach from beneath the bed to hold a nearby light target."
+        }
+      ],
+      "weapons": [
+        {
+          "id": "anomalous-twinblade",
+          "name": "Double incision",
+          "look": "Twin clean surgical knives with cream grips, dark sockets and mint enameled guards, one slightly longer than the other.",
+          "active": {
+            "name": "False negative",
+            "icon": "scissors",
+            "effect": "A successful flank strike marks the target for a second delayed cut.",
+            "limit": "Front-facing strikes do not arm the delayed effect.",
+            "cue": "Two clean pale slash marks snap together after a beat.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "twinblade",
+          "role": "Twin daggers",
+          "cell": 0,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "anomalous-sword",
+          "name": "Discharge blade",
+          "look": "Long mint hospital-sign sword with steel edge, pale bandage wrapped hilt, a single watchful black eye in its guard.",
+          "active": {
+            "name": "Last visitor",
+            "icon": "door-open",
+            "effect": "After a timed parry, send a short fear pulse through nearby light enemies.",
+            "limit": "Requires a successful parry; bosses ignore fear.",
+            "cue": "An ink doorway opens briefly behind the guard.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "sword",
+          "role": "Sword",
+          "cell": 1,
+          "stats": {
+            "Power": 4,
+            "Speed": 3,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "anomalous-spear",
+          "name": "IV lance",
+          "look": "Long cream IV-pole spear with mint bag-shaped glowing reservoir and sharpened dark chrome hook at tip, medical but clearly fantasy.",
+          "active": {
+            "name": "Vital tether",
+            "icon": "syringe",
+            "effect": "Anchor a target with a visible short tether if it is already slowed.",
+            "limit": "Cannot initiate the slow itself; moving away breaks it.",
+            "cue": "A mint pulse fills a thin outlined tube.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "spear",
+          "role": "Spear",
+          "cell": 2,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        },
+        {
+          "id": "anomalous-carbine",
+          "name": "Witness rifle",
+          "look": "Cream and mint plasma rifle assembled around an old hospital camera housing, dark eye lens scope, rubber grips, red status lamp.",
+          "active": {
+            "name": "Caught on film",
+            "icon": "camera",
+            "effect": "Photograph a target through the sights to reveal it and weaken its next attack.",
+            "limit": "Requires a steady aim window; misses consume the charge.",
+            "cue": "A sharp cream rectangular flash with no screen washout.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "carbine",
+          "role": "Plasma rifle",
+          "cell": 3,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Reach": 4,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "anomalous-scepter",
+          "name": "Night-shift scepter",
+          "look": "Mint hospital-lamp staff with cream hooked head enclosing a strange cold ember and a watchful black pupil.",
+          "active": {
+            "name": "Lights out",
+            "icon": "lamp",
+            "effect": "Extinguish a small area briefly, slowing already marked targets.",
+            "limit": "Unmarked enemies are unaffected; area is fixed.",
+            "cue": "A crisp circular shadow with a mint readable boundary.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "scepter",
+          "role": "Ember scepter",
+          "cell": 4,
+          "stats": {
+            "Power": 3,
+            "Speed": 2,
+            "Reach": 5,
+            "Complexity": 4
+          }
+        },
+        {
+          "id": "anomalous-lobber",
+          "name": "Patient zero lobber",
+          "look": "Chunky cream hospital pneumatic tube launcher with mint drum, wrapped grip and small red emergency lamp.",
+          "active": {
+            "name": "Unscheduled arrival",
+            "icon": "package-open",
+            "effect": "Lob a case that opens into a short-lived decoy to pull light enemies.",
+            "limit": "The decoy is fragile and deals no direct damage.",
+            "cue": "A case outline unfolds into a crooked patient silhouette.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "lobber",
+          "role": "Lobber",
+          "cell": 5,
+          "stats": {
+            "Power": 5,
+            "Speed": 1,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "brainshot",
+      "name": "Brainshot",
+      "origin": "Roblox Brainrot crossover",
+      "color": "#f0c66f",
+      "motto": "Absurd equipment. Serious timing.",
+      "identity": "Literal character silhouettes: sneaker shark, coffee ballerina and wooden bat-bearer. Kitchenware and street gear become functional weapon mechanisms.",
+      "materials": "Coffee porcelain, sneaker rubber, varnished wood, pink fabric, blue enamel and exposed fasteners.",
+      "source": "https://stealabrainrot.fandom.com/wiki/Tralalero_Tralala",
+      "world": {
+        "name": "The impossible promenade",
+        "terrain": "A seaside town collides with a coffee factory and oversized sports courts. Tiled plazas, surf-worn cliffs and absurd landmarks keep a grounded terrain layout.",
+        "play": "Beach paths are fast but exposed. Cafe terraces create short flanks. The central factory is a defendable landmark.",
+        "look": "A strange coastal Roblox town with Mediterranean painted walls, seaside promenade, wide warm stone plaza, oversized coffee cup factory with steam chimney, sneaker-shaped public pavilion, gentle blue surf, natural cliffs, basketball court on a terrace, absurd landmarks built as real architecture, sunny late afternoon, no text, no foreground characters."
+      },
+      "commanders": [
+        {
+          "name": "Tralalero Tralala",
+          "role": "Mobile skirmisher",
+          "look": "Recognizable Tralalero Tralala: blue-gray shark with three fin-like legs wearing blue sneakers, large shark head with white belly, no humanoid torso, no added armor.",
+          "active": {
+            "name": "Triple step",
+            "icon": "waves",
+            "effect": "Chain three short ground dashes, each ending in a small knockback.",
+            "limit": "Must finish each dash before steering the next; no vertical travel.",
+            "cue": "Blue sneaker sole marks and three crisp surf arcs.",
+            "window": "Three linked steps; long recovery"
+          },
+          "complexity": 3,
+          "id": "brainshot-commander-0",
+          "cell": 0,
+          "stats": {
+            "Power": 3,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 3
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        },
+        {
+          "name": "Ballerina Cappuccina",
+          "role": "Area support",
+          "look": "Recognizable Ballerina Cappuccina: porcelain cappuccino cup head with visible latte art, face on the cup, slim ballerina body, pink tutu and pink ballet slippers.",
+          "active": {
+            "name": "Steam pirouette",
+            "icon": "wind",
+            "effect": "Spin in place to push nearby light enemies outward and protect allies.",
+            "limit": "Rooted during the spin; vulnerable to ranged fire.",
+            "cue": "Pink skirt arc encircles a cream spiral of steam.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "complexity": 2,
+          "id": "brainshot-commander-1",
+          "cell": 1,
+          "stats": {
+            "Power": 2,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 2
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        },
+        {
+          "name": "Tung Tung Tung Sahur",
+          "role": "Heavy brawler",
+          "look": "Recognizable Tung Tung Tung Sahur: tall cylindrical varnished light-brown wooden log body, expressive eyes and smiling face, thin arms and long legs, holding a wooden bat.",
+          "active": {
+            "name": "Wake-up call",
+            "icon": "drum",
+            "effect": "Charge a bat slam that staggers armored enemies in a small cone.",
+            "limit": "The audible wind-up gives enemies time to move.",
+            "cue": "Three expanding wooden-impact marks form a wedge.",
+            "window": "Hold and commit; long recovery"
+          },
+          "complexity": 2,
+          "id": "brainshot-commander-2",
+          "cell": 2,
+          "stats": {
+            "Power": 5,
+            "Speed": 1,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        }
+      ],
+      "units": [
+        {
+          "name": "Sneaker scout",
+          "role": "Fast recon",
+          "look": "Original tiny shark courier on two oversized blue sneakers, small utility pack on dorsal fin.",
+          "active": null,
+          "complexity": 3,
+          "id": "brainshot-unit-0",
+          "cell": 3,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 1
+          },
+          "tradeoff": "Fast but fragile; cannot hold a contested lane.",
+          "behavior": "Scout ahead and mark nearby routes for allies."
+        },
+        {
+          "name": "Espresso loader",
+          "role": "Heavy support",
+          "look": "Original squat walking espresso machine robot with porcelain cup chest, metal porter arms and pink steam valves.",
+          "active": null,
+          "complexity": 3,
+          "id": "brainshot-unit-1",
+          "cell": 4,
+          "stats": {
+            "Power": 4,
+            "Speed": 1,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Slow and dependent on protection from allies.",
+          "behavior": "Carry spare charges and support a nearby tower."
+        },
+        {
+          "name": "Beat keeper",
+          "role": "Ranged support",
+          "look": "Original short wooden metronome creature, sneaker feet, small drum harness and twin bouncing spoon antennae.",
+          "active": null,
+          "complexity": 3,
+          "id": "brainshot-unit-2",
+          "cell": 5,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "Low damage; heavy enemies ignore the stagger.",
+          "behavior": "Send rhythmic stagger pulses at a single light enemy."
+        }
+      ],
+      "towers": [
+        {
+          "name": "Espresso press",
+          "role": "Sustained beam",
+          "look": "Large industrial espresso machine turret on stout blue sneaker-like outriggers, porcelain pressure chamber and brass-free dark steel steam nozzle.",
+          "active": null,
+          "complexity": 3,
+          "id": "brainshot-tower-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Needs continuous contact; overheats if held too long.",
+          "behavior": "Build sustained pressure into a hot, focused stream."
+        },
+        {
+          "name": "Bass drop",
+          "role": "Area burst",
+          "look": "Stacked wooden speaker cabinets on reinforced pink concrete base, oversized rubber woofer and a sprung metal impact foot.",
+          "active": null,
+          "complexity": 3,
+          "id": "brainshot-tower-1",
+          "cell": 1,
+          "stats": {
+            "Power": 2,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 3
+          },
+          "tradeoff": "Long visible recharge and no long-range coverage.",
+          "behavior": "Release a powerful close-range sound pulse."
+        },
+        {
+          "name": "Sneaker launcher",
+          "role": "Long-range volley",
+          "look": "A blue sneaker-shaped artillery cradle with visible laces as cables, triple small launch rails and squat concrete base.",
+          "active": null,
+          "complexity": 3,
+          "id": "brainshot-tower-2",
+          "cell": 2,
+          "stats": {
+            "Power": 3,
+            "Speed": 4,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "Poor minimum range and a long travel time.",
+          "behavior": "Lob a spread of small rockets at a distant cluster."
+        }
+      ],
+      "weapons": [
+        {
+          "id": "brainshot-twinblade",
+          "name": "Double shot",
+          "look": "Two short porcelain espresso-spoon daggers with coffee-brown edges and pink rubber grips.",
+          "active": {
+            "name": "Double espresso",
+            "icon": "cup-soda",
+            "effect": "Gain a brief fast attack burst after landing both blades on one target.",
+            "limit": "Missing either blade wastes the charge.",
+            "cue": "Two cream coffee-ring impacts stack into a sharp star.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "twinblade",
+          "role": "Twin daggers",
+          "cell": 0,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "brainshot-sword",
+          "name": "Wake-up bat",
+          "look": "Broad wooden sword shaped like a squared cricket bat, varnished grain, blue sneaker-rubber grip and visible impact chips.",
+          "active": {
+            "name": "Punchline",
+            "icon": "hammer",
+            "effect": "Delay a heavy swing for a larger stagger cone.",
+            "limit": "Slow wind-up and short reach expose the wielder.",
+            "cue": "A compact ink-edged wooden shock wedge.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "sword",
+          "role": "Sword",
+          "cell": 1,
+          "stats": {
+            "Power": 4,
+            "Speed": 3,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "brainshot-spear",
+          "name": "Skewer special",
+          "look": "Long blue steel spear with oversized polished fork-like two-prong tip, porcelain collar and coffee-brown rubber shaft.",
+          "active": {
+            "name": "Dinner bell",
+            "icon": "bell-ring",
+            "effect": "Pin a light enemy briefly and pull it a short distance closer.",
+            "limit": "Heavy enemies cannot be pulled.",
+            "cue": "A small cream ringing arc appears at the fork tip.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "spear",
+          "role": "Spear",
+          "cell": 2,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        },
+        {
+          "id": "brainshot-carbine",
+          "name": "Sharkbite carbine",
+          "look": "Blue sneaker-rubber plasma rifle with shark-jaw barrel housing, lace cable details, white ceramic receiver and solid stock.",
+          "active": {
+            "name": "Bite back",
+            "icon": "fish",
+            "effect": "Fire a short charged burst that gains force at close range.",
+            "limit": "Damage falls quickly with distance.",
+            "cue": "A flat blue shark-jaw silhouette closes on impact.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "carbine",
+          "role": "Plasma rifle",
+          "cell": 3,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Reach": 4,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "brainshot-scepter",
+          "name": "Cappuccino scepter",
+          "look": "Long pink-handled staff with a white coffee-cup head and tightly curled cream ember steam, dark ink collar.",
+          "active": {
+            "name": "Hot foam",
+            "icon": "flame",
+            "effect": "Leave a small lingering hot-foam patch at the beam endpoint.",
+            "limit": "Only one patch may exist; it does not follow targets.",
+            "cue": "Cream bubbles sit inside a pink outlined ground circle.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "scepter",
+          "role": "Ember scepter",
+          "cell": 4,
+          "stats": {
+            "Power": 3,
+            "Speed": 2,
+            "Reach": 5,
+            "Complexity": 4
+          }
+        },
+        {
+          "id": "brainshot-lobber",
+          "name": "Beatbox lobber",
+          "look": "Wooden speaker grenade launcher with big circular woofer mouth, blue rubber grip, pink drum and exposed large screws.",
+          "active": {
+            "name": "Bass rebound",
+            "icon": "audio-lines",
+            "effect": "Launch a bouncing shell that grows its burst after one surface bounce.",
+            "limit": "Direct hits give a smaller burst; poor angles miss entirely.",
+            "cue": "A visible sound ring appears at the first bounce.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "lobber",
+          "role": "Lobber",
+          "cell": 5,
+          "stats": {
+            "Power": 5,
+            "Speed": 1,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "robloxian",
+      "name": "Robloxian",
+      "origin": "Classic Roblox",
+      "color": "#edc76e",
+      "motto": "Build something worth defending.",
+      "identity": "Classic block proportions, studded construction parts and recognizable avatar silhouettes. Warm plastic wears at handling edges; confident ink adds weight.",
+      "materials": "Yellow plastic, royal-blue enamel, green molded bases, steel tools and orange construction shells.",
+      "source": "https://roblox.fandom.com/wiki/Player%3ABuilderman",
+      "world": {
+        "name": "Crossroads, reimagined",
+        "terrain": "A green central baseplate meets a stone bridge, brick towers and grassy stepped hills. Recognizable classic construction becomes a lived-in frontier.",
+        "play": "The bridge is a natural defense lane. Brick ruins offer cover. Broad flat pads teach building without obstructing navigation.",
+        "look": "Classic Roblox Crossroads inspired terrain reimagined in sophisticated Painted Inkline: rolling green studded baseplate hills, stone arched bridge across shallow stream, red brick watchtower, simple gray castle ruin, yellow construction crane, broad grass foreground building pads, bright soft cloud sky with painted contours, a tiny classic yellow-head blue-torso green-leg avatar for scale, no text."
+      },
+      "commanders": [
+        {
+          "name": "Noob",
+          "role": "All-round defender",
+          "look": "Classic Roblox Noob with yellow cylindrical head and hands, simple smile, royal-blue block torso, green block legs, small utility belt, original classic block proportions.",
+          "active": {
+            "name": "Second wind",
+            "icon": "heart-handshake",
+            "effect": "Recover a modest amount of health after breaking line of sight.",
+            "limit": "Cannot trigger while taking damage; does not restore a full health bar.",
+            "cue": "A bright yellow smile badge closes around a small green pulse.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "complexity": 1,
+          "id": "robloxian-commander-0",
+          "cell": 0,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Health": 4,
+            "Complexity": 1
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        },
+        {
+          "name": "Guest",
+          "role": "Quiet flanker",
+          "look": "Classic Roblox Guest with pale cylindrical smiling head, black cap, dark blocky shirt with a small red chest stripe, dark trousers, simple anonymous face, no military helmet.",
+          "active": {
+            "name": "Off the list",
+            "icon": "user-round-x",
+            "effect": "Briefly drop enemy attention after dodging behind nearby cover.",
+            "limit": "Attacking ends the effect immediately; bosses keep tracking.",
+            "cue": "A clean pale avatar outline fades to a dotted silhouette.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "complexity": 2,
+          "id": "robloxian-commander-1",
+          "cell": 1,
+          "stats": {
+            "Power": 3,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 2
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        },
+        {
+          "name": "Builderman",
+          "role": "Construction support",
+          "look": "Builderman classic 2007-inspired avatar: yellow head with simple smile, orange hard hat, orange torso with black wrench emblem, dark block arms and legs, tool belt and large spanner.",
+          "active": {
+            "name": "Quick build",
+            "icon": "construction",
+            "effect": "Deploy a small temporary barricade at a valid nearby build point.",
+            "limit": "Only one barricade; cannot seal a required route or replace a tower.",
+            "cue": "Three studded blocks snap together with white ink impact ticks.",
+            "window": "Choose valid ground; long recovery"
+          },
+          "complexity": 2,
+          "id": "robloxian-commander-2",
+          "cell": 2,
+          "stats": {
+            "Power": 2,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 2
+          },
+          "canon": "Source character; game role and power are new crossover proposals."
+        }
+      ],
+      "units": [
+        {
+          "name": "Brickguard",
+          "role": "Line infantry",
+          "look": "Classic yellow smiling block soldier, blue work vest, green legs, simple studded shield and compact tool carbine.",
+          "active": null,
+          "complexity": 3,
+          "id": "robloxian-unit-0",
+          "cell": 3,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 3,
+            "Complexity": 1
+          },
+          "tradeoff": "Limited speed and weak coverage at the sides.",
+          "behavior": "Hold a short firing line behind a portable stud shield."
+        },
+        {
+          "name": "Builder crew",
+          "role": "Repair support",
+          "look": "Blocky yellow-headed builder with orange hardhat, denim overalls, large wrench and studded parts backpack.",
+          "active": null,
+          "complexity": 3,
+          "id": "robloxian-unit-1",
+          "cell": 4,
+          "stats": {
+            "Power": 1,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 2
+          },
+          "tradeoff": "Cannot fight effectively or repair through heavy damage.",
+          "behavior": "Repair one nearby structure between incoming hits."
+        },
+        {
+          "name": "Bacon runner",
+          "role": "Fast scout",
+          "look": "Blocky Roblox avatar with brown layered bacon hair, pale head, blue-black shirt, green utility trousers and small messenger bag.",
+          "active": null,
+          "complexity": 3,
+          "id": "robloxian-unit-2",
+          "cell": 5,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 1
+          },
+          "tradeoff": "Avoids direct trades; very low health.",
+          "behavior": "Move quickly between objectives and carry small pickups."
+        }
+      ],
+      "towers": [
+        {
+          "name": "Stud sentry",
+          "role": "Reliable fire",
+          "look": "Classic Roblox studded blue and gray brick turret with a short green plasma barrel on sturdy yellow circular base, real hinge and large bolts.",
+          "active": null,
+          "complexity": 3,
+          "id": "robloxian-tower-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Useful baseline, but no special armor or crowd answer.",
+          "behavior": "Track one target with steady, reliable plasma bolts."
+        },
+        {
+          "name": "Brickwork bastion",
+          "role": "Heavy fire",
+          "look": "Chunky red brick watchtower with orange construction cap, gray long cannon and reinforced dark steel corner bands.",
+          "active": null,
+          "complexity": 3,
+          "id": "robloxian-tower-1",
+          "cell": 1,
+          "stats": {
+            "Power": 2,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 3
+          },
+          "tradeoff": "Slow traverse; nearby fast targets can slip underneath.",
+          "behavior": "Fire heavy shells from a reinforced brick platform."
+        },
+        {
+          "name": "Spawn beacon",
+          "role": "Support field",
+          "look": "Tall green-and-blue classic Roblox spawn pad tower with studded pedestal, yellow square halo held above by mechanical posts, clean white signal core.",
+          "active": null,
+          "complexity": 3,
+          "id": "robloxian-tower-2",
+          "cell": 2,
+          "stats": {
+            "Power": 3,
+            "Speed": 4,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "No direct damage and no stacking with another beacon.",
+          "behavior": "Give nearby allied units a brief rally-speed pulse."
+        }
+      ],
+      "weapons": [
+        {
+          "id": "robloxian-twinblade",
+          "name": "Paired classics",
+          "look": "Two simple polished gray short Roblox daggers, yellow guards, blue studded grips and crisp green pommels.",
+          "active": {
+            "name": "Quick swap",
+            "icon": "repeat-2",
+            "effect": "After a successful dodge, empower the next alternating blade pair.",
+            "limit": "No bonus if the same blade is repeated.",
+            "cue": "Two small yellow arrows exchange places around the hands.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "twinblade",
+          "role": "Twin daggers",
+          "cell": 0,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "robloxian-sword",
+          "name": "Classic sword",
+          "look": "Iconic simple straight gray Roblox sword, blue hilt, yellow crossguard, small clean edge chips, blocky readable silhouette.",
+          "active": {
+            "name": "Lunge",
+            "icon": "sword",
+            "effect": "Commit to a short forward thrust that breaks a light guard.",
+            "limit": "Cannot turn mid-lunge and ends with a brief recovery.",
+            "cue": "One broad white slash wedge framed in dark ink.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "sword",
+          "role": "Sword",
+          "cell": 1,
+          "stats": {
+            "Power": 4,
+            "Speed": 3,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "robloxian-spear",
+          "name": "Stud pike",
+          "look": "Long gray studded spear with yellow square collar, green angular steel tip, blue taped grip and block-built butt cap.",
+          "active": {
+            "name": "Hold the bridge",
+            "icon": "fence",
+            "effect": "Brace to stop the first light enemy charging into reach.",
+            "limit": "Stationary and only protects a narrow front arc.",
+            "cue": "A green bracket appears on the ground ahead.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "spear",
+          "role": "Spear",
+          "cell": 2,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        },
+        {
+          "id": "robloxian-carbine",
+          "name": "Brickbolt rifle",
+          "look": "Royal-blue block-built plasma rifle, yellow studded receiver, green cylindrical barrel shroud, gray stock and visible modular brick connections.",
+          "active": {
+            "name": "Overclock",
+            "icon": "zap",
+            "effect": "Fire a brief fast volley using a charged brick capacitor.",
+            "limit": "Heat forces a short recovery before normal fire resumes.",
+            "cue": "Yellow block-shaped sparks skip between green coils.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "carbine",
+          "role": "Plasma rifle",
+          "cell": 3,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Reach": 4,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "robloxian-scepter",
+          "name": "Spawnfire staff",
+          "look": "Green classic Roblox staff with blue studded grip and square yellow energy cage holding a crisp white ember.",
+          "active": {
+            "name": "Rally point",
+            "icon": "flag",
+            "effect": "Place a short-lived zone that speeds nearby allied movement.",
+            "limit": "One zone only; leaving it ends the benefit.",
+            "cue": "A yellow square flag hangs over an outlined green pad.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "scepter",
+          "role": "Ember scepter",
+          "cell": 4,
+          "stats": {
+            "Power": 3,
+            "Speed": 2,
+            "Reach": 5,
+            "Complexity": 4
+          }
+        },
+        {
+          "id": "robloxian-lobber",
+          "name": "Blockbuster",
+          "look": "Chunky yellow-and-blue classic brick rocket lobber, single broad gray launch tube, green studded drum and modular stock.",
+          "active": {
+            "name": "Demolition day",
+            "icon": "brick-wall",
+            "effect": "Break a cluster of temporary enemy obstacles with a heavy arcing shell.",
+            "limit": "Lower direct-target damage; friendly structures are unaffected.",
+            "cue": "Clean brick-shaped dust fragments fall inside a marked circle.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "lobber",
+          "role": "Lobber",
+          "cell": 5,
+          "stats": {
+            "Power": 5,
+            "Speed": 1,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "alien",
+      "name": "Invader",
+      "origin": "Original invading faction",
+      "color": "#c5d984",
+      "motto": "The meteor was a door.",
+      "identity": "An original glyph cipher encodes ayy lmao. Rust chitin, hooked ivory brow plates and lime channels unify a living invasion force.",
+      "materials": "Rusted red chitin, ivory bone, deep plum shadow and narrow lime bioluminescent channels.",
+      "source": null,
+      "world": {
+        "name": "The hollow arrival",
+        "terrain": "Meteor craters expose living basalt beneath a rust-colored crust. Bone-like arches span broad dry gullies and luminous channels trace routes toward buried hives.",
+        "play": "Crater rims offer elevation. Wide gullies carry readable attack lanes. Lime channels mark dangerous ground rather than fogging the whole scene.",
+        "look": "Alien homeworld of enormous broken meteor shells, rust-red desert crust and deep plum basalt craters, hooked ivory arches across broad dry gullies, sparse narrow lime glowing channels, living hive spires carved into far cliffs, foreground flat traversable crater shelf, immense pale planet in dusky orange sky, small four-legged chitin creatures for scale. Illustrative atmosphere but clear foreground shadows."
+      },
+      "commanders": [
+        {
+          "name": "The Herald",
+          "role": "Original invasion captain",
+          "look": "Original angular rust-chitin alien with broad ivory hooked brow, narrow lime eyes, two articulated arms, backward-jointed legs, long split red shoulder plates and a dark plum core.",
+          "active": {
+            "name": "Breach call",
+            "icon": "radio-tower",
+            "effect": "Open a small arrival marker that buffs nearby invading units after a delay.",
+            "limit": "The visible marker can be destroyed before activation.",
+            "cue": "A lime glyph opens between two broken meteor fragments.",
+            "window": "Place and defend; long recovery"
+          },
+          "complexity": 3,
+          "id": "alien-commander-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 3
+          },
+          "canon": "Original character concept."
+        },
+        {
+          "name": "Broodwarden",
+          "role": "Original heavy guardian",
+          "look": "Original huge low quadrupedal alien beetle with rust-red shell, ivory mandible shield, many small lime eyes, heavy segmented legs and small back spines.",
+          "active": {
+            "name": "Carapace wall",
+            "icon": "shell",
+            "effect": "Unfurl a frontal shell that shelters nearby allies from projectiles.",
+            "limit": "Turning is slow and the exposed rear remains vulnerable.",
+            "cue": "Ivory plates lock together with a dark outlined lime seam.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "complexity": 2,
+          "id": "alien-commander-1",
+          "cell": 1,
+          "stats": {
+            "Power": 4,
+            "Speed": 1,
+            "Health": 5,
+            "Complexity": 2
+          },
+          "canon": "Original character concept."
+        },
+        {
+          "name": "Riftwalker",
+          "role": "Original strike leader",
+          "look": "Original slender tall alien with a split ivory mask, long rust-red insect limbs, narrow waist, two floating chitin shoulder fins, lime tendon glow and hooked feet.",
+          "active": {
+            "name": "Slip between",
+            "icon": "scan-line",
+            "effect": "Blink a short distance to a visible target point after a clear tell.",
+            "limit": "Cannot cross sealed geometry; arrival has a short vulnerable pause.",
+            "cue": "A thin lime cut peels open with rust-colored ink fragments.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "complexity": 4,
+          "id": "alien-commander-2",
+          "cell": 2,
+          "stats": {
+            "Power": 3,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 4
+          },
+          "canon": "Original character concept."
+        }
+      ],
+      "units": [
+        {
+          "name": "Skitter",
+          "role": "Swarm scout",
+          "look": "Small rust-red four-legged insect alien, hooked ivory brow, sharp lime eyes and compact dark plum underside.",
+          "active": null,
+          "complexity": 3,
+          "id": "alien-unit-0",
+          "cell": 3,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Health": 2,
+            "Complexity": 1
+          },
+          "tradeoff": "Low health and vulnerable to wide attack arcs.",
+          "behavior": "Rush exposed targets in small, readable groups."
+        },
+        {
+          "name": "Shellback",
+          "role": "Armored breaker",
+          "look": "Broad low six-legged alien with layered rust chitin, huge ivory frontal shield and small lime vents.",
+          "active": null,
+          "complexity": 3,
+          "id": "alien-unit-1",
+          "cell": 4,
+          "stats": {
+            "Power": 4,
+            "Speed": 1,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Rear armor is thin and turns are slow.",
+          "behavior": "Advance behind a thick frontal shell to pressure structures."
+        },
+        {
+          "name": "Spore eye",
+          "role": "Ranged support",
+          "look": "Floating rust-chitin seedpod creature with one lime lens, ivory hooked fins and three thin articulated tendrils.",
+          "active": null,
+          "complexity": 3,
+          "id": "alien-unit-2",
+          "cell": 5,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "Fragile at close range and easy to reveal.",
+          "behavior": "Float behind the swarm and lob small plasma seeds."
+        }
+      ],
+      "towers": [
+        {
+          "name": "Breach spine",
+          "role": "Piercing fire",
+          "look": "Tall organic rust-red chitin turret with hooked ivory rails, lime energy throat and three large claw legs gripping a dark basalt base.",
+          "active": null,
+          "complexity": 3,
+          "id": "alien-tower-0",
+          "cell": 0,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 2
+          },
+          "tradeoff": "Needs a straight lane and time between shots.",
+          "behavior": "Drive a narrow piercing pulse through aligned enemies."
+        },
+        {
+          "name": "Brood kettle",
+          "role": "Swarm support",
+          "look": "Squat meteor-shell hive nest with layered rust plates, ivory rib cage, lime egg-like energy core and small low arched exits.",
+          "active": null,
+          "complexity": 3,
+          "id": "alien-tower-1",
+          "cell": 1,
+          "stats": {
+            "Power": 2,
+            "Speed": 3,
+            "Health": 5,
+            "Complexity": 3
+          },
+          "tradeoff": "Nest is vulnerable while open; no unlimited stacking.",
+          "behavior": "Release a small capped group of fragile temporary skitters."
+        },
+        {
+          "name": "Rift thorn",
+          "role": "Area control",
+          "look": "Three asymmetrical ivory thorn arches rising from a rust-chitin basalt plinth around a narrow lime portal lens, organic articulated roots.",
+          "active": null,
+          "complexity": 3,
+          "id": "alien-tower-2",
+          "cell": 2,
+          "stats": {
+            "Power": 3,
+            "Speed": 4,
+            "Health": 3,
+            "Complexity": 3
+          },
+          "tradeoff": "Little direct damage and only one active zone.",
+          "behavior": "Slow enemies crossing a small rift zone."
+        }
+      ],
+      "weapons": [
+        {
+          "id": "alien-twinblade",
+          "name": "Split talons",
+          "look": "Twin hooked ivory alien daggers with rust-chitin grips and thin lime tendon channels.",
+          "active": {
+            "name": "Predator mark",
+            "icon": "focus",
+            "effect": "Mark a target with both blades, then briefly reveal its weak side.",
+            "limit": "Both hits must connect; no bonus against an unmarked target.",
+            "cue": "Two lime claw marks point toward the exposed flank.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "twinblade",
+          "role": "Twin daggers",
+          "cell": 0,
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "alien-sword",
+          "name": "Meteor fang",
+          "look": "Heavy rust-chitin sword with long ivory hooked edge, dark plum grip and a narrow lime crack in its spine.",
+          "active": {
+            "name": "Fault line",
+            "icon": "split",
+            "effect": "Strike the ground to send a short fissure toward a target.",
+            "limit": "Grounded targets only; slow recovery after release.",
+            "cue": "An ivory-edged rust crack travels with a thin lime center.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "sword",
+          "role": "Sword",
+          "cell": 1,
+          "stats": {
+            "Power": 4,
+            "Speed": 3,
+            "Reach": 3,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "alien-spear",
+          "name": "Arrival pike",
+          "look": "Long bone alien spear with split ivory hooked tip, rust segmented shaft and narrow lime bioluminescent tubes.",
+          "active": {
+            "name": "Harpoon",
+            "icon": "anchor",
+            "effect": "Catch a light target and draw it slightly closer.",
+            "limit": "Armored heavy targets anchor the user instead.",
+            "cue": "A taut lime tendon shows the direction of the pull.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "spear",
+          "role": "Spear",
+          "cell": 2,
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        },
+        {
+          "id": "alien-carbine",
+          "name": "Chitin carbine",
+          "look": "Organic rust-red alien plasma rifle with ivory hooked brow sight, lime living chamber, articulated dark grip, strong readable stock and barrel.",
+          "active": {
+            "name": "Living burst",
+            "icon": "bug",
+            "effect": "Launch a slow tracking plasma seed after a short target lock.",
+            "limit": "Targets can break the lock with cover; projectile can be intercepted.",
+            "cue": "Three small lime seeds orbit before one launches.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "carbine",
+          "role": "Plasma rifle",
+          "cell": 3,
+          "stats": {
+            "Power": 3,
+            "Speed": 3,
+            "Reach": 4,
+            "Complexity": 2
+          }
+        },
+        {
+          "id": "alien-scepter",
+          "name": "Rift ember",
+          "look": "Organic ivory hooked staff with rust-chitin segmented handle, dark plum cage and restrained lime flame.",
+          "active": {
+            "name": "Molting heat",
+            "icon": "blend",
+            "effect": "Leave a burning shell at the current position while stepping back.",
+            "limit": "The shell is stationary and fragile; no invulnerability.",
+            "cue": "Rust flakes peel away around one sharply outlined lime ember.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "scepter",
+          "role": "Ember scepter",
+          "cell": 4,
+          "stats": {
+            "Power": 3,
+            "Speed": 2,
+            "Reach": 5,
+            "Complexity": 4
+          }
+        },
+        {
+          "id": "alien-lobber",
+          "name": "Spore lobber",
+          "look": "Bulbous rust-red chitin launcher with ivory mouth ring, lime segmented spore drum and bone stock.",
+          "active": {
+            "name": "Hatchfall",
+            "icon": "egg",
+            "effect": "Lob a pod that releases a few fragile temporary distractions.",
+            "limit": "Pod opens slowly; one brood at a time and low direct damage.",
+            "cue": "A lime crack splits the rust shell into three large pieces.",
+            "window": "Deliberate activation; medium recovery"
+          },
+          "family": "lobber",
+          "role": "Lobber",
+          "cell": 5,
+          "stats": {
+            "Power": 5,
+            "Speed": 1,
+            "Reach": 4,
+            "Complexity": 3
+          }
+        }
+      ]
+    }
+  ],
+  "plates": [
+    {
+      "index": 0,
+      "id": "rainboom-roster",
+      "faction": "rainboom",
+      "type": "roster",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "A premium game character concept sheet, six separate full-body figures in an exact 3 columns x 2 rows grid. Equal cells, generous empty margins. Flat light cool-gray background throughout, no text, no grid lines, no extra vignettes. Shared art direction from the attached reference: Painted Inkline, hand-painted opaque gouache surfaces, confident black outer contours, thinner irregular internal ink edges, crisp broad colored cel-shadow shapes, soft brush variation within local color, illustrative depth, sharp readable silhouettes. No crosshatch shading, no photorealism, no glossy toy render. Roblox crossover but mature expressive character shapes. RAINBOOM faction. TOP ROW commanders left to right: BLUE from Rainbow Friends, recognizable large rounded blue mascot with gold three-prong crown, one black button eye with an X, other round white eye, crooked drooling smile, stocky blue body, NO armor and NO human face; GREEN from Rainbow Friends, recognizable very tall thin green fuzzy mascot, long flexible arms, two googly eyes, open long mouth with little teeth, no armor; ORANGE from Rainbow Friends, small orange dinosaur/lizard mascot with long jaw full of sharp teeth, large outward facing eyes, tiny arms and a tail, racing forward. BOTTOM ROW units left to right: small red round Lookie-inspired one-eyed bouncing pigment carrier with a chunky cobalt canister harness; compact blue toy-factory shield drone on two wheels with crown-shaped shield and separated yellow paint tank; lanky green hose-hand helper mascot with two paint hoses and segmented boots. Commanders entirely retain source character identities. Units are original RainBOOM military helper interpretations. Pops of cyan pink yellow liquid are separated paint reservoirs, no rainbow gradients. Put one figure centered in each cell, feet stay in cell. Top row heroes same visual area despite different heights. Painterly, textured, beautiful finished development art.",
+      "promptSha256": "7e62798bbb4a59e1e53d77e6215e6f2b677a24dcbfef24d4f0d3acdb89eae0b6",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "a00f6934-7137-4fe8-8c4a-e15807c53318",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_163431_a00f6934-7137-4fe8-8c4a-e15807c53318.png",
+      "file": "rainboom-roster.png",
+      "preview": "rainboom-roster.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "9fc3c62ec3e43c9270a6b892d5c1230df64b7c59b5bf66a9234f65eeb71ea559",
+      "webpSha256": "e555f046d8984f4a06bcb8250b3fcfc1aaa298e7882eb330975bb54e7e4312fe"
+    },
+    {
+      "index": 1,
+      "id": "rainboom-arsenal",
+      "faction": "rainboom",
+      "type": "arsenal",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: RainBOOM. Materials: Painted cobalt plastic, soft mascot fabric, rubber hoses, yellow and pink pigment tanks. Six separate premium weapon concepts in an EXACT 3 columns x 2 rows grid. Equal square cells, flat light cool-gray background, generous empty cell margins, no dividers. Every weapon fully visible, isolated, readable three-quarter view, no hands or people. TOP ROW LEFT TO RIGHT: Two short asymmetric curved cobalt knives with crown guards and separate pink/yellow paint cartridges. | Broad cobalt sword, gold crown guard, orange paint reservoir in spine. | Long segmented green spear with cobalt crown collar and a yellow conical nozzle tip.. BOTTOM ROW LEFT TO RIGHT: Chunky cobalt plasma rifle with gold crown rear sight, three physically separate bright pigment chambers, readable stock grip and barrel. | White-and-cobalt staff with gold crown cage holding three separate floating colored pigment spheres. | Squat blue drum grenade launcher with toy-factory hinges, yellow drum and pink paint shell.. Daggers are ONE matched pair in the first cell. Every other cell contains exactly one weapon. Long weapons diagonal within their own cell.",
+      "promptSha256": "5f45cfb6aafc41082f5ec623167bce0e1b420c1c1207a2389761ec752fad7a14",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "1e1e5c37-baaa-4a03-8f98-a499d4e862b6",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164151_1e1e5c37-baaa-4a03-8f98-a499d4e862b6.png",
+      "file": "rainboom-arsenal.png",
+      "preview": "rainboom-arsenal.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "c79067d534303634bb4fec0942d6e102637bccf37419dfd4aa994d50bf6b9cff",
+      "webpSha256": "9004d78354838ecabc79015fb61c5c5da512d04ec6e5b66245323e15be4cb7fd"
+    },
+    {
+      "index": 2,
+      "id": "rainboom-towers",
+      "faction": "rainboom",
+      "type": "towers",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: RainBOOM. Materials: Painted cobalt plastic, soft mascot fabric, rubber hoses, yellow and pink pigment tanks. Three isolated game tower concepts, EXACTLY THREE equal width vertical columns, no dividers, flat light cool-gray background. Full towers including base visible with comfortable margins. LEFT TO RIGHT: Short round cobalt paint turret on yellow industrial tripod, three clearly separate pink yellow cyan chambers, single wide splatter nozzle. | Tall gold crown-shaped reflector ring above a stout cobalt plinth, rotating separated colored glass prisms and narrow beam emitter. | Oversized slightly battered corrugated hiding box on low blue turntable, toothy hinged lid and three spring-loaded paint pistons.. Strong unique functional silhouettes, rich close-up material painting, buildable block-compatible forms, detailed pivots and mechanisms. NO characters and NO extra items.",
+      "promptSha256": "bd8d7967aa67563e58c3cf9b851a52454eb566a34ed697ce8d6e5eca923a2a2b",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "ba1be691-767c-410c-9285-a73cacfab13d",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164153_ba1be691-767c-410c-9285-a73cacfab13d.png",
+      "file": "rainboom-towers.png",
+      "preview": "rainboom-towers.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "2065e771cacdd7e3b45b75fa10f09801b20887b87680845024bad9907b13d0f2",
+      "webpSha256": "cfd27ca7f2a57497d2273ab4fdfb6c5c859f6f8b87eff7be40d0a74b6f34c91b"
+    },
+    {
+      "index": 3,
+      "id": "rainboom-world",
+      "faction": "rainboom",
+      "type": "world",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "16:9",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: RainBOOM. Materials: Painted cobalt plastic, soft mascot fabric, rubber hoses, yellow and pink pigment tanks. Cinematic wide game environment concept painting. A sprawling deserted Roblox amusement park on rolling green hills at late afternoon, immense blue mascot head gate with gold crown, pastel separated paint reservoirs, orange rollercoaster weaving between cliffs, cracked service roads, blue river rides, chunky hedges, wide traversable foreground service-road junction and a small Worldheart beacon. No characters close to camera. Terrain-first composition: near foreground readable playable route, middle distance cover and construction space, dramatic far landmark. Strong contrast, gentle atmospheric recession without washing out paint or shadows. No UI, no inset panels.",
+      "promptSha256": "bedc9881748bb2c0e50653f45268411b4dfbc6b1e7aa459524035fb2a503f738",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "a5b2fb6a-71f0-4a09-90c6-8923ad1759a1",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164151_a5b2fb6a-71f0-4a09-90c6-8923ad1759a1.png",
+      "file": "rainboom-world.png",
+      "preview": "rainboom-world.webp",
+      "width": 2752,
+      "height": 1536,
+      "sha256": "065da6d8e41ddfb2cad933a61862f0fccc952939edd0d0934996bef9d72ff612",
+      "webpSha256": "2b1deee294d49fa8219eaa012d02abe2a5d5ccdbaac6b93e768d840a4183a3e5"
+    },
+    {
+      "index": 4,
+      "id": "axiom-roster",
+      "faction": "axiom",
+      "type": "roster",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Axiom. Materials: White ceramic, satin titanium, graphite joints, restrained ice-cyan status light. No gold or ochre armor. Six separate full-body character concept figures in an EXACT 3 columns x 2 rows grid. Equal square cells, generous margins, flat light cool-gray background, no dividers. One character centered per cell, feet and extremities fully inside each cell. TOP ROW commanders LEFT TO RIGHT: Broad-shouldered pristine white ceramic robot, wide rectangular head with expressive paired cyan binocular optics, graphite spine and visible knee joints, integrated forearm shield. | Lean white ceramic athletic robot with tapered limbs, smoked-glass narrow visor, exposed black ankle mechanisms and split fin shoulders. | Small floating white ceramic robot with round body, two articulated repair arms, broad binocular optic face, graphite gimbal and a tiny cyan core.. BOTTOM ROW units LEFT TO RIGHT: Small white two-legged optical robot with tripod binocular head, thin graphite legs and a scanning fin. | Pristine white broad humanoid robot with rounded chest shell, solid forearm plates and black articulated joints. | Floating white torus robot with two graphite arms and an exposed small cyan light at center.. Retain the recognizable source identities; do not turn mascots into generic armored humans.",
+      "promptSha256": "40515c45dee105c4b02a040d692b82cd880589b46a5b85e6cd9360f74fd9ec59",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "fa124a38-76f3-4141-bd4c-88f579eb9743",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164151_fa124a38-76f3-4141-bd4c-88f579eb9743.png",
+      "file": "axiom-roster.png",
+      "preview": "axiom-roster.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "372e30fa2bd73206f60b12077efad1b3745b3a13f5f2c326f99f5d2b065c4316",
+      "webpSha256": "459b6a2c4e42d539ed187bd534d4cb82001032ff88043b60b76d51dd754fc948"
+    },
+    {
+      "index": 5,
+      "id": "axiom-arsenal",
+      "faction": "axiom",
+      "type": "arsenal",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Axiom. Materials: White ceramic, satin titanium, graphite joints, restrained ice-cyan status light. No gold or ochre armor. Six separate premium weapon concepts in an EXACT 3 columns x 2 rows grid. Equal square cells, flat light cool-gray background, generous empty cell margins, no dividers. Every weapon fully visible, isolated, readable three-quarter view, no hands or people. TOP ROW LEFT TO RIGHT: Matched short white ceramic daggers with graphite spine, open circular guards and thin cyan inner edge. | Pristine white ceramic long sword with inset graphite blade channel, circular guard and small cyan seam. | Long white robotic spear with two split ceramic tip fins around a cyan beam tip and graphite shaft joints.. BOTTOM ROW LEFT TO RIGHT: Clean white ergonomic plasma rifle with graphite receiver, two parallel floating white barrel shrouds, cyan core and compact stock. | Pristine white staff with three symmetrical ceramic petals enclosing a cyan energy core, graphite articulated grip. | Compact white robotic lobber with graphite cylindrical shell chamber inside white concentric orbital gimbal.. Daggers are ONE matched pair in the first cell. Every other cell contains exactly one weapon. Long weapons diagonal within their own cell.",
+      "promptSha256": "e6d913aea4e3ac885d48d56c97a5557ef77e49ff78e1aff11943a17508d56a0e",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "42ae012d-294d-4114-b95b-2d6af38b5f77",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164152_42ae012d-294d-4114-b95b-2d6af38b5f77.png",
+      "file": "axiom-arsenal.png",
+      "preview": "axiom-arsenal.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "e7c859bd055a14c68b39ec4888157813afa70bec5e76a5b288b1f6c8f89b8d31",
+      "webpSha256": "702b6cab61e2413b486c6e9e0935a91a962c678b03514925993b1d7eddf7a05c"
+    },
+    {
+      "index": 6,
+      "id": "axiom-towers",
+      "faction": "axiom",
+      "type": "towers",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Axiom. Materials: White ceramic, satin titanium, graphite joints, restrained ice-cyan status light. No gold or ochre armor. Three isolated game tower concepts, EXACTLY THREE equal width vertical columns, no dividers, flat light cool-gray background. Full towers including base visible with comfortable margins. LEFT TO RIGHT: Pristine white ceramic long-rail turret, twin straight graphite barrel rails on circular white pedestal with exposed black pivot. | Three white ceramic curved fins suspended above a low graphite circular plinth, tiny cyan diagnostic core, no weapon barrel. | Low white three-legged dish around a recessed dark gravity lens, pristine broad curved plates, concentric articulated titanium rings.. Strong unique functional silhouettes, rich close-up material painting, buildable block-compatible forms, detailed pivots and mechanisms. NO characters and NO extra items.",
+      "promptSha256": "536260373731c738e00886bbff1bc0b889e33b79df8094927d34bc01372e6a94",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "e41ee4a9-b5e8-4652-9b79-a8d98085b394",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164151_e41ee4a9-b5e8-4652-9b79-a8d98085b394.png",
+      "file": "axiom-towers.png",
+      "preview": "axiom-towers.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "0daca4b64be13c84c9639dd52a368fd184511bf62e196e6e06a235fec7f7b3d2",
+      "webpSha256": "ed903790b14ae21792d4b4ef9516f63cc02305ee11aae466e8051ca0337866d6"
+    },
+    {
+      "index": 7,
+      "id": "axiom-world",
+      "faction": "axiom",
+      "type": "world",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "16:9",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Axiom. Materials: White ceramic, satin titanium, graphite joints, restrained ice-cyan status light. No gold or ochre armor. Cinematic wide game environment concept painting. A pristine white robotic civilization on basalt islands, monumental ceramic rings and tiered white terraces across deep black-blue water, minimalist clean white towers with graphite seams, small natural reed patches in cracks, broad white traversable causeway in foreground, low sun and hard blue-gray shadows, tiny white service robots for scale, no busy cyberpunk city. Terrain-first composition: near foreground readable playable route, middle distance cover and construction space, dramatic far landmark. Strong contrast, gentle atmospheric recession without washing out paint or shadows. No UI, no inset panels.",
+      "promptSha256": "51a421b7ae5e6c410a74a5080ea15fc55cc81922d1404d9b3ff736071c5a267e",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "816efdff-5fdc-434d-9527-7e4bd65f85ef",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164214_816efdff-5fdc-434d-9527-7e4bd65f85ef.png",
+      "file": "axiom-world.png",
+      "preview": "axiom-world.webp",
+      "width": 2752,
+      "height": 1536,
+      "sha256": "7b543b007daa628c395a0858b4a27d0b973cb8c4d8cb104578ef1226e3c316bc",
+      "webpSha256": "5e6fccdbd9eda8dc35f4e8f938156b11dca6b7ba5027256d72d32a4221b5707c"
+    },
+    {
+      "index": 8,
+      "id": "anomalous-roster",
+      "faction": "anomalous",
+      "type": "roster",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Anomalous. Materials: Faded mint enamel, cream fur, worn hospital fabric, dark eye sockets, red emergency lamps. Keep effects non-gory. Six separate full-body character concept figures in an EXACT 3 columns x 2 rows grid. Equal square cells, generous margins, flat light cool-gray background, no dividers. One character centered per cell, feet and extremities fully inside each cell. TOP ROW commanders LEFT TO RIGHT: Barney from Animal Hospital: white rabbit-like creature, long ears, brown hat, small mustache, brown plaid trousers, huge dark eyes with white pinpoints, disturbing sharp-toothed smile, coffee cup in one hand and small knife in the other. Non-gory. | The Stalker from Animal Hospital: very tall thin black rat creature, round large ears, large white eyes, long wide grin, long narrow limbs and tail, peeking posture. | Dr. Harlow from Animal Hospital: light orange deer, large muted-orange antlers, white doctor coat over blue scrubs, blue mask, black stethoscope, forehead mirror with brown band, black case marked with a small red warning rectangle.. BOTTOM ROW units LEFT TO RIGHT: Animal Hospital patient anomaly interpreted as pale rabbit in mint patient gown, hollow black eyes and open frown, long arms and hunched posture. | Animal Hospital-inspired small black rat silhouette with a wide grin and large pale eyes, hiding behind a mint folded screen. | Original cream cat patient in a hospital gown, unnaturally stretched neck, offset head and crooked drawn smile, limbs bent at odd but readable angles.. Retain the recognizable source identities; do not turn mascots into generic armored humans.",
+      "promptSha256": "30aff1a2431d134fb28abee1ce8e892d566dd43a7ae0f7837d276ff52c60e83c",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "966b7208-0ea5-4887-ab8e-0923a91fb655",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164214_966b7208-0ea5-4887-ab8e-0923a91fb655.png",
+      "file": "anomalous-roster.png",
+      "preview": "anomalous-roster.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "9282f465d2b0c4525e80246acda7089c65a29843fbd6f85f781fcd725a058389",
+      "webpSha256": "8e695e639fb62aee992cec15533af768662ffb998a35932c1696269684f5f368"
+    },
+    {
+      "index": 9,
+      "id": "anomalous-arsenal",
+      "faction": "anomalous",
+      "type": "arsenal",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Anomalous. Materials: Faded mint enamel, cream fur, worn hospital fabric, dark eye sockets, red emergency lamps. Keep effects non-gory. Six separate premium weapon concepts in an EXACT 3 columns x 2 rows grid. Equal square cells, flat light cool-gray background, generous empty cell margins, no dividers. Every weapon fully visible, isolated, readable three-quarter view, no hands or people. TOP ROW LEFT TO RIGHT: Twin clean surgical knives with cream grips, dark sockets and mint enameled guards, one slightly longer than the other. | Long mint hospital-sign sword with steel edge, pale bandage wrapped hilt, a single watchful black eye in its guard. | Long cream IV-pole spear with mint bag-shaped glowing reservoir and sharpened dark chrome hook at tip, medical but clearly fantasy.. BOTTOM ROW LEFT TO RIGHT: Cream and mint plasma rifle assembled around an old hospital camera housing, dark eye lens scope, rubber grips, red status lamp. | Mint hospital-lamp staff with cream hooked head enclosing a strange cold ember and a watchful black pupil. | Chunky cream hospital pneumatic tube launcher with mint drum, wrapped grip and small red emergency lamp.. Daggers are ONE matched pair in the first cell. Every other cell contains exactly one weapon. Long weapons diagonal within their own cell.",
+      "promptSha256": "44145d2af3512cea0de6103baa26e1d8a46dd2c8ac4454cfdf25255ed7662be5",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "04114c1b-942b-4e51-bfd7-ff14ca9a1511",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164214_04114c1b-942b-4e51-bfd7-ff14ca9a1511.png",
+      "file": "anomalous-arsenal.png",
+      "preview": "anomalous-arsenal.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "3dd9de98f6ed6389cf2f98dd669df661c15c7a893f4afc41b4d3b3df906cf2d3",
+      "webpSha256": "94224f900b2f69fba1507d7e54b4ff42ed0535acd13c2f977807870bfe46f020"
+    },
+    {
+      "index": 10,
+      "id": "anomalous-towers",
+      "faction": "anomalous",
+      "type": "towers",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Anomalous. Materials: Faded mint enamel, cream fur, worn hospital fabric, dark eye sockets, red emergency lamps. Keep effects non-gory. Three isolated game tower concepts, EXACTLY THREE equal width vertical columns, no dividers, flat light cool-gray background. Full towers including base visible with comfortable margins. LEFT TO RIGHT: A freestanding mint hospital check-in window on chunky cream foundations with steel sliding shutters, single red emergency lamp and watchful eyes behind glass. | Old cream security camera with enormous black pupil lens on a mint articulated hospital lamp pedestal, film coil and warning triangle. | Small empty cream hospital bed on heavy mint wheeled plinth, raised white pillow, dark long cartoon rat hands emerging from underneath, red alarm clock; no gore.. Strong unique functional silhouettes, rich close-up material painting, buildable block-compatible forms, detailed pivots and mechanisms. NO characters and NO extra items.",
+      "promptSha256": "92c40edde3c94885b241df4351c6a99c8f85261fd99960167d465f0499cabad5",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "4c215755-5b31-4b43-8f06-63ceac3df7b6",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164215_4c215755-5b31-4b43-8f06-63ceac3df7b6.png",
+      "file": "anomalous-towers.png",
+      "preview": "anomalous-towers.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "b27315d9a3ab2285639c13d3b534ea365dcdf5fff8a0185d865b432f8bc948a2",
+      "webpSha256": "4214ed312a9e50dacb6b6d5a67dfa0339160bcc5765e96867b492596ce329842"
+    },
+    {
+      "index": 11,
+      "id": "anomalous-world",
+      "faction": "anomalous",
+      "type": "world",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "16:9",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Anomalous. Materials: Faded mint enamel, cream fur, worn hospital fabric, dark eye sockets, red emergency lamps. Keep effects non-gory. Cinematic wide game environment concept painting. Roblox animal hospital campus at blue-hour dusk, faded mint and cream low buildings, dark pine forest hills, crooked but traversable asphalt ambulance road and broad tiled courtyard in foreground, lit check-in windows, enormous distant hospital wing folded at one impossible right angle, red emergency lamps, clearly readable terrain, ominous but non-gory, no characters close to camera. Terrain-first composition: near foreground readable playable route, middle distance cover and construction space, dramatic far landmark. Strong contrast, gentle atmospheric recession without washing out paint or shadows. No UI, no inset panels.",
+      "promptSha256": "edefa760ea5c3c9df436d522f53818696661df2a1c53dc523edac5c659b8a01e",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "426fe3cf-cfc8-4fda-abb5-340d583f6cdf",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164214_426fe3cf-cfc8-4fda-abb5-340d583f6cdf.png",
+      "file": "anomalous-world.png",
+      "preview": "anomalous-world.webp",
+      "width": 2752,
+      "height": 1536,
+      "sha256": "ece60f954e72a931a98833aa873db5aa9221e461be343dbd4c925d5754b979bb",
+      "webpSha256": "6d4faf3486a44df30231bf3f7e404aeda350ea34b1d4568a3e3d80f6991a60b3"
+    },
+    {
+      "index": 12,
+      "id": "brainshot-roster",
+      "faction": "brainshot",
+      "type": "roster",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "New complete Painted Inkline character sheet. Use the reference ONLY for the exact six-cell layout and painted contour style. REPLACE EVERY ROBOT with the characters below. Exactly 6 figures total, in a strict 3 column by 2 row contact sheet. Equal rectangular cells. Thin white gutters. No figure may span rows or cross a gutter. No alternate versions, no duplicates, no extra figures, no text. Scale every full-body character to fit entirely inside its own cell, similar apparent height, including the wooden tall character. Flat gray backdrop, black outlines, subtle painted surface grain, broad clean colored shadows. Faction Brainshot. TOP LEFT: Recognizable Tralalero Tralala: blue-gray shark with three fin-like legs wearing blue sneakers, large shark head with white belly, no humanoid torso, no added armor. TOP CENTER: Recognizable Ballerina Cappuccina: porcelain cappuccino cup head with visible latte art, face on the cup, slim ballerina body, pink tutu and pink ballet slippers. TOP RIGHT: Recognizable Tung Tung Tung Sahur: tall cylindrical varnished light-brown wooden log body, expressive eyes and smiling face, thin arms and long legs, holding a wooden bat. BOTTOM LEFT: Original tiny shark courier on two oversized blue sneakers, small utility pack on dorsal fin. BOTTOM CENTER: Original squat walking espresso machine robot with porcelain cup chest, metal porter arms and pink steam valves. BOTTOM RIGHT: Original short wooden metronome creature, sneaker feet, small drum harness and twin bouncing spoon antennae. Exactly these SIX figures, all fully inside their individual cells. Six total. No others. Quality finished hand-painted concept art.",
+      "promptSha256": "6fd26b9d7289688347b8bb7feae42c2fd54f551cabe23f8ce69f990fe3a5f307",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "43fdc634-09a1-4669-8175-1e38d23f9e46",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_165143_43fdc634-09a1-4669-8175-1e38d23f9e46.png",
+      "file": "brainshot-roster.png",
+      "preview": "brainshot-roster.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "4435cd3fe90e8a3e169d1d9135d22ce3c5a086c5da8414bc0bbfe83c6ad49ee3",
+      "webpSha256": "1547fe4c417a2ef9fe50b03512ffe17f99fb8fcd2f6cc4f532c04cee6bb65c6c",
+      "sourcePromptSha256": "7e35c29146aa58d1f0e6819783bdd0cd4eb44505aeec23876d9e0a8e77199dbd",
+      "revisionReason": "Exact six-figure roster and consistent row mapping; replaces duplicate/spanning figures."
+    },
+    {
+      "index": 13,
+      "id": "brainshot-arsenal",
+      "faction": "brainshot",
+      "type": "arsenal",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Brainshot. Materials: Coffee porcelain, sneaker rubber, varnished wood, pink fabric, blue enamel and exposed fasteners. Six separate premium weapon concepts in an EXACT 3 columns x 2 rows grid. Equal square cells, flat light cool-gray background, generous empty cell margins, no dividers. Every weapon fully visible, isolated, readable three-quarter view, no hands or people. TOP ROW LEFT TO RIGHT: Two short porcelain espresso-spoon daggers with coffee-brown edges and pink rubber grips. | Broad wooden sword shaped like a squared cricket bat, varnished grain, blue sneaker-rubber grip and visible impact chips. | Long blue steel spear with oversized polished fork-like two-prong tip, porcelain collar and coffee-brown rubber shaft.. BOTTOM ROW LEFT TO RIGHT: Blue sneaker-rubber plasma rifle with shark-jaw barrel housing, lace cable details, white ceramic receiver and solid stock. | Long pink-handled staff with a white coffee-cup head and tightly curled cream ember steam, dark ink collar. | Wooden speaker grenade launcher with big circular woofer mouth, blue rubber grip, pink drum and exposed large screws.. Daggers are ONE matched pair in the first cell. Every other cell contains exactly one weapon. Long weapons diagonal within their own cell.",
+      "promptSha256": "6618b8ff170b8ebe92e8510e9f6678ce7b1fc099ea6a359ac134cdfc73465771",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "2d18729b-e15b-49df-a0ba-844ca2d3aeba",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164219_2d18729b-e15b-49df-a0ba-844ca2d3aeba.png",
+      "file": "brainshot-arsenal.png",
+      "preview": "brainshot-arsenal.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "711c5a2825a74695598a4ff8ff0c7c65e5feef8ad6122bcb0487bf934a8eef24",
+      "webpSha256": "b540d6af58f6d2f8097a61a761ed5ebc61f27e73a4f68e34bfbf14679454a047"
+    },
+    {
+      "index": 14,
+      "id": "brainshot-towers",
+      "faction": "brainshot",
+      "type": "towers",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Brainshot. Materials: Coffee porcelain, sneaker rubber, varnished wood, pink fabric, blue enamel and exposed fasteners. Three isolated game tower concepts, EXACTLY THREE equal width vertical columns, no dividers, flat light cool-gray background. Full towers including base visible with comfortable margins. LEFT TO RIGHT: Large industrial espresso machine turret on stout blue sneaker-like outriggers, porcelain pressure chamber and brass-free dark steel steam nozzle. | Stacked wooden speaker cabinets on reinforced pink concrete base, oversized rubber woofer and a sprung metal impact foot. | A blue sneaker-shaped artillery cradle with visible laces as cables, triple small launch rails and squat concrete base.. Strong unique functional silhouettes, rich close-up material painting, buildable block-compatible forms, detailed pivots and mechanisms. NO characters and NO extra items.",
+      "promptSha256": "d44d713cd2928ba4d31f8527a53f5ed43916de4257b8cf2c72e788ee914092f6",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "db96d91f-260d-473e-b3b3-1cb20c532676",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164219_db96d91f-260d-473e-b3b3-1cb20c532676.png",
+      "file": "brainshot-towers.png",
+      "preview": "brainshot-towers.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "cd4f279c2bb88cea973ad961331f7740f908d9f069f33af55f9bf5618ac777e9",
+      "webpSha256": "0a1fcf967977a6236ece1190a9e25e3cdeacac5dd45646dfffba639c58cc93e0"
+    },
+    {
+      "index": 15,
+      "id": "brainshot-world",
+      "faction": "brainshot",
+      "type": "world",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "16:9",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Brainshot. Materials: Coffee porcelain, sneaker rubber, varnished wood, pink fabric, blue enamel and exposed fasteners. Cinematic wide game environment concept painting. A strange coastal Roblox town with Mediterranean painted walls, seaside promenade, wide warm stone plaza, oversized coffee cup factory with steam chimney, sneaker-shaped public pavilion, gentle blue surf, natural cliffs, basketball court on a terrace, absurd landmarks built as real architecture, sunny late afternoon, no text, no foreground characters. Terrain-first composition: near foreground readable playable route, middle distance cover and construction space, dramatic far landmark. Strong contrast, gentle atmospheric recession without washing out paint or shadows. No UI, no inset panels.",
+      "promptSha256": "3adb3d64e692fccdf842c28d236fe9e42eddf6f8e617f5c4b853b20e2fb4231a",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "9674739d-10a5-44b0-8d43-82b8bb0f5eb3",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164219_9674739d-10a5-44b0-8d43-82b8bb0f5eb3.png",
+      "file": "brainshot-world.png",
+      "preview": "brainshot-world.webp",
+      "width": 2752,
+      "height": 1536,
+      "sha256": "66ca0d75754a226854960d55175aa15825e84f043f13b8664be849d54cfe1130",
+      "webpSha256": "f491214ef4bbaf3e2ad16c46eb904687294bb480fcde3c7e27af8aa09b134cdf"
+    },
+    {
+      "index": 16,
+      "id": "robloxian-roster",
+      "faction": "robloxian",
+      "type": "roster",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "New complete Painted Inkline character sheet. Use the reference ONLY for the exact six-cell layout and painted contour style. REPLACE EVERY ROBOT with the characters below. Exactly 6 figures total, in a strict 3 column by 2 row contact sheet. Equal rectangular cells. Thin white gutters. No figure may span rows or cross a gutter. No alternate versions, no duplicates, no extra figures, no text. Scale every full-body character to fit entirely inside its own cell, similar apparent height, including the wooden tall character. Flat gray backdrop, black outlines, subtle painted surface grain, broad clean colored shadows. Faction Robloxian. TOP LEFT: Classic Roblox Noob with yellow cylindrical head and hands, simple smile, royal-blue block torso, green block legs, small utility belt, original classic block proportions. TOP CENTER: Classic Roblox Guest with pale cylindrical smiling head, black cap, dark blocky shirt with a small red chest stripe, dark trousers, simple anonymous face, no military helmet. TOP RIGHT: Builderman classic 2007-inspired avatar: yellow head with simple smile, orange hard hat, orange torso with black wrench emblem, dark block arms and legs, tool belt and large spanner. BOTTOM LEFT: Classic yellow smiling block soldier, blue work vest, green legs, simple studded shield and compact tool carbine. BOTTOM CENTER: Blocky yellow-headed builder with orange hardhat, denim overalls, large wrench and studded parts backpack. BOTTOM RIGHT: Blocky Roblox avatar with brown layered bacon hair, pale head, blue-black shirt, green utility trousers and small messenger bag. Exactly these SIX figures, all fully inside their individual cells. Six total. No others. Quality finished hand-painted concept art.",
+      "promptSha256": "e0d701c6120303ccf21cbdece2bb953051558cd49cb0d28a8164c4f544994a3b",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "08f556dc-f396-4e78-9d83-2d8c0060a136",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_165143_08f556dc-f396-4e78-9d83-2d8c0060a136.png",
+      "file": "robloxian-roster.png",
+      "preview": "robloxian-roster.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "ad3e5e6a2d4c915652d10c9eefec54759e2546c77ed659432930ace5b013d1ec",
+      "webpSha256": "102b94977e0dbff8b1cc9cff064df3b00668a2224cc8344995d76f6a77adc725",
+      "sourcePromptSha256": "c2c56aab37e5e13a5df63b96fb3a1b8dc1603246a8dabc09e44ab1849b380caf",
+      "revisionReason": "Exact six-figure roster and consistent row mapping; replaces duplicate/spanning figures."
+    },
+    {
+      "index": 17,
+      "id": "robloxian-arsenal",
+      "faction": "robloxian",
+      "type": "arsenal",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Robloxian. Materials: Yellow plastic, royal-blue enamel, green molded bases, steel tools and orange construction shells. Six separate premium weapon concepts in an EXACT 3 columns x 2 rows grid. Equal square cells, flat light cool-gray background, generous empty cell margins, no dividers. Every weapon fully visible, isolated, readable three-quarter view, no hands or people. TOP ROW LEFT TO RIGHT: Two simple polished gray short Roblox daggers, yellow guards, blue studded grips and crisp green pommels. | Iconic simple straight gray Roblox sword, blue hilt, yellow crossguard, small clean edge chips, blocky readable silhouette. | Long gray studded spear with yellow square collar, green angular steel tip, blue taped grip and block-built butt cap.. BOTTOM ROW LEFT TO RIGHT: Royal-blue block-built plasma rifle, yellow studded receiver, green cylindrical barrel shroud, gray stock and visible modular brick connections. | Green classic Roblox staff with blue studded grip and square yellow energy cage holding a crisp white ember. | Chunky yellow-and-blue classic brick rocket lobber, single broad gray launch tube, green studded drum and modular stock.. Daggers are ONE matched pair in the first cell. Every other cell contains exactly one weapon. Long weapons diagonal within their own cell.",
+      "promptSha256": "3a02fbe51056b32a792201e59c43b1f56d7c256918699eb885ff53ad57662128",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "73a32082-cd01-4fc4-b3e8-8abdd4ffedfc",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164219_73a32082-cd01-4fc4-b3e8-8abdd4ffedfc.png",
+      "file": "robloxian-arsenal.png",
+      "preview": "robloxian-arsenal.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "cee06e708b7c963d35a4226f49550606a071c10c6f27c9bed9e3dca10a606d74",
+      "webpSha256": "489f89d27a24cdd9b440e04acd699ca7bb1a5b27d2f3c0a5f589896d5aa992bf"
+    },
+    {
+      "index": 18,
+      "id": "robloxian-towers",
+      "faction": "robloxian",
+      "type": "towers",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Robloxian. Materials: Yellow plastic, royal-blue enamel, green molded bases, steel tools and orange construction shells. Three isolated game tower concepts, EXACTLY THREE equal width vertical columns, no dividers, flat light cool-gray background. Full towers including base visible with comfortable margins. LEFT TO RIGHT: Classic Roblox studded blue and gray brick turret with a short green plasma barrel on sturdy yellow circular base, real hinge and large bolts. | Chunky red brick watchtower with orange construction cap, gray long cannon and reinforced dark steel corner bands. | Tall green-and-blue classic Roblox spawn pad tower with studded pedestal, yellow square halo held above by mechanical posts, clean white signal core.. Strong unique functional silhouettes, rich close-up material painting, buildable block-compatible forms, detailed pivots and mechanisms. NO characters and NO extra items.",
+      "promptSha256": "3578e92331f080c01f91c1e896f0f5d1219e8af61004d9ccf911d809e2ac899e",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "695e6d15-4e05-4931-836f-ac6a65466f18",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164219_695e6d15-4e05-4931-836f-ac6a65466f18.png",
+      "file": "robloxian-towers.png",
+      "preview": "robloxian-towers.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "e395444631b62eabf70c227b0c966475a832ece8a674a4d1b39cef162879e6a5",
+      "webpSha256": "a2689d8c3e5be6b3738c763891003de0174e924f43a07cd7920e29940302e328"
+    },
+    {
+      "index": 19,
+      "id": "robloxian-world",
+      "faction": "robloxian",
+      "type": "world",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "16:9",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Robloxian. Materials: Yellow plastic, royal-blue enamel, green molded bases, steel tools and orange construction shells. Cinematic wide game environment concept painting. Classic Roblox Crossroads inspired terrain reimagined in sophisticated Painted Inkline: rolling green studded baseplate hills, stone arched bridge across shallow stream, red brick watchtower, simple gray castle ruin, yellow construction crane, broad grass foreground building pads, bright soft cloud sky with painted contours, a tiny classic yellow-head blue-torso green-leg avatar for scale, no text. Terrain-first composition: near foreground readable playable route, middle distance cover and construction space, dramatic far landmark. Strong contrast, gentle atmospheric recession without washing out paint or shadows. No UI, no inset panels.",
+      "promptSha256": "c8626d8e7043f7c86929d91d3577ca393f120dbd116bbaf62c15e151fdaa4715",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "b21e13d8-b15b-462e-b20e-e66b431ed6ca",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164223_b21e13d8-b15b-462e-b20e-e66b431ed6ca.png",
+      "file": "robloxian-world.png",
+      "preview": "robloxian-world.webp",
+      "width": 2752,
+      "height": 1536,
+      "sha256": "239977adc9fa78e91c19b3a5991846d15776d2e01af63763ec98e960b3678edd",
+      "webpSha256": "4f83f1c9151596096d4a320540770140a105dfed228b360a9fd743ffb0aeae28"
+    },
+    {
+      "index": 20,
+      "id": "alien-roster",
+      "faction": "alien",
+      "type": "roster",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Invader. Materials: Rusted red chitin, ivory bone, deep plum shadow and narrow lime bioluminescent channels. Six separate full-body character concept figures in an EXACT 3 columns x 2 rows grid. Equal square cells, generous margins, flat light cool-gray background, no dividers. One character centered per cell, feet and extremities fully inside each cell. TOP ROW commanders LEFT TO RIGHT: Original angular rust-chitin alien with broad ivory hooked brow, narrow lime eyes, two articulated arms, backward-jointed legs, long split red shoulder plates and a dark plum core. | Original huge low quadrupedal alien beetle with rust-red shell, ivory mandible shield, many small lime eyes, heavy segmented legs and small back spines. | Original slender tall alien with a split ivory mask, long rust-red insect limbs, narrow waist, two floating chitin shoulder fins, lime tendon glow and hooked feet.. BOTTOM ROW units LEFT TO RIGHT: Small rust-red four-legged insect alien, hooked ivory brow, sharp lime eyes and compact dark plum underside. | Broad low six-legged alien with layered rust chitin, huge ivory frontal shield and small lime vents. | Floating rust-chitin seedpod creature with one lime lens, ivory hooked fins and three thin articulated tendrils.. Retain the recognizable source identities; do not turn mascots into generic armored humans.",
+      "promptSha256": "5db7f10d44af27166b3435efc3d0216420185f67cafee667c66fc05486828dc5",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "d6edadc7-07d6-4be0-90a2-f4e23434299e",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164223_d6edadc7-07d6-4be0-90a2-f4e23434299e.png",
+      "file": "alien-roster.png",
+      "preview": "alien-roster.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "ade1baff7d8da1e24079f5646e57ac37b7c531d46f065c8b86a00a03f68e6fc6",
+      "webpSha256": "95ffe9b9c453e13a43688c770d74018613dc698974801c4105aa8e97c54bd140"
+    },
+    {
+      "index": 21,
+      "id": "alien-arsenal",
+      "faction": "alien",
+      "type": "arsenal",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Invader. Materials: Rusted red chitin, ivory bone, deep plum shadow and narrow lime bioluminescent channels. Six separate premium weapon concepts in an EXACT 3 columns x 2 rows grid. Equal square cells, flat light cool-gray background, generous empty cell margins, no dividers. Every weapon fully visible, isolated, readable three-quarter view, no hands or people. TOP ROW LEFT TO RIGHT: Twin hooked ivory alien daggers with rust-chitin grips and thin lime tendon channels. | Heavy rust-chitin sword with long ivory hooked edge, dark plum grip and a narrow lime crack in its spine. | Long bone alien spear with split ivory hooked tip, rust segmented shaft and narrow lime bioluminescent tubes.. BOTTOM ROW LEFT TO RIGHT: Organic rust-red alien plasma rifle with ivory hooked brow sight, lime living chamber, articulated dark grip, strong readable stock and barrel. | Organic ivory hooked staff with rust-chitin segmented handle, dark plum cage and restrained lime flame. | Bulbous rust-red chitin launcher with ivory mouth ring, lime segmented spore drum and bone stock.. Daggers are ONE matched pair in the first cell. Every other cell contains exactly one weapon. Long weapons diagonal within their own cell.",
+      "promptSha256": "42f2ae575959175ea1b7a59dcc3fd098046c44b0c97f4b832a230c037a9666f6",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "94b1ee7b-9169-4dea-ac57-9f0a90faf2ac",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164223_94b1ee7b-9169-4dea-ac57-9f0a90faf2ac.png",
+      "file": "alien-arsenal.png",
+      "preview": "alien-arsenal.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "54580886af2b22e15e6b6e8496c694baad34aedb9ad6968f2a1c06fef439c36c",
+      "webpSha256": "c295d9f09436eb827ed39e8ad97ae53243c5352506a2f8a74a560a94e7d171d3"
+    },
+    {
+      "index": 22,
+      "id": "alien-towers",
+      "faction": "alien",
+      "type": "towers",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "3:2",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Invader. Materials: Rusted red chitin, ivory bone, deep plum shadow and narrow lime bioluminescent channels. Three isolated game tower concepts, EXACTLY THREE equal width vertical columns, no dividers, flat light cool-gray background. Full towers including base visible with comfortable margins. LEFT TO RIGHT: Tall organic rust-red chitin turret with hooked ivory rails, lime energy throat and three large claw legs gripping a dark basalt base. | Squat meteor-shell hive nest with layered rust plates, ivory rib cage, lime egg-like energy core and small low arched exits. | Three asymmetrical ivory thorn arches rising from a rust-chitin basalt plinth around a narrow lime portal lens, organic articulated roots.. Strong unique functional silhouettes, rich close-up material painting, buildable block-compatible forms, detailed pivots and mechanisms. NO characters and NO extra items.",
+      "promptSha256": "4e8fc9393a46b36936022000261136079d719948167e62fa5abe3f10f3b1ca24",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "e637065b-d62a-4189-af86-e0194d28161b",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164223_e637065b-d62a-4189-af86-e0194d28161b.png",
+      "file": "alien-towers.png",
+      "preview": "alien-towers.webp",
+      "width": 2528,
+      "height": 1696,
+      "sha256": "39d791729d5da6309950caf71a68561285df6d44db61de8acfcbf06ce2e475e1",
+      "webpSha256": "c25388cd96f4c673206a8e7b86af0c315d9e317d9e5d78e78e584afc6b9c5625"
+    },
+    {
+      "index": 23,
+      "id": "alien-world",
+      "faction": "alien",
+      "type": "world",
+      "modelRequested": "nano_banana_pro",
+      "resolution": "2k",
+      "aspectRatio": "16:9",
+      "prompt": "Shared Painted Inkline art direction, matching the attached style reference: hand-painted opaque gouache surfaces, confident dark outer contours, thinner irregular internal ink edges, broad colored cel shadows, subtle brush variation inside local color, selective purposeful edge wear, crisp readable silhouettes and illustrative depth. Roblox crossover shapes with mature art direction. No crosshatch shading, no photorealism, no glossy toy render, no text, no logos, no watermarks. Keep contours tied to objects. Faction: Invader. Materials: Rusted red chitin, ivory bone, deep plum shadow and narrow lime bioluminescent channels. Cinematic wide game environment concept painting. Alien homeworld of enormous broken meteor shells, rust-red desert crust and deep plum basalt craters, hooked ivory arches across broad dry gullies, sparse narrow lime glowing channels, living hive spires carved into far cliffs, foreground flat traversable crater shelf, immense pale planet in dusky orange sky, small four-legged chitin creatures for scale. Illustrative atmosphere but clear foreground shadows. Terrain-first composition: near foreground readable playable route, middle distance cover and construction space, dramatic far landmark. Strong contrast, gentle atmospheric recession without washing out paint or shadows. No UI, no inset panels.",
+      "promptSha256": "86e0e25baab57d67797291ecbb555c8c777203a9dcad694ee95346619f7958ff",
+      "reference": "https://majieddd.github.io/worldheart/v2/lib/99-art/references/paintline_clash.webp",
+      "status": "completed",
+      "jobId": "3a4492c3-696a-48a9-9416-19d097ede3e8",
+      "modelReported": "nano_banana_2",
+      "sourceUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3IW1qpG7eVV30fIBOq2oLvLODjC/hf_20260916_164224_3a4492c3-696a-48a9-9416-19d097ede3e8.png",
+      "file": "alien-world.png",
+      "preview": "alien-world.webp",
+      "width": 2752,
+      "height": 1536,
+      "sha256": "a87fd89e436c7b86f4a9ea998d95cd397779022520a164e6612c6e42237bb0e9",
+      "webpSha256": "30ce042e8a06c421b1482545e402261878999ff0ce04842d03701728562c4539"
+    }
+  ]
+}
