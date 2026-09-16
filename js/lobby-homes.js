@@ -20,7 +20,7 @@ export function homeworldStation(content,message,refresh){
     add('h3','A planet to call home',empty);
     add('p','Expand your Worldheart until its base covers a whole planet, then defeat its sovereign to unlock it.',empty);
   }
-  add('h3',`Captured planets · ${catalogue.homes.length} / 99`,section);
+  add('h3',`Home planets · ${catalogue.homes.length} / 100`,section);
   for(const home of catalogue.homes){
     const card=add('article','',section);card.className='home-choice';card.dataset.home=home.id;
     add('strong',home.name,card);
