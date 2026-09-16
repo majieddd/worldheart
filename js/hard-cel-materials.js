@@ -29,7 +29,7 @@ export async function createCandidateMaterials(){
         outgoingLight*=1.0-studyHatch*hatch*shade*fade;
         float edge=pow(1.0-abs(dot(n,normalize(cameraPosition-paintedPosition))),3.0)*smoothstep(-.1,.7,facing);
         outgoingLight+=vec3(1.0,.64,.24)*edge*studyRim;
-        if(studyShadowDepth>0.0){
+        if(studyShadowDepth>0.0||studySaturation!=1.0){
           outgoingLight*=1.0-studyShadowDepth*shade;
           float luminance=dot(outgoingLight,vec3(.2126,.7152,.0722));
           outgoingLight=max(vec3(0.0),mix(vec3(luminance),outgoingLight,studySaturation));

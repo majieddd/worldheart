@@ -1,5 +1,15 @@
 # 99 Planets development progress
 
+U172-U177 locally verified, publication pending: Codex on `feature/atmospheric-combat`.
+The owner now selects **Atmospheric Ink 1.3.1**. Its exact prior slice is archived
+and tagged; mesh-attached pigment fixes moving texture projection. A separate FPS
+proving ground adds sword/plasma combat, three environments, three unit/tower
+families, three-wave rounds, infinite lives, flight and reversible graphics tuning.
+52 local browser cases, real-input assisted three-wave completion, 35 playground
+and 61 candidate regressions, 372 automated tests. Aegis 3.18.3 is current and
+320 installed/source files match. [Scope, evidence and limits](qa/implementation/ATMOSPHERIC-COMBAT.md).
+Earlier preference entries below are historical; both prior archives stay intact.
+
 Published and publicly verified U180-U183: [PR #52](https://github.com/majieddd/worldheart/pull/52), Codex on `feature/homeworld-boss-progression`.
 Earth starter home, boss-gated planet capture, ten-wave home checkpoints,
 safe gear, direct third-person visits, fog, zoom and hail shake. All 27 public

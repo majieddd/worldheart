@@ -1,0 +1,200 @@
+{
+  "base": "http://127.0.0.1:8154",
+  "checks": [
+    {
+      "name": "Arena boots with pinned rig and three loadouts",
+      "ok": true
+    },
+    {
+      "name": "Initial graphics match selected 1.3.1 recipe",
+      "ok": true,
+      "detail": {
+        "line": 1.4,
+        "fog": 0.0115,
+        "shadowDepth": 0.1,
+        "saturation": 1.16,
+        "texture": 1,
+        "exposure": 1,
+        "resolution": 1.25,
+        "fov": 78,
+        "bob": 0.35,
+        "shake": 0.45,
+        "sensitivity": 1
+      }
+    },
+    {
+      "name": "Download serves exact locked archive",
+      "ok": false,
+      "detail": {
+        "digest": "132484ba909be432553e32da1fee548b054fd139bd86aafb506681c78fa1fa26"
+      }
+    },
+    {
+      "name": "Enter captures pointer and starts live simulation",
+      "ok": true
+    },
+    {
+      "name": "Real WASD moves player with visible walking patrols",
+      "ok": true,
+      "detail": {
+        "pos": [
+          0,
+          0.48129139691043155,
+          8.904339671650803
+        ],
+        "clip": "Walking"
+      }
+    },
+    {
+      "name": "Pointer-locked mouse changes view immediately",
+      "ok": true
+    },
+    {
+      "name": "Jump has upward motion",
+      "ok": true
+    },
+    {
+      "name": "Jump settles on terrain",
+      "ok": true
+    },
+    {
+      "name": "Flight ascends with Space",
+      "ok": true
+    },
+    {
+      "name": "Landing restores grounded controller",
+      "ok": true
+    },
+    {
+      "name": "Sword anticipation cannot damage a target",
+      "ok": true
+    },
+    {
+      "name": "One sword swing hits once through its active blade path",
+      "ok": true,
+      "detail": {
+        "hits": 1,
+        "events": [
+          {
+            "time": 3.8192999999999886,
+            "kind": "sword-start",
+            "combo": 1
+          },
+          {
+            "time": 4.002633333333321,
+            "kind": "hit",
+            "id": 0,
+            "source": "sword",
+            "hp": 23
+          }
+        ]
+      }
+    },
+    {
+      "name": "Articulated arms remain finite with fixed limb lengths through cut",
+      "ok": true,
+      "detail": {
+        "maxStep": 0.13200563343471125,
+        "maxLengthError": 1.6653345369377348e-16
+      }
+    },
+    {
+      "name": "Out-of-range sword swing misses",
+      "ok": true
+    },
+    {
+      "name": "Held plasma fires repeatedly and swept bolts hit at range",
+      "ok": true,
+      "detail": {
+        "shots": 4,
+        "hits": 3,
+        "joints": [
+          [
+            -0.48,
+            -0.37,
+            0.07
+          ],
+          [
+            -0.2822346097433747,
+            -0.45306399800241265,
+            -0.32558718716927604
+          ],
+          [
+            0.010374994116324143,
+            -0.4225481686706592,
+            -0.6527697109832253
+          ],
+          [
+            0.48,
+            -0.37,
+            0.07
+          ],
+          [
+            0.6165461972630459,
+            -0.5626439464958086,
+            -0.31307107159314623
+          ],
+          [
+            0.32000000000000006,
+            -0.43,
+            -0.6098301259568566
+          ]
+        ]
+      }
+    },
+    {
+      "name": "R visibly vents a warm rifle",
+      "ok": true
+    },
+    {
+      "name": "Vent returns the weapon to ready",
+      "ok": true
+    },
+    {
+      "name": "Round starts with all three first-wave enemies",
+      "ok": true
+    },
+    {
+      "name": "Hostile units navigate toward the player",
+      "ok": false
+    },
+    {
+      "name": "Hostile and tower attacks produce timed contacts and projectiles",
+      "ok": false
+    },
+    {
+      "name": "Lethal damage starts free respawn",
+      "ok": true
+    },
+    {
+      "name": "Respawn restores health and keeps the same round",
+      "ok": true
+    },
+    {
+      "name": "Controlled lifecycle clears all 15 enemies and all three waves",
+      "ok": true,
+      "detail": {
+        "phase": "complete",
+        "wave": 3,
+        "kills": 15,
+        "total": 15,
+        "remaining": 0,
+        "delay": -0.008333333333326953,
+        "respawns": 1,
+        "elapsed": 20.608333333332805
+      }
+    },
+    {
+      "name": "Completed round can restart cleanly",
+      "ok": true
+    },
+    {
+      "name": "Harness completed",
+      "ok": false,
+      "detail": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-world=\"canyon\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button data-world=\"canyon\" aria-pressed=\"false\">Canyon</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div id=\"entry\" class=\"veil\">…</div> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div id=\"entry\" class=\"veil\">…</div> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    54 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <div id=\"entry\" class=\"veil\">…</div> intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+    }
+  ],
+  "errors": [
+    "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-world=\"canyon\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button data-world=\"canyon\" aria-pressed=\"false\">Canyon</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div id=\"entry\" class=\"veil\">…</div> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div id=\"entry\" class=\"veil\">…</div> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    54 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <div id=\"entry\" class=\"veil\">…</div> intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+  ]
+}

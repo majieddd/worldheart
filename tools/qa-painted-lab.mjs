@@ -16,7 +16,11 @@ const shot=async name=>{await settle();return page.locator('#stage').screenshot(
 const difference=async(a,b)=>{const aa=await sharp(a).removeAlpha().raw().toBuffer(),bb=await sharp(b).removeAlpha().raw().toBuffer();if(aa.length!==bb.length)throw Error('Image dimensions differ');let sum=0;for(let i=0;i<aa.length;i++)sum+=Math.abs(aa[i]-bb[i]);return sum/aa.length;};
 const ready=async p=>{await p.waitForFunction(()=>window.PAINTED_LAB?.ready&&!document.querySelector('#loading:not([hidden])'),null,{timeout:60000});};
 try{
-  if(process.argv.includes('--playground')){
+  if(process.argv.includes('--arena-live')){
+    await (await import('./probes/arena-live.mjs')).run({page,browser,base,out,check,shot,settle,difference,sharp,errors,requests});
+  }else if(process.argv.includes('--arena')){
+    await (await import('./probes/atmospheric-combat.mjs')).run({page,browser,base,out,check,shot,settle,difference,sharp,errors,requests});
+  }else if(process.argv.includes('--playground')){
     await (await import('./probes/playground.mjs')).run({page,browser,base,out,check,shot,settle,difference,sharp,errors,requests});
   }else if(process.argv.includes('--candidates')){
     await (await import('./probes/hard-cel.mjs')).run({page,browser,base,out,check,shot,settle,difference,sharp,errors,requests});

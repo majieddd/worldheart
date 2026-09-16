@@ -4,6 +4,15 @@
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
 ## Dials
+Current owner decision: **Atmospheric Ink 1.3.1 is the selected art direction**.
+Preserve its exact prior slice ZIP, manifest and `art/atmospheric-ink-v1.3.1` tag.
+`atmospheric-arena.html` is the expanded FPS test: mesh-attached pigment, three
+environments, moving articulated units, sword/plasma weapons and illustrative
+feedback. Graphics overrides are temporary and reset to the saved recipe.
+The current treatment uses object/rest-space pigment with separate deformed
+world-space lighting, fixing texture swimming without changing the selected palette.
+Earlier preferences below are historical. Production campaign art is not migrated.
+
 `style-playground.html` applies the preserved 1.0 and refined 1.3.1 recipes to
 a walkable meadow. Authored character clips crossfade in 0.18 s; world-space ink
 shards, dust, impact flashes and expanding rings provide contact feedback.

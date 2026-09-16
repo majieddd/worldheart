@@ -3,6 +3,13 @@
 This is the front door. If you are new to the repo, read this page first, then
 `CLAUDE.md`, then whichever document below matches what you are about to touch.
 
+Art contributors: Atmospheric Ink 1.3.1 is now the selected direction. Preserve
+its [locked archive and recipe](art-candidates/ATMOSPHERIC-INK.md) and the previous
+Hard Cel archive. Complement collaborators' existing work, methods and evidence;
+add a scoped extension or separately versioned experiment instead of replacing
+their branch, approved baseline or contribution record. Refresh shared preview
+and the current Aegis release before integrating changes.
+
 The current owner-directed work is tracked in **[docs/PROGRESS.md](docs/PROGRESS.md)**:
 the blind QA baseline, the **[99 Planets To Defend blueprint](docs/99-PLANETS-TO-DEFEND.md)**,
 linked issues, dependencies and evidence. Start there when joining campaign development.
