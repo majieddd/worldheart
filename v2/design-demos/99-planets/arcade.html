@@ -169,6 +169,7 @@ main{padding:18px 24px 0}
   </div>
   <nav class="review-links" aria-label="Related pages"><a href="../../99-art.html?page=factions">Faction concepts ↗</a><a href="../../index.html">Play game ↗</a></nav>
 </header>
+  <nav class="mode-nav" role="tablist" aria-label="Preview state"><button role="tab" aria-selected="true" aria-controls="combat-state" data-mode="combat">Combat</button><button role="tab" aria-selected="false" aria-controls="build-state" data-mode="build">Build</button><button role="tab" aria-selected="false" aria-controls="loadout-state" data-mode="loadout">Loadout</button></nav>
 <main>
  <section class="game" data-mode="combat" aria-label="99 Planets game interface concept">
   <img class="world" src="../../lib/99-art/painted-anime-inkline/earth-void.webp" alt="Painted-Anime-Inkline Earth scene with purple Void scouts, a sleeper agent, a defense tower and the Worldheart">
@@ -176,7 +177,7 @@ main{padding:18px 24px 0}
    <div class="wave"><div class="wave-line">WAVE <strong>4</strong><span>/ 10</span></div><p>DEFEND THE WORLDHEART</p></div>
    <div class="heart"><div class="heart-title"><span class="heart-name">WORLDHEART</span><strong class="heart-value">20</strong></div><div class="bar" role="meter" aria-label="Worldheart health" aria-valuenow="20" aria-valuemin="0" aria-valuemax="20"><i></i></div><div class="heart-foot"><span>Crystals</span><span class="crystals"><i></i><i></i><i></i> 0 / 3</span></div></div>
   </div>
-  <nav class="mode-nav" role="tablist" aria-label="Game mode"><button role="tab" aria-selected="true" aria-controls="combat-state" data-mode="combat">Combat</button><button role="tab" aria-selected="false" aria-controls="build-state" data-mode="build">Build</button><button role="tab" aria-selected="false" aria-controls="loadout-state" data-mode="loadout">Loadout</button></nav>
+
   <div class="base-marker" aria-hidden="true">WORLDHEART</div>
   <div id="combat-state" role="tabpanel" aria-label="Combat">
    <div class="crosshair" aria-hidden="true"></div>
@@ -186,17 +187,17 @@ main{padding:18px 24px 0}
      <button class="weapon-slot" data-slot="0" aria-pressed="true"><span class="key">1</span><span class="slot-copy"><small class="faction-name">Brainshot</small><strong class="weapon-name-0">Plasma carbine</strong></span></button>
      <button class="weapon-slot" data-slot="1" aria-pressed="false"><span class="key">2</span><span class="slot-copy"><small class="faction-name">Brainshot</small><strong class="weapon-name-1">Sword</strong></span></button>
     </div>
-    <div class="abilities" aria-label="Commander abilities"><button class="ability" data-ability="Aegis Ward" aria-pressed="false"><span class="key">Z</span><span>Aegis Ward</span></button><button class="ability" data-ability="Cyclone Slash" aria-pressed="false"><span class="key">V</span><span>Cyclone Slash</span></button></div>
+    <div class="abilities" aria-label="Commander abilities"><button class="ability" data-ability="Aegis Ward" aria-pressed="false"><span class="key">F</span><span>Aegis Ward</span></button><button class="ability" data-ability="Cyclone Slash" aria-pressed="false"><span class="key">G</span><span>Cyclone Slash</span></button></div>
    </div>
   </div>
   <section id="build-state" class="build-state" role="tabpanel" aria-label="Build" hidden>
-   <div class="coverage" aria-hidden="true"></div><div class="placement-marker" aria-hidden="true" hidden></div><div class="placement-label" hidden>Within base coverage</div>
+   <div class="coverage" aria-hidden="true"></div><div class="placement-marker" aria-hidden="true" hidden></div><div class="placement-label" hidden>VALID POSITION  /  150</div>
    <div class="build-panel">
     <div class="build-switch" aria-label="Construction selection"><button data-build="tower" aria-pressed="true">Bolt Sentinel</button><button data-build="base" aria-pressed="false">Worldheart</button></div>
-    <div class="tower-details"><h2>BOLT SENTINEL</h2><p>Place a defense within base coverage.</p><div class="cost-line"><span>Construction cost</span><strong>150</strong></div><button class="primary" id="placement-button">Preview placement</button></div>
+    <div class="tower-details"><h2>BOLT SENTINEL</h2><p>Stable ground. Every breach keeps a path to the heart.</p><div class="cost-line"><span>Construction cost</span><strong>150</strong></div><button class="primary" id="placement-button">Preview placement</button></div>
     <div class="base-details" hidden><h2>WORLDHEART</h2><p>Deposit crystals at the Worldheart to upgrade your base.</p><div class="cost-line"><span>Crystals deposited</span><strong>0 / 3</strong></div><button class="primary" id="coverage-button">Show base coverage</button></div>
    </div>
-   <div class="build-note"><strong>BASE COVERAGE</strong>Keep your defenses inside the boundary.</div>
+   <div class="build-note"><strong>PATH CLEAR</strong>Stable ground  /  Within coverage<br>Click to place  /  Esc to cancel</div>
   </section>
   <section id="loadout-state" class="loadout-state" role="tabpanel" aria-label="Loadout" hidden>
    <header class="loadout-heading"><div><h2>LOADOUT</h2><p>Equipment &amp; manufacturers</p></div><button class="back" data-return>Back to combat</button></header>
@@ -244,8 +245,10 @@ main{padding:18px 24px 0}
  }
  function setMode(mode) {
   game.dataset.mode = mode;
+  document.querySelector('.world').src = mode==='build'?'../../lib/99-art/identity-v2/turret-placement.webp':'../../lib/99-art/painted-anime-inkline/earth-void.webp';
+  document.querySelector('.world').alt=mode==='build'?'Third-person turret placement concept with an open path and mint ghost':'Modern Earth Void arrival concept';
   modes.forEach(button => button.setAttribute('aria-selected', String(button.dataset.mode === mode)));
-  ['combat','build','loadout'].forEach(name => { document.getElementById(name + '-state').hidden = mode !== name; });
+  ['combat','build','loadout'].forEach(name => { document.getElementById(name + '-state').hidden = mode !== name && !(mode === 'build' && name === 'combat'); });
   feedback.hidden = true;
  }
  function setSlot(slot, notify = true) {
@@ -322,10 +325,11 @@ main{padding:18px 24px 0}
   if (event.altKey || event.ctrlKey || event.metaKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
   const key = event.key.toLowerCase();
   if (key === 'escape') { setMode('combat'); modes[0].focus(); }
+  if (key === 'f' || key === 'g') document.querySelector('[data-ability="' + (key === 'f' ? 'Aegis Ward' : 'Cyclone Slash') + '"]').click();
   if (game.dataset.mode !== 'combat') return;
   if (key === '1' || key === '2') setSlot(Number(key) - 1);
-  if (key === 'z' || key === 'v') document.querySelector('[data-ability="' + (key === 'z' ? 'Aegis Ward' : 'Cyclone Slash') + '"]').click();
  });
+setMode(new URLSearchParams(location.search).get('mode')==='build'?'build':'combat');
 })();
 </script>
 <script type="module" src="arcade-refinement.js"></script>

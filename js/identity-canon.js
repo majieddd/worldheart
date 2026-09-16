@@ -1,0 +1,29 @@
+// Current identity corrections sit after historical prompt composition.
+export function applyIdentityCanon(catalogue){
+ const anomaly=catalogue.factions.find(f=>f.id==='anomalous');
+ anomaly.source='https://www.ign.com/wikis/animal-hospital-roblox/All_Anomalies';
+ anomaly.identity='The recognizable Animal Hospital patients, with their original animal bodies and unsettling faces. Our paint and ink change the rendering, not their anatomy. Commander roles below are proposals for this game, not named bosses claimed from Animal Hospital.';
+ anomaly.materials='Pink, cream, cyan and indigo patient bodies; their exact eyes, teeth, ears and proportions remain identity anchors. Matte painted color, fine contour and non-gory shadow add depth without costumes or armor.';
+ const names=['Three Eyes','X-rayed Face','Crooked Face'];
+ const looks=['Pink floppy-eared patient, exactly three red eyes and a tiny inverted-V mouth.','Beige long pointed ears, concentric eyes and a mouth of realistic teeth.','Cyan conical horn, mismatched bulging eyes and a pointed-tooth grin.'];
+ const powers=[
+  {name:'Third sight',icon:'scan-line',effect:'Mark one visible target after all three eyes light in sequence.',limit:'Breaking line of sight cancels the mark; no tracking through terrain.',cue:'Three red rings converge on one outlined target.',window:'Short visible channel; long recovery'},
+  {name:'Fixed grin',icon:'shield',effect:'Brace against one frontal hit, then release a close-range stagger.',limit:'Cannot move while braced; flanks and delayed attacks beat it.',cue:'Teeth flash once, followed by a narrow ground wedge.',window:'Timed guard; medium recovery'},
+  {name:'Wrong angle',icon:'wind',effect:'Lunge sideways before snapping toward a nearby marked target.',limit:'Short reach and a long visible recovery after a miss.',cue:'A cyan contour echo shows the committed landing point.',window:'Direction lock after wind-up; medium recovery'}
+ ];
+ anomaly.commanders.forEach((c,i)=>Object.assign(c,{name:names[i],look:looks[i],role:['Patient controller','Counterattack bruiser','Ambush skirmisher'][i],active:powers[i],canon:'Source patient appearance; commander status and power are 99 Planets proposals.'}));
+ anomaly.units.forEach((c,i)=>Object.assign(c,{name:['Creepy Smile','Long-neck Patient','Sharp-teeth Patient'][i],look:['Indigo cat with enormous circular eyes and a squared tooth grin.','Pale cat with an elongated neck and small almond-eyed head.','Pale green body and a huge open red mouth lined with pointed teeth.'][i],canon:'Appearance anchored to the owner-supplied Animal Hospital reference. Descriptive roster label, not an asserted official proper name.'}));
+ const brain=catalogue.factions.find(f=>f.id==='brainshot');
+ brain.source='https://brainrotcharacters.net/all-brainrot-characters/?bcf_status=official';
+ brain.identity='Recognizable Brainrot characters first: a three-legged sneaker shark, a cappuccino-headed ballerina and a wooden bat-bearer. Preserve their bodies, faces and signature props. Painted-Anime-Inkline is a rendering treatment, not a costume redesign.';
+ const unitNames=['Cappuccino Assassino','Bombardino Crocodilo','Chimpanzini Bananini'];
+ brain.units.forEach((c,i)=>Object.assign(c,{name:unitNames[i],role:['Melee infiltrator','Air support','Supply runner'][i],behavior:['Close in through cover and strike with paired blades.','Make a telegraphed bombing pass over a narrow lane.','Carry charges between protected support positions.'][i],tradeoff:['Fragile when seen; cannot dash through walls.','Slow turn and long recovery; vulnerable to anti-air.','Low direct damage; supplies are capped and require travel.'][i],stats:[{Power:4,Speed:4,Health:1,Complexity:3},{Power:5,Speed:1,Health:3,Complexity:3},{Power:1,Speed:5,Health:3,Complexity:2}][i],canon:'Existing Brainrot identity; battlefield role is a proposal for 99 Planets.'}));
+ const x=catalogue.factions.find(f=>f.id==='alien');
+ x.origin='Original multi-race invading faction';
+ x.identity='Xeno is a coalition of alien races. The familiar hooked-brow chitin creatures are one combat-grunt race, valued for tenacity and their inability to feel sorrow. Grays specialize in coordination and instruments; Reptilians in deliberate breach tactics. Race, element and role are separate design axes.';
+ x.materials='Chitin belongs to the existing grunt race. Grays have smooth gray skin and tailored instrument suits; Reptilians have scales and weight-bearing field equipment. Shared glyphs and contained energy cues connect the faction.';
+ x.commanders.forEach(c=>{c.race='Chitin grunt race';});
+ x.commanders.push({id:'alien-commander-3',name:'Vey, the Surveyor',role:'Gray reconnaissance commander',race:'Zeta Reticuli Gray',plate:'gray-commander',stats:{Power:2,Speed:5,Health:3,Complexity:4},active:{name:'Survey aperture',icon:'scan-line',effect:'Reveal a short approach and designate one landing point for allied scouts.',limit:'No damage or wall traversal; the landing point is visible to opponents and the channel can be interrupted.',cue:'Three thin violet arcs close around a mint ground marker.',window:'Visible channel; long recovery'},canon:'Original working-name proposal. Inspired by the Gray archetype, not a Cosmic Conquest character transplant.'},
+ {id:'alien-commander-4',name:'Sarrak, breach marshal',role:'Reptilian frontline commander',race:'Reptilian',plate:'xeno-reptilian',stats:{Power:4,Speed:2,Health:4,Complexity:3},active:{name:'Breach order',icon:'shield',effect:'Brace a frontal shield and lead a short, committed advance with nearby grunts.',limit:'Exposed sides, slow steering and no damage immunity. Cannot obstruct the required enemy route.',cue:'An ochre shield edge and one clear forward wedge.',window:'Directional commitment; long recovery'},canon:'Original working-name proposal. Scales, tail and snout distinguish the race; no imported Cosmic Conquest political history.'});
+ return catalogue;
+}
