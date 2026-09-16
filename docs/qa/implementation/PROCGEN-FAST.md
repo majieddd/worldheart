@@ -7,7 +7,7 @@ Owner: Codex. Branch `feature/procgen-fast-sandbox`. Baseline `6b85808`.
 | U221 Research and profiles | Verified | Locate remaining work and evaluate primary-source methods |
 | U222 Exact-output experiments | Verified fixtures | Preserve every generated geometry/navigation value |
 | U223 Visual sandbox and benchmarks | Verified; numeric target OPEN | Paired renders, matched trials, target under 5 s normally and 10 s for stretch cases |
-| U224 Integration and public verification | Publishing | Verified V2 only, preserve main and collaborator content |
+| U224 Integration and public verification | Published and verified | Verified V2 only, preserve main and collaborator content |
 
 The targets are goals, not measured claims. Cold generation must be reported
 separately from cached revisits and rendering/shader startup. Rejected methods
@@ -77,3 +77,15 @@ Further visual QA: settling the orbit rig was insufficient because the route tra
 The local direct-runtime check (no source interception) matches the canyon oracle, activates 36 worker batches without failures, and compares clearance with/without the shortcut at 1,049 graph points both before and after a terrain fault. No differences; fault activation disables all shortcuts. Camera checks also pass. Desktop and 390px comparison UI checks pass with both images decoded, keyboard-operable wipe and no horizontal overflow.
 
 Integration: the concurrent artbook used U217-U220 too. This experiment is renumbered U221-U224; earlier issue comments retain their original historical IDs. Preview d96576d is preserved in full. Generated dist conflicts are rebuilt from the combined source, not hand-merged.
+
+## Published checkpoint
+
+V2 **47d874dc3bf715701aee75bbfb4c500b5e3cc624** is live. [PR #64](https://github.com/majieddd/worldheart/pull/64), [successful Pages run](https://github.com/majieddd/worldheart/actions/runs/35143889904), [visual lab](https://majieddd.github.io/worldheart/v2/generation-lab.html). Main remains 6133d0713f4e93e6fc743c35d9dd0fd1834bc98f. Normal generation is still serial; candidate links explicitly enable the experiment.
+
+- 402 automated tests, 152 parsed modules and 399 generated mirror files pass after integration.
+- [166 targeted public identities](PROCGEN-FAST/public-identity.json) match the deployment manifest, including runtime modules, comparison assets and the checked production entry files. This is a targeted identity check, not every site asset.
+- [Public candidate runtime](PROCGEN-FAST/public-runtime.json), loaded without source interception, matches the canyon oracle exactly. All 36 worker batches complete, all camera checks pass and all 1,049 before/after-fault clearance comparisons agree with the detailed path. No runtime or failed-request errors.
+- [Public lab](PROCGEN-FAST/public-lab.json) works at 1280px and 390px, with all four fixture choices, decoded captures, keyboard wipe and no overflow.
+- [Collaborator art integration](PROCGEN-FAST/integrated-art.json): 93/93 checks pass. The first inherited harness run found the iframe before it navigated and failed after 38 checks; the harness now subscribes to the navigation before clicking. [Original failure](PROCGEN-FAST/integrated-art-first.json) is retained. No art runtime change was needed.
+
+Public checks ran alongside integration checks and are correctness evidence only. Performance numbers remain the isolated three-trial medians above. This publishes the research/testing checkpoint; the numeric speed targets, physical mobile performance and peak worker memory remain open.
