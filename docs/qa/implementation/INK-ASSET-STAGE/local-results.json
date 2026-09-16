@@ -1,0 +1,743 @@
+{
+  "base": "http://127.0.0.1:8154",
+  "checks": [
+    {
+      "name": "Denied cursor capture: actual mouse click starts one sword cut",
+      "ok": true
+    },
+    {
+      "name": "Fallback drag turns without attacking",
+      "ok": true
+    },
+    {
+      "name": "A recovery click queues the next cut",
+      "ok": true
+    },
+    {
+      "name": "Fallback click also fires the plasma weapon",
+      "ok": true
+    },
+    {
+      "name": "Arena preset exactly matches default",
+      "ok": true,
+      "detail": {
+        "line": 1.4,
+        "fog": 0.0115,
+        "shadowDepth": 0.1,
+        "saturation": 1.16,
+        "texture": 1,
+        "exposure": 1,
+        "resolution": 1.25,
+        "fov": 78,
+        "bob": 0.35,
+        "shake": 0.45,
+        "sensitivity": 1
+      }
+    },
+    {
+      "name": "Arena preset exactly matches vivid",
+      "ok": true,
+      "detail": {
+        "line": 1.74,
+        "fog": 0.0185,
+        "shadowDepth": 0.35,
+        "saturation": 1.65,
+        "texture": 1.77,
+        "exposure": 1.19,
+        "resolution": 1,
+        "fov": 80,
+        "bob": 0.44,
+        "shake": 0.45,
+        "sensitivity": 1
+      }
+    },
+    {
+      "name": "Arena preset exactly matches deep",
+      "ok": true,
+      "detail": {
+        "line": 2.8,
+        "fog": 0.021,
+        "shadowDepth": 0.3,
+        "saturation": 1.5,
+        "texture": 1.69,
+        "exposure": 0.84,
+        "resolution": 1.25,
+        "fov": 81,
+        "bob": 0.45,
+        "shake": 0.45,
+        "sensitivity": 1
+      }
+    },
+    {
+      "name": "Slider edit clears named preset selection",
+      "ok": true
+    },
+    {
+      "name": "Held weapon uses dedicated fine paint density",
+      "ok": true,
+      "detail": [
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4,
+        2.4
+      ]
+    },
+    {
+      "name": "Actual key input: cut 1 lands exactly once",
+      "ok": true,
+      "detail": {
+        "hits": 1,
+        "hp": 958,
+        "cut": 0
+      }
+    },
+    {
+      "name": "Actual key input: cut 2 lands exactly once",
+      "ok": true,
+      "detail": {
+        "hits": 2,
+        "hp": 958,
+        "cut": 1
+      }
+    },
+    {
+      "name": "Actual key input: cut 3 lands exactly once",
+      "ok": true,
+      "detail": {
+        "hits": 3,
+        "hp": 946,
+        "cut": 2
+      }
+    },
+    {
+      "name": "Asset stage loads 17 named live specimens",
+      "ok": true
+    },
+    {
+      "name": "Fresh stage has finite positive time and no ghost effects",
+      "ok": true,
+      "detail": {
+        "time": 0.05,
+        "metrics": {
+          "calls": 2327,
+          "triangles": 1303242,
+          "geometries": 896,
+          "textures": 28,
+          "effects": 0
+        }
+      }
+    },
+    {
+      "name": "Stage preset matches arena default",
+      "ok": true
+    },
+    {
+      "name": "Stage preset matches arena vivid",
+      "ok": true
+    },
+    {
+      "name": "Stage preset matches arena deep",
+      "ok": true
+    },
+    {
+      "name": "Scrubbing freezes at the requested time",
+      "ok": true
+    },
+    {
+      "name": "Frame step advances exactly one 60 Hz frame",
+      "ok": true
+    },
+    {
+      "name": "Slow motion advances authored pose time",
+      "ok": true
+    },
+    {
+      "name": "All 14 authored clips can be sampled with finite joints",
+      "ok": true,
+      "detail": [
+        "Idle",
+        "Walking",
+        "Running",
+        "Dance",
+        "Death",
+        "Jump",
+        "No",
+        "Punch",
+        "Sitting",
+        "Standing",
+        "ThumbsUp",
+        "WalkJump",
+        "Wave",
+        "Yes"
+      ]
+    },
+    {
+      "name": "Complete cut 1 has continuous articulated limbs",
+      "ok": true,
+      "detail": {
+        "maxJointStep": 0.021903352760596115,
+        "maxLengthError": 2.220446049250313e-16
+      }
+    },
+    {
+      "name": "Cut 1 keeps the blade visible through its complete cycle",
+      "ok": true,
+      "detail": {
+        "visible": 121,
+        "total": 121
+      }
+    },
+    {
+      "name": "Complete cut 2 has continuous articulated limbs",
+      "ok": true,
+      "detail": {
+        "maxJointStep": 0.02703106731361452,
+        "maxLengthError": 2.220446049250313e-16
+      }
+    },
+    {
+      "name": "Cut 2 keeps the blade visible through its complete cycle",
+      "ok": true,
+      "detail": {
+        "visible": 121,
+        "total": 121
+      }
+    },
+    {
+      "name": "Complete cut 3 has continuous articulated limbs",
+      "ok": true,
+      "detail": {
+        "maxJointStep": 0.020571540477480776,
+        "maxLengthError": 1.6653345369377348e-16
+      }
+    },
+    {
+      "name": "Cut 3 keeps the blade visible through its complete cycle",
+      "ok": true,
+      "detail": {
+        "visible": 121,
+        "total": 121
+      }
+    },
+    {
+      "name": "Paintline reference keeps the 2048 source texture",
+      "ok": true,
+      "detail": [
+        {
+          "width": 2048,
+          "height": 2048
+        }
+      ]
+    },
+    {
+      "name": "Paintline reference serves exact pinned collaborator bytes",
+      "ok": true
+    },
+    {
+      "name": "blade effect produces visible live geometry",
+      "ok": true
+    },
+    {
+      "name": "plasma effect produces visible live geometry",
+      "ok": true
+    },
+    {
+      "name": "beacon effect produces visible live geometry",
+      "ok": true
+    },
+    {
+      "name": "Clear effects returns pool to idle",
+      "ok": true
+    },
+    {
+      "name": "Repeated feedback keeps GPU allocations bounded",
+      "ok": true,
+      "detail": {
+        "allocation": {
+          "calls": 1329,
+          "triangles": 745996,
+          "geometries": 974,
+          "textures": 28,
+          "effects": 41
+        },
+        "later": {
+          "calls": 1252,
+          "triangles": 744060,
+          "geometries": 974,
+          "textures": 28,
+          "effects": 12
+        }
+      }
+    },
+    {
+      "name": "Category shows all four towers only",
+      "ok": true
+    },
+    {
+      "name": "Real stage pointer drag and wheel orbit and zoom",
+      "ok": true
+    },
+    {
+      "name": "Home restores full overview",
+      "ok": true
+    },
+    {
+      "name": "Stage usable at 390",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390,
+        "stage": {
+          "x": 0,
+          "y": 123,
+          "width": 390,
+          "height": 556.796875,
+          "top": 123,
+          "right": 390,
+          "bottom": 679.796875,
+          "left": 0
+        },
+        "bad": []
+      }
+    },
+    {
+      "name": "Overview labels stay inside the viewport at 390",
+      "ok": true,
+      "detail": [
+        {
+          "name": "Focus Commander",
+          "left": 57.015625,
+          "right": 75.640625,
+          "width": 390
+        },
+        {
+          "name": "Focus Blade skirmisher",
+          "left": 117.40625,
+          "right": 136.03125,
+          "width": 390
+        },
+        {
+          "name": "Focus Plasma ranger",
+          "left": 178.421875,
+          "right": 197.046875,
+          "width": 390
+        },
+        {
+          "name": "Focus Heavy guard",
+          "left": 240.09375,
+          "right": 258.71875,
+          "width": 390
+        },
+        {
+          "name": "Focus Bastion cannon",
+          "left": 302.421875,
+          "right": 321.046875,
+          "width": 390
+        },
+        {
+          "name": "Focus Twin plasma",
+          "left": 69.453125,
+          "right": 88.078125,
+          "width": 390
+        },
+        {
+          "name": "Focus Pulse beacon",
+          "left": 126.1875,
+          "right": 144.8125,
+          "width": 390
+        },
+        {
+          "name": "Focus Paintline tower",
+          "left": 183.484375,
+          "right": 202.109375,
+          "width": 390
+        },
+        {
+          "name": "Focus Sable edge",
+          "left": 241.359375,
+          "right": 259.984375,
+          "width": 390
+        },
+        {
+          "name": "Focus Pulse carbine",
+          "left": 299.796875,
+          "right": 318.421875,
+          "width": 390
+        },
+        {
+          "name": "Focus Painted commander",
+          "left": 80.453125,
+          "right": 99.078125,
+          "width": 390
+        },
+        {
+          "name": "Focus Painted enemy",
+          "left": 133.953125,
+          "right": 152.578125,
+          "width": 390
+        },
+        {
+          "name": "Focus Painted tower",
+          "left": 187.96875,
+          "right": 206.59375,
+          "width": 390
+        },
+        {
+          "name": "Focus Painted meadow",
+          "left": 242.46875,
+          "right": 261.09375,
+          "width": 390
+        },
+        {
+          "name": "Focus Amber canyon",
+          "left": 297.5,
+          "right": 316.125,
+          "width": 390
+        },
+        {
+          "name": "Focus Moonlit ruins",
+          "left": 90.265625,
+          "right": 108.890625,
+          "width": 390
+        },
+        {
+          "name": "Focus Effects target",
+          "left": 140.875,
+          "right": 159.5,
+          "width": 390
+        }
+      ]
+    },
+    {
+      "name": "Stage usable at 768",
+      "ok": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768,
+        "stage": {
+          "x": 0,
+          "y": 123,
+          "width": 768,
+          "height": 556.796875,
+          "top": 123,
+          "right": 768,
+          "bottom": 679.796875,
+          "left": 0
+        },
+        "bad": []
+      }
+    },
+    {
+      "name": "Overview labels stay inside the viewport at 768",
+      "ok": true,
+      "detail": [
+        {
+          "name": "Focus Commander",
+          "left": 74.5234375,
+          "right": 144.3515625,
+          "width": 768
+        },
+        {
+          "name": "Focus Blade skirmisher",
+          "left": 195.6171875,
+          "right": 279.2265625,
+          "width": 768
+        },
+        {
+          "name": "Focus Plasma ranger",
+          "left": 330.203125,
+          "right": 406.421875,
+          "width": 768
+        },
+        {
+          "name": "Focus Heavy guard",
+          "left": 466.8515625,
+          "right": 537.6171875,
+          "width": 768
+        },
+        {
+          "name": "Focus Bastion cannon",
+          "left": 599.1328125,
+          "right": 679.3984375,
+          "width": 768
+        },
+        {
+          "name": "Focus Twin plasma",
+          "left": 117.3515625,
+          "right": 186.7421875,
+          "width": 768
+        },
+        {
+          "name": "Focus Pulse beacon",
+          "left": 228.328125,
+          "right": 301.046875,
+          "width": 768
+        },
+        {
+          "name": "Focus Paintline tower",
+          "left": 340.328125,
+          "right": 418.828125,
+          "width": 768
+        },
+        {
+          "name": "Focus Sable edge",
+          "left": 464.140625,
+          "right": 529.390625,
+          "width": 768
+        },
+        {
+          "name": "Focus Pulse carbine",
+          "left": 579.984375,
+          "right": 652.734375,
+          "width": 768
+        },
+        {
+          "name": "Focus Painted commander",
+          "left": 136.8359375,
+          "right": 233.9453125,
+          "width": 768
+        },
+        {
+          "name": "Focus Painted enemy",
+          "left": 246.8046875,
+          "right": 325.1328125,
+          "width": 768
+        },
+        {
+          "name": "Focus Painted tower",
+          "left": 350.9375,
+          "right": 425.75,
+          "width": 768
+        },
+        {
+          "name": "Focus Painted meadow",
+          "left": 450.03125,
+          "right": 535.03125,
+          "width": 768
+        },
+        {
+          "name": "Focus Amber canyon",
+          "left": 559.8984375,
+          "right": 637.3203125,
+          "width": 768
+        },
+        {
+          "name": "Focus Moonlit ruins",
+          "left": 175.625,
+          "right": 248.78125,
+          "width": 768
+        },
+        {
+          "name": "Focus Effects target",
+          "left": 266.78125,
+          "right": 339.3125,
+          "width": 768
+        }
+      ]
+    },
+    {
+      "name": "Stage usable at 1600",
+      "ok": true,
+      "detail": {
+        "width": 1600,
+        "scroll": 1600,
+        "stage": {
+          "x": 238,
+          "y": 88,
+          "width": 1098,
+          "height": 872,
+          "top": 88,
+          "right": 1336,
+          "bottom": 960,
+          "left": 238
+        },
+        "bad": []
+      }
+    },
+    {
+      "name": "Overview labels stay inside the viewport at 1600",
+      "ok": true,
+      "detail": [
+        {
+          "name": "Focus Commander",
+          "left": 115.78125,
+          "right": 208.5625,
+          "width": 1098
+        },
+        {
+          "name": "Focus Blade skirmisher",
+          "left": 287.7109375,
+          "right": 397.7265625,
+          "width": 1098
+        },
+        {
+          "name": "Focus Plasma ranger",
+          "left": 476.5625,
+          "right": 577.34375,
+          "width": 1098
+        },
+        {
+          "name": "Focus Heavy guard",
+          "left": 668.0234375,
+          "right": 761.9765625,
+          "width": 1098
+        },
+        {
+          "name": "Focus Bastion cannon",
+          "left": 854.0625,
+          "right": 959.90625,
+          "width": 1098
+        },
+        {
+          "name": "Focus Twin plasma",
+          "left": 172.0546875,
+          "right": 264.2890625,
+          "width": 1098
+        },
+        {
+          "name": "Focus Pulse beacon",
+          "left": 330.7734375,
+          "right": 427.1640625,
+          "width": 1098
+        },
+        {
+          "name": "Focus Paintline tower",
+          "left": 490.890625,
+          "right": 594.515625,
+          "width": 1098
+        },
+        {
+          "name": "Focus Sable edge",
+          "left": 665.890625,
+          "right": 752.953125,
+          "width": 1098
+        },
+        {
+          "name": "Focus Pulse carbine",
+          "left": 831,
+          "right": 927.4375,
+          "width": 1098
+        },
+        {
+          "name": "Focus Painted commander",
+          "left": 199.5234375,
+          "right": 326.4140625,
+          "width": 1098
+        },
+        {
+          "name": "Focus Painted enemy",
+          "left": 356.21875,
+          "right": 459.625,
+          "width": 1098
+        },
+        {
+          "name": "Focus Painted tower",
+          "left": 505.7265625,
+          "right": 604.7421875,
+          "width": 1098
+        },
+        {
+          "name": "Focus Painted meadow",
+          "left": 649.109375,
+          "right": 760.859375,
+          "width": 1098
+        },
+        {
+          "name": "Focus Amber canyon",
+          "left": 806.0625,
+          "right": 908.34375,
+          "width": 1098
+        },
+        {
+          "name": "Focus Moonlit ruins",
+          "left": 251.1328125,
+          "right": 348.0859375,
+          "width": 1098
+        },
+        {
+          "name": "Focus Effects target",
+          "left": 383.484375,
+          "right": 479.640625,
+          "width": 1098
+        }
+      ]
+    },
+    {
+      "name": "Stage renders sustained desktop animation",
+      "ok": true,
+      "detail": {
+        "samples": 120,
+        "p95": 27.69999999999709,
+        "metrics": {
+          "calls": 2327,
+          "triangles": 1303242,
+          "geometries": 974,
+          "textures": 28,
+          "effects": 0
+        }
+      }
+    },
+    {
+      "name": "No campaign save mutation",
+      "ok": true
+    },
+    {
+      "name": "No campaign runtime imported",
+      "ok": true
+    },
+    {
+      "name": "Reduced motion pauses stage playback",
+      "ok": true
+    },
+    {
+      "name": "No runtime or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

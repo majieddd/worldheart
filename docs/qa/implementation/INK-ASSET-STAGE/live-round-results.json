@@ -1,0 +1,40 @@
+{
+  "base": "http://127.0.0.1:8154",
+  "checks": [
+    {
+      "name": "Real-time assisted-input combat completes all three waves",
+      "ok": true,
+      "detail": {
+        "round": {
+          "phase": "complete",
+          "wave": 3,
+          "kills": 15,
+          "total": 15,
+          "remaining": 0,
+          "delay": -0.006999999999988322,
+          "respawns": 0,
+          "elapsed": 32.578500000001306
+        },
+        "state": {
+          "world": "canyon",
+          "weapon": "rifle",
+          "camera": "first",
+          "flight": false,
+          "playing": true,
+          "paused": false,
+          "hits": 71,
+          "shots": 140,
+          "swings": 0,
+          "guards": 0,
+          "muted": false
+        }
+      }
+    },
+    {
+      "name": "Live input run has no browser errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}
