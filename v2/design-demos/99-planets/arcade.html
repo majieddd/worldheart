@@ -7,7 +7,7 @@
 <title>99 Planets To Defend | Arcade UI concept</title>
 <link rel="icon" href="data:,">
 <!--
-  First direction draft for owner selection, not production gameplay.
+  Owner selected B. Refined framing and faction assets, still a UI concept.
   Shared input: docs/art/99-planets/design-spec.md. No other drafts consulted.
   Reference verified 2026-09-16: the official Super Smash Bros. Ultimate
   gameplay and fighter pages, https://www.smashbros.com/en_US/howtoplay/basic.html
@@ -159,20 +159,20 @@ main{padding:18px 24px 0}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 </style>
+<link rel="stylesheet" href="arcade-refinement.css">
 </head>
 <body>
 <header class="review-bar">
   <div class="review-title">
     <div class="brand" aria-label="99 Planets To Defend"><b class="ninety-nine">99</b><span class="name">PLANETS<small>TO DEFEND</small></span></div>
-    <div class="concept-label">ARCADE<span>UI concept</span></div>
+    <div class="concept-label">ARCADE B<span>Selected layout / refined</span></div>
   </div>
-  <nav class="review-links" aria-label="Related pages"><a href="../../99-art.html">Art collection ↗</a><a href="../../index.html">Play game ↗</a></nav>
+  <nav class="review-links" aria-label="Related pages"><a href="../../99-factions.html">Faction concepts ↗</a><a href="../../index.html">Play game ↗</a></nav>
 </header>
 <main>
  <section class="game" data-mode="combat" aria-label="99 Planets game interface concept">
   <img class="world" src="../../lib/99-art/earth.webp" alt="Paintline Earth invasion scene with a commander, alien meteor shells, a defense tower and the Worldheart on a present-day street">
   <div class="hud-top">
-   <div class="earth"><div class="planet-count">01<small>OF 99</small></div><div><h1>EARTH</h1><p>13 APR 2029</p></div></div>
    <div class="wave"><div class="wave-line">WAVE <strong>4</strong><span>/ 10</span></div><p>DEFEND THE WORLDHEART</p></div>
    <div class="heart"><div class="heart-title"><span class="heart-name">WORLDHEART</span><strong class="heart-value">20</strong></div><div class="bar" role="meter" aria-label="Worldheart health" aria-valuenow="20" aria-valuemin="0" aria-valuemax="20"><i></i></div><div class="heart-foot"><span>Crystals</span><span class="crystals"><i></i><i></i><i></i> 0 / 3</span></div></div>
   </div>
@@ -201,10 +201,10 @@ main{padding:18px 24px 0}
   <section id="loadout-state" class="loadout-state" role="tabpanel" aria-label="Loadout" hidden>
    <header class="loadout-heading"><div><h2>LOADOUT</h2><p>Equipment &amp; manufacturers</p></div><button class="back" data-return>Back to combat</button></header>
    <div class="faction-switch" aria-label="Choose faction">
-    <button data-faction="alien" aria-pressed="false">Invader</button><button data-faction="brainshot" aria-pressed="true">Brainshot</button><button data-faction="rainboom" aria-pressed="false">RainBOOM</button><button data-faction="anomalous" aria-pressed="false">Anomalous</button><button data-faction="axiom" aria-pressed="false">Axiom</button>
+    <button data-faction="alien" aria-pressed="false">Invader</button><button data-faction="brainshot" aria-pressed="true">Brainshot</button><button data-faction="rainboom" aria-pressed="false">RainBOOM</button><button data-faction="anomalous" aria-pressed="false">Anomalous</button><button data-faction="axiom" aria-pressed="false">Axiom</button><button data-faction="robloxian" aria-pressed="false">Robloxian</button>
    </div>
    <div class="loadout-body">
-    <figure class="manufacturer-art"><img id="faction-art" src="../../lib/99-art/brainshot.webp" alt="Brainshot equipment and character art, shown as one complete illustration"></figure>
+    <figure class="manufacturer-art"><img id="faction-art" src="../../lib/99-art/factions/brainshot-arsenal.webp" alt="Brainshot equipment and character art, shown as one complete illustration"></figure>
     <div class="equipment"><p class="eyebrow">Manufacturer</p><h3 id="manufacturer">BRAINSHOT</h3><p class="materials" id="materials">Sticker-cut enamel, exposed screws and rubber grip tape.</p><p class="equip-heading">Equipped</p>
      <button class="weapon-slot" data-slot="0" aria-pressed="true"><span class="key">1</span><span class="slot-copy"><small>Slot 1</small><strong class="weapon-name-0">Plasma carbine</strong></span></button>
      <button class="weapon-slot" data-slot="1" aria-pressed="false"><span class="key">2</span><span class="slot-copy"><small>Slot 2</small><strong class="weapon-name-1">Sword</strong></span></button>
@@ -216,7 +216,7 @@ main{padding:18px 24px 0}
   </section>
   <div class="feedback" role="status" aria-live="polite" hidden></div>
  </section>
- <footer class="review-footer"><p><strong>First direction draft.</strong> Staged values and equipment. Anomalous trigger is a UI proposal.</p><p>Paintline art foundation · <span class="small-screen-note">Responsive control layout · </span>Awaiting visual selection</p></footer>
+ <footer class="review-footer"><p><strong>Selected B / refined.</strong> Interactive UI concept with staged values and equipment.</p><p>Painted Inkline · <a href="arcade-v1.html">Original B comparison ↗</a></p></footer>
 </main>
 <script>
 (() => {
@@ -227,8 +227,9 @@ main{padding:18px 24px 0}
   alien:{name:'Native invader',color:'#bfcc82',weapons:['Plasma carbine','Sword'],materials:'Rust chitin plates, an ivory hooked brow and lime capillary channels.'},
   brainshot:{name:'Brainshot',color:'#efbb56',weapons:['Plasma carbine','Sword'],materials:'Sticker-cut enamel, exposed screws and rubber grip tape.'},
   rainboom:{name:'RainBOOM',color:'#7dbadd',weapons:['Plasma carbine','Sword'],materials:'Cobalt plastic armor, separate pigment chambers and a crown antenna.'},
-  anomalous:{name:'Anomalous',color:'#dcb77c',weapons:['Plasma carbine','Sword'],materials:'Smoked glass cages, off-register ivory plates and amber witness lamps.'},
-  axiom:{name:'Axiom',color:'#d6bb74',weapons:['Plasma carbine','Sword'],materials:'Ochre ceramic panels, a graphite spine and twin teal lamps.'}
+  anomalous:{name:'Anomalous',color:'#dcb77c',weapons:['Plasma carbine','Sword'],materials:'Animal Hospital forms, mint medical enamel and watchful lenses.'},
+  axiom:{name:'Axiom',color:'#acdcd9',weapons:['Plasma carbine','Sword'],materials:'Pristine white ceramic, graphite articulation and twin cyan optics.'},
+  robloxian:{name:'Robloxian',color:'#edc76e',weapons:['Plasma carbine','Sword'],materials:'Classic yellow plastic, blue studded receivers and modular green fittings.'}
  };
  let faction = 'brainshot';
  let equipped = [...factions[faction].weapons];
@@ -270,7 +271,7 @@ main{padding:18px 24px 0}
   document.getElementById('manufacturer').textContent = data.name.toUpperCase();
   document.getElementById('materials').textContent = data.materials;
   const art = document.getElementById('faction-art');
-  art.src = '../../lib/99-art/' + key + '.webp';
+  art.src = '../../lib/99-art/factions/' + key + '-arsenal.webp';
   art.alt = data.name + ' equipment and character art, shown as one complete illustration';
   document.querySelector('.condition').hidden = key !== 'anomalous';
   setSlot(0,false);
@@ -327,5 +328,6 @@ main{padding:18px 24px 0}
  });
 })();
 </script>
+<script type="module" src="arcade-refinement.js"></script>
 </body>
 </html>

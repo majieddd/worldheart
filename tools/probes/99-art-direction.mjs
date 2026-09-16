@@ -29,7 +29,7 @@ export async function run({page,base,out,check,sharp,errors,httpFailures}){
     for(const faction of ['alien','brainshot','rainboom','anomalous','axiom']){
       await page.locator('[data-faction="'+faction+'"]').click();
       await page.evaluate(async()=>{await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));});
-      check(id+' displays '+faction+' equipment',await page.locator('img[src$="/'+faction+'.webp"]').count()>0);
+      check(id+' displays '+faction+' equipment',await page.locator('img[src$="/'+faction+(id==='arcade'?'-arsenal':'')+'.webp"]').count()>0);
     }
     await page.locator('[data-faction="brainshot"]').click();
     await capture(id+'-loadout');

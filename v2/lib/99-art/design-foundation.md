@@ -1,6 +1,8 @@
 # 99 Planets To Defend
 
-Modern Earth art and game-design foundation, revision 0.1.0. Owner review pending.
+Modern Earth art and game-design foundation, revision 0.2.0. B / Arcade composition selected. Expanded faction art remains under owner review.
+
+The [six-faction supplement](factions/foundation.md) and [90-concept catalogue](factions/catalogue.json) record the current roster, all six weapon families, active powers, five-step profiles and terrain visions. Earlier plates remain preserved as first studies.
 Prepared 2026-09-16 from the current public Worldheart game and owner direction.
 
 This is an additive visual/narrative companion to the running game blueprint at
@@ -58,17 +60,19 @@ changes. Switching context changes information priority rather than stacking men
 | Alien glyph name | Native invading enemy | Rust chitin, ivory hooked brow, lime capillary channels; grown mechanisms | Contained pulses followed by sharp discharges |
 | Brainshot | Brainrot-inspired | Shark/sneaker carbine, banana blade, espresso staff; enamel, screws, rubber | One clear object-related action per weapon, such as steam from the coffee emitter |
 | RainBOOM | Rainbow Friends-inspired | Cobalt shell, crown antenna, button-eye gauges, separate pigment chambers | Bold colored impact fragments and short trails |
-| Anomalous | Anomaly-inspired | Smoked glass cages, displaced ivory plates, amber witness lamps | Clearly different dormant, arming and triggered states |
-| Axiom | Neutral autonomous robots | Ochre ceramic, graphite spine, paired teal lamps and balanced forms | Symmetrical closures and measured corrective pulses |
+| Anomalous | Animal Hospital crossover | Animal silhouettes, unsettling faces, mint clinical enamel and one impossible detail | Clearly different dormant, arming and triggered states |
+| Axiom | Neutral autonomous robots | Pristine white ceramic, graphite articulation, paired cyan optics and balanced forms | Symmetrical closures and measured corrective pulses |
+| Robloxian | Classic Roblox | Yellow plastic, blue studded receivers, green molded bases and practical construction parts | Crisp brick-shaped impacts and readable snap-together effects |
 
 The alien identity is an original fictional five-glyph cipher encoding **ayy lmao**.
 Repeated letters repeat the same glyph. The Adamic-language premise is inspiration,
-not a claim of an authenticated historical translation. Anomalous has no particular
-franchise assigned beyond the owner's stated anomaly theme. The weapon and character
+not a claim of an authenticated historical translation. Anomalous now draws on the
+owner's Animal Hospital reference. The weapon and character
 sheets are proposed crossover-inspired designs, not official franchise assets.
 
-Each faction sheet contains a ranged plasma family, a sword and a thermal/ember
-staff family. Descriptive labels are placeholders; the owner retains weapon naming.
+The expanded faction pages cover twin daggers, sword, spear, rifle, ember scepter
+and lobber, plus three commanders, three units and three towers per faction.
+Descriptive labels are working names; the owner retains weapon naming.
 The previously accepted broad-headed, binocular-eyed robot belongs to **Axiom**.
 
 ### Existing identity carried into the redraw
@@ -207,10 +211,10 @@ for that possibility; no planet index or story placement has been assigned to it
 Three first drafts share the same illustrated Earth scene so composition can be compared:
 
 - **Field:** compact field controls, ivory/amber labels, separate equipment column.
-- **Arcade:** square, tactile controls and strong ownership of the two weapon slots.
+- **Arcade B, selected:** tactile rounded controls and strong ownership of the two weapon slots. Planet/date block removed; six current faction arsenals supported.
 - **Signal:** quieter framing, orbital Worldheart indicator, lighter loadout screen.
 
-Each supports Combat, Build and Loadout. All five faction sheets can be inspected.
+Each supports Combat, Build and Loadout. Refined B includes all six faction arsenals; A, C and original B remain comparisons.
 The background is an illustration, not a real-time scene. Review UI and staged numbers
 are labeled outside the game image. The actual game is linked separately.
 
@@ -220,7 +224,7 @@ No ammo counter is added because the current game does not use one. Selected UI 
 later be tested with motion, camera rotation, effects, long labels and touch input.
 
 Working brand palette: ink #20282c, warm white #eeeee9, Worldheart mint #84e5d1,
-impact orange #d9582a, Axiom ochre #d1ab54. Barlow Condensed Bold carries short labels
+impact orange #d9582a, Axiom ceramic white and cyan #acdcd9. Barlow Condensed Bold carries short labels
 and strong numbers; Barlow Regular/SemiBold carries reading. Fonts and OFL licenses
 are saved locally. The title treatment is a draft, not an approved final logo.
 
@@ -256,14 +260,14 @@ Owner decisions: new title, modern Earth opening, five faction identities, accep
 robot assigned to Axiom, Paintline/Ink Cel inspiration, no hatched 3D shadows,
 previous medieval direction preserved for later, browser before Roblox.
 
-Pending owner decisions: UI composition, final alien glyph shape, final weapon names,
+Pending owner decisions: refined B surface treatment, expanded faction concepts, final alien glyph shape, final weapon names,
 faction trigger tuning, character costume refinements, final logo and production meshes.
 
 | Decision | Status | Evidence |
 | --- | --- | --- |
 | Modern Earth visual foundation | partial | Nine saved plates in catalogue.json and rendered collection; owner art review pending |
-| Five factions and Axiom robot assignment | partial | Five dedicated concept pages plus actual Axiom runtime reference; campaign integration not yet |
-| Three different UI compositions | partial | Field, Arcade and Signal desktop/mobile screenshots; final composition not selected |
+| Six factions and Axiom robot assignment | partial | Six expanded pages with 24 plates and 90 concepts; actual original robot reference retained; campaign integration not yet |
+| Selected B / Arcade composition | partial | Owner selected B on 2026-09-16; refined controls and 203 browser checks; not integrated into campaign |
 | Medieval study preserved | partial | Six original PNG hashes retained and archive link; no medieval planet added to campaign |
 | Roblox port | not yet | Browser concept and asset acceptance precede the production adapter |
 
