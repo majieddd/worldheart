@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../lib/three.module.min.js';
 export function buildPlanetAdornment(environment,radius){
  const group=new THREE.Group();
  if(environment.rings){

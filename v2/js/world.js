@@ -1,5 +1,5 @@
 import {ecologyScatter} from './terrain/scatter.js';
-import * as THREE from 'three';
+import * as THREE from '../lib/three.module.min.js';
 import {TerrainChunks,DecorChunks} from './terrain-chunks.js';
 import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './biome-visuals.js';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
@@ -28,6 +28,8 @@ import {
 export let R = CONFIG.planetRadius;
 export const floatingWorld=()=>CONFIG.terrainKey==='sky'||CONFIG.environment?.theme==='skyarchipelago';
 export let FEATURES=null;
+export let analyticHeightUpper=Infinity;
+export const clearanceMetrics={shortcuts:0};
 export const SUN_DIR = new THREE.Vector3(0.62, 0.46, 0.58).normalize();
 
 // Frequency plan per map: continental features scale with the map's freqMul,
@@ -212,7 +214,7 @@ function initSpaceLayout(seed) {
 
 export function initTerrainField(seed) {
   heightValid.fill(0);regionalLast.x=NaN;
-  R=CONFIG.planetRadius;FEATURES=null;GUIDED=null;
+  R=CONFIG.planetRadius;FEATURES=null;GUIDED=null;analyticHeightUpper=Infinity;clearanceMetrics.shortcuts=0;
   FA=R/30;F_ROLL=4.3*FA;F_MOIST=4.6*(1+(FA-1)*.8);
   solarSample=CONFIG.environment?.solar?createSolarSampler(CONFIG.environment.theme):null;
   TERRAIN_FAULTS.length=0;
@@ -239,6 +241,9 @@ export function initTerrainField(seed) {
     FEATURES.active.splice(0,FEATURES.active.length,...placeActiveFeatures(FORMATIONS,R,(x,y,z)=>navigationHeight(x,y,z,false),biomeAt,oceanAt,seed).filter(s=>s.key!=='trunks'));
     FEATURES.vents.splice(0,FEATURES.vents.length,...FEATURES.active.filter(s=>s.key==='geyser'));
   }
+  // Four bounded simplex gradient terms give |noise| < 3. Guided blending
+  // stays between raw/cage/landmark maxima. Solar transforms use the fallback.
+  if(FORMATIONS&&!solarSample&&!floatingWorld())analyticHeightUpper=Math.max(.55+.96*FORMATIONS.maxNoise+FORMATIONS.upperBound,GUIDED?.upperBound??-Infinity)+1e-6;
   if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
@@ -575,7 +580,8 @@ export function surfaceTravel(unit, bearing, distance = 0.05, deckCeiling = null
 
 export function canFlyAt(dir, clearance = FLIGHT_CLEARANCE) {
   return !CONFIG.terrain || (inBattlefield(dir.x, dir.y, dir.z)
-    && navigationHeight(dir.x, dir.y, dir.z, false) + clearance <= FLIGHT_CEILING);
+    && (CONFIG.fastGeneration&&!TERRAIN_FAULTS.length&&analyticHeightUpper+clearance<=FLIGHT_CEILING
+      ?(++clearanceMetrics.shortcuts,true):navigationHeight(dir.x, dir.y, dir.z, false) + clearance <= FLIGHT_CEILING));
 }
 
 // Analytic ray-to-surface intersection: enter the terrain shell, march, then

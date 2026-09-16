@@ -1,6 +1,8 @@
 import { buildIcosphereSteps } from './geodesic.js';
+import {SamplePoints} from './terrain-sample-pool.js';
 import { OrderedEdgeSet, ExactPointIndex } from './nav-build.js';
 import { surveyBattlefield } from './terrain/acceptance.js';
+import {floorCoverage} from './terrain/coverage.js';
 import * as THREE from 'three';
 import { nestSite, NEST_SCHEDULE_CAPACITY } from './nest-sites.js';
 import { CONFIG } from './config.js';
@@ -304,7 +306,7 @@ export class NavGraph {
       oldToNew = new Int32Array(total).fill(-1);
       const cosLimit = Math.cos(capTheta + 0.02);
       n = 0;
-      for (let i = 0; i < total; i++) {
+    for (let i = 0; i < total; i++) {
       if(i%256===0)yield;
         const [x, y, z] = verts[i];
         if (x * capCenter.x + y * capCenter.y + z * capCenter.z >= cosLimit) {
@@ -354,6 +356,12 @@ export class NavGraph {
     this._airReady = false;
     this.revision = (this.revision || 0) + 1;this.terrainRevision=(this.terrainRevision||0)+1;
 
+    let sampled=null;
+    if(this.sampleTerrain){
+      const points=new SamplePoints(total);
+      for(let i=0;i<total;i++){if(keep&&!keep[i])continue;const v=verts[i];if(reused?.get(...v)!==undefined)continue;points.push(keep?oldToNew[i]:i,...v);}
+      sampled=yield this.sampleTerrain(points.finish(),{config:CONFIG,n,floorDatum:this.floorDatum,coarse,walkAll});
+    }
     for (let i = 0; i < total; i++) {
       if(i%256===0)yield;
       if (keep && !keep[i]) continue;
@@ -362,18 +370,19 @@ export class NavGraph {
       this.dirs[idx * 3] = x; this.dirs[idx * 3 + 1] = y; this.dirs[idx * 3 + 2] = z;
       _v.set(x, y, z);
       const cached=reused?.get(x,y,z);if(cached!==undefined)reusedNodes[idx]=cached;
-      const h = cached===undefined?terrainHeight(x, y, z):reuse.height[cached];
+      const at=idx*7,parallel=sampled&&Number.isFinite(sampled[at]);
+      const h = parallel?sampled[at]:cached===undefined?terrainHeight(x, y, z):reuse.height[cached];
       this.height[idx] = h;
-      this.baseHeight[idx] = cached===undefined?(CONFIG.terrain ? terrainHeight(x, y, z, false) : h):reuse.baseHeight[cached];
-      this.waterDepth[idx] = WORLD.waterDepthAt(_v,this.baseHeight[idx]);
-      if (this.airWalk) this.airWalk[idx] = WORLD.canFlyAt(_v, WORLD.FLIGHT_CLEARANCE + 2) ? 1 : 0;
-      const p = (CONFIG.terrain ? WORLD.surfaceElevation(_v,h) : Math.max(h,.03)) + R;
+      this.baseHeight[idx] = parallel?sampled[at+1]:cached===undefined?(CONFIG.terrain ? terrainHeight(x, y, z, false) : h):reuse.baseHeight[cached];
+      this.waterDepth[idx] = parallel?sampled[at+2]:WORLD.waterDepthAt(_v,this.baseHeight[idx]);
+      if (this.airWalk) this.airWalk[idx] = parallel?sampled[at+5]:WORLD.canFlyAt(_v, WORLD.FLIGHT_CLEARANCE + 2) ? 1 : 0;
+      const p = parallel?sampled[at+6]:(CONFIG.terrain ? WORLD.surfaceElevation(_v,h) : Math.max(h,.03)) + R;
       this.pos[idx * 3] = x * p; this.pos[idx * 3 + 1] = y * p; this.pos[idx * 3 + 2] = z * p;
       // Space flight lanes: the void is pathable, the rocks are not, so the
       // flow field bends every lane around the platforms.
-      this.walk[idx] = cached!==undefined?reuse.walk[cached]:walkAll ? (h < 0.55 ? 1 : 0)
+      this.walk[idx] = parallel?sampled[at+3]:cached!==undefined?reuse.walk[cached]:walkAll ? (h < 0.55 ? 1 : 0)
         : (coarse ? (isLandDir(_v) ? 1 : 0) : (isWalkableDir(_v) ? 1 : 0));
-      if(this.floorWalk)this.floorWalk[idx]=cached!==undefined?reuse.floorWalk[cached]:this.walk[idx]&&isFloorTerrain(this.baseHeight[idx]-this.floorDatum,WORLD.slopeAt(_v),this.waterDepth[idx])?1:0;
+      if(this.floorWalk)this.floorWalk[idx]=parallel?sampled[at+4]:cached!==undefined?reuse.floorWalk[cached]:this.walk[idx]&&isFloorTerrain(this.baseHeight[idx]-this.floorDatum,WORLD.slopeAt(_v),this.waterDepth[idx])?1:0;
       // The retained mesh includes a stitching margin outside the wall.
       // It must never become a route that the movement boundary refuses.
       if (CONFIG.terrain && capCenter && _v.dot(capCenter) < Math.cos(capTheta - 0.8 / R)) {
@@ -428,6 +437,17 @@ export class NavGraph {
       this.adj[ab]=b;this.adj[ba]=a;
       if(reverseEdge){reverseEdge[ab]=ba;reverseEdge[ba]=ab;}
     }
+    let airSamples=null;
+    if(this.sampleTerrain&&this.airWalk){
+      const points=new SamplePoints(n);
+      for(let i=0;i<n;i++){
+        if(!this.airWalk[i]||reusedNodes?.[i]>=0&&reuse._airCertificate)continue;
+        let near=this.baseHeight[i]>WORLD.FLIGHT_CEILING*.2;
+        for(let e=this.adjOff[i];!near&&e<this.adjOff[i+1];e++)near=this.baseHeight[this.adj[e]]>WORLD.FLIGHT_CEILING*.2;
+        if(near)points.push(i,this.dirs[i*3],this.dirs[i*3+1],this.dirs[i*3+2]);
+      }
+      if(points.length)airSamples=yield this.sampleTerrain(points.finish(),{config:CONFIG,n,width:1,kind:'air',spacing:this.spacing});
+    }
     if (this.airWalk) {
       const centre = new THREE.Vector3(), a = new THREE.Vector3(), b = new THREE.Vector3(), probe = new THREE.Vector3();
       const offsets=Array.from({length:24},(_,sample)=>{const angle=sample%8*Math.PI/4,distance=(1+Math.floor(sample/8))*this.spacing*.3;return[Math.cos(angle)*distance/R,Math.sin(angle)*distance/R];});
@@ -439,6 +459,7 @@ export class NavGraph {
         let nearRelief = this.baseHeight[i] > WORLD.FLIGHT_CEILING * 0.2;
         for (let e = this.adjOff[i]; !nearRelief && e < this.adjOff[i + 1]; e++) nearRelief = this.baseHeight[this.adj[e]] > WORLD.FLIGHT_CEILING * 0.2;
         if (!nearRelief) continue;
+        if(airSamples&&Number.isFinite(airSamples[i])){this.airWalk[i]=airSamples[i];continue;}
         this.nodeDir(i, centre).normalize();
         a.set(0, Math.abs(centre.y) < 0.9 ? 1 : 0, Math.abs(centre.y) < 0.9 ? 0 : 1);
         b.crossVectors(centre, a).normalize(); a.crossVectors(b, centre).normalize();
@@ -455,6 +476,15 @@ export class NavGraph {
           if (!safe[this.adj[e]]) { this.airWalk[i] = 0; break; }
         }
       }
+    }
+    let edgeSamples=null;
+    if(this.sampleTerrain&&this.airWalk){
+      const points=new SamplePoints(this.adj.length/2);
+      for(let i=0;i<n;i++)if(this.airWalk[i])for(let e=this.adjOff[i];e<this.adjOff[i+1];e++){
+        const j=this.adj[e];if(j<i||!this.airWalk[j])continue;
+        points.push(e,this.dirs[i*3]+this.dirs[j*3],this.dirs[i*3+1]+this.dirs[j*3+1],this.dirs[i*3+2]+this.dirs[j*3+2]);
+      }
+      if(points.length)edgeSamples=yield this.sampleTerrain(points.finish(),{config:CONFIG,n:this.adj.length,width:1,kind:'edge'});
     }
     this._routeHeuristicScale = CONFIG.terrain ? Infinity : 0;
     for (let i = 0; i < n; i++) {
@@ -473,6 +503,7 @@ export class NavGraph {
           // directed. Reuse the exact Float32 result of the reverse edge;
           // keep every midpoint probe, but evaluate each midpoint only once.
           if(j<i)this.airCost[e]=this.airCost[reverseEdge[e]];
+          else if(edgeSamples&&Number.isFinite(edgeSamples[e]))this.airCost[e]=edgeSamples[e]?angle*R:Infinity;
           else if(this.airWalk[i]&&this.airWalk[j]){
             _v.set(this.dirs[i * 3] + this.dirs[j * 3], this.dirs[i * 3 + 1] + this.dirs[j * 3 + 1], this.dirs[i * 3 + 2] + this.dirs[j * 3 + 2]).normalize();
             if(WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+2))this.airCost[e]=angle*R;
@@ -703,6 +734,11 @@ export class NavGraph {
     }
     if (heart < 0 || heartScore < 25 - relax * 8) return false;
     this.heartNode = heart;
+    if(CONFIG.fastGeneration&&CONFIG.map.mode==='ninetynine'&&this.floorWalk){
+      const coverage=floorCoverage(this,WORLD.FORMATIONS,heart,capCenter,capTheta);
+      (this.coverageTrials||=[]).push({...coverage,seed:CONFIG.seed});
+      if(!coverage.possible)return false;
+    }
 
     // Graph distances from the heart pick spread-out portal sites
     yield* this._dijkstraSteps(heart, null);
