@@ -13,6 +13,11 @@ For art debugging, inspect full motion cycles, test both captured and denied
 cursor input, and distinguish texture resolution from its scale on the model.
 Use the shared asset stage and runtime builders so inspection fixes carry into
 the demo. Keep source posters, static meshes and animated adaptations identified.
+The current demo default is the owner's revised Vivid Paint. Original 1.3.1
+remains independently selectable and archived. The artboard supplements the
+collaborator's Paintline direction with proposed Roblox concepts and saved prompts.
+For FPS input, test simultaneous mouse buttons: pointer events alone do not report
+every button in a chord. Inspect complete ADS, fire, slide and recovery cycles.
 
 The current owner-directed work is tracked in **[docs/PROGRESS.md](docs/PROGRESS.md)**:
 the blind QA baseline, the **[99 Planets To Defend blueprint](docs/99-PLANETS-TO-DEFEND.md)**,

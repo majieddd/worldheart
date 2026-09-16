@@ -17,7 +17,7 @@ camera.layers.enable(1);handsCamera.layers.enable(1);scene.background=new THREE.
 const sun=new THREE.DirectionalLight('#ffe6b8',2.1);sun.position.set(-13,24,13);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-26,right:26,top:24,bottom:-24,near:1,far:85});sun.shadow.bias=-.0001;sun.shadow.normalBias=.035;sun.shadow.radius=1.6;
 scene.add(sun,new THREE.HemisphereLight('#e2ebdc','#83765f',1.15));const fill=new THREE.DirectionalLight('#bdced7',.35);fill.position.set(15,10,-15);scene.add(fill);
 const handLight=new THREE.DirectionalLight('#ffe6b8',2.1);handLight.position.set(-3,5,4);handsScene.add(handLight,new THREE.HemisphereLight('#e2ebdc','#83765f',1.15));
-const items=[],graphics={...GRAPHICS_DEFAULTS},state={selected:0,category:'all',playing:!reduced.matches,speed:1,time:0,clip:'Idle',fps:false,turn:false,preset:'default',overview:true};
+const items=[],graphics={...GRAPHICS_DEFAULTS},state={selected:0,category:'all',playing:!reduced.matches,speed:1,time:0,clip:'Idle',fps:false,turn:false,preset:'vivid',overview:true};
 const orbit={yaw:.08,pitch:.68,distance:36,target:new THREE.Vector3(0,.5,2)},timings=[];
 let exhibitTime=0,renderer,paint,k,rig,fx,worlds,ready=false,last=performance.now(),drag=null,shotTime=-1,shotOrigin=new THREE.Vector3(),lost=false;
 const projectile=plasmaMesh();projectile.visible=false;scene.add(projectile);
@@ -31,7 +31,7 @@ function add(name,category,root,description,extra={}){
 function current(){return items[state.selected];}
 function clipOptions(item){
   if(item.actor)return ['Idle','Walking','Running',...Object.keys(item.actor.clips).filter(n=>!['Idle','Walking','Running'].includes(n))];
-  if(item.weapon)return item.weapon==='sword'?['Cut 1','Cut 2','Cut 3','Guard']:['Recoil','Vent'];
+  if(item.weapon)return item.weapon==='sword'?['Cut 1','Cut 2','Cut 3','Guard']:['Recoil','Vent','Aim'];
   if(item.tower)return ['Track & fire'];
   return ['Still'];
 }
@@ -49,7 +49,7 @@ function select(index,focus=false){
 function focusCurrent(){const i=current();state.overview=false;orbit.target.copy(i.station.position).add(new THREE.Vector3(0,1.15,0));orbit.distance=i.category==='worlds'?10:7.6;orbit.yaw=.5;orbit.pitch=.27;}
 function overview(){state.overview=true;setFPS(false);orbit.target.set(0,.5,2);orbit.yaw=.08;orbit.pitch=.68;orbit.distance=36;}
 function setFPS(value){state.fps=value&&!!current()?.weapon;$('#fps').setAttribute('aria-pressed',String(state.fps));$('#view-note').textContent=state.fps?'Actual held rig · Use timeline to inspect every pose · Play loops the selected action':'Drag to orbit · Scroll to zoom · Click a label to focus';}
-function applyPreset(id){if(!GRAPHICS_PRESETS[id])id='default';state.preset=id;Object.assign(graphics,GRAPHICS_PRESETS[id].graphics);if(renderer){renderer.setPixelRatio(Math.min(devicePixelRatio,2)*graphics.resolution);renderer.toneMappingExposure=graphics.exposure;}document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===id)));}
+function applyPreset(id){if(!GRAPHICS_PRESETS[id])id='vivid';state.preset=id;Object.assign(graphics,GRAPHICS_PRESETS[id].graphics);if(renderer){renderer.setPixelRatio(Math.min(devicePixelRatio,2)*graphics.resolution);renderer.toneMappingExposure=graphics.exposure;}document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===id)));}
 function pose(){
   if(!ready)return;
   for(const i of items){
@@ -60,7 +60,7 @@ function pose(){
   }
   const i=current();if(i.weapon){
     const cut=Math.max(0,Number(state.clip.slice(-1))-1),attack=i.weapon==='sword'&&state.clip!=='Guard'?Math.min(1,state.time/duration()):0;
-    if(i.weapon==='rifle'&&state.clip==='Recoil'){rig.fire();rig.update(state.time,{weapon:'rifle',bob:0});}else rig.update(0,{weapon:i.weapon,attack,combo:cut,aim:state.clip==='Guard',vent:state.clip==='Vent'?1-state.time:0,bob:0});
+    if(i.weapon==='rifle'&&state.clip==='Recoil'){rig.fire();rig.update(state.time,{weapon:'rifle',ads:0,bob:0});}else rig.update(0,{weapon:i.weapon,attack,combo:cut,aim:state.clip==='Guard'||state.clip==='Aim',ads:['Guard','Aim'].includes(state.clip)?Math.min(1,state.time/.2):0,vent:state.clip==='Vent'?1-state.time:0,bob:0});
     if(!state.fps){i.root.rotation.set(i.weapon==='sword'?-.12:0,i.weapon==='rifle'?-.7:0,i.weapon==='sword'?-.38:0);}
   }
   $('#scrub').value=state.time;$('#time').value=state.time.toFixed(2)+' s';
@@ -98,7 +98,7 @@ canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','A
 document.addEventListener('visibilitychange',()=>{last=performance.now();drag=null;});reduced.addEventListener('change',()=>{if(reduced.matches){setPlaying(false);state.turn=false;$('#turn').setAttribute('aria-pressed','false');}});
 
 async function boot(){try{
-  renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;renderer.info.autoReset=false;applyPreset(new URLSearchParams(location.search).get('preset')||'default');
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;renderer.info.autoReset=false;applyPreset(new URLSearchParams(location.search).get('preset')||'vivid');
   paint=await createSurfaceMaterials();k=kit(paint);fx=createEffects(scene);rig=createWeapons(paint);handsScene.add(rig.root);
   k.mesh(scene,new THREE.PlaneGeometry(160,160),paint.material('#a2b29a'),[0,-.25,0],[-Math.PI/2,0,0],false);
   const hero=await createActor(paint,{color:'#c1b388'});add('Commander','units',hero.root,'Accepted automaton rig. Fourteen authored clips, with articulated fingers and calibrated locomotion.',{actor:hero});
@@ -110,7 +110,7 @@ async function boot(){try{
   for(const name of ['commander','enemy','tower']){const ref=await referenceModel(paint,'lib/painted/'+name+'.gltf',2.4);add('Painted '+name,'reference',ref.root,'Earlier detailed painted study. Original textured static reference, not an animated game unit.',{reference:ref});}
   worlds=createWorlds(paint);for(const world of worlds){world.root.visible=true;world.root.scale.setScalar(.035);add(world.name,'worlds',world.root,'Miniature of the actual walkable environment, with the same geometry and material builders.',{world});}
   const target=new THREE.Group();k.mesh(target,new THREE.OctahedronGeometry(.65),k.mats.glow,[0,1.3,0]);k.mesh(target,new THREE.CylinderGeometry(.4,.6,.65,8),k.mats.stone,[0,.32,0]);add('Effects target','worlds',target,'Use the contact buttons for warm blade sparks, cool plasma streaks and a clean healing ring. Pause and frame-step to inspect.');
-  ready=true;select(0);setPlaying(state.playing);$('#loading').hidden=true;draw();last=performance.now();requestAnimationFrame(frame);
+  ready=true;const queryAsset=Number(new URLSearchParams(location.search).get('asset')||0);select(Number.isInteger(queryAsset)&&queryAsset>=0&&queryAsset<items.length?queryAsset:0,queryAsset>0);setPlaying(state.playing);$('#loading').hidden=true;draw();last=performance.now();requestAnimationFrame(frame);
   window.INK_STAGE={ready:true,state,items,graphics,rig,select,advance,draw,applyPreset,effect,setPlaying,get duration(){return duration();},get orbit(){return {yaw:orbit.yaw,pitch:orbit.pitch,distance:orbit.distance};},get metrics(){return {calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures,effects:fx.active};},get timings(){return timings.slice();}};
   canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();lost=true;setPlaying(false);$('#loading').hidden=false;$('#load-status').textContent='Graphics interrupted. Waiting for recovery…';});canvas.addEventListener('webglcontextrestored',()=>{lost=false;$('#loading').hidden=true;last=performance.now();});
 }catch(e){window.INK_STAGE_ERROR=String(e);$('#load-status').textContent=e.message;$('#retry').hidden=false;console.error(e);}}

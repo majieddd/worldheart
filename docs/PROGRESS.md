@@ -1,5 +1,12 @@
 # 99 Planets development progress
 
+U189-U193 locally verified, publication pending: Codex on `feature/ink-fps-handling`. New owner Vivid Paint
+default, connected foliage, FPS pace/slide/ADS and a Roblox-focused concept
+artboard after the demo fixes. [Plan and evidence](qa/implementation/INK-FPS-HANDLING.md).
+The original 1.3.1 archive and existing collaborator work remain preserved.
+379 automated checks, 20 handling, 53 arena, 48 stage and 25 artboard browser
+cases pass, plus a complete real-time position-assisted three-wave round.
+
 U184-U188 published and publicly verified at `0e8723e`, [PR #55](https://github.com/majieddd/worldheart/pull/55): Codex on `feature/ink-asset-stage`. Exact screenshot presets,
 denied-cursor-capture swing repair, close-up weapon paint, Paintline tower and
 a 17-specimen asset/animation/effects stage. 48 targeted, 53 arena and 374 automated

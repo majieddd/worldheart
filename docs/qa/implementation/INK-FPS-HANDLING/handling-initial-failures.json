@@ -1,0 +1,122 @@
+{
+  "base": "http://127.0.0.1:8154",
+  "checks": [
+    {
+      "name": "Fresh arena starts with exact new Vivid values",
+      "ok": true
+    },
+    {
+      "name": "Original 1.3.1 remains exact and independently selectable",
+      "ok": true
+    },
+    {
+      "name": "Reset selects Vivid and restores current default",
+      "ok": true
+    },
+    {
+      "name": "Actual W input travels over four units in one second",
+      "ok": true,
+      "detail": {
+        "z": 6.7290964276868825,
+        "v": -4.399999999999589
+      }
+    },
+    {
+      "name": "Forward sprint reaches 7.1 units per second",
+      "ok": true,
+      "detail": {
+        "vx": 0,
+        "vz": -7.0999991740637345,
+        "ads": 0,
+        "sprint": 0.9999546000702375,
+        "crouch": 0,
+        "slide": 0,
+        "cooldown": 0,
+        "slideX": 0,
+        "slideZ": 0,
+        "slideSpeed": 0,
+        "eye": 2.02,
+        "mode": "sprint",
+        "previousCrouch": false,
+        "land": 0
+      }
+    },
+    {
+      "name": "Actual sprint/C starts momentum slide and lowers camera",
+      "ok": true,
+      "detail": {
+        "vx": 0,
+        "vz": -7.950814796361115,
+        "ads": 0,
+        "sprint": 0.1353291390242595,
+        "crouch": 0.8891968416376661,
+        "slide": 0.7200000000000003,
+        "cooldown": 0,
+        "slideX": 0,
+        "slideZ": -1,
+        "slideSpeed": 7.950814796361115,
+        "eye": 1.3264264635226204,
+        "mode": "slide",
+        "previousCrouch": true,
+        "land": 0
+      }
+    },
+    {
+      "name": "Slide ends and standing view recovers smoothly",
+      "ok": true
+    },
+    {
+      "name": "ADS passes through an intermediate pose",
+      "ok": true
+    },
+    {
+      "name": "ADS completes in 0.20 seconds",
+      "ok": true
+    },
+    {
+      "name": "Left release stops fire while right aim stays held",
+      "ok": false
+    },
+    {
+      "name": "Aim remains after trigger release",
+      "ok": true
+    },
+    {
+      "name": "Right release leaves held fire active",
+      "ok": false
+    },
+    {
+      "name": "All sampled ADS limbs stay finite with fixed segment lengths",
+      "ok": true
+    },
+    {
+      "name": "Live foliage attaches formerly hovering accents",
+      "ok": true,
+      "detail": {
+        "leaves": 4480,
+        "reattached": 496,
+        "maxRadiusBefore": 1.6368768699919989,
+        "maxRadiusAfter": 0.965
+      }
+    },
+    {
+      "name": "Real-time sprint-slide-aim-fire sequence executes",
+      "ok": false
+    },
+    {
+      "name": "Pause clears held inputs and stops simulation",
+      "ok": true
+    },
+    {
+      "name": "Stage also starts with Vivid by default",
+      "ok": true
+    },
+    {
+      "name": "No handling browser errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "httpFailures": []
+}

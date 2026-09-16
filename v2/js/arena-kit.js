@@ -22,7 +22,12 @@ export function kit(paint,{detail=false}={}){
         mesh(root,box(.008,.018,.13),mats.dark,[side*.15,.17,-.04],[0,0,0],false);
       }
       for(let i=0;i<6;i++)mesh(root,box(.12,.016,.026),mats.metal,[0,.354,-.43+i*.06],[0,0,0],false);
-      mesh(root,box(.075,.065,.5),mats.dark,[0,.31,-.2]);mesh(root,box(.1,.1,.14),mats.gold,[0,.36,-.04]);mesh(root,new THREE.SphereGeometry(.035,8,6),mats.glow,[0,.36,-.125],[0,0,0],false);tip.position.set(0,.14,-1.17);base.position.set(0,.1,-.25);
+      mesh(root,box(.075,.065,.5),mats.dark,[0,.31,-.2]);
+      // Open reflex sight: the center stays clear, unlike the former solid gold
+      // block. Its optical center is .45 above the grip for the actual ADS pose.
+      for(const x of [-.083,.083])mesh(root,box(.025,.19,.07),mats.dark,[x,.445,-.04]);
+      mesh(root,box(.19,.025,.07),mats.gold,[0,.54,-.04]);mesh(root,box(.19,.025,.07),mats.dark,[0,.35,-.04]);
+      mesh(root,new THREE.SphereGeometry(.007,8,6),mats.glow,[0,.45,-.16],[0,0,0],false);tip.position.set(0,.14,-1.17);base.position.set(0,.1,-.25);
     }
     root.add(tip,base);return {root,tip,base,kind};
   }
