@@ -1,7 +1,7 @@
 # Guided terrain in the full game
 
 U200-U204. Codex on `feature/guided-planet-integration`, 2026-09-16.
-Status: locally verified, publication pending. Owner approved Guided Terrain Kit 1.0.0 and requested full-game
+Status: published and publicly verified. Owner approved Guided Terrain Kit 1.0.0 and requested full-game
 integration. Tracker #1. V2 only; main remains `6133d07`.
 
 ## Contract
@@ -27,7 +27,7 @@ the static kit; they must not regenerate the whole grid.
 | U201 full gameplay and save integration | Verified | New generation, saved geometry, campaign/home launch, no classic-map regression |
 | U202 debug/generator inspection and landmarks | Verified | Production field visible, useful ledges and floor-following passages |
 | U203 adversarial runtime and performance | Verified within stated scope | Real rendering/input, nest routes, tower placement, commander, quake; measured generation |
-| U204 verified V2 publication and handoff | Active | Syntax/style/tests, mirrors, PR, Pages identities and public runtime |
+| U204 verified V2 publication and handoff | Published and verified | Syntax/style/tests, mirrors, PR, Pages identities and public runtime |
 
 ## Evidence
 
@@ -92,6 +92,29 @@ and a broader loading optimization pass remain qualification work.
 Evidence files are in [GUIDED-PLANET-INTEGRATION](GUIDED-PLANET-INTEGRATION/):
 initial-browser.json, initial-generation.json, lifecycle.json, quake.json,
 optimization-parity.json, performance.json, baseline.json, tests.txt and syntax.txt.
-Publication identity and final public runtime evidence are pending.
+Runtime checkpoint `f22e3b2349a5617e4f463a21a37e61bc44e2c2db` is deployed by
+[Pages run 35109218353](https://github.com/majieddd/worldheart/actions/runs/35109218353),
+with [PR #59](https://github.com/majieddd/worldheart/pull/59) retained for review.
+All **493/493 live/source identities** pass, including unchanged main `6133d07`.
+Additional planet-33 and planet-99 headless fixtures each deliver 15/15 enemies
+without floor or flight violations: 45 arrivals across the three sampled worlds.
+
+The first public harness reached boot-complete before the deferred inspector
+import finished. The probe now waits for the actual inspector. A subsequent
+public pass verified all six worlds and fitted tower shelves (8 cases), then a
+GitHub Pages **503 for js/run/homeworld.js** interrupted the campaign navigation.
+Both failure records are retained. The remaining lifecycle checks were retried
+in a fresh browser: **10/10 pass**, with no runtime/HTTP errors. Together, **18
+distinct public cases** pass: generation, placement, campaign versions, capture
+snapshots, home entry, Earth routes, held-key movement, actual ramp grounding,
+starting defense, old-save geometry, Debug World and error checks.
+
+Public evidence: public-identity.json, public-generation.json,
+public-generation-and-503.json and public-lifecycle.json. The corrected deferred
+import wait lives in the shared probe, not in a duplicate test launcher.
+
+![Fitted overlook in the deployed V2 planet](GUIDED-PLANET-INTEGRATION/guided-overlook.png)
+
+![Production terraced formation in Debug World](GUIDED-PLANET-INTEGRATION/debug-plateau.png)
 Full 99-planet completion and real-device mobile acceptance are outside this
 bounded terrain integration. Record discovered failures and fixes here.

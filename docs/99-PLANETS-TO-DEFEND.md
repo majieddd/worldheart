@@ -9,10 +9,12 @@ drafts await owner selection. [Companion foundation](../lib/99-art/design-founda
 and [implementation evidence](qa/implementation/99-ART-DIRECTION.md). These are
 concept proposals, not a replacement of the existing campaign or a completed Roblox port.
 
-U200-U204 locally verified, 2026-09-16: the owner requested full-game adoption of approved
+U200-U204 published and publicly verified at V2 `f22e3b2`, 2026-09-16:
+the owner requested full-game adoption of approved
 Guided Terrain Kit 1.0.0. New V2 planets use spherical shared-corner terrain,
 floor-following passages and fitted overlooks, preserving planet composition and
-old saved-world geometry. [Implementation and acceptance](qa/implementation/GUIDED-PLANET-INTEGRATION.md).
+old saved-world geometry. 393 automated tests and 18 distinct public browser
+cases pass. [Implementation and acceptance](qa/implementation/GUIDED-PLANET-INTEGRATION.md).
 
 U199, owner decision 2026-09-16: **Guided Terrain Kit 1.0.0 is selected and locked**.
 Use its shared-corner cliff shelves, readable routes and fitted landmarks as the
