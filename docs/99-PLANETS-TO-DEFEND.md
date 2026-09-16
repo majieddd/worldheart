@@ -1,5 +1,15 @@
 # 99 Planets To Defend: running development blueprint
 
+U205-U208, published and publicly verified at V2 `ec7320d` (PR #60), 2026-09-16:
+the owner directs a modern-Earth visual foundation under
+the **99 Planets To Defend** title. Five factions are the native alien glyph name,
+Brainshot, RainBOOM, Anomalous and Axiom; the accepted robot is now Axiom's design.
+Paintline / Inked Cel remains the 2D reference, without hatched 3D shadows. The
+prior collection is preserved for a possible medieval planet. Three UI first
+drafts await owner selection. [Companion foundation](../lib/99-art/design-foundation.md)
+and [implementation evidence](qa/implementation/99-ART-DIRECTION.md). These are
+concept proposals, not a replacement of the existing campaign or a completed Roblox port.
+
 U200-U204 published and publicly verified at V2 `f22e3b2`, 2026-09-16:
 the owner requested full-game adoption of approved
 Guided Terrain Kit 1.0.0. New V2 planets use spherical shared-corner terrain,

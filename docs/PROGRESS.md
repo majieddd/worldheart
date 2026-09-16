@@ -1,5 +1,15 @@
 # 99 Planets development progress
 
+U205-U208 published and publicly verified at **ec7320d**, [PR #60](https://github.com/majieddd/worldheart/pull/60): Codex on `feature/99-planets-art-direction`. Modern-Earth concept
+collection for **99 Planets To Defend**, five owner-defined manufacturers, nine
+new art plates, five commander and six tower redraws, and three interactive UI
+compositions. Previous artboard is preserved as a medieval-planet study.
+Integrated checks pass: 84 local / 84 public browser cases, 393 automated tests,
+536 deployed/source identities and the blueprint gate.
+Owner UI selection is pending. [Scope and evidence](qa/implementation/99-ART-DIRECTION.md)
+and [downloadable design foundation](../lib/99-art/design-foundation.md).
+The collaborator's guided terrain integration is retained; main is unchanged.
+
 U200-U204 published and publicly verified at **f22e3b2**, [PR #59](https://github.com/majieddd/worldheart/pull/59): Codex on
 `feature/guided-planet-integration`. The approved Guided Terrain Kit now drives
 new V2 planets, with versioned saves and shared navigation/rendering geometry.
