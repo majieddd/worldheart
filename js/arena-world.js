@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import {createPaintedEnvironment} from '../art-candidates/hard-cel-v1/js/painted-environment.js';
 import {kit} from './arena-kit.js';
+import {attachCanopyLeaves} from './arena-foliage.js';
 
 export function createWorlds(paint){
-  const k=kit(paint),meadow=createPaintedEnvironment(paint);
+  const k=kit(paint),meadow=attachCanopyLeaves(createPaintedEnvironment(paint));
   const worlds=[{id:'meadow',name:'Painted meadow',...meadow,sky:'#c8d5cb',sun:'#ffe6b8',ambient:'#e2ebdc',obstacles:[[-10,1,2],[13,-7,2],[-9,-12,1.7],[14,11,1.5],[-14,-10,4],[-5,-4,2.6],[-1,-4,1]]}];
   for(const kind of ['canyon','ruins']){
     const root=new THREE.Group(),height=(x,z)=>.15+Math.sin(x*.19)*.3+Math.cos(z*.22)*.22,obstacles=[],details=[];

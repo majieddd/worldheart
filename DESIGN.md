@@ -4,6 +4,17 @@
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
 ## Dials
+
+Latest owner decision: Vivid Paint is the default for the arena and asset stage.
+Its new exact screenshot values live in `js/arena-presets.js`; reset restores
+Vivid. The independent original 1.3.1 button and archive remain unchanged.
+The concept artboard extends the Paintline 2D direction for a future Roblox port:
+block-shaped characters, three maker-specific weapon families and a UI study.
+New concepts remain proposals, distinct from current 3D runtime models.
+Artboard dials: variance 4, motion 1, density 4. Warm paper is the image-review
+ground; navy/mint remains navigation and selected-control language. Georgia is
+reserved for editorial artbook headings, Segoe UI for controls and copy. The
+navy embedded stage is a separate existing tool, not a second page theme.
 The Paintline column on the collaborator board is the future 2D reference:
 painted color masses, clean contours and readable dark shadow blocks. It
 supplements the approved 3D direction below. Asset stage uses the existing
@@ -14,7 +25,7 @@ Current owner decision: **Atmospheric Ink 1.3.1 is the selected art direction**.
 Preserve its exact prior slice ZIP, manifest and `art/atmospheric-ink-v1.3.1` tag.
 `atmospheric-arena.html` is the expanded FPS test: mesh-attached pigment, three
 environments, moving articulated units, sword/plasma weapons and illustrative
-feedback. Graphics overrides are temporary and reset to the saved recipe.
+feedback. Graphics overrides are temporary; original and Vivid are separate presets.
 The current treatment uses object/rest-space pigment with separate deformed
 world-space lighting, fixing texture swimming without changing the selected palette.
 Earlier preferences below are historical. Production campaign art is not migrated.
