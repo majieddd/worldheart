@@ -1,7 +1,7 @@
 # Homeworld boss progression
 
 Owner: Codex. Branch: `feature/homeworld-boss-progression`, based on preview
-`307f2a6`. Status: published and publicly verified; final catalogue-label correction publishing. Existing art studies and selected Hard Cel are preserved.
+`307f2a6`. Status: published and publicly verified as V2 `2b30339`. Existing art studies and selected Hard Cel are preserved.
 
 | Item | Work | Acceptance |
 | --- | --- | --- |
@@ -10,7 +10,7 @@ Owner: Codex. Branch: `feature/homeworld-boss-progression`, based on preview
 | U182 | Endless homes: checkpoints every 10 waves, retained gear on death, rare drop ceiling | Boundary rollback, gear/identity persistence, rarity sampling |
 | U183 | Close minimum zoom at maximum base; reduce hail shake | Camera suite, bounded hail shake fixture, classic regression |
 
-The targeted progression, fog, zoom and hail checks pass. All 23 backup/terrain/touch regressions and the single-file home boot also pass. All 27 public gameplay checks and 232 initial public/source identities match. Main remains unchanged. This work does not
+The targeted progression, fog, zoom and hail checks pass. All 23 backup/terrain/touch regressions and the single-file home boot also pass. All 27 public gameplay checks and 240 final public/source identities pass. Main remains unchanged. This work does not
 close the open audio acceptance items U150/U151.
 
 
@@ -95,10 +95,20 @@ balance and a full 99-planet playthrough remain separate acceptance work.
 ## Handoff
 
 [PR #52](https://github.com/majieddd/worldheart/pull/52),
-[successful Pages run](https://github.com/majieddd/worldheart/actions/runs/35041623100),
-and [232 public/source identities](HOMEWORLD-BOSS-PROGRESSION/publication.json)
-record V2 `233564241a20020232485bb1a48a095d766e5652` and unchanged main
+[successful Pages run](https://github.com/majieddd/worldheart/actions/runs/35042219982),
+and [final public/source identities](HOMEWORLD-BOSS-PROGRESSION/publication.json)
+record V2 `2b303397b0103dbefe6f6c41144b741849532bff` and unchanged main
 `1374122d1109919a5fab10b69fefdfb80308eb6e`.
+
+The gameplay runner used the `2335642` runtime. All gameplay, home, camera,
+weather, loot and HUD modules are unchanged in `2b30339`; later integration
+preserves the separate art playground and fixes the lobby total to 100 homes
+(Earth plus 99 captures). The final integration parses 120 modules, verifies
+203 generated mirrors, passes the three deployment regression tests and style
+gate. [Initial identity evidence](HOMEWORLD-BOSS-PROGRESSION/publication-initial.json)
+is retained separately. The [final mobile lobby check](HOMEWORLD-BOSS-PROGRESSION/public-lobby.json)
+and [rendered view](HOMEWORLD-BOSS-PROGRESSION/public-lobby.png) verify the 100-home
+total, direct Earth route and readable mobile layout.
 
 Run `node artifacts/cosmic-landforms/run.mjs tools/qa-home-boss.mjs artifacts/home-boss/final`.
 Use `WH_BASE_URL` for the public V2 origin. `--conquest-only` isolates the boss;

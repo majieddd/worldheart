@@ -4,7 +4,9 @@ Published and publicly verified U180-U183: [PR #52](https://github.com/majieddd/
 Earth starter home, boss-gated planet capture, ten-wave home checkpoints,
 safe gear, direct third-person visits, fog, zoom and hail shake. All 27 public
 gameplay checks pass, plus 369 automated tests and 23 local backup/terrain/touch
-regressions. Main remains unchanged. Final catalogue-label correction publishing.
+regressions. V2 `2b30339` includes the final 100-home catalogue label and preserves
+the concurrent art playground. All 240 deployed/source identity checks pass.
+Main remains unchanged.
 [Scope and acceptance](qa/implementation/HOMEWORLD-BOSS-PROGRESSION.md).
 
 U168 published and publicly verified (12c1664, PR #51): Atmospheric Ink 1.3.1 reduces haze and

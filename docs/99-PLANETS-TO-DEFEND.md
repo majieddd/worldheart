@@ -28,7 +28,7 @@ Owner direction captured 2026-09-05. Baseline: Worldheart `1374122`.
 This is the plan for evolving the existing game around its 99 Planets mode.
 Implementation and publication are recorded in the [progress ledger](PROGRESS.md). Start with the original [QA evidence](qa/2026-09-05/README.md). Proposed tuning below is a concrete prototype specification, subject to measured playtests rather than a claim of final balance.
 
-U180-U183 updates the home contract: Earth is unlocked on a new device. Visiting
+Published U180-U183 (V2 `2b30339`, PR #52) updates the home contract: Earth is unlocked on a new device. Visiting
 any home bypasses the title screen and starts beside the heart in third person,
 with clear visibility and a visible Start waves control. Maximum base coverage
 on an expedition schedules the next wave as a Planet Sovereign: 2.25x normal
