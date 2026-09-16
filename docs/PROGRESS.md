@@ -12,8 +12,9 @@ gate pass. Aegis 3.18.2 is installed locally with current upstream contributions
 and the existing production workflow retained; all 320 installed files match.
 See the [candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md).
 U169-U171: Codex on feature/style-playground. The separate walkable Hard Cel /
-Atmospheric Ink slice is implemented and locally verified (35 browser checks,
-continuous motion capture and full-cycle pose metrics). Publication is pending.
+Atmospheric Ink slice is published at V2 060c78c (PR #53), integrated with the
+collaborator Homeworld preview 2335642. 35 local and 35 public browser checks,
+369 combined tests, full-cycle motion evidence and 240 public identities pass.
 See the [playground ledger](qa/implementation/STYLE-PLAYGROUND.md).
 
 Published U164-U167: V2 `307f2a6`, [PR #50](https://github.com/majieddd/worldheart/pull/50).
