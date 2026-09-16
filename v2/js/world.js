@@ -267,7 +267,7 @@ function regionalHeight(dx,dy,dz,includeFine) {
   // Below-sea incisions begin beyond the shoreline mask. The land between
   // ocean and dry cuts stays above sea level, preventing an exposed water wall.
   h+=relief<0?(c>.3+profile.ocean?Math.max(relief,-coastClearance.sample(dx,dy,dz)*.45):0):inland*relief;
-    Object.assign(regionalLast,{x:dx,y:dy,z:dz,h,land});
+    regionalLast.x=dx;regionalLast.y=dy;regionalLast.z=dz;regionalLast.h=h;regionalLast.land=land;
   }
   if(includeFine){
     const fine=fbm3(nDetail,dx*F_FINE+53,dy*F_FINE,dz*F_FINE,2);

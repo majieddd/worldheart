@@ -1,5 +1,12 @@
 # 99 Planets development progress
 
+U205-U207 locally verified; U208 publishing: Codex on `feature/procgen-performance`.
+Research-led exact sampling/graph optimizations cut median generation loading
+by 19% Garden, 40% Io and 37% Deep Canyons across three matched trials each.
+All 15 final comparisons across nine configurations preserve generated arrays;
+397 tests, real movement/save checks, quake oracle and 251 mirrors pass.
+[Scope and evidence](qa/implementation/PROCGEN-PERFORMANCE.md). V2 only.
+
 U200-U204 published and publicly verified at **f22e3b2**, [PR #59](https://github.com/majieddd/worldheart/pull/59): Codex on
 `feature/guided-planet-integration`. The approved Guided Terrain Kit now drives
 new V2 planets, with versioned saves and shared navigation/rendering geometry.

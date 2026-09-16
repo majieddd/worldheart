@@ -1,5 +1,10 @@
 # 99 Planets To Defend: running development blueprint
 
+U205-U207 verified locally, U208 publishing: output-preserving generation
+optimizations reduce measured loading by 19-40% across Garden, Io and Deep
+Canyons. Fifteen final comparisons across nine configurations preserve terrain,
+navigation and saved-world geometry. 397 tests pass. [Evidence and limits](qa/implementation/PROCGEN-PERFORMANCE.md).
+
 U200-U204 published and publicly verified at V2 `f22e3b2`, 2026-09-16:
 the owner requested full-game adoption of approved
 Guided Terrain Kit 1.0.0. New V2 planets use spherical shared-corner terrain,

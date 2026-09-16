@@ -1,0 +1,38 @@
+{
+  "note": "Exploratory only: profiler overhead or concurrent local work; final matched trials supersede timing claims.",
+  "rows": [
+    {
+      "theme": "temperate",
+      "version": "before",
+      "bootMs": 22120,
+      "navMs": 18681,
+      "errors": []
+    },
+    {
+      "theme": "temperate",
+      "version": "after",
+      "bootMs": 18337,
+      "navMs": 14532,
+      "errors": []
+    },
+    {
+      "theme": "io",
+      "version": "before",
+      "bootMs": 29554,
+      "navMs": 25285.899999976158,
+      "errors": []
+    },
+    {
+      "theme": "io",
+      "version": "after",
+      "bootMs": 24895,
+      "navMs": 17422.19999998808,
+      "errors": []
+    }
+  ],
+  "parity": {
+    "reference": "e527859",
+    "cases": 2,
+    "mismatches": []
+  }
+}

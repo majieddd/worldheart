@@ -1,4 +1,5 @@
-import { buildIcosphere } from './geodesic.js';
+import { buildIcosphereSteps } from './geodesic.js';
+import { OrderedEdgeSet, ExactPointIndex } from './nav-build.js';
 import { surveyBattlefield } from './terrain/acceptance.js';
 import * as THREE from 'three';
 import { nestSite, NEST_SCHEDULE_CAPACITY } from './nest-sites.js';
@@ -80,7 +81,7 @@ export class NavGraph {
     // move the heart after a quake and strand the saved defenses elsewhere.
     if(CONFIG.homeSnapshot&&!CONFIG.homeSnapshot.starter){
       const w=CONFIG.homeSnapshot.world;this.attempts=1;this.fieldCenter=new THREE.Vector3(...w.centre);
-      const ico=buildIcosphere(DETAIL,this.fieldCenter,theta,7);
+      const ico=yield* buildIcosphereSteps(DETAIL,this.fieldCenter,theta,7);
       yield* this._buildGraphSteps(null,0,false,DETAIL,false,ico);
       this.heartNode=this.nearestWalkableNode(new THREE.Vector3(...w.heart));
       this.portalNodes=w.portals.map(d=>this.nearestWalkableNode(new THREE.Vector3(...d)));
@@ -156,7 +157,7 @@ export class NavGraph {
             if (CONFIG.map.mode === 'ninetynine') {
               const heart=this.nodeDir(this.heartNode,new THREE.Vector3());
               const portals=this.portalNodes.map(n=>this.nodeDir(n,new THREE.Vector3()));
-              const ico=buildIcosphere(DETAIL,this.fieldCenter,theta,7);
+              const ico=yield* buildIcosphereSteps(DETAIL,this.fieldCenter,theta,7);
               yield* this._buildGraphSteps(null,0,false,DETAIL,false,ico,{...this});
               this.heartNode=this.nearestWalkableNode(heart);
               this.portalNodes=portals.map(d=>this.nearestWalkableNode(d));
@@ -276,22 +277,22 @@ export class NavGraph {
     else if (capCenter) {
       // Cap-pruned spheres depend on where the field landed, so they are built
       // per attempt rather than cached; pruning keeps that cheap.
-      ico = buildIcosphere(detail, capCenter, capTheta);
+      ico = yield* buildIcosphereSteps(detail, capCenter, capTheta);
     } else {
       if (!this._icoCache) this._icoCache = new Map();
       ico = this._icoCache.get(detail);
-      if (!ico) { ico = buildIcosphere(detail); this._icoCache.set(detail, ico); }
+      if (!ico) { ico = yield* buildIcosphereSteps(detail); this._icoCache.set(detail, ico); }
     }
     const { verts, faces } = ico;
     let reused=null;
     if(reuse?._sourcePoints){
-      reused=new Map();const source=reuse._sourcePoints;
+      const source=reuse._sourcePoints;reused=new ExactPointIndex(reuse.baseCount);
       for(let i=0;i<source.verts.length;i++){
         if(i%4096===0)yield;
         if(source.keep&&!source.keep[i])continue;
         const v=source.verts[i];
         if(source.center&&v[0]*source.center.x+v[1]*source.center.y+v[2]*source.center.z<Math.cos(source.theta-4*reuse.spacing/R))continue;
-        reused.set(v.join(','),source.keep?source.oldToNew[i]:i);
+        reused.set(v[0],v[1],v[2],source.keep?source.oldToNew[i]:i);
       }
     }
     const total = verts.length;
@@ -320,7 +321,10 @@ export class NavGraph {
     const baseCount=n,deckIndex=new Int32Array(n).fill(-1),decks=[];
     if(CONFIG.terrain&&!coarse&&!WORLD.floatingWorld()&&WORLD.FEATURES?.surfaces.length){
       for(let i=0;i<total;i++){if(i%256===0)yield;
-        if(keep&&!keep[i])continue;const idx=keep?oldToNew[i]:i,d=verts[i],h=terrainHeight(...d),top=WORLD.FEATURES.support(d,Infinity,h);
+        if(keep&&!keep[i])continue;const idx=keep?oldToNew[i]:i,d=verts[i],top=WORLD.FEATURES.support(d,Infinity,-Infinity);
+        // Almost all globe vertices are outside a bridge/cave roof. Only
+        // evaluate their expensive fine terrain if a real deck exists here.
+        if(top===-Infinity)continue;const h=terrainHeight(...d);
         if(top>h+.08&&(top>=0||!WORLD.oceanAt(...d))){deckIndex[idx]=n++;decks.push({idx:deckIndex[idx],base:idx,d,h:top});}
       }
     }
@@ -357,7 +361,7 @@ export class NavGraph {
       const [x, y, z] = verts[i];
       this.dirs[idx * 3] = x; this.dirs[idx * 3 + 1] = y; this.dirs[idx * 3 + 2] = z;
       _v.set(x, y, z);
-      const cached=reused?.get(verts[i].join(','));if(cached!==undefined)reusedNodes[idx]=cached;
+      const cached=reused?.get(x,y,z);if(cached!==undefined)reusedNodes[idx]=cached;
       const h = cached===undefined?terrainHeight(x, y, z):reuse.height[cached];
       this.height[idx] = h;
       this.baseHeight[idx] = cached===undefined?(CONFIG.terrain ? terrainHeight(x, y, z, false) : h):reuse.baseHeight[cached];
@@ -385,7 +389,7 @@ export class NavGraph {
     }
     // CSR adjacency from unique triangle edges (kept nodes only)
     const stride=Math.max(1048576,2**Math.ceil(Math.log2(n+1)));
-    const edgeSet = new Set();
+    const edgeSet = new OrderedEdgeSet(Math.ceil(faces.length*1.5)+decks.length*6);
     const deg = new Int32Array(n);
     const addEdge = (a0, b0) => {
       let a = a0, b = b0;
@@ -394,12 +398,11 @@ export class NavGraph {
         a = oldToNew[a0]; b = oldToNew[b0];
       }
       const key = a < b ? a * stride + b : b * stride + a;
-      if (edgeSet.has(key)) return;
-      edgeSet.add(key);
+      if (!edgeSet.add(key)) return;
       deg[a]++; deg[b]++;
     };
     let faceIndex=0;for (const [a, b, c] of faces) {if(faceIndex++%2048===0)yield;addEdge(a, b); addEdge(b, c); addEdge(c, a);}
-    const groundEdges=[...edgeSet];
+    const groundEdgeCount=edgeSet.size;
     const connect=(a,b)=>{
       if(a<0||b<0||!this.walk[a]||!this.walk[b])return;
       this.nodeDir(a,_v);this.nodeDir(b,_v2);const distance=_v.distanceTo(_v2)*R;
@@ -407,9 +410,9 @@ export class NavGraph {
       const probe=new THREE.Vector3();
       for(const t of [.2,.4,.6,.8]){probe.copy(_v).lerp(_v2,t).normalize();const expected=this.height[a]*(1-t)+this.height[b]*t,actual=WORLD.supportHeight(probe,expected+.6);
         if(Math.abs(actual-expected)>Math.max(.7,distance*.18)||WORLD.solidTerrainAt(probe,actual,1.7))return;}
-      const key=Math.min(a,b)*stride+Math.max(a,b);if(!edgeSet.has(key)){edgeSet.add(key);deg[a]++;deg[b]++;}
+      const key=Math.min(a,b)*stride+Math.max(a,b);if(edgeSet.add(key)){deg[a]++;deg[b]++;}
     };
-    for(const key of groundEdges){const a=Math.floor(key/stride),b=key%stride,da=deckIndex[a],db=deckIndex[b];if(da>=0&&db>=0)connect(da,db);if(da>=0)connect(da,b);if(db>=0)connect(a,db);}
+    for(let edge=0;edge<groundEdgeCount;edge++){if(edge%8192===0)yield;const key=edgeSet.keys[edge],a=Math.floor(key/stride),b=key%stride,da=deckIndex[a],db=deckIndex[b];if(da>=0&&db>=0)connect(da,db);if(da>=0)connect(da,b);if(db>=0)connect(a,db);}
 
     this.adjOff = new Int32Array(n + 1);
     for (let i = 0; i < n; i++) this.adjOff[i + 1] = this.adjOff[i] + deg[i];
@@ -417,13 +420,17 @@ export class NavGraph {
     this.cost = new Float32Array(this.adjOff[n]);
     this.airCost = CONFIG.terrain ? new Float32Array(this.adjOff[n]) : null;
     const cursor = new Int32Array(n);
-    for (const key of edgeSet) {
+    const reverseEdge=CONFIG.terrain?new Int32Array(this.adj.length):null;
+    for (let edge=0;edge<edgeSet.size;edge++) {
+      if(edge%8192===0)yield;const key=edgeSet.keys[edge];
       const a = Math.floor(key / stride), b = key % stride;
-      this.adj[this.adjOff[a] + cursor[a]++] = b;
-      this.adj[this.adjOff[b] + cursor[b]++] = a;
+      const ab=this.adjOff[a]+cursor[a]++,ba=this.adjOff[b]+cursor[b]++;
+      this.adj[ab]=b;this.adj[ba]=a;
+      if(reverseEdge){reverseEdge[ab]=ba;reverseEdge[ba]=ab;}
     }
     if (this.airWalk) {
       const centre = new THREE.Vector3(), a = new THREE.Vector3(), b = new THREE.Vector3(), probe = new THREE.Vector3();
+      const offsets=Array.from({length:24},(_,sample)=>{const angle=sample%8*Math.PI/4,distance=(1+Math.floor(sample/8))*this.spacing*.3;return[Math.cos(angle)*distance/R,Math.sin(angle)*distance/R];});
       for (let i = 0; i < n; i++) {
         if(i%64===0)yield;
         if(!this.airWalk[i])continue;
@@ -436,8 +443,7 @@ export class NavGraph {
         a.set(0, Math.abs(centre.y) < 0.9 ? 1 : 0, Math.abs(centre.y) < 0.9 ? 0 : 1);
         b.crossVectors(centre, a).normalize(); a.crossVectors(b, centre).normalize();
         for (let sample = 0; sample < 24; sample++) {
-          const angle = sample % 8 * Math.PI / 4, distance = (1 + Math.floor(sample / 8)) * this.spacing * 0.3;
-          probe.copy(centre).addScaledVector(a, Math.cos(angle) * distance / R).addScaledVector(b, Math.sin(angle) * distance / R).normalize();
+          probe.copy(centre).addScaledVector(a,offsets[sample][0]).addScaledVector(b,offsets[sample][1]).normalize();
           if (!WORLD.canFlyAt(probe, WORLD.FLIGHT_CLEARANCE + 1)) { this.airWalk[i] = 0; break; }
         }
       }
@@ -455,12 +461,6 @@ export class NavGraph {
       if(i%256===0)yield;
       for (let e = this.adjOff[i]; e < this.adjOff[i + 1]; e++) {
         const j = this.adj[e];
-        const dx = this.pos[i * 3] - this.pos[j * 3];
-        const dy = this.pos[i * 3 + 1] - this.pos[j * 3 + 1];
-        const dz = this.pos[i * 3 + 2] - this.pos[j * 3 + 2];
-        const len = Math.hypot(dx, dy, dz);
-        const dh = Math.abs(this.height[i] - this.height[j]);
-        this.cost[e] = len * (1 + dh * 0.7);
         if (CONFIG.terrain) {
           const dot = this.dirs[i * 3] * this.dirs[j * 3] + this.dirs[i * 3 + 1] * this.dirs[j * 3 + 1] + this.dirs[i * 3 + 2] * this.dirs[j * 3 + 2];
           const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
@@ -468,13 +468,23 @@ export class NavGraph {
           // Dijkstra expands OUT from the destination. Store the incoming
           // j -> i travel cost, so a route uphill really costs more time.
           this.cost[e] = travelCost(this.baseHeight[j], this.baseHeight[i], horizontal, this.waterDepth[j], this.waterDepth[i]);
-          _v.set(this.dirs[i * 3] + this.dirs[j * 3], this.dirs[i * 3 + 1] + this.dirs[j * 3 + 1], this.dirs[i * 3 + 2] + this.dirs[j * 3 + 2]).normalize();
-          this.airCost[e] = this.airWalk[i] && this.airWalk[j] && WORLD.canFlyAt(_v, WORLD.FLIGHT_CLEARANCE + 2) ? angle * R : Infinity;
+          this.airCost[e]=Infinity;
+          // Air clearance is symmetric even though uphill ground costs are
+          // directed. Reuse the exact Float32 result of the reverse edge;
+          // keep every midpoint probe, but evaluate each midpoint only once.
+          if(j<i)this.airCost[e]=this.airCost[reverseEdge[e]];
+          else if(this.airWalk[i]&&this.airWalk[j]){
+            _v.set(this.dirs[i * 3] + this.dirs[j * 3], this.dirs[i * 3 + 1] + this.dirs[j * 3 + 1], this.dirs[i * 3 + 2] + this.dirs[j * 3 + 2]).normalize();
+            if(WORLD.canFlyAt(_v,WORLD.FLIGHT_CLEARANCE+2))this.airCost[e]=angle*R;
+          }
           // A conservative lower cost per unit chord, measured from every
           // actual directed edge. This keeps point-search A* admissible even
           // with Float32 direction/edge rounding or future traversal costs.
           const chord=Math.hypot(this.dirs[i*3]-this.dirs[j*3],this.dirs[i*3+1]-this.dirs[j*3+1],this.dirs[i*3+2]-this.dirs[j*3+2]);
           if(chord>0&&Number.isFinite(this.cost[e]))this._routeHeuristicScale=Math.min(this._routeHeuristicScale,this.cost[e]/chord*.999);
+        }else{
+          const dx=this.pos[i*3]-this.pos[j*3],dy=this.pos[i*3+1]-this.pos[j*3+1],dz=this.pos[i*3+2]-this.pos[j*3+2];
+          this.cost[e]=Math.hypot(dx,dy,dz)*(1+Math.abs(this.height[i]-this.height[j])*.7);
         }
       }
     }

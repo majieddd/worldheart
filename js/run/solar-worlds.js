@@ -53,7 +53,10 @@ function earthRelief(lng,lat){let height=0;for(let b=0;b<mountainBelts.length;b+
  height=Math.max(height,[14,17,22,9,6,5][b]*Math.exp(-((d/[3,2.2,3,1.4,1.8,1.5][b])**2)));
  }return height;}
 export function createSolarSampler(theme){
- const cache=new Map();
+ // Fixed direct-mapped cache: bounded storage, no whole-Map clear/rehash or
+ // boxed numeric keys during millions of navigation probes. Full keys are
+ // compared, so collisions only evict; the quantized geography stays exact.
+ const size=16384,keys=new Float64Array(size).fill(-1),values=new Array(size);
  let lastX=NaN,lastY=NaN,lastZ=NaN,lastValue;
  return (x,y,z)=>{
   // Height, geology and biome probes often ask for the exact same direction
@@ -63,9 +66,10 @@ export function createSolarSampler(theme){
   // Millimetre-scale angular quantisation shares geology between height,
   // ecology and rendering queries without moving a visible coastline.
   const qx=Math.round((x+1)*65535),qy=Math.round((y+1)*65535),qz=Math.round((z+1)*65535),key=qx*17179869184+qy*131072+qz;
-  if(cache.has(key))return lastValue=cache.get(key);
+  const slot=(Math.imul(qx,73856093)^Math.imul(qy,19349663)^Math.imul(qz,83492791))&(size-1);
+  if(keys[slot]===key)return lastValue=values[slot];
   const a=qx/65535-1,b=qy/65535-1,c=qz/65535-1,length=Math.hypot(a,b,c)||1,g=solarGeography(theme,a/length,b/length,c/length);
-  if(cache.size>=131072)cache.clear();cache.set(key,g);return lastValue=g;
+  keys[slot]=key;values[slot]=g;return lastValue=g;
  };
 }
 export function solarGeography(theme,x,y,z){
