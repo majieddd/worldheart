@@ -5,10 +5,10 @@ Owner: Codex. Branch `feature/procgen-performance`. Reference `e527859`
 
 | Item | State | Acceptance |
 |---|---|---|
-| U205 Research and profiling | Verified | Primary sources, actual CPU profile, reproducible matched seeds |
-| U206 Implementation | Verified | Measured speed improvement without changing generated output |
-| U207 Verification | Verified locally | Exact terrain, navigation and placement identity; gameplay and quake regressions |
-| U208 Publication | Active | V2 deployment identity and public behavior; main unchanged |
+| U209 Research and profiling | Verified | Primary sources, actual CPU profile, reproducible matched seeds |
+| U210 Implementation | Verified | Measured speed improvement without changing generated output |
+| U211 Verification | Verified locally | Exact terrain, navigation and placement identity; gameplay and quake regressions |
+| U212 Publication | Active | V2 deployment identity and public behavior; main unchanged |
 
 Contract: preserve resolution, noise, formation recipes, random sequence, seed
 selection, navigation safety, saved-world versions and the approved demo.
@@ -144,3 +144,8 @@ These checks are instrumented fixtures, not an unassisted full-campaign playthro
 Publication gate: 397 tests, 142 parsed modules, house style, 251 generated
 mirror files and the 144-module standalone bundle pass. Runtime changes and
 evidence are ready for the review PR and V2 deployment. Main stays `6133d07`.
+
+Integration note: preview advanced to `ec7320d` with the separate art collection
+and UI review routes. Preserve those additions and merge their deployment
+manifest before publication. Performance tracker IDs were moved from U205-U208
+to U209-U212 because the concurrent art work used the same range.
