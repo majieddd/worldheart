@@ -1,6 +1,6 @@
 # Painted training ground: walkable style slice
 
-Owner: Codex. Branch: feature/style-playground. U169-U170 verified locally; U171 publication pending.
+Owner: Codex. Branch: feature/style-playground. U169-U171 published and publicly verified.
 
 ## Reference
 
@@ -115,9 +115,9 @@ separate from physical-phone acceptance. A still screenshot does not verify moti
 
 ## Task list
 
-- U169 animated movement and attack specimen: locally verified.
-- U170 authored feedback, comparison and touch interaction: locally verified.
-- U171 temporal/runtime/public verification: local checks complete; public pending.
+- U169 animated movement and attack specimen: published.
+- U170 authored feedback, comparison and touch interaction: published.
+- U171 temporal/runtime/public verification: complete.
 
 ## Where we are
 
@@ -190,3 +190,29 @@ harness owns the probe. Evidence is in STYLE-PLAYGROUND/ beside this document.
 Final UI follow-up passes: minimum measured text contrast 5.99:1, P resumes
 after clicking Pause, and movement works immediately after a style-button click.
 The existing candidate comparison also passes all 61 regression cases.
+
+Publication integration merges feature a7d1c79 with collaborator preview 2335642
+in a separate integration/style-playground-v2 worktree. The artist PR #53 stays
+scoped to the slice. Homeworld source files are retained byte-for-byte; generated
+bundles are rebuilt from the combined tree. No shared history is rewritten.
+
+Combined preview verification: 369/369 tests, 120 parsed modules and 203 mirrors pass. Homeworld js/css/tests are unchanged from 2335642, and playground source is unchanged from a7d1c79.
+
+## Public closeout
+
+Runtime 060c78c806f2ad17fed76a4951797b553d3beb09 passed
+[Pages action 35041945537](https://github.com/majieddd/worldheart/actions/runs/35041945537).
+[Open the playground](https://majieddd.github.io/worldheart/v2/style-playground.html?style=v1).
+Feature review remains [PR #53](https://github.com/majieddd/worldheart/pull/53),
+stacked on #51; integration includes the separate Homeworld work in #52.
+
+35/35 public browser checks pass, including measured AA contrast, actual keyboard,
+pointer and touch controls, authored full-cycle animation, attack events, GPU
+allocation bounds, failure recovery and context restoration. All 240 public/source
+identities match. Public native desktop p95 was 14.0 ms over 840 sampled frames.
+Physical-phone feel/performance and owner approval of the new specimen remain open.
+The original Hard Cel candidate and production main 1374122 remain unchanged.
+
+This evidence closeout does not change runtime 060c78c. Public results, animation
+metrics, performance, identities and selected renders are saved beside local
+motion video, ordered sequences and the retained failed diagnostic passes.
