@@ -1,6 +1,6 @@
 # Atmospheric Ink handling and concept board
 
-Owner: Codex. Branch: feature/ink-fps-handling. U189-U193 locally verified.
+Owner: Codex. Branch: feature/ink-fps-handling. U189-U193 publicly verified.
 Intake: https://github.com/majieddd/worldheart/issues/1#issuecomment-5692619265
 
 ## Reference
@@ -110,11 +110,11 @@ Campaign mechanics and frozen art archives are outside this change.
 
 ## Task list
 
-- U189 presets: locally verified.
-- U190 foliage: locally verified; 496 formerly detached accents embedded.
-- U191 handling: locally verified, including simultaneous aim/fire inputs.
-- U192 verification/publication: local verification complete, publication pending.
-- U193 artboard: six plates generated, saved, inspected and browser verified.
+- U189 presets: locally and publicly verified.
+- U190 foliage: locally and publicly verified; 496 detached accents embedded.
+- U191 handling: locally and publicly verified, including simultaneous aim/fire.
+- U192 verification/publication: published 4ca722b; 279/279 identities match.
+- U193 artboard: six plates saved, inspected and publicly browser verified.
 
 ## Where we are
 
@@ -178,8 +178,41 @@ were inspected visually; no automated art-quality or Roblox-readiness claim.
 input cleared all three waves / 15 enemies without damage or wave overrides.
 Saved videos and ordered ADS/cut sequences provide motion evidence. The first
 blueprint check rejected a missing decision-table format; this ledger records
-the actual states. Public verification follows publication.
+the actual states. Public verification is recorded below.
 
 Limits: physical-phone performance and owner feel/art acceptance remain open.
 Current units retain the existing authored robot rig. New Roblox concepts,
 manufacturer weapons and interface are production studies, not generated meshes.
+
+### Published acceptance
+
+Runtime commit: 4ca722bc07e67e6d4856f49f1639f567021cfff6.
+[Draft PR #56](https://github.com/majieddd/worldheart/pull/56) supplements the prior
+asset-stage branch. [Pages run 35065391045](https://github.com/majieddd/worldheart/actions/runs/35065391045)
+passed build and deployment. Stable main remains 1374122d1109919a5fab10b69fefdfb80308eb6e.
+
+- [Play demo](https://majieddd.github.io/worldheart/v2/atmospheric-arena.html?world=meadow).
+- [Concept artboard](https://majieddd.github.io/worldheart/v2/artboard.html).
+- [Asset and motion stage](https://majieddd.github.io/worldheart/v2/asset-stage.html).
+- Public real-browser cases: handling 20/20, artboard 25/25, stage 48/48, arena 53/53.
+  No browser errors or HTTP failures in these runs. Motion, mouse chords,
+  complete sword cycles, touch input, recovery, responsive layout, full-size PNG
+  downloads, keyboard modal navigation and real embedded specimens were exercised.
+- Native desktop arena: 300 timing samples, median 7 ms, p95 14 ms. This bounded
+  desktop fixture does not establish device-wide or physical-phone performance.
+- All 279 public files match their exact preview or stable-source revisions.
+  Six PNG identities, original archive identity and frozen dependencies pass.
+- Evidence: `INK-FPS-HANDLING/*-public.json`, `public-identity.json`,
+  `artboard-ui-public.png`; prior local failures, input videos and measurements
+  remain alongside them. This closeout only adds documentation/evidence.
+
+Reproduce the checks with `node tools/test.mjs`, `node tools/syntax.mjs`,
+`node tools/style.mjs`, then `node tools/qa-painted-lab.mjs OUTPUT --handling`
+(also `--arena`, `--asset-stage`, `--artboard`, and local `--arena-live`).
+Set WH_BASE_URL to the served root or public V2 URL and WH_NODE_MODULES to the
+installed Playwright/sharp modules directory. The canonical identity command is
+`node tools/verify-preview.mjs 4ca722b OUTPUT.json`.
+
+Owner art/feel acceptance remains open. The UI and nine manufacturer weapons
+are illustrated concepts. Existing 3D specimens are separately labeled; no
+production Roblox import or new concept-to-mesh delivery is claimed.
