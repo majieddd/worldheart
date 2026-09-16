@@ -1,5 +1,13 @@
 # 99 Planets development progress
 
+U209-U212 published and publicly verified at **f43ca42**, [PR #61](https://github.com/majieddd/worldheart/pull/61): Codex on `feature/procgen-performance`.
+Research-led exact sampling/graph optimizations cut median generation loading
+by 19% Garden, 40% Io and 37% Deep Canyons across three matched trials each.
+All 15 final comparisons across nine configurations preserve generated arrays;
+397 tests, 13 public gameplay checks, 84 public art checks, 537 live identities,
+quake oracle and 294 mirrors pass.
+[Scope and evidence](qa/implementation/PROCGEN-PERFORMANCE.md). V2 only.
+
 U205-U208 published and publicly verified at **ec7320d**, [PR #60](https://github.com/majieddd/worldheart/pull/60): Codex on `feature/99-planets-art-direction`. Modern-Earth concept
 collection for **99 Planets To Defend**, five owner-defined manufacturers, nine
 new art plates, five commander and six tower redraws, and three interactive UI

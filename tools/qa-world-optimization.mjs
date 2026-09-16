@@ -1,3 +1,5 @@
+// Exact-revision comparisons use fresh browsers and counterbalanced trials.
+if(process.argv.some(a=>a.startsWith('--reference='))){await import('./probes/world-performance.mjs');process.exit(process.exitCode||0);}
 import {createRequire} from 'node:module';import {resolve} from 'node:path';import {mkdirSync,writeFileSync} from 'node:fs';import {execFileSync} from 'node:child_process';
 const require=createRequire(resolve(process.env.WH_NODE_MODULES,'package.json')),{chromium}=require('playwright'),out=process.argv[2]||'artifacts/combat-world/compare';mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true}),report=[],guided=process.argv.includes('--guided-compare');
