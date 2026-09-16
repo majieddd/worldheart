@@ -1,0 +1,376 @@
+{
+  "base": "http://127.0.0.1:8152",
+  "checks": [
+    {
+      "name": "Authored rig and both skeletons load",
+      "ok": false,
+      "detail": {
+        "speeds": {
+          "Walking": 1.767341896235553,
+          "Running": 2.247546303264186
+        },
+        "clips": [
+          "Dance",
+          "Death",
+          "Idle",
+          "Jump",
+          "No",
+          "Punch",
+          "Running",
+          "Sitting",
+          "Standing",
+          "ThumbsUp",
+          "Walking",
+          "WalkJump",
+          "Wave",
+          "Yes"
+        ],
+        "metrics": {
+          "calls": 389,
+          "triangles": 637802,
+          "geometries": 338,
+          "textures": 17,
+          "effects": 0,
+          "emitted": 0
+        },
+        "storage": "{}"
+      }
+    },
+    {
+      "name": "Stance calibration yields finite walk and run speeds",
+      "ok": true,
+      "detail": {
+        "Walking": 1.767341896235553,
+        "Running": 2.247546303264186
+      }
+    },
+    {
+      "name": "Pinned authored character serves exact saved bytes",
+      "ok": true,
+      "detail": {
+        "sourceRevision": "8f24439631c052231f9661b81633e7ab514f25a5",
+        "source": "https://github.com/mrdoob/three.js/tree/8f24439631c052231f9661b81633e7ab514f25a5/examples/models/gltf/RobotExpressive",
+        "author": "Tomas Laulhe / Quaternius",
+        "modifications": "Don McCurdy; runtime palette and toon material adapted locally",
+        "license": "CC0-1.0",
+        "path": "lib/playground/RobotExpressive.glb",
+        "sha256": "047f5e5fb3bb6d378bd1df16ca6137f2a596c99b3a1b5690b4020c05aaf6f319",
+        "authoredClips": 14,
+        "aiGeneratedThisSession": false
+      }
+    },
+    {
+      "name": "Live art treatments produce distinct pixels",
+      "ok": true
+    },
+    {
+      "name": "Style switching preserves camera, position and animation phase",
+      "ok": true
+    },
+    {
+      "name": "Pause freezes simulation",
+      "ok": true
+    },
+    {
+      "name": "Real WASD walks forward with Walking clip",
+      "ok": true,
+      "detail": {
+        "pos": [
+          0,
+          0.5255046922847701,
+          8.00071645678819
+        ],
+        "clip": "Walking",
+        "speed": [
+          0,
+          0,
+          -1.7673416048805395
+        ],
+        "feet": [
+          [
+            -0.3173301424939103,
+            0.5579616766838894,
+            7.837555834007221
+          ],
+          [
+            0.3206108542201667,
+            0.8749115269638079,
+            8.488095371625612
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Release settles to Idle",
+      "ok": true
+    },
+    {
+      "name": "Real strike produces one contact and a target hit",
+      "ok": true,
+      "detail": {
+        "style": "v5",
+        "paused": false,
+        "ink": true,
+        "paint": true,
+        "light": "golden",
+        "hits": 1,
+        "strikes": 1,
+        "pulses": 0,
+        "jumps": 0,
+        "contacts": 1
+      }
+    },
+    {
+      "name": "Pulse creates world effects at authored contact",
+      "ok": true
+    },
+    {
+      "name": "Pulse recovery prevents repeated activation",
+      "ok": true
+    },
+    {
+      "name": "Jump lifts the animated character",
+      "ok": true
+    },
+    {
+      "name": "Jump lands and returns to Idle",
+      "ok": true
+    },
+    {
+      "name": "Sprint uses the Running clip at greater travel speed",
+      "ok": true,
+      "detail": {
+        "pos": [
+          3.0823293014991062,
+          0.5678196226850952,
+          10
+        ],
+        "clip": "Running",
+        "velocity": [
+          2.9218088937888216,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Right drag orbits camera",
+      "ok": true
+    },
+    {
+      "name": "Wheel zooms camera",
+      "ok": true
+    },
+    {
+      "name": "Cannon station places player in the demonstration area",
+      "ok": true
+    },
+    {
+      "name": "Cannon fires and impact follows the projectile",
+      "ok": true
+    },
+    {
+      "name": "Complete walk and run cycles contain continuous articulated motion",
+      "ok": true,
+      "detail": {
+        "clips": {
+          "Walking": {
+            "duration": 0.9583333134651184,
+            "movingFrames": 120,
+            "medianPoseStep": 0.000615190310888202,
+            "seam": 0.06284126043007843,
+            "wrapRatio": 102.14930131027131,
+            "hipVerticalRange": 0.008933175950265104,
+            "footTravel": 0.04222479892953057
+          },
+          "Running": {
+            "duration": 0.9583333134651184,
+            "movingFrames": 120,
+            "medianPoseStep": 0.026224285207831956,
+            "seam": 0.06400753114270666,
+            "wrapRatio": 2.440773147311204,
+            "hipVerticalRange": 0.40493834763034053,
+            "footTravel": 0.981790523623685
+          },
+          "Punch": {
+            "duration": 0.8333333134651184,
+            "movingFrames": 120,
+            "medianPoseStep": 0.01350262964267693,
+            "seam": 0.0003749104765543929,
+            "wrapRatio": 0.027765737969249818,
+            "hipVerticalRange": 0.052983651054262726,
+            "footTravel": 0
+          },
+          "Jump": {
+            "duration": 0.7083333134651184,
+            "movingFrames": 120,
+            "medianPoseStep": 0.012310588302856437,
+            "seam": 0.2072568199694004,
+            "wrapRatio": 16.835655199460323,
+            "hipVerticalRange": 0.9425344872360735,
+            "footTravel": 4.973799150320701e-14
+          }
+        },
+        "frozenControl": {
+          "movingFrames": 0
+        },
+        "groundSpeeds": {
+          "Walking": 1.767341896235553,
+          "Running": 2.247546303264186
+        }
+      }
+    },
+    {
+      "name": "Locomotion loop wrap stays within two typical sampled pose steps",
+      "ok": false,
+      "detail": {
+        "Walking": {
+          "duration": 0.9583333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.000615190310888202,
+          "seam": 0.06284126043007843,
+          "wrapRatio": 102.14930131027131,
+          "hipVerticalRange": 0.008933175950265104,
+          "footTravel": 0.04222479892953057
+        },
+        "Running": {
+          "duration": 0.9583333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.026224285207831956,
+          "seam": 0.06400753114270666,
+          "wrapRatio": 2.440773147311204,
+          "hipVerticalRange": 0.40493834763034053,
+          "footTravel": 0.981790523623685
+        },
+        "Punch": {
+          "duration": 0.8333333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.01350262964267693,
+          "seam": 0.0003749104765543929,
+          "wrapRatio": 0.027765737969249818,
+          "hipVerticalRange": 0.052983651054262726,
+          "footTravel": 0
+        },
+        "Jump": {
+          "duration": 0.7083333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.012310588302856437,
+          "seam": 0.2072568199694004,
+          "wrapRatio": 16.835655199460323,
+          "hipVerticalRange": 0.9425344872360735,
+          "footTravel": 4.973799150320701e-14
+        }
+      }
+    },
+    {
+      "name": "Authored hips translate and feet travel through both cycles",
+      "ok": false,
+      "detail": {
+        "Walking": {
+          "duration": 0.9583333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.000615190310888202,
+          "seam": 0.06284126043007843,
+          "wrapRatio": 102.14930131027131,
+          "hipVerticalRange": 0.008933175950265104,
+          "footTravel": 0.04222479892953057
+        },
+        "Running": {
+          "duration": 0.9583333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.026224285207831956,
+          "seam": 0.06400753114270666,
+          "wrapRatio": 2.440773147311204,
+          "hipVerticalRange": 0.40493834763034053,
+          "footTravel": 0.981790523623685
+        },
+        "Punch": {
+          "duration": 0.8333333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.01350262964267693,
+          "seam": 0.0003749104765543929,
+          "wrapRatio": 0.027765737969249818,
+          "hipVerticalRange": 0.052983651054262726,
+          "footTravel": 0
+        },
+        "Jump": {
+          "duration": 0.7083333134651184,
+          "movingFrames": 120,
+          "medianPoseStep": 0.012310588302856437,
+          "seam": 0.2072568199694004,
+          "wrapRatio": 16.835655199460323,
+          "hipVerticalRange": 0.9425344872360735,
+          "footTravel": 4.973799150320701e-14
+        }
+      }
+    },
+    {
+      "name": "The same motion detector rejects a deliberately frozen control",
+      "ok": true
+    },
+    {
+      "name": "Repeated effects keep GPU geometry allocation bounded",
+      "ok": false
+    },
+    {
+      "name": "Photo exports a PNG",
+      "ok": true
+    },
+    {
+      "name": "Measured renderer frame sample is valid",
+      "ok": true,
+      "detail": {
+        "frames": 840,
+        "p50": 13.799999999999272,
+        "p95": 15.69999999999709,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "metrics": {
+          "calls": 391,
+          "triangles": 637914,
+          "geometries": 355,
+          "textures": 18,
+          "effects": 16,
+          "emitted": 209
+        }
+      }
+    },
+    {
+      "name": "Context interruption displays a recovery state",
+      "ok": true
+    },
+    {
+      "name": "Restored context renders again",
+      "ok": true
+    },
+    {
+      "name": "No campaign code or saves used",
+      "ok": true
+    },
+    {
+      "name": "Mobile has no horizontal overflow and touch controls fit",
+      "ok": true
+    },
+    {
+      "name": "Real touch joystick moves the character",
+      "ok": true
+    },
+    {
+      "name": "Touch strike drives authored attack",
+      "ok": true
+    },
+    {
+      "name": "Touch style switch and reduced-motion preference work",
+      "ok": true
+    },
+    {
+      "name": "Missing character shows retry and disables export",
+      "ok": true
+    },
+    {
+      "name": "No JavaScript or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}
