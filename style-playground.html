@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Worldheart · Painted training ground</title><link rel="icon" href="data:,"><link rel="stylesheet" href="css/playground.css"></head>
+<body>
+<header><a class="brand" href="hard-cel-lab.html">WORLDHEART <span>STYLE PLAYGROUND</span></a><nav aria-label="Art treatment"><button data-style="v1" aria-pressed="true">Hard Cel <small>1.0.0</small></button><button data-style="v5" aria-pressed="false">Atmospheric Ink <small>1.3.1</small></button></nav><div class="utilities"><button id="pause">Pause</button><button id="reset">Reset</button><button id="capture">Photo ↓</button></div></header>
+<main id="stage"><canvas id="world" tabindex="0" aria-label="Walkable painted training ground. WASD to move, Shift run, J strike, E pulse, Space jump. Right drag to orbit."></canvas>
+<section class="title-card"><p>LIVE ART & MOTION STUDY</p><h1>Painted training ground.</h1><span>Walk the meadow. Meet the sentinels. Try the ink.</span><div class="stations" aria-label="Explore a field station"><button data-station="meadow">Meadow</button><button data-station="brook">Stream</button><button data-station="cannon">Cannon range</button></div></section>
+<div id="reticle" aria-hidden="true">+</div>
+<div class="status-card"><span class="label">YOUR SENTINEL</span><strong id="action-status" role="status">Preparing scene</strong><span id="target-status">Three reusable training targets</span><span id="hit-status" aria-live="polite">Land a strike to see the paint move.</span></div>
+<div class="legend"><span><kbd>W A S D</kbd> Move</span><span><kbd>Shift</kbd> Run</span><span><kbd>Space</kbd> Jump</span><span><kbd>Click / J</kbd> Strike</span><span><kbd>E</kbd> Pulse</span><span>Right drag · Orbit</span></div>
+<div class="touch-controls"><div id="stick" aria-label="Movement joystick"><span id="thumb"></span></div><div class="touch-actions"><button id="touch-run" aria-pressed="false">Run</button><button id="touch-jump">Jump</button><button id="touch-pulse">Pulse</button><button id="touch-strike">Strike</button></div></div>
+<div id="loading" role="status"><p>WORLDHEART / FIELD STUDY</p><h2>Opening the painted meadow</h2><span id="load-status">Preparing authored motion and ink contours…</span><button id="retry" hidden>Reload scene</button></div>
+<div id="paused" hidden><strong>Scene paused</strong><span>Press P or Resume to continue.</span></div>
+</main>
+<footer><span id="scene-status">Hard Cel · preferred candidate</span><a href="hard-cel-lab.html?version=v5&reference=v4">Before / after study ↗</a><a href="lib/playground/provenance.json" target="_blank">Model & animation credits ↗</a></footer>
+<noscript>Enable JavaScript to enter this interactive 3D scene.</noscript>
+<script type="importmap">{"imports":{"three":"./art-candidates/hard-cel-v1/lib/three.module.min.js"}}</script><script type="module" src="js/playground.js"></script>
+</body></html>

@@ -5,14 +5,16 @@ Verified locally, publishing U180-U183: Codex on `feature/homeworld-boss-progres
 safe gear, direct third-person visits, fog, zoom and hail shake.
 [Scope and acceptance](qa/implementation/HOMEWORLD-BOSS-PROGRESSION.md).
 
-U168 implemented and locally verified: Atmospheric Ink 1.3.1 reduces haze and
+U168 published and publicly verified (12c1664, PR #51): Atmospheric Ink 1.3.1 reduces haze and
 deepens shadow/color while preserving the preferred Hard Cel 1.0.0 and previous
 atmosphere 1.3.0. 61 browser cases, 364 core tests and the updated Aegis identity
 gate pass. Aegis 3.18.2 is installed locally with current upstream contributions
 and the existing production workflow retained; all 320 installed files match.
 See the [candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md).
-Next owner request: a walkable Hard Cel/Atmospheric Ink demo with fluid character
-and attack animation plus illustrative visual feedback. This is a separate slice.
+U169-U171: Codex on feature/style-playground. The separate walkable Hard Cel /
+Atmospheric Ink slice is implemented and locally verified (35 browser checks,
+continuous motion capture and full-cycle pose metrics). Publication is pending.
+See the [playground ledger](qa/implementation/STYLE-PLAYGROUND.md).
 
 Published U164-U167: V2 `307f2a6`, [PR #50](https://github.com/majieddd/worldheart/pull/50).
 Hard Cel 1.0.0 is now the owner's selected candidate for future use.
