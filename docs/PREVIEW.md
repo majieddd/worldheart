@@ -1,11 +1,22 @@
 # Live V2 development workflow
 
+## Production promotion, 2026-09-16
+
+The owner authorized the current verified V2 snapshot `0e8723e` for main. The
+release record is [MAIN-PROMOTION](qa/implementation/MAIN-PROMOTION.md). After this
+release `/worldheart/` serves that modern game and preparation lobby. V2 remains
+the development route; subsequent preview publication still preserves main.
+Earlier references to the original stable build describe the pre-release period.
+Browser profiles remain separate. Existing V2 campaign/home progress can be
+transferred deliberately using the game's export/import controls; the release
+does not overwrite either route's saved profile.
+
 The owner authorized this workflow on 2026-09-06 so development can be played
 alongside the stable game without merging gameplay PRs into main.
 
 | Route | Source | Purpose |
 |---|---|---|
-| [Original game](https://majieddd.github.io/worldheart/) | main | Stable game; preview publishes preserve its tracked file bytes |
+| [Main game](https://majieddd.github.io/worldheart/) | main | Released game and lobby; preview publishes preserve its tracked file bytes |
 | [V2 preview](https://majieddd.github.io/worldheart/v2/) | preview/v2 | Latest integrated, verified work; opens the preparation lobby |
 | [Campaign](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=1) | preview/v2 | Direct entry to the saved 99-planet campaign |
 | [Debug World](https://majieddd.github.io/worldheart/v2/debug.html) | preview/v2 | Production models, mounts, formations, combined terrain, biomes, active features, disasters and theme globes; no save access |

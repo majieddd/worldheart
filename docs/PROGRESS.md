@@ -1,5 +1,10 @@
 # 99 Planets development progress
 
+U194 active: owner-authorized main release of verified V2 `0e8723e`. Codex on
+`release/promote-v2-2026-09-16`. Runtime is promoted unchanged, with previous main
+preserved for rollback and V2 retained for future development. Release checks and
+public identity are tracked in [MAIN-PROMOTION](qa/implementation/MAIN-PROMOTION.md).
+
 U184-U188 locally verified, publishing: Codex on `feature/ink-asset-stage`. Exact screenshot presets,
 denied-cursor-capture swing repair, close-up weapon paint, Paintline tower and
 a 17-specimen asset/animation/effects stage. 48 targeted, 53 arena and 374 automated

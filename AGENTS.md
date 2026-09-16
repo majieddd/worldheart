@@ -28,6 +28,10 @@ who do not have that skill installed. No additional approval gate is implied.
 
 ## Publish working changes to V2
 
+On 2026-09-16 the owner explicitly authorized promoting the current verified V2
+snapshot to main. See docs/qa/implementation/MAIN-PROMOTION.md for that release.
+This is a production checkpoint, not standing permission to merge future work.
+
 The owner authorized ongoing live previews at /worldheart/v2/ without merging
 gameplay into main. Follow docs/PREVIEW.md at the start of each work session.
 Base new campaign work on origin/preview/v2, preserve other collaborators'
