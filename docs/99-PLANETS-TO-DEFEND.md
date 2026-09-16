@@ -1,6 +1,6 @@
 # 99 Planets To Defend: running development blueprint
 
-U225-U227 locally verified, V2 publication pending: Codex on `feature/99-character-identity`. Recognizable Animal Hospital / Brainrot rosters, Arcade B third-person placement concept with F/G, and Gray / Reptilian Xeno commander proposals. U228 is PARTIAL: Higgsfield 2D and an editable Blender comparison exist; Krea execution awaits a local installation and Meshy submission is unavailable. [Scope and evidence](qa/implementation/99-CHARACTER-IDENTITY.md).
+U225-U227 published and publicly verified at V2 42504cb ([PR #65](https://github.com/majieddd/worldheart/pull/65)); 31 browser and 678 live/source identity checks pass: Codex on `feature/99-character-identity`. Recognizable Animal Hospital / Brainrot rosters, Arcade B third-person placement concept with F/G, and Gray / Reptilian Xeno commander proposals. U228 is PARTIAL: Higgsfield 2D and an editable Blender comparison exist; Krea execution awaits a local installation and Meshy submission is unavailable. [Scope and evidence](qa/implementation/99-CHARACTER-IDENTITY.md).
 
 U221-U223 verified as an opt-in experiment; U224 publishing: Codex on `feature/procgen-fast-sandbox`. Exact-output generation experiments cut measured median loading by 16% Garden, 44% Io and 60% Deep Canyons. The under-5 / under-10-second targets remain OPEN. Visual comparison sandbox and retained counterexamples: [scope and evidence](qa/implementation/PROCGEN-FAST.md). Originally claimed U217-U220; renumbered on integration to preserve the concurrent artbook records.
 

@@ -91,4 +91,9 @@ identity-v2 source PNGs and generated model files.
 
 Integrated shared preview 47d874d and retained the procgen sandbox records.
 Publication is V2 only; main remains under the existing release policy.
-Deployment and public checks will be recorded after publishing.
+Published and publicly verified at 42504cb: 31/31 public browser checks and
+678/678 live/source identities. [Deployment](https://github.com/majieddd/worldheart/actions/runs/35152754837).
+[Draft PR #65](https://github.com/majieddd/worldheart/pull/65) retains review.
+A follow-up corrects three legacy Brainshot unit look descriptions in exported
+data; current generated art and gameplay are unchanged. Follow-up deployment
+identity will be recorded in the tracker. U228 remains partial.
