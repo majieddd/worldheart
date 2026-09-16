@@ -6,9 +6,19 @@ preserved for rollback and V2 retained for future development. Release checks an
 public identity are tracked in [MAIN-PROMOTION](qa/implementation/MAIN-PROMOTION.md).
 
 U184-U188 locally verified, publishing: Codex on `feature/ink-asset-stage`. Exact screenshot presets,
+
+U189-U193 locally verified, publication pending: Codex on `feature/ink-fps-handling`. New owner Vivid Paint
+default, connected foliage, FPS pace/slide/ADS and a Roblox-focused concept
+artboard after the demo fixes. [Plan and evidence](qa/implementation/INK-FPS-HANDLING.md).
+The original 1.3.1 archive and existing collaborator work remain preserved.
+379 automated checks, 20 handling, 53 arena, 48 stage and 25 artboard browser
+cases pass, plus a complete real-time position-assisted three-wave round.
+
+U184-U188 published and publicly verified at `0e8723e`, [PR #55](https://github.com/majieddd/worldheart/pull/55): Codex on `feature/ink-asset-stage`. Exact screenshot presets,
 denied-cursor-capture swing repair, close-up weapon paint, Paintline tower and
 a 17-specimen asset/animation/effects stage. 48 targeted, 53 arena and 374 automated
-checks pass, plus a full real-time assisted-input demo round. [Scope and acceptance](qa/implementation/INK-ASSET-STAGE.md).
+checks pass, plus a full real-time assisted-input demo round. Public checks pass
+48/48 and deployed identities match 261/261. [Scope and acceptance](qa/implementation/INK-ASSET-STAGE.md).
 
 U172-U177 published and publicly verified at `576e229`, [PR #54](https://github.com/majieddd/worldheart/pull/54): Codex on `feature/atmospheric-combat`.
 The owner now selects **Atmospheric Ink 1.3.1**. Its exact prior slice is archived

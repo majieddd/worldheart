@@ -15,4 +15,6 @@ Runtime scope and limits are in [the blueprint](../INK-ASSET-STAGE.md).
 
 Performance samples describe this workstation and bounded scenes. They do not
 certify physical-phone performance, natural unassisted play, final aesthetics,
-or production-campaign acceptance. Public verification follows publication.
+or production-campaign acceptance. public-results.json contains 48 passing live
+cases; public-identity.json contains 261 matching identities. The initial HTTP
+503 failure is preserved separately as retained-public-503.json.

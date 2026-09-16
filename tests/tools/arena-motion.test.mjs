@@ -21,8 +21,8 @@ test('all sword cuts return continuously to rest and move through contact',()=>{
 });
 test('owner screenshot presets preserve all supplied values and original reset',()=>{
   const keys=['line','fog','shadowDepth','saturation','texture','exposure','resolution','fov','bob','shake','sensitivity'];
-  assert.deepEqual(keys.map(k=>GRAPHICS_PRESETS.vivid.graphics[k]),[1.74,.0185,.35,1.65,1.77,1.19,1,80,.44,.45,1]);
+  assert.deepEqual(keys.map(k=>GRAPHICS_PRESETS.vivid.graphics[k]),[2.8,.0225,.35,1.3,1.5,.77,1.25,81,.45,.45,1]);
   assert.deepEqual(keys.map(k=>GRAPHICS_PRESETS.deep.graphics[k]),[2.8,.021,.3,1.5,1.69,.84,1.25,81,.45,.45,1]);
   const before=JSON.stringify(GRAPHICS_DEFAULTS),custom=normalizeGraphics({...GRAPHICS_PRESETS.vivid.graphics,line:99,texture:NaN});
-  assert.equal(custom.line,4);assert.equal(custom.texture,1);assert.equal(matchingPreset(custom),'custom');assert.equal(matchingPreset(GRAPHICS_DEFAULTS),'default');assert.equal(JSON.stringify(GRAPHICS_DEFAULTS),before);assert.ok(Object.isFrozen(GRAPHICS_PRESETS.vivid.graphics));
+  assert.equal(custom.line,4);assert.equal(custom.texture,1.5);assert.equal(matchingPreset(custom),'custom');assert.equal(matchingPreset(GRAPHICS_DEFAULTS),'vivid');assert.equal(JSON.stringify(GRAPHICS_DEFAULTS),before);assert.ok(Object.isFrozen(GRAPHICS_PRESETS.vivid.graphics));
 });
