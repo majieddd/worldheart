@@ -7,8 +7,8 @@ Owner: Codex. Branch `feature/procgen-performance`. Reference `e527859`
 |---|---|---|
 | U209 Research and profiling | Verified | Primary sources, actual CPU profile, reproducible matched seeds |
 | U210 Implementation | Verified | Measured speed improvement without changing generated output |
-| U211 Verification | Verified locally | Exact terrain, navigation and placement identity; gameplay and quake regressions |
-| U212 Publication | Active | V2 deployment identity and public behavior; main unchanged |
+| U211 Verification | Verified locally and publicly | Exact terrain, navigation and placement identity; gameplay and quake regressions |
+| U212 Publication | Published and verified | V2 deployment identity and public behavior; main unchanged |
 
 Contract: preserve resolution, noise, formation recipes, random sequence, seed
 selection, navigation safety, saved-world versions and the approved demo.
@@ -138,12 +138,12 @@ parity. The final three-trial batch above confirms a gain for all three worlds;
 all final output arrays still match. The earlier two-world timing batch is kept
 in `intermediate-timing-*.json`, superseded by the final edge-reuse measurements.
 The second pre-fix reference sample overlapped profiling and is retained as
-contaminated, not included in speed claims. Public verification is pending.
+contaminated, not included in speed claims. Public verification is recorded below.
 These checks are instrumented fixtures, not an unassisted full-campaign playthrough.
 
-Publication gate: 397 tests, 142 parsed modules, house style, 251 generated
+Pre-integration publication gate: 397 tests, 142 parsed modules, house style, 251 generated
 mirror files and the 144-module standalone bundle pass. Runtime changes and
-evidence are ready for the review PR and V2 deployment. Main stays `6133d07`.
+evidence passed before integrating the separate art collection. Main stays `6133d07`.
 
 Integration note: preview advanced to `ec7320d` with the separate art collection
 and UI review routes. Preserve those additions and merge their deployment
@@ -161,3 +161,31 @@ Latest art publication receipts from `f3a7763` are integrated as well.
 The initial asset hash helper exceeded Node default output buffering for a PNG;
 rerunning with a bounded 32 MB buffer completed all comparisons. This was a
 verification-harness failure, not a game resource failure.
+
+## Published acceptance
+
+V2 runtime `f43ca4286dcd2f310ce5dabaa2a45fca6d82035f` is live.
+[PR #61](https://github.com/majieddd/worldheart/pull/61) is stacked on the
+concurrent art review (#60), preserving its complete collection.
+[Pages run](https://github.com/majieddd/worldheart/actions/runs/35121462154)
+succeeded, including the Linux validation/build gates.
+
+- [537/537 live identities](PROCGEN-PERFORMANCE/public-identity.json) match
+  the exact preview and production Git revisions. Main remains
+  `6133d0713f4e93e6fc743c35d9dd0fd1834bc98f`.
+- [Three public generation checks](PROCGEN-PERFORMANCE/public-game.json) pass:
+  generated portal routes, actual inspector landmarks and compatible tower
+  placement on fitted shelves.
+- [Ten public lifecycle checks](PROCGEN-PERFORMANCE/public-lifecycle.json) pass:
+  versioned saves, real lobby-to-home navigation, held commander movement,
+  collision-based ramp traversal, nest activation, legacy-home reload and Debug
+  World. No game, resource or shader errors were recorded. The Earth screenshot
+  was visually inspected for third-person rendering and intact terrain/vegetation.
+- [84/84 public art-review checks](PROCGEN-PERFORMANCE/public-art.json) pass,
+  preserving the collaborator content and desktop/mobile layouts.
+
+Public correctness checks ran concurrently with asset verification; their load
+times are not performance evidence. Speed claims use only the isolated final
+three-trial batch above. Physical mobile speed, low-memory pressure and shader
+startup improvements remain unverified or future work; this closes the bounded
+output-preserving generation optimization, not all possible runtime optimization.

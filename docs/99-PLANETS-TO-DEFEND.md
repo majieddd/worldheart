@@ -1,9 +1,10 @@
 # 99 Planets To Defend: running development blueprint
 
-U209-U211 verified locally, U212 publishing: output-preserving generation
+U209-U212 published and publicly verified at V2 `f43ca42` (PR #61): generation
 optimizations reduce measured loading by 19-40% across Garden, Io and Deep
 Canyons. Fifteen final comparisons across nine configurations preserve terrain,
-navigation and saved-world geometry. 397 tests pass. [Evidence and limits](qa/implementation/PROCGEN-PERFORMANCE.md).
+navigation and saved-world geometry. 397 tests, 13 public gameplay checks and
+537 deployed identities pass. [Evidence and limits](qa/implementation/PROCGEN-PERFORMANCE.md).
 
 U205-U208, published and publicly verified at V2 `ec7320d` (PR #60), 2026-09-16:
 the owner directs a modern-Earth visual foundation under
