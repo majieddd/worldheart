@@ -23,6 +23,7 @@ export function moduleKey(relPath) {
 // return the import-map key it should point at. './rng.js' inside 'run/run'
 // resolves to 'run/rng'; '../run/run.js' inside 'modes/ninetynine' to 'run/run'.
 export function resolveSpecifier(fromKey, spec) {
+  if(spec.endsWith('/lib/three.module.min.js'))return 'three';
   const fromDir = fromKey.includes('/') ? fromKey.slice(0, fromKey.lastIndexOf('/')) : '';
   const parts = fromDir ? fromDir.split('/') : [];
   for (const seg of spec.replace(/\.js$/, '').split('/')) {

@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../../lib/three.module.min.js';
 import {placeActiveFeatures,buildActiveFeature} from './active-features.js';
 
 // Additional surfaces make actual open space under bridges, cave roofs and

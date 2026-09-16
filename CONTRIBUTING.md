@@ -35,6 +35,12 @@ Read docs/art/99-planets/unified-artbook.md for current Xeno elemental canon and
 the fictional Adamic-inspired alphabet. Preserve historical prompts and images;
 apply current content overrides after generation prompts are composed.
 Keep concept art, current runtime models and future mesh-production work labeled.
+For crossover characters, preserve canonical silhouette, anatomy, face, palette
+and signature props before applying our paint treatment. Use the revised
+identity-v2 roster over superseded character studies. Keep method receipts and
+label unexecuted Krea or Meshy work honestly; see the
+[production guide](lib/99-art/identity-v2/production-guide.md).
+Xeno race, element and battlefield role are separate axes.
 Read the [scope and evidence ledger](docs/qa/implementation/99-ART-DIRECTION.md)
 before changing this collection; supplement collaborators' work in a scoped branch.
 

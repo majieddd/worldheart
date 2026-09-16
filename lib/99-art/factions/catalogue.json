@@ -664,9 +664,9 @@
       "origin": "Animal Hospital crossover",
       "color": "#c3d9a3",
       "motto": "Something is wrong with this patient.",
-      "identity": "Animal silhouettes, unsettling faces and familiar hospital objects with one impossible detail. Readable horror rather than abstract glitch hardware.",
-      "materials": "Faded mint enamel, cream fur, worn hospital fabric, dark eye sockets, red emergency lamps. Keep effects non-gory.",
-      "source": "https://animal-hospital.fandom.com/wiki/Anomalies",
+      "identity": "The recognizable Animal Hospital patients, with their original animal bodies and unsettling faces. Our paint and ink change the rendering, not their anatomy. Commander roles below are proposals for this game, not named bosses claimed from Animal Hospital.",
+      "materials": "Pink, cream, cyan and indigo patient bodies; their exact eyes, teeth, ears and proportions remain identity anchors. Matte painted color, fine contour and non-gory shadow add depth without costumes or armor.",
+      "source": "https://www.ign.com/wikis/animal-hospital-roblox/All_Anomalies",
       "world": {
         "name": "The endless night shift",
         "terrain": "A hospital campus stretches into pine-covered hills. Corridors open onto outdoor courtyards; asphalt ambulance roads return to doors that should not connect.",
@@ -675,16 +675,16 @@
       },
       "commanders": [
         {
-          "name": "Barney",
-          "role": "Close-range deceiver",
-          "look": "Barney from Animal Hospital: white rabbit-like creature, long ears, brown hat, small mustache, brown plaid trousers, huge dark eyes with white pinpoints, disturbing sharp-toothed smile, coffee cup in one hand and small knife in the other. Non-gory.",
+          "name": "Three Eyes",
+          "role": "Patient controller",
+          "look": "Pink floppy-eared patient, exactly three red eyes and a tiny inverted-V mouth.",
           "active": {
-            "name": "Friendly visit",
-            "icon": "coffee",
-            "effect": "Send a harmless coffee-bearing decoy toward a target; reactivate to trade places.",
-            "limit": "Decoy breaks on damage and cannot pass through walls.",
-            "cue": "A coffee steam curl bends into a rabbit-ear silhouette.",
-            "window": "Place then reactivate; long recovery"
+            "name": "Third sight",
+            "icon": "scan-line",
+            "effect": "Mark one visible target after all three eyes light in sequence.",
+            "limit": "Breaking line of sight cancels the mark; no tracking through terrain.",
+            "cue": "Three red rings converge on one outlined target.",
+            "window": "Short visible channel; long recovery"
           },
           "complexity": 4,
           "id": "anomalous-commander-0",
@@ -695,19 +695,19 @@
             "Health": 2,
             "Complexity": 4
           },
-          "canon": "Source character; game role and power are new crossover proposals."
+          "canon": "Source patient appearance; commander status and power are 99 Planets proposals."
         },
         {
-          "name": "Stalker",
-          "role": "Ambush controller",
-          "look": "The Stalker from Animal Hospital: very tall thin black rat creature, round large ears, large white eyes, long wide grin, long narrow limbs and tail, peeking posture.",
+          "name": "X-rayed Face",
+          "role": "Counterattack bruiser",
+          "look": "Beige long pointed ears, concentric eyes and a mouth of realistic teeth.",
           "active": {
-            "name": "Corner of the eye",
-            "icon": "eye-off",
-            "effect": "Mark a corner and briefly appear there to frighten nearby light enemies.",
-            "limit": "Bright open ground prevents the ambush; bosses resist fear.",
-            "cue": "A long rat shadow peeks out before the white eyes appear.",
-            "window": "Requires nearby cover; long recovery"
+            "name": "Fixed grin",
+            "icon": "shield",
+            "effect": "Brace against one frontal hit, then release a close-range stagger.",
+            "limit": "Cannot move while braced; flanks and delayed attacks beat it.",
+            "cue": "Teeth flash once, followed by a narrow ground wedge.",
+            "window": "Timed guard; medium recovery"
           },
           "complexity": 4,
           "id": "anomalous-commander-1",
@@ -718,19 +718,19 @@
             "Health": 2,
             "Complexity": 4
           },
-          "canon": "Source character; game role and power are new crossover proposals."
+          "canon": "Source patient appearance; commander status and power are 99 Planets proposals."
         },
         {
-          "name": "Dr. Harlow",
-          "role": "Crossover support interpretation",
-          "look": "Dr. Harlow from Animal Hospital: light orange deer, large muted-orange antlers, white doctor coat over blue scrubs, blue mask, black stethoscope, forehead mirror with brown band, black case marked with a small red warning rectangle.",
+          "name": "Crooked Face",
+          "role": "Ambush skirmisher",
+          "look": "Cyan conical horn, mismatched bulging eyes and a pointed-tooth grin.",
           "active": {
-            "name": "Second opinion",
-            "icon": "clipboard-plus",
-            "effect": "Diagnose one ally, removing a single negative condition after a short channel.",
-            "limit": "Does not heal raw damage; interrupted channels do nothing.",
-            "cue": "A mint diagnostic frame closes around a white check.",
-            "window": "Channel on an ally; medium recovery"
+            "name": "Wrong angle",
+            "icon": "wind",
+            "effect": "Lunge sideways before snapping toward a nearby marked target.",
+            "limit": "Short reach and a long visible recovery after a miss.",
+            "cue": "A cyan contour echo shows the committed landing point.",
+            "window": "Direction lock after wind-up; medium recovery"
           },
           "complexity": 3,
           "id": "anomalous-commander-2",
@@ -741,14 +741,14 @@
             "Health": 5,
             "Complexity": 3
           },
-          "canon": "Dr. Harlow is a source character whose anomaly status is uncertain. This support commander is a parallel-universe interpretation."
+          "canon": "Source patient appearance; commander status and power are 99 Planets proposals."
         }
       ],
       "units": [
         {
-          "name": "Head Banger",
+          "name": "Creepy Smile",
           "role": "Disruption",
-          "look": "Animal Hospital patient anomaly interpreted as pale rabbit in mint patient gown, hollow black eyes and open frown, long arms and hunched posture.",
+          "look": "Indigo cat with enormous circular eyes and a squared tooth grin.",
           "active": null,
           "complexity": 3,
           "id": "anomalous-unit-0",
@@ -760,12 +760,13 @@
             "Complexity": 1
           },
           "tradeoff": "Requires close contact and can be distracted.",
-          "behavior": "Interrupt enemy use of a nearby doorway or cover point."
+          "behavior": "Interrupt enemy use of a nearby doorway or cover point.",
+          "canon": "Appearance anchored to the owner-supplied Animal Hospital reference. Descriptive roster label, not an asserted official proper name."
         },
         {
-          "name": "Hider",
+          "name": "Long-neck Patient",
           "role": "Ambush scout",
-          "look": "Animal Hospital-inspired small black rat silhouette with a wide grin and large pale eyes, hiding behind a mint folded screen.",
+          "look": "Pale cat with an elongated neck and small almond-eyed head.",
           "active": null,
           "complexity": 3,
           "id": "anomalous-unit-1",
@@ -777,12 +778,13 @@
             "Complexity": 2
           },
           "tradeoff": "Weak on open ground and easy to remove once revealed.",
-          "behavior": "Wait beside cover, then briefly expose a marked target."
+          "behavior": "Wait beside cover, then briefly expose a marked target.",
+          "canon": "Appearance anchored to the owner-supplied Animal Hospital reference. Descriptive roster label, not an asserted official proper name."
         },
         {
-          "name": "Twitch patient",
+          "name": "Sharp-teeth Patient",
           "role": "Unstable skirmisher",
-          "look": "Original cream cat patient in a hospital gown, unnaturally stretched neck, offset head and crooked drawn smile, limbs bent at odd but readable angles.",
+          "look": "Pale green body and a huge open red mouth lined with pointed teeth.",
           "active": null,
           "complexity": 3,
           "id": "anomalous-unit-2",
@@ -794,7 +796,8 @@
             "Complexity": 3
           },
           "tradeoff": "Missed lunges leave a long punish window.",
-          "behavior": "Lunge unpredictably after a visible neck-twitch tell."
+          "behavior": "Lunge unpredictably after a visible neck-twitch tell.",
+          "canon": "Appearance anchored to the owner-supplied Animal Hospital reference. Descriptive roster label, not an asserted official proper name."
         }
       ],
       "towers": [
@@ -991,9 +994,9 @@
       "origin": "Roblox Brainrot crossover",
       "color": "#f0c66f",
       "motto": "Absurd equipment. Serious timing.",
-      "identity": "Literal character silhouettes: sneaker shark, coffee ballerina and wooden bat-bearer. Kitchenware and street gear become functional weapon mechanisms.",
+      "identity": "Recognizable Brainrot characters first: a three-legged sneaker shark, a cappuccino-headed ballerina and a wooden bat-bearer. Preserve their bodies, faces and signature props. Painted-Anime-Inkline is a rendering treatment, not a costume redesign.",
       "materials": "Coffee porcelain, sneaker rubber, varnished wood, pink fabric, blue enamel and exposed fasteners.",
-      "source": "https://stealabrainrot.fandom.com/wiki/Tralalero_Tralala",
+      "source": "https://brainrotcharacters.net/all-brainrot-characters/?bcf_status=official",
       "world": {
         "name": "The impossible promenade",
         "terrain": "A seaside town collides with a coffee factory and oversized sports courts. Tiled plazas, surf-worn cliffs and absurd landmarks keep a grounded terrain layout.",
@@ -1073,55 +1076,58 @@
       ],
       "units": [
         {
-          "name": "Sneaker scout",
-          "role": "Fast recon",
-          "look": "Original tiny shark courier on two oversized blue sneakers, small utility pack on dorsal fin.",
+          "name": "Cappuccino Assassino",
+          "role": "Melee infiltrator",
+          "look": "Cappuccino Assassino: coffee cup body with dark ninja headband and face wrap, compact limbs and paired blades.",
           "active": null,
           "complexity": 3,
           "id": "brainshot-unit-0",
           "cell": 3,
           "stats": {
-            "Power": 2,
-            "Speed": 5,
-            "Health": 2,
-            "Complexity": 1
+            "Power": 4,
+            "Speed": 4,
+            "Health": 1,
+            "Complexity": 3
           },
-          "tradeoff": "Fast but fragile; cannot hold a contested lane.",
-          "behavior": "Scout ahead and mark nearby routes for allies."
+          "tradeoff": "Fragile when seen; cannot dash through walls.",
+          "behavior": "Close in through cover and strike with paired blades.",
+          "canon": "Existing Brainrot identity; battlefield role is a proposal for 99 Planets."
         },
         {
-          "name": "Espresso loader",
-          "role": "Heavy support",
-          "look": "Original squat walking espresso machine robot with porcelain cup chest, metal porter arms and pink steam valves.",
+          "name": "Bombardino Crocodilo",
+          "role": "Air support",
+          "look": "Bombardino Crocodilo: crocodile head fused with a propeller bomber aircraft, wings and military-green fuselage.",
           "active": null,
           "complexity": 3,
           "id": "brainshot-unit-1",
           "cell": 4,
           "stats": {
-            "Power": 4,
+            "Power": 5,
             "Speed": 1,
-            "Health": 4,
-            "Complexity": 2
+            "Health": 3,
+            "Complexity": 3
           },
-          "tradeoff": "Slow and dependent on protection from allies.",
-          "behavior": "Carry spare charges and support a nearby tower."
+          "tradeoff": "Slow turn and long recovery; vulnerable to anti-air.",
+          "behavior": "Make a telegraphed bombing pass over a narrow lane.",
+          "canon": "Existing Brainrot identity; battlefield role is a proposal for 99 Planets."
         },
         {
-          "name": "Beat keeper",
-          "role": "Ranged support",
-          "look": "Original short wooden metronome creature, sneaker feet, small drum harness and twin bouncing spoon antennae.",
+          "name": "Chimpanzini Bananini",
+          "role": "Supply runner",
+          "look": "Chimpanzini Bananini: brown chimpanzee emerging from a peeled yellow banana body, recognizable chimp face and limbs.",
           "active": null,
           "complexity": 3,
           "id": "brainshot-unit-2",
           "cell": 5,
           "stats": {
-            "Power": 3,
-            "Speed": 3,
+            "Power": 1,
+            "Speed": 5,
             "Health": 3,
-            "Complexity": 3
+            "Complexity": 2
           },
-          "tradeoff": "Low damage; heavy enemies ignore the stagger.",
-          "behavior": "Send rhythmic stagger pulses at a single light enemy."
+          "tradeoff": "Low direct damage; supplies are capped and require travel.",
+          "behavior": "Carry charges between protected support positions.",
+          "canon": "Existing Brainrot identity; battlefield role is a proposal for 99 Planets."
         }
       ],
       "towers": [
@@ -1642,11 +1648,11 @@
     {
       "id": "alien",
       "name": "Xeno",
-      "origin": "Original invading species",
+      "origin": "Original multi-race invading faction",
       "color": "#c9b1ec",
       "motto": "The scouts arrive before the stone.",
-      "identity": "Layered living chitin and an ivory hooked brow unite five elemental forms. Purple Void scouts arrive first; reddish-brown Physical Xeno endure Mars and travel inside meteors.",
-      "materials": "Element-colored chitin, an ivory hooked brow and contained capillary light. Brown Physical shells are heavy; purple Void armor is thin and narrow.",
+      "identity": "Xeno is a coalition of alien races. The familiar hooked-brow chitin creatures are one combat-grunt race, valued for tenacity and their inability to feel sorrow. Grays specialize in coordination and instruments; Reptilians in deliberate breach tactics. Race, element and role are separate design axes.",
+      "materials": "Chitin belongs to the existing grunt race. Grays have smooth gray skin and tailored instrument suits; Reptilians have scales and weight-bearing field equipment. Shared glyphs and contained energy cues connect the faction.",
       "source": null,
       "world": {
         "name": "Mars / The meteor dwellers",
@@ -1676,7 +1682,8 @@
             "Health": 4,
             "Complexity": 3
           },
-          "canon": "Original Xeno commander proposal. Physical lineage; brown meteor-dweller material study."
+          "canon": "Original Xeno commander proposal. Physical lineage; brown meteor-dweller material study.",
+          "race": "Chitin grunt race"
         },
         {
           "name": "Broodwarden",
@@ -1699,7 +1706,8 @@
             "Health": 5,
             "Complexity": 2
           },
-          "canon": "Original Xeno commander proposal. Slow Physical endurance specialist from the Martian lineage."
+          "canon": "Original Xeno commander proposal. Slow Physical endurance specialist from the Martian lineage.",
+          "race": "Chitin grunt race"
         },
         {
           "name": "Riftwalker",
@@ -1722,7 +1730,52 @@
             "Health": 1,
             "Complexity": 4
           },
-          "canon": "Original Xeno commander proposal. Purple, physically fragile and element-resistant. The updated roster and elemental lineup establish the current appearance."
+          "canon": "Original Xeno commander proposal. Purple, physically fragile and element-resistant. The updated roster and elemental lineup establish the current appearance.",
+          "race": "Chitin grunt race"
+        },
+        {
+          "id": "alien-commander-3",
+          "name": "Vey, the Surveyor",
+          "role": "Gray reconnaissance commander",
+          "race": "Zeta Reticuli Gray",
+          "plate": "gray-commander",
+          "stats": {
+            "Power": 2,
+            "Speed": 5,
+            "Health": 3,
+            "Complexity": 4
+          },
+          "active": {
+            "name": "Survey aperture",
+            "icon": "scan-line",
+            "effect": "Reveal a short approach and designate one landing point for allied scouts.",
+            "limit": "No damage or wall traversal; the landing point is visible to opponents and the channel can be interrupted.",
+            "cue": "Three thin violet arcs close around a mint ground marker.",
+            "window": "Visible channel; long recovery"
+          },
+          "canon": "Original working-name proposal. Inspired by the Gray archetype, not a Cosmic Conquest character transplant."
+        },
+        {
+          "id": "alien-commander-4",
+          "name": "Sarrak, breach marshal",
+          "role": "Reptilian frontline commander",
+          "race": "Reptilian",
+          "plate": "xeno-reptilian",
+          "stats": {
+            "Power": 4,
+            "Speed": 2,
+            "Health": 4,
+            "Complexity": 3
+          },
+          "active": {
+            "name": "Breach order",
+            "icon": "shield",
+            "effect": "Brace a frontal shield and lead a short, committed advance with nearby grunts.",
+            "limit": "Exposed sides, slow steering and no damage immunity. Cannot obstruct the required enemy route.",
+            "cue": "An ochre shield edge and one clear forward wedge.",
+            "window": "Directional commitment; long recovery"
+          },
+          "canon": "Original working-name proposal. Scales, tail and snout distinguish the race; no imported Cosmic Conquest political history."
         }
       ],
       "units": [

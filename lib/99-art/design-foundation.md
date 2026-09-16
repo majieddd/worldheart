@@ -283,3 +283,15 @@ Current owner revision: one five-tab artbook at 99-art.html. The faction data an
 2026-09-16: This collection is a concrete first-draft review package. Approving an image does not
 automatically approve gameplay tuning, UI composition or a 3D implementation. Collaborators
 should add scoped refinements, preserving the chosen baselines and other active work.
+
+
+## Character identity supplement, 2026-09-16
+
+The identity-v2 roster is the current Anomalous and Brainshot appearance guide.
+Keep iconic anatomy, face, palette and props; our rendering treatment supplies
+paint and ink without replacing character identity. The Xeno include distinct
+grunt, Gray and Reptilian races; element and role are independent.
+See [the production guide](identity-v2/production-guide.md) for ComfyUI/Krea 2,
+Higgsfield and Blender instructions, method status and preserved receipts.
+Arcade B now demonstrates third-person placement and F/G powers, with preview
+mode controls outside the game frame. It remains a concept visualization.
