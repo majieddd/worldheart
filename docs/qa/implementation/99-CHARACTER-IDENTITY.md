@@ -60,7 +60,7 @@ a later reviewed result can use the same mesh conversion for comparison.
 
 ## Verification
 
-Local: 30 identity/placement/model checks, 206 faction/UI checks and 93 unified
+Local: 31 identity/placement/model checks, 206 faction/UI checks and 93 unified
 artbook checks pass. Reports are in the adjacent 99-CHARACTER-IDENTITY folder.
 402 repository tests pass; 155 modules parse; style check passes.
 All 24 historical faction prompt receipts match their previous values.
