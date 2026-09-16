@@ -1,7 +1,7 @@
 # Atmospheric Ink combat field
 
-Owner: Codex. Branch: feature/atmospheric-combat. U172-U177 locally verified;
-public verification pending. Usage unmeasured.
+Owner: Codex. Branch: feature/atmospheric-combat. U172-U177 published and publicly
+verified at runtime 576e229, PR #54. Usage unmeasured.
 
 ## Reference
 
@@ -139,12 +139,12 @@ Run syntax/core tests and existing browser harness, then public identity/runtime
 
 ## Task list
 
-- U172 lock 1.3.1 and fix material sliding: locally verified.
-- U173 FPS controls and articulated sword/rifle: locally verified.
-- U174 moving unit variants, towers and repeatable rounds: locally verified.
-- U175 three environments and inspection flight: locally verified.
-- U176 graphics tuning and exact reset: locally verified.
-- U177 temporal/local/public verification: local complete, public pending.
+- U172 lock 1.3.1 and fix material sliding: published and verified.
+- U173 FPS controls and articulated sword/rifle: published and verified.
+- U174 moving unit variants, towers and repeatable rounds: published and verified.
+- U175 three environments and inspection flight: published and verified.
+- U176 graphics tuning and exact reset: published and verified.
+- U177 temporal/local/public verification: complete for the bounded slice.
 
 ## Where we are
 
@@ -226,3 +226,26 @@ Use the existing `tools/qa-painted-lab.mjs` runner with `--arena` or `--arena-li
 Set WH_BASE_URL and WH_NODE_MODULES as for previous labs. Evidence and preserved
 failures are in the adjacent ATMOSPHERIC-COMBAT/ folder. The implementation retains
 the latest Homeworld preview; publication must fast-forward shared preview/v2.
+
+### Public closeout
+
+[Open the proving ground](https://majieddd.github.io/worldheart/v2/atmospheric-arena.html).
+[PR #54](https://github.com/majieddd/worldheart/pull/54) retains the scoped review.
+Runtime `576e229a753a3d3ec355cefd712c36e6044d824e` passed
+[Pages action 35050727019](https://github.com/majieddd/worldheart/actions/runs/35050727019).
+The annotated preservation tag and ZIP are pushed. Stable main remains `1374122`.
+
+53/53 public browser checks pass, including the added AA contrast measurement
+(minimum 5.87:1), actual mouse/keyboard/touch controls, rendered graphics sliders,
+all-wave spawn checks in all environments, infinite respawns, preset round trip,
+bounded GPU allocation, missing-model guidance and graphics-context restoration.
+The public surface-anchoring control passes. Public desktop median 7 ms, p95 14 ms
+over 300 frames on the same RTX 4080 Laptop GPU. All 251 public/source identities
+match. The first concurrent network pass timed out on page navigation and three
+older campaign audio files; sequential browser and targeted hash retries pass.
+Both initial failure receipts are retained, and no runtime fix was needed for
+those transport timeouts.
+
+This evidence closeout changes documentation only. It does not change the
+verified runtime commit or imply a production campaign art migration. Expanded
+asset/art acceptance and physical-phone feel remain owner/device checks.

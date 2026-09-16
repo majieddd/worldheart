@@ -1,0 +1,13 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "Harness completed",
+      "ok": false,
+      "detail": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://majieddd.github.io/worldheart/v2/atmospheric-arena.html\", waiting until \"load\"\u001b[22m\n"
+    }
+  ],
+  "errors": [
+    "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://majieddd.github.io/worldheart/v2/atmospheric-arena.html\", waiting until \"load\"\u001b[22m\n"
+  ]
+}
