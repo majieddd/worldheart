@@ -4,6 +4,13 @@
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
 ## Dials
+`style-playground.html` applies the preserved 1.0 and refined 1.3.1 recipes to
+a walkable meadow. Authored character clips crossfade in 0.18 s; world-space ink
+shards, dust, impact flashes and expanding rings provide contact feedback.
+Reduced motion removes decorative camera shake while retaining player controls.
+The original detailed assets are retained; the rigged CC0 automaton is an extra
+example. This does not approve a replacement for production characters.
+
 The owner selected **Hard Cel 1.0.0** with the detailed models as a candidate for
 future Worldheart adoption. Preserve `art-candidates/hard-cel-v1/` and tag
 `art/hard-cel-v1` exactly. `hard-cel-lab.html` compares it with three unreviewed

@@ -1,0 +1,483 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "Fresh lobby offers unlocked Earth",
+      "ok": true
+    },
+    {
+      "name": "Home visit skips title and starts peaceful in commander third person",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Earth uses Earth theme, full base and clear fog",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Maximum base retains close zoom and whole-planet overview",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Start waves is visible on the HUD",
+      "ok": true
+    },
+    {
+      "name": "Earth initialization persists accepted anchors and remains direct entry",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Start waves creates physical home nests",
+      "ok": true
+    },
+    {
+      "name": "Stopping wave one returns to peace without advancing ten-wave checkpoint",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 2,
+        "cleared": 1,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Commander death returns to wave-zero defense checkpoint in third person",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 1,
+        "cleared": 0,
+        "checkpoint": 0,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Death retains new equipment including pre-existing rarity above Rare",
+      "ok": true
+    },
+    {
+      "name": "Tenth defended wave creates the next checkpoint",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 11,
+        "cleared": 10,
+        "checkpoint": 10,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "HUD restarts waves after the tenth-wave draft",
+      "ok": true,
+      "detail": {
+        "save": "",
+        "locked": false,
+        "phase": "building",
+        "swing": 0
+      }
+    },
+    {
+      "name": "Wave eleven does not replace the wave-ten checkpoint",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 12,
+        "cleared": 11,
+        "checkpoint": 10,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Home enemy drops are capped at Rare",
+      "ok": true,
+      "detail": {
+        "count": 110,
+        "rarities": [
+          "common",
+          "rare",
+          "uncommon"
+        ]
+      }
+    },
+    {
+      "name": "Heart defeat after wave eleven restores wave ten",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 11,
+        "cleared": 10,
+        "checkpoint": 10,
+        "possessed": true,
+        "boom": 4,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 12345,
+        "theme": "earth",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Hail retains small pulses without per-frame trauma stacking",
+      "ok": true,
+      "detail": {
+        "start": true,
+        "pulses": [
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08
+        ],
+        "exposures": 360,
+        "trauma": 0
+      }
+    },
+    {
+      "name": "Home maximum-base camera regression",
+      "ok": true,
+      "detail": {
+        "map": "ninetynine",
+        "pass": true,
+        "checks": [
+          {
+            "name": "grabbed point stays under cursor under rotation",
+            "ok": true,
+            "worstErrorPx": 0.01,
+            "meanErrorPx": 0.01,
+            "dragLengthPx": 40,
+            "worstCase": {
+              "yaw": 0,
+              "drag": [
+                40,
+                0
+              ]
+            },
+            "samples": 64,
+            "skippedAtBoundary": 0
+          },
+          {
+            "name": "cursor tracking holds across zoom",
+            "ok": true,
+            "errorPxByZoom": [
+              0.02,
+              0,
+              0,
+              0.01,
+              0.01
+            ]
+          },
+          {
+            "name": "dragging past the horizon stays bounded",
+            "ok": true,
+            "largestSingleStepRad": 0.1564
+          },
+          {
+            "name": "view stays centred through a full zoom",
+            "ok": true,
+            "worstDriftPx": 0
+          },
+          {
+            "name": "full-planet overview centres the globe",
+            "ok": true,
+            "errorPx": 0
+          },
+          {
+            "name": "view angle opens steadily through the zoom",
+            "ok": true,
+            "worstSagDeg": 0,
+            "flattestDeg": 48
+          },
+          {
+            "name": "zoom clamps to tuned height limits",
+            "ok": true,
+            "reachedMin": 6,
+            "reachedMax": 1148.5,
+            "limits": [
+              6,
+              1148.6
+            ]
+          },
+          {
+            "name": "lens and view angle match the tuned endpoints",
+            "ok": true,
+            "fov": [
+              82.8,
+              37.2
+            ],
+            "viewDeg": [
+              48,
+              66
+            ],
+            "tuned": {
+              "fov": [
+                83,
+                37
+              ],
+              "view": [
+                48,
+                66
+              ]
+            }
+          },
+          {
+            "name": "keyboard pan moves and releases without drift",
+            "ok": true,
+            "movedRad": 0.74697,
+            "residualVelocity": 0
+          },
+          {
+            "name": "view rotation applies and click-resets",
+            "ok": true,
+            "yawAfterDrag": -0.78,
+            "tiltAfterDrag": 0.252
+          },
+          {
+            "name": "flick inertia settles",
+            "ok": true,
+            "launchVelocity": 14.3269,
+            "after2s": 0.000032
+          },
+          {
+            "name": "camera stays inside the battlefield",
+            "ok": true,
+            "aimAngle": 1.111,
+            "limit": 3.142
+          },
+          {
+            "name": "camera state finite",
+            "ok": true
+          },
+          {
+            "name": "sim + camera step under 6ms",
+            "ok": true,
+            "msNear": 1.388,
+            "msFar": 1.273
+          }
+        ],
+        "failed": []
+      }
+    },
+    {
+      "name": "Touch home wave control fits and avoids action-button overlap",
+      "ok": true,
+      "detail": {
+        "visible": true,
+        "overlap": false
+      }
+    },
+    {
+      "name": "Touch layout can start home waves",
+      "ok": true
+    },
+    {
+      "name": "Max base schedules next boss at current multiplier and cannot claim early",
+      "ok": true,
+      "detail": {
+        "wave": 23,
+        "limit": 23,
+        "claim": null,
+        "level": 10
+      }
+    },
+    {
+      "name": "Fixture disrupts the queued sovereign nest through the quake destruction path",
+      "ok": true,
+      "detail": {
+        "node": 115651,
+        "destroyed": true
+      }
+    },
+    {
+      "name": "Planet Sovereign actually spawns stronger than current-wave ordinary boss",
+      "ok": true,
+      "detail": {
+        "wave": 23,
+        "scale": 8.04375,
+        "expected": 8.04375,
+        "name": "Planet Sovereign",
+        "protected": true,
+        "waveNow": 23,
+        "source": 115648
+      }
+    },
+    {
+      "name": "Sovereign summons minions at its physical nest with assault ancestry",
+      "ok": true,
+      "detail": {
+        "added": 3,
+        "children": 3
+      }
+    },
+    {
+      "name": "Sovereign defeat disperses minions, captures the planet and automatically stops waves",
+      "ok": true,
+      "detail": {
+        "playing": "playing",
+        "active": true,
+        "quiet": true,
+        "level": 10,
+        "wave": 24,
+        "cleared": 23,
+        "checkpoint": 23,
+        "possessed": false,
+        "boom": 0,
+        "veil": false,
+        "cloud": false,
+        "fog": false,
+        "seed": 36102,
+        "theme": "temperate",
+        "min": 6,
+        "max": 1148.5607762323696,
+        "title": false
+      }
+    },
+    {
+      "name": "Captured home remains selectable alongside Earth",
+      "ok": true
+    },
+    {
+      "name": "Newly captured home can immediately restart endless beyond conquest wave",
+      "ok": true
+    },
+    {
+      "name": "No browser exceptions",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

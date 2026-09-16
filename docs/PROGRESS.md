@@ -1,18 +1,22 @@
 # 99 Planets development progress
 
-Verified locally, publishing U180-U183: Codex on `feature/homeworld-boss-progression`, based on V2
-`307f2a6`. Earth starter home, boss-gated planet capture, ten-wave home checkpoints,
-safe gear, direct third-person visits, fog, zoom and hail shake.
+Published and publicly verified U180-U183: [PR #52](https://github.com/majieddd/worldheart/pull/52), Codex on `feature/homeworld-boss-progression`.
+Earth starter home, boss-gated planet capture, ten-wave home checkpoints,
+safe gear, direct third-person visits, fog, zoom and hail shake. All 27 public
+gameplay checks pass, plus 369 automated tests and 23 local backup/terrain/touch
+regressions. Main remains unchanged. Final catalogue-label correction publishing.
 [Scope and acceptance](qa/implementation/HOMEWORLD-BOSS-PROGRESSION.md).
 
-U168 implemented and locally verified: Atmospheric Ink 1.3.1 reduces haze and
+U168 published and publicly verified (12c1664, PR #51): Atmospheric Ink 1.3.1 reduces haze and
 deepens shadow/color while preserving the preferred Hard Cel 1.0.0 and previous
 atmosphere 1.3.0. 61 browser cases, 364 core tests and the updated Aegis identity
 gate pass. Aegis 3.18.2 is installed locally with current upstream contributions
 and the existing production workflow retained; all 320 installed files match.
 See the [candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md).
-Next owner request: a walkable Hard Cel/Atmospheric Ink demo with fluid character
-and attack animation plus illustrative visual feedback. This is a separate slice.
+U169-U171: Codex on feature/style-playground. The separate walkable Hard Cel /
+Atmospheric Ink slice is implemented and locally verified (35 browser checks,
+continuous motion capture and full-cycle pose metrics). Publication is pending.
+See the [playground ledger](qa/implementation/STYLE-PLAYGROUND.md).
 
 Published U164-U167: V2 `307f2a6`, [PR #50](https://github.com/majieddd/worldheart/pull/50).
 Hard Cel 1.0.0 is now the owner's selected candidate for future use.

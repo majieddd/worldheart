@@ -131,3 +131,9 @@ U164 preservation, U165 three versions, U166 local/public verification and U167
 the GitHub method supplement are complete. This evidence-only closeout does not
 change the published runtime. Future implementation must retain the original
 and get a separate owner decision before treating a variant as selected.
+
+U168 published runtime 12c166476d85328667cfff81638f5d32f8327ba3 after Pages action
+35039064108, PR #51. All 61 public browser checks and 232 public/source identities
+pass. Public comparison and results are in atmosphere-1.3.1/. The preferred
+1.0.0 candidate is unchanged. This evidence-only closeout leaves that runtime
+live while the separately requested walkable playground is built next.

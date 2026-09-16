@@ -1,7 +1,7 @@
 # Homeworld boss progression
 
 Owner: Codex. Branch: `feature/homeworld-boss-progression`, based on preview
-`307f2a6`. Status: implemented and locally verified; publication pending. Existing art studies and selected Hard Cel are preserved.
+`307f2a6`. Status: published and publicly verified; final catalogue-label correction publishing. Existing art studies and selected Hard Cel are preserved.
 
 | Item | Work | Acceptance |
 | --- | --- | --- |
@@ -10,7 +10,7 @@ Owner: Codex. Branch: `feature/homeworld-boss-progression`, based on preview
 | U182 | Endless homes: checkpoints every 10 waves, retained gear on death, rare drop ceiling | Boundary rollback, gear/identity persistence, rarity sampling |
 | U183 | Close minimum zoom at maximum base; reduce hail shake | Camera suite, bounded hail shake fixture, classic regression |
 
-The targeted progression, fog, zoom and hail checks pass. All 23 backup/terrain/touch regressions and the single-file home boot also pass. Public verification is pending. Main remains unchanged. This work does not
+The targeted progression, fog, zoom and hail checks pass. All 23 backup/terrain/touch regressions and the single-file home boot also pass. All 27 public gameplay checks and 232 initial public/source identities match. Main remains unchanged. This work does not
 close the open audio acceptance items U150/U151.
 
 
@@ -48,6 +48,12 @@ close the open audio acceptance items U150/U151.
 ## Evidence and corrections
 
 These are instrumented fixtures, not natural boss balance acceptance:
+
+- [27 public gameplay checks](HOMEWORLD-BOSS-PROGRESSION/public.json) cover the
+  full targeted runner without exceptions. Public Earth entry, home wave controls,
+  checkpoints, gear retention, rarity cap, hail, zoom, touch and sovereign capture
+  pass. [Public touch view](HOMEWORLD-BOSS-PROGRESSION/public-home-touch.png)
+  was visually reviewed for clear ground, readable wave controls and separation.
 
 - [Home progression](HOMEWORLD-BOSS-PROGRESSION/home-local.json): Earth arrival,
   waves 1/10/11, commander and heart death, retained relic equipment, 110 actual
@@ -87,6 +93,12 @@ Rendered review checked clear surroundings, the commander beside the crystal,
 balance and a full 99-planet playthrough remain separate acceptance work.
 
 ## Handoff
+
+[PR #52](https://github.com/majieddd/worldheart/pull/52),
+[successful Pages run](https://github.com/majieddd/worldheart/actions/runs/35041623100),
+and [232 public/source identities](HOMEWORLD-BOSS-PROGRESSION/publication.json)
+record V2 `233564241a20020232485bb1a48a095d766e5652` and unchanged main
+`1374122d1109919a5fab10b69fefdfb80308eb6e`.
 
 Run `node artifacts/cosmic-landforms/run.mjs tools/qa-home-boss.mjs artifacts/home-boss/final`.
 Use `WH_BASE_URL` for the public V2 origin. `--conquest-only` isolates the boss;
