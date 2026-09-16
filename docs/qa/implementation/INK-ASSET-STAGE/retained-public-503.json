@@ -1,0 +1,14 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "Harness completed",
+      "ok": false,
+      "detail": "TimeoutError: page.waitForFunction: Timeout 60000ms exceeded."
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 503 ()",
+    "TimeoutError: page.waitForFunction: Timeout 60000ms exceeded."
+  ]
+}

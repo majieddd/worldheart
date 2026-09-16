@@ -3,6 +3,7 @@
 U184-U188 extends the approved 1.3.1 demo with two screenshot presets, reliable
 fallback attacks, crisp held weapons and an asset/animation inspection stage.
 Paintline is the owner's future 2D reference; the current 3D style stays selected.
+Published at V2 `0e8723e`, PR #55, with 48 public browser and 261 identity checks.
 [Bounded blueprint](qa/implementation/INK-ASSET-STAGE.md).
 
 U172-U177: the owner selects Atmospheric Ink 1.3.1 and asks to lock it. The standalone

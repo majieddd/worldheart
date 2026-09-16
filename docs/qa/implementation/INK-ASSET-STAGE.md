@@ -1,6 +1,6 @@
 # Atmospheric Ink asset inspection
 
-Owner: Codex. Branch: feature/ink-asset-stage. U184-U188 locally verified; publication pending.
+Owner: Codex. Branch: feature/ink-asset-stage. U184-U188 published and publicly verified at 0e8723e; PR #55.
 Intake: https://github.com/majieddd/worldheart/issues/1#issuecomment-5691920677
 
 ## Reference
@@ -135,7 +135,7 @@ which did not cover this fallback. The clean control now rejects the old path.
 - U185 sword input/animation: verified with all three full cycles and actual-input contacts.
 - U186 close-up weapon detail: implemented and visually inspected.
 - U187 stage/reference tower: implemented and browser verified.
-- U188 regression and tracking: locally verified; public checks pending.
+- U188 regression, shared tracking and V2 publication: verified and published.
 
 ## Where we are
 
@@ -143,7 +143,7 @@ Local implementation is complete. Initial stage capture found a negative first
 frame delta and an unequipped inspection rifle; both are fixed. The first ordered
 cut review found excessive offscreen follow-through, so positions and angles were
 revised to keep the cutting path readable. Arena regression passes 53/53 cases.
-Final motion evidence passes; publication is pending.
+Final motion evidence and public verification pass.
 
 ### Production boundary
 
@@ -183,3 +183,19 @@ preview equip fixed both. The first cut sheet had offscreen follow-through even
 though joint-length tests passed; full-cycle blade-visibility checks now cover
 that gap. Overview screenshots also found clipped outer labels; aspect-aware
 framing and compact phone labels now pass explicit bounds checks.
+
+### Public closeout
+
+Runtime 0e8723e8dc76d711a5d9e2980969b91a99c5b0b3 passed
+[Pages action 35057594155](https://github.com/majieddd/worldheart/actions/runs/35057594155).
+[PR #55](https://github.com/majieddd/worldheart/pull/55) isolates this extension.
+The [arena](https://majieddd.github.io/worldheart/v2/atmospheric-arena.html) and
+[asset stage](https://majieddd.github.io/worldheart/v2/asset-stage.html) are live.
+
+48/48 public browser checks and 261/261 public/source identity checks pass.
+Public stage p95 is 14 ms over 120 desktop frames, same hardware/configuration.
+The first public run encountered an HTTP 503 and failed startup. Its receipt is
+retained; the fresh sequential retry has zero HTTP, runtime or shader errors.
+The QA runner now records failed response URLs/statuses for future diagnosis.
+Stable main remains 1374122d1109919a5fab10b69fefdfb80308eb6e. This closeout changes
+documentation and probe diagnostics only; the verified runtime stays 0e8723e.

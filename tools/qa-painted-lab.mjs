@@ -8,9 +8,9 @@ const {chromium}=require('playwright'),sharp=require('sharp');
 const base=(process.env.WH_BASE_URL||'http://127.0.0.1:8152').replace(/\/$/,''),out=resolve(process.argv[2]||'artifacts/style-lab/painted/qa');
 mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
-const page=await browser.newPage({viewport:{width:1600,height:1100}}),checks=[],errors=[],requests=[];
+const page=await browser.newPage({viewport:{width:1600,height:1100}}),checks=[],errors=[],requests=[],httpFailures=[];
 const check=(name,ok,detail)=>{checks.push({name,ok:!!ok,detail});console.log((ok?'PASS ':'FAIL ')+name);};
-page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});page.on('request',r=>requests.push(r.url()));
+page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});page.on('request',r=>requests.push(r.url()));page.on('response',r=>{if(r.status()>=400)httpFailures.push({url:r.url(),status:r.status()});});
 const settle=async()=>{await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));};
 const shot=async name=>{await settle();return page.locator('#stage').screenshot({path:resolve(out,name+'.png')});};
 const difference=async(a,b)=>{const aa=await sharp(a).removeAlpha().raw().toBuffer(),bb=await sharp(b).removeAlpha().raw().toBuffer();if(aa.length!==bb.length)throw Error('Image dimensions differ');let sum=0;for(let i=0;i<aa.length;i++)sum+=Math.abs(aa[i]-bb[i]);return sum/aa.length;};
@@ -73,5 +73,5 @@ try{
   check('No runtime or shader errors',errors.length===0,errors);
   }
 }catch(error){errors.push(String(error));check('Harness completed',false,String(error));}
-finally{writeFileSync(resolve(out,'results.json'),JSON.stringify({base,checks,errors},null,2)+'\n');await browser.close();}
+finally{writeFileSync(resolve(out,'results.json'),JSON.stringify({base,checks,errors,httpFailures},null,2)+'\n');await browser.close();}
 console.log(`${checks.filter(c=>c.ok).length}/${checks.length} painted lab checks pass`);if(checks.some(c=>!c.ok)||errors.length)process.exitCode=1;
