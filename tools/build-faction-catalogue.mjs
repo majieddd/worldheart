@@ -1,6 +1,7 @@
 // Authored concept data, not runtime game tuning. Repeatable catalogue assembly.
 import {mkdirSync,writeFileSync,readFileSync,existsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {applyXenoCanon} from '../js/xeno-canon.js';
 const root='lib/99-art/factions';mkdirSync(root,{recursive:true});
 const power=(name,icon,effect,limit,cue,window='Deliberate activation; medium recovery')=>({name,icon,effect,limit,cue,window});
 const asset=(name,role,look,active=null,complexity=3)=>({name,role,look,active,complexity});
@@ -149,5 +150,5 @@ for(const f of factions){
 }
 const old=existsSync(root+'/catalogue.json')?JSON.parse(readFileSync(root+'/catalogue.json','utf8')):null;
 for(const p of plates){const previous=old?.plates.find(x=>x.id===p.id);if(previous?.promptSha256===p.promptSha256||previous?.sourcePromptSha256===p.promptSha256||p.index===0&&previous?.jobId==='a00f6934-7137-4fe8-8c4a-e15807c53318')Object.assign(p,previous);}
-writeFileSync(root+'/catalogue.json',JSON.stringify({version:'0.2.0',title:'99 Planets To Defend / faction concepts',direction:'Painted Inkline',balance:'Qualitative concept targets only. Equal basic role budgets are a consistency guard, not evidence of playtested balance. Complexity is handling demand, not strength. Abilities need cooldown, uptime and counterplay tests before game integration.',factions,plates},null,2)+'\n');
+writeFileSync(root+'/catalogue.json',JSON.stringify(applyXenoCanon({version:'0.3.0',title:'99 Planets To Defend / faction concepts',direction:'Painted-Anime-Inkline',balance:'Qualitative concept targets only. Basic role budgets guide tradeoffs; elemental resistance and abilities require separate testing. The fragile Void scout intentionally trades physical durability for resistance and teleportation. Complexity means handling demand. These profiles are not evidence of playtested balance.',factions,plates}),null,2)+'\n');
 console.log(`${factions.length} factions, ${factions.flatMap(f=>[...f.commanders,...f.units,...f.weapons,...f.towers]).length} concepts, ${plates.length} plates.`);

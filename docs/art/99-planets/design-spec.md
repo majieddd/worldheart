@@ -1,5 +1,7 @@
 # 99 Planets To Defend: shared direction brief
 
+Historical first-draft brief. Its prior approval state and five-faction descriptions are superseded by [the unified artbook contract](unified-artbook.md), the selected B receipt and the current design foundation. Original assignments and observations below remain as history.
+
 ## Intent
 
 Worldheart is becoming 99 Planets To Defend. The owner wants the game's actual

@@ -1,5 +1,7 @@
 # 99 Planets To Defend: running development blueprint
 
+U217-U220 published and publicly verified at V2 **d96576d**, [PR #63](https://github.com/majieddd/worldheart/pull/63), on feature/99-unified-artbook. 93 public artbook checks, 204 faction/UI checks and 627 live/source identities pass. The owner consolidates the collection into Summary, Storyline, Factions, Media and Design Principles. Painted-Anime-Inkline is the style name: Studio Ghibli-like painted wonder with Borderlands-like comic grit. Eight new built-in paintings cover five environments/scenarios, the opening comic, five Xeno elements and the updated Xeno roster. The catalogue is embedded in the main page. Physical Xeno are brown Martian meteor dwellers; purple Void scouts teleport onto Earth first. The 26-glyph script is fictional and Adamic-inspired. See [scope and evidence](qa/implementation/99-UNIFIED-ARTBOOK.md).
+
 U213-U216 published and publicly verified at V2 `6b85808` ([PR #62](https://github.com/majieddd/worldheart/pull/62)): the owner selected B / Arcade and
 requested a six-faction Painted Inkline expansion. Robloxian joins the roster;
 Axiom becomes pristine white robotics; Anomalous draws on Animal Hospital.

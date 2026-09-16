@@ -28,9 +28,12 @@ every button in a chord. Inspect complete ADS, fire, slide and recovery cycles.
 The owner has moved the earlier artboard to a future medieval-planet study.
 Preserve its originals. The new [99 Planets art collection](99-art.html) and
 [design foundation](lib/99-art/design-foundation.md) start with modern Earth and
-five owner-defined factions: the native alien glyph name, Brainshot, RainBOOM,
-Anomalous and Axiom. The accepted demo robot belongs to Axiom. The three UI
-compositions are first drafts awaiting owner selection, not approved replacements.
+six owner-defined factions: Xeno, Brainshot, RainBOOM,
+Anomalous, Axiom and Robloxian. The accepted demo robot belongs to Axiom. B / Arcade is the selected UI composition; A, C and original B remain comparisons.
+The unified artbook has five tabs and uses the Painted-Anime-Inkline style contract.
+Read docs/art/99-planets/unified-artbook.md for current Xeno elemental canon and
+the fictional Adamic-inspired alphabet. Preserve historical prompts and images;
+apply current content overrides after generation prompts are composed.
 Keep concept art, current runtime models and future mesh-production work labeled.
 Read the [scope and evidence ledger](docs/qa/implementation/99-ART-DIRECTION.md)
 before changing this collection; supplement collaborators' work in a scoped branch.

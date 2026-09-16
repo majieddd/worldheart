@@ -1,0 +1,166 @@
+{
+  "base": "https://majieddd.github.io/worldheart/v2",
+  "checks": [
+    {
+      "name": "Default is Summary with exactly five requested tabs",
+      "ok": true
+    },
+    {
+      "name": "summary switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "storyline switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "factions switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "media switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "principles switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "Updated art name, inspirations and seven design principles",
+      "ok": true
+    },
+    {
+      "name": "Revised principles replace misleading language",
+      "ok": true
+    },
+    {
+      "name": "Five mixed-scenario environmental reference studies",
+      "ok": true
+    },
+    {
+      "name": "Opening is six ordered comic beats",
+      "ok": true
+    },
+    {
+      "name": "Void-first and brown meteor canon are explicit",
+      "ok": true
+    },
+    {
+      "name": "Legacy brand route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy earth route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy story route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy alien route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy ui route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy archive route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Old catalogue link redirects with faction, section and asset intact",
+      "ok": true
+    },
+    {
+      "name": "Xeno has five elements and seven subject sections",
+      "ok": true
+    },
+    {
+      "name": "Element 0 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Element 1 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Element 2 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Element 3 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Element 4 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Void is physically fragile but element-resistant",
+      "ok": true
+    },
+    {
+      "name": "All 26 glyphs are unique and fictional boundary is visible",
+      "ok": true
+    },
+    {
+      "name": "Original maker-mark glyphs preserved",
+      "ok": true
+    },
+    {
+      "name": "Cipher renders only known glyphs and spaces",
+      "ok": true
+    },
+    {
+      "name": "Maker mark repeats identical Y glyph",
+      "ok": true
+    },
+    {
+      "name": "Complete gallery exposes every delivered image",
+      "ok": true
+    },
+    {
+      "name": "Every gallery image decodes",
+      "ok": true
+    },
+    {
+      "name": "UI filter includes all three drafts",
+      "ok": true
+    },
+    {
+      "name": "Text search selects Xeno references",
+      "ok": true
+    },
+    {
+      "name": "Empty search is explained",
+      "ok": true
+    },
+    {
+      "name": "Image modal exposes full original",
+      "ok": true
+    },
+    {
+      "name": "Modal zoom works",
+      "ok": true
+    },
+    {
+      "name": "Original download targets saved PNG",
+      "ok": true
+    },
+    {
+      "name": "Escape restores invoking control",
+      "ok": true
+    },
+    {
+      "name": "Harness completed",
+      "ok": false,
+      "detail": "TypeError: Cannot read properties of undefined (reading 'waitForFunction')"
+    }
+  ],
+  "errors": [
+    "TypeError: Cannot read properties of undefined (reading 'waitForFunction')"
+  ],
+  "httpFailures": []
+}
