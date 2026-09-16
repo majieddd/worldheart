@@ -1,7 +1,7 @@
 # 99 Planets modern-Earth art direction
 
 Owner: Codex. Branch: `feature/99-planets-art-direction`. Scope: U205-U208.
-Status: implemented, local review package verified; final checks and V2 publication in progress.
+Status: implemented and locally verified after integrating shared terrain; V2 publication in progress.
 Owner visual selection is pending. Usage: unmeasured.
 
 ## Request and boundaries
@@ -24,7 +24,7 @@ are the fictional divergence. The alien glyph name is a fictional cipher for
 | U205 replay and source foundation | verified, bounded | Current public game was played; observations below and replay screenshots | unmeasured |
 | U206 modern catalogue and medieval archive | verified locally | Nine new original plates, hashes/prompts, old originals retained; owner art acceptance pending | unmeasured |
 | U207 three UI compositions | verified locally | Field/Arcade/Signal, Combat/Build/Loadout, desktop/mobile render and input checks; owner choice pending | unmeasured |
-| U208 design kit and review publication | active | Foundation, scope record, canonical QA extension; public verification follows integration | unmeasured |
+| U208 design kit and review publication | locally verified | Foundation, scope record, canonical QA extension; public verification pending | unmeasured |
 
 ## What was played
 
@@ -96,9 +96,29 @@ Huashu requires showing three real first drafts and ending the turn for the owne
 selection. This package stops at that review boundary. No `direction-approved.md`
 exists because the owner has not chosen a new UI composition.
 
-The shared preview advanced to `f22e3b2` while this collection was built. Integrate
-that terrain work, preserve the new `--guided-game` probe and regenerate mirrors
-before publishing. Never force-push shared preview or replace production main.
+The shared preview advanced to `f22e3b2` while this collection was built. It was
+merged at `5ba9c2e`, preserving both the `--guided-game` and `--99-art` probes.
+Generated single-file builds were rebuilt from the integrated sources. Game
+modules, index and existing game CSS remain identical to that collaborator snapshot.
+
+## Integrated local acceptance
+
+- `local-browser.json`: **84/84** cases pass. Includes all three desktop/mobile
+  compositions, actual keyboard abilities, explicit equipment swaps, all thirteen
+  topic routes, original downloads, history, Axiom WebGL and six archived originals.
+- `tests.txt`: **393/393** automated tests pass, including the extended Pages
+  fixture which publishes this review route and excludes unrelated draft directories.
+- `syntax.txt`: **142/142** modules parse. All three inline draft scripts were
+  also parsed and exercised in the browser.
+- `style.txt`: clean. `blueprint.txt`: **14/14** sections, **6/6** mechanic blocks,
+  **5/5** decision rows, no failures or warnings.
+- **293** source/V2 files mirror correctly after integration.
+- Actual desktop combat/build/loadout and narrow-screen captures were reviewed.
+  Selected durable captures live beside this ledger; the three combat previews
+  are also served in `lib/99-art/ui-*.webp`.
+
+These results support the review package. They do not certify final taste,
+new-mesh animation quality, a new playable Earth environment or a Roblox port.
 
 ## Reproduction
 
