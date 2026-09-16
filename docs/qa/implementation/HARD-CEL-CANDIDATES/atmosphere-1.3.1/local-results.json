@@ -1,0 +1,975 @@
+{
+  "base": "http://127.0.0.1:8152",
+  "checks": [
+    {
+      "name": "Pinned scene boots with three textured models and one context",
+      "ok": true,
+      "detail": {
+        "storage": "{}",
+        "metrics": {
+          "frames": 1,
+          "calls": 596,
+          "triangles": 1105536,
+          "geometries": 296,
+          "textures": 8,
+          "models": 3,
+          "grassBlades": 10716,
+          "flowers": 360,
+          "contexts": 1
+        },
+        "assets": [
+          {
+            "name": "enemy",
+            "vertices": 26377,
+            "triangles": 31019,
+            "textures": 1,
+            "sourceDimensions": [
+              1.898393988609314,
+              1.734734058380127,
+              1.8173170685768127
+            ],
+            "rigged": false
+          },
+          {
+            "name": "tower",
+            "vertices": 33216,
+            "triangles": 28415,
+            "textures": 1,
+            "sourceDimensions": [
+              1.8994519114494324,
+              1.5818759202957153,
+              1.3817939758300781
+            ],
+            "rigged": false
+          },
+          {
+            "name": "commander",
+            "vertices": 32530,
+            "triangles": 29527,
+            "textures": 1,
+            "sourceDimensions": [
+              1.2168858647346497,
+              1.8993379473686218,
+              0.5964289605617523
+            ],
+            "rigged": false
+          }
+        ],
+        "backend": {
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+          "dpr": 1
+        }
+      }
+    },
+    {
+      "name": "Model and pigment requests use the archived assets",
+      "ok": true,
+      "detail": [
+        "http://127.0.0.1:8152/art-candidates/hard-cel-v1/lib/painted/gouache.png",
+        "http://127.0.0.1:8152/art-candidates/hard-cel-v1/lib/painted/commander.gltf",
+        "http://127.0.0.1:8152/art-candidates/hard-cel-v1/lib/painted/enemy.gltf",
+        "http://127.0.0.1:8152/art-candidates/hard-cel-v1/lib/painted/tower.gltf"
+      ]
+    },
+    {
+      "name": "Candidate interface text meets AA contrast",
+      "ok": true,
+      "detail": [
+        {
+          "text": "WORLDHEART V2",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "← Painted frontier",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "ART DIRECTION / SAVED CANDIDATE + THREE ",
+          "ratio": 14.18408804904819,
+          "required": 4.5
+        },
+        {
+          "text": "Hard Cel, explored.",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "Your preferred original. A clearer, rich",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "1.0 ORIGINAL SAVED",
+          "ratio": 14.18408804904819,
+          "required": 4.5
+        },
+        {
+          "text": "Download the preserved slice ↓",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "1.0 · OWNER-SELECTEDHard Cel",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "1.0 · OWNER-SELECTED",
+          "ratio": 8.230483720824555,
+          "required": 4.5
+        },
+        {
+          "text": "1.1 · VARIATIONPainted light",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "1.1 · VARIATION",
+          "ratio": 8.230483720824555,
+          "required": 4.5
+        },
+        {
+          "text": "1.2 · VARIATIONEtched color",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "1.2 · VARIATION",
+          "ratio": 8.230483720824555,
+          "required": 4.5
+        },
+        {
+          "text": "1.3.1 · REFINEDAtmospheric ink",
+          "ratio": 8.418981229789951,
+          "required": 4.5
+        },
+        {
+          "text": "1.3.1 · REFINED",
+          "ratio": 8.418981229789951,
+          "required": 4.5
+        },
+        {
+          "text": "Valley",
+          "ratio": 8.418981229789951,
+          "required": 4.5
+        },
+        {
+          "text": "Commander",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Cannon",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Invader",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Light Golden hourSoft daylight",
+          "ratio": 8.230483720824555,
+          "required": 4.5
+        },
+        {
+          "text": "Golden hourSoft daylight",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Layout Side by sideAll four versionsSele",
+          "ratio": 8.230483720824555,
+          "required": 4.5
+        },
+        {
+          "text": "Side by sideAll four versionsSelected fu",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "1.0.0 / HARD CEL",
+          "ratio": 12.991807970169898,
+          "required": 4.5
+        },
+        {
+          "text": "Owner-selected candidate",
+          "ratio": 12.991807970169898,
+          "required": 4.5
+        },
+        {
+          "text": "1.3.1 / ATMOSPHERIC INK",
+          "ratio": 12.991807970169898,
+          "required": 4.5
+        },
+        {
+          "text": "Refinement awaiting review",
+          "ratio": 12.991807970169898,
+          "required": 4.5
+        },
+        {
+          "text": "Drag to orbit · Scroll to zoom · Shared ",
+          "ratio": 8.230483720824555,
+          "required": 4.5
+        },
+        {
+          "text": "Compare with Hard Cel 1.0.0Atmosphere 1.",
+          "ratio": 8.230483720824555,
+          "required": 4.5
+        },
+        {
+          "text": "Hard Cel 1.0.0Atmosphere 1.3.0",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Ink contour",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Surface texture",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Play breeze",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Reset view",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Save comparison ↓",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "VERSION 1.3.1",
+          "ratio": 14.18408804904819,
+          "required": 4.5
+        },
+        {
+          "text": "Atmospheric ink",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "Less haze reveals richer painted color. ",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "A CANDIDATE WORTH KEEPING",
+          "ratio": 14.18408804904819,
+          "required": 4.5
+        },
+        {
+          "text": "Explore from a fixed original.",
+          "ratio": 16.20214253305593,
+          "required": 3
+        },
+        {
+          "text": "Saved recipe and file identities ↗",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "More color in shadow",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "A lifted cel palette and cool shadow col",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "Texture with a finer line",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Stronger pigment, a slightly finer conto",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "Clearer air, deeper color",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        },
+        {
+          "text": "Less haze, darker cool shadows and riche",
+          "ratio": 9.006228966909653,
+          "required": 4.5
+        },
+        {
+          "text": "View previous 1.3.0",
+          "ratio": 14.806582294404338,
+          "required": 4.5
+        },
+        {
+          "text": "Previous study ↗",
+          "ratio": 16.20214253305593,
+          "required": 4.5
+        }
+      ]
+    },
+    {
+      "name": "Archived identity: painted-lab.html",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: css/painted-lab.css",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: js/painted-lab.js",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: js/painted-materials.js",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: js/painted-environment.js",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/three.module.min.js",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/three.core.min.js",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/THREE-LICENSE.txt",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/addons/loaders/GLTFLoader.js",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/addons/utils/BufferGeometryUtils.js",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/painted/commander.gltf",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/painted/enemy.gltf",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/painted/tower.gltf",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/painted/gouache.png",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/painted/provenance.json",
+      "ok": true
+    },
+    {
+      "name": "Archived identity: lib/painted/README.md",
+      "ok": true
+    },
+    {
+      "name": "Original-to-original rendered control is stable",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 0
+      }
+    },
+    {
+      "name": "Saved baseline matches archived Hard Cel rendering",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 0.0030158767140664113,
+        "tolerance": 0.02
+      }
+    },
+    {
+      "name": "Atmosphere refinement deepens valley shadows and color",
+      "ok": true,
+      "detail": {
+        "previous": {
+          "shadow": 0.5190407843137255,
+          "contrast": 0.28293098039215686,
+          "saturation": 0.28757683054729577
+        },
+        "refined": {
+          "shadow": 0.42342431372549016,
+          "contrast": 0.3695388235294117,
+          "saturation": 0.4132392898864868
+        }
+      }
+    },
+    {
+      "name": "Atmosphere refinement deepens commander shadows and color",
+      "ok": true,
+      "detail": {
+        "previous": {
+          "shadow": 0.3372729411764706,
+          "contrast": 0.5578596078431372,
+          "saturation": 0.3566105026521717
+        },
+        "refined": {
+          "shadow": 0.2853937254901961,
+          "contrast": 0.5641176470588236,
+          "saturation": 0.46524193404248454
+        }
+      }
+    },
+    {
+      "name": "Before and after compare different atmosphere versions",
+      "ok": true
+    },
+    {
+      "name": "Before/after URL restores selected reference",
+      "ok": true
+    },
+    {
+      "name": "v2 visibly differs from the original",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 2.806559337697941
+      }
+    },
+    {
+      "name": "v3 visibly differs from the original",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 2.5766550432448243
+      }
+    },
+    {
+      "name": "v4 visibly differs from the original",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 12.455040138342019
+      }
+    },
+    {
+      "name": "v5 visibly differs from the original",
+      "ok": true,
+      "detail": {
+        "meanRGBDifference": 8.13050397500317
+      }
+    },
+    {
+      "name": "All three iterations produce distinct scene pixels",
+      "ok": true
+    },
+    {
+      "name": "Four-version grid has original plus three experiments",
+      "ok": true
+    },
+    {
+      "name": "All versions render valley",
+      "ok": true
+    },
+    {
+      "name": "All versions render commander",
+      "ok": true
+    },
+    {
+      "name": "All versions render tower",
+      "ok": true
+    },
+    {
+      "name": "All versions render enemy",
+      "ok": true
+    },
+    {
+      "name": "Original can be inspected full width",
+      "ok": true
+    },
+    {
+      "name": "Texture toggle affects pigment and hatching",
+      "ok": true
+    },
+    {
+      "name": "Contour toggle changes the actual image",
+      "ok": true
+    },
+    {
+      "name": "Real pointer orbit changes yaw and pitch",
+      "ok": true
+    },
+    {
+      "name": "Wheel zoom works",
+      "ok": true
+    },
+    {
+      "name": "Keyboard orbit and focus are visible",
+      "ok": true
+    },
+    {
+      "name": "Home restores camera preset",
+      "ok": true
+    },
+    {
+      "name": "Shared daylight changes rendering",
+      "ok": true
+    },
+    {
+      "name": "Comparison export contains real PNG pixels",
+      "ok": true
+    },
+    {
+      "name": "Saved candidate archive downloads exact bytes",
+      "ok": true
+    },
+    {
+      "name": "Four-version responsive layout 375",
+      "ok": true,
+      "detail": {
+        "body": 375,
+        "controls": [
+          {
+            "text": "1.0 · OWNER-SELECTEDHard Cel",
+            "width": 171,
+            "scroll": 171,
+            "height": 68
+          },
+          {
+            "text": "1.1 · VARIATIONPainted light",
+            "width": 171,
+            "scroll": 171,
+            "height": 68
+          },
+          {
+            "text": "1.2 · VARIATIONEtched color",
+            "width": 171,
+            "scroll": 171,
+            "height": 68
+          },
+          {
+            "text": "1.3.1 · REFINEDAtmospheric ink",
+            "width": 171,
+            "scroll": 171,
+            "height": 68
+          },
+          {
+            "text": "Valley",
+            "width": 77,
+            "scroll": 77,
+            "height": 48
+          },
+          {
+            "text": "Commander",
+            "width": 77,
+            "scroll": 77,
+            "height": 48
+          },
+          {
+            "text": "Cannon",
+            "width": 77,
+            "scroll": 77,
+            "height": 48
+          },
+          {
+            "text": "Invader",
+            "width": 77,
+            "scroll": 77,
+            "height": 48
+          },
+          {
+            "text": "Golden hourSoft daylight",
+            "width": 98,
+            "scroll": 98,
+            "height": 48
+          },
+          {
+            "text": "Side by sideAll four versionsSelected full width",
+            "width": 126,
+            "scroll": 126,
+            "height": 48
+          },
+          {
+            "text": "Hard Cel 1.0.0Atmosphere 1.3.0",
+            "width": 133,
+            "scroll": 133,
+            "height": 48
+          },
+          {
+            "text": "Play breeze",
+            "width": 105,
+            "scroll": 105,
+            "height": 48
+          },
+          {
+            "text": "Reset view",
+            "width": 105,
+            "scroll": 105,
+            "height": 48
+          },
+          {
+            "text": "Save comparison ↓",
+            "width": 105,
+            "scroll": 105,
+            "height": 48
+          },
+          {
+            "text": "View previous 1.3.0",
+            "width": 138,
+            "scroll": 138,
+            "height": 48
+          }
+        ],
+        "views": [
+          {
+            "w": 347,
+            "h": 418
+          },
+          {
+            "w": 347,
+            "h": 418
+          },
+          {
+            "w": 347,
+            "h": 418
+          },
+          {
+            "w": 347,
+            "h": 418
+          }
+        ]
+      }
+    },
+    {
+      "name": "Four-version responsive layout 768",
+      "ok": true,
+      "detail": {
+        "body": 768,
+        "controls": [
+          {
+            "text": "1.0 · OWNER-SELECTEDHard Cel",
+            "width": 172,
+            "scroll": 172,
+            "height": 78
+          },
+          {
+            "text": "1.1 · VARIATIONPainted light",
+            "width": 172,
+            "scroll": 172,
+            "height": 78
+          },
+          {
+            "text": "1.2 · VARIATIONEtched color",
+            "width": 172,
+            "scroll": 172,
+            "height": 78
+          },
+          {
+            "text": "1.3.1 · REFINEDAtmospheric ink",
+            "width": 172,
+            "scroll": 172,
+            "height": 78
+          },
+          {
+            "text": "Valley",
+            "width": 64,
+            "scroll": 64,
+            "height": 48
+          },
+          {
+            "text": "Commander",
+            "width": 100,
+            "scroll": 100,
+            "height": 48
+          },
+          {
+            "text": "Cannon",
+            "width": 75,
+            "scroll": 75,
+            "height": 48
+          },
+          {
+            "text": "Invader",
+            "width": 73,
+            "scroll": 73,
+            "height": 48
+          },
+          {
+            "text": "Golden hourSoft daylight",
+            "width": 123,
+            "scroll": 123,
+            "height": 48
+          },
+          {
+            "text": "Side by sideAll four versionsSelected full width",
+            "width": 154,
+            "scroll": 154,
+            "height": 48
+          },
+          {
+            "text": "Hard Cel 1.0.0Atmosphere 1.3.0",
+            "width": 133,
+            "scroll": 133,
+            "height": 48
+          },
+          {
+            "text": "Play breeze",
+            "width": 95,
+            "scroll": 95,
+            "height": 48
+          },
+          {
+            "text": "Reset view",
+            "width": 90,
+            "scroll": 90,
+            "height": 48
+          },
+          {
+            "text": "Save comparison ↓",
+            "width": 135,
+            "scroll": 135,
+            "height": 48
+          },
+          {
+            "text": "View previous 1.3.0",
+            "width": 138,
+            "scroll": 138,
+            "height": 48
+          }
+        ],
+        "views": [
+          {
+            "w": 357,
+            "h": 398
+          },
+          {
+            "w": 357,
+            "h": 398
+          },
+          {
+            "w": 357,
+            "h": 398
+          },
+          {
+            "w": 357,
+            "h": 398
+          }
+        ]
+      }
+    },
+    {
+      "name": "Four-version responsive layout 1280",
+      "ok": true,
+      "detail": {
+        "body": 1280,
+        "controls": [
+          {
+            "text": "1.0 · OWNER-SELECTEDHard Cel",
+            "width": 292,
+            "scroll": 292,
+            "height": 78
+          },
+          {
+            "text": "1.1 · VARIATIONPainted light",
+            "width": 292,
+            "scroll": 292,
+            "height": 78
+          },
+          {
+            "text": "1.2 · VARIATIONEtched color",
+            "width": 292,
+            "scroll": 292,
+            "height": 78
+          },
+          {
+            "text": "1.3.1 · REFINEDAtmospheric ink",
+            "width": 292,
+            "scroll": 292,
+            "height": 78
+          },
+          {
+            "text": "Valley",
+            "width": 64,
+            "scroll": 64,
+            "height": 48
+          },
+          {
+            "text": "Commander",
+            "width": 100,
+            "scroll": 100,
+            "height": 48
+          },
+          {
+            "text": "Cannon",
+            "width": 75,
+            "scroll": 75,
+            "height": 48
+          },
+          {
+            "text": "Invader",
+            "width": 73,
+            "scroll": 73,
+            "height": 48
+          },
+          {
+            "text": "Golden hourSoft daylight",
+            "width": 123,
+            "scroll": 123,
+            "height": 48
+          },
+          {
+            "text": "Side by sideAll four versionsSelected full width",
+            "width": 154,
+            "scroll": 154,
+            "height": 48
+          },
+          {
+            "text": "Hard Cel 1.0.0Atmosphere 1.3.0",
+            "width": 133,
+            "scroll": 133,
+            "height": 48
+          },
+          {
+            "text": "Play breeze",
+            "width": 95,
+            "scroll": 95,
+            "height": 48
+          },
+          {
+            "text": "Reset view",
+            "width": 90,
+            "scroll": 90,
+            "height": 48
+          },
+          {
+            "text": "Save comparison ↓",
+            "width": 135,
+            "scroll": 135,
+            "height": 48
+          },
+          {
+            "text": "View previous 1.3.0",
+            "width": 138,
+            "scroll": 138,
+            "height": 48
+          }
+        ],
+        "views": [
+          {
+            "w": 597,
+            "h": 398
+          },
+          {
+            "w": 597,
+            "h": 398
+          },
+          {
+            "w": 597,
+            "h": 398
+          },
+          {
+            "w": 597,
+            "h": 398
+          }
+        ]
+      }
+    },
+    {
+      "name": "Four animated renders sustain desktop frames",
+      "ok": true,
+      "detail": {
+        "samples": 92,
+        "median": 13.899999999999636,
+        "p95": 20.899999999999636,
+        "metrics": {
+          "frames": 158,
+          "calls": 1424,
+          "triangles": 2354832,
+          "geometries": 298,
+          "textures": 11,
+          "models": 3,
+          "grassBlades": 10716,
+          "flowers": 360,
+          "contexts": 1
+        },
+        "backend": {
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 Laptop GPU (0x000027E0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+          "dpr": 1
+        }
+      }
+    },
+    {
+      "name": "Pause stops simulation and idle draws",
+      "ok": true
+    },
+    {
+      "name": "Repeated views do not grow geometry or texture allocation",
+      "ok": true,
+      "detail": {
+        "frames": 173,
+        "calls": 1424,
+        "triangles": 2354832,
+        "geometries": 298,
+        "textures": 11,
+        "models": 3,
+        "grassBlades": 10716,
+        "flowers": 360,
+        "contexts": 1
+      }
+    },
+    {
+      "name": "Comparison does not modify game saves",
+      "ok": true
+    },
+    {
+      "name": "Graphics loss shows guidance and disables export",
+      "ok": true
+    },
+    {
+      "name": "Context restoration renders all versions",
+      "ok": true
+    },
+    {
+      "name": "Version-specific URL restores the full comparison",
+      "ok": true
+    },
+    {
+      "name": "Touch selects a version and model",
+      "ok": true
+    },
+    {
+      "name": "Reduced motion initializes a still scene",
+      "ok": true
+    },
+    {
+      "name": "Real touch swipe orbits the selected version",
+      "ok": true
+    },
+    {
+      "name": "Missing archived model shows recovery guidance and disables export",
+      "ok": true
+    },
+    {
+      "name": "Previous study links to the candidate comparison",
+      "ok": true
+    },
+    {
+      "name": "No runtime or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

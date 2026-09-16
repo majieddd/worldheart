@@ -1,5 +1,9 @@
 # 99 Planets To Defend: running development blueprint
 
+U168 refines Atmospheric Ink to 1.3.1 with reduced haze and stronger shadow/color.
+Hard Cel 1.0.0 remains preferred. A separate walkable style playground is next:
+third-person movement, attacks and art-matched feedback in both treatments.
+
 U164-U167 preserves the owner-selected **Hard Cel 1.0.0** as a real candidate for
 future adoption. [Candidate ledger](qa/implementation/HARD-CEL-CANDIDATES.md)
 records its immutable archive, three unreviewed rendering variants and the
