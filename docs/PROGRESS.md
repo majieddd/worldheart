@@ -1,9 +1,10 @@
 # 99 Planets development progress
 
-U194 verified locally, publishing: owner-authorized main release of V2 `4ca722b`. Codex on
-`release/promote-v2-2026-09-16`. Runtime is promoted unchanged, with previous main
-preserved for rollback and V2 retained for future development. Release checks and
-public identity are tracked in [MAIN-PROMOTION](qa/implementation/MAIN-PROMOTION.md).
+U194 published and publicly verified: main and V2 now serve release `6133d07`,
+promoting V2 snapshot `4ca722b` unchanged. [Release PR #57](https://github.com/majieddd/worldheart/pull/57)
+is merged. All 379 automated tests, 11 local and 11 public browser checks, and
+485 deployed/source identities pass. The original main is preserved as a rollback
+tag; V2 remains the development route. [Release evidence](qa/implementation/MAIN-PROMOTION.md).
 
 U189-U193 locally verified, publication pending: Codex on `feature/ink-fps-handling`. New owner Vivid Paint
 default, connected foliage, FPS pace/slide/ADS and a Roblox-focused concept
