@@ -1,6 +1,6 @@
 # 99 Planets To Defend: running development blueprint
 
-U240-U243 locally verified, publishing: Codex on `feature/first-expedition`. Skippable red-text opening, Earth/meteor cinematic, four illustrated lore panels in Painted-Anime-Inkline, third-person arrival and progressive action-based guide. 406 tests and 21 browser checks pass; late-game briefings use labeled fixtures. [Scope, evidence and remaining owner acceptance](qa/implementation/FIRST-EXPEDITION.md).
+U240-U243 published to V2 at `19355dc`, with 21/21 public browser checks: Codex on `feature/first-expedition`. Skippable red-text opening, Earth/meteor cinematic, four illustrated lore panels in Painted-Anime-Inkline, third-person arrival and progressive action-based guide. 406 tests and 21 browser checks pass; late-game briefings use labeled fixtures. [Scope, evidence and remaining owner acceptance](qa/implementation/FIRST-EXPEDITION.md).
 
 U237-U239 locally verified: Codex on `feature/vey-quality-benchmark`. A real Modly Trellis.2 local shape/texture trial, Vey-specific palette/detail correction, rig transfer and retained CMU motion are reviewable alongside the old pilot. The studio adds artifact-bound technical gates, engine selection and per-attempt timing. 402 repository tests, 23 pipeline tests and desktop/mobile browser checks pass. Visual parity with Tripo and owner acceptance are not claimed. [Evidence and timing](qa/implementation/VEY-LOCAL-BENCHMARK.md).
 

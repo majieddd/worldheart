@@ -2,10 +2,10 @@
 
 Owner: Codex. Branch: feature/first-expedition. Base: preview/v2 7db5236.
 
-- U240: Opening typing, cinematic and four-panel story: implemented, awaiting browser verification.
-- U241: Third-person arrival and action-based tutorial: implemented, awaiting adversarial verification.
-- U242: Art direction second pass against 99-art principles: active. Existing reference is Painted-Anime-Inkline; painting, ink, material wear and rich shadow, not generic science-fiction rendering.
-- U243: Responsive, save isolation, real input, contextual briefing and V2 deployment: pending.
+- U240: Opening typing, cinematic and four-panel story: published, verified.
+- U241: Third-person arrival and action-based tutorial: published, verified.
+- U242: Art direction second pass against 99-art principles: published for owner review. Existing reference is Painted-Anime-Inkline; painting, ink, material wear and rich shadow, not generic science-fiction rendering.
+- U243: Responsive, save isolation, real input, contextual briefing and V2 deployment: verified and published.
 
 Scope: new-player presentation only; no world seed or campaign inventory migration. Main remains unchanged. Existing assaults bypass automatic beginner flow. Replay opening from lobby; onboarding=1 enables explicit test/replay on a non-home 99 Planets route. Guide can be skipped without changing gameplay progression.
 
@@ -29,3 +29,11 @@ U240-U243 locally verified; publishing next.
 Evidence: [browser report](../first-expedition/browser.json), [desktop story](../first-expedition/story-desktop.png), [mobile story](../first-expedition/story-mobile.png). Reproduce with WH_NODE_MODULES pointing to Playwright/sharp, WH_BASE_URL set to the server, then node tools/qa-painted-lab.mjs artifacts/first-expedition/recheck --first-expedition.
 
 Remaining acceptance: owner review of art/pacing and physical-phone play. This does not claim a 99-world campaign playthrough. The introductory Earth is narrative; existing procedural first-planet recipes and saved seeds are preserved.
+
+## Published checkpoint
+
+Runtime 19355dcd6981a48584f601cfdfc3b0c46b241ce0 is live on V2. Pages [run 35208926643](https://github.com/majieddd/worldheart/actions/runs/35208926643) succeeded; the public build.json matches. The complete 21-check browser probe also passes against the public V2 route, with no runtime or HTTP errors. The mobile capture was taken after controls rendered and visually inspected for overlap. Main remains 6133d0713f4e93e6fc743c35d9dd0fd1834bc98f.
+
+[Live browser evidence](../first-expedition/live-browser.json) · [Mobile arrival](../first-expedition/mobile-first-defense.png) · [PR 69](https://github.com/majieddd/worldheart/pull/69).
+
+Replay the full flow in a single-world test using /v2/?map=ninetynine&campaign=0&seed=12345&onboarding=1. The lobby also has Replay opening. New campaign players receive the story automatically; existing saves are preserved.
