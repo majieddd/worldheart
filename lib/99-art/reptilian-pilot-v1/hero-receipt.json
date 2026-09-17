@@ -1,0 +1,35 @@
+{
+  "provider": "local ComfyUI",
+  "model": "krea2-turbo-local-fp8.safetensors",
+  "settings": {
+    "family": "krea",
+    "model": "krea2-turbo-local-fp8.safetensors",
+    "loras": [
+      {
+        "name": "krea2_style_reference.safetensors",
+        "strength": 0.8
+      }
+    ],
+    "seed": 132917,
+    "width": 768,
+    "height": 1024,
+    "steps": 8,
+    "meshSteps": 30,
+    "meshResolution": 256,
+    "textureSize": 4096,
+    "meshEngine": "trellis2",
+    "paintEngine": "trellis2",
+    "trellisSteps": 25,
+    "encoder": "qwen3vl_4b_native_bf16.safetensors"
+  },
+  "prompt": "The reference shows the exact ALBINO REPTILIAN XENO COMMANDER. Preserve this exact white-scaled crocodilian alien face, ruby-pink slit eyes, chunky powerful body, dark plum and charcoal armor, turquoise clasps, brass edges, clawed empty hands and feet, and confident hand-painted anime ink rendering. Fix FRAMING only: zoom OUT so the entire character is small enough to occupy only the central 70 percent of the canvas, with a large empty border on ALL sides. The muscular WHITE TAIL must curve INWARD beside the legs so its tapering pointed TIP is clearly visible and DOES NOT TOUCH the right edge. Full body including every toe and the complete tail. Relaxed neutral A pose, no prop, no scenery. All exposed skin white or ivory with cool lavender gray and pink shadows, never green. Plain light gray background. No cropped extremities. Painted-Anime-Inkline for 99 Planets To Defend. Reference pictures preserve identity and rendering; do not add their background to the asset. Hand-painted anime illustration with whimsical environmental light, confident dark outer contours, fine broken interior ink, rich colored cel shadows, broad opaque gouache color, selective material wear and crisp facial detail. Studio Ghibli painted warmth meets Borderlands comic grit. Preserve the subject anatomy, proportions, colors and signature props. No crosshatch shadow fill, glossy toy look, blurry texture, or screen-space pattern. Single isolated full-body asset, three-quarter front, neutral relaxed A-pose with hands separated from body, complete feet and extremities, generous margins, even neutral lighting, plain light gray background. No scenery, text, watermark or ground shadow.",
+  "references": [
+    {
+      "file": "concept-9532b21e4b.png",
+      "sha256": "f42781f22e84fb6d12504d1656e61e16976a0733ce28018746703d610ceef0ce"
+    }
+  ],
+  "seconds": 99.43524718284607,
+  "sha256": "b8bd603c64ec3560191ad534766a36f4ab71053370c6bd97665bba39aa299d32",
+  "job": "a41cff27-eedc-4cd8-b52e-6c7982e84855"
+}

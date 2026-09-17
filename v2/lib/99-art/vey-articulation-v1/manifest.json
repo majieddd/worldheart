@@ -1,0 +1,34 @@
+{
+  "version": "0.4.0-review",
+  "style": "Painted-Anime-Inkline",
+  "ownerApproved": false,
+  "verdict": "Compare heel contact, flat support, toe-off, cuff openings and relaxed digits. Previous surface refinement stays available. Technical checks do not replace your visual approval.",
+  "models": {
+    "motion": {
+      "file": "vey-motion.glb",
+      "summary": "Heel-flat-toe walking roll / ten fitted digit joints / relaxed grip",
+      "sha256": "e6dab674a5b106c0e4573580dcea720cfef8d72feac3adea2d777fb3edd1a814"
+    },
+    "paint": {
+      "file": "paint-articulated.glb",
+      "summary": "Original paint / roomier wrist and cuff fit",
+      "sha256": "ad8e52d82f996b4a2afedf02a9bfd04d34d20d63da6375afce3eb068bd9c4e53"
+    },
+    "old-motion": {
+      "file": "vey-motion.glb",
+      "summary": "Previous surface refinement / original boot and hand motion",
+      "sha256": "f6febcc493537647e5cbc3866571dc337bfa4af44af8026e796cf9498231b390"
+    },
+    "old-paint": {
+      "file": "paint-refined.glb",
+      "summary": "Previous surface refinement / original wrist fit",
+      "sha256": "5a4f25de880075186932be226a5acb6de16d58a407d4d700dd11d38225ac27b8"
+    }
+  },
+  "reports": {
+    "articulation-quality.json": "d5d3ad8216710803f058b552c2ca2dcd9357ec545a95a70bfca0b12a0d0b69d0",
+    "surface-quality.json": "8097b1a692d7375f6d6983d7c9269645812177f4a209d4b36aaafb4e4a78fab6",
+    "sole-quality.json": "a0f62213d0413e420d73d214627881b58f73390e8d7ca646624e8c531581e1fe",
+    "motion-quality.json": "c64db4405eb4e7365291c287295e050c065a5ec8981d2ae8d8e71f19d4a499d4"
+  }
+}

@@ -1,0 +1,249 @@
+{
+  "base": "http://127.0.0.1:8157",
+  "checks": [
+    {
+      "name": "field desktop fits viewport",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "scroll": 1440
+      }
+    },
+    {
+      "name": "field Z selects Aegis Ward",
+      "ok": true
+    },
+    {
+      "name": "field V selects Cyclone Slash",
+      "ok": true
+    },
+    {
+      "name": "field build placement control changes feedback",
+      "ok": true
+    },
+    {
+      "name": "field displays alien equipment",
+      "ok": true
+    },
+    {
+      "name": "field displays brainshot equipment",
+      "ok": true
+    },
+    {
+      "name": "field displays rainboom equipment",
+      "ok": true
+    },
+    {
+      "name": "field displays anomalous equipment",
+      "ok": true
+    },
+    {
+      "name": "field displays axiom equipment",
+      "ok": true
+    },
+    {
+      "name": "Field explicitly equips backpack into selected slot",
+      "ok": true
+    },
+    {
+      "name": "field Escape returns to combat",
+      "ok": true
+    },
+    {
+      "name": "field mobile has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "field mobile equipment images load",
+      "ok": true,
+      "detail": [
+        {
+          "src": "../../lib/99-art/earth.webp",
+          "loaded": true
+        },
+        {
+          "src": "../../lib/99-art/rainboom.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "field mobile loadout has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "arcade desktop fits viewport",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "scroll": 1440
+      }
+    },
+    {
+      "name": "arcade Z selects Aegis Ward",
+      "ok": true
+    },
+    {
+      "name": "arcade V selects Cyclone Slash",
+      "ok": true
+    },
+    {
+      "name": "arcade build placement control changes feedback",
+      "ok": true
+    },
+    {
+      "name": "arcade displays alien equipment",
+      "ok": true
+    },
+    {
+      "name": "arcade displays brainshot equipment",
+      "ok": true
+    },
+    {
+      "name": "arcade displays rainboom equipment",
+      "ok": true
+    },
+    {
+      "name": "arcade displays anomalous equipment",
+      "ok": true
+    },
+    {
+      "name": "arcade displays axiom equipment",
+      "ok": true
+    },
+    {
+      "name": "arcade Escape returns to combat",
+      "ok": true
+    },
+    {
+      "name": "arcade mobile has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "arcade mobile equipment images load",
+      "ok": true,
+      "detail": [
+        {
+          "src": "../../lib/99-art/earth.webp",
+          "loaded": true
+        },
+        {
+          "src": "../../lib/99-art/rainboom.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "arcade mobile loadout has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "signal desktop fits viewport",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "scroll": 1440
+      }
+    },
+    {
+      "name": "signal Z selects Aegis Ward",
+      "ok": true
+    },
+    {
+      "name": "signal V selects Cyclone Slash",
+      "ok": true
+    },
+    {
+      "name": "signal build placement control changes feedback",
+      "ok": true
+    },
+    {
+      "name": "signal displays alien equipment",
+      "ok": true
+    },
+    {
+      "name": "signal displays brainshot equipment",
+      "ok": true
+    },
+    {
+      "name": "signal displays rainboom equipment",
+      "ok": true
+    },
+    {
+      "name": "signal displays anomalous equipment",
+      "ok": true
+    },
+    {
+      "name": "signal displays axiom equipment",
+      "ok": true
+    },
+    {
+      "name": "Signal explicit equip updates combat maker",
+      "ok": true
+    },
+    {
+      "name": "signal Escape returns to combat",
+      "ok": true
+    },
+    {
+      "name": "signal mobile has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "signal mobile equipment images load",
+      "ok": true,
+      "detail": [
+        {
+          "src": "../../lib/99-art/earth.webp",
+          "loaded": true
+        },
+        {
+          "src": "../../lib/99-art/rainboom.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "signal mobile loadout has no page overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "No JavaScript or resource errors",
+      "ok": false,
+      "detail": {
+        "errors": [
+          "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        ],
+        "httpFailures": []
+      }
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "httpFailures": []
+}

@@ -25,3 +25,10 @@ test('handling terminal speeds and camera are consistent at 30/60/120Hz',()=>{
 test('new Vivid startup does not mutate original Atmospheric Ink',()=>{
   assert.notEqual(GRAPHICS_DEFAULTS,GRAPHICS_ORIGINAL);assert.equal(GRAPHICS_DEFAULTS.exposure,.77);assert.equal(GRAPHICS_ORIGINAL.exposure,1);assert.equal(GRAPHICS_ORIGINAL.fog,.0115);assert.ok(Object.isFrozen(GRAPHICS_ORIGINAL));
 });
+
+test('a fitted third-person pace preserves source speed and keeps FPS defaults separate',()=>{
+ const pace={...HANDLING,walk:1.389573589,sprint:3.461958244,slide:4.5};const walk=newHandling(),run=newHandling();
+ advance(walk,{z:-1,pace},.5);advance(run,{z:-1,run:true,pace},.5);
+ assert.ok(Math.abs(-walk.vz-pace.walk)<.001);assert.ok(Math.abs(-run.vz-pace.sprint)<.001);
+ updateHandling(run,.01,{z:-1,run:true,crouch:true,pace});assert.ok(run.slide>0);assert.equal(HANDLING.walk,4.4);
+});

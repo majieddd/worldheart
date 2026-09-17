@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG, CAM_TUNE, TERRAIN_PROFILES } from './config.js';
 import { browserStorage } from './storage.js';
 import { worldgenUrl, rememberWorld } from './worldgen.js';
-import { FORMATIONS, FEATURES, ECOLOGY, terrainHeight, biomeAt, waterDepthAt } from './world.js';
+import { FORMATIONS, FEATURES, ECOLOGY, GUIDED, terrainHeight, biomeAt, waterDepthAt } from './world.js';
 import { NestAtlasView } from './nest-atlas-view.js';
 import { PLANET_THEMES } from './run/planet-environments.js';
 import {environmentalHostility} from './run/environment-catalogue.js';
@@ -84,21 +84,22 @@ export class WorldgenPanel {
     el('peak').onclick = () => this.focus(peakDir, Math.max(65, CONFIG.terrain?.range || 40));
     el('globe').onclick = () => this.focus(home, CONFIG.planetRadius * 2.8);
     this.landmarks = FORMATIONS ? surveyLandmarks(FORMATIONS,terrainHeight,nav.fieldCenter,CONFIG.map.fieldTheta,(x,y,z,h)=>waterDepthAt(new THREE.Vector3(x,y,z),h)>0,(x,y,z,h)=>biomeAt(new THREE.Vector3(x,y,z),h),FEATURES) : [];
+    for(const site of GUIDED?.landmarks||[])this.landmarks.push({...site,label:'Guided overlook',scale:38,depth:0,inside:nav.fieldCenter.dot(new THREE.Vector3(...site.dir))>Math.cos(CONFIG.map.fieldTheta)});
     el('formation-label').hidden = !FORMATIONS;
     for(const [i,site]of this.landmarks.entries()){
       const option=document.createElement('option');option.value=String(i);
       const d=new THREE.Vector3(...site.dir);
-      option.textContent=`${LANDFORM_RECIPES[site.type].label} · ${biomeAt(d,site.height)}${site.inside?'':' · beyond battlefield'}`;
+      option.textContent=`${site.label||LANDFORM_RECIPES[site.type].label} · ${biomeAt(d,site.height)}${site.inside?'':' · beyond battlefield'}`;
       el('formation').append(option);
     }
     el('formation').onchange=()=>{
       const site=this.landmarks[Number(el('formation').value)];if(el('formation').value===''||!site)return;
       this.focus(new THREE.Vector3(...site.dir),Math.max(65,site.scale*1.4));
-      this.status.textContent=`${LANDFORM_RECIPES[site.type].label}. ${site.inside?'Inside this battlefield.':'Elsewhere on this planet.'} ${site.depth>1?`${site.depth.toFixed(1)}m cut into the surrounding upland.`:'Look around the shoulders and nearby routes.'}`;
+      this.status.textContent=`${site.label||LANDFORM_RECIPES[site.type].label}. ${site.inside?'Inside this battlefield.':'Elsewhere on this planet.'} ${site.depth>1?`${site.depth.toFixed(1)}m cut into the surrounding upland.`:site.label?'A fitted ramp connects the low approach to a raised tower shelf.':'Look around the shoulders and nearby routes.'}`;
     };
     el('paths').disabled = !CONFIG.terrain;
     el('paths').onchange = () => { if (!this.paths) this.buildRoutes(); this.paths.visible = el('paths').checked; el('atlas').hidden = !el('paths').checked; };
-    el('info').textContent = `Seed ${CONFIG.requestedSeed} · generated ${CONFIG.seed} · ${FORMATIONS ? 'landforms v' + FORMATIONS.version : 'classic terrain'} · peak ${nav.height[peak].toFixed(1)}m${ECOLOGY?' · '+ECOLOGY.manifest().regime+' climate':''}`;
+    el('info').textContent = `Seed ${CONFIG.requestedSeed} · generated ${CONFIG.seed} · ${GUIDED?'Guided terrain 1.0':FORMATIONS ? 'landforms v' + FORMATIONS.version : 'classic terrain'} · peak ${nav.height[peak].toFixed(1)}m${ECOLOGY?' · '+ECOLOGY.manifest().regime+' climate':''}`;
     if(CONFIG.environment){
       const e=CONFIG.environment;
       el('info').textContent+=` · ${e.name} · ${e.star.name} (${e.star.type}) · ${e.orbitAU.toFixed(2)} AU · ${e.flux.toFixed(2)}x Earth sunlight`;

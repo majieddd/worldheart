@@ -1,0 +1,141 @@
+{
+  "base": "http://127.0.0.1:8157",
+  "checks": [
+    {
+      "name": "anomalous updated commander route",
+      "ok": true
+    },
+    {
+      "name": "brainshot updated commander route",
+      "ok": true
+    },
+    {
+      "name": "xeno updated commander route",
+      "ok": true
+    },
+    {
+      "name": "Xeno has five commanders and two distinct new races",
+      "ok": true
+    },
+    {
+      "name": "All revised actives have available icons",
+      "ok": true
+    },
+    {
+      "name": "Vey, the Surveyor has individual artwork and five-step ratings",
+      "ok": true
+    },
+    {
+      "name": "Sarrak, breach marshal has individual artwork and five-step ratings",
+      "ok": true
+    },
+    {
+      "name": "Race page separates race, element and role",
+      "ok": true
+    },
+    {
+      "name": "Third-person placement scene is selected",
+      "ok": true
+    },
+    {
+      "name": "No in-game mode buttons",
+      "ok": true
+    },
+    {
+      "name": "Ability keys F and G",
+      "ok": true
+    },
+    {
+      "name": "F ability feedback",
+      "ok": true
+    },
+    {
+      "name": "G ability feedback",
+      "ok": true
+    },
+    {
+      "name": "Placement preview gives visible position feedback",
+      "ok": true
+    },
+    {
+      "name": "Build HUD fits 390",
+      "ok": true
+    },
+    {
+      "name": "Build HUD fits 768",
+      "ok": true
+    },
+    {
+      "name": "Build HUD fits 1440",
+      "ok": true
+    },
+    {
+      "name": "Blender GLB-derived viewer loads embedded maps and contour meshes",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "meshes": 86,
+        "textures": 8,
+        "contours": 32
+      }
+    },
+    {
+      "name": "Model can orbit and reset",
+      "ok": true
+    },
+    {
+      "name": "Model controls fit mobile",
+      "ok": true
+    },
+    {
+      "name": "Production workflow and methods are visible",
+      "ok": true
+    },
+    {
+      "name": "Embedded commander inspection works",
+      "ok": true
+    },
+    {
+      "name": "anomalous-roster-v2 source image identity",
+      "ok": true
+    },
+    {
+      "name": "brainshot-roster-v2 source image identity",
+      "ok": true
+    },
+    {
+      "name": "gray-commander source image identity",
+      "ok": true
+    },
+    {
+      "name": "xeno-reptilian source image identity",
+      "ok": true
+    },
+    {
+      "name": "turret-placement source image identity",
+      "ok": true
+    },
+    {
+      "name": "gray-higgsfield source image identity",
+      "ok": true
+    },
+    {
+      "name": "vey-blender source image identity",
+      "ok": true
+    },
+    {
+      "name": "turret-placement-hud source image identity",
+      "ok": true
+    },
+    {
+      "name": "No browser or HTTP errors",
+      "ok": true,
+      "detail": {
+        "errors": [],
+        "httpFailures": []
+      }
+    }
+  ],
+  "errors": [],
+  "httpFailures": []
+}
