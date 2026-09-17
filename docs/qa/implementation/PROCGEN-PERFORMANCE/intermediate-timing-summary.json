@@ -1,0 +1,28 @@
+{
+  "reference": "e527859",
+  "method": "Fresh headless Chrome per sample, three alternating-order matched trials per theme, no profiler, desktop CPU/GPU, 1280x720",
+  "summary": [
+    {
+      "theme": "temperate",
+      "trials": 3,
+      "beforeMs": 16512,
+      "afterMs": 14598,
+      "improvementPercent": 11.591569767441856,
+      "navBeforeMs": 13799.700000047684,
+      "navAfterMs": 11532.600000023842,
+      "maxGenerationTaskBeforeMs": 706,
+      "maxGenerationTaskAfterMs": 327
+    },
+    {
+      "theme": "io",
+      "trials": 3,
+      "beforeMs": 22622,
+      "afterMs": 14669,
+      "improvementPercent": 35.156042790204225,
+      "navBeforeMs": 19260.399999976158,
+      "navAfterMs": 11874.400000035763,
+      "maxGenerationTaskBeforeMs": 728,
+      "maxGenerationTaskAfterMs": 199
+    }
+  ]
+}

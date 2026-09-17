@@ -21,8 +21,8 @@ import { execFileSync } from 'node:child_process';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIRROR = join(ROOT, 'v2');
-const TREES = ['js', 'css', 'lib', 'audio', 'art-candidates'];
-const FILES = ['index.html','debug.html','lobby.html','audio-lab.html','style-lab.html','painted-lab.html','hard-cel-lab.html','style-playground.html','atmospheric-arena.html','asset-stage.html','artboard.html'];
+const TREES = ['js', 'css', 'lib', 'audio', 'art-candidates', 'design-demos/99-planets'];
+const FILES = ['index.html','debug.html','lobby.html','audio-lab.html','style-lab.html','painted-lab.html','hard-cel-lab.html','style-playground.html','atmospheric-arena.html','asset-stage.html','artboard.html','procgen-lab.html','generation-lab.html','99-art.html','99-factions.html'];
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {

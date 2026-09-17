@@ -1,0 +1,43 @@
+{
+  "method": "Unsigned surface occupancy repair, bounded simplification and new UVs; no new neural generation",
+  "voxelMeters": 0.003,
+  "sourceSha256": "1d0eae44371f634c4b0faa239d3d86ac973e1ea3a294e812405a06a27e2e7602",
+  "surfaceDistanceP95Meters": 0.009379632771015167,
+  "surfaceDistanceMaxMeters": 0.07645256817340851,
+  "vertices": 32332,
+  "faces": 65000,
+  "ownerApproved": false,
+  "worstNewPoint": [
+    0.3286697268486023,
+    -0.1171237975358963,
+    0.007117637433111668
+  ],
+  "worstOldPoint": [
+    0.02229609154164791,
+    -0.12089137732982635,
+    1.0822514295578003
+  ],
+  "worstOldNearestPoint": [
+    0.023868832737207413,
+    -0.0972469225525856,
+    1.0803446769714355
+  ],
+  "directionalQuantiles": {
+    "newToOld": [
+      0.0019798772409558296,
+      0.0035775534808635684,
+      0.005862827720120545,
+      0.07645256817340851
+    ],
+    "oldToNew": [
+      0.002493607811629772,
+      0.010538140498101698,
+      0.014189695604145526,
+      0.02377329394221306
+    ]
+  },
+  "capException": "New sole cap within the bottom 12mm is intentional added surface; its full distance remains reported. Inspect the underside separately.",
+  "retainedSurfaceMaxMeters": 0.02377329394221306,
+  "seconds": 1.1969843999831937,
+  "outputSha256": "777d0dceca1134f97a3a48f8aede52c1413f6380b51dfa7922289d7b2c5fef76"
+}

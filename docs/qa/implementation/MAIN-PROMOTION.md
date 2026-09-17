@@ -1,7 +1,7 @@
 # Main release of the V2 game
 
 Owner authorized production publication on 2026-09-16. U194, Codex,
-`release/promote-v2-2026-09-16`. Status: verified locally, production deployment pending.
+`release/promote-v2-2026-09-16`. Status: published and publicly verified.
 
 Source snapshot: `4ca722bc07e67e6d4856f49f1639f567021cfff6`, including the verified
 collaborator publication during preparation. The first snapshot `0e8723e` also
@@ -30,6 +30,20 @@ Never force-push main or preview/v2.
 
 ## Verification
 
+Main and preview/v2 were atomically fast-forwarded to
+`6133d0713f4e93e6fc743c35d9dd0fd1834bc98f`. [PR #57](https://github.com/majieddd/worldheart/pull/57)
+is merged. [Main Pages action](https://github.com/majieddd/worldheart/actions/runs/35066134083)
+and the identical [preview action](https://github.com/majieddd/worldheart/actions/runs/35066137526)
+both succeeded. The [main game](https://majieddd.github.io/worldheart/) is live.
+
+- [485 public/source identities](MAIN-PROMOTION/public-identity.json) match both
+  branch revisions, including the stable single-file download.
+- [All 11 public browser checks](MAIN-PROMOTION/public.json) pass with no runtime
+  exceptions. The [mobile lobby](MAIN-PROMOTION/public-mobile.png) and
+  [Earth entry](MAIN-PROMOTION/public-earth.png) were rendered and inspected.
+- [279 pre-release identities](MAIN-PROMOTION/preview-final-identity.json) confirm
+  the newer V2 snapshot before promotion; the earlier receipt is also retained.
+
 - All 379 automated tests pass; 135 source modules parse and the house style
   check passes. The generated V2 mirror has 242 matching files.
 - Runtime directories and all entry pages are unchanged from `4ca722b`.
@@ -41,3 +55,7 @@ Never force-push main or preview/v2.
   This was a fixture failure, not a changed game feature. The first report is
   retained with the final evidence. Campaign navigation is intercepted only
   after the real launch click; the home wave is actually simulated.
+
+The evidence closeout on the release branch only updates documents and the
+probe's screenshot-settling waits. Deployed gameplay remains the exact release
+above; it does not require another runtime publication.

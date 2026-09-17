@@ -1,0 +1,447 @@
+{
+  "base": "http://127.0.0.1:8157",
+  "checks": [
+    {
+      "name": "Default is Summary with exactly five requested tabs",
+      "ok": true
+    },
+    {
+      "name": "summary switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "storyline switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "factions switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "media switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "principles switches in the same main document",
+      "ok": true
+    },
+    {
+      "name": "Updated art name, inspirations and seven design principles",
+      "ok": true
+    },
+    {
+      "name": "Revised principles replace misleading language",
+      "ok": true
+    },
+    {
+      "name": "Five mixed-scenario environmental reference studies",
+      "ok": true
+    },
+    {
+      "name": "Opening is six ordered comic beats",
+      "ok": true
+    },
+    {
+      "name": "Void-first and brown meteor canon are explicit",
+      "ok": true
+    },
+    {
+      "name": "Legacy brand route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy earth route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy story route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy alien route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy ui route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Legacy archive route stays useful",
+      "ok": true
+    },
+    {
+      "name": "Old catalogue link redirects with faction, section and asset intact",
+      "ok": true
+    },
+    {
+      "name": "Xeno has five elements and seven subject sections",
+      "ok": true
+    },
+    {
+      "name": "Element 0 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Element 1 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Element 2 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Element 3 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Element 4 selects readable profile",
+      "ok": true
+    },
+    {
+      "name": "Void is physically fragile but element-resistant",
+      "ok": true
+    },
+    {
+      "name": "All 26 glyphs are unique and fictional boundary is visible",
+      "ok": true
+    },
+    {
+      "name": "Original maker-mark glyphs preserved",
+      "ok": true
+    },
+    {
+      "name": "Cipher renders only known glyphs and spaces",
+      "ok": true
+    },
+    {
+      "name": "Maker mark repeats identical Y glyph",
+      "ok": true
+    },
+    {
+      "name": "Complete gallery exposes every delivered image",
+      "ok": true
+    },
+    {
+      "name": "Every gallery image decodes",
+      "ok": true
+    },
+    {
+      "name": "UI filter includes all three drafts",
+      "ok": true
+    },
+    {
+      "name": "Text search selects Xeno references",
+      "ok": true
+    },
+    {
+      "name": "Empty search is explained",
+      "ok": true
+    },
+    {
+      "name": "Image modal exposes full original",
+      "ok": true
+    },
+    {
+      "name": "Modal zoom works",
+      "ok": true
+    },
+    {
+      "name": "Original download targets saved PNG",
+      "ok": true
+    },
+    {
+      "name": "Escape restores invoking control",
+      "ok": true
+    },
+    {
+      "name": "Embedded asset stage loads actual WebGL models",
+      "ok": true
+    },
+    {
+      "name": "Leaving Media disposes embedded stage",
+      "ok": true
+    },
+    {
+      "name": "AA text contrast ?page=summary",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "AA text contrast ?page=factions&faction=xeno&section=elements",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "AA text contrast ?page=factions&faction=rainboom",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "AA text contrast ?page=principles",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "Responsive 375 ?page=storyline",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "Responsive 375 ?page=principles",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "Responsive 375 ?page=factions&faction=xeno&section=glyphs",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "Responsive 375 ?page=factions&faction=rainboom&section=weapons",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "Responsive 375 ?page=media",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "Responsive 768 ?page=storyline",
+      "ok": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "Responsive 768 ?page=principles",
+      "ok": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "Responsive 768 ?page=factions&faction=xeno&section=glyphs",
+      "ok": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "Responsive 768 ?page=factions&faction=rainboom&section=weapons",
+      "ok": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "Responsive 768 ?page=media",
+      "ok": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "Responsive 1280 ?page=storyline",
+      "ok": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "Responsive 1280 ?page=principles",
+      "ok": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "Responsive 1280 ?page=factions&faction=xeno&section=glyphs",
+      "ok": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "Responsive 1280 ?page=factions&faction=rainboom&section=weapons",
+      "ok": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "Responsive 1280 ?page=media",
+      "ok": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "New original/preview identity earth-void.png",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity earth-void.webp",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity garden-rainboom.png",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity garden-rainboom.webp",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity polar-axiom.png",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity polar-axiom.webp",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity wetland-brainshot.png",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity wetland-brainshot.webp",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity mars-physical.png",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity mars-physical.webp",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity xeno-elements.png",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity xeno-elements.webp",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity opening-comic.png",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity opening-comic.webp",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity xeno-roster.png",
+      "ok": true
+    },
+    {
+      "name": "New original/preview identity xeno-roster.webp",
+      "ok": true
+    },
+    {
+      "name": "Preserved earlier painting earth",
+      "ok": true
+    },
+    {
+      "name": "Preserved earlier painting rainboom",
+      "ok": true
+    },
+    {
+      "name": "Preserved earlier painting axiom",
+      "ok": true
+    },
+    {
+      "name": "Preserved earlier painting alien",
+      "ok": true
+    },
+    {
+      "name": "Preserved earlier painting brainshot",
+      "ok": true
+    },
+    {
+      "name": "Preserved earlier painting anomalous",
+      "ok": true
+    },
+    {
+      "name": "Preserved earlier painting units",
+      "ok": true
+    },
+    {
+      "name": "Preserved earlier painting towers",
+      "ok": true
+    },
+    {
+      "name": "Preserved earlier painting story",
+      "ok": true
+    },
+    {
+      "name": "Preserved medieval painting frontier",
+      "ok": true
+    },
+    {
+      "name": "Preserved medieval painting defenders",
+      "ok": true
+    },
+    {
+      "name": "Preserved medieval painting rainbow",
+      "ok": true
+    },
+    {
+      "name": "Preserved medieval painting doors",
+      "ok": true
+    },
+    {
+      "name": "Preserved medieval painting tide",
+      "ok": true
+    },
+    {
+      "name": "Preserved medieval painting interface",
+      "ok": true
+    },
+    {
+      "name": "Artbook does not mutate campaign saves",
+      "ok": true
+    },
+    {
+      "name": "Touch selects Void profile",
+      "ok": true
+    },
+    {
+      "name": "No runtime or missing-resource errors",
+      "ok": true,
+      "detail": {
+        "errors": [],
+        "httpFailures": []
+      }
+    }
+  ],
+  "errors": [],
+  "httpFailures": []
+}

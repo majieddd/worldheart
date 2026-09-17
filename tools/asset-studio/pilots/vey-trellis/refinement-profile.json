@@ -1,0 +1,19 @@
+{
+  "id": "vey-trellis-refinement-1",
+  "identity": "Vey / approved Gray concept, calibrated Trellis rest mesh",
+  "referenceSha256": "670f30a50a1cfdc2f31f3b5bb52514e37a229b6ff0a8ef8b9dc6143b814d9ec3",
+  "paintSha256": "1d0eae44371f634c4b0faa239d3d86ac973e1ea3a294e812405a06a27e2e7602",
+  "meshSha256": "380c40d3b3b944f06c5334ae9da0cba5bbf0fb65a989bd01caed1d33f0de5fc5",
+  "animationSha256": "8c1de1d12d9ae2b08fd83b5bd5187ce7f9a1545172acffc9d7fba1add8babaee",
+  "sourceRigSha256": "7108b4cf29b4dd9fbd9b714f623cf76fc2b6a82957b24e5cfc132e5dbd361e22",
+  "coordinates": "metres, Y up, +Z front, two-metre rest height",
+  "topology": {"closedOrientedSurface":true,"scope":"Vey reconstructed body, including fitted closed boot undersides"},
+  "surfaceRegions": [
+    {"name":"Rear mantle paint", "min":[-0.23,1.36,-0.24], "max":[0.23,1.46,-0.01], "darkBelow":0.12,"maxDarkRatio":0.05},
+    {"name":"Left hand skin", "min":[0.36,0.65,-0.15], "max":[0.55,0.84,0.2], "darkBelow":0.22,"maxDarkRatio":0.04},
+    {"name":"Right hand skin", "min":[-0.55,0.65,-0.15], "max":[-0.36,0.84,0.2], "darkBelow":0.22,"maxDarkRatio":0.04},
+    {"name":"Rear head skin", "min":[-0.17,1.76,-0.24], "max":[0.17,1.97,-0.04], "darkBelow":0.25,"maxDarkRatio":0.03}
+  ],
+  "sole": {"upAxis":"Z in Blender", "restMaxZ":0.14,"pairDistortionP95Max":0.025,"groundMinimum":-0.003,"walkGroundMaximum":0.01},
+  "approval": "Review-only character profile. Owner acceptance stays separate; never automatically applied to unrelated assets."
+}

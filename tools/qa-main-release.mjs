@@ -26,14 +26,14 @@ try{
  });
  await page.locator('[data-station="homeworld"]').click();
  check('Released lobby offers default Earth and correct capacity',(await page.locator('.home-featured').innerText()).includes('Earth')&&await page.getByRole('heading',{name:'Home planets · 1 / 100',exact:true}).isVisible());
- await page.screenshot({path:out+'/lobby.png'});
+ await page.waitForTimeout(450);await page.screenshot({path:out+'/lobby.png'});
  const href=await page.getByRole('link',{name:'Go to Homeworld'}).getAttribute('href');
  check('Homeworld link stays on production',new URL(href,page.url()).pathname===new URL(base).pathname,href);
  await page.getByRole('link',{name:'Go to Homeworld'}).click();
  await page.waitForFunction(()=>window.WH?.mode99&&document.querySelector('#boot.done'),null,{timeout:180000});
  const home=await page.evaluate(()=>({playing:WH.game.state,home:WH.mode99.home.active,quiet:WH.mode99.home.quiet,possessed:WH.possession.unit===WH.mode99.commander,boom:WH.possession.boomWant,theme:WH.CONFIG.environment.theme,veil:WH.world.fogVeil?.mesh.visible,title:document.querySelector('#title-overlay').classList.contains('show')}));
  check('Root Earth starts directly in clear third person',home.playing==='playing'&&home.home&&home.quiet&&home.possessed&&home.boom===4&&home.theme==='earth'&&!home.veil&&!home.title,home);
- await page.screenshot({path:out+'/earth.png'});
+ await page.waitForFunction(()=>getComputedStyle(document.querySelector('#boot')).opacity==='0');await page.screenshot({path:out+'/earth.png'});
  await page.evaluate(()=>document.exitPointerLock?.());await page.locator('#home-wave-toggle').click();
  await page.evaluate(()=>WH.step(14,30,false));
  check('Root Start waves runs the real nest-based wave director',await page.evaluate(()=>WH.mode99.home.running&&WH.waves.wave===1&&WH.world.portals.some(p=>p.active&&p.established)));
@@ -51,7 +51,7 @@ try{
  await page.setViewportSize({width:390,height:844});
  await page.goto(new URL('lobby.html#homeworld',base).href);await page.getByRole('link',{name:'Go to Homeworld'}).waitFor();
  const fits=await page.getByRole('link',{name:'Go to Homeworld'}).evaluate(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>=44&&r.left>=0&&r.right<=innerWidth;});
- check('Main mobile lobby has a visible usable home action',fits);await page.screenshot({path:out+'/mobile.png'});
+ check('Main mobile lobby has a visible usable home action',fits);await page.waitForTimeout(450);await page.screenshot({path:out+'/mobile.png'});
  check('No browser exceptions',errors.length===0,errors);
 }catch(e){await page.screenshot({path:out+'/failure.png'}).catch(()=>{});writeFileSync(out+'/failure.txt',String(e.stack));process.exitCode=1;console.error(e);}
 finally{writeFileSync(out+'/results.json',JSON.stringify({base,checks,errors,scope:'Production route and save-isolation smoke. Wave time accelerated; mission destination intercepted after real UI launch.'},null,2));await browser.close();}

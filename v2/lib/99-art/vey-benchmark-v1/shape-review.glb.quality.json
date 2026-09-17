@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "file": "shape-review.glb",
+  "sha256": "380c40d3b3b944f06c5334ae9da0cba5bbf0fb65a989bd01caed1d33f0de5fc5",
+  "stage": "mesh",
+  "checks": [
+    {
+      "name": "container",
+      "status": "pass",
+      "detail": "Embedded buffers and chunk bounds are valid"
+    },
+    {
+      "name": "finite_geometry",
+      "status": "pass",
+      "detail": {
+        "vertices": 20158,
+        "triangles": 39999
+      }
+    },
+    {
+      "name": "degenerate_faces",
+      "status": "pass",
+      "detail": {
+        "count": 1,
+        "maximumRatio": 0.001
+      }
+    }
+  ],
+  "metrics": {
+    "vertices": 20158,
+    "triangles": 39999,
+    "degenerateTriangles": 1,
+    "clips": []
+  },
+  "visualAcceptance": "pending",
+  "promotionAllowed": false,
+  "reviewRequired": [
+    "Compare silhouette, face and material boundaries against the approved reference",
+    "Inspect six rendered views, rear details, seams and hands",
+    "Watch full walk/run cycles and transitions; measure planted-foot drift against the intended ground speed",
+    "Confirm target platform triangle/texture budget and import"
+  ],
+  "status": "review_required"
+}
