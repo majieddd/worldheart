@@ -1,0 +1,44 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "checks": [
+    {
+      "name": "Opening types red text",
+      "ok": true
+    },
+    {
+      "name": "Four illustrated story panels",
+      "ok": true
+    },
+    {
+      "name": "Story stays within mobile viewport",
+      "ok": false
+    },
+    {
+      "name": "Arrival possesses commander in third person",
+      "ok": true
+    },
+    {
+      "name": "Wave held for basic lessons",
+      "ok": true
+    },
+    {
+      "name": "Real movement completes move lesson",
+      "ok": true
+    },
+    {
+      "name": "Real attack completes attack lesson",
+      "ok": true
+    },
+    {
+      "name": "Skip immediately releases waves",
+      "ok": true
+    },
+    {
+      "name": "No runtime errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "httpFailures": []
+}

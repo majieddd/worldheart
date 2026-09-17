@@ -1,0 +1,117 @@
+[
+  {
+    "requestedSeed": 12345,
+    "theme": "temperate",
+    "terrain": "varied",
+    "run": 0,
+    "version": "after",
+    "reference": "6b85808",
+    "map": "ninetynine",
+    "sourceFingerprint": "41184bc7069b27773817d7844d33224a891e80f4ee3c612ee3f9b0cbf373202d",
+    "browser": "152.0.7977.84",
+    "bootMs": 20481,
+    "parallel": {
+      "batches": 1,
+      "points": 186662,
+      "workers": 4,
+      "failures": [
+        "TypeError: Failed to resolve module specifier \"three\". Relative references must start with either \"/\", \"./\", or \"../\"."
+      ]
+    },
+    "stages": [
+      {
+        "label": "seeding the noise fields",
+        "start": 1590.199999988079,
+        "ms": 336.30000001192093
+      },
+      {
+        "label": "charting the ley lines",
+        "start": 1926.5,
+        "ms": 15513.100000023842
+      },
+      {
+        "label": "carving the continents",
+        "start": 17439.600000023842,
+        "ms": 1585.8999999761581
+      },
+      {
+        "label": "pouring the oceans",
+        "start": 19025.5,
+        "ms": 213
+      },
+      {
+        "label": "hanging the stars",
+        "start": 19238.5,
+        "ms": 12
+      },
+      {
+        "label": "planting the forests",
+        "start": 19250.5,
+        "ms": 584.6999999880791
+      },
+      {
+        "label": "raising the light",
+        "start": 19835.19999998808,
+        "ms": 131.20000004768372
+      },
+      {
+        "label": "waking the worldheart",
+        "start": 19966.400000035763,
+        "ms": 436.69999998807907
+      }
+    ],
+    "n": 426335,
+    "seed": 36102,
+    "terrainVersion": 1,
+    "heart": 386563,
+    "portals": [
+      393837,
+      235371,
+      347664,
+      287194,
+      212158
+    ],
+    "hashes": {
+      "dirs": "46c916c22e859504dba2c4f2cd730de9227c95f444ec766d57f0f293affcd71f",
+      "pos": "20b8179a6672ac1eb37e546b4bfd5113a5148567ae291eadcbb802a2fbd6d788",
+      "height": "2e880c9f3e464f98d62ad27ee90cb63416b974cdd192ee2d1c2640fbe437ae76",
+      "baseHeight": "301d8c7603dad9817e6b1c894cb82527846b2b6ffc5c249625ee6f622cf36156",
+      "waterDepth": "568b65a4e226bd4e92c168f72fb128fbff13c685ab79f34959df6621acae0a6c",
+      "walk": "ac986113a1e2034a19e832f15119513d97287abdfad83100b3bcaab0355208dd",
+      "floorWalk": "b2cde2a8ce6dd037aadf79e32659942bd802bba316af209a31f544c66685e2d0",
+      "block": "f7334406b476dea2edd538ab80deb3a2efd381ddebf77e5260ecb91579583441",
+      "dist": "5ce387e3d3b2f1a33abf559b5f87eaf1438f8b1d19c21cb22231311d79d40af1",
+      "next": "c37d609fb43933a7ae7a4b218f708802a4662a6c413456447acf007dd2404a70",
+      "flow": "049283b626cc4ba3a54d48c207069cd08924da7d9c322341627e40b58c8ed2d9",
+      "airWalk": "cdc510af9661e72b539d4d3520b6937b07889d97cb77e4d5b6160ef3815d81f3",
+      "airDist": "de73026a64a0f13ed56a10e2adcb2efbd27ee5c5d687430b5b86cd919ce7360d",
+      "airNext": "1326710cd43b20e321b60587269f99d84ac95c8fc9c2792c4f36d2406884d5c9",
+      "adjOff": "b9a666ec10dc843816573fd695bef7a914cad3d92bcc31cdf4513699c8f14322",
+      "adj": "5ad4e9abbe925eee6fe0d431a92a9c1965ce52809fb3e9c750cc7ed63f19ab72",
+      "cost": "46c508273fa95078ee408a33d9a8f75425a57485138994799dc78dac9de0db8c",
+      "airCost": "f44d865450b8f247c5c4937d86bf7f3f2eb5229cd4d215d3b2d87e8730c99a01",
+      "layer": "fd0af59c9778e5c71fb5b98c3ea9d9aacb1f74a4dbb5753cc2f718516f246ca0",
+      "deckIndex": "44403bdd5564f87e0be41194ee94dd904ec37d10fd28cde83cf6c7f2ce83da31",
+      "march.dist": "67fe0b88202c84158bc6905ba09c730bfbf2947832653cca7f0c7e36dfca43e8",
+      "march.next": "dfff98a4f55652e634a60fd93f10f69cbc46e1028c443ebba9efb388ddcea25b",
+      "march.floorReach": "059bc78bc28c6cee595a8ccd64fdb85e822000d1a3c29232dfeb490743ebdbb0",
+      "march.cost": "df5c8fb5a78782ea5bbc1da6494f847157951870a0600c672b6540c03b8cb0f6",
+      "march.lowerDist": "a2ce05bf582ff93292ce65a67bc5d2560d8d7be4d659178e3eedc902e900f1de",
+      "march.lowerNext": "e8017502daeec9c3e99dd0623f73603384dd9d0a3f7fb23f5aebb87e2232de08",
+      "terrain": "8236eab6e146845b2a2312f5e229fa0289ac3e7e4df27a04e8cdb9343b5f6078",
+      "colors": "86bd0536981d49637a35352ff097efb7aef5763b90a43ea4d5797beceea7ece5",
+      "fog": "38584e234b52790733d8ef667dbcffb87c64dbd2eff5872c78c88130b87a614e"
+    },
+    "maxBootTask": 407,
+    "maxLoadTask": 3220,
+    "longTasks": 22,
+    "metrics": {
+      "ScriptDuration": 0.048017,
+      "TaskDuration": 18.725316,
+      "JSHeapUsedSize": 46818612,
+      "JSHeapTotalSize": 141877248
+    },
+    "errors": [],
+    "failedRequests": []
+  }
+]

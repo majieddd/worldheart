@@ -1,6 +1,7 @@
 import { campaignStore } from './campaign-store.js';
 import { startExpedition, extendExpedition } from '../run/campaign.js';
 import { planetDefinition, CAMPAIGN_LENGTH } from '../run/planets.js';
+import {CURRENT_TERRAIN_VERSION,savedTerrainVersion} from '../run/terrain-version.js';
 
 export function campaignLaunch(enabled,seed) {
   if(!enabled)return null;
@@ -9,5 +10,6 @@ export function campaignLaunch(enabled,seed) {
   const expedition=campaignStore.snapshot().expedition;
   if(!expedition)return null;
   const planet=planetDefinition(expedition.planet,expedition.seed);
-  return planet ? {...planet,status:expedition.status,limit:expedition.limit} : null;
+  const terrainVersion=expedition.assault?savedTerrainVersion(expedition.assault):CURRENT_TERRAIN_VERSION;
+  return planet ? {...planet,terrainVersion,status:expedition.status,limit:expedition.limit} : null;
 }

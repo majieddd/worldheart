@@ -6,6 +6,7 @@ import { PLANET_THEMES } from './planet-environments.js';
 import { TERRAIN_PACKS } from './world-catalogue.js';
 import { planetEnvironment } from './planet-environments.js';
 import { createRunState } from './state.js';
+import {CURRENT_TERRAIN_VERSION,validTerrainVersion} from './terrain-version.js';
 export const HOME_VERSION = 1;
 export const DECORATIONS = {
   lantern: { name: 'Crystal lantern', color: 0x59f2ff },
@@ -27,7 +28,7 @@ export function starterEarthHome(){
   const centre=[.9078024509717959,.15408265393676962,-.3900682578285518];
   const portals=[[.6801780331007379,.6080736400562928,-.40939503118125603],[.8955682196225241,-.34300387963419166,-.2833829609521985],[.9667618343511912,.23208756910083342,.10727029370140632],[.6846683613657987,.059442877702197174,-.7264267197970857],[.837718025117125,.5415445664233771,-.07041301705778767]];
   return {version:HOME_VERSION,id:EARTH_HOME_ID,name:'Earth',starter:false,decorations:[],
-    world:{seed,radius:environment.radius,terrain:'varied',environment,planetIndex:1,centre,heart:[...centre],portals},
+    world:{seed,terrainVersion:CURRENT_TERRAIN_VERSION,radius:environment.radius,terrain:'varied',environment,planetIndex:1,centre,heart:[...centre],portals},
     checkpoint:{run,commander:'commander',mount:'none',inventory:createInventory('commander').snapshot(),gold:650,lives:20,maxLives:20,kills:0,score:0,forged:0,lootSequence:0,towers:[],faults:[]}};
 }
 // Equipment survives a defense rollback. The loot stream/sequence continue,
@@ -49,7 +50,7 @@ export function validateHome(home) {
   if(typeof home.name!=='string'||home.name.length>60||!home.name.trim())return false;
   if(!w || !Number.isInteger(w.seed)||!finite(w.seed,1,0xffffffff)||!finite(w.radius,10,4000)
     || !unitVector(w.centre)||!unitVector(w.heart)||!Array.isArray(w.portals)||!w.portals.length||!w.portals.every(unitVector))return false;
-  if(!w.environment||!Object.hasOwn(PLANET_THEMES,w.environment.theme)||!Object.hasOwn(TERRAIN_PACKS,w.terrain))return false;
+  if(!validTerrainVersion(w.terrainVersion)||!w.environment||!Object.hasOwn(PLANET_THEMES,w.environment.theme)||!Object.hasOwn(TERRAIN_PACKS,w.terrain))return false;
   if(!c||!s||s.heartLevel!==MAX_HEART_LEVEL||s.frontierSteps!==10||s.phase!=='building'||!s.endless
     ||!Number.isInteger(s.wavesCleared)||!finite(s.wavesCleared,0,100000))return false;
   if(!['commander','duelist','marksman','bombardier','oracle'].includes(c.commander)||!c.inventory)return false;

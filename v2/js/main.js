@@ -5,6 +5,7 @@ import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
 import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight, TERRAIN_TOP, surfaceElevation } from './world.js';
 import { NavGraph } from './nav.js';
+import {TerrainSamplePool} from './terrain-sample-pool.js';
 import { SIM_RANDOM } from './noise.js';
 import { makeRng } from './run/rng.js';
 import { EnemyManager, EVO as ENEMY_EVO } from './enemies.js';
@@ -257,10 +258,10 @@ function yieldBootTask(){
   return new Promise(resolve=>{bootChannel.port1.onmessage=resolve;bootChannel.port2.postMessage(0);});
 }
 async function finishBootSteps(steps){
-  let step;
+  let step,input;
   do{
     const slice=performance.now();
-    do{step=steps.next();}while(!step.done&&performance.now()-slice<8);
+    do{step=steps.next(input);input=undefined;if(step.value?.then){input=await step.value;break;}}while(!step.done&&performance.now()-slice<8);
     if(!step.done)await yieldBootTask();
   }while(!step.done);
 }
@@ -279,7 +280,12 @@ async function boot() {
   await progress(BOOT_LABELS[0]);
   world.buildStep(0);
   await progress(BOOT_LABELS[1]);
-  await finishBootSteps(nav.buildSteps());
+  const parallel=new URLSearchParams(location.search).get('generation')==='parallel'&&CONFIG.terrain;
+  CONFIG.fastGeneration=!!parallel;
+  const pool=parallel?new TerrainSamplePool():null;
+  if(pool)nav.parallelMetrics=pool.metrics;
+  if(pool)nav.sampleTerrain=(points,options)=>pool.sample(points,options);
+  try{await finishBootSteps(nav.buildSteps());}finally{pool?.dispose();delete nav.sampleTerrain;}
   if (CONFIG.terrain) {
     rig.heightProbe = dir => surfaceElevation(dir);
     rig.terrainTop = TERRAIN_TOP;
@@ -546,6 +552,11 @@ async function boot() {
   rig.autoOrbit = rig.confine ? 0 : 0.045;
   ui.showTitle();
   if(CONFIG.homeSnapshot)mode99.enterHome();
+  if(mode99){
+    const {installFirstExpedition}=await import('./first-expedition.js');
+    window.WH.onboarding=installFirstExpedition({game,ui,waves,mode:mode99,possession,allies,nav,config:CONFIG});
+    void window.WH.onboarding?.arrive();
+  }
   if (CONFIG.worldgen) {
     const { WorldgenPanel } = await import('./ui-worldgen.js');
     window.WH.worldgen = new WorldgenPanel({ui, game, world, nav, rig, possession, scene});
@@ -659,7 +670,7 @@ function stepFrame(dt, render) {
   if (simDt > 0) {
     allies?.update(simDt);
     caches?.update(simDt);
-    waves.update(simDt);
+    if(!game.onboardingHold)waves.update(simDt);
     enemies.update(simDt);
     towerMgr.update(simDt);
   } else {
@@ -671,6 +682,7 @@ function stepFrame(dt, render) {
   mode99?.renderEffects?.(simDt);
   if (ui) ui.update(dt);
   game?.context?.update();
+  window.WH.onboarding?.update();
   window.WH?.mobile?.update(dt);
   if (fx) {
     // Strategic scale: swell models with zoom, then hand over to icons.
