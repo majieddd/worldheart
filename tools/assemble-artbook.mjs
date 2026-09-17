@@ -24,6 +24,7 @@ const old=read(root+'/catalogue.json'),factions=read(root+'/factions/catalogue.j
 function add(row,prefix,group,title,caption,status){
  media.push({id:row.id,title:title||row.title||row.id,caption:caption||row.caption||'',group,status,src:prefix+'/'+(row.preview||row.file),original:prefix+'/'+row.file,width:row.width,height:row.height,sha256:row.sha256});
 }
+if(existsSync(root+'/mascot-v1/catalogue.json'))for(const p of read(root+'/mascot-v1/catalogue.json').plates)add(p,root+'/mascot-v1',p.group,p.title,p.caption,'Mascot candidate');
 if(existsSync(root+'/identity-v2/catalogue.json'))for(const p of read(root+'/identity-v2/catalogue.json').plates)add(p,root+'/identity-v2',p.group,p.title,p.caption,'Identity revision');
 for(const p of fresh.plates)add(p,dir,p.group,p.title,p.caption,'New reference');
 for(const p of factions.plates){const f=factions.factions.find(f=>f.id===p.faction);add(p,root+'/factions','Factions',f.name+' / '+p.type,p.faction==='alien'?'Earlier Physical-material study; current elemental canon is in the Xeno codex.':['anomalous','brainshot'].includes(p.faction)&&p.type==='roster'?'Superseded identity study. Use the corrected roster in Factions; original preserved for history.':'Commanders, equipment and homeworld proposals.','Catalogue study');}
