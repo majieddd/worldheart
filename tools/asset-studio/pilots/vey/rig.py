@@ -1,11 +1,13 @@
 """Vey-specific hand-placed rig and CMU retarget; a review recipe, not auto-rigging."""
-import bpy, json, math, time
+import bpy, json, math, time, argparse
 from pathlib import Path
 import numpy as np
 from mathutils import Vector, Matrix
 from scipy.ndimage import gaussian_filter1d
 
-ROOT=Path(__file__).resolve().parents[4];OUT=ROOT/'lib/99-art/vey-pilot-v1';SRC=ROOT/'artifacts/vey-pilot/mocap';start=time.time()
+ROOT=Path(__file__).resolve().parents[4]
+parser=argparse.ArgumentParser();parser.add_argument('--output-dir',default=str(ROOT/'lib/99-art/vey-pilot-v1'));parser.add_argument('--weights-from');args=parser.parse_args()
+OUT=Path(args.output_dir).resolve();SRC=ROOT/'artifacts/vey-pilot/mocap';start=time.time()
 bpy.ops.wm.open_mainfile(filepath=str(OUT/'paint-review.blend'));scene=bpy.context.scene;obj=next(o for o in scene.objects if o.type=='MESH')
 defs=[('root',(0,0,0),(0,0,.2),None),('hips',(0,0,1.03),(0,0,1.14),'root'),('spine',(0,0,1.14),(0,0,1.31),'hips'),('chest',(0,0,1.31),(0,0,1.46),'spine'),('neck',(0,0,1.46),(0,0,1.63),'chest'),('head',(0,0,1.63),(.015,0,1.96),'neck')]
 for side,s in [('L',1),('R',-1)]:
@@ -20,7 +22,37 @@ bpy.ops.object.mode_set(mode='OBJECT')
 # region-box binding and its measured cross-limb failures are retained in artifacts.
 rig.animation_data_create();scene.render.fps=60
 bpy.ops.object.select_all(action='DESELECT');obj.select_set(True);rig.select_set(True);bpy.context.view_layer.objects.active=rig
-bpy.ops.object.parent_set(type='ARMATURE_AUTO')
+if args.weights_from:
+    # Same-character, same-rest-pose correspondence. This is an explicit Vey
+    # adaptation; it must not be offered as universal automatic rigging.
+    from mathutils.bvhtree import BVHTree
+    from mathutils.geometry import barycentric_transform
+    with bpy.data.libraries.load(str(Path(args.weights_from).resolve()),link=False) as (source,data):
+        data.objects=source.objects
+    source_obj=next(o for o in data.objects if o and o.type=='MESH')
+    source_obj.data.calc_loop_triangles();triangles=[tuple(t.vertices) for t in source_obj.data.loop_triangles]
+    coords=[source_obj.matrix_world@v.co for v in source_obj.data.vertices];tree=BVHTree.FromPolygons(coords,triangles,all_triangles=True)
+    names={g.index:g.name for g in source_obj.vertex_groups};groups={n:obj.vertex_groups.new(name=n) for n,_,_,_ in defs if n!='root'};distances=[]
+    for vertex in obj.data.vertices:
+        hit,normal,index,distance=tree.find_nearest(obj.matrix_world@vertex.co);distances.append(distance)
+        ids=triangles[index];bary=barycentric_transform(hit,*[coords[i] for i in ids],Vector((1,0,0)),Vector((0,1,0)),Vector((0,0,1)))
+        weights={}
+        for i,factor in zip(ids,bary):
+            for g in source_obj.data.vertices[i].groups:
+                name=names[g.group]
+                if name in groups:weights[name]=weights.get(name,0)+max(0,factor)*g.weight
+        selected=sorted(weights.items(),key=lambda item:item[1],reverse=True)[:4];total=sum(w for _,w in selected)
+        if total<=1e-8:raise RuntimeError('Weight correspondence has an unbound vertex')
+        for name,weight in selected:groups[name].add([vertex.index],weight/total,'REPLACE')
+    if max(distances)>.20:raise RuntimeError('Source rig is too far from this shape; hand-fit the skeleton and weights')
+    obj.parent=rig;modifier=obj.modifiers.new('Vey transferred skin','ARMATURE');modifier.object=rig
+    (OUT/'binding-receipt.json').write_text(json.dumps({'method':'Barycentric nearest-surface weight transfer from the prior Vey rest mesh; four normalized influences','maxDistanceMeters':max(distances),'p95DistanceMeters':float(np.percentile(distances,95)),'requiresDeformationReview':True},indent=2),encoding='utf-8')
+    for source_object in data.objects:
+        if source_object:bpy.data.objects.remove(source_object,do_unlink=True)
+    # ACTIONS export also includes compatible orphaned source actions. Keep the
+    # new retarget only, rather than exporting duplicate .001 walk/run clips.
+    for source_action in list(bpy.data.actions):bpy.data.actions.remove(source_action)
+else:bpy.ops.object.parent_set(type='ARMATURE_AUTO')
 bpy.context.view_layer.objects.active=obj;bpy.ops.object.vertex_group_normalize_all(lock_active=False)
 unweighted=[v.index for v in obj.data.vertices if sum(g.weight for g in v.groups)<.001]
 if unweighted:raise RuntimeError('Heat skinning left '+str(len(unweighted))+' unweighted vertices; do not export this rig.')
@@ -90,4 +122,4 @@ for f in range(145):
 save_action('Idle',action)
 for b in rig.pose.bones:b.matrix_basis=Matrix.Identity(4)
 scene.frame_set(1);bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'vey-motion.blend'));bpy.ops.export_scene.gltf(filepath=str(OUT/'vey-motion.glb'),export_format='GLB',export_animations=True,export_animation_mode='ACTIONS',export_skins=True,export_yup=True)
-(OUT/'motion-chart.json').write_text(json.dumps(charts));(OUT/'rig-receipt.json').write_text(json.dumps({'bones':len(defs),'clips':reports,'method':'Hand-placed Vey skeleton, normalized heat skinning and captured whole-body retarget','seconds':time.time()-start,'ownerApproval':False},indent=2));print(json.dumps(reports))
+(OUT/'motion-chart.json').write_text(json.dumps(charts));(OUT/'rig-receipt.json').write_text(json.dumps({'bones':len(defs),'clips':reports,'method':('Vey rig reuse, barycentric surface-weight transfer and captured whole-body retarget' if args.weights_from else 'Hand-placed Vey skeleton, normalized heat skinning and captured whole-body retarget'),'seconds':time.time()-start,'ownerApproval':False},indent=2));print(json.dumps(reports))

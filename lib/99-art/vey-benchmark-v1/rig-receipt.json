@@ -1,0 +1,30 @@
+{
+  "bones": 22,
+  "clips": {
+    "Walk": {
+      "source": "CMU optical motion capture; direction retarget with target limb lengths",
+      "seconds": 1.0833333333333333,
+      "frames": 66,
+      "pelvisVerticalMeters": 0.049238076715508075,
+      "pelvisLateralMeters": 0.043362939569648616,
+      "nominalSourceSpeed": 1.5307996629091813,
+      "toeFloor": 0.06,
+      "poseSeamMeters": 0.0008074166473681394,
+      "note": "Foot calibration and deformation require rendered review; no IK foot lock disguises retarget errors."
+    },
+    "Run": {
+      "source": "CMU optical motion capture; direction retarget with target limb lengths",
+      "seconds": 0.7333333333333333,
+      "frames": 45,
+      "pelvisVerticalMeters": 0.0887414281443012,
+      "pelvisLateralMeters": 0.010521861577151877,
+      "nominalSourceSpeed": 3.851969065833632,
+      "toeFloor": 0.06,
+      "poseSeamMeters": 0.001664048992685071,
+      "note": "Foot calibration and deformation require rendered review; no IK foot lock disguises retarget errors."
+    }
+  },
+  "method": "Vey rig reuse, barycentric surface-weight transfer and captured whole-body retarget",
+  "seconds": 2.826591968536377,
+  "ownerApproval": false
+}

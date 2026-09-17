@@ -2,12 +2,15 @@
 import hashlib,json,os,re,shutil,subprocess,sys,threading,time,uuid,zipfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from contextlib import contextmanager
+from datetime import datetime,timezone
 import requests
 from fastapi import FastAPI,HTTPException,Request,UploadFile,File
 from fastapi.responses import FileResponse,JSONResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from workflows import STYLE,compose_prompt,krea_graph,checkpoint_graph
+from asset_quality import inspect_asset,VERSION as QUALITY_VERSION
 
 ROOT=Path(__file__).resolve().parents[2]
 RUNTIME=Path(os.environ.get('WH_STUDIO_RUNTIME',ROOT.parent/'local-asset-runtime')).resolve()
@@ -15,7 +18,7 @@ DATA=RUNTIME/'studio-data';DATA.mkdir(parents=True,exist_ok=True)
 PROJECTS=DATA/'projects';PROJECTS.mkdir(exist_ok=True)
 COMFY=RUNTIME/'ComfyUI';COMFY_URL='http://127.0.0.1:8188'
 POOL=ThreadPoolExecutor(max_workers=1);LOCK=threading.RLock();CANCEL={};ACTIVE=None
-DEFAULT={'family':'krea','model':'krea2_turbo_int8_convrot.safetensors','loras':[{'name':'krea2_style_reference.safetensors','strength':.8}],'seed':99131,'width':768,'height':1024,'steps':8,'meshSteps':30,'meshResolution':256,'textureSize':2048}
+DEFAULT={'family':'krea','model':'krea2_turbo_int8_convrot.safetensors','loras':[{'name':'krea2_style_reference.safetensors','strength':.8}],'seed':99131,'width':768,'height':1024,'steps':8,'meshSteps':30,'meshResolution':256,'textureSize':2048,'meshEngine':'hunyuan','paintEngine':'projection','trellisSteps':25}
 app=FastAPI(docs_url=None,redoc_url=None)
 
 def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -38,6 +41,30 @@ def local_path(value,base=DATA):
     return path
 def asset_url(p,name):return f'/files/projects/{p["id"]}/{name}'
 def output(p,name):return PROJECTS/p['id']/name
+
+def validate_output(p,field):
+    if field not in ['mesh','paint','animation','polished'] or not p.get(field):raise HTTPException(409,'No model at this stage')
+    path=output(p,p[field]);sha=digest(path);stage='polish' if field=='polished' else field
+    reference_sha=digest(output(p,p['art'])) if p.get('art') else None
+    cached=p.setdefault('quality',{}).get(field)
+    if cached and cached.get('sha256')==sha and cached.get('version')==QUALITY_VERSION and cached.get('referenceSha256')==reference_sha:return cached
+    report=inspect_asset(path,stage)
+    report['referenceSha256']=reference_sha
+    report['reportFile']=path.stem+'.quality.json'
+    write(output(p,report['reportFile']),report);p['quality'][field]=report;save(p)
+    return report
+
+def require_valid_output(p,field):
+    report=validate_output(p,field)
+    if report['status']=='fail':
+        failures=', '.join(c['name'] for c in report['checks'] if c['status']=='fail')
+        raise HTTPException(409,'Asset checks failed: '+failures+'. Inspect the quality report before continuing.')
+
+@app.post('/api/projects/{key}/validate/{field}')
+def validate_project(key,field):
+    p=project(key)
+    if p['status'] in ['queued','running']:raise HTTPException(409,'Wait for the current job')
+    validate_output(p,field);return p
 def settings():return {**DEFAULT,**read(DATA/'settings.json',{})}
 def brief_digest(p):
     return hashlib.sha256(json.dumps({'description':p['description'],'style':p['style'],'references':[(n,digest(output(p,n))) for n in p['references']]},sort_keys=True).encode()).hexdigest()
@@ -45,11 +72,24 @@ def update(p,stage,status,message):
     p['stage']=stage;p['status']=status;p['message']=message;save(p)
 def log_event(p,text):
     p.setdefault('events',[]).append({'time':time.time(),'text':text});p['events']=p['events'][-80:];save(p)
+
+@contextmanager
+def timed_stage(p,stage):
+    entry={'stage':stage,'startedAt':datetime.now(timezone.utc).isoformat(),'status':'running'}
+    start=time.perf_counter();p.setdefault('timings',[]).append(entry);save(p)
+    try:
+        yield
+        entry['status']='completed'
+    except BaseException as e:
+        entry.update(status='failed',error=str(e)[:500]);raise
+    finally:
+        entry.update(endedAt=datetime.now(timezone.utc).isoformat(),seconds=round(time.perf_counter()-start,3))
+        write(output(p,'timings.json'),{'note':'Elapsed execution per attempt, including failed attempts. Human review and queue waits are separate.','attempts':p['timings']});save(p)
 def model_files(folder):return sorted(str(p.relative_to(folder)).replace('\\','/') for p in folder.rglob('*.safetensors')) if folder.exists() else []
 def config():
     return {'settings':settings(),'styles':[{'id':k,'name':v[0]} for k,v in STYLE.items()],
       'models':[{'family':'krea','name':n} for n in model_files(COMFY/'models/diffusion_models') if 'krea' in n.lower()]+[{'family':'checkpoint','name':n} for n in model_files(COMFY/'models/checkpoints')],
-      'loras':model_files(COMFY/'models/loras'),'paths':{'models':str(COMFY/'models'),'projects':str(PROJECTS)}}
+      'loras':model_files(COMFY/'models/loras'),'trellisReady':bool(read(DATA/'trellis2-ready.json')) and (RUNTIME/'modly-trellis2/venv/Scripts/python.exe').is_file(),'paths':{'models':str(COMFY/'models'),'projects':str(PROJECTS)}}
 def gpu():
     try:
         text=subprocess.check_output(['nvidia-smi','--query-gpu=name,memory.total,memory.free','--format=csv,noheader,nounits'],text=True,timeout=4,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0)).strip();name,total,free=text.split(',');return {'name':name,'total':int(total),'free':int(free)}
@@ -78,6 +118,9 @@ async def put_config(request:Request):
     for lora in data.get('loras',[]):
         if lora.get('name') not in available['loras'] or not -2<=float(lora.get('strength',0))<=2:raise HTTPException(400,'Invalid LoRA')
     clean={k:data.get(k,v) for k,v in DEFAULT.items()}
+    if clean['meshEngine'] not in ['hunyuan','trellis2'] or clean['paintEngine'] not in ['projection','trellis2']:raise HTTPException(400,'Unknown 3D engine')
+    if 'trellis2' in [clean['meshEngine'],clean['paintEngine']] and not available['trellisReady']:raise HTTPException(409,'Finish and verify the local Trellis installation first')
+    if not isinstance(clean['trellisSteps'],int) or not 5<=clean['trellisSteps']<=50:raise HTTPException(400,'Invalid Trellis steps')
     for key,lo,hi in [('seed',0,2**48),('width',256,1536),('height',256,1536),('steps',1,60),('meshSteps',5,60),('meshResolution',128,384),('textureSize',512,4096)]:
         if not isinstance(clean[key],int) or not lo<=clean[key]<=hi:raise HTTPException(400,'Invalid '+key)
     if clean['width']%64 or clean['height']%64:raise HTTPException(400,'Image dimensions must be multiples of 64')
@@ -113,7 +156,7 @@ async def upload(key,file:UploadFile=File(...)):
         if raw[:4]!=b'glTF':raise HTTPException(400,'Not a GLB model')
         dest.write_bytes(raw);p.update(mesh=name,paint=None,animation=None,polished=None,stage='mesh',status='review',message='Imported geometry is preserved. Inspect the model, then paint or prepare its animations.');p['imported']=True;p['approvals']={'geometry':digest(dest)}
     elif ext in ['.png','.jpg','.jpeg','.webp']:
-        if len(p['references'])>=3:raise HTTPException(400,'Use up to three reference images')
+        if len(p['references'])>=7:raise HTTPException(400,'Use a hero and up to six directional references')
         import io
         try:
             im=Image.open(io.BytesIO(raw));im.verify()
@@ -146,6 +189,7 @@ def approve(key,stage):
     if not field or not p.get(field):raise HTTPException(409,'There is no completed output to approve')
     if stage=='art' and p.get('artBrief')!=brief_digest(p):raise HTTPException(409,'The concept belongs to an older brief. Generate a new concept or select a reference as the concept.')
     if stage=='animation' and p.get('motionInput')!=digest(output(p,p.get('paint') or p['mesh'])):raise HTTPException(409,'Motion belongs to an older model. Prepare motion again.')
+    if stage=='animation':require_valid_output(p,'animation')
     p['approvals'][stage]=digest(output(p,p[field]));p['status']='approved';p['message']='2D approved. The approved image is locked for reconstruction.' if stage=='art' else 'Animation approved. Polish and export are now available.';log_event(p,stage+' approved by user');save(p);return p
 
 def assert_approved(p,stage,field):
@@ -199,8 +243,18 @@ def make_art(p,s):
 
 def make_mesh(p,s):
     comfy_free();name='shape-'+str(int(time.time()))+'.glb'
-    run_process(p,[RUNTIME/'.venv/Scripts/python.exe',Path(__file__).with_name('mesh_worker.py'),'--runtime',RUNTIME,'--image',output(p,p['art']),'--output',output(p,name),'--steps',s['meshSteps'],'--resolution',s['meshResolution'],'--seed',s['seed']])
+    if s.get('meshEngine')=='trellis2':trellis_stage(p,s,'shape',name)
+    else:run_process(p,[RUNTIME/'.venv/Scripts/python.exe',Path(__file__).with_name('mesh_worker.py'),'--runtime',RUNTIME,'--image',output(p,p['art']),'--output',output(p,name),'--steps',s['meshSteps'],'--resolution',s['meshResolution'],'--seed',s['seed']])
     p['mesh']=name;p['paint']=None;p['animation']=None;p['polished']=None;p['approvals'].pop('animation',None);update(p,'mesh','review','Local image-to-3D complete. Orbit the model and compare the face, silhouette and back before continuing.')
+    require_valid_output(p,'mesh')
+
+def trellis_stage(p,s,stage,name,source=None):
+    if not config()['trellisReady']:raise RuntimeError('Local Trellis engine has not passed its installation trial')
+    if not p.get('art'):raise RuntimeError('Trellis texturing needs a concept reference')
+    assert_approved(p,'art','art');comfy_free()
+    args=[RUNTIME/'modly-trellis2/venv/Scripts/python.exe',Path(__file__).with_name('trellis_worker.py'),'--runtime',RUNTIME,'--image',output(p,p['art']),'--output',output(p,name),'--stage',stage,'--steps',s.get('trellisSteps',25),'--seed',s['seed'],'--texture-size',s['textureSize']]
+    if source:args+=['--mesh',output(p,source)]
+    run_process(p,args)
 
 def blender_stage(p,s,stage):
     field={'paint':'mesh','animation':'paint','polish':'animation'}[stage]
@@ -209,24 +263,27 @@ def blender_stage(p,s,stage):
     name=stage+'-'+str(int(time.time()))+'.glb'
     task={'stage':stage,'input':str(output(p,source)),'output':str(output(p,name)),'reference':str(output(p,p['art'])) if p.get('art') else None,'style':p['style'],'textureSize':s['textureSize'],'preserveRig':p.get('imported',False),'seed':s['seed']}
     write(output(p,'task.json'),task)
-    run_process(p,[RUNTIME/'blender-py311/Scripts/python.exe',Path(__file__).with_name('model_worker.py'),output(p,'task.json')])
+    if stage=='paint' and s.get('paintEngine')=='trellis2':trellis_stage(p,s,'paint',name,source)
+    else:run_process(p,[RUNTIME/'blender-py311/Scripts/python.exe',Path(__file__).with_name('model_worker.py'),output(p,'task.json')])
     p[stage if stage!='polish' else 'polished']=name
     p['modelReport']=read(output(p,name).with_suffix('.json'),{})
     if stage=='paint':p['animation']=None;p['polished']=None;p['approvals'].pop('animation',None)
     if stage=='animation':p['approvals'].pop('animation',None);p['polished']=None;p['motionInput']=digest(output(p,source))
+    if stage=='polish':p['polishInput']=digest(output(p,source))
     update(p,stage,'review','Review every animation and deformation before approving polish.' if stage=='animation' else 'Inspect the surface treatment from every side.' if stage=='paint' else 'Polished export ready. Original geometry, paint and animation versions are retained.')
+    require_valid_output(p,'polished' if stage=='polish' else stage)
 
 def worker(key,stage,s):
     global ACTIVE
     p=project(key);ACTIVE={'project':key,'stage':stage};update(p,stage,'running','Working locally. You can leave this tab open.');log_event(p,stage+' started')
     try:
         cancelled(p)
-        if stage=='concept':make_art(p,s)
-        elif stage=='mesh':make_mesh(p,s)
-        elif stage=='production':
-            make_mesh(p,s)
-            for step in ['paint','animation']:cancelled(p);update(p,step,'running','Working locally.');blender_stage(p,s,step)
-        else:blender_stage(p,s,stage)
+        for step in (['mesh','paint','animation'] if stage=='production' else [stage]):
+            cancelled(p);update(p,step,'running','Working locally.')
+            with timed_stage(p,step):
+                if step=='concept':make_art(p,s)
+                elif step=='mesh':make_mesh(p,s)
+                else:blender_stage(p,s,step)
         log_event(p,stage+' completed')
     except Exception as e:update(p,stage,'error',str(e));log_event(p,'Failed: '+str(e)[:500])
     finally:ACTIVE=None;CANCEL.pop(key,None)
@@ -236,11 +293,14 @@ def run(key,stage):
     p=project(key)
     if stage not in ['concept','mesh','paint','animation','production','polish']:raise HTTPException(400,'Unknown stage')
     with LOCK:
-        if any(x['status'] in ['queued','running'] for x in list_projects()):raise HTTPException(409,'One local GPU job at a time. Wait for or cancel the active job.')
+        if ACTIVE or any(x['status'] in ['queued','running'] for x in list_projects()):raise HTTPException(409,'One local GPU job at a time. Wait for or cancel the active job.')
         if stage=='concept' and len(p['description'].strip())<8:raise HTTPException(400,'Describe the asset first')
         if stage in ['mesh','production']:assert_approved(p,'art','art')
         if stage=='polish':assert_approved(p,'animation','animation')
         if stage in ['paint','animation'] and not p.get('mesh'):raise HTTPException(409,'Create or import a model first')
+        if stage=='paint':require_valid_output(p,'mesh')
+        if stage=='animation':require_valid_output(p,'paint' if p.get('paint') else 'mesh')
+        if stage=='polish':require_valid_output(p,'animation')
         CANCEL[key]=False;update(p,stage,'queued','Waiting for the local worker.');POOL.submit(worker,key,stage,settings())
     return p
 @app.post('/api/projects/{key}/cancel')
@@ -265,9 +325,12 @@ def export(key):
     p=project(key)
     if not p.get('polished'):raise HTTPException(409,'Approve animation and polish before exporting the production package')
     assert_approved(p,'animation','animation')
+    if p.get('motionInput')!=digest(output(p,p.get('paint') or p['mesh'])):raise HTTPException(409,'The model changed after motion was prepared')
+    if p.get('polishInput')!=digest(output(p,p['animation'])):raise HTTPException(409,'Polish belongs to an older animation')
+    require_valid_output(p,'polished')
     archive=output(p,'asset-package.zip')
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
-        for name in [p['polished'],Path(p['polished']).with_suffix('.blend').name,Path(p['polished']).with_suffix('.fbx').name,Path(p['polished']).with_suffix('.json').name,'project.json']:
+        for name in [p['polished'],Path(p['polished']).with_suffix('.blend').name,Path(p['polished']).with_suffix('.fbx').name,Path(p['polished']).with_suffix('.json').name,'project.json','timings.json']+[q['reportFile'] for q in p.get('quality',{}).values() if q.get('reportFile')]:
             path=output(p,name)
             if path.exists():z.write(path,name)
     return FileResponse(archive,filename=p['id']+'-asset.zip')
