@@ -1,0 +1,159 @@
+{
+  "method": "Median of 3 matched fresh-browser trials per version. Chrome 152, i9-13900H, local server; includes navigation and initial rendering. No warm world cache.",
+  "status": "Opt-in experiment. Under-5 / under-10-second targets remain open. Animated effects are not pixel-identical.",
+  "worlds": [
+    {
+      "name": "Garden world / Mixed Landscapes",
+      "seed": 12345,
+      "acceptedSeed": 36102,
+      "nodes": 426335,
+      "theme": "temperate",
+      "terrain": "varied",
+      "beforeMs": 16273,
+      "afterMs": 13730,
+      "exact": true,
+      "beforeImage": "temperate-before.png",
+      "afterImage": "temperate-after.png",
+      "samples": [
+        {
+          "version": "before",
+          "ms": 17180,
+          "run": 0
+        },
+        {
+          "version": "after",
+          "ms": 14448,
+          "run": 0
+        },
+        {
+          "version": "after",
+          "ms": 13730,
+          "run": 1
+        },
+        {
+          "version": "before",
+          "ms": 14985,
+          "run": 1
+        },
+        {
+          "version": "before",
+          "ms": 16273,
+          "run": 2
+        },
+        {
+          "version": "after",
+          "ms": 11828,
+          "run": 2
+        }
+      ],
+      "method": "Median of 3 matched fresh-browser trials per version. Chrome 152, i9-13900H, local server; includes navigation and initial rendering. No warm world cache."
+    },
+    {
+      "name": "Io / Mixed Landscapes",
+      "seed": 2919286854,
+      "acceptedSeed": 2919286854,
+      "nodes": 415027,
+      "theme": "io",
+      "terrain": "varied",
+      "beforeMs": 17592,
+      "afterMs": 9919,
+      "exact": true,
+      "beforeImage": "io-before.png",
+      "afterImage": "io-after.png",
+      "samples": [
+        {
+          "version": "before",
+          "ms": 18593,
+          "run": 0
+        },
+        {
+          "version": "after",
+          "ms": 12799,
+          "run": 0
+        },
+        {
+          "version": "after",
+          "ms": 9919,
+          "run": 1
+        },
+        {
+          "version": "before",
+          "ms": 17592,
+          "run": 1
+        },
+        {
+          "version": "before",
+          "ms": 15622,
+          "run": 2
+        },
+        {
+          "version": "after",
+          "ms": 9328,
+          "run": 2
+        }
+      ],
+      "method": "Median of 3 matched fresh-browser trials per version. Chrome 152, i9-13900H, local server; includes navigation and initial rendering. No warm world cache."
+    },
+    {
+      "name": "Arid world / Deep Canyons",
+      "seed": 9137,
+      "acceptedSeed": 24975,
+      "nodes": 416248,
+      "theme": "arid",
+      "terrain": "canyon",
+      "beforeMs": 56595,
+      "afterMs": 22630,
+      "exact": true,
+      "beforeImage": "arid-before.png",
+      "afterImage": "arid-after.png",
+      "samples": [
+        {
+          "version": "before",
+          "ms": 60876,
+          "run": 0
+        },
+        {
+          "version": "after",
+          "ms": 22764,
+          "run": 0
+        },
+        {
+          "version": "after",
+          "ms": 22630,
+          "run": 1
+        },
+        {
+          "version": "before",
+          "ms": 56595,
+          "run": 1
+        },
+        {
+          "version": "before",
+          "ms": 54512,
+          "run": 2
+        },
+        {
+          "version": "after",
+          "ms": 21602,
+          "run": 2
+        }
+      ],
+      "method": "Median of 3 matched fresh-browser trials per version. Chrome 152, i9-13900H, local server; includes navigation and initial rendering. No warm world cache."
+    },
+    {
+      "name": "Sky Archipelago / Variable result",
+      "seed": 12345,
+      "acceptedSeed": 12345,
+      "nodes": 415081,
+      "theme": "skyarchipelago",
+      "terrain": "sky",
+      "beforeMs": 15268,
+      "afterMs": 17660,
+      "exact": true,
+      "beforeImage": "skyarchipelago-before.png",
+      "afterImage": "skyarchipelago-after.png",
+      "method": "One matched trial only. Candidate was slower; no general speedup is claimed for floating worlds.",
+      "status": "This first trial regressed; later capture-only trials were faster. Results vary, so no general floating-world speedup is claimed."
+    }
+  ]
+}

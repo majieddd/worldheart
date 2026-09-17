@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../lib/three.module.min.js';
 
 // Reuse every authored vertex, normal, colour and lava attribute. Only the
 // triangle submission is partitioned: a close camera should not send the

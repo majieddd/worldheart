@@ -1,0 +1,758 @@
+[
+  {
+    "name": "optimized runtime unchanged",
+    "ref": "a43af19",
+    "checks": [
+      {
+        "file": "js/abilities.js",
+        "ok": true
+      },
+      {
+        "file": "js/allies.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-effects.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-foliage.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-handling.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-kit.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-materials.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-motion.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-presets.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-reference.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-rules.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-unit.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-weapons.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena-world.js",
+        "ok": true
+      },
+      {
+        "file": "js/arena.js",
+        "ok": true
+      },
+      {
+        "file": "js/artboard.js",
+        "ok": true
+      },
+      {
+        "file": "js/asset-stage.js",
+        "ok": true
+      },
+      {
+        "file": "js/attacks.js",
+        "ok": true
+      },
+      {
+        "file": "js/audio-context.js",
+        "ok": true
+      },
+      {
+        "file": "js/audio-lab.js",
+        "ok": true
+      },
+      {
+        "file": "js/audio-material.js",
+        "ok": true
+      },
+      {
+        "file": "js/audio.js",
+        "ok": true
+      },
+      {
+        "file": "js/biome-dressing.js",
+        "ok": true
+      },
+      {
+        "file": "js/biome-visuals.js",
+        "ok": true
+      },
+      {
+        "file": "js/camera.js",
+        "ok": true
+      },
+      {
+        "file": "js/combatfx.js",
+        "ok": true
+      },
+      {
+        "file": "js/config.js",
+        "ok": true
+      },
+      {
+        "file": "js/debug-animation.js",
+        "ok": true
+      },
+      {
+        "file": "js/debug-planets.js",
+        "ok": true
+      },
+      {
+        "file": "js/debug-weapons.js",
+        "ok": true
+      },
+      {
+        "file": "js/debug-world.js",
+        "ok": true
+      },
+      {
+        "file": "js/disaster-art.js",
+        "ok": true
+      },
+      {
+        "file": "js/disaster-preview.js",
+        "ok": true
+      },
+      {
+        "file": "js/dotted-path.js",
+        "ok": true
+      },
+      {
+        "file": "js/effects.js",
+        "ok": true
+      },
+      {
+        "file": "js/encounters.js",
+        "ok": true
+      },
+      {
+        "file": "js/enemies.js",
+        "ok": true
+      },
+      {
+        "file": "js/game.js",
+        "ok": true
+      },
+      {
+        "file": "js/geodesic.js",
+        "ok": true
+      },
+      {
+        "file": "js/hard-cel-lab.js",
+        "ok": true
+      },
+      {
+        "file": "js/hard-cel-materials.js",
+        "ok": true
+      },
+      {
+        "file": "js/hard-cel-versions.js",
+        "ok": true
+      },
+      {
+        "file": "js/home-planet.js",
+        "ok": true
+      },
+      {
+        "file": "js/lobby-homes.js",
+        "ok": true
+      },
+      {
+        "file": "js/lobby.js",
+        "ok": true
+      },
+      {
+        "file": "js/loot-field.js",
+        "ok": true
+      },
+      {
+        "file": "js/main.js",
+        "ok": true
+      },
+      {
+        "file": "js/mobile-controls.js",
+        "ok": true
+      },
+      {
+        "file": "js/modes/campaign-launch.js",
+        "ok": true
+      },
+      {
+        "file": "js/modes/campaign-store.js",
+        "ok": true
+      },
+      {
+        "file": "js/modes/home-store.js",
+        "ok": true
+      },
+      {
+        "file": "js/modes/ninetynine.js",
+        "ok": true
+      },
+      {
+        "file": "js/modes/progress.js",
+        "ok": true
+      },
+      {
+        "file": "js/mounts.js",
+        "ok": true
+      },
+      {
+        "file": "js/nav-build.js",
+        "ok": true
+      },
+      {
+        "file": "js/nav.js",
+        "ok": true
+      },
+      {
+        "file": "js/nest-atlas-view.js",
+        "ok": true
+      },
+      {
+        "file": "js/nest-sites.js",
+        "ok": true
+      },
+      {
+        "file": "js/noise.js",
+        "ok": true
+      },
+      {
+        "file": "js/painted-environment.js",
+        "ok": true
+      },
+      {
+        "file": "js/painted-lab.js",
+        "ok": true
+      },
+      {
+        "file": "js/painted-materials.js",
+        "ok": true
+      },
+      {
+        "file": "js/planet-adornment.js",
+        "ok": true
+      },
+      {
+        "file": "js/playground-actor.js",
+        "ok": true
+      },
+      {
+        "file": "js/playground-fx.js",
+        "ok": true
+      },
+      {
+        "file": "js/playground.js",
+        "ok": true
+      },
+      {
+        "file": "js/possess.js",
+        "ok": true
+      },
+      {
+        "file": "js/postfx.js",
+        "ok": true
+      },
+      {
+        "file": "js/preparation.js",
+        "ok": true
+      },
+      {
+        "file": "js/procgen-lab.js",
+        "ok": true
+      },
+      {
+        "file": "js/range-guide.js",
+        "ok": true
+      },
+      {
+        "file": "js/rewards.js",
+        "ok": true
+      },
+      {
+        "file": "js/rig.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/abilities.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/campaign.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/crystals.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/draft.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/earth-coast.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/environment-catalogue.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/expedition.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/frontier.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/homeworld.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/manufacturers.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/modifiers.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/planet-environments.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/planets.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/powers.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/rng.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/run.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/schedule.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/solar-worlds.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/state.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/terrain-version.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/weapons.js",
+        "ok": true
+      },
+      {
+        "file": "js/run/world-catalogue.js",
+        "ok": true
+      },
+      {
+        "file": "js/soldier.js",
+        "ok": true
+      },
+      {
+        "file": "js/soundtrack.js",
+        "ok": true
+      },
+      {
+        "file": "js/storage.js",
+        "ok": true
+      },
+      {
+        "file": "js/storm-art.js",
+        "ok": true
+      },
+      {
+        "file": "js/style-lab-materials.js",
+        "ok": true
+      },
+      {
+        "file": "js/style-lab-scene.js",
+        "ok": true
+      },
+      {
+        "file": "js/style-lab.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain-chunks.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/acceptance.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/active-features.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/additional-formations.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/atlas.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/coast-clearance.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/ecology.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/exotic-formations.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/features.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/formations.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/geysers.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/kit-experiment.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/kit-worker.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/landmarks.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/quad-kit.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/recipes.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/rifts.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/samples.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/scatter.js",
+        "ok": true
+      },
+      {
+        "file": "js/terrain/spherical-kit.js",
+        "ok": true
+      },
+      {
+        "file": "js/threat-guides.js",
+        "ok": true
+      },
+      {
+        "file": "js/touch-input.js",
+        "ok": true
+      },
+      {
+        "file": "js/towers.js",
+        "ok": true
+      },
+      {
+        "file": "js/traversal.js",
+        "ok": true
+      },
+      {
+        "file": "js/ui-campaign.js",
+        "ok": true
+      },
+      {
+        "file": "js/ui-expedition.js",
+        "ok": true
+      },
+      {
+        "file": "js/ui-icons.js",
+        "ok": true
+      },
+      {
+        "file": "js/ui-weapons.js",
+        "ok": true
+      },
+      {
+        "file": "js/ui-worldgen.js",
+        "ok": true
+      },
+      {
+        "file": "js/ui.js",
+        "ok": true
+      },
+      {
+        "file": "js/unit-routes.js",
+        "ok": true
+      },
+      {
+        "file": "js/viewmodel.js",
+        "ok": true
+      },
+      {
+        "file": "js/waves.js",
+        "ok": true
+      },
+      {
+        "file": "js/weapon-card.js",
+        "ok": true
+      },
+      {
+        "file": "js/weapon-display.js",
+        "ok": true
+      },
+      {
+        "file": "js/weapon-model.js",
+        "ok": true
+      },
+      {
+        "file": "js/weather.js",
+        "ok": true
+      },
+      {
+        "file": "js/world-context.js",
+        "ok": true
+      },
+      {
+        "file": "js/world.js",
+        "ok": true
+      },
+      {
+        "file": "js/worldgen.js",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "name": "collaborator art preserved",
+    "ref": "ec7320d",
+    "checks": [
+      {
+        "file": "99-art.html",
+        "ok": true
+      },
+      {
+        "file": "artboard.html",
+        "ok": true
+      },
+      {
+        "file": "css/99-art.css",
+        "ok": true
+      },
+      {
+        "file": "design-demos/99-planets/arcade.html",
+        "ok": true
+      },
+      {
+        "file": "design-demos/99-planets/field.html",
+        "ok": true
+      },
+      {
+        "file": "design-demos/99-planets/signal.html",
+        "ok": true
+      },
+      {
+        "file": "js/99-art.js",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/alien.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/alien.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/anomalous.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/anomalous.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/axiom.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/axiom.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/brainshot.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/brainshot.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/catalogue.json",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/design-foundation.md",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/earth.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/earth.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/fonts/Barlow-Regular.ttf",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/fonts/Barlow-SemiBold.ttf",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/fonts/BarlowCondensed-Bold.ttf",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/fonts/OFL-Barlow.txt",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/fonts/OFL-BarlowCondensed.txt",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/rainboom.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/rainboom.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/references/axiom-runtime.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/references/current-bolt.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/references/current-bulwark.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/references/current-gear.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/references/inkcel_commander.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/references/inkcel_enemy.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/references/inkcel_tower.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/references/paintline_buildgrid.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/references/paintline_clash.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/story.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/story.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/towers.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/towers.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/ui-arcade.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/ui-field.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/ui-signal.webp",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/units.png",
+        "ok": true
+      },
+      {
+        "file": "lib/99-art/units.webp",
+        "ok": true
+      }
+    ]
+  }
+]
