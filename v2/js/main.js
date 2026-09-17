@@ -552,6 +552,11 @@ async function boot() {
   rig.autoOrbit = rig.confine ? 0 : 0.045;
   ui.showTitle();
   if(CONFIG.homeSnapshot)mode99.enterHome();
+  if(mode99){
+    const {installFirstExpedition}=await import('./first-expedition.js');
+    window.WH.onboarding=installFirstExpedition({game,ui,waves,mode:mode99,possession,allies,nav,config:CONFIG});
+    void window.WH.onboarding?.arrive();
+  }
   if (CONFIG.worldgen) {
     const { WorldgenPanel } = await import('./ui-worldgen.js');
     window.WH.worldgen = new WorldgenPanel({ui, game, world, nav, rig, possession, scene});
@@ -665,7 +670,7 @@ function stepFrame(dt, render) {
   if (simDt > 0) {
     allies?.update(simDt);
     caches?.update(simDt);
-    waves.update(simDt);
+    if(!game.onboardingHold)waves.update(simDt);
     enemies.update(simDt);
     towerMgr.update(simDt);
   } else {
@@ -677,6 +682,7 @@ function stepFrame(dt, render) {
   mode99?.renderEffects?.(simDt);
   if (ui) ui.update(dt);
   game?.context?.update();
+  window.WH.onboarding?.update();
   window.WH?.mobile?.update(dt);
   if (fx) {
     // Strategic scale: swell models with zoom, then hand over to icons.
