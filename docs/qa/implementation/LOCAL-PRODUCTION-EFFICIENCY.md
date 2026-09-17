@@ -17,7 +17,7 @@ Reduce wasted usage without reducing output quality. This supplements the curren
 1. Inventory installed engines, usable cached weights, GPU headroom and required interfaces once. Retain the report.
 2. Run one small real pilot with the chosen method before expanding its interface or asset batch. Validate identity, complete framing, contours and materials on the actual image/model.
 3. Reuse the successful local Krea conversion. The downloader now skips equivalent installed local weights instead of downloading another diffusion model and text encoder.
-4. Use `tools/asset-studio/status.py` for bounded status. Full installation, inference and test logs remain on disk. Read a failure's error and relevant stack only; do not repeatedly print complete reports or source files.
+4. Use `tools/asset-studio/status.py` for bounded status and `tools/asset-studio/run_logged.py --log artifacts/check.log -- <command>` for checks. The command wrapper stores complete stdout/stderr, preserves the exit code and prints only the duration, log path and a bounded failure tail. Read a failure's error and relevant stack only; do not repeatedly print complete reports or source files. Select individual fields from deployment manifests instead of printing the manifest.
 5. Retry when there is a concrete diagnosis or changed condition. Record the failure and correction. Do not switch providers or weight formats repeatedly without a reason.
 6. Separate setup, inference, verification and owner approval. A passing API test cannot substitute for a generated result or visual inspection.
 7. Run targeted checks after relevant changes and the required integration checks once before publication. Re-run only when edits, failures or unresolved concerns justify it.

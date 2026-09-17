@@ -41,6 +41,12 @@ identity-v2 roster over superseded character studies. Keep method receipts and
 label unexecuted Krea or Meshy work honestly; see the
 [production guide](lib/99-art/identity-v2/production-guide.md).
 Xeno race, element and battlefield role are separate axes.
+For local asset production, inventory cached engines and models before installing
+more, then validate one actual reference-driven pilot before expanding the UI or
+batch. Preserve successful artifacts and approval gates. Save complete check logs
+with `tools/asset-studio/run_logged.py`; return bounded summaries and inspect only
+relevant failures. Re-run checks when changes or unresolved evidence justify it.
+See the [efficiency correction](docs/qa/implementation/LOCAL-PRODUCTION-EFFICIENCY.md).
 Read the [scope and evidence ledger](docs/qa/implementation/99-ART-DIRECTION.md)
 before changing this collection; supplement collaborators' work in a scoped branch.
 

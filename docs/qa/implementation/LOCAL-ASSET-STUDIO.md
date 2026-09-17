@@ -8,7 +8,7 @@ Branch: `feature/local-asset-studio`. Supplements the identity correction and un
 - **U230:** Real local Hunyuan3D-2mini reconstruction from the preferred built-in poster. 30 steps, resolution 256, 68.9 seconds, 81,738 vertices / 163,472 faces. The paint candidate projects the front reference into a 2048px UV texture; unseen rear detail is a palette fill. Supplied Gray mascot geometry is preserved separately.
 - **U231:** Loopback-only asset studio with four saved styles, prompt/image paste, installed-model and LoRA settings, concept approval, reconstruction, UV paint, rig/motion review, animation approval and GLB/Blend/FBX packaging. Importing a GLB preserves its source rig. Automatic biped skinning/motion is explicitly a draft.
 - **U232:** Two built-in Painted-Anime-Inkline mascot banners based on the supplied Gray/deer model and requested pursuit/fortification compositions. Source model: 18 meshes, 1 skin, 40 bones and 21 clips. Public study includes original geometry and clip playback.
-- **U233:** Installation/launch scripts, pinned engine source revisions, recorded Python package versions, local receipts, source hashes and runtime checks. Publication receipt will be recorded after deployment.
+- **U233:** Installation/launch scripts, pinned engine source revisions, recorded Python package versions, local receipts, source hashes and runtime checks. Published to V2 at `37b3196`; see the receipt below.
 
 ## Verification evidence
 
@@ -19,7 +19,18 @@ Branch: `feature/local-asset-studio`. Supplements the identity correction and un
 - Repository integration: 402 tests pass; 157 modules parse; style check passes. Later new modules receive targeted parsing and public checks.
 - Detailed local artifacts: `artifacts/local-asset-studio-qa`, `artifacts/vey-image-to-3d`, `artifacts/mascot-animation-preservation`; image and shape receipts are also distributed beside the public candidates.
 
-## Failures retained and corrections
+## Publication receipt
+
+V2 commit `37b31960ce6bf9073c09e45e621a803612f01b9d`, [review PR #66](https://github.com/majieddd/worldheart/pull/66), [successful Pages action](https://github.com/majieddd/worldheart/actions/runs/35169150105). All 24 changed static files match the deployed build; the production snapshot remains `6133d0713f4e93e6fc743c35d9dd0fd1834bc98f`. Public mascot and Vey views render, the actual local Krea image is visible in the artbook, and no browser errors were recorded. The artbook-only browser retry scrolls the lazy-loaded image into view before awaiting image decode; the initial wait lacked that viewport trigger.
+
+- [Mascot banners and original animated model](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/mascot.html)
+- [Vey reference and reconstructed model](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/vey-model.html)
+- [Artbook production comparison](https://majieddd.github.io/worldheart/v2/99-art.html?page=principles#production)
+- Local GPU studio: `http://127.0.0.1:8771/` while the local launcher is running.
+
+Receipts: `artifacts/local-studio-public-identity.json`, `artifacts/local-studio-public-browser.json`, and `artifacts/local-asset-studio-qa/public-*.png`.
+
+## Setup failures retained and corrections
 
 Hugging Face Xet range failures prompted standard official downloading. Subsequent network timeouts/DNS errors and a Windows file-length observation mistake inflated troubleshooting time. Complete cached Krea weights were then reused. The initial Qwen checkpoint lacked the namespace needed for native detection; the successful adapter prefixes keys without changing tensor values. The pinned Hunyuan offload helper lacked its expected components mapping; a local adapter supplies that mapping and explicitly selects the CUDA execution device. No external engine source is overwritten.
 
