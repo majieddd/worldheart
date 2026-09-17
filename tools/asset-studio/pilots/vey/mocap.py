@@ -5,7 +5,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 from scipy.signal import find_peaks
 
-ROOT=Path(__file__).resolve().parents[4]; SRC=ROOT/'artifacts/vey-pilot/mocap'; OUT=ROOT/'lib/99-art/vey-pilot-v1'
+ROOT=Path(__file__).resolve().parents[4]; SRC=ROOT/'artifacts/vey-pilot/mocap'; OUT=Path(globals().get('MOTION_REPORT_DIR',ROOT/'lib/99-art/vey-pilot-v1'))
 def read(sub):
     text=(SRC/(sub+'.asf')).read_text();defs={}
     for block in re.findall(r'begin\s+(.*?)\s+end',text.split(':bonedata')[1].split(':hierarchy')[0],re.S):

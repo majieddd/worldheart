@@ -1,12 +1,14 @@
 """Local mesh finishing. Preserves imported rigs; generated bipeds get a review draft."""
-import bpy,json,math,sys,time
+import bpy,json,math,sys,time,shutil,hashlib
 from pathlib import Path
 from mathutils import Vector
 import numpy as np
 from PIL import Image
 task=json.loads(Path(sys.argv[-1]).read_text('utf-8'));start=time.time()
 bpy.ops.wm.read_factory_settings(use_empty=True)
-bpy.ops.import_scene.gltf(filepath=task['input'])
+blend_source=Path(task['input']).with_suffix('.blend')
+if task['stage']=='polish' and blend_source.is_file():bpy.ops.wm.open_mainfile(filepath=str(blend_source))
+else:bpy.ops.import_scene.gltf(filepath=task['input'])
 scene=bpy.context.scene;meshes=[o for o in scene.objects if o.type=='MESH'];rigs=[o for o in scene.objects if o.type=='ARMATURE']
 report={'stage':task['stage'],'method':'local Blender finishing of supplied or image-generated geometry','input':Path(task['input']).name,'rigPreserved':bool(rigs),'ownerApproval':False}
 
@@ -111,7 +113,11 @@ if task['stage']=='paint':
     if task.get('reference') and not task.get('preserveRig'):project_reference()
     else:painted_materials()
 elif task['stage']=='animation':
-    if not rigs:draft_rig()
+    profile=Path(task['input']).parent/'rig-profile.json'
+    if not rigs and profile.exists():
+        from fitted_motion import build
+        rigs.append(build(task,meshes,scene,report,profile))
+    elif not rigs:draft_rig()
     else:report['rigMethod']='Existing skeleton, skin weights and authored clips preserved. No replacement motion generated.'
 elif task['stage']=='polish':
     # Keep silhouette, topology and approved motion intact. Polish validates and
@@ -119,7 +125,10 @@ elif task['stage']=='polish':
     for mesh in meshes:
         if any(not math.isfinite(c) for v in mesh.data.vertices for c in v.co):raise ValueError('Non-finite mesh vertex')
     for image in bpy.data.images:
-        if image.source=='FILE':image.pack()
+        if image.type=='IMAGE':
+            if min(image.size)<1:raise ValueError('Source image has no decoded pixels. Export the retained Blender source instead of a broken GLB round-trip.')
+            folder=Path(task['output']).with_suffix('');folder.mkdir(exist_ok=True)
+            image.filepath_raw=str(folder/(image.name.replace('/','_')+'.png'));image.file_format='PNG';image.save();image.pack()
     report['polishMethod']='Finite-geometry check, packed texture delivery, retained topology and approved animation. No destructive decimation.'
 for rig in rigs:
     if rig.animation_data:
@@ -127,7 +136,9 @@ for rig in rigs:
         for track in rig.animation_data.nla_tracks:track.mute=True
 report.update(meshes=len(meshes),bones=sum(len(o.data.bones) for o in rigs),animations=[a.name for a in bpy.data.actions],images=[{'name':i.name,'width':i.size[0],'height':i.size[1]} for i in bpy.data.images if i.type=='IMAGE'],seconds=time.time()-start)
 scene.frame_set(1);dest=Path(task['output']);bpy.ops.wm.save_as_mainfile(filepath=str(dest.with_suffix('.blend')))
-bpy.ops.export_scene.gltf(filepath=str(dest),export_format='GLB',export_animations=True,export_animation_mode='ACTIONS',export_skins=True,export_yup=True,export_apply=False)
+if task['stage']=='polish':
+    shutil.copy2(task['input'],dest);report['portableGLB']='Approved source retained byte-for-byte';report['sourceSha256']=hashlib.sha256(Path(task['input']).read_bytes()).hexdigest()
+else:bpy.ops.export_scene.gltf(filepath=str(dest),export_format='GLB',export_animations=True,export_animation_mode='ACTIONS',export_skins=True,export_yup=True,export_apply=False)
 if task['stage']=='polish':
     bpy.ops.export_scene.fbx(filepath=str(dest.with_suffix('.fbx')),use_selection=False,object_types={'ARMATURE','MESH'},add_leaf_bones=False,bake_anim=True,bake_anim_use_all_actions=True,bake_anim_use_nla_strips=False,path_mode='COPY',embed_textures=True)
     report['exports']=['glb','blend','fbx']

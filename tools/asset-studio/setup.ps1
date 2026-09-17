@@ -18,6 +18,7 @@ foreach ($entry in $repos) {
 $studioPython = Join-Path $Runtime '.venv/Scripts/python.exe'
 Checked $studioUv @('pip','install','--python',$studioPython,'torch','torchvision','torchaudio','--index-url','https://download.pytorch.org/whl/cu130')
 Checked $studioUv @('pip','install','--python',$studioPython,'-r',(Join-Path $Runtime 'ComfyUI/requirements.txt'),'-r',(Join-Path $PSScriptRoot 'requirements-studio.txt'),'--torch-backend','cu130')
-Checked $studioUv @('pip','install','--python',(Join-Path $Runtime 'blender-py311/Scripts/python.exe'),'bpy==4.5.3','numpy<2','pillow')
+Checked $studioUv @('pip','install','--python',(Join-Path $Runtime 'blender-py311/Scripts/python.exe'),'bpy==4.5.3','numpy<2','pillow','scipy')
 if (-not $SkipModels) { Checked $studioPython @((Join-Path $PSScriptRoot 'download_models.py'),$Runtime) }
+Checked $studioPython @('-X','utf8',(Join-Path $PSScriptRoot 'prepare_motion.py'))
 Write-Output 'Setup finished. Launch with tools/asset-studio/launch.ps1 and run a small pilot.'

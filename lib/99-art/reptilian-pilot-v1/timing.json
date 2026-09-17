@@ -1,0 +1,386 @@
+{
+  "recordedAt": "2026-09-17T20:31:25.146731+00:00",
+  "scope": "Vey/1.3.2/archive update plus albino Reptilian production and tool refinement",
+  "turnStart": "2026-09-17T16:42:49+00:00",
+  "elapsedWallSecondsSoFar": 13716.15,
+  "elapsedNote": "Wall clock includes engineering, inspection, other requested site work and the approximately 67-minute pause before the user asked to continue. This is not generation time or a billing measurement.",
+  "pipelineExecutionUnionSeconds": 3982.734,
+  "timingRule": "Union of measured job intervals avoids double-counting nested timers. Completed means execution completed, not visual acceptance. Rejected visual attempts remain listed.",
+  "latestFittedReplaySeconds": 65.99,
+  "latestReplayStages": [
+    {
+      "stage": "fitted paint replay",
+      "seconds": 50.225
+    },
+    {
+      "stage": "fitted motion replay",
+      "seconds": 9.227
+    },
+    {
+      "stage": "exact reference replay",
+      "seconds": 6.452
+    }
+  ],
+  "polishSeconds": 3.187,
+  "attempts": [
+    {
+      "stage": "hero",
+      "startedAt": "2026-09-17T17:02:33.876435+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:03:53.971878+00:00",
+      "seconds": 80.094
+    },
+    {
+      "stage": "hero concept",
+      "startedAt": "2026-09-17T17:02:33.877436+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:03:53.966621+00:00",
+      "seconds": 80.088
+    },
+    {
+      "stage": "hero",
+      "startedAt": "2026-09-17T17:08:26.647268+00:00",
+      "status": "failed",
+      "error": "Cancelled by user. Previous outputs are preserved.",
+      "endedAt": "2026-09-17T17:14:17.479750+00:00",
+      "seconds": 350.827
+    },
+    {
+      "stage": "hero concept",
+      "startedAt": "2026-09-17T17:08:26.647268+00:00",
+      "status": "failed",
+      "error": "Cancelled by user. Previous outputs are preserved.",
+      "endedAt": "2026-09-17T17:14:17.478227+00:00",
+      "seconds": 350.824
+    },
+    {
+      "stage": "hero",
+      "startedAt": "2026-09-17T17:15:23.286484+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:17:25.415850+00:00",
+      "seconds": 122.127
+    },
+    {
+      "stage": "hero concept",
+      "startedAt": "2026-09-17T17:15:23.287482+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:17:25.410331+00:00",
+      "seconds": 122.12
+    },
+    {
+      "stage": "hero",
+      "startedAt": "2026-09-17T17:18:17.182379+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:19:56.656643+00:00",
+      "seconds": 99.473
+    },
+    {
+      "stage": "hero concept",
+      "startedAt": "2026-09-17T17:18:17.182379+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:19:56.650642+00:00",
+      "seconds": 99.466
+    },
+    {
+      "stage": "references",
+      "startedAt": "2026-09-17T17:20:35.574427+00:00",
+      "status": "failed",
+      "error": "Cancelled by user. Previous outputs are preserved.",
+      "endedAt": "2026-09-17T17:23:57.916553+00:00",
+      "seconds": 202.339
+    },
+    {
+      "stage": "reference front",
+      "startedAt": "2026-09-17T17:20:35.584436+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:22:52.979546+00:00",
+      "seconds": 137.393
+    },
+    {
+      "stage": "reference left",
+      "startedAt": "2026-09-17T17:22:52.986544+00:00",
+      "status": "failed",
+      "error": "Cancelled by user. Previous outputs are preserved.",
+      "endedAt": "2026-09-17T17:23:57.913263+00:00",
+      "seconds": 64.926
+    },
+    {
+      "stage": "reference-front",
+      "startedAt": "2026-09-17T17:25:26.355642+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:27:43.748536+00:00",
+      "seconds": 137.39
+    },
+    {
+      "stage": "reference front",
+      "startedAt": "2026-09-17T17:25:26.370641+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:27:43.742509+00:00",
+      "seconds": 137.37
+    },
+    {
+      "stage": "mesh",
+      "startedAt": "2026-09-17T17:29:58.459967+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T17:47:54.893935+00:00",
+      "seconds": 1076.416
+    },
+    {
+      "stage": "mesh",
+      "startedAt": "2026-09-17T17:53:44.654713+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:03:20.606507+00:00",
+      "seconds": 575.942
+    },
+    {
+      "stage": "mesh",
+      "startedAt": "2026-09-17T18:08:29.920217+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:13:29.626875+00:00",
+      "seconds": 299.702
+    },
+    {
+      "stage": "mesh",
+      "startedAt": "2026-09-17T18:21:34.671558+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:22:27.506768+00:00",
+      "seconds": 52.835
+    },
+    {
+      "stage": "mesh",
+      "startedAt": "2026-09-17T18:23:46.741907+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:26:43.735890+00:00",
+      "seconds": 176.991
+    },
+    {
+      "stage": "paint",
+      "startedAt": "2026-09-17T18:28:41.087919+00:00",
+      "status": "failed",
+      "error": "Cancelled by user. Previous outputs are preserved.",
+      "endedAt": "2026-09-17T18:31:37.476705+00:00",
+      "seconds": 176.386
+    },
+    {
+      "stage": "paint",
+      "startedAt": "2026-09-17T18:31:54.083002+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:33:39.666302+00:00",
+      "seconds": 105.581
+    },
+    {
+      "stage": "clean-paint",
+      "startedAt": "2026-09-17T18:37:24.270318+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:38:01.631724+00:00",
+      "seconds": 37.361
+    },
+    {
+      "stage": "clean-paint",
+      "startedAt": "2026-09-17T18:39:58.049693+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:40:45.385689+00:00",
+      "seconds": 47.336
+    },
+    {
+      "stage": "clean-paint",
+      "startedAt": "2026-09-17T18:42:12.283382+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:42:59.209881+00:00",
+      "seconds": 46.926
+    },
+    {
+      "stage": "animation",
+      "startedAt": "2026-09-17T18:43:56.236994+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:44:09.133376+00:00",
+      "seconds": 12.896
+    },
+    {
+      "stage": "clean-paint",
+      "startedAt": "2026-09-17T18:45:23.778702+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:46:13.112863+00:00",
+      "seconds": 49.334
+    },
+    {
+      "stage": "animation",
+      "startedAt": "2026-09-17T18:48:38.401581+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:48:46.422549+00:00",
+      "seconds": 8.021
+    },
+    {
+      "stage": "animation",
+      "startedAt": "2026-09-17T18:49:39.716318+00:00",
+      "status": "failed",
+      "error": "409: Asset checks failed: Bound refinement evidence: animation-1789670979.fitted-quality.json. Inspect the quality report before continuing.",
+      "endedAt": "2026-09-17T18:49:49.798022+00:00",
+      "seconds": 10.082
+    },
+    {
+      "stage": "animation",
+      "startedAt": "2026-09-17T18:51:42.102153+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T18:51:51.339723+00:00",
+      "seconds": 9.237
+    },
+    {
+      "stage": "model-references",
+      "startedAt": "2026-09-17T19:59:21.560553+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T19:59:28.029396+00:00",
+      "seconds": 6.469
+    },
+    {
+      "stage": "exact model reference renders",
+      "startedAt": "2026-09-17T19:59:21.562553+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T19:59:28.016255+00:00",
+      "seconds": 6.453
+    },
+    {
+      "stage": "clean-paint",
+      "startedAt": "2026-09-17T20:03:18.790092+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:04:01.146335+00:00",
+      "seconds": 42.356
+    },
+    {
+      "stage": "clean-paint",
+      "startedAt": "2026-09-17T20:05:58.569462+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:06:48.551298+00:00",
+      "seconds": 49.98
+    },
+    {
+      "stage": "replay-fitted",
+      "startedAt": "2026-09-17T20:09:16.759735+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:10:20.819140+00:00",
+      "seconds": 64.059
+    },
+    {
+      "stage": "fitted paint replay",
+      "startedAt": "2026-09-17T20:09:16.806303+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:10:03.587943+00:00",
+      "seconds": 46.782
+    },
+    {
+      "stage": "fitted motion replay",
+      "startedAt": "2026-09-17T20:10:03.609986+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:10:13.970210+00:00",
+      "seconds": 10.36
+    },
+    {
+      "stage": "exact reference replay",
+      "startedAt": "2026-09-17T20:10:13.972206+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:10:20.816631+00:00",
+      "seconds": 6.844
+    },
+    {
+      "stage": "exact model reference renders",
+      "startedAt": "2026-09-17T20:10:13.973202+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:10:20.801583+00:00",
+      "seconds": 6.828
+    },
+    {
+      "stage": "replay-fitted",
+      "startedAt": "2026-09-17T20:12:45.922288+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:13:56.775737+00:00",
+      "seconds": 70.853
+    },
+    {
+      "stage": "fitted paint replay",
+      "startedAt": "2026-09-17T20:12:45.972902+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:13:40.632488+00:00",
+      "seconds": 54.658
+    },
+    {
+      "stage": "fitted motion replay",
+      "startedAt": "2026-09-17T20:13:40.657538+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:13:50.319310+00:00",
+      "seconds": 9.661
+    },
+    {
+      "stage": "exact reference replay",
+      "startedAt": "2026-09-17T20:13:50.323332+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:13:56.770230+00:00",
+      "seconds": 6.446
+    },
+    {
+      "stage": "exact model reference renders",
+      "startedAt": "2026-09-17T20:13:50.325873+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:13:56.756192+00:00",
+      "seconds": 6.43
+    },
+    {
+      "stage": "replay-fitted",
+      "startedAt": "2026-09-17T20:16:15.983362+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:17:21.973931+00:00",
+      "seconds": 65.99
+    },
+    {
+      "stage": "fitted paint replay",
+      "startedAt": "2026-09-17T20:16:16.032934+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:17:06.258944+00:00",
+      "seconds": 50.225
+    },
+    {
+      "stage": "fitted motion replay",
+      "startedAt": "2026-09-17T20:17:06.284988+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:17:15.511910+00:00",
+      "seconds": 9.227
+    },
+    {
+      "stage": "exact reference replay",
+      "startedAt": "2026-09-17T20:17:15.516943+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:17:21.968931+00:00",
+      "seconds": 6.452
+    },
+    {
+      "stage": "exact model reference renders",
+      "startedAt": "2026-09-17T20:17:15.518954+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:17:21.951376+00:00",
+      "seconds": 6.433
+    },
+    {
+      "stage": "polish",
+      "startedAt": "2026-09-17T20:20:03.801052+00:00",
+      "status": "failed",
+      "error": "409: Asset checks failed: bound_color_textures, embedded_texture_resolution. Inspect the quality report before continuing.",
+      "endedAt": "2026-09-17T20:20:06.283015+00:00",
+      "seconds": 2.483
+    },
+    {
+      "stage": "polish",
+      "startedAt": "2026-09-17T20:22:34.078228+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T20:22:37.265348+00:00",
+      "seconds": 3.187
+    }
+  ],
+  "visualRejections": [
+    "First olive-skinned hero",
+    "Clipped-tail hero",
+    "Both generated alternate-view identity tests",
+    "Four reduced meshes with broken surfaces",
+    "Mottled generated paint and imperfect intermediate material masks",
+    "First run with no right-foot contact",
+    "First polish export with missing embedded textures"
+  ]
+}

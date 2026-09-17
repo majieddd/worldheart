@@ -9,7 +9,7 @@ p.renderer.setPixelRatio(1);p.renderer.setSize(768,1024,false);p.scene.backgroun
 const rest=new Map();p.root.traverse(o=>{if(o.isBone)rest.set(o.name,o.quaternion.clone());});
 function pose(){p.mixer.stopAllAction();p.root.traverse(o=>{if(o.isBone&&rest.has(o.name))o.quaternion.copy(rest.get(o.name));});}
 function view(name){pose();camera.up.set(0,1,0);if(name==='top')camera.up.set(0,0,-1);if(name==='bottom')camera.up.set(0,0,1);camera.position.copy(center).addScaledVector(new THREE.Vector3(...basis[name]),7);camera.lookAt(center);camera.updateProjectionMatrix();p.renderer.render(p.scene,camera);return {position:camera.position.toArray(),target:center.toArray(),up:camera.up.toArray(),orthographic:[camera.left,camera.right,camera.top,camera.bottom],resolution:[768,1024]};}
-function motion(name,fraction){view('right');const clip=p.clips.find(c=>c.name.toLowerCase().startsWith(name.toLowerCase()));if(!clip)return {available:false,reason:'No '+name+' clip in this model'};p.mixer.clipAction(clip).reset().play();p.mixer.setTime(clip.duration*fraction);p.renderer.render(p.scene,camera);return {available:true,clip:clip.name,time:clip.duration*fraction};}
+function motion(name,fraction,angle='right'){view(angle);const clip=p.clips.find(c=>c.name.toLowerCase().startsWith(name.toLowerCase()));if(!clip)return {available:false,reason:'No '+name+' clip in this model'};p.mixer.clipAction(clip).reset().play();p.mixer.setTime(clip.duration*fraction);p.renderer.render(p.scene,camera);return {available:true,clip:clip.name,time:clip.duration*fraction};}
 function strike(phase){
  view('right');const find=name=>{let match;p.root.traverse(o=>{if(o.isBone&&o.name.replace(/[^a-z0-9]/gi,'')===name)match=o;});return match;};const upper=find('upperarmR'),lower=find('forearmR'),hand=find('handR');
  if(!upper||!lower||!hand)return {available:false,reason:'Fit an arm profile before proposing a strike'};
@@ -18,4 +18,4 @@ function strike(phase){
  const reach=[.15,1,.35][phase];aim(upper,lower,new THREE.Vector3(-.10,-.48+reach*.43,-.10+reach*.8));aim(lower,hand,new THREE.Vector3(.05,.18*(1-reach),.65));
  p.renderer.render(p.scene,camera);return {available:true,source:'authored pose proposal; not an approved or baked attack',phase:['anticipation','extension','recovery'][phase]};
 }
-window.REFERENCE_RENDER={ready:true,view,motion,strike,clips:p.clips.map(c=>c.name)};view('front');
+window.REFERENCE_RENDER={preview:p,ready:true,view,motion,strike,clips:p.clips.map(c=>c.name)};view('front');

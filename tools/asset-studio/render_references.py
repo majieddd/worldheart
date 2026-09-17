@@ -14,7 +14,7 @@ for name in packets.VIEWS:steps.extend([{'eval':f"REFERENCE_RENDER.view('{name}'
 for i,t in enumerate([.17,.40,.76]):steps.extend([{'eval':f"REFERENCE_RENDER.motion('Walk',{t})"},{'shot':'walk-'+str(i)}])
 for i in range(3):steps.extend([{'eval':f'REFERENCE_RENDER.strike({i})'},{'shot':'strike-'+str(i)}])
 script=out/'capture.cjs';script.write_text('module.exports='+json.dumps(steps)+';',encoding='utf-8')
-url='http://127.0.0.1:8771/reference-render.html?asset=/files/projects/'+a.project+'/'+a.model
+url=os.environ.get('WH_STUDIO_URL','http://127.0.0.1:8773').rstrip('/')+'/reference-render.html?asset=/files/projects/'+a.project+'/'+a.model
 subprocess.run(['node',str(runner),url,str(out),str(script.resolve())],check=True,stdout=(out/'capture.log').open('w',encoding='utf-8'),stderr=subprocess.STDOUT)
 result=json.loads((out/'summary.json').read_text(encoding='utf-8')) if (out/'summary.json').exists()else None
 pack={'version':1,'folder':a.folder,'hero':a.hero,'heroSha256':packets.sha(root/a.hero),'sourceModel':a.model,'sourceModelSha256':packets.sha(root/a.model),'style':a.style,'provider':'local Three.js rendering of exact mesh','calibrated':True,'approval':'pending','complete':True,'outputs':{},'coordinateSystem':'glTF meters, Y up, face +Z; left means anatomical +X','limitations':['Rendered back shows existing mesh paint, not independent evidence of correct hidden-surface design.','Strike poses are an authored proposal on a compatible fitted arm rig; they are not a baked or approved attack clip.']}
@@ -37,4 +37,6 @@ else:
   y=845+i*80;draw.text((30,y),title,fill='#243830',font=font);draw.text((310,y),body,fill='#243830',font=font)
  draw.text((30,1110),'No strike animation exists in the accepted model. This is guidance, not an approved clip.',fill='#243830',font=ImageFont.truetype('C:/Windows/Fonts/arial.ttf',19))
 sheet.save(out/'motion.png');pack['outputs']['motion']={'file':a.folder+'/motion.png','sha256':packets.sha(out/'motion.png')};pack['motionStatus']={'walk':'rendered from source','strike':'authored pose proposal; not an approved attack' if attack.get('available')else'brief only; no source clip'}
+profile_file=root/'paint-profile.json'
+if profile_file.exists():pack['materialPalette']=json.loads(profile_file.read_text('utf-8')).get('palette')
 packets.assemble(root,pack,a.description);pack['cameraEvidence']='capture.log';(out/'manifest.json').write_text(json.dumps(pack,indent=2),encoding='utf-8');print(json.dumps({'folder':a.folder,'sourceModelSha256':pack['sourceModelSha256'],'motionStatus':pack['motionStatus']}))

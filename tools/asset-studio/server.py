@@ -5,7 +5,7 @@ from pathlib import Path
 from contextlib import contextmanager
 from datetime import datetime,timezone
 import requests
-from fastapi import FastAPI,HTTPException,Request,UploadFile,File
+from fastapi import FastAPI,HTTPException,Request,UploadFile,File,Body
 from fastapi.responses import FileResponse,JSONResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
@@ -192,7 +192,7 @@ def use_reference(key,index:int):
     update(p,'concept','review','Imported reference is the concept. Review it and approve 2D before reconstruction.');return p
 
 @app.post('/api/projects/{key}/approve/{stage}')
-def approve(key,stage):
+def approve(key,stage,review:dict=Body(default={})):
     p=project(key)
     if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the job to finish')
     field={'art':'art','animation':'animation'}.get(stage)
@@ -201,10 +201,111 @@ def approve(key,stage):
     if stage=='art' and p.get('artBrief')!=brief_digest(p):raise HTTPException(409,'The concept belongs to an older brief. Generate a new concept or select a reference as the concept.')
     if stage=='animation' and p.get('motionInput')!=digest(output(p,p.get('paint') or p['mesh'])):raise HTTPException(409,'Motion belongs to an older model. Prepare motion again.')
     if stage=='animation':require_valid_output(p,'animation')
+    if stage=='animation' and p.get('referenceMode')=='model':
+        if not p.get('referencePack',{}).get('sourceModel'):raise HTTPException(409,'Render and review exact model references before animation approval')
+        require_reference_pack(p)
+    reviewer=review.get('reviewer','owner')
+    if reviewer not in ['owner','agent']:raise HTTPException(400,'Reviewer must be owner or agent')
+    notes=str(review.get('notes','')).strip()[:4000]
+    if reviewer=='agent' and not notes:raise HTTPException(400,'Record the actual visual checks before an agent review')
     p['approvals'][stage]=digest(output(p,p[field]));
+    p.setdefault('reviews',{})[stage]={'reviewer':reviewer,'notes':notes,'sha256':p['approvals'][stage],'time':time.time(),'ownerApproved':reviewer=='owner'}
     if stage=='art' and p.get('referencePack'):
         p['referencePack']['approval']='approved';p['approvals']['referencePack']=digest(output(p,p['referencePack']['folder']+'/manifest.json'))
-    p['status']='approved';p['message']='2D approved. The approved image is locked for reconstruction.' if stage=='art' else 'Animation approved. Polish and export are now available.';log_event(p,stage+' approved by user');save(p);return p
+    p['status']='approved';p['message']=('Owner review accepted. ' if reviewer=='owner' else 'Agent-reviewed candidate; owner acceptance is pending. ')+('Image and references locked for reconstruction.' if stage=='art' else 'Polish and export are available.');log_event(p,stage+' reviewed by '+reviewer);save(p);return p
+
+@app.post('/api/projects/{key}/use-concept-reference')
+def concept_reference(key):
+    p=project(key)
+    if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the current job')
+    if not p.get('art'):raise HTTPException(409,'Generate a concept first')
+    p['references']=[p['art']]+[n for n in p['references'] if n!=p['art']][:2]
+    p['approvals']={};p['polished']=None
+    update(p,'concept','draft','Current concept is the first identity reference. Describe the correction, then generate the next main concept.');return p
+
+@app.post('/api/projects/{key}/paint-profile')
+def save_paint_profile(key,profile:dict=Body(...)):
+    p=project(key)
+    if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the current job')
+    source=p.get('paint')
+    if not source or profile.get('sourceSha256')!=digest(output(p,source)):raise HTTPException(409,'Paint profile must identify the current painted model')
+    palette=profile.get('palette',[])
+    if len(palette)!=5 or any(len(c)!=3 or any(not isinstance(v,(float,int)) or not 0<=v<=255 for v in c) for c in palette):raise HTTPException(400,'Provide five RGB material colours')
+    write(output(p,'paint-profile.json'),profile);p['paintProfile']={'file':'paint-profile.json','source':source,'sourceSha256':profile['sourceSha256']};save(p);return p
+
+@app.post('/api/projects/{key}/recipe')
+def save_recipe(key):
+    p=project(key)
+    if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the current job')
+    if not all(p.get(k) for k in ['art','mesh','paint','paintProfile','rigProfile']):raise HTTPException(409,'Complete the concept, model, material fit and anatomical fit first')
+    fit=read(output(p,p['rigProfile']['file']))
+    known=[p['paint']]+p.get('paintHistory',[])
+    if not any(digest(output(p,name))==fit['sourceSha256'] for name in known):raise HTTPException(409,'Anatomical fit belongs to a different model lineage')
+    source=next(iter(p.get('paintHistory',[])),p['paint']);folder='recipe-'+uuid.uuid4().hex[:10];output(p,folder).mkdir()
+    recipe={'version':1,'name':p['name'],'hero':p['art'],'heroSha256':digest(output(p,p['art'])),'mesh':p['mesh'],'meshSha256':digest(output(p,p['mesh'])),'sourcePaint':source,'sourcePaintSha256':digest(output(p,source)),'palette':read(output(p,p['paintProfile']['file'])),'rig':fit,'style':p['style'],'ownerApproved':False,'scope':'Replay fitted corrections for this exact identity and model lineage. Different anatomy requires a reviewed fit.'}
+    file=folder+'/recipe.json';write(output(p,file),recipe);p['productionRecipe']={'file':file,'sha256':digest(output(p,file)),'name':p['name']};save(p);return p
+
+def require_recipe(p):
+    meta=p.get('productionRecipe')
+    if not meta or digest(output(p,meta['file']))!=meta['sha256']:raise HTTPException(409,'Save a fitted production recipe first')
+    recipe=read(output(p,meta['file']))
+    for field in ['hero','mesh','sourcePaint']:
+        if digest(output(p,recipe[field]))!=recipe[field+'Sha256']:raise HTTPException(409,'A recipe source changed; review and save it again')
+    if digest(output(p,p['art']))!=recipe['heroSha256'] or digest(output(p,p['mesh']))!=recipe['meshSha256']:raise HTTPException(409,'This recipe belongs to a different concept or mesh')
+    return recipe
+
+def replay_fitted(p,s):
+    recipe=require_recipe(p);p['paint']=recipe['sourcePaint'];p['reviewReports']={};p['approvals'].pop('animation',None)
+    palette=recipe['palette'];palette['sourceSha256']=recipe['sourcePaintSha256'];write(output(p,'paint-profile.json'),palette)
+    p['paintProfile']={'file':'paint-profile.json','source':p['paint'],'sourceSha256':palette['sourceSha256']}
+    with timed_stage(p,'fitted paint replay'):clean_paint(p,s)
+    cancelled(p);update(p,'replay-fitted','running','Fitted paint complete. Rebuilding captured motion and contact checks.')
+    fit=recipe['rig'];fit['sourceSha256']=digest(output(p,p['paint']));write(output(p,'rig-profile.json'),fit)
+    p['rigProfile']={'file':'rig-profile.json','sourceSha256':fit['sourceSha256'],'sha256':digest(output(p,'rig-profile.json')),'name':fit['name']}
+    with timed_stage(p,'fitted motion replay'):blender_stage(p,s,'animation')
+    cancelled(p);update(p,'replay-fitted','running','Motion gates passed. Rendering the exact reference packet.')
+    with timed_stage(p,'exact reference replay'):render_reference_pack(p,s)
+    update(p,'animation','review','Fitted recipe replay complete. Inspect the model and motion, then approve polish. Owner acceptance is still separate.')
+
+@app.post('/api/projects/{key}/rig-profile')
+def save_rig_profile(key,profile:dict=Body(...)):
+    import math
+    p=project(key)
+    if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the current job')
+    source=p.get('paint') or p.get('mesh')
+    if not source or profile.get('sourceSha256')!=digest(output(p,source)):raise HTTPException(409,'Fit must identify the current painted model bytes')
+    joints=profile.get('joints',[]);seen=set()
+    if not 15<=len(joints)<=100:raise HTTPException(400,'Provide 15 to 100 fitted joints')
+    for joint in joints:
+        name=joint.get('name');parent=joint.get('parent')
+        if not isinstance(name,str) or name in seen or (parent and parent not in seen):raise HTTPException(400,'Joint names must be unique and parents must precede children')
+        for point in ['head','tail']:
+            value=joint.get(point)
+            if not isinstance(value,list) or len(value)!=3 or not all(isinstance(x,(int,float)) and math.isfinite(x) and abs(x)<100 for x in value):raise HTTPException(400,'Joint positions need three finite meter coordinates')
+        if sum((a-b)**2 for a,b in zip(joint['head'],joint['tail']))<1e-6:raise HTTPException(400,'Joint length is too small')
+        seen.add(name)
+    write(output(p,'rig-profile.json'),profile);p['rigProfile']={'file':'rig-profile.json','sha256':digest(output(p,'rig-profile.json')),'sourceSha256':profile['sourceSha256'],'name':str(profile.get('name','Fitted anatomy'))[:120]}
+    p['animation']=None;p['polished']=None;p['approvals'].pop('animation',None)
+    update(p,'paint','review','Anatomical fit saved for this model. Prepare motion, then inspect the complete clips.');return p
+
+@app.post('/api/projects/{key}/reference-mode')
+def reference_mode(key,body:dict=Body(...)):
+    p=project(key)
+    if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the current job')
+    mode=body.get('mode')
+    if mode not in ['generated','model']:raise HTTPException(400,'Choose generated or model references')
+    if p.get('referencePack'):p.setdefault('referencePackHistory',[]).append(p.pop('referencePack'))
+    p['referenceMode']=mode;p['referencePackExpected']=mode=='generated';p['approvals']={};p['polished']=None
+    update(p,'concept','review','Exact-view route: approve the hero, reconstruct and refine the model, then render its six views before animation approval. Hidden surfaces remain design proposals.' if mode=='model' else 'Generated-view route: test one angle for identity, then complete and review the pack before reconstruction.');return p
+
+@app.delete('/api/projects/{key}/rig-profile')
+def clear_rig_profile(key):
+    p=project(key)
+    if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the current job')
+    source=output(p,'rig-profile.json')
+    if source.exists():shutil.move(str(source),str(output(p,'rig-profile-'+uuid.uuid4().hex[:8]+'.json')))
+    p.pop('rigProfile',None);p['approvals'].pop('animation',None);p['polished']=None
+    update(p,'paint','review','Fit archived. Preparing motion now uses the generic biped draft; it will need anatomy and motion review.');return p
 
 def assert_approved(p,stage,field):
     if not p.get(field) or p['approvals'].get(stage)!=digest(output(p,p[field])):raise HTTPException(409,f'Approve the current {stage} first')
@@ -218,10 +319,22 @@ def comfy_free():
     except requests.RequestException:pass
 def run_process(p,args):
     log=output(p,'worker.log')
+    last_message='';last_read=0;start_offset=log.stat().st_size if log.exists() else 0
     with log.open('a',encoding='utf-8') as handle:
         child=subprocess.Popen([str(x) for x in args],cwd=ROOT,stdout=handle,stderr=subprocess.STDOUT,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
         while child.poll() is None:
             if CANCEL.get(p['id']):child.terminate();child.wait(timeout=20);cancelled(p)
+            if time.time()-last_read>3:
+                last_read=time.time()
+                with log.open('rb') as tail:
+                    tail.seek(max(start_offset,log.stat().st_size-8000));lines=tail.read().decode('utf-8',errors='replace').splitlines()
+                for line in reversed(lines):
+                    try:progress=json.loads(line)
+                    except (ValueError,TypeError):continue
+                    if not isinstance(progress,dict) or 'percent' not in progress or 'message' not in progress:continue
+                    message=str(progress['message'])[:180]+' / '+str(progress['percent'])+'%'
+                    if message!=last_message:last_message=message;p['message']=message;save(p)
+                    break
             time.sleep(.4)
     if child.returncode:raise RuntimeError(log.read_text('utf-8',errors='replace')[-1800:])
 
@@ -251,7 +364,7 @@ def generate_image(p,s,prompt,references,name):
         time.sleep(1.5)
     raise RuntimeError('Generation exceeded two hours; inspect ComfyUI before retrying')
 
-def make_reference_pack(p,s):
+def make_reference_pack(p,s,roles=None):
     if not p.get('art') or p.get('artBrief')!=brief_digest(p):raise RuntimeError('Create a current hero concept first')
     if s['family']!='krea':raise RuntimeError('Choose Krea for identity-conditioned directional views; the checkpoint route is text-only')
     hero=output(p,p['art']);token=packets.identity(hero,p['description'],p['style'],s)
@@ -262,12 +375,16 @@ def make_reference_pack(p,s):
         pack={'version':packets.VERSION,'folder':folder,'hero':folder+'/hero.png','heroSha256':digest(hero),'recipeSha256':token,'style':p['style'],'complete':False,'calibrated':False,'approval':'pending','outputs':{},'roles':{'shape':'hero only; current local engines accept one image','paint':'individual views require camera and material-region fitting before projection','motion':'walk and strike are visual guides, not generated skeletal clips'}}
         p['referencePack']=pack;p['approvals'].pop('art',None);save(p)
     for i,(role,prompt) in enumerate(packets.prompts(p['description'],p['style']).items()):
+        if roles and role not in roles:continue
         cancelled(p);old=pack['outputs'].get(role)
-        if old and output(p,old['file']).is_file() and digest(output(p,old['file']))==old['sha256']:continue
-        name=pack['folder']+'/'+role+'.png';size={'width':768,'height':1024} if role!='motion' else {'width':1280,'height':768}
+        if old and not roles and output(p,old['file']).is_file() and digest(output(p,old['file']))==old['sha256']:continue
+        if old:pack.setdefault('attemptHistory',[]).append({'role':role,**old})
+        name=pack['folder']+'/'+role+('-'+uuid.uuid4().hex[:6] if old else '')+'.png';size={'width':768,'height':1024} if role!='motion' else {'width':1280,'height':768}
         update(p,'references','running','Reference pack: '+role+' / completed views are cached')
         with timed_stage(p,'reference '+role):receipt=generate_image(p,{**s,**size,'seed':s['seed']+101+i},prompt,[hero],name)
         pack['outputs'][role]={'file':name,'sha256':receipt['sha256'],'prompt':prompt,'receipt':name+'.json'};save(p);write(output(p,pack['folder']+'/manifest.json'),pack)
+    if not all(role in pack['outputs'] for role in [*packets.VIEWS,'motion']):
+        pack['complete']=False;save(p);update(p,'concept','review','Inspect the test angle against the hero. Retry this angle if identity drifts; build the remaining references when it matches.');return
     with timed_stage(p,'palette and turnaround sheet'):pack['palette']=packets.assemble(PROJECTS/p['id'],pack,p['description'])
     pack['complete']=True;write(output(p,pack['folder']+'/manifest.json'),pack);save(p)
     update(p,'concept','review','Review hero, all six views, palette and walk/strike guide. Approve 2D before reconstruction. Generated views require fitting before texture projection.')
@@ -294,25 +411,29 @@ def production_contract(p,s):
     write(output(p,'production-contract.json'),contract);return contract
 
 def require_reference_pack(p):
-    if not p.get('referencePack'):return
+    if not p.get('referencePack'):
+        if p.get('referencePackExpected'):raise HTTPException(409,'Build and review the six-view reference pack before approving the complete concept')
+        return
     if not packets.current(p['referencePack'],PROJECTS/p['id'],output(p,p['art'])):raise HTTPException(409,'Reference pack is incomplete or changed. Resume the pack and review it before continuing.')
     pack=p['referencePack']
     if pack.get('sourceModel') and digest(output(p,pack['sourceModel']))!=pack['sourceModelSha256']:raise HTTPException(409,'Reference model bytes changed; render the references again')
 
-def make_art(p,s):
+def make_art(p,s,with_pack=True):
     if s['family']!='krea':raise RuntimeError('The full character reference pack needs Krea reference conditioning. Select Krea in Settings.')
     name='concept-'+uuid.uuid4().hex[:10]+'.png';refs=[output(p,n)for n in p['references']]
     if not refs and (ROOT/'lib/99-art/references/paintline_clash.webp').exists():refs=[ROOT/'lib/99-art/references/paintline_clash.webp']
     with timed_stage(p,'hero concept'):generate_image(p,s,compose_prompt(p['description'],p['style'],len(refs)),refs,name)
+    if p.get('art'):p.setdefault('conceptHistory',[]).append({'file':p['art'],'sha256':digest(output(p,p['art'])),'briefSha256':p.get('artBrief'),'replacedAt':time.time()})
     if p.get('referencePack'):p.setdefault('referencePackHistory',[]).append(p.pop('referencePack'))
-    p.update(art=name,artBrief=brief_digest(p),mesh=None,paint=None,animation=None,polished=None,imported=False,approvals={});save(p)
-    make_reference_pack(p,s)
+    p.update(art=name,artBrief=brief_digest(p),mesh=None,paint=None,animation=None,polished=None,imported=False,approvals={},referencePackExpected=p.get('referenceMode')!='model');save(p)
+    if with_pack:make_reference_pack(p,s)
+    else:update(p,'concept','review','Review the hero face, silhouette, costume and full framing. Build the reference pack next when this direction is right.')
 
 def make_mesh(p,s):
     comfy_free();name='shape-'+str(int(time.time()))+'.glb'
     if s.get('meshEngine')=='trellis2':trellis_stage(p,s,'shape',name)
     else:run_process(p,[RUNTIME/'.venv/Scripts/python.exe',Path(__file__).with_name('mesh_worker.py'),'--runtime',RUNTIME,'--image',output(p,p['art']),'--output',output(p,name),'--steps',s['meshSteps'],'--resolution',s['meshResolution'],'--seed',s['seed']])
-    p['mesh']=name;p['paint']=None;p['animation']=None;p['polished']=None;p['approvals'].pop('animation',None);update(p,'mesh','review','Local image-to-3D complete. Orbit the model and compare the face, silhouette and back before continuing.')
+    p.pop('paintHistory',None);p['mesh']=name;p['paint']=None;p['animation']=None;p['polished']=None;p['approvals'].pop('animation',None);update(p,'mesh','review','Local image-to-3D complete. Orbit the model and compare the face, silhouette and back before continuing.')
     require_valid_output(p,'mesh')
 
 def trellis_stage(p,s,stage,name,source=None):
@@ -322,6 +443,14 @@ def trellis_stage(p,s,stage,name,source=None):
     args=[RUNTIME/'modly-trellis2/venv/Scripts/python.exe',Path(__file__).with_name('trellis_worker.py'),'--runtime',RUNTIME,'--image',output(p,p['art']),'--output',output(p,name),'--stage',stage,'--steps',s.get('trellisSteps',25),'--seed',s['seed'],'--texture-size',s['textureSize']]
     if source:args+=['--mesh',output(p,source)]
     run_process(p,args)
+
+def clean_paint(p,s):
+    profile=p.get('paintProfile')
+    if not profile or digest(output(p,p['paint']))!=profile['sourceSha256']:raise RuntimeError('Fit a material profile to the current paint first')
+    name='paint-clean-'+str(int(time.time()))+'.glb'
+    run_process(p,[RUNTIME/'.venv/Scripts/python.exe',Path(__file__).with_name('palette_worker.py'),'--input',output(p,p['paint']),'--output',output(p,name),'--profile',output(p,profile['file'])])
+    p.setdefault('paintHistory',[]).append(p['paint']);p['paint']=name;p['animation']=None;p['polished']=None;p['approvals'].pop('animation',None)
+    require_valid_output(p,'paint');update(p,'paint','review','Material cleanup saved. Inspect face, back, hands and soles; original generated paint remains in history.')
 
 def blender_stage(p,s,stage):
     field={'paint':'mesh','animation':'paint','polish':'animation'}[stage]
@@ -334,6 +463,13 @@ def blender_stage(p,s,stage):
     else:run_process(p,[RUNTIME/'blender-py311/Scripts/python.exe',Path(__file__).with_name('model_worker.py'),output(p,'task.json')])
     p[stage if stage!='polish' else 'polished']=name
     p['modelReport']=read(output(p,name).with_suffix('.json'),{})
+    if stage=='animation' and p.get('rigProfile'):
+        quality_name=Path(name).with_suffix('.fitted-quality.json').name
+        run_process(p,[RUNTIME/'blender-py311/Scripts/python.exe',Path(__file__).with_name('fitted_quality.py'),output(p,name).with_suffix('.blend'),output(p,quality_name)])
+        fitted=read(output(p,quality_name));p['modelReport']['fittedQuality']=quality_name
+        p['modelReport']['motionSpeeds']={k:v['contactSpeedMedian']for k,v in fitted['clips'].items()if k in ['Walk','Run']}
+        write(output(p,name).with_suffix('.json'),p['modelReport']);p.setdefault('reviewReports',{})['animation']=[quality_name]
+
     if stage=='paint':p['animation']=None;p['polished']=None;p['approvals'].pop('animation',None)
     if stage=='animation':p['approvals'].pop('animation',None);p['polished']=None;p['motionInput']=digest(output(p,source))
     if stage=='polish':p['polishInput']=digest(output(p,source))
@@ -408,13 +544,17 @@ def worker(key,stage,s):
             cancelled(p);production_contract(p,s);update(p,step,'running','Working locally.')
             with timed_stage(p,step):
                 if step=='concept':make_art(p,s)
+                elif step=='hero':make_art(p,s,with_pack=False)
                 elif step=='references':make_reference_pack(p,s)
+                elif step.startswith('reference-'):make_reference_pack(p,s,[step.removeprefix('reference-')])
                 elif step=='model-references':render_reference_pack(p,s)
                 elif step=='refined-production':
                     refine_vey(p,s,continuing=True);articulate_vey(p,s)
                 elif step=='mesh':make_mesh(p,s)
                 elif step=='refine':refine_vey(p,s)
                 elif step=='articulate':articulate_vey(p,s)
+                elif step=='clean-paint':clean_paint(p,s)
+                elif step=='replay-fitted':replay_fitted(p,s)
                 else:blender_stage(p,s,step)
         production_contract(p,s);log_event(p,stage+' completed')
     except Exception as e:update(p,stage,'error',str(e));log_event(p,'Failed: '+str(e)[:500])
@@ -423,13 +563,14 @@ def worker(key,stage,s):
 @app.post('/api/projects/{key}/run/{stage}')
 def run(key,stage):
     p=project(key)
-    if stage not in ['concept','mesh','paint','animation','production','polish','refine','articulate','references','model-references','refined-production']:raise HTTPException(400,'Unknown stage')
+    if stage not in ['concept','hero','mesh','paint','animation','production','polish','refine','articulate','references','model-references','refined-production','clean-paint','replay-fitted']+['reference-'+r for r in [*packets.VIEWS,'motion']]:raise HTTPException(400,'Unknown stage')
     with LOCK:
         if ACTIVE or any(x['status'] in ['queued','running'] for x in list_projects()):raise HTTPException(409,'One local GPU job at a time. Wait for or cancel the active job.')
-        if stage=='concept' and len(p['description'].strip())<8:raise HTTPException(400,'Describe the asset first')
-        if stage=='references' and not p.get('art'):raise HTTPException(409,'Create or import a hero first')
+        if stage in ['concept','hero'] and len(p['description'].strip())<8:raise HTTPException(400,'Describe the asset first')
+        if (stage=='references' or stage.startswith('reference-')) and not p.get('art'):raise HTTPException(409,'Create or import a hero first')
         if stage in ['refine','refined-production']:require_refinement_source(p)
         if stage=='articulate':require_articulation_source(p)
+        if stage=='replay-fitted':require_recipe(p)
         if stage in ['mesh','production']:assert_approved(p,'art','art')
         if stage=='polish':assert_approved(p,'animation','animation')
         if stage in ['paint','animation'] and not p.get('mesh'):raise HTTPException(409,'Create or import a model first')
@@ -472,6 +613,13 @@ def export(key):
         if p.get('referencePack'):
             for path in output(p,p['referencePack']['folder']).glob('*'):
                 if path.is_file():z.write(path,str(path.relative_to(PROJECTS/p['id'])))
+        extra=['paint-profile.json','rig-profile.json']
+        if p.get('productionRecipe'):
+            recipe=require_recipe(p);extra.extend([p['productionRecipe']['file'],recipe['sourcePaint']])
+        extra.extend(name for names in p.get('reviewReports',{}).values() for name in names)
+        existing=set(z.namelist())
+        for name in extra:
+            if name not in existing and output(p,name).is_file():z.write(output(p,name),name);existing.add(name)
     return FileResponse(archive,filename=p['id']+'-asset.zip')
 
 for stale in PROJECTS.glob('*/project.json'):

@@ -27,3 +27,5 @@ Current production shows accepted Vey, his exact views and the original arena ca
 - Repository tests pass; syntax/style/build and public release identity are recorded after publication.
 
 Raw logs, timings and screenshots: `artifacts/ink-132/`. Owner-requested albino Reptilian commander production follows this checkpoint through Asset Studio, with separate candidate status and timing.
+
+Published checkpoint `f2d0161` passed GitHub Pages run `35249869959`. Public arena checks passed in 8.42 seconds and public artbook checks in 20.62 seconds. The deployed build identifies the exact preview commit; all four sampled changed assets match committed Git blobs byte-for-byte. The first disk comparison differed only because Windows working copies use CRLF; committed-blob comparisons are the deployment authority. Main remains `6133d0713f4e93e6fc743c35d9dd0fd1834bc98f`.

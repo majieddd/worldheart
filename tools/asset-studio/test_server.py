@@ -9,6 +9,28 @@ import server
 from fastapi.testclient import TestClient
 
 class StudioTests(unittest.TestCase):
+    def test_recipe_rejects_changed_identity(self):
+        p=self.concept();server.output(p,'mesh.glb').write_bytes(fixture(motion=False));server.output(p,'paint.glb').write_bytes(fixture(motion=False))
+        sha=server.digest(server.output(p,'paint.glb'));server.write(server.output(p,'rig-profile.json'),{'name':'fixture fit','sourceSha256':sha});server.write(server.output(p,'paint-profile.json'),{'sourceSha256':sha,'palette':[[128,128,128]]*5})
+        p.update(mesh='mesh.glb',paint='paint.glb',rigProfile={'file':'rig-profile.json'},paintProfile={'file':'paint-profile.json'});server.save(p)
+        r=self.client.post(self.base+'/recipe');self.assertEqual(r.status_code,200)
+        self.assertFalse(server.require_recipe(server.project(p['id']))['ownerApproved'])
+        server.output(p,p['art']).write_bytes(self.image()+b'changed')
+        self.assertEqual(self.client.post(self.base+'/run/replay-fitted').status_code,409)
+    def test_paint_profile_is_bound_to_current_model(self):
+        p=server.project(self.p['id']);server.output(p,'paint.glb').write_bytes(fixture(motion=False));p['paint']='paint.glb';server.save(p)
+        profile={'sourceSha256':'wrong','palette':[[128,128,128]]*5}
+        self.assertEqual(self.client.post(self.base+'/paint-profile',json=profile).status_code,409)
+        profile['sourceSha256']=server.digest(server.output(p,'paint.glb'))
+        self.assertEqual(self.client.post(self.base+'/paint-profile',json=profile).status_code,200)
+        profile['palette'][0]=[300,0,0]
+        self.assertEqual(self.client.post(self.base+'/paint-profile',json=profile).status_code,400)
+    def test_exact_view_route_requires_model_packet_before_motion_approval(self):
+        p=self.concept();p['referenceMode']='model';p.pop('referencePack',None)
+        server.output(p,'mesh.glb').write_bytes(fixture(motion=False));server.output(p,'motion.glb').write_bytes(fixture())
+        p.update(mesh='mesh.glb',animation='motion.glb',motionInput=server.digest(server.output(p,'mesh.glb')));server.save(p)
+        r=self.client.post(self.base+'/approve/animation')
+        self.assertEqual(r.status_code,409);self.assertIn('exact model references',r.json()['detail'])
     def test_incomplete_pack_blocks_approval_and_resume_reuses_finished_views(self):
         self.concept();p=server.project(self.p['id']);calls=[]
         def generate(p,s,prompt,refs,name):
@@ -36,6 +58,13 @@ class StudioTests(unittest.TestCase):
         self.assertEqual(saved['status'],'running');self.assertEqual(saved['stage'],'refined-production')
         self.assertEqual(self.client.post(self.base+'/run/model-references').status_code,409)
         saved['status']='review';server.save(saved)
+    def test_hero_checkpoint_does_not_spend_on_views_or_allow_incomplete_approval(self):
+        p=self.concept();calls=[]
+        def generate(p,s,prompt,refs,name):
+            calls.append(name);server.output(p,name).write_bytes(self.image());return {'sha256':server.digest(server.output(p,name))}
+        with patch.object(server,'generate_image',side_effect=generate):server.make_art(p,{**server.DEFAULT,'family':'krea'},with_pack=False)
+        self.assertEqual(len(calls),1);self.assertIsNone(p.get('referencePack'));self.assertEqual(p['status'],'review')
+        self.assertEqual(self.client.post(self.base+'/approve/art').status_code,409)
     def setUp(self):
         self.client=TestClient(server.app);self.p=self.client.post('/api/projects',json={'name':'Test fixture'}).json();self.base='/api/projects/'+self.p['id']
     def image(self):
@@ -56,6 +85,36 @@ class StudioTests(unittest.TestCase):
     def test_changed_file_cannot_reuse_approval(self):
         p=self.concept();self.client.post(self.base+'/approve/art');server.output(p,p['art']).write_bytes(self.image()+b'changed')
         self.assertEqual(self.client.post(self.base+'/run/mesh').status_code,409)
+    def test_one_angle_retry_preserves_prior_file_and_needs_complete_review(self):
+        p=self.concept()
+        def generated(p,s,prompt,refs,name):
+            server.output(p,name).write_bytes(self.image());return {'sha256':server.digest(server.output(p,name))}
+        with patch.object(server,'generate_image',side_effect=generated):
+            server.make_reference_pack(p,server.DEFAULT,['front'])
+            first=p['referencePack']['outputs']['front']['file']
+            self.assertFalse(p['referencePack']['complete'])
+            self.assertEqual(self.client.post(self.base+'/approve/art').status_code,409)
+            server.make_reference_pack(p,server.DEFAULT,['front'])
+            self.assertNotEqual(first,p['referencePack']['outputs']['front']['file'])
+            self.assertTrue(server.output(p,first).exists())
+            self.assertEqual(p['referencePack']['attemptHistory'][0]['file'],first)
+    def test_current_concept_can_become_identity_reference(self):
+        p=self.concept();self.client.post(self.base+'/approve/art')
+        r=self.client.post(self.base+'/use-concept-reference');self.assertEqual(r.status_code,200)
+        self.assertEqual(r.json()['references'][0],p['art']);self.assertFalse(r.json()['approvals'])
+    def test_rig_fit_requires_exact_model_and_valid_joint_tree(self):
+        p=self.concept();server.output(p,'mesh.glb').write_bytes(fixture(motion=False));p['mesh']='mesh.glb';server.save(p)
+        self.assertEqual(self.client.post(self.base+'/rig-profile',json={'sourceSha256':'wrong'}).status_code,409)
+        profile={'sourceSha256':server.digest(server.output(p,'mesh.glb')),'joints':[{'name':'same','head':[0,0,0],'tail':[0,0,1]}]*15}
+        self.assertEqual(self.client.post(self.base+'/rig-profile',json=profile).status_code,400)
+    def test_agent_review_does_not_claim_owner_acceptance(self):
+        self.concept()
+        self.assertEqual(self.client.post(self.base+'/approve/art',json={'reviewer':'agent'}).status_code,400)
+        r=self.client.post(self.base+'/approve/art',json={'reviewer':'agent','notes':'Inspected face, silhouette, skin colors and full framing.'})
+        self.assertEqual(r.status_code,200)
+        p=r.json();self.assertFalse(p['reviews']['art']['ownerApproved'])
+        self.assertIn('owner acceptance is pending',p['message'])
+        self.assertNotIn('approved by user',p['events'][-1]['text'])
     def test_added_reference_invalidates_approval(self):
         self.concept();self.client.post(self.base+'/approve/art')
         self.client.post(self.base+'/upload',files={'file':('second.png',self.image(),'image/png')})
