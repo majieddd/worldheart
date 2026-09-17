@@ -63,6 +63,19 @@ class StudioTests(unittest.TestCase):
         self.assertIn('endedAt',entry);self.assertTrue(server.output(p,'timings.json').exists())
     def test_no_production_export_before_approval(self):
         self.assertEqual(self.client.get(self.base+'/export').status_code,409)
+    def test_refinement_cannot_run_on_unrelated_asset(self):
+        self.assertEqual(self.client.post(self.base+'/run/refine').status_code,409)
+        p=server.project(self.p['id']);p['refinementProfile']='vey-trellis-refinement-1';server.save(p)
+        self.assertEqual(self.client.post(self.base+'/run/refine').status_code,409)
+    def test_stale_extra_evidence_blocks_approval(self):
+        p=self.concept();server.output(p,'motion.glb').write_bytes(fixture(moving=True))
+        p.update(animation='motion.glb',reviewReports={'animation':['sole.json']})
+        server.write(server.output(p,'sole.json'),{'sha256':'stale','checks':[]});server.save(p)
+        report=self.client.post(self.base+'/validate/animation').json()['quality']['animation']
+        self.assertEqual(report['status'],'fail')
+        server.write(server.output(p,'sole.json'),{'sha256':server.digest(server.output(p,'motion.glb')),'checks':[{'name':'sole shape','status':'fail','metrics':{'distortion':.12}}]})
+        report=self.client.post(self.base+'/validate/animation').json()['quality']['animation']
+        self.assertEqual(report['status'],'fail');self.assertTrue(any(c['name']=='sole shape' for c in report['checks']))
     def test_local_origin_and_path_boundaries(self):
         self.assertEqual(self.client.post('/api/projects',json={},headers={'Origin':'https://example.com'}).status_code,403)
         self.assertEqual(self.client.get('/api/config',headers={'Host':'attacker.example'}).status_code,403)

@@ -46,11 +46,19 @@ def validate_output(p,field):
     if field not in ['mesh','paint','animation','polished'] or not p.get(field):raise HTTPException(409,'No model at this stage')
     path=output(p,p[field]);sha=digest(path);stage='polish' if field=='polished' else field
     reference_sha=digest(output(p,p['art'])) if p.get('art') else None
+    extras=p.get('reviewReports',{}).get(field,[])
+    evidence=[[name,digest(output(p,name))] for name in extras]
     cached=p.setdefault('quality',{}).get(field)
-    if cached and cached.get('sha256')==sha and cached.get('version')==QUALITY_VERSION and cached.get('referenceSha256')==reference_sha:return cached
+    if cached and cached.get('sha256')==sha and cached.get('version')==QUALITY_VERSION and cached.get('referenceSha256')==reference_sha and cached.get('evidence',[])==evidence:return cached
     report=inspect_asset(path,stage)
     report['referenceSha256']=reference_sha
-    report['reportFile']=path.stem+'.quality.json'
+    report['evidence']=evidence
+    for name,_ in evidence:
+        extra=read(output(p,name));matches=extra.get('sha256')==sha
+        report['checks'].append({'name':'Bound refinement evidence: '+name,'status':'pass' if matches else 'fail','detail':'Checks must describe the current model bytes'})
+        if matches:report['checks'].extend(extra['checks'])
+    if any(c['status']=='fail' for c in report['checks']):report['status']='fail'
+    report['reportFile']=str(Path(p[field]).with_suffix('.quality.json')).replace('\\','/')
     write(output(p,report['reportFile']),report);p['quality'][field]=report;save(p)
     return report
 
@@ -273,6 +281,40 @@ def blender_stage(p,s,stage):
     update(p,stage,'review','Review every animation and deformation before approving polish.' if stage=='animation' else 'Inspect the surface treatment from every side.' if stage=='paint' else 'Polished export ready. Original geometry, paint and animation versions are retained.')
     require_valid_output(p,'polished' if stage=='polish' else stage)
 
+def require_refinement_source(p):
+    profile=read(Path(__file__).parent/'pilots/vey-trellis/refinement-profile.json')
+    if p.get('refinementProfile')!=profile['id']:raise HTTPException(409,'This fitted recipe is available for the Vey Trellis review project. Other assets need their own material and rig profile.')
+    if not p.get('mesh') or digest(output(p,p['mesh']))!=profile['meshSha256']:raise HTTPException(409,'Current geometry differs from the fitted Vey mesh')
+    sources=p.get('refinementSources') or {'art':p.get('art'),'paint':p.get('paint'),'animation':p.get('animation')}
+    for field,expected in [('art','referenceSha256'),('paint','paintSha256'),('animation','animationSha256')]:
+        name=sources.get(field)
+        if not name or digest(output(p,name))!=profile[expected]:raise HTTPException(409,'Refinement source or identity changed. Fit and review the profile before applying it.')
+    if p.get('art')!=sources['art'] or digest(output(p,p['art']))!=profile['referenceSha256']:raise HTTPException(409,'Current reference differs from the fitted Vey identity')
+    if digest(ROOT/'lib/99-art/vey-benchmark-v1/vey-motion.blend')!=profile['sourceRigSha256']:raise HTTPException(409,'Source rig changed; update and review the fitted recipe')
+    return sources
+
+def refine_vey(p,s):
+    sources=require_refinement_source(p);folder='refine-'+uuid.uuid4().hex[:10];dest=output(p,folder);dest.mkdir()
+    scripts=Path(__file__).parent;recipe=scripts/'pilots/vey-trellis';profile=recipe/'refinement-profile.json'
+    def step(name,args):
+        cancelled(p)
+        with timed_stage(p,name):run_process(p,args)
+    py=RUNTIME/'.venv/Scripts/python.exe';bp=RUNTIME/'blender-py311/Scripts/python.exe'
+    step('surface and sole reconstruction',[py,recipe/'solidify-surface.py','--input',output(p,sources['paint']),'--output',dest/'solid-surface.glb'])
+    step('silhouette validation and UVs',[bp,recipe/'repair-shape.py','--input',dest/'solid-surface.glb','--reference',output(p,sources['paint']),'--output',dest/'clean-shape.glb'])
+    step('material-region paint',[py,recipe/'refine-paint.py','--input',dest/'clean-shape.glb','--output',dest/'paint-refined.glb','--size',4096])
+    step('sole weights and motion',[bp,recipe/'refine-motion.py','--input',ROOT/'lib/99-art/vey-benchmark-v1/vey-motion.blend','--surface',dest/'paint-refined.glb','--atlas',dest/'paint-refined.png','--output-dir',dest])
+    step('surface region validation',[py,scripts/'surface_quality.py',dest/'paint-refined.glb','--profile',profile,'--output',dest/'surface-quality.json'])
+    step('deformed sole validation',[bp,scripts/'sole_quality.py',dest/'vey-motion.glb','--profile',profile,'--output',dest/'sole-quality.json'])
+    # Keep earlier files and approvals as history. A repair creates a new review
+    # candidate and cannot inherit approval from different paint or animation.
+    p.setdefault('refinementHistory',[]).append({'paint':p.get('paint'),'animation':p.get('animation'),'approvals':dict(p['approvals'])})
+    p['refinementSources']=sources;p['paint']=folder+'/paint-refined.glb';p['animation']=folder+'/vey-motion.glb';p['polished']=None;p['approvals'].pop('animation',None)
+    p['reviewReports']={'paint':[folder+'/surface-quality.json'],'animation':[folder+'/sole-quality.json']}
+    p['motionInput']=digest(dest/'paint-refined.glb');save(p)
+    require_valid_output(p,'paint');require_valid_output(p,'animation')
+    update(p,'animation','review','Vey material paint and boot correction complete. Compare all views and full clips before approving. Original files remain available.')
+
 def worker(key,stage,s):
     global ACTIVE
     p=project(key);ACTIVE={'project':key,'stage':stage};update(p,stage,'running','Working locally. You can leave this tab open.');log_event(p,stage+' started')
@@ -283,6 +325,7 @@ def worker(key,stage,s):
             with timed_stage(p,step):
                 if step=='concept':make_art(p,s)
                 elif step=='mesh':make_mesh(p,s)
+                elif step=='refine':refine_vey(p,s)
                 else:blender_stage(p,s,step)
         log_event(p,stage+' completed')
     except Exception as e:update(p,stage,'error',str(e));log_event(p,'Failed: '+str(e)[:500])
@@ -291,10 +334,11 @@ def worker(key,stage,s):
 @app.post('/api/projects/{key}/run/{stage}')
 def run(key,stage):
     p=project(key)
-    if stage not in ['concept','mesh','paint','animation','production','polish']:raise HTTPException(400,'Unknown stage')
+    if stage not in ['concept','mesh','paint','animation','production','polish','refine']:raise HTTPException(400,'Unknown stage')
     with LOCK:
         if ACTIVE or any(x['status'] in ['queued','running'] for x in list_projects()):raise HTTPException(409,'One local GPU job at a time. Wait for or cancel the active job.')
         if stage=='concept' and len(p['description'].strip())<8:raise HTTPException(400,'Describe the asset first')
+        if stage=='refine':require_refinement_source(p)
         if stage in ['mesh','production']:assert_approved(p,'art','art')
         if stage=='polish':assert_approved(p,'animation','animation')
         if stage in ['paint','animation'] and not p.get('mesh'):raise HTTPException(409,'Create or import a model first')
