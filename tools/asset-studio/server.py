@@ -315,6 +315,31 @@ def refine_vey(p,s):
     require_valid_output(p,'paint');require_valid_output(p,'animation')
     update(p,'animation','review','Vey material paint and boot correction complete. Compare all views and full clips before approving. Original files remain available.')
 
+def require_articulation_source(p):
+    require_refinement_source(p)
+    profile=read(Path(__file__).parent/'pilots/vey-trellis/refinement-profile.json')['articulation']
+    sources=p.get('articulationSources') or {'paint':p.get('paint'),'animation':p.get('animation')}
+    for field in ['paint','animation']:
+        if not sources.get(field) or digest(output(p,sources[field]))!=profile[field+'Sha256']:raise HTTPException(409,'Articulation needs the saved Vey surface-refinement candidate. Run and review that stage first.')
+    if digest(ROOT/'lib/99-art/vey-refinement-v1/vey-motion.blend')!=profile['blendSha256']:raise HTTPException(409,'Articulation source rig changed; refit the recipe')
+    return sources
+
+def articulate_vey(p,s):
+    sources=require_articulation_source(p);folder='articulate-'+uuid.uuid4().hex[:10];dest=output(p,folder);dest.mkdir()
+    scripts=Path(__file__).parent;recipe=scripts/'pilots/vey-trellis';profile=recipe/'refinement-profile.json';py=RUNTIME/'.venv/Scripts/python.exe';bp=RUNTIME/'blender-py311/Scripts/python.exe'
+    def step(name,args):
+        cancelled(p)
+        with timed_stage(p,name):run_process(p,args)
+    step('boot roll, wrists and digits',[bp,recipe/'refine-articulation.py','--input',ROOT/'lib/99-art/vey-refinement-v1/vey-motion.blend','--output-dir',dest])
+    step('articulation validation',[bp,scripts/'articulation_quality.py',dest/'vey-motion.glb','--output',dest/'articulation-quality.json'])
+    step('sole validation',[bp,scripts/'sole_quality.py',dest/'vey-motion.glb','--profile',profile,'--output',dest/'sole-quality.json'])
+    step('surface validation',[py,scripts/'surface_quality.py',dest/'paint-articulated.glb','--profile',profile,'--output',dest/'surface-quality.json'])
+    p.setdefault('refinementHistory',[]).append({'paint':p.get('paint'),'animation':p.get('animation'),'approvals':dict(p['approvals'])})
+    p['articulationSources']=sources;p['paint']=folder+'/paint-articulated.glb';p['animation']=folder+'/vey-motion.glb';p['polished']=None;p['approvals'].pop('animation',None)
+    p['reviewReports']={'paint':[folder+'/surface-quality.json'],'animation':[folder+'/sole-quality.json',folder+'/articulation-quality.json']};p['motionInput']=digest(dest/'paint-articulated.glb');save(p)
+    require_valid_output(p,'paint');require_valid_output(p,'animation')
+    update(p,'animation','review','Hands and boot roll refined. Review heel contact, flat support, toe-off and relaxed digits through full walk/run cycles before approval.')
+
 def worker(key,stage,s):
     global ACTIVE
     p=project(key);ACTIVE={'project':key,'stage':stage};update(p,stage,'running','Working locally. You can leave this tab open.');log_event(p,stage+' started')
@@ -326,6 +351,7 @@ def worker(key,stage,s):
                 if step=='concept':make_art(p,s)
                 elif step=='mesh':make_mesh(p,s)
                 elif step=='refine':refine_vey(p,s)
+                elif step=='articulate':articulate_vey(p,s)
                 else:blender_stage(p,s,step)
         log_event(p,stage+' completed')
     except Exception as e:update(p,stage,'error',str(e));log_event(p,'Failed: '+str(e)[:500])
@@ -334,11 +360,12 @@ def worker(key,stage,s):
 @app.post('/api/projects/{key}/run/{stage}')
 def run(key,stage):
     p=project(key)
-    if stage not in ['concept','mesh','paint','animation','production','polish','refine']:raise HTTPException(400,'Unknown stage')
+    if stage not in ['concept','mesh','paint','animation','production','polish','refine','articulate']:raise HTTPException(400,'Unknown stage')
     with LOCK:
         if ACTIVE or any(x['status'] in ['queued','running'] for x in list_projects()):raise HTTPException(409,'One local GPU job at a time. Wait for or cancel the active job.')
         if stage=='concept' and len(p['description'].strip())<8:raise HTTPException(400,'Describe the asset first')
         if stage=='refine':require_refinement_source(p)
+        if stage=='articulate':require_articulation_source(p)
         if stage in ['mesh','production']:assert_approved(p,'art','art')
         if stage=='polish':assert_approved(p,'animation','animation')
         if stage in ['paint','animation'] and not p.get('mesh'):raise HTTPException(409,'Create or import a model first')

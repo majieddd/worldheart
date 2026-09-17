@@ -64,6 +64,7 @@ class StudioTests(unittest.TestCase):
     def test_no_production_export_before_approval(self):
         self.assertEqual(self.client.get(self.base+'/export').status_code,409)
     def test_refinement_cannot_run_on_unrelated_asset(self):
+        self.assertEqual(self.client.post(self.base+'/run/articulate').status_code,409)
         self.assertEqual(self.client.post(self.base+'/run/refine').status_code,409)
         p=server.project(self.p['id']);p['refinementProfile']='vey-trellis-refinement-1';server.save(p)
         self.assertEqual(self.client.post(self.base+'/run/refine').status_code,409)

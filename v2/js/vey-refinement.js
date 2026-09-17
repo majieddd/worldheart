@@ -1,6 +1,6 @@
 import * as THREE from '../lib/three.module.min.js';
 import {ModelPreview} from './asset-model-viewer.js';
-const $=s=>document.querySelector(s),base='../../lib/99-art/vey-refinement-v1/',old='../../lib/99-art/vey-benchmark-v1/';
+const $=s=>document.querySelector(s),base=document.body.dataset.assetBase||'../../lib/99-art/vey-refinement-v1/',old=document.body.dataset.baselineBase||'../../lib/99-art/vey-benchmark-v1/';
 const preview=new ModelPreview($('#viewer'),{contourMode:'silhouette'});
 preview.renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 preview.scene.children.filter(o=>o.isLight).forEach(o=>o.intensity*=.55);
@@ -8,7 +8,7 @@ const state=window.VEY_REFINEMENT={preview,ready:false};window.VEY_BENCHMARK=sta
 window.VEY_PILOT={preview,selectClip:(name,fade)=>selectClip(name,fade),step(time){preview.playing=false;preview.mixer.setTime(time);preview.draw();}};
 const grid=new THREE.GridHelper(12,40,0x9fa99f,0xc4ccc1);preview.scene.add(grid);
 const manifest=await fetch(base+'manifest.json').then(r=>r.json());
-const charts=await fetch(old+'motion-chart.json').then(r=>r.json());
+const charts=await fetch('../../lib/99-art/vey-benchmark-v1/motion-chart.json').then(r=>r.json());
 let loaded=false,last=performance.now(),travel=0;
 function selectClip(name,fade=true){$('#clip').value=name;const clip=preview.clips.find(c=>c.name.startsWith(name));if(clip)preview.clip(clip.name,{fade:fade?.22:0});$('#play').textContent='Pause';}
 const originalDraw=preview.draw.bind(preview);

@@ -74,6 +74,21 @@ timing-ledger.json records setup separately and warns about overlapping stages.
 Do not add parallel downloads to total wall time or describe one asset as a batch
 average. Cached results and preserved raw shape avoid rerunning expensive stages.
 
+## Articulation follow-up
+
+`refine-articulation.py` starts from the saved clean `vey-refinement-v1` blend.
+The Studio action **Refine hands & foot roll** checks the exact reference,
+surface and rig hashes first. It preserves earlier files and invalidates motion
+approval. Reconstruction and painting are not repeated.
+
+This fitted Vey pass authors heel/flat/toe roll from measured ankle phase,
+corrects sole pitch and bank, expands the cuff openings with radial falloff,
+isolates palm/wrist weights and adds ten digit joints with relaxed motion.
+`articulation_quality.py` checks exported sole pitch, grounded flat support and
+finger edge strain. Existing surface, sole and motion checks remain in force.
+The original upturned boot, hard digit-weight seams and outside-edge support are
+retained as failure cases. Owner visual acceptance remains separate.
+
 ## Evidence
 
 Browser steps: browser-steps.cjs. Local evidence: artifacts/vey-quality-research.
