@@ -95,3 +95,26 @@ Browser steps: browser-steps.cjs. Local evidence: artifacts/vey-quality-research
 Published assets: lib/99-art/vey-benchmark-v1; viewer: vey-benchmark.html.
 CMU attribution and source limitations remain with the prior pilot documentation.
 Roblox import/budget checks and owner visual acceptance are still separate gates.
+
+## Complete reference packs and accepted Vey replay
+
+Concept generation now saves the hero, six individual directional views, sampled
+color palette, walk/strike guide and portable prompt. Successful views are cached
+by hero, brief, settings and recipe hashes. An incomplete or changed pack cannot
+be approved. Inspect the first generated view before spending on a batch: the
+Krea pilot changed Vey's mantle into a long coat and was rejected. Generated views
+are design proposals, not calibrated projection inputs. Shape currently consumes
+the hero only. Export includes the pack, reports and production contract.
+
+For an existing accepted model, **Render exact model references** uses six
+orthographic cameras and records their transforms. Walk frames come from the
+source clip. The compatible arm profile also provides labeled strike pose
+proposals; it does not claim a baked attack. Alpha-aware palette sampling retains
+minor accents and excludes transparent background pixels.
+
+**Replay complete Vey refinement** performs the saved surface/sole, semantic
+paint, motion and wrist/digit refinement with artifact-bound checks. This is an
+exact-source Vey recipe; other anatomy still requires a fitted material and rig
+profile. Preserve the accepted model while testing replays in a separate project.
+See `docs/qa/implementation/VEY-FIELD-REFERENCE-PIPELINE.md` for live-scene and
+replay evidence.

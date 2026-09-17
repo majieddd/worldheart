@@ -3,3 +3,5 @@
 @media(max-width:1000px){main{grid-template-columns:290px 1fr}.workspace{padding:24px 20px}.review{align-items:flex-start;flex-direction:column}#actions{justify-content:flex-start;max-width:none}.local{font-size:12px}.preview{height:52vh;min-height:350px}}
 @media(max-width:720px){header{padding:0 16px;height:72px}.local{display:none}main{display:flex;flex-direction:column}aside{border-right:0;border-bottom:1px solid var(--line);min-height:0;padding:20px}.workspace{padding:22px 16px}.preview{min-height:340px;height:55vh}.stages{gap:0}.stages button{padding:8px 9px;font-size:12px}textarea{min-height:130px}.wordmark{font-size:36px}}
 @media(prefers-reduced-motion:reduce){button{transition:none}}
+
+#reference-pack{padding:12px 0;display:flex;flex-wrap:wrap;align-items:center;gap:10px}#reference-pack select{max-width:250px}#reference-pack .hint{flex-basis:100%;margin:0}#reference-pack a{font-size:12px;text-decoration:underline}

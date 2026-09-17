@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from workflows import STYLE,compose_prompt,krea_graph,checkpoint_graph
 from asset_quality import inspect_asset,VERSION as QUALITY_VERSION
+import reference_pack as packets
 
 ROOT=Path(__file__).resolve().parents[2]
 RUNTIME=Path(os.environ.get('WH_STUDIO_RUNTIME',ROOT.parent/'local-asset-runtime')).resolve()
@@ -186,6 +187,7 @@ def use_reference(key,index:int):
     if not 0<=index<len(p['references']):raise HTTPException(404,'Reference not found')
     name='concept-import-'+uuid.uuid4().hex[:8]+Path(p['references'][index]).suffix
     shutil.copy2(output(p,p['references'][index]),output(p,name))
+    if p.get('referencePack'):p.setdefault('referencePackHistory',[]).append(p.pop('referencePack'))
     p.update(art=name,artBrief=brief_digest(p),mesh=None,paint=None,animation=None,polished=None,imported=False,approvals={})
     update(p,'concept','review','Imported reference is the concept. Review it and approve 2D before reconstruction.');return p
 
@@ -195,14 +197,20 @@ def approve(key,stage):
     if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the job to finish')
     field={'art':'art','animation':'animation'}.get(stage)
     if not field or not p.get(field):raise HTTPException(409,'There is no completed output to approve')
+    if stage=='art':require_reference_pack(p)
     if stage=='art' and p.get('artBrief')!=brief_digest(p):raise HTTPException(409,'The concept belongs to an older brief. Generate a new concept or select a reference as the concept.')
     if stage=='animation' and p.get('motionInput')!=digest(output(p,p.get('paint') or p['mesh'])):raise HTTPException(409,'Motion belongs to an older model. Prepare motion again.')
     if stage=='animation':require_valid_output(p,'animation')
-    p['approvals'][stage]=digest(output(p,p[field]));p['status']='approved';p['message']='2D approved. The approved image is locked for reconstruction.' if stage=='art' else 'Animation approved. Polish and export are now available.';log_event(p,stage+' approved by user');save(p);return p
+    p['approvals'][stage]=digest(output(p,p[field]));
+    if stage=='art' and p.get('referencePack'):
+        p['referencePack']['approval']='approved';p['approvals']['referencePack']=digest(output(p,p['referencePack']['folder']+'/manifest.json'))
+    p['status']='approved';p['message']='2D approved. The approved image is locked for reconstruction.' if stage=='art' else 'Animation approved. Polish and export are now available.';log_event(p,stage+' approved by user');save(p);return p
 
 def assert_approved(p,stage,field):
     if not p.get(field) or p['approvals'].get(stage)!=digest(output(p,p[field])):raise HTTPException(409,f'Approve the current {stage} first')
+    if stage=='art':require_reference_pack(p)
     if stage=='art' and p.get('artBrief')!=brief_digest(p):raise HTTPException(409,'The approved concept no longer matches this brief')
+    if stage=='art' and p.get('referencePack') and p['approvals'].get('referencePack')!=digest(output(p,p['referencePack']['folder']+'/manifest.json')):raise HTTPException(409,'Approve the current reference pack first')
 def cancelled(p):
     if CANCEL.get(p['id']):raise RuntimeError('Cancelled by user. Previous outputs are preserved.')
 def comfy_free():
@@ -217,19 +225,14 @@ def run_process(p,args):
             time.sleep(.4)
     if child.returncode:raise RuntimeError(log.read_text('utf-8',errors='replace')[-1800:])
 
-def make_art(p,s):
+def generate_image(p,s,prompt,references,name):
     if not (COMFY/'models/text_encoders/qwen3vl_4b_fp8_scaled.safetensors').exists() and (COMFY/'models/text_encoders/qwen3vl_4b_native_bf16.safetensors').exists():s={**s,'encoder':'qwen3vl_4b_native_bf16.safetensors'}
     refs=[]
-    source_refs=p['references'][:]
-    if not source_refs and (ROOT/'lib/99-art/references/paintline_clash.webp').exists():
-        shutil.copy2(ROOT/'lib/99-art/references/paintline_clash.webp',output(p,'style-reference.webp'));source_refs=['style-reference.webp']
-    if s['family']=='checkpoint' and p['references']:raise RuntimeError('Reference conditioning is supported by the Krea workflow. Choose Krea to use pasted references; the checkpoint workflow is text-only.')
-    for name in source_refs:
-        with output(p,name).open('rb') as f:
-            r=requests.post(COMFY_URL+'/upload/image',files={'image':(p['id']+'-'+name,f)},data={'overwrite':'true'},timeout=40);r.raise_for_status();refs.append(r.json()['name'])
-    prompt=compose_prompt(p['description'],p['style'],len(refs));stamp=str(int(time.time()));prefix='studio/'+p['id']+'-'+stamp
-    graph=krea_graph(prompt,s,refs,prefix) if s['family']=='krea' else checkpoint_graph(prompt,s,prefix)
-    write(output(p,'workflow-'+stamp+'.json'),graph)
+    for path in references[:3]:
+        with Path(path).open('rb') as f:
+            r=requests.post(COMFY_URL+'/upload/image',files={'image':(p['id']+'-'+Path(path).name,f)},data={'overwrite':'true'},timeout=40);r.raise_for_status();refs.append(r.json()['name'])
+    graph=krea_graph(prompt,s,refs,'studio/'+p['id']+'-'+uuid.uuid4().hex[:8]) if s['family']=='krea' else checkpoint_graph(prompt,s,'studio/'+p['id'])
+    write(output(p,name+'.workflow.json'),graph)
     r=requests.post(COMFY_URL+'/prompt',json={'prompt':graph,'client_id':'asset-studio-'+p['id']},timeout=30)
     if not r.ok:raise RuntimeError(r.text[:1800])
     job=r.json()['prompt_id'];p['comfyJob']=job;save(p);start=time.time()
@@ -238,16 +241,72 @@ def make_art(p,s):
         if history:
             if history.get('status',{}).get('status_str')=='error':
                 errors=[msg[1] for msg in history['status'].get('messages',[]) if msg[0]=='execution_error']
-                if errors:raise RuntimeError(errors[-1].get('exception_type','Engine error')+': '+errors[-1].get('exception_message','Unknown error'))
-                raise RuntimeError('Image engine failed. Inspect the local ComfyUI log.')
+                raise RuntimeError(str(errors[-1].get('exception_message','Engine error'))[:1500] if errors else 'Image engine failed')
             images=[im for node in history.get('outputs',{}).values() for im in node.get('images',[])]
             if images:
-                info=images[0];r=requests.get(COMFY_URL+'/view',params=info,timeout=120);r.raise_for_status();name='concept-'+stamp+'.png';output(p,name).write_bytes(r.content)
-                p.update(art=name,artBrief=brief_digest(p),mesh=None,paint=None,animation=None,polished=None,imported=False,approvals={})
-                write(output(p,'concept-'+stamp+'.json'),{'provider':'local ComfyUI','model':s['model'],'settings':s,'prompt':prompt,'references':refs,'seconds':time.time()-start,'sha256':digest(output(p,name)),'job':job})
-                update(p,'concept','review','Inspect the concept. Approve its identity and style before making a model.');return
+                r=requests.get(COMFY_URL+'/view',params=images[0],timeout=120);r.raise_for_status();output(p,name).write_bytes(r.content)
+                with Image.open(output(p,name)) as im:im.verify()
+                receipt={'provider':'local ComfyUI','model':s['model'],'settings':s,'prompt':prompt,'references':[{'file':Path(x).name,'sha256':digest(x)}for x in references],'seconds':time.time()-start,'sha256':digest(output(p,name)),'job':job}
+                write(output(p,name+'.json'),receipt);return receipt
         time.sleep(1.5)
-    raise RuntimeError('Generation exceeded two hours; inspect the ComfyUI log before retrying')
+    raise RuntimeError('Generation exceeded two hours; inspect ComfyUI before retrying')
+
+def make_reference_pack(p,s):
+    if not p.get('art') or p.get('artBrief')!=brief_digest(p):raise RuntimeError('Create a current hero concept first')
+    if s['family']!='krea':raise RuntimeError('Choose Krea for identity-conditioned directional views; the checkpoint route is text-only')
+    hero=output(p,p['art']);token=packets.identity(hero,p['description'],p['style'],s)
+    pack=p.get('referencePack')
+    if not pack or pack.get('recipeSha256')!=token:
+        if pack:p.setdefault('referencePackHistory',[]).append(pack)
+        folder='references-'+uuid.uuid4().hex[:10];output(p,folder).mkdir();shutil.copy2(hero,output(p,folder+'/hero.png'))
+        pack={'version':packets.VERSION,'folder':folder,'hero':folder+'/hero.png','heroSha256':digest(hero),'recipeSha256':token,'style':p['style'],'complete':False,'calibrated':False,'approval':'pending','outputs':{},'roles':{'shape':'hero only; current local engines accept one image','paint':'individual views require camera and material-region fitting before projection','motion':'walk and strike are visual guides, not generated skeletal clips'}}
+        p['referencePack']=pack;p['approvals'].pop('art',None);save(p)
+    for i,(role,prompt) in enumerate(packets.prompts(p['description'],p['style']).items()):
+        cancelled(p);old=pack['outputs'].get(role)
+        if old and output(p,old['file']).is_file() and digest(output(p,old['file']))==old['sha256']:continue
+        name=pack['folder']+'/'+role+'.png';size={'width':768,'height':1024} if role!='motion' else {'width':1280,'height':768}
+        update(p,'references','running','Reference pack: '+role+' / completed views are cached')
+        with timed_stage(p,'reference '+role):receipt=generate_image(p,{**s,**size,'seed':s['seed']+101+i},prompt,[hero],name)
+        pack['outputs'][role]={'file':name,'sha256':receipt['sha256'],'prompt':prompt,'receipt':name+'.json'};save(p);write(output(p,pack['folder']+'/manifest.json'),pack)
+    with timed_stage(p,'palette and turnaround sheet'):pack['palette']=packets.assemble(PROJECTS/p['id'],pack,p['description'])
+    pack['complete']=True;write(output(p,pack['folder']+'/manifest.json'),pack);save(p)
+    update(p,'concept','review','Review hero, all six views, palette and walk/strike guide. Approve 2D before reconstruction. Generated views require fitting before texture projection.')
+
+def render_reference_pack(p,s):
+    model=p.get('animation') or p.get('paint') or p.get('mesh')
+    if not model or not p.get('art'):raise RuntimeError('A model and hero concept are required')
+    folder='model-references-'+uuid.uuid4().hex[:10]
+    with timed_stage(p,'exact model reference renders'):
+        run_process(p,[RUNTIME/'.venv/Scripts/python.exe',Path(__file__).with_name('render_references.py'),'--root',PROJECTS/p['id'],'--project',p['id'],'--model',model,'--hero',p['art'],'--folder',folder,'--description',p['description'],'--style',p['style']])
+    if p.get('referencePack'):p.setdefault('referencePackHistory',[]).append(p['referencePack'])
+    p['referencePack']=read(output(p,folder+'/manifest.json'));p['approvals'].pop('referencePack',None)
+    update(p,'concept','review','Exact model references saved: six cameras, palette, walk frames and a separate strike pose proposal. Review guides before reusing them.')
+
+def production_contract(p,s):
+    contract={'version':1,'hero':{'file':p.get('art'),'sha256':digest(output(p,p['art'])) if p.get('art')else None},'referencePack':p.get('referencePack'),'engines':{'shape':s['meshEngine'],'paint':s['paintEngine']},'style':p['style'],
+      'steps':[
+        {'stage':'concept','gate':'Hero identity, all six views, palette and walk/strike references reviewed together. A generated back is a proposal until approved.'},
+        {'stage':'shape','gate':'Compare silhouette and limb separation in six cameras. Preserve raw reconstruction. Do not infer geometry from a composite sheet.'},
+        {'stage':'paint','gate':'Inspect lit, albedo and clay. Use calibrated visible views and material regions; reject front-to-back leakage. Preserve 4K paint when supplied.'},
+        {'stage':'motion','gate':'Fit joints and weights to this anatomy. Check both soles: heel-flat-toe, lateral bank, contact and clearance. Inspect wrist fit, digit webbing max strain and all clip seams.'},
+        {'stage':'export','gate':'Require owner animation approval and artifact-bound checks. Preserve source mesh, rig, paint and receipts.'}],
+      'fittedProfile':p.get('refinementProfile'),'scope':'Vey repair is exact-source fitted. Other anatomy uses a draft rig until fitted and reviewed; a concept sheet does not perform rigging.'}
+    write(output(p,'production-contract.json'),contract);return contract
+
+def require_reference_pack(p):
+    if not p.get('referencePack'):return
+    if not packets.current(p['referencePack'],PROJECTS/p['id'],output(p,p['art'])):raise HTTPException(409,'Reference pack is incomplete or changed. Resume the pack and review it before continuing.')
+    pack=p['referencePack']
+    if pack.get('sourceModel') and digest(output(p,pack['sourceModel']))!=pack['sourceModelSha256']:raise HTTPException(409,'Reference model bytes changed; render the references again')
+
+def make_art(p,s):
+    if s['family']!='krea':raise RuntimeError('The full character reference pack needs Krea reference conditioning. Select Krea in Settings.')
+    name='concept-'+uuid.uuid4().hex[:10]+'.png';refs=[output(p,n)for n in p['references']]
+    if not refs and (ROOT/'lib/99-art/references/paintline_clash.webp').exists():refs=[ROOT/'lib/99-art/references/paintline_clash.webp']
+    with timed_stage(p,'hero concept'):generate_image(p,s,compose_prompt(p['description'],p['style'],len(refs)),refs,name)
+    if p.get('referencePack'):p.setdefault('referencePackHistory',[]).append(p.pop('referencePack'))
+    p.update(art=name,artBrief=brief_digest(p),mesh=None,paint=None,animation=None,polished=None,imported=False,approvals={});save(p)
+    make_reference_pack(p,s)
 
 def make_mesh(p,s):
     comfy_free();name='shape-'+str(int(time.time()))+'.glb'
@@ -269,7 +328,7 @@ def blender_stage(p,s,stage):
     source=p.get(field) or (p.get('mesh') if stage=='animation' else None)
     if not source:raise RuntimeError('Complete the preceding stage first')
     name=stage+'-'+str(int(time.time()))+'.glb'
-    task={'stage':stage,'input':str(output(p,source)),'output':str(output(p,name)),'reference':str(output(p,p['art'])) if p.get('art') else None,'style':p['style'],'textureSize':s['textureSize'],'preserveRig':p.get('imported',False),'seed':s['seed']}
+    task={'stage':stage,'input':str(output(p,source)),'output':str(output(p,name)),'reference':str(output(p,p['art'])) if p.get('art') else None,'style':p['style'],'textureSize':s['textureSize'],'preserveRig':p.get('imported',False),'seed':s['seed'],'productionContract':str(output(p,'production-contract.json'))}
     write(output(p,'task.json'),task)
     if stage=='paint' and s.get('paintEngine')=='trellis2':trellis_stage(p,s,'paint',name,source)
     else:run_process(p,[RUNTIME/'blender-py311/Scripts/python.exe',Path(__file__).with_name('model_worker.py'),output(p,'task.json')])
@@ -346,25 +405,30 @@ def worker(key,stage,s):
     try:
         cancelled(p)
         for step in (['mesh','paint','animation'] if stage=='production' else [stage]):
-            cancelled(p);update(p,step,'running','Working locally.')
+            cancelled(p);production_contract(p,s);update(p,step,'running','Working locally.')
             with timed_stage(p,step):
                 if step=='concept':make_art(p,s)
+                elif step=='references':make_reference_pack(p,s)
+                elif step=='model-references':render_reference_pack(p,s)
+                elif step=='refined-production':
+                    refine_vey(p,s);articulate_vey(p,s)
                 elif step=='mesh':make_mesh(p,s)
                 elif step=='refine':refine_vey(p,s)
                 elif step=='articulate':articulate_vey(p,s)
                 else:blender_stage(p,s,step)
-        log_event(p,stage+' completed')
+        production_contract(p,s);log_event(p,stage+' completed')
     except Exception as e:update(p,stage,'error',str(e));log_event(p,'Failed: '+str(e)[:500])
     finally:ACTIVE=None;CANCEL.pop(key,None)
 
 @app.post('/api/projects/{key}/run/{stage}')
 def run(key,stage):
     p=project(key)
-    if stage not in ['concept','mesh','paint','animation','production','polish','refine','articulate']:raise HTTPException(400,'Unknown stage')
+    if stage not in ['concept','mesh','paint','animation','production','polish','refine','articulate','references','model-references','refined-production']:raise HTTPException(400,'Unknown stage')
     with LOCK:
         if ACTIVE or any(x['status'] in ['queued','running'] for x in list_projects()):raise HTTPException(409,'One local GPU job at a time. Wait for or cancel the active job.')
         if stage=='concept' and len(p['description'].strip())<8:raise HTTPException(400,'Describe the asset first')
-        if stage=='refine':require_refinement_source(p)
+        if stage=='references' and not p.get('art'):raise HTTPException(409,'Create or import a hero first')
+        if stage in ['refine','refined-production']:require_refinement_source(p)
         if stage=='articulate':require_articulation_source(p)
         if stage in ['mesh','production']:assert_approved(p,'art','art')
         if stage=='polish':assert_approved(p,'animation','animation')
@@ -401,9 +465,13 @@ def export(key):
     require_valid_output(p,'polished')
     archive=output(p,'asset-package.zip')
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
-        for name in [p['polished'],Path(p['polished']).with_suffix('.blend').name,Path(p['polished']).with_suffix('.fbx').name,Path(p['polished']).with_suffix('.json').name,'project.json','timings.json']+[q['reportFile'] for q in p.get('quality',{}).values() if q.get('reportFile')]:
+        for name in [p.get('art'),p.get('mesh'),p.get('paint'),p.get('animation'),p['polished'],Path(p['polished']).with_suffix('.blend').name,Path(p['polished']).with_suffix('.fbx').name,Path(p['polished']).with_suffix('.json').name,'project.json','timings.json','production-contract.json']+[q['reportFile'] for q in p.get('quality',{}).values() if q.get('reportFile')]:
+            if not name:continue
             path=output(p,name)
             if path.exists():z.write(path,name)
+        if p.get('referencePack'):
+            for path in output(p,p['referencePack']['folder']).glob('*'):
+                if path.is_file():z.write(path,str(path.relative_to(PROJECTS/p['id'])))
     return FileResponse(archive,filename=p['id']+'-asset.zip')
 
 for stale in PROJECTS.glob('*/project.json'):

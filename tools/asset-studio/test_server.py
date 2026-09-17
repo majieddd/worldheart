@@ -9,6 +9,24 @@ import server
 from fastapi.testclient import TestClient
 
 class StudioTests(unittest.TestCase):
+    def test_incomplete_pack_blocks_approval_and_resume_reuses_finished_views(self):
+        self.concept();p=server.project(self.p['id']);calls=[]
+        def generate(p,s,prompt,refs,name):
+            calls.append(name)
+            if name.endswith('/left.png'):raise RuntimeError('Fixture interruption')
+            server.output(p,name).write_bytes(self.image());return {'sha256':server.digest(server.output(p,name))}
+        with patch.object(server,'generate_image',side_effect=generate):
+            with self.assertRaises(RuntimeError):server.make_reference_pack(p,server.DEFAULT)
+        p['status']='review';server.save(p)
+        self.assertEqual(self.client.post(self.base+'/approve/art').status_code,409)
+        calls.clear()
+        def finish(p,s,prompt,refs,name):
+            calls.append(name);server.output(p,name).write_bytes(self.image());return {'sha256':server.digest(server.output(p,name))}
+        with patch.object(server,'generate_image',side_effect=finish):server.make_reference_pack(p,server.DEFAULT)
+        self.assertEqual(len(calls),6);self.assertFalse(any(n.endswith('/front.png')for n in calls))
+        self.assertEqual(self.client.post(self.base+'/approve/art').status_code,200)
+        p=server.project(self.p['id']);server.output(p,p['referencePack']['outputs']['back']['file']).write_bytes(b'changed')
+        with self.assertRaises(server.HTTPException):server.assert_approved(p,'art','art')
     def setUp(self):
         self.client=TestClient(server.app);self.p=self.client.post('/api/projects',json={'name':'Test fixture'}).json();self.base='/api/projects/'+self.p['id']
     def image(self):
