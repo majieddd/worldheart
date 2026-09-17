@@ -1,7 +1,7 @@
 {
   "startedAt": "2026-09-17T09:26:01+00:00",
-  "checkpointAt": "2026-09-17T10:43:09.645101+00:00",
-  "totalSeconds": 4628.645101,
+  "checkpointAt": "2026-09-17T10:47:01.435305+00:00",
+  "totalSeconds": 4860.435305,
   "timeBasis": "Includes inspection, implementation and retries. No engine installation or neural inference was needed. Public verification follows this checkpoint.",
   "steps": [
     {
@@ -398,7 +398,8 @@
       "exitCode": 1,
       "endedAt": "2026-09-17T10:40:14.188058+00:00",
       "seconds": 1.49,
-      "step": "original negative control"
+      "step": "original negative control",
+      "result": "Expected rejection of original defects"
     },
     {
       "startedAt": "2026-09-17T10:41:21.288216+00:00",
@@ -408,6 +409,33 @@
       "endedAt": "2026-09-17T10:41:27.369966+00:00",
       "seconds": 6.08,
       "step": "review ui"
+    },
+    {
+      "startedAt": "2026-09-17T10:46:15.056719+00:00",
+      "status": "passed",
+      "fullLog": "integration-tests.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T10:46:24.547190+00:00",
+      "seconds": 9.49,
+      "step": "integration tests"
+    },
+    {
+      "startedAt": "2026-09-17T10:46:15.468995+00:00",
+      "status": "passed",
+      "fullLog": "integration-syntax.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T10:46:26.825645+00:00",
+      "seconds": 11.36,
+      "step": "integration syntax"
+    },
+    {
+      "startedAt": "2026-09-17T10:46:26.937019+00:00",
+      "status": "passed",
+      "fullLog": "integration-style.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T10:46:27.858340+00:00",
+      "seconds": 0.92,
+      "step": "integration style"
     }
   ]
 }

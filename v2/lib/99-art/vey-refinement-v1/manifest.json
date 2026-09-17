@@ -24,5 +24,36 @@
       "summary": "Preserved benchmark / previous paint and foot weights",
       "sha256": "8c1de1d12d9ae2b08fd83b5bd5187ce7f9a1545172acffc9d7fba1add8babaee"
     }
+  },
+  "reports": {
+    "surface-quality.json": {
+      "file": "surface-quality.json",
+      "sha256": "7006f39ca3257ae4805b136099d4dc03d0a6a2706b0a55e187242e511a40d2bb"
+    },
+    "sole-quality.json": {
+      "file": "sole-quality.json",
+      "sha256": "9ab283fb3bf6b43c1bec02861ce86d278a11fc835e7be729eafc279a848f2f0c"
+    },
+    "motion-quality.json": {
+      "file": "motion-quality.json",
+      "sha256": "4e758857af1ffcbed6c4fda7ba991c4409d7108017dfde9259f36e6d6918a53e"
+    },
+    "clean-shape.json": {
+      "file": "clean-shape.json",
+      "sha256": "65f967c1cc4e9a5002b53805f66be08dd3248365876915818bd3e5a34068d9c2"
+    },
+    "solid-surface.json": {
+      "file": "solid-surface.json",
+      "sha256": "d9c4d7c2688a2bfcabce554b60791df22e271ea313efab0dc422d948f437ac8b"
+    },
+    "original-surface-failures.json": {
+      "file": "original-surface-failures.json",
+      "sha256": "9afb1263d32b68335a6937c71b73e7295ade1b3896c01211ea65fd917d901bbe"
+    }
+  },
+  "recipe": {
+    "profile": "tools/asset-studio/pilots/vey-trellis/refinement-profile.json",
+    "referenceSha256": "670f30a50a1cfdc2f31f3b5bb52514e37a229b6ff0a8ef8b9dc6143b814d9ec3",
+    "scope": "Supervised Vey surface reconstruction, UV paint and rig transfer; retain originals and obtain owner approval"
   }
 }
