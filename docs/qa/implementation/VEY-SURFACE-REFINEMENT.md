@@ -4,6 +4,16 @@
 replace the earlier U240-U242 claim because the first-expedition collaborator
 used U240-U243. Preserve and integrate that work before publishing V2.
 
+Published and publicly verified at V2 **927d9cd**, [PR 70](https://github.com/majieddd/worldheart/pull/70),
+[deployment](https://github.com/majieddd/worldheart/actions/runs/35212369986).
+[Review the model](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/vey-refinement.html).
+The first-expedition commit 19355dc is integrated. All **406** integrated tests
+pass. All **26** delivered file identities and desktop/mobile public controls
+pass. Main remains 6133d0713f4e93e6fc743c35d9dd0fd1834bc98f.
+Total through public verification: **1h 26m 42s**, from 09:26:01 to 10:52:43 UTC.
+The public table is the earlier release checkpoint; the complete local timing
+record includes publication and final verification.
+
 ## Delivered candidate
 
 `design-demos/99-planets/vey-refinement.html` compares the original benchmark
@@ -53,6 +63,9 @@ No neural regeneration or new runtime installation was needed. Clearing custom
 normals alone failed. Signed voxel remeshing hollowed the model; unconstrained
 collapse produced spikes; watertightness alone missed hollow soles. Those trials
 are retained and the corrected steps are saved in the tool and Aegis references.
+The first public text-file hash comparison used Windows working-copy bytes and
+failed on line endings. The corrected comparison uses the deployed Git object;
+all 26 identities pass. Binary model identities passed in the initial run too.
 
 Aegis **3.18.8**, commit `f07d3c4`, is published and installed. Source/cache method
 hashes match and an installed workflow passes. The prior 75 plugin regression
