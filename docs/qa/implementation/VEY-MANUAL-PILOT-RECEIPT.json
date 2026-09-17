@@ -1,0 +1,98 @@
+{
+  "identity": {
+    "status": "pass",
+    "previewSha": "86aace6a3ceaa2021ebad042a46534d16dcba66b",
+    "productionSha": "6133d0713f4e93e6fc743c35d9dd0fd1834bc98f",
+    "checked": 28,
+    "note": "27 unchanged assets verified against earlier public responses and current deployment hashes; corrected shared viewer fetched and hashed again."
+  },
+  "publicBrowser": {
+    "status": "pass",
+    "checks": [
+      {
+        "name": "Model loaded",
+        "status": "pass",
+        "metrics": {
+          "clips": [
+            "Idle / quiet breath",
+            "Run / CMU retarget",
+            "Walk / CMU retarget"
+          ]
+        }
+      },
+      {
+        "name": "Walk has captured pelvis translation",
+        "status": "pass",
+        "metrics": {
+          "verticalMeters": 0.04883183527483026,
+          "lateralMeters": 0.043149077717949694,
+          "duration": 1.0833333730697632
+        }
+      },
+      {
+        "name": "Walk complete cycle seam",
+        "status": "pass",
+        "metrics": {
+          "seamMeters": 0.0008237818865119577,
+          "duration": 1.0833333730697632
+        }
+      },
+      {
+        "name": "Walk cadence",
+        "status": "pass",
+        "metrics": {
+          "stepsPerMinute": 110.76922670623975
+        }
+      },
+      {
+        "name": "Run has captured pelvis translation",
+        "status": "pass",
+        "metrics": {
+          "verticalMeters": 0.08783947752662713,
+          "lateralMeters": 0.010160142579231663,
+          "duration": 0.7333333492279053
+        }
+      },
+      {
+        "name": "Run complete cycle seam",
+        "status": "pass",
+        "metrics": {
+          "seamMeters": 0.0017157006638985088,
+          "duration": 0.7333333492279053
+        }
+      },
+      {
+        "name": "Run cadence",
+        "status": "pass",
+        "metrics": {
+          "stepsPerMinute": 163.63636008964104
+        }
+      },
+      {
+        "name": "Frozen-pelvis negative control",
+        "status": "pass",
+        "metrics": {
+          "frozenFixtureVerticalMeters": 0,
+          "criterionMinimum": 0.025
+        }
+      },
+      {
+        "name": "No page overflow",
+        "status": "pass",
+        "metrics": {
+          "width": 1280,
+          "scrollWidth": 1265
+        }
+      }
+    ],
+    "stages": {
+      "stages": 3,
+      "clips": 3,
+      "transition": "walk to run",
+      "ready": true
+    },
+    "consoleErrors": []
+  },
+  "ownerApproved": false,
+  "studioPromoted": false
+}
