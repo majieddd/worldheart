@@ -1,7 +1,7 @@
 # Vey in the painted frontier / complete reference pipeline
 
 U250-U252. Owner: Codex. Branch: `feature/vey-field-reference-pipeline`.
-Implementation and local checks complete; publication verification follows.
+Published and publicly verified at V2 `109714f` ([PR #72](https://github.com/majieddd/worldheart/pull/72)). Main remains `6133d0713f4e93e6fc743c35d9dd0fd1834bc98f`.
 
 ## Delivered scope
 
@@ -52,3 +52,11 @@ Separate local project `3f18e4dbc375` completed in **307.676 seconds**. The rege
 | surface validation | 2.414 |
 
 The total includes orchestration. Individual steps are measured, not estimates. This replay begins at the preserved reconstruction and paint, so it does not include new concept or shape inference.
+
+## Publication and elapsed time
+
+Live preview: `109714f39f9aea55d3dc54774a509178eae1d598`. Pages run [35243004302](https://github.com/majieddd/worldheart/actions/runs/35243004302) succeeded. `/v2/build.json` matches. All 20 delivered file identities match committed bytes, including the unchanged accepted model.
+
+Public field movement/environment/free-camera/mobile checks passed in 25.40 seconds on `b17fd36`; the final commit changes only Studio orchestration, prompt metadata and evidence, with identical scene and model bytes. Public reference-sheet rendering passed in 5.20 seconds. No browser console errors in either. One transient GitHub API connection timed out; subsequent deployment and file verification passed.
+
+Total this turn through final public verification: **51 minutes 25.5 seconds** (2026-09-17T15:03:54+00:00 to 2026-09-17T15:55:19.545592+00:00). This includes implementation, rejected Krea work, successful replays, tests, corrections and both deployments. Individual measured work is in the tables/logs above; overlapping work must not be added to the total.
