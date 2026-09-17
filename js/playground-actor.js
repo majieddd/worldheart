@@ -12,7 +12,7 @@ function calibrate(root,mixer,clip,feet){
   action.stop();mixer.setTime(0);return Math.max(.3,median(values));
 }
 
-function animatedContour(mesh,paint){
+export function animatedContour(mesh,paint){
   const template=paint.shells[0].material;
   const material=new THREE.ShaderMaterial({side:THREE.BackSide,uniforms:template.uniforms,fragmentShader:template.fragmentShader,vertexShader:`
 uniform vec2 resolution;uniform float lineWidth;

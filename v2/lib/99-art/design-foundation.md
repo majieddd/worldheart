@@ -7,16 +7,14 @@ Prepared 2026-09-16 from the current public Worldheart game and owner direction.
 
 This is an additive visual/narrative companion to the running game blueprint at
 `docs/99-PLANETS-TO-DEFEND.md`. It does not replace campaign mechanics or imply
-that new illustrations are already production meshes. Each subject has a page
-in `99-art.html`. Three interactive UI compositions await owner selection.
+that new illustrations are already production meshes. Current subjects share the five main sections in `99-art.html`; superseded work is in Archives. Arcade B is the selected interface; other compositions are in Archives.
 
 ## Reference
 
 - Current browser game: https://majieddd.github.io/worldheart/
 - Binding scene direction: Paintline column at https://majieddd.github.io/worldheart-styles/
 - Binding object direction: Inked Cel posters and models at the same site.
-- Accepted 3D surface foundation: Atmospheric Ink 1.3.1. Vivid Paint remains the
-  owner's revised demo default. The original 1.3.1 archive remains immutable.
+- Accepted 3D surface foundation: Painted-Anime-Inkline 1.3.2, using the owner's exact preset. The original 1.3.1 archive remains immutable. Vey is a Xeno Commander, with his accepted model in the Atmospheric Arena renderer.
 - New working title: **99 Planets To Defend**. This collection uses the new name;
   changing campaign branding everywhere is a later integration decision.
 - Development sequence: use the browser for efficient staging today; port confirmed checkpoints to Roblox. Shift development to Roblox when it becomes the more efficient build-and-validation environment.

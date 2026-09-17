@@ -9,7 +9,7 @@ should carry its approved shelves, connected passages and irregular shared-corne
 shapes into the game, with separately versioned comparisons for major revisions.
 The existing evidence distinguishes visual approval from spherical gameplay QA.
 
-Art contributors: Atmospheric Ink 1.3.1 is now the selected direction. Preserve
+Art contributors: Painted-Anime-Inkline 1.3.2 is the selected graphics default. Preserve
 its [locked archive and recipe](art-candidates/ATMOSPHERIC-INK.md) and the previous
 Hard Cel archive. Complement collaborators' existing work, methods and evidence;
 add a scoped extension or separately versioned experiment instead of replacing
@@ -20,7 +20,7 @@ For art debugging, inspect full motion cycles, test both captured and denied
 cursor input, and distinguish texture resolution from its scale on the model.
 Use the shared asset stage and runtime builders so inspection fixes carry into
 the demo. Keep source posters, static meshes and animated adaptations identified.
-The current demo default is the owner's revised Vivid Paint. Original 1.3.1
+The current demo default is the owner's supplied 1.3.2 preset (contour 1.81). Original 1.3.1
 remains independently selectable and archived. The artboard supplements the
 collaborator's Paintline direction with proposed Roblox concepts and saved prompts.
 For FPS input, test simultaneous mouse buttons: pointer events alone do not report
@@ -30,8 +30,8 @@ The owner has moved the earlier artboard to a future medieval-planet study.
 Preserve its originals. The new [99 Planets art collection](99-art.html) and
 [design foundation](lib/99-art/design-foundation.md) start with modern Earth and
 six owner-defined factions: Xeno, Brainshot, RainBOOM,
-Anomalous, Axiom and Robloxian. The accepted demo robot belongs to Axiom. B / Arcade is the selected UI composition; A, C and original B remain comparisons.
-The unified artbook has five tabs and uses the Painted-Anime-Inkline style contract.
+Anomalous, Axiom and Robloxian. The accepted demo robot belongs to Axiom. B / Arcade is the selected UI composition; A, C and original B are archived. Vey is a Xeno Commander; his accepted model runs in Atmospheric Arena using the shared painted renderer.
+The unified artbook has five current-content tabs plus Archives and uses the Painted-Anime-Inkline style contract.
 Read docs/art/99-planets/unified-artbook.md for current Xeno elemental canon and
 the fictional Adamic-inspired alphabet. Preserve historical prompts and images;
 apply current content overrides after generation prompts are composed.

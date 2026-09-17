@@ -73,3 +73,18 @@ The polar image keeps white robotics distinct from the dark rat and rabbit threa
 Artbook typography, controls and canvas are quiet so the paintings carry the
 identity. Responsive checks include 375, 768 and 1280px; touch and keyboard are
 checked separately. Owner approval of the new art remains pending.
+
+## Current-content policy / September 17
+
+The five primary sections show current decisions, relevant binding references,
+current faction proposals and accepted production examples. Archives is a sixth
+section with superseded images, older character methods, alternate interfaces,
+previous graphics recipes and the medieval collection. Catalogue entries carry
+an explicit `archived` flag; age alone does not retire a binding style reference.
+The main gallery and figures exclude archived entries. Original image bytes,
+prompts, model files and historical URLs remain intact.
+
+Vey is a Xeno Commander. His current runtime is Atmospheric Arena with the
+owner-supplied Painted-Anime-Inkline 1.3.2 preset. The separate Vey field renderer
+is archived. The accepted GLB is unchanged; its displayed materials now use the
+original arena paint, cel shading and skinning-aware contours.
