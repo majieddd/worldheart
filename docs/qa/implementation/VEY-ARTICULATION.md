@@ -1,7 +1,14 @@
 # Vey hand and foot articulation
 
 2026-09-17, Codex, `feature/vey-hand-foot-articulation`, U247-U249.
-Started 14:14:58 UTC. Publication and final timing follow the local checkpoint.
+Published and publicly verified at V2 **4185d75**, [PR 71](https://github.com/majieddd/worldheart/pull/71),
+[successful deployment](https://github.com/majieddd/worldheart/actions/runs/35236035454).
+[Review the articulation](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/vey-articulation.html?review=4185d75).
+All 24 public file identities and desktop/mobile controls pass without console
+errors. Main remains 6133d0713f4e93e6fc743c35d9dd0fd1834bc98f.
+Total through public verification: **37m 15.5s**, 14:14:58 to 14:52:13.528 UTC.
+The public timing table is the earlier release checkpoint. Final local timings
+include the retained CI encoding failure, correction and live verification.
 
 ## Delivered change
 
@@ -47,7 +54,9 @@ multi-joint gripping system. No neural reconstruction or image generation ran.
 - 406 repository tests, 30 pipeline tests, syntax and style pass. New viewer
   and local Studio pass desktop/mobile controls with no console errors.
   One test invocation used system Python without trimesh and failed; rerunning
-  in the configured runtime passed. Both logs are retained.
+  in the configured runtime passed. Both logs are retained. The first CI build
+  passed all 406 tests but caught a Windows text-encoding error in the new page;
+  its UTF-8 correction passed the repository style check before republishing.
 
 ## Repeatable tool and plugin
 
