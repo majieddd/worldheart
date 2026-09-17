@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "id": "worldheart-guided-terrain-kit",
+  "version": "1.0.0",
+  "status": "owner-approved-terrain-direction",
+  "approvedOn": "2026-09-16",
+  "approval": "Owner liked the new terrain approach and explicitly asked to lock it in.",
+  "sourceRevision": "2fb6ddf297a64edcb6c9257156d0fe78f99eccd0",
+  "tag": "terrain/guided-kit-v1.0.0",
+  "entry": "procgen-lab.html?seed=12345&terrain=varied",
+  "approvedPane": "Guided kit / right comparison pane",
+  "recipe": {
+    "kitVersion": 1,
+    "defaultSeed": 12345,
+    "presets": [
+      "varied",
+      "badlands",
+      "canyon"
+    ],
+    "sourceRegion": 0,
+    "sourcePlanetRadius": 240,
+    "quadPatchRings": 5,
+    "triangleSpacing": 18,
+    "terrainBandHeight": 8,
+    "dualCornerTransition": [
+      0.24,
+      0.76
+    ],
+    "routeFlatHalfWidth": 5,
+    "routeShoulderExtent": 10,
+    "navigationStep": 3,
+    "unitClearanceProbeRadius": 1.2
+  },
+  "scope": "Approved visual and terrain-generation direction; local demo preserved. Spherical campaign integration and device qualification remain the next engineering work.",
+  "priorVerificationRevision": "de2022e4171146e39739424b2eb214416bf5bd00",
+  "files": [
+    {
+      "path": "procgen-lab.html",
+      "bytes": 5100,
+      "sha256": "b2ccf0a901f56ea2de8c71de089b6f4c1ce3a851bce8b6e368255b86403cd438"
+    },
+    {
+      "path": "css/painted-lab.css",
+      "bytes": 5457,
+      "sha256": "0af79759a897cbd229c063cf3fc16ee204c4b13b9d7c3f6256bc4704f629841a"
+    },
+    {
+      "path": "css/procgen-lab.css",
+      "bytes": 1754,
+      "sha256": "4ac07caa9aa8223da9acdd78d5d6c509c62083827c068f2d6e6d12b0c09d98e7"
+    },
+    {
+      "path": "js/procgen-lab.js",
+      "bytes": 16276,
+      "sha256": "028a301a36a8485b2d8a92c958abed16de4d8e0949c2dfdf71dc546ae6553565"
+    },
+    {
+      "path": "js/noise.js",
+      "bytes": 5042,
+      "sha256": "492f1626060bc4ec8f3a40f5545130356babb72da36c185e21a9c750d3d535d3"
+    },
+    {
+      "path": "js/terrain/quad-kit.js",
+      "bytes": 6029,
+      "sha256": "4b9aaec5bd262535c78b4210b7ae5f7823ee15480bc905dd1e82a5307fadfcd5"
+    },
+    {
+      "path": "js/terrain/kit-experiment.js",
+      "bytes": 10352,
+      "sha256": "c9abdd7c61a420109f9405e31b4155beacacf93c1c9a2ed2c0de6a8d19543804"
+    },
+    {
+      "path": "js/terrain/kit-worker.js",
+      "bytes": 2384,
+      "sha256": "518c00534e3b7c3e7337ad131fb7197cdff3b698e82790852188208015aebc59"
+    },
+    {
+      "path": "js/terrain/formations.js",
+      "bytes": 29392,
+      "sha256": "753b29758ca4a16581cba16423e73e823e0ccc85c6a4c59275f39881161da82b"
+    },
+    {
+      "path": "js/terrain/recipes.js",
+      "bytes": 6185,
+      "sha256": "e822855ca2a40432bd4091b1555320ac332c2719dc856b46f12088e4175cf39c"
+    },
+    {
+      "path": "js/terrain/rifts.js",
+      "bytes": 2117,
+      "sha256": "597390c08a9216c36dc47d3e69583f5b8d6b45e13802ef84fb5303585fec1556"
+    },
+    {
+      "path": "js/terrain/additional-formations.js",
+      "bytes": 7464,
+      "sha256": "2c9457504f307004f842b9c1526745d52a69364248546ae4adc696b439ca9fe9"
+    },
+    {
+      "path": "js/terrain/exotic-formations.js",
+      "bytes": 5678,
+      "sha256": "d2535d42f6a3063cb803363268ce366dd056f7793c79e01b16fda1e875b3c449"
+    },
+    {
+      "path": "js/run/world-catalogue.js",
+      "bytes": 7928,
+      "sha256": "ea27d44f66474b93bdb245fb0df38b43ef1236679f02aabe2cfab99e188024b0"
+    },
+    {
+      "path": "lib/three.module.min.js",
+      "bytes": 338908,
+      "sha256": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6"
+    },
+    {
+      "path": "lib/three.core.min.js",
+      "bytes": 381124,
+      "sha256": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de"
+    },
+    {
+      "path": "lib/THREE-LICENSE.txt",
+      "bytes": 1081,
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+    },
+    {
+      "path": "tests/terrain/quad-kit.test.mjs",
+      "bytes": 3473,
+      "sha256": "07c78807ba34f72ecc543249b0829974e2e21f129040d33d1d9f31f99943b0c7"
+    },
+    {
+      "path": "tools/probes/procgen-kit.mjs",
+      "bytes": 7684,
+      "sha256": "78562422746a049040e93018741db14da333d0139fba5f022e4cc67c66233f96"
+    },
+    {
+      "path": "docs/qa/implementation/PROCGEN-GUIDED-KIT/varied.png",
+      "bytes": 215491,
+      "sha256": "377a771719120484d1b558f9931bfaa6442acde6f9958e85e8313e139d5aedae"
+    }
+  ]
+}

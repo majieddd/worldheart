@@ -1,0 +1,27 @@
+{
+  "method": "Measured ankle-phase boot roll, cuff opening fit and isolated palm/digit weights",
+  "sourceSha256": "cacd84a1151b835ad924fb92855d235ff29f9122362551ff545ca1ada02a082b",
+  "wristRadialGain": 0.18,
+  "adjustedVertices": 2417,
+  "clips": {
+    "Walk / CMU retarget": {
+      "phases": {
+        "L": {
+          "contactFrame": 45,
+          "departureFrame": 19,
+          "stanceFraction": 0.6
+        },
+        "R": {
+          "contactFrame": 12,
+          "departureFrame": 51,
+          "stanceFraction": 0.6
+        }
+      },
+      "heelContactDegrees": 15,
+      "toeDepartureDegrees": -38
+    }
+  },
+  "ownerApproved": false,
+  "seconds": 7.296780299977399,
+  "outputSha256": "e6dab674a5b106c0e4573580dcea720cfef8d72feac3adea2d777fb3edd1a814"
+}

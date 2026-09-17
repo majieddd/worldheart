@@ -1,0 +1,749 @@
+{
+  "scope": "Node local patch algorithm and rendered-triangle navigation, not campaign gameplay or mobile hardware benchmark",
+  "kitVersion": 1,
+  "hashes": {
+    "js/terrain/quad-kit.js": "4b9aaec5bd262535c78b4210b7ae5f7823ee15480bc905dd1e82a5307fadfcd5",
+    "js/terrain/kit-experiment.js": "c9abdd7c61a420109f9405e31b4155beacacf93c1c9a2ed2c0de6a8d19543804",
+    "js/terrain/formations.js": "753b29758ca4a16581cba16423e73e823e0ccc85c6a4c59275f39881161da82b"
+  },
+  "results": [
+    {
+      "seed": 0,
+      "preset": "varied",
+      "anchor": {
+        "id": 0,
+        "type": "range",
+        "dir": [
+          0.05810211715535659,
+          0.9816363868079205,
+          0.1816979583725586
+        ]
+      },
+      "overlook": true,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 341,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 400,
+          "raisedSites": 8,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 1253.6169,
+        "surfaceMs": 348.488,
+        "navigationMs": [
+          438.7617000000001,
+          341.78560000000004
+        ]
+      }
+    },
+    {
+      "seed": 12345,
+      "preset": "varied",
+      "anchor": {
+        "id": 0,
+        "type": "plateau",
+        "dir": [
+          -0.11388818156325531,
+          0.5662153662890843,
+          0.8163514200871664
+        ]
+      },
+      "overlook": true,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 343,
+          "raisedSites": 65,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 383,
+          "raisedSites": 56,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 867.6246999999998,
+        "surfaceMs": 412.94320000000016,
+        "navigationMs": [
+          172.05910000000017,
+          154.12799999999993
+        ]
+      }
+    },
+    {
+      "seed": 44021,
+      "preset": "varied",
+      "anchor": {
+        "id": 0,
+        "type": "gorge",
+        "dir": [
+          0.1699936711275292,
+          -0.6909334143690107,
+          -0.7026472576513528
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 422,
+          "raisedSites": 4,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 533,
+          "raisedSites": 2,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 696.6426000000001,
+        "surfaceMs": 299.25199999999995,
+        "navigationMs": [
+          174.45499999999993,
+          169.27549999999974
+        ]
+      }
+    },
+    {
+      "seed": 9137,
+      "preset": "varied",
+      "anchor": {
+        "id": 0,
+        "type": "gorge",
+        "dir": [
+          -0.1779462614761327,
+          0.8590697929506251,
+          -0.47993147309427153
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 493,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 41216,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 584,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 41216,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 662.8308999999999,
+        "surfaceMs": 249.95920000000024,
+        "navigationMs": [
+          182.0700999999999,
+          153.67429999999968
+        ]
+      }
+    },
+    {
+      "seed": 4206018157,
+      "preset": "varied",
+      "anchor": {
+        "id": 0,
+        "type": "dome",
+        "dir": [
+          0.18300440385470604,
+          0.657545284592614,
+          -0.7308512754861974
+        ]
+      },
+      "overlook": true,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 381,
+          "raisedSites": 1,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 409,
+          "raisedSites": 17,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 521.6811000000002,
+        "surfaceMs": 239.9407000000001,
+        "navigationMs": [
+          118.66210000000001,
+          111.75520000000006
+        ]
+      }
+    },
+    {
+      "seed": 4294967295,
+      "preset": "varied",
+      "anchor": {
+        "id": 0,
+        "type": "cells",
+        "dir": [
+          0.034464408279223195,
+          -0.4370694728230984,
+          -0.8987672003851175
+        ]
+      },
+      "overlook": true,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 0,
+          "sites": 342,
+          "raisedSites": 5,
+          "samples": 757,
+          "triangles": 41472,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 457,
+          "raisedSites": 4,
+          "samples": 757,
+          "triangles": 41472,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 457.52210000000014,
+        "surfaceMs": 209.54389999999967,
+        "navigationMs": [
+          109.11520000000019,
+          99.42060000000038
+        ]
+      }
+    },
+    {
+      "seed": 0,
+      "preset": "badlands",
+      "anchor": {
+        "id": 0,
+        "type": "cuesta",
+        "dir": [
+          0.06298563351088872,
+          0.9847868334082359,
+          0.161949691932438
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": true,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 449,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 513,
+          "raisedSites": 4,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 743.8543,
+        "surfaceMs": 295.8642,
+        "navigationMs": [
+          136.91830000000027,
+          376.6266999999998
+        ]
+      }
+    },
+    {
+      "seed": 12345,
+      "preset": "badlands",
+      "anchor": {
+        "id": 0,
+        "type": "plateau",
+        "dir": [
+          -0.12286643992449885,
+          0.5780690356868949,
+          0.806684590109606
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": true,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 323,
+          "raisedSites": 69,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 318,
+          "raisedSites": 41,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 509.3849999999993,
+        "surfaceMs": 255.28279999999995,
+        "navigationMs": [
+          68.47400000000016,
+          250.15750000000025
+        ]
+      }
+    },
+    {
+      "seed": 44021,
+      "preset": "badlands",
+      "anchor": {
+        "id": 0,
+        "type": "plateau",
+        "dir": [
+          0.18431069274133152,
+          -0.686615806219273,
+          -0.7032697229307318
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": true,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 305,
+          "raisedSites": 70,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 333,
+          "raisedSites": 67,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 495.0559999999996,
+        "surfaceMs": 247.1297000000004,
+        "navigationMs": [
+          62.77360000000044,
+          240.39170000000013
+        ]
+      }
+    },
+    {
+      "seed": 9137,
+      "preset": "badlands",
+      "anchor": {
+        "id": 0,
+        "type": "cuesta",
+        "dir": [
+          -0.19225269366679518,
+          0.8587382617215943,
+          -0.47498157820407716
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": true,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 400,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 41216,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 466,
+          "raisedSites": 6,
+          "samples": 757,
+          "triangles": 41216,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 514.6225999999997,
+        "surfaceMs": 216.04299999999967,
+        "navigationMs": [
+          83.82049999999981,
+          264.5003999999999
+        ]
+      }
+    },
+    {
+      "seed": 4206018157,
+      "preset": "badlands",
+      "anchor": {
+        "id": 0,
+        "type": "box",
+        "dir": [
+          0.19789783747930184,
+          0.6538357252830066,
+          -0.7302980831582816
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 425,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 575,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 378.942,
+        "surfaceMs": 130.89779999999973,
+        "navigationMs": [
+          117.21939999999995,
+          104.16039999999975
+        ]
+      }
+    },
+    {
+      "seed": 4294967295,
+      "preset": "badlands",
+      "anchor": {
+        "id": 0,
+        "type": "cuesta",
+        "dir": [
+          0.03733912061190869,
+          -0.42288748361109085,
+          -0.905412594498778
+        ]
+      },
+      "overlook": true,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 0,
+          "sites": 483,
+          "raisedSites": 1,
+          "samples": 757,
+          "triangles": 41472,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 505,
+          "raisedSites": 4,
+          "samples": 757,
+          "triangles": 41472,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 356.4210000000003,
+        "surfaceMs": 133.97560000000067,
+        "navigationMs": [
+          106.61070000000018,
+          87.9973
+        ]
+      }
+    },
+    {
+      "seed": 0,
+      "preset": "canyon",
+      "anchor": {
+        "id": 0,
+        "type": "ravine",
+        "dir": [
+          0.09519682098273541,
+          0.9950702371954439,
+          0.027799070534542503
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": true,
+      "metrics": [
+        {
+          "reachable": 0,
+          "sites": 251,
+          "raisedSites": 172,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 281,
+          "raisedSites": 85,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 419.8885,
+        "surfaceMs": 204.65800000000127,
+        "navigationMs": [
+          68.10059999999976,
+          194.21600000000035
+        ]
+      }
+    },
+    {
+      "seed": 12345,
+      "preset": "canyon",
+      "anchor": {
+        "id": 0,
+        "type": "gorge",
+        "dir": [
+          -0.17958706632917612,
+          0.6503978369650487,
+          0.7380590350903278
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 162,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 369,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 371.40329999999904,
+        "surfaceMs": 158.97050000000036,
+        "navigationMs": [
+          107.43130000000019,
+          80.10520000000179
+        ]
+      }
+    },
+    {
+      "seed": 44021,
+      "preset": "canyon",
+      "anchor": {
+        "id": 0,
+        "type": "gorge",
+        "dir": [
+          0.28136443502023073,
+          -0.65342455886272,
+          -0.7027591341141048
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 347,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 478,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 358.3737000000001,
+        "surfaceMs": 130.36409999999887,
+        "navigationMs": [
+          108.48120000000017,
+          92.37199999999939
+        ]
+      }
+    },
+    {
+      "seed": 9137,
+      "preset": "canyon",
+      "anchor": {
+        "id": 0,
+        "type": "ravine",
+        "dir": [
+          -0.285510683628386,
+          0.8519934950534073,
+          -0.438851608087211
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": true,
+      "metrics": [
+        {
+          "reachable": 1,
+          "sites": 181,
+          "raisedSites": 151,
+          "samples": 757,
+          "triangles": 41216,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 260,
+          "raisedSites": 132,
+          "samples": 757,
+          "triangles": 41216,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 454.0191999999988,
+        "surfaceMs": 238.03140000000167,
+        "navigationMs": [
+          66.88990000000013,
+          214.63490000000093
+        ]
+      }
+    },
+    {
+      "seed": 4206018157,
+      "preset": "canyon",
+      "anchor": {
+        "id": 0,
+        "type": "box",
+        "dir": [
+          0.2960865098287688,
+          0.6249471170521879,
+          -0.722339172124548
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": false,
+      "metrics": [
+        {
+          "reachable": 3,
+          "sites": 147,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 314,
+          "raisedSites": 0,
+          "samples": 757,
+          "triangles": 40960,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 312.0604000000003,
+        "surfaceMs": 123.33230000000003,
+        "navigationMs": [
+          80.64289999999892,
+          76.1203000000005
+        ]
+      }
+    },
+    {
+      "seed": 4294967295,
+      "preset": "canyon",
+      "anchor": {
+        "id": 0,
+        "type": "ravine",
+        "dir": [
+          0.05524194086598826,
+          -0.32708873645887626,
+          -0.9433775948426457
+        ]
+      },
+      "overlook": false,
+      "rejectedOverlook": true,
+      "metrics": [
+        {
+          "reachable": 2,
+          "sites": 304,
+          "raisedSites": 238,
+          "samples": 757,
+          "triangles": 41472,
+          "seamError": 0
+        },
+        {
+          "reachable": 3,
+          "sites": 315,
+          "raisedSites": 185,
+          "samples": 757,
+          "triangles": 41472,
+          "seamError": 0
+        }
+      ],
+      "timings": {
+        "totalMs": 472.01760000000104,
+        "surfaceMs": 228.39709999999832,
+        "navigationMs": [
+          80.28159999999843,
+          217.62109999999848
+        ]
+      }
+    }
+  ]
+}

@@ -1,5 +1,71 @@
 # 99 Planets To Defend: running development blueprint
 
+U250-U252 published and publicly verified at V2 `109714f` ([PR #72](https://github.com/majieddd/worldheart/pull/72)): playable accepted Vey in three painted environments; complete concept/reference-pack pipeline, exact model turnarounds and fitted replay action. 35 pipeline tests and scene/Studio desktop-mobile checks pass. Complete fitted replay reproduces the accepted model hash in 307.676 seconds. Aegis 3.18.10 published and installed. Generic anatomy fitting and strike animation remain separate. [Evidence, boundaries and timing](qa/implementation/VEY-FIELD-REFERENCE-PIPELINE.md).
+
+U247-U249 published and publicly verified at V2 `4185d75` ([PR #71](https://github.com/majieddd/worldheart/pull/71)): Codex on `feature/vey-hand-foot-articulation`. Vey heel-flat-toe walk, roomier cuffs and ten fitted digit joints; previous surface candidate preserved. Asset Studio replays the correction in 42.519 seconds. 406 repository tests, 30 pipeline tests, 34 exported quality checks and desktop/mobile controls pass. Aegis 3.18.9 published and installed. All 24 public file identities pass; total through live verification 37m 15.5s. Owner visual acceptance remains pending. [Evidence and timing](qa/implementation/VEY-ARTICULATION.md).
+
+U244-U246 published and publicly verified at V2 `927d9cd` ([PR #70](https://github.com/majieddd/worldheart/pull/70)): Codex on `feature/vey-surface-refinement`. Cleaned Vey surface, 4K material-region paint, closed boot soles and mesh-measured motion clearance; comparison and close-up controls in the public study and Asset Studio. 406 integrated tests, 27 pipeline tests, 26 public file identities and desktop/mobile checks pass. Total through live verification: 1h 26m 42s. Full local replay: 131.404 seconds. Aegis 3.18.8 published and installed. Originals and owner approval remain separate. [Evidence and timing](qa/implementation/VEY-SURFACE-REFINEMENT.md). Earlier U240-U242 claim renumbered to preserve the first-expedition collaborator.
+
+U240-U243 locally verified, publishing: Codex on `feature/first-expedition`. Skippable red-text opening, Earth/meteor cinematic, four illustrated lore panels in Painted-Anime-Inkline, third-person arrival and progressive action-based guide. 406 tests and 21 browser checks pass; late-game briefings use labeled fixtures. [Scope, evidence and remaining owner acceptance](qa/implementation/FIRST-EXPEDITION.md).
+
+U237-U239 published and publicly verified at V2 `7db5236` ([PR #68](https://github.com/majieddd/worldheart/pull/68)): Codex on `feature/vey-quality-benchmark`. A real Modly Trellis.2 local shape/texture trial, Vey-specific palette/detail correction, rig transfer and retained CMU motion are reviewable alongside the old pilot. The studio adds artifact-bound technical gates, engine selection and per-attempt timing. 402 repository tests, 23 pipeline tests and desktop/mobile browser checks pass. Visual parity with Tripo and owner acceptance are not claimed. [Evidence and timing](qa/implementation/VEY-LOCAL-BENCHMARK.md). All 24 public file identities and live motion/mobile checks pass. Total through public verification: 2h 48m 43s; setup/downloads overlap and failed attempts remain recorded. Main is unchanged.
+
+U234-U236: Vey manual production pilot locally verified on `feature/vey-manual-pilot`: six directional references, eight-color palette, portable prompt, four-view UV paint and CMU walk/run on a hand-placed 22-bone rig. Saved editable assets and replayable steps await owner review before automatic-studio promotion. 402 tests, nine exported-model checks and the deformation regression pass. Aegis 3.18.6 is published and installed with compact logs, resumable checkpoints and truthful browser failure exits. [Evidence and remaining boundaries](qa/implementation/VEY-MANUAL-PILOT.md). Published and publicly verified at V2 `86aace6` ([PR #67](https://github.com/majieddd/worldheart/pull/67)); all three model stages and 28 delivered file identities pass. Main is unchanged.
+
+U229-U233: local Krea generation and Hunyuan reference reconstruction now run on this computer; two Gray mascot banners, original 21-clip viewer and an approval-gated local asset studio are implemented on `feature/local-asset-studio`. Built-in remains the preferred art anchor. Automatic rigging, rear texture detail and Roblox budget acceptance remain open. [Evidence and boundaries](qa/implementation/LOCAL-ASSET-STUDIO.md). Owner requested lower usage without reducing quality; [workflow correction](qa/implementation/LOCAL-PRODUCTION-EFFICIENCY.md) records measured overhead and cache-first, pilot-first changes. Published and publicly verified at V2 `37b3196` ([PR #66](https://github.com/majieddd/worldheart/pull/66)); 24 changed static files match deployment and public views render without browser errors.
+
+U225-U227 published and publicly verified at V2 42504cb ([PR #65](https://github.com/majieddd/worldheart/pull/65)); 31 browser and 678 live/source identity checks pass: Codex on `feature/99-character-identity`. Recognizable Animal Hospital / Brainrot rosters, Arcade B third-person placement concept with F/G, and Gray / Reptilian Xeno commander proposals. U228 is PARTIAL: Higgsfield 2D and an editable Blender comparison exist; Krea execution awaits a local installation and Meshy submission is unavailable. [Scope and evidence](qa/implementation/99-CHARACTER-IDENTITY.md).
+
+U221-U223 verified as an opt-in experiment; U224 publishing: Codex on `feature/procgen-fast-sandbox`. Exact-output generation experiments cut measured median loading by 16% Garden, 44% Io and 60% Deep Canyons. The under-5 / under-10-second targets remain OPEN. Visual comparison sandbox and retained counterexamples: [scope and evidence](qa/implementation/PROCGEN-FAST.md). Originally claimed U217-U220; renumbered on integration to preserve the concurrent artbook records.
+
+U217-U220 published and publicly verified at V2 **d96576d**, [PR #63](https://github.com/majieddd/worldheart/pull/63), on feature/99-unified-artbook. 93 public artbook checks, 204 faction/UI checks and 627 live/source identities pass. The owner consolidates the collection into Summary, Storyline, Factions, Media and Design Principles. Painted-Anime-Inkline is the style name: Studio Ghibli-like painted wonder with Borderlands-like comic grit. Eight new built-in paintings cover five environments/scenarios, the opening comic, five Xeno elements and the updated Xeno roster. The catalogue is embedded in the main page. Physical Xeno are brown Martian meteor dwellers; purple Void scouts teleport onto Earth first. The 26-glyph script is fictional and Adamic-inspired. See [scope and evidence](qa/implementation/99-UNIFIED-ARTBOOK.md).
+
+
+U213-U216 published and publicly verified at V2 `6b85808` ([PR #62](https://github.com/majieddd/worldheart/pull/62)): the owner selected B / Arcade and
+requested a six-faction Painted Inkline expansion. Robloxian joins the roster;
+Axiom becomes pristine white robotics; Anomalous draws on Animal Hospital.
+24 concept plates cover 90 assets, six homeworlds and 54 active powers/icons.
+Five-step bars are qualitative proposals, not tested gameplay balance.
+[Current supplement](../lib/99-art/factions/foundation.md) and
+[implementation evidence](qa/implementation/99-FACTION-CATALOGUE.md).
+
+U209-U212 published and publicly verified at V2 `f43ca42` (PR #61): generation
+optimizations reduce measured loading by 19-40% across Garden, Io and Deep
+Canyons. Fifteen final comparisons across nine configurations preserve terrain,
+navigation and saved-world geometry. 397 tests, 13 public gameplay checks and
+537 deployed identities pass. [Evidence and limits](qa/implementation/PROCGEN-PERFORMANCE.md).
+
+U205-U208, published and publicly verified at V2 `ec7320d` (PR #60), 2026-09-16:
+the owner directs a modern-Earth visual foundation under
+the **99 Planets To Defend** title. Five factions are the native alien glyph name,
+Brainshot, RainBOOM, Anomalous and Axiom; the accepted robot is now Axiom's design.
+Paintline / Inked Cel remains the 2D reference, without hatched 3D shadows. The
+prior collection is preserved for a possible medieval planet. Three UI first
+drafts await owner selection. [Companion foundation](../lib/99-art/design-foundation.md)
+and [implementation evidence](qa/implementation/99-ART-DIRECTION.md). These are
+concept proposals, not a replacement of the existing campaign or a completed Roblox port.
+
+U200-U204 published and publicly verified at V2 `f22e3b2`, 2026-09-16:
+the owner requested full-game adoption of approved
+Guided Terrain Kit 1.0.0. New V2 planets use spherical shared-corner terrain,
+floor-following passages and fitted overlooks, preserving planet composition and
+old saved-world geometry. 393 automated tests and 18 distinct public browser
+cases pass. [Implementation and acceptance](qa/implementation/GUIDED-PLANET-INTEGRATION.md).
+
+U199, owner decision 2026-09-16: **Guided Terrain Kit 1.0.0 is selected and locked**.
+Use its shared-corner cliff shelves, readable routes and fitted landmarks as the
+terrain baseline for V2. Preserve the exact reviewed demo and compare subsequent
+integration against it. [Versioned approval](../terrain-baselines/GUIDED-KIT.md).
+Next: carry this approved approach onto spherical planets and production traversal,
+while retaining theme diversity and validating seams, placement and device cost.
+
+U195-U198, published at V2 `2fb6ddf` (PR #58), explores a local irregular-grid terrain kit over the current formation
+field. Shared-corner profiles, route clearance and fitted landmarks are compared
+in an isolated seeded demo before any campaign adoption. Main remains the released
+game. All 21 public browser checks and 491 deployment identities pass. Visual
+judgment recorded tradeoffs before the U199 approval above; campaign integration
+remains an engineering milestone. [Experiment contract](qa/implementation/PROCGEN-GUIDED-KIT.md).
+
 U184-U188 extends the approved 1.3.1 demo with two screenshot presets, reliable
 fallback attacks, crisp held weapons and an asset/animation inspection stage.
 Paintline is the owner's future 2D reference; the current 3D style stays selected.

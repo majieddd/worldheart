@@ -1,10 +1,11 @@
 import {ecologyScatter} from './terrain/scatter.js';
-import * as THREE from 'three';
+import * as THREE from '../lib/three.module.min.js';
 import {TerrainChunks,DecorChunks} from './terrain-chunks.js';
 import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './biome-visuals.js';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import { createFormationField } from './terrain/formations.js';
+import {createGuidedSurface,protectedLandforms} from './terrain/spherical-kit.js';
 import {createTerrainFeatures} from './terrain/features.js';
 import {placeActiveFeatures} from './terrain/active-features.js';
 import { formationHeightLimit, formationDepthLimit } from './terrain/recipes.js';
@@ -27,6 +28,8 @@ import {
 export let R = CONFIG.planetRadius;
 export const floatingWorld=()=>CONFIG.terrainKey==='sky'||CONFIG.environment?.theme==='skyarchipelago';
 export let FEATURES=null;
+export let analyticHeightUpper=Infinity;
+export const clearanceMetrics={shortcuts:0};
 export const SUN_DIR = new THREE.Vector3(0.62, 0.46, 0.58).normalize();
 
 // Frequency plan per map: continental features scale with the map's freqMul,
@@ -106,6 +109,7 @@ export function inBattlefield(dx, dy, dz, margin = 0) {
 
 let nWarp, nBase, nDetail, nRidge, nMoist, nRange, nCanyon, nGap;
 export let FORMATIONS = null;
+export let GUIDED = null;
 export let ECOLOGY = null;
 export const TERRAIN_FAULTS = [];
 export function createTerrainFault(dir,axis,protectedDir){
@@ -210,7 +214,7 @@ function initSpaceLayout(seed) {
 
 export function initTerrainField(seed) {
   heightValid.fill(0);regionalLast.x=NaN;
-  R=CONFIG.planetRadius;FEATURES=null;
+  R=CONFIG.planetRadius;FEATURES=null;GUIDED=null;analyticHeightUpper=Infinity;clearanceMetrics.shortcuts=0;
   FA=R/30;F_ROLL=4.3*FA;F_MOIST=4.6*(1+(FA-1)*.8);
   solarSample=CONFIG.environment?.solar?createSolarSampler(CONFIG.environment.theme):null;
   TERRAIN_FAULTS.length=0;
@@ -230,12 +234,16 @@ export function initTerrainField(seed) {
   FORMATIONS = CONFIG.terrain ? createFormationField(seed,R,CONFIG.terrain,CONFIG.terrainKey,
     {...authored,...(CONFIG.terrainKey==='varied'?{composition:CONFIG.environment}:{}),weights:{...authored?.weights}}) : null;
   coastClearance=CONFIG.terrain?createCoastClearance(R,(x,y,z)=>continentalityAt(x,y,z)<.37+CONFIG.terrain.ocean):null;
+  if(CONFIG.terrain&&CONFIG.terrainVersion===1&&!floatingWorld())GUIDED=createGuidedSurface(seed,R,(x,y,z)=>basePlanetHeight(x,y,z,false),{water:oceanAt,protectedSites:protectedLandforms(FORMATIONS)});
   ECOLOGY = CONFIG.terrain ? createEcology(seed,CONFIG.biomeKey,CONFIG.environment,FORMATIONS,solarSample) : null;
   FEATURES=FORMATIONS?createTerrainFeatures(FORMATIONS,R,(x,y,z)=>terrainHeight(x,y,z,false),{seed,theme:CONFIG.environment?.theme,biome:biomeAt,water:oceanAt,floating:floatingWorld()}):null;
   if(FEATURES&&floatingWorld()){
     FEATURES.active.splice(0,FEATURES.active.length,...placeActiveFeatures(FORMATIONS,R,(x,y,z)=>navigationHeight(x,y,z,false),biomeAt,oceanAt,seed).filter(s=>s.key!=='trunks'));
     FEATURES.vents.splice(0,FEATURES.vents.length,...FEATURES.active.filter(s=>s.key==='geyser'));
   }
+  // Four bounded simplex gradient terms give |noise| < 3. Guided blending
+  // stays between raw/cage/landmark maxima. Solar transforms use the fallback.
+  if(FORMATIONS&&!solarSample&&!floatingWorld())analyticHeightUpper=Math.max(.55+.96*FORMATIONS.maxNoise+FORMATIONS.upperBound,GUIDED?.upperBound??-Infinity)+1e-6;
   if (CONFIG.map.mode === 'space') initSpaceLayout(seed);
 }
 
@@ -264,7 +272,7 @@ function regionalHeight(dx,dy,dz,includeFine) {
   // Below-sea incisions begin beyond the shoreline mask. The land between
   // ocean and dry cuts stays above sea level, preventing an exposed water wall.
   h+=relief<0?(c>.3+profile.ocean?Math.max(relief,-coastClearance.sample(dx,dy,dz)*.45):0):inland*relief;
-    Object.assign(regionalLast,{x:dx,y:dy,z:dz,h,land});
+    regionalLast.x=dx;regionalLast.y=dy;regionalLast.z=dz;regionalLast.h=h;regionalLast.land=land;
   }
   if(includeFine){
     const fine=fbm3(nDetail,dx*F_FINE+53,dy*F_FINE,dz*F_FINE,2);
@@ -332,7 +340,13 @@ function uncachedTerrainHeight(dx, dy, dz, includeFine = true) {
     }
     return h;
   }
-  if(CONFIG.terrain){const h=regionalHeight(dx,dy,dz,includeFine);if(solarSample){const g=solarSample(dx,dy,dz);if(CONFIG.environment.theme==='earth'){const coast=(g.land-.3)/.08;return (coast<0?Math.max(-5,coast*.65):Math.max(.08,smoothstep(0,1,coast)*(.55+h*g.relief)+g.extra))+faultHeight(dx,dy,dz);}return (oceanAt(dx,dy,dz)&&h<0?h:h*g.relief)+g.extra+faultHeight(dx,dy,dz);}return h+faultHeight(dx,dy,dz);}
+  if(CONFIG.terrain){
+    if(!GUIDED)return basePlanetHeight(dx,dy,dz,includeFine)+faultHeight(dx,dy,dz);
+    const raw=basePlanetHeight(dx,dy,dz,false),h=GUIDED.height(dx,dy,dz,raw);
+    // Fine relief is cosmetic, not input to the kit. Dynamic faults are last so
+    // a quake changes the real surface without rebuilding the static grid.
+    return h+(includeFine?basePlanetHeight(dx,dy,dz,true)-raw:0)+faultHeight(dx,dy,dz);
+  }
   const w = 0.26;
   const wx = dx + nWarp(dx * F_WARP + 7.7, dy * F_WARP, dz * F_WARP) * w;
   const wy = dy + nWarp(dx * F_WARP, dy * F_WARP + 3.1, dz * F_WARP) * w;
@@ -415,6 +429,17 @@ function uncachedTerrainHeight(dx, dy, dz, includeFine = true) {
     }
   }
   return h;
+}
+
+function basePlanetHeight(dx,dy,dz,includeFine){
+  const h=regionalHeight(dx,dy,dz,includeFine);
+  if(!solarSample)return h;
+  const g=solarSample(dx,dy,dz);
+  if(CONFIG.environment.theme==='earth'){
+    const coast=(g.land-.3)/.08;
+    return coast<0?Math.max(-5,coast*.65):Math.max(.08,smoothstep(0,1,coast)*(.55+h*g.relief)+g.extra);
+  }
+  return (oceanAt(dx,dy,dz)&&h<0?h:h*g.relief)+g.extra;
 }
 
 export function moistureAt(dx, dy, dz) {
@@ -555,7 +580,8 @@ export function surfaceTravel(unit, bearing, distance = 0.05, deckCeiling = null
 
 export function canFlyAt(dir, clearance = FLIGHT_CLEARANCE) {
   return !CONFIG.terrain || (inBattlefield(dir.x, dir.y, dir.z)
-    && navigationHeight(dir.x, dir.y, dir.z, false) + clearance <= FLIGHT_CEILING);
+    && (CONFIG.fastGeneration&&!TERRAIN_FAULTS.length&&analyticHeightUpper+clearance<=FLIGHT_CEILING
+      ?(++clearanceMetrics.shortcuts,true):navigationHeight(dir.x, dir.y, dir.z, false) + clearance <= FLIGHT_CEILING));
 }
 
 // Analytic ray-to-surface intersection: enter the terrain shell, march, then

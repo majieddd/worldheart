@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../../lib/three.module.min.js';
 import {placeActiveFeatures,buildActiveFeature} from './active-features.js';
 
 // Additional surfaces make actual open space under bridges, cave roofs and
@@ -89,10 +89,11 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
   list=surfaces.filter(s=>d.x*s.dir[0]+d.y*s.dir[1]+d.z*s.dir[2]>s.bucketCos);buckets.set(key,list);return list;
  }
  function support(dir,ceiling,floor){
-  const w=field.warped(dir);let best=floor;for(const s of nearby(dir)){const p=local(s,dir,w);if(!p)continue;const h=s.top(p.u,p.v);if(h<=ceiling+.12&&h>best)best=h;}return best;
+  const list=nearby(dir);if(!list.length)return floor;
+  const w=field.warped(dir);let best=floor;for(const s of list){const p=local(s,dir,w);if(!p)continue;const h=s.top(p.u,p.v);if(h<=ceiling+.12&&h>best)best=h;}return best;
  }
- function ceiling(dir,feet){const w=field.warped(dir);let best=Infinity;for(const s of nearby(dir)){const p=local(s,dir,w);if(!p)continue;const h=s.bottom(p.u,p.v);if(h>feet+.1)best=Math.min(best,h);}return best;}
- function intersects(dir,feet,height){const w=field.warped(dir);for(const s of nearby(dir)){const p=local(s,dir,w);if(p&&feet<s.top(p.u,p.v)-.1&&feet+height>s.bottom(p.u,p.v)+.05)return true;}return false;}
+ function ceiling(dir,feet){const list=nearby(dir);if(!list.length)return Infinity;const w=field.warped(dir);let best=Infinity;for(const s of list){const p=local(s,dir,w);if(!p)continue;const h=s.bottom(p.u,p.v);if(h>feet+.1)best=Math.min(best,h);}return best;}
+ function intersects(dir,feet,height){const list=nearby(dir);if(!list.length)return false;const w=field.warped(dir);for(const s of list){const p=local(s,dir,w);if(p&&feet<s.top(p.u,p.v)-.1&&feet+height>s.bottom(p.u,p.v)+.05)return true;}return false;}
  // Resolve recipe fits only after the structural surfaces exist. Floating
  // islands must host their own ecology, rather than placing every feature on
  // the ocean underneath them. Keep ground-level features under normal caves.

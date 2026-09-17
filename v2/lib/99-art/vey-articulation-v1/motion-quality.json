@@ -1,0 +1,82 @@
+{
+  "sha256": "e6dab674a5b106c0e4573580dcea720cfef8d72feac3adea2d777fb3edd1a814",
+  "checks": [
+    {
+      "name": "Run / CMU retarget:deformation",
+      "status": "pass",
+      "metrics": {
+        "crossLimbEdges": 0
+      }
+    },
+    {
+      "name": "Run / CMU retarget:loop",
+      "status": "pass",
+      "metrics": {
+        "footEndpointGapRelativeToHeight": 0.0005543621252307273,
+        "seconds": 0.7333333492279053
+      }
+    },
+    {
+      "name": "Run / CMU retarget:pelvis",
+      "status": "pass",
+      "metrics": {
+        "verticalRangeRelativeToHeight": 0.02928241911053861
+      }
+    },
+    {
+      "name": "Run / CMU retarget:stance",
+      "status": "pass",
+      "metrics": {
+        "measuredGroundSpeed": 3.2482842803373275,
+        "testedGroundSpeed": 3.2482842803373275,
+        "medianResidualRatio": 0.14818136505341356,
+        "stanceDirection": 1,
+        "samples": 130,
+        "maximum": 0.25,
+        "axis": 1,
+        "contactKnown": true
+      }
+    },
+    {
+      "name": "Walk / CMU retarget:deformation",
+      "status": "pass",
+      "metrics": {
+        "crossLimbEdges": 0
+      }
+    },
+    {
+      "name": "Walk / CMU retarget:loop",
+      "status": "pass",
+      "metrics": {
+        "footEndpointGapRelativeToHeight": 0.0001992420796453232,
+        "seconds": 1.0833333333333333
+      }
+    },
+    {
+      "name": "Walk / CMU retarget:pelvis",
+      "status": "pass",
+      "metrics": {
+        "verticalRangeRelativeToHeight": 0.022776582833841118
+      }
+    },
+    {
+      "name": "Walk / CMU retarget:stance",
+      "status": "pass",
+      "metrics": {
+        "measuredGroundSpeed": 1.3804735587193417,
+        "testedGroundSpeed": 1.3804735587193417,
+        "medianResidualRatio": 0.09599384200303344,
+        "stanceDirection": 1,
+        "samples": 144,
+        "maximum": 0.25,
+        "axis": 1,
+        "contactKnown": true
+      }
+    }
+  ],
+  "visualAcceptance": "pending",
+  "probeVersion": "1.1.0",
+  "rigContractSha256": "da2ca3b2cb09aeb6efe7f17b1777b53d972f248afa0a4a5ac6ac2187bb84125b",
+  "contactSampling": "contract toe tips",
+  "status": "review_required"
+}

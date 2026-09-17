@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "hero": {
+    "file": "hero.png",
+    "sha256": "670f30a50a1cfdc2f31f3b5bb52514e37a229b6ff0a8ef8b9dc6143b814d9ec3"
+  },
+  "referencePack": {
+    "version": 1,
+    "folder": ".",
+    "hero": "hero.png",
+    "heroSha256": "670f30a50a1cfdc2f31f3b5bb52514e37a229b6ff0a8ef8b9dc6143b814d9ec3",
+    "sourceModel": "../vey-articulation-v1/vey-motion.glb",
+    "sourceModelSha256": "e6dab674a5b106c0e4573580dcea720cfef8d72feac3adea2d777fb3edd1a814",
+    "style": "painted-anime-inkline",
+    "provider": "local Three.js rendering of exact mesh",
+    "calibrated": true,
+    "approval": "pending",
+    "complete": true,
+    "outputs": {
+      "front": {
+        "file": "front.png",
+        "sha256": "bfe12f8cd23a30e72298c9785dab86ddf8f5ad1fa48b72efd4f511ef485de458"
+      },
+      "left": {
+        "file": "left.png",
+        "sha256": "fac0cd497f24b6031080f03152e28034a6e0f09c315a4482b26798ad927fb25c"
+      },
+      "right": {
+        "file": "right.png",
+        "sha256": "3376ff563a04ceb32bb0b408c8879194fd14727b82394384bdd5a8c5ff642daa"
+      },
+      "back": {
+        "file": "back.png",
+        "sha256": "876607799e75c7840a92b18dc8bf0a5930c02fc07a2ff1c69064769580902b93"
+      },
+      "top": {
+        "file": "top.png",
+        "sha256": "f5791dfb671f5d4f448b7dbaf8dedd9562dae13e2c6d236af40742866a02ba3a"
+      },
+      "bottom": {
+        "file": "bottom.png",
+        "sha256": "3da1f071a196bd68de85ab1f9546583131a1445db5763ad27b942975faae2932"
+      },
+      "cameras": {
+        "file": "cameras.json",
+        "sha256": "6052befb76f0b8b315067e1f251cc6936b4ab95aa25d7de845ad5fe79d193fbf"
+      },
+      "motion": {
+        "file": "motion.png",
+        "sha256": "b7b9e15d54f6fa5c9053a9708b2df2451703067e70a1384f5c7981316e1e20d8"
+      },
+      "sheet": {
+        "file": "turnaround.png",
+        "sha256": "a1e168e41f4a208ca7ccbfb6cefd74fd805f98190763f93e61cfd25c1cb2c92b"
+      },
+      "palette": {
+        "file": "palette.json",
+        "sha256": "382614bf8b03220bae330d6fe894d8af1612b97af07565f5de711838c64c6a40"
+      },
+      "prompt": {
+        "file": "portable-prompt.txt",
+        "sha256": "c2ef697e5e5f6133f182a99bea7500b30996b4cef5ce98dd8be77dcb7f6aa985"
+      }
+    },
+    "coordinateSystem": "glTF meters, Y up, face +Z; left means anatomical +X",
+    "limitations": [
+      "Rendered back shows existing mesh paint, not independent evidence of correct hidden-surface design.",
+      "Strike poses are an authored proposal on a compatible fitted arm rig; they are not a baked or approved attack clip."
+    ],
+    "motionStatus": {
+      "walk": "rendered from source",
+      "strike": "authored pose proposal; not an approved attack"
+    }
+  },
+  "engines": {
+    "shape": "hunyuan",
+    "paint": "projection"
+  },
+  "style": "painted-anime-inkline",
+  "steps": [
+    {
+      "stage": "concept",
+      "gate": "Hero identity, all six views, palette and walk/strike references reviewed together. A generated back is a proposal until approved."
+    },
+    {
+      "stage": "shape",
+      "gate": "Compare silhouette and limb separation in six cameras. Preserve raw reconstruction. Do not infer geometry from a composite sheet."
+    },
+    {
+      "stage": "paint",
+      "gate": "Inspect lit, albedo and clay. Use calibrated visible views and material regions; reject front-to-back leakage. Preserve 4K paint when supplied."
+    },
+    {
+      "stage": "motion",
+      "gate": "Fit joints and weights to this anatomy. Check both soles: heel-flat-toe, lateral bank, contact and clearance. Inspect wrist fit, digit webbing max strain and all clip seams."
+    },
+    {
+      "stage": "export",
+      "gate": "Require owner animation approval and artifact-bound checks. Preserve source mesh, rig, paint and receipts."
+    }
+  ],
+  "fittedProfile": "vey-trellis-refinement-1",
+  "scope": "Vey repair is exact-source fitted. Other anatomy uses a draft rig until fitted and reviewed; a concept sheet does not perform rigging."
+}

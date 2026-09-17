@@ -1,0 +1,108 @@
+{
+  "version": "1.0.0",
+  "file": "vey-motion.glb",
+  "sha256": "8c1de1d12d9ae2b08fd83b5bd5187ce7f9a1545172acffc9d7fba1add8babaee",
+  "stage": "animation",
+  "checks": [
+    {
+      "name": "container",
+      "status": "pass",
+      "detail": "Embedded buffers and chunk bounds are valid"
+    },
+    {
+      "name": "finite_geometry",
+      "status": "pass",
+      "detail": {
+        "vertices": 49977,
+        "triangles": 39938
+      }
+    },
+    {
+      "name": "degenerate_faces",
+      "status": "pass",
+      "detail": {
+        "count": 0,
+        "maximumRatio": 0.001
+      }
+    },
+    {
+      "name": "uv_coordinates",
+      "status": "pass",
+      "detail": "Every mesh primitive needs finite UV coordinates"
+    },
+    {
+      "name": "bound_color_textures",
+      "status": "pass",
+      "detail": "Every mesh primitive must bind its painted base-color texture"
+    },
+    {
+      "name": "embedded_texture_resolution",
+      "status": "pass",
+      "detail": {
+        "sizes": [
+          [
+            2048,
+            2048
+          ]
+        ],
+        "minimum": 1024,
+        "note": "Resolution alone does not prove crisp reference detail"
+      }
+    },
+    {
+      "name": "animation_present",
+      "status": "pass",
+      "detail": "Skinned animated output is required"
+    },
+    {
+      "name": "normalized_skin_weights",
+      "status": "pass",
+      "detail": "Finite nonnegative weights must sum to one"
+    },
+    {
+      "name": "pelvis_translation:Run / CMU retarget",
+      "status": "pass",
+      "detail": {
+        "translationRange": [
+          0.08792459964752197
+        ],
+        "note": "Biped profile; foot contact and seam need sampled motion review"
+      }
+    },
+    {
+      "name": "pelvis_translation:Walk / CMU retarget",
+      "status": "pass",
+      "detail": {
+        "translationRange": [
+          0.04923820495605469
+        ],
+        "note": "Biped profile; foot contact and seam need sampled motion review"
+      }
+    }
+  ],
+  "metrics": {
+    "vertices": 49977,
+    "triangles": 39938,
+    "degenerateTriangles": 0,
+    "textureSizes": [
+      [
+        2048,
+        2048
+      ]
+    ],
+    "clips": [
+      "Idle / quiet breath",
+      "Run / CMU retarget",
+      "Walk / CMU retarget"
+    ]
+  },
+  "visualAcceptance": "pending",
+  "promotionAllowed": false,
+  "reviewRequired": [
+    "Compare silhouette, face and material boundaries against the approved reference",
+    "Inspect six rendered views, rear details, seams and hands",
+    "Watch full walk/run cycles and transitions; measure planted-foot drift against the intended ground speed",
+    "Confirm target platform triangle/texture budget and import"
+  ],
+  "status": "review_required"
+}
