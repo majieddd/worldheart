@@ -1,0 +1,215 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "checks": [
+    {
+      "name": "varied/temperate: full production generator and all portal routes",
+      "ok": true,
+      "detail": {
+        "seed": 36102,
+        "version": 1,
+        "theme": "temperate",
+        "stages": [
+          {
+            "label": "seeding the noise fields",
+            "start": 393.19999998807907,
+            "ms": 302.60000002384186
+          },
+          {
+            "label": "charting the ley lines",
+            "start": 695.8000000119209,
+            "ms": 11938.100000023842
+          },
+          {
+            "label": "carving the continents",
+            "start": 12633.900000035763,
+            "ms": 1393
+          },
+          {
+            "label": "pouring the oceans",
+            "start": 14026.900000035763,
+            "ms": 194.39999997615814
+          },
+          {
+            "label": "hanging the stars",
+            "start": 14221.300000011921,
+            "ms": 12.300000011920929
+          },
+          {
+            "label": "planting the forests",
+            "start": 14233.600000023842,
+            "ms": 548.3999999761581
+          },
+          {
+            "label": "raising the light",
+            "start": 14782,
+            "ms": 120
+          },
+          {
+            "label": "waking the worldheart",
+            "start": 14902,
+            "ms": 370.19999998807907
+          }
+        ],
+        "attempts": 4,
+        "nodes": 426335,
+        "kit": {
+          "quads": 10848,
+          "vertices": 10850,
+          "landmarks": 22
+        },
+        "floating": false,
+        "surfaces": 16,
+        "routes": [
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          }
+        ],
+        "maxTask": 2659,
+        "overlooks": 22,
+        "bootMs": 18110
+      }
+    },
+    {
+      "name": "Fitted overlooks appear in the real world inspector",
+      "ok": true,
+      "detail": {
+        "count": 22
+      }
+    },
+    {
+      "name": "Fitted shelves accept their climate-compatible tower footprint",
+      "ok": true,
+      "detail": [
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.603512273372319
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.429107213807324
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.635138559403131
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.434467843703663
+        },
+        {
+          "type": "cryo",
+          "ok": true,
+          "height": 8.600284393265827
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.761220215640439
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.41098938686682
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.58054715255535
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.68211743838302
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.609954978967654
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.520754341314726
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.520507680423037
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.430349598130531
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.50065616685111
+        },
+        {
+          "type": "cryo",
+          "ok": true,
+          "height": 8.659048770560823
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.541406150536957
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.587317634301453
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.685390185897274
+        },
+        {
+          "type": "cryo",
+          "ok": true,
+          "height": 8.664362729369563
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.469083039708032
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.474224654983102
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.726264329370775
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "httpFailures": []
+}

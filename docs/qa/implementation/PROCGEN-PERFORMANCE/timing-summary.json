@@ -1,0 +1,70 @@
+{
+  "reference": "e527859",
+  "sourceFingerprint": "74a34d7b258a14c8594b5bffcfaa61a005b910ce05b1a55cc04a72b448fd83d3",
+  "method": "Fresh Chrome per sample, three alternating-order matched trials per theme, no profiler or other agent browser workload; user applications not closed; 1280x720",
+  "summary": [
+    {
+      "theme": "temperate",
+      "trials": 3,
+      "beforeMs": 16620,
+      "afterMs": 13483,
+      "improvementPercent": 18.874849578820697,
+      "beforeRange": [
+        16620,
+        15334,
+        18376
+      ],
+      "afterRange": [
+        13998,
+        13483,
+        11728
+      ],
+      "navBeforeMs": 14068.5,
+      "navAfterMs": 10418.099999964237,
+      "maxGenerationTaskBeforeMs": 593,
+      "maxGenerationTaskAfterMs": 354
+    },
+    {
+      "theme": "io",
+      "trials": 3,
+      "beforeMs": 21475,
+      "afterMs": 12926,
+      "improvementPercent": 39.80908032596042,
+      "beforeRange": [
+        23086,
+        21475,
+        18405
+      ],
+      "afterRange": [
+        17063,
+        12926,
+        11591
+      ],
+      "navBeforeMs": 18363,
+      "navAfterMs": 10360.599999964237,
+      "maxGenerationTaskBeforeMs": 743,
+      "maxGenerationTaskAfterMs": 213
+    },
+    {
+      "theme": "arid",
+      "trials": 3,
+      "beforeMs": 61884,
+      "afterMs": 38907,
+      "improvementPercent": 37.129144851657934,
+      "beforeRange": [
+        66448,
+        47283,
+        61884
+      ],
+      "afterRange": [
+        50635,
+        37438,
+        38907
+      ],
+      "navBeforeMs": 58854.80000001192,
+      "navAfterMs": 35289.799999952316,
+      "maxGenerationTaskBeforeMs": 854,
+      "maxGenerationTaskAfterMs": 419
+    }
+  ]
+}

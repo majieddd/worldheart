@@ -1,0 +1,37 @@
+{
+  "walk": {
+    "source": "07_01",
+    "sourceFps": 120,
+    "sourceFrames": 316,
+    "periodSamples": 128,
+    "start": 96,
+    "cycleFrames": 130,
+    "seconds": 1.0833333333333333,
+    "sourceSpeed": 24.57950482065459,
+    "footExtrema": [
+      140,
+      268
+    ],
+    "sourcePelvisVertical": 0.7955298637857203,
+    "sourcePelvisLateral": 0.7028172918013116
+  },
+  "run": {
+    "source": "09_01",
+    "sourceFps": 120,
+    "sourceFrames": 148,
+    "periodSamples": 89,
+    "start": 5,
+    "cycleFrames": 88,
+    "seconds": 0.7333333333333333,
+    "sourceSpeed": 64.39430469815397,
+    "footExtrema": [
+      37,
+      126
+    ],
+    "sourcePelvisVertical": 1.4926361002342925,
+    "sourcePelvisLateral": 0.19339935789554402
+  },
+  "credit": "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.",
+  "source": "http://mocap.cs.cmu.edu/subjects/",
+  "note": "Two selected takes only. Data not resold standalone. Source finger channels are not captured and are not used."
+}

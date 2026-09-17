@@ -1,0 +1,102 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "checks": [
+    {
+      "name": "Seeded current and guided patches render",
+      "ok": true
+    },
+    {
+      "name": "Shared input and mesh budget have no open seams",
+      "ok": true
+    },
+    {
+      "name": "No campaign storage writes or game imports",
+      "ok": true
+    },
+    {
+      "name": "Shared-grid overlay toggles",
+      "ok": true
+    },
+    {
+      "name": "Single-side mode uses the selected comparison",
+      "ok": true
+    },
+    {
+      "name": "Keyboard orbit moves synchronized camera",
+      "ok": true
+    },
+    {
+      "name": "Real drag changes shared orbit",
+      "ok": true
+    },
+    {
+      "name": "Wheel zoom works",
+      "ok": true
+    },
+    {
+      "name": "Ground click moves commander along a real surface route",
+      "ok": true
+    },
+    {
+      "name": "Commander traverses the fitted multi-cell ramp",
+      "ok": true
+    },
+    {
+      "name": "Pause freezes moving scouts",
+      "ok": true
+    },
+    {
+      "name": "All 18 scouts finish both sets of three routes without teleporting",
+      "ok": true
+    },
+    {
+      "name": "varied renders with checked guided approaches",
+      "ok": true
+    },
+    {
+      "name": "badlands renders with checked guided approaches",
+      "ok": true
+    },
+    {
+      "name": "canyon renders with checked guided approaches",
+      "ok": true
+    },
+    {
+      "name": "Repeated regeneration frees GPU geometry and shadow textures",
+      "ok": true,
+      "detail": {
+        "before": {
+          "geometries": 207,
+          "textures": 2
+        },
+        "after": {
+          "geometries": 207,
+          "textures": 2
+        }
+      }
+    },
+    {
+      "name": "New seed changes recipe and shareable URL",
+      "ok": true
+    },
+    {
+      "name": "New recipe cancels an in-flight worker without stale result",
+      "ok": true
+    },
+    {
+      "name": "Mobile fits viewport and respects reduced motion",
+      "ok": true
+    },
+    {
+      "name": "Actual touch drag orbits the mobile patch",
+      "ok": true
+    },
+    {
+      "name": "No runtime errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "httpFailures": []
+}
