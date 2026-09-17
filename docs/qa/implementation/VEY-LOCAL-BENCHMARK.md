@@ -1,7 +1,13 @@
 # Vey local benchmark / U237-U239
 
-Status: locally verified review candidate; publication receipt follows in tracker #1.
+Status: published and publicly verified review candidate.
 Owner acceptance and Tripo-equivalent quality are not claimed.
+
+## Publication receipt
+
+Published and publicly verified at V2 `7db5236` ([PR #68](https://github.com/majieddd/worldheart/pull/68), [Pages run](https://github.com/majieddd/worldheart/actions/runs/35189473724)). All 24 deployed files match the committed V2 bytes; live desktop/mobile motion checks pass with no console errors. Main remains `6133d07`. Total through public verification: **2h 48m 43s**, including failures and overlapping setup. [Every measured step](VEY-LOCAL-BENCHMARK-TIMING.md).
+
+[Open the comparison](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/vey-benchmark.html?stage=motion).
 
 ## What changed
 
