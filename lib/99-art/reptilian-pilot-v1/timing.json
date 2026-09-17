@@ -1,9 +1,9 @@
 {
-  "recordedAt": "2026-09-17T20:31:25.146731+00:00",
+  "recordedAt": "2026-09-17T21:13:52.443091+00:00",
   "scope": "Vey/1.3.2/archive update plus albino Reptilian production and tool refinement",
   "turnStart": "2026-09-17T16:42:49+00:00",
-  "elapsedWallSecondsSoFar": 13716.15,
-  "elapsedNote": "Wall clock includes engineering, inspection, other requested site work and the approximately 67-minute pause before the user asked to continue. This is not generation time or a billing measurement.",
+  "elapsedWallSecondsSoFar": 16263.443,
+  "elapsedNote": "Through the verified production checkpoint, including engineering, inspection, Vey/Archives work and the approximately 67-minute pause before continuation. Excludes subsequent release-note bookkeeping. This is not generation time or a billing measurement.",
   "pipelineExecutionUnionSeconds": 3982.734,
   "timingRule": "Union of measured job intervals avoids double-counting nested timers. Completed means execution completed, not visual acceptance. Rejected visual attempts remain listed.",
   "latestFittedReplaySeconds": 65.99,
@@ -382,5 +382,16 @@
     "Mottled generated paint and imperfect intermediate material masks",
     "First run with no right-foot contact",
     "First polish export with missing embedded textures"
-  ]
+  ],
+  "productionVerifiedAt": "2026-09-17T21:13:52.443091+00:00",
+  "verifiedPreviewSha": "b596286f07f5486b1c7fff7ab662823fd637c930",
+  "verification": {
+    "repositoryTests": 408,
+    "studioTests": 43,
+    "publicFileIdentities": 26,
+    "publicViewer": "pass",
+    "publicArena": "pass",
+    "publicArtbookEmbed": "pass",
+    "ownerAcceptance": "pending"
+  }
 }
