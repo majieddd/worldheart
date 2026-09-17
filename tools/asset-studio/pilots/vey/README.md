@@ -78,6 +78,12 @@ The saved bad binding was observed failing this gate. Review complete walk/run
 sequences from the side, front and rear in `vey-pilot.html`. The browser-side
 `runtime-review.js` checks the actual exported GLB, including cadence, translated
 pelvis and seam. GLTFLoader sanitizes dots from bone names; resolve that alias.
+Run `browser-steps.cjs` through Aegis `tools/headless.js` against the local or public
+pilot URL. Pass the steps file as an absolute path. This also switches through all
+three model stages and checks mobile overflow. A static-outline shader regression
+was discovered only by this switching check: expand along the source `normal`
+attribute before skinning, because unlit static shaders may omit `objectNormal`.
+Retain compiler errors and require a nonzero CLI exit for browser errors.
 
 Use the rig and 3D foot-path overlay, slow playback, and walk/run crossfade. Moving
 ground speed comes from measured stance travel after retargeting, and updates

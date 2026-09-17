@@ -60,6 +60,11 @@ are in `lib/99-art/vey-pilot-v1`. Reproducible manual steps and scripts are in
 - 402 repository tests pass; 159/159 modules parse; style checks pass. Full logs,
   prior failures, render sequences and deformation reports remain in
   `artifacts/vey-pilot`. No test pass is treated as owner art acceptance.
+- First public stage-switching check found an existing static-outline shader
+  compile error in the shared model viewer. Replaced its unavailable objectNormal
+  variable with the source normal attribute before skinning. All three stages now
+  pass locally with no shader/browser errors. The failing public report is retained;
+  corrected publication and final public recheck are pending.
 
 ## Pipeline lesson and Aegis
 
