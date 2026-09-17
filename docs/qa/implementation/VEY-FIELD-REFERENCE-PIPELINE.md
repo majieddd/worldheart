@@ -20,7 +20,7 @@ Local logs and images: `artifacts/vey-field/` (ignored evidence folder). Reprodu
 - Real browser smoke: entered scene, movement/run taps, selected canyon and toggled free camera; screenshot inspected. Sustained movement assertions use synthetic keyboard events and are labeled as such.
 - Studio UI: 6.97 seconds. Exact sheet, all six view choices, motion guide, prompt download, calibrated-camera label, fitted replay action and mobile layout pass; screenshots inspected. Initial harness checked the motion-only action on the Concept tab and failed. The corrected test checks it on Motion. Earlier scene harness invocation/evaluation failures are retained.
 - Repository validation: 406 tests pass; JavaScript syntax, style and static build pass.
-- Pipeline: 34 tests pass in 4.59 seconds including incomplete-pack rejection, resume without repeating completed views, changed-view approval invalidation and alpha-aware palette extraction.
+- Pipeline: 35 tests pass in 4.26 seconds including incomplete-pack rejection, resume without repeating completed views, changed-view approval invalidation and alpha-aware palette extraction.
 - Exact pack final replay: 6.844 seconds end to end (6.821 seconds renderer subprocess). Camera and image hashes saved in `lib/99-art/vey-field-v1`.
 - Krea pilot front: 145.033 seconds. Rejected after inspection because the short mantle became a long coat and identity details drifted. Remaining batch cancelled; failure preserved in local project `4ae924c8c5ad`. Full generic six-view generation is fixture-tested, not visually certified from this rejected pilot.
 
@@ -33,3 +33,22 @@ The current reconstruction engine consumes the hero image. Six views support rev
 ## Timing
 
 Turn began 2026-09-17 15:03:54 UTC. Per-job timings, failures and overlapping phases are retained in the local logs and Studio timing histories. Publication completion and total wall time are recorded below after live verification; do not sum overlapping test/replay durations.
+
+## Complete fitted replay
+
+Separate local project `3f18e4dbc375` completed in **307.676 seconds**. The regenerated animation SHA-256 exactly matches the accepted GLB (`e6dab674...bedd1a814`); all checks returned successfully. The owner project and its accepted animation were preserved. The first run exposed a premature review label between surface and articulation; the server now remains running through that boundary, with a regression check. A first test fixture omitted its stub output hash and failed; corrected fixture and raw log are retained.
+
+| Step | Seconds |
+| --- | ---: |
+| surface and sole reconstruction | 148.167 |
+| silhouette validation and UVs | 3.315 |
+| material-region paint | 24.429 |
+| sole weights and motion | 18.830 |
+| surface region validation | 2.415 |
+| deformed sole validation | 31.644 |
+| boot roll, wrists and digits | 12.434 |
+| articulation validation | 35.261 |
+| sole validation | 27.237 |
+| surface validation | 2.414 |
+
+The total includes orchestration. Individual steps are measured, not estimates. This replay begins at the preserved reconstruction and paint, so it does not include new concept or shape inference.

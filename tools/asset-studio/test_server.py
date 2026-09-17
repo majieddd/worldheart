@@ -27,6 +27,15 @@ class StudioTests(unittest.TestCase):
         self.assertEqual(self.client.post(self.base+'/approve/art').status_code,200)
         p=server.project(self.p['id']);server.output(p,p['referencePack']['outputs']['back']['file']).write_bytes(b'changed')
         with self.assertRaises(server.HTTPException):server.assert_approved(p,'art','art')
+    def test_complete_replay_stays_busy_until_articulation_finishes(self):
+        p=self.concept()
+        sources={'art':p['art'],'paint':'fixture-paint.glb','animation':'fixture-motion.glb'}
+        with patch.object(server,'require_refinement_source',return_value=sources),patch.object(server,'run_process'),patch.object(server,'require_valid_output'),patch.object(server,'digest',return_value='fixture-hash'):
+            server.refine_vey(p,server.DEFAULT,continuing=True)
+        saved=server.project(p['id'])
+        self.assertEqual(saved['status'],'running');self.assertEqual(saved['stage'],'refined-production')
+        self.assertEqual(self.client.post(self.base+'/run/model-references').status_code,409)
+        saved['status']='review';server.save(saved)
     def setUp(self):
         self.client=TestClient(server.app);self.p=self.client.post('/api/projects',json={'name':'Test fixture'}).json();self.base='/api/projects/'+self.p['id']
     def image(self):

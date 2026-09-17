@@ -43,7 +43,8 @@ def assemble(root,pack,description):
   x=24+i*187;d.rectangle((x,1590,x+158,1650),fill=color);d.text((x,1660),color,font=small,fill='#243830')
  sheet.save(root/folder/'turnaround.png')
  (root/folder/'palette.json').write_text(json.dumps({'colorSpace':'sRGB','colors':colors,'method':'dominant non-background hero pixels','materialRoles':'requires review; these are not segmentation masks'},indent=2),encoding='utf-8')
- (root/folder/'portable-prompt.txt').write_text(description+'\n\n'+STYLE[pack['style']][1]+'\n\nUse hero.png as identity. Individual directional views are design guides, not calibrated projection cameras. Preserve pose, proportions, material boundaries and asymmetry. Fit and verify the back, hands, wrists, soles and full walk/strike cycles. Do not project a front image through the model onto its back.\n',encoding='utf-8')
+ camera_note='Individual views are exact model renders; cameras.json records their orthographic transforms. Match those cameras when checking shape and paint.' if pack.get('calibrated') else 'Individual directional views are design guides, not calibrated projection cameras.'
+ (root/folder/'portable-prompt.txt').write_text(description+'\n\n'+STYLE[pack['style']][1]+'\n\nUse hero.png as identity. '+camera_note+' Preserve pose, proportions, material boundaries and asymmetry. Fit and verify the back, hands, wrists, soles and full walk/strike cycles. Do not project a front image through the model onto its back.\n',encoding='utf-8')
  for key,file in [('sheet','turnaround.png'),('palette','palette.json'),('prompt','portable-prompt.txt')]:
   p=folder/file;pack['outputs'][key]={'file':p.as_posix(),'sha256':sha(root/p)}
  return colors

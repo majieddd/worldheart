@@ -352,7 +352,7 @@ def require_refinement_source(p):
     if digest(ROOT/'lib/99-art/vey-benchmark-v1/vey-motion.blend')!=profile['sourceRigSha256']:raise HTTPException(409,'Source rig changed; update and review the fitted recipe')
     return sources
 
-def refine_vey(p,s):
+def refine_vey(p,s,continuing=False):
     sources=require_refinement_source(p);folder='refine-'+uuid.uuid4().hex[:10];dest=output(p,folder);dest.mkdir()
     scripts=Path(__file__).parent;recipe=scripts/'pilots/vey-trellis';profile=recipe/'refinement-profile.json'
     def step(name,args):
@@ -372,7 +372,7 @@ def refine_vey(p,s):
     p['reviewReports']={'paint':[folder+'/surface-quality.json'],'animation':[folder+'/sole-quality.json']}
     p['motionInput']=digest(dest/'paint-refined.glb');save(p)
     require_valid_output(p,'paint');require_valid_output(p,'animation')
-    update(p,'animation','review','Vey material paint and boot correction complete. Compare all views and full clips before approving. Original files remain available.')
+    update(p,'refined-production' if continuing else 'animation','running' if continuing else 'review','Surface and paint checked. Continuing wrist, digit and boot articulation.' if continuing else 'Vey material paint and boot correction complete. Compare all views and full clips before approving. Original files remain available.')
 
 def require_articulation_source(p):
     require_refinement_source(p)
@@ -411,7 +411,7 @@ def worker(key,stage,s):
                 elif step=='references':make_reference_pack(p,s)
                 elif step=='model-references':render_reference_pack(p,s)
                 elif step=='refined-production':
-                    refine_vey(p,s);articulate_vey(p,s)
+                    refine_vey(p,s,continuing=True);articulate_vey(p,s)
                 elif step=='mesh':make_mesh(p,s)
                 elif step=='refine':refine_vey(p,s)
                 elif step=='articulate':articulate_vey(p,s)
