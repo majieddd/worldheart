@@ -7,8 +7,8 @@ import {HANDLING} from './arena-handling.js';
 // third person; the existing first-person combat handling stays available.
 export const VEY_PACE=Object.freeze({...HANDLING,walk:1.389573589,sprint:3.461958244,crouch:1,aim:1.15,slide:4.5});
 
-export async function createVeyActor(paint,{url='lib/99-art/vey-articulation-v1/vey-motion.glb',pace=VEY_PACE}={}){
-  const gltf=await new GLTFLoader().loadAsync(url);
+export async function createVeyActor(paint,{url='lib/99-art/vey-articulation-v1/vey-motion.glb',pace=VEY_PACE,onProgress}={}){
+  const gltf=await new GLTFLoader().loadAsync(url,onProgress);
   const root=new THREE.Group(),model=gltf.scene;root.add(model);
   const meshes=[];let hand;
   model.traverse(o=>{if(o.isMesh)meshes.push(o);if(o.isBone&&o.name.replace(/[^a-z0-9]/gi,'')==='handR')hand=o;});
