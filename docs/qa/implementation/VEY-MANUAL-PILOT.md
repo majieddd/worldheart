@@ -34,7 +34,7 @@ a need that the current tools cannot meet.
 
 ## Status
 
-Locally verified; publishing the review candidate. The hero, six separate views,
+Published and publicly verified at V2 `86aace6`; [PR #67](https://github.com/majieddd/worldheart/pull/67). The hero, six separate views,
 eight-color palette, portable prompt, motion guide, painted GLB and editable rig
 are in `lib/99-art/vey-pilot-v1`. Reproducible manual steps and scripts are in
 `tools/asset-studio/pilots/vey`. The automatic studio has not been promoted.
@@ -64,7 +64,8 @@ are in `lib/99-art/vey-pilot-v1`. Reproducible manual steps and scripts are in
   compile error in the shared model viewer. Replaced its unavailable objectNormal
   variable with the source normal attribute before skinning. All three stages now
   pass locally with no shader/browser errors. The failing public report is retained;
-  corrected publication and final public recheck are pending.
+  corrected public checks pass with zero browser/shader errors across all three
+  stages. Nine exported-model checks, walk/run transition and mobile layout pass.
 
 ## Pipeline lesson and Aegis
 
@@ -83,3 +84,18 @@ not a general automatic rigger. Top/bottom are advisory perspective illustration
 512px view sources do not become true high-resolution detail in a 2048px atlas.
 Modly, Tripo and Kimodo were researched, not executed. Local tools handled mesh,
 paint and retargeting; built-in concept generation was not a local inference run.
+
+## Published receipt
+
+[Review pilot](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/vey-pilot.html)
+was verified after [Pages action 35176395830](https://github.com/majieddd/worldheart/actions/runs/35176395830).
+Live preview SHA: `86aace6a3ceaa2021ebad042a46534d16dcba66b`. Main remains `6133d07`.
+28 static file identities match: 27 unchanged pilot assets were fetched and hashed
+on the first publication and matched against the new manifest; the corrected
+shared viewer was fetched and hashed again. Public browser evaluation and console
+checks pass. [Machine-readable receipt](VEY-MANUAL-PILOT-RECEIPT.json).
+
+Aegis [3.18.6](https://github.com/majieddd/claude-plugins-custom/releases/tag/aegis-suite-v3.18.6)
+is published and installed/enabled as `3.18.6+codex.20260917024327`. 335-file
+source/cache/package parity, 75 source tests, eight installed tests and fresh
+discovery of seven tools pass. Current-turn checks use the updated CLI directly.
