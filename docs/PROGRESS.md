@@ -1,3 +1,5 @@
+MiniMax H3 video-reference pilot locally verified: one Vey clip (12.25 s, 2K/24 fps) imported through Studio with slow playback, sampled frames, source hashes and separate review. 78 Studio tests and desktop/mobile playback pass. Video-to-skeleton extraction remains unimplemented. Siria ZIP storage blocker resolved and download reverified. [Evidence](qa/implementation/MINIMAX-MOTION-GUIDE.md).
+
 ## Siria final storage checkpoint
 
 Rig, captured walk and polished GLB/FBX/Blender verified locally; dedicated T-pose guide saved (latest generation 108.682 s). The initial ZIP passed CRC/hash validation, then was removed to recover disk space when C: filled again. ZIP regeneration currently needs space. Atomic state/package writes and failure tests preserve existing outputs. See [recovery evidence](qa/implementation/SIRIA-RIGGING-RECOVERY.md).

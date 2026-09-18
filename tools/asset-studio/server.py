@@ -731,6 +731,8 @@ def export(key):
                 for path in output(p,p['referencePack']['folder']).glob('*'):
                     if path.is_file():z.write(path,str(path.relative_to(PROJECTS/p['id'])))
             extra=['paint-profile.json','rig-profile.json']
+            if p.get('motionGuide'):
+                extra.extend(p['motionGuide'][k] for k in ['file','sheet','receipt'])
             if p.get('rigReference'):
                 extra.extend([p['rigReference']['file'],p['rigReference']['receipt']])
                 if p['rigReference'].get('rawFile'):extra.append(p['rigReference']['rawFile'])
@@ -747,6 +749,8 @@ def export(key):
 
 import research_pipeline
 research_pipeline.register(app,sys.modules[__name__])
+import motion_guides
+motion_guides.register(app,sys.modules[__name__])
 
 for stale in PROJECTS.glob('*/project.json'):
     p=read(stale)

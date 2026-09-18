@@ -9,6 +9,43 @@ import server
 from fastapi.testclient import TestClient
 
 class StudioTests(unittest.TestCase):
+    def test_export_includes_independent_pose_and_video_guides(self):
+        import zipfile
+        p=server.project(self.p['id']);server.output(p,'model.glb').write_bytes(fixture());sha=server.digest(server.output(p,'model.glb'))
+        p.update(mesh='model.glb',animation='model.glb',polished='model.glb',motionInput=sha,polishInput=sha)
+        p['rigReference']={'file':'pose.png','receipt':'pose.json'};p['motionGuide']={'file':'guide.mp4','sheet':'guide.jpg','receipt':'guide.json'}
+        for name in [*p['rigReference'].values(),*p['motionGuide'].values()]:server.output(p,name).write_bytes(b'fixture')
+        server.save(p)
+        with patch.object(server,'assert_approved'),patch.object(server,'require_valid_output'):
+            result=self.client.get(self.base+'/export')
+        self.assertEqual(result.status_code,200)
+        with zipfile.ZipFile(io.BytesIO(result.content)) as archive:
+            self.assertTrue({'pose.png','pose.json','guide.mp4','guide.jpg','guide.json'}<=set(archive.namelist()))
+
+    def test_video_guide_does_not_replace_motion_or_approval(self):
+        import motion_guides
+        p=self.concept();p.update(animation='accepted.glb',polished='retained.glb',approvals={'animation':'retained'});server.save(p)
+        with patch.object(motion_guides,'inspect_video',return_value={'duration':12,'fps':24}):
+            result=self.client.post(self.base+'/motion-guide?reference=hero',files={'file':('guide.mp4',b'video fixture','video/mp4')})
+        self.assertEqual(result.status_code,200);saved=result.json();self.assertEqual(saved['animation'],'accepted.glb');self.assertEqual(saved['approvals'],p['approvals']);self.assertFalse(saved['motionGuide']['skeletalMotionExtracted'])
+        self.assertEqual(self.client.post(self.base+'/motion-guide/review',json={'decision':'accept'}).status_code,400)
+        reviewed=self.client.post(self.base+'/motion-guide/review',json={'decision':'accept','checks':dict.fromkeys(motion_guides.CHECKS,True)}).json()
+        self.assertEqual(reviewed['motionGuide']['status'],'accepted-reference');self.assertEqual(reviewed['approvals'],p['approvals'])
+        server.output(p,p['art']).write_bytes(b'changed reference')
+        self.assertEqual(self.client.post(self.base+'/motion-guide/review',json={'decision':'reject'}).status_code,409)
+
+    def test_invalid_video_does_not_replace_existing_guide(self):
+        import motion_guides
+        p=self.concept();p['motionGuide']={'file':'retained.mp4'};server.save(p)
+        with patch.object(motion_guides,'inspect_video',side_effect=ValueError('Unreadable video')):
+            result=self.client.post(self.base+'/motion-guide',files={'file':('bad.mp4',b'bad video','video/mp4')})
+        self.assertEqual(result.status_code,400);self.assertEqual(server.project(p['id'])['motionGuide'],p['motionGuide'])
+        self.assertEqual(list(server.output(p,'.').glob('motion-guide-*')),[])
+
+    def test_minimax_brief_preserves_identity_and_labels_requested_timing(self):
+        self.concept();r=self.client.get(self.base+'/motion-guide/brief').json()
+        self.assertEqual(r['model'],'MiniMax-H3');self.assertEqual(r['duration'],12);self.assertIn('not this video',r['boundary']);self.assertEqual(len(r['requestedPhases']),7)
+
     def test_export_low_storage_preserves_existing_package(self):
         from types import SimpleNamespace
         p=server.project(self.p['id']);server.output(p,'paint.glb').write_bytes(fixture());server.output(p,'motion.glb').write_bytes(fixture())

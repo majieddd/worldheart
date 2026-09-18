@@ -180,3 +180,18 @@ candidates with removed-face receipts; accepted source paint is retained.
 Sole fitting keeps foot/toe weights and excludes distant shin influence. This
 cannot certify anatomy or repair arbitrary clothing: inspect the rest T-pose
 and all angles, and reconstruct extensively fused characters with separated limbs.
+
+## Optional MiniMax motion-video guides
+
+In Concept or Rig & Motion, open Walk + Strike / video reference. Download the
+MiniMax H3 brief, generate a clip externally from the named character reference,
+and import the MP4. Studio stores source/video hashes, actual duration, frame rate,
+a timestamped sheet and independent review. Full-body framing, identity, contact
+and readable phase timing must be checked before accepting the guide. Playback
+supports normal, half and quarter speed. ZIP export includes the guide and receipt.
+
+MiniMax H3 was checked against the provider's current documentation on 2026-09-18.
+The optional pilot used H3 through Higgsfield: 12.25 s, 2560x1440, 24 fps.
+Generation is external; import and playback are local. This does not extract
+a skeleton or replace captured motion. Automatic video-to-rig conversion remains
+unimplemented. Reference acceptance never changes animation approval.
