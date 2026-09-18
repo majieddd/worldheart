@@ -16,6 +16,7 @@ add a scoped extension or separately versioned experiment instead of replacing
 their branch, approved baseline or contribution record. Refresh shared preview
 and the current Aegis release before integrating changes.
 For repeatable local asset work, see the [Trellis/Vey recipe](tools/asset-studio/pilots/vey-trellis/README.md). Preserve raw candidates, time setup separately from per-asset work, keep failed attempts, and bind checks to the exact exported model. File validity never grants visual acceptance. Character-specific paint and rig recipes supplement the general pipeline; they are not universal defaults.
+For painted humanoids, test the ordinary Rig and animate -> review -> polish -> export path, not only research candidates. Include a separate T-pose in the concept packet, preserve painted sources, and inspect raised-arm bridge deformation before accepting locomotion. See [Siria rigging recovery](docs/qa/implementation/SIRIA-RIGGING-RECOVERY.md).
 For art debugging, inspect full motion cycles, test both captured and denied
 cursor input, and distinguish texture resolution from its scale on the model.
 Use the shared asset stage and runtime builders so inspection fixes carry into

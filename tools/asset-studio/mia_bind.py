@@ -34,11 +34,21 @@ def bind(task):
     if not np.isfinite(weights).all() or np.max(abs(weights.sum(axis=1)-1))>.0001:
         raise ValueError('Invalid normalized prediction weights.')
     names = list(pred['names']); parents = pred['parents']
+    # Remove distant leg influence from the rigid sole region. Keep the learned
+    # foot/toe blend; this prevents tiny shin weights pulling soles underground.
+    body_height=np.ptp(vertices[:,2]);sole_fits=0
+    foot_ids=[next(i for i,n in enumerate(names) if n.endswith(s+'Foot'))for s in ['Left','Right']]
+    toe_ids=[next(i for i,n in enumerate(names) if n.endswith(s+'ToeBase'))for s in ['Left','Right']]
+    for i,v in enumerate(vertices):
+        side=int(np.argmin([abs(v[0]-heads[j,0]) for j in foot_ids]));foot,toe=foot_ids[side],toe_ids[side]
+        if v[2]<heads[foot,2]-.015*body_height:
+            pair=weights[i,[foot,toe]].copy();total=pair.sum();weights[i]=0
+            weights[i,[foot,toe]]=pair/total if total>.05 else [1.,0.];sole_fits+=1
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=str(source.resolve()))
     scene = bpy.context.scene
     meshes = [o for o in scene.objects if o.type=='MESH']
-    uv_before = {}; texture_before = {}
+    uv_before = {}; texture_before = {};positions_before={}
     for image in bpy.data.images:
         pixels = np.empty(len(image.pixels),dtype=np.float32); image.pixels.foreach_get(pixels)
         texture_before[image.name] = hashlib.sha256(pixels.tobytes()).hexdigest()
@@ -49,6 +59,7 @@ def bind(task):
         bpy.ops.object.select_all(action='DESELECT');obj.select_set(True);bpy.context.view_layer.objects.active=obj
         bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
         uv_before[obj.name] = [np.array([p.uv[:] for p in layer.data]) for layer in obj.data.uv_layers]
+        positions_before[obj.name]=np.array([v.co[:] for v in obj.data.vertices])
     for obj in list(scene.objects):
         if obj not in meshes:bpy.data.objects.remove(obj,do_unlink=True)
     arm = bpy.data.armatures.new('MIA v2 humanoid')
@@ -92,18 +103,58 @@ def bind(task):
     for image in bpy.data.images:
         pixels=np.empty(len(image.pixels),dtype=np.float32);image.pixels.foreach_get(pixels)
         if texture_before.get(image.name)!=hashlib.sha256(pixels.tobytes()).hexdigest():raise ValueError('Paint changed during binding')
+    # Fused reconstruction sheets can occupy very few faces and evade percentile
+    # deformation checks. Remove only diagnosed bridges from this rig candidate.
+    from rig_bridges import bridge_faces
+    import bmesh
+    repairs={}
+    ankles=[heads[i] for i,n in enumerate(names) if n.rsplit(':',1)[-1] in ['LeftFoot','RightFoot']]
+    for obj in meshes:
+        faces=np.array([list(poly.vertices) for poly in obj.data.polygons])
+        removed,repair=bridge_faces(positions_before[obj.name],np.array([v.co[:]for v in obj.data.vertices]),faces,ankles)
+        repair['removedFaceIndices']=removed.tolist();repairs[obj.name]=repair
+        if len(removed):
+            bm=bmesh.new();bm.from_mesh(obj.data);bm.faces.ensure_lookup_table()
+            origin=bm.loops.layers.int.new('source_uv_loop')
+            for face,poly in zip(bm.faces,obj.data.polygons):
+                for loop,index in zip(face.loops,poly.loop_indices):loop[origin]=index+1
+            bmesh.ops.delete(bm,geom=[bm.faces[int(i)]for i in removed],context='FACES')
+            # UV seam duplicates must be joined before sealing the small exposed
+            # cuts; UVs are per-loop and remain attached to retained faces.
+            bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=body_height*1e-6)
+            boundary=[edge for edge in bm.edges if edge.is_boundary]
+            caps=bmesh.ops.holes_fill(bm,edges=boundary,sides=0)['faces'] if boundary else []
+            caps=[face for face in caps if face.is_valid]
+            if caps:
+                bmesh.ops.face_attribute_fill(bm,faces=caps,use_normals=True,use_data=True)
+                caps=[face for face in caps if face.is_valid]
+                for face in caps:
+                    for loop in face.loops:loop[origin]=0
+                bmesh.ops.triangulate(bm,faces=caps)
+            retained=[loop for face in bm.faces for loop in face.loops if loop[origin]]
+            original_indices=np.fromiter((loop[origin]-1 for loop in retained),dtype=np.int64)
+            for layer,expected in zip(bm.loops.layers.uv.values(),uv_before[obj.name]):
+                actual=np.array([loop[layer].uv[:]for loop in retained])
+                if len(retained) and not np.allclose(actual,expected[original_indices],rtol=0,atol=1e-6):
+                    raise ValueError('Repair changed a retained face UV. Source paint is preserved; candidate rejected.')
+            bm.loops.layers.int.remove(origin)
+            bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces))
+            repair['sealedBoundaries']=len(caps)
+            bm.to_mesh(obj.data);bm.free();obj.data.update()
     floor=min((obj.matrix_world@v.co).z for obj in meshes for v in obj.data.vertices)
     rig.location.z=.003-floor
     output.parent.mkdir(parents=True,exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=str(output.with_suffix('.blend').resolve()))
     bpy.ops.export_scene.gltf(filepath=str(output.resolve()),export_format='GLB',export_animations=False)
-    report={'schema':1,'engine':'MIA v2 binding','bones':len(names),
+    report={'schema':1,'pipelineVersion':3,'engine':'MIA v2 binding','bones':len(names),'bridgeRepair':repairs,'soleWeightsFitted':sole_fits,
         'sourceSha256':receipt['sourceSha256'],'predictionSha256':receipt['predictionSha256'],
         'outputSha256':hashlib.sha256(output.read_bytes()).hexdigest(),
-        'maxVertexMappingError':maximum,'uvUnchanged':True,'paintPixelsUnchanged':True,
+        'maxVertexMappingError':maximum,'uvUnchangedOnRetainedFaces':True,'paintPixelsUnchanged':True,
         'seconds':time.perf_counter()-start,'review':'Rest-pose candidate. Motion and visual acceptance pending.'}
     output.with_suffix('.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-    print(json.dumps(report),flush=True)
+    print(json.dumps({'engine':report['engine'],'bones':report['bones'],'seconds':report['seconds'],
+        'paintPixelsUnchanged':True,'removedBridgeFaces':sum(r['removedFaces']for r in repairs.values()),
+        'report':str(output.with_suffix('.json'))}),flush=True)
 
 
 if __name__=='__main__':

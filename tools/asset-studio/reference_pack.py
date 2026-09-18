@@ -10,7 +10,7 @@ VIEWS={'front':'straight front view, face and both palms visible',
  'back':'straight BACK view, back of head and costume; NO face visible',
  'top':'directly overhead TOP view, looking down at crown and shoulders',
  'bottom':'directly underneath BOTTOM view, looking up at soles and underside'}
-VERSION=3
+VERSION=4
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def identity(hero,description,style,settings):
  scripts={name:sha(Path(__file__).with_name(name))for name in ['reference_pack.py','workflows.py']}
@@ -24,6 +24,10 @@ def prompts(description,style):
        'Match image 1 lighting, rendering and brushwork exactly; do not reinterpret the style. ')
  result={name:f'ONE CHARACTER ONLY, ONE VIEW ONLY. Not a character sheet or comparison. Render {view}. '+base+'Same standing pose. Single full body, complete hands, feet and tail, plain light gray background, orthographic camera. Only the viewing angle changes. Never show a second figure, inset, front-view copy or alternate side. No text.' for name,view in VIEWS.items()}
  result['motion']=base+'Character motion reference sheet, two rows of three complete full-body side-view poses. Top row walking: heel contact, flat support, toe-off. Bottom row a grounded unarmed strike: anticipation, extension/contact, recovery. Show a relaxed hand during walking and a safe closed fist during striking. Same character and scale in every cell, wide space between poses, plain light gray background. No extra limbs, no cropped feet. This is a visual choreography guide, not animation frames.'
+ result['tpose']=base.replace('alter pose, ','')+(' RIGGING T-POSE: change ONLY the limb pose of this exact character. ONE full-body character, straight front orthographic view. '
+     'Both arms extend horizontally at shoulder height, forming a straight T, elbows straight but relaxed. Palms face forward, all fingers gently separated and fully visible, thumbs clear of the palms. '
+     'Legs straight, feet hip-width apart, both soles flat and pointing forward. Head upright, spine neutral. No weapon in the hands. Preserve costume and anatomy without stretching the sleeves or narrowing the wrists. '
+     'Complete fingertips and boots inside the frame with generous margin. Plain light gray background, no perspective, text, second figure or ground plinth. This is a rest-pose visual guide, not a fitted skeleton.')
  for name,direction in [('left','left'),('right','right')]:
   result[name]=(f'Rotate the ENTIRE character exactly 90 degrees into a strict anatomical {direction.upper()} side profile, facing the {direction} edge. '
       'Head, chest, pelvis, both legs and boots rotate together. This is NOT just a head turn. '
@@ -37,7 +41,9 @@ def prompts(description,style):
  return result
 def current(pack,root,hero):
  if not pack or not pack.get('complete') or pack.get('heroSha256')!=sha(hero):return False
- return all((Path(root)/v['file']).is_file() and sha(Path(root)/v['file'])==v['sha256'] for v in pack.get('outputs',{}).values()) and all(n in pack.get('outputs',{})for n in [*VIEWS,'motion','sheet','palette','prompt'])
+ required=[*VIEWS,'motion','sheet','palette','prompt']
+ if pack.get('version',3)>=4 and not pack.get('calibrated'):required.append('tpose')
+ return all((Path(root)/v['file']).is_file() and sha(Path(root)/v['file'])==v['sha256'] for v in pack.get('outputs',{}).values()) and all(n in pack.get('outputs',{})for n in required)
 def assemble(root,pack,description):
  root=Path(root);folder=Path(pack['folder']);hero=Image.open(root/pack['hero']).convert('RGBA');sample=hero.resize((192,192))
  # Respect alpha first: transparent black is not a costume color.

@@ -173,9 +173,10 @@ def retarget(task):
             evaluated.to_mesh_clear()
     root_bone = next(b for b in parents_first if b.parent is None)
     # A non-deforming root can carry the common offset without changing pelvis bob.
+    contact_failure=None
     if contact_report:
         if floor < -.005:
-            raise ValueError('Contact fit leaves a body surface below the floor; inspect the candidate.')
+            contact_failure=f'Contact fit leaves a body surface {floor:.5f} m below the floor; inspect the retained candidate.'
     elif root_bone.name != hips:
         for frame in range(count+1):
             scene.frame_set(frame)
@@ -204,10 +205,11 @@ def retarget(task):
         'travelVector':(travel*scale).tolist(),
         'provisionalTravelSpeed':float(np.linalg.norm(travel)*scale/duration),
         'mappedBones':mapping,'unmappedBones':sorted(target_names-set(mapping)),
-        'constantFloorOffset':0 if contact_report else .003-floor,'contactRefinement':contact_report,'seconds':time.perf_counter()-started,
+        'constantFloorOffset':0 if contact_report else .003-floor,'contactRefinement':contact_report,'minimumSurfaceHeight':floor,'seconds':time.perf_counter()-started,
         'review':'Motion candidate. Foot contact, seams and target deformation have not been accepted.'}
     dest.with_suffix('.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(report),flush=True)
+    if contact_failure:raise ValueError(contact_failure)
     return report
 
 

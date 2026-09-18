@@ -9,6 +9,91 @@ import server
 from fastapi.testclient import TestClient
 
 class StudioTests(unittest.TestCase):
+    def test_export_low_storage_preserves_existing_package(self):
+        from types import SimpleNamespace
+        p=server.project(self.p['id']);server.output(p,'paint.glb').write_bytes(fixture());server.output(p,'motion.glb').write_bytes(fixture())
+        p.update(mesh='paint.glb',paint='paint.glb',animation='motion.glb',polished='motion.glb',motionInput=server.digest(server.output(p,'paint.glb')),polishInput=server.digest(server.output(p,'motion.glb')));server.save(p)
+        archive=server.output(p,'asset-package.zip');archive.write_bytes(b'existing package')
+        with patch.object(server,'assert_approved'),patch.object(server,'require_valid_output'),patch.object(server.shutil,'disk_usage',return_value=SimpleNamespace(free=0)):
+            response=self.client.get(self.base+'/export')
+        self.assertEqual(response.status_code,507);self.assertIn('Saved models remain available',response.json()['detail'])
+        self.assertEqual(archive.read_bytes(),b'existing package')
+
+    def test_failed_json_save_preserves_previous_file_and_cleans_temp(self):
+        path=server.DATA/'atomic-save.json';server.write(path,{'saved':'original'})
+        with patch.object(server.os,'fsync',side_effect=OSError(28,'No space left')):
+            with self.assertRaises(OSError):server.write(path,{'saved':'replacement'})
+        self.assertEqual(server.read(path),{'saved':'original'})
+        self.assertEqual(list(path.parent.glob(path.name+'.*.tmp')),[])
+
+    def test_main_motion_uses_learned_rig_for_imported_static_paint(self):
+        p=server.project(self.p['id']);server.output(p,'paint.glb').write_bytes(fixture(motion=False))
+        p.update(mesh='paint.glb',paint='paint.glb',imported=True);server.save(p)
+        self.assertFalse(server.has_authored_motion(p))
+        with patch.object(server,'prepare_learned_motion') as learned,patch.object(server,'blender_stage') as legacy:
+            server.worker(p['id'],'animation',server.DEFAULT)
+            learned.assert_called_once();legacy.assert_not_called()
+        server.output(p,'paint.glb').write_bytes(fixture());self.assertTrue(server.has_authored_motion(p))
+
+    def test_main_motion_failure_preserves_paint_and_previous_outputs(self):
+        p=server.project(self.p['id']);raw=fixture(motion=False);server.output(p,'paint.glb').write_bytes(raw)
+        p.update(mesh='paint.glb',paint='paint.glb',animation='previous.glb',polished='retained.glb');server.save(p)
+        with patch.object(server,'prepare_learned_motion',side_effect=ValueError('Rig check failed')):server.worker(p['id'],'animation',server.DEFAULT)
+        result=server.project(p['id']);self.assertEqual(result['status'],'error')
+        self.assertEqual(result['animation'],'previous.glb');self.assertEqual(result['polished'],'retained.glb')
+        self.assertEqual(server.output(p,'paint.glb').read_bytes(),raw);self.assertIsNone(server.ACTIVE)
+
+    def test_process_failure_does_not_reuse_old_worker_traceback(self):
+        import sys
+        p=server.project(self.p['id']);server.output(p,'worker.log').write_text('Obsolete unrelated rig error\n')
+        with self.assertRaises(RuntimeError) as caught:server.run_process(p,[sys.executable,'-c','import sys;sys.exit(7)'])
+        self.assertIn('code 7',str(caught.exception));self.assertIn('no diagnostic output',str(caught.exception));self.assertNotIn('Obsolete',str(caught.exception))
+
+    def test_tpose_supplement_keeps_existing_pack_paint_and_approval(self):
+        p=self.concept();self.client.post(self.base+'/approve/art');p=server.project(p['id'])
+        p['paint']='existing-paint.glb';before=dict(p['approvals'])
+        def fake(p,settings,prompt,refs,name):
+            self.assertEqual(settings['width'],1280);self.assertIn('T-POSE',prompt)
+            server.output(p,name).write_bytes(self.image());return {'sha256':server.digest(server.output(p,name))}
+        with patch.object(server,'generate_image',side_effect=fake):server.make_rig_reference(p,server.DEFAULT)
+        self.assertEqual(p['approvals'],before);self.assertEqual(p['paint'],'existing-paint.glb')
+        self.assertEqual(p['rigReference']['visualAcceptance'],'pending')
+        self.assertEqual(p['rigReference']['heroSha256'],server.digest(server.output(p,p['art'])))
+
+    def test_complete_main_rig_path_preserves_paint_and_requires_visual_review(self):
+        p=server.project(self.p['id']);paint=fixture(motion=False);server.output(p,'paint.glb').write_bytes(paint)
+        p.update(mesh='paint.glb',paint='paint.glb');server.save(p)
+        for env in ['mia-env','blender-py311']:
+            path=server.RUNTIME/env/'Scripts/python.exe';path.parent.mkdir(parents=True,exist_ok=True);path.touch()
+        server.write(server.DATA/'research-runtime.json',{'mia':{'runtimeVerified':True}})
+        library=server.DATA/'motion-library';library.mkdir(exist_ok=True)
+        (library/'mixamo-walk.npz').write_bytes(b'capture');server.write(library/'mixamo-walk.json',{'name':'Mixamo Walking'})
+        calls=[]
+        def engine(project,cmd):
+            script=Path(cmd[1]).name;calls.append(script);self.assertEqual(project['status'],'running');self.assertIsNotNone(server.ACTIVE)
+            if script=='retarget_quality.py':
+                source=Path(cmd[2]).with_suffix('.glb');server.write(cmd[3],{'sha256':server.digest(source),'passed':True,'checks':[{'name':'fixture contact','status':'pass','detail':'mock worker output'}]});return
+            task=server.read(cmd[2]);dest=Path(task['output']);dest.parent.mkdir(exist_ok=True)
+            if script=='mia_worker.py':dest.write_bytes(b'prediction');server.write(dest.with_suffix('.json'),{'passed':True});return
+            dest.write_bytes(fixture() if script=='mixamo_retarget.py' else paint);dest.with_suffix('.blend').write_bytes(b'editable rig')
+        with patch.object(server,'run_process',side_effect=engine):server.worker(p['id'],'animation',server.DEFAULT)
+        result=server.project(p['id']);self.assertEqual(result['status'],'review',result.get('message'))
+        self.assertEqual(calls,['mia_worker.py','mia_bind.py','mixamo_retarget.py','retarget_quality.py'])
+        self.assertEqual(server.output(p,'paint.glb').read_bytes(),paint);self.assertEqual(result['motionInput'],server.digest(server.output(p,'paint.glb')))
+        self.assertNotIn('animation',result['approvals']);self.assertIsNone(result['polished']);self.assertEqual(self.client.get(self.base+'/export').status_code,409)
+
+    def test_queue_cannot_overlap_its_project_or_an_external_worker(self):
+        p=server.project(self.p['id']);server.output(p,'mesh.glb').write_bytes(fixture(motion=False));p['mesh']='mesh.glb';server.save(p)
+        with patch.object(server,'ACTIVE',{'project':p['id'],'stage':'paint'}):self.assertEqual(self.client.post(self.base+'/run/animation?queue=true').status_code,409)
+        with patch.object(server,'ACTIVE',None),patch.object(server,'list_projects',return_value=[{'status':'running'}]):self.assertEqual(self.client.post(self.base+'/run/animation?queue=true').status_code,409)
+
+    def test_explicit_queue_serializes_behind_other_managed_job(self):
+        p=server.project(self.p['id']);server.output(p,'mesh.glb').write_bytes(fixture(motion=False));p['mesh']='mesh.glb';server.save(p)
+        with patch.object(server,'ACTIVE',{'project':'other','stage':'mesh'}),patch.object(server.POOL,'submit') as submit:
+            response=self.client.post(self.base+'/run/animation?queue=true');self.assertEqual(response.status_code,200);self.assertEqual(response.json()['status'],'queued');submit.assert_called_once()
+            self.assertEqual(self.client.post(self.base+'/run/animation?queue=true').status_code,409)
+        p=server.project(p['id']);p['status']='review';server.save(p)
+
     def test_reference_isolation_preserves_source_and_invalidates_review(self):
         from PIL import ImageDraw
         p=self.concept();folder=server.output(p,'refs');folder.mkdir()
@@ -118,7 +203,7 @@ class StudioTests(unittest.TestCase):
         def finish(p,s,prompt,refs,name):
             calls.append(name);server.output(p,name).write_bytes(self.image());return {'sha256':server.digest(server.output(p,name))}
         with patch.object(server,'generate_image',side_effect=finish):server.make_reference_pack(p,server.DEFAULT)
-        self.assertEqual(len(calls),6);self.assertFalse(any(n.endswith('/front.png')for n in calls))
+        self.assertEqual(len(calls),7);self.assertFalse(any(n.endswith('/front.png')for n in calls))
         self.assertEqual(self.client.post(self.base+'/approve/art').status_code,200)
         p=server.project(self.p['id']);server.output(p,p['referencePack']['outputs']['back']['file']).write_bytes(b'changed')
         with self.assertRaises(server.HTTPException):server.assert_approved(p,'art','art')
@@ -139,6 +224,7 @@ class StudioTests(unittest.TestCase):
         self.assertEqual(len(calls),1);self.assertIsNone(p.get('referencePack'));self.assertEqual(p['status'],'review')
         self.assertEqual(self.client.post(self.base+'/approve/art').status_code,409)
     def setUp(self):
+        free=patch.object(server,'comfy_free');free.start();self.addCleanup(free.stop)
         self.client=TestClient(server.app);self.p=self.client.post('/api/projects',json={'name':'Test fixture'}).json();self.base='/api/projects/'+self.p['id']
     def image(self):
         b=io.BytesIO();Image.new('RGB',(8,8),'green').save(b,format='PNG');return b.getvalue()

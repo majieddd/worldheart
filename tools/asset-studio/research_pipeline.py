@@ -118,14 +118,16 @@ def register(app, s):
             s.POOL.submit(import_job,key,filename,label,'User-supplied local FBX; exact download URL not recorded')
         return p
 
-    def execute(key,item,task):
-        p=s.project(key);s.ACTIVE={'project':key,'stage':'research-'+item['method']}
+    def execute(key,item,task,production=None):
+        p=production if production is not None else s.project(key)
+        if production is None:s.ACTIVE={'project':key,'stage':'research-'+item['method']}
         # Reload the same persisted item so timings/status edits share one object.
         item=next(x for x in p['researchCandidates'] if x['id']==item['id'])
         method=item['method'];folder=s.output(p,item['folder']);folder.mkdir(exist_ok=True)
         def command(script,env,*args):s.run_process(p,[s.RUNTIME/env/'Scripts/python.exe',scripts/script,*args])
         try:
-            s.update(p,'research-'+method,'running','Building an isolated comparison. Current production stages remain selected.')
+            s.update(p,'animation' if production is not None else 'research-'+method,'running',
+                'Fitting the skeleton and skin weights to this painted model.' if method=='mia' else 'Retargeting captured motion and checking foot contact.' if method=='mixamo' else 'Building an isolated comparison.')
             with s.timed_stage(p,method+' candidate'):
                 task_path=folder/'task.json';s.write(task_path,task)
                 if method=='mixamo':
@@ -133,6 +135,7 @@ def register(app, s):
                     command('retarget_quality.py','blender-py311',Path(task['output']).with_suffix('.blend'),folder/'quality.json')
                     item['report']=item['folder']+'/quality.json'
                 elif method=='mia':
+                    s.comfy_free()
                     command('mia_worker.py','mia-env',task_path)
                     bind={'input':task['input'],'prediction':task['output'],'output':str(folder/'candidate.glb')};s.write(folder/'bind.json',bind)
                     command('mia_bind.py','blender-py311',folder/'bind.json')
@@ -146,7 +149,7 @@ def register(app, s):
                 if report['status']=='fail':raise ValueError('The generated file failed asset checks. Review its retained report.')
                 item.update(file=filename,sha256=s.digest(s.output(p,filename)),passed=True,status='review',
                     message='Technical checks passed. Compare identity, hands, boots and full motion before use.')
-            s.update(p,'research-'+method,'review','Comparison saved. Inspect it before using it in production.')
+            if production is None:s.update(p,'research-'+method,'review','Comparison saved. Inspect it before using it in production.')
         except Exception as e:
             # Keep complete worker diagnostics downloadable, with a short result
             # in the product UI rather than a raw traceback.
@@ -160,9 +163,77 @@ def register(app, s):
                     if failures:item['message']='Needs correction: '+', '.join(failures)+'. Current asset retained.'
                     break
             if (folder/'candidate.glb').exists():item['file']=item['folder']+'/candidate.glb'
-            s.update(p,'research-'+method,'error',item['message'])
+            if production is None:s.update(p,'research-'+method,'error',item['message'])
         finally:
-            item['finishedAt']=time.time();s.save(p);s.ACTIVE=None;s.CANCEL.pop(key,None)
+            item['finishedAt']=time.time();s.save(p)
+            if production is None:s.ACTIVE=None;s.CANCEL.pop(key,None)
+        if production is not None and not item.get('passed'):raise ValueError(item['message'])
+        return item
+
+    def candidate_task(p,method,body):
+        source=source_model(p);identifier=uuid.uuid4().hex[:12];folder='research-'+identifier
+        item={'id':identifier,'method':method,'folder':folder,'sourceSha256':s.digest(s.output(p,source)),
+            'createdAt':time.time(),'status':'queued','passed':False,'ownerApproved':False}
+        dest=s.output(p,folder);task={'runtime':str(s.RUNTIME),'input':str(s.output(p,source)),'output':str(dest/'candidate.glb')}
+        if method=='mixamo':
+            motion=next((m for m in motions() if m['id']==body.get('motion')),None)
+            if not motion:raise HTTPException(400,'Choose an imported locomotion capture.')
+            target=source_rig(p,body.get('target'))
+            label=str(motion.get('name') or motion.get('label') or motion['id'])
+            carry=body.get('carryAction') or ('Run' if 'run' in label.lower() else 'Walk' if 'walk' in label.lower() else None)
+            if carry not in ['Walk','Run']:raise HTTPException(400,'Choose walk or run to match the fitted appendage cycle.')
+            task.update(input=str(target),motion=str(library/(motion['id']+'.npz')),name='Mixamo '+label.removeprefix('Mixamo ')[:90],fps=60,carryAction=carry)
+        elif method=='mia':
+            task['output']=str(dest/'prediction.npz')
+            if p.get('rigProfile'):task['rigProfile']=str(s.output(p,p['rigProfile']['file']))
+            fit_hash=s.digest(Path(task['rigProfile'])) if task.get('rigProfile') else None
+            for previous in ([] if body.get('freshInference') else reversed(p.get('researchCandidates',[]))):
+                prediction=s.output(p,previous['folder']+'/prediction.npz')
+                report=s.read(prediction.with_suffix('.json'),{})
+                if previous['method']=='mia' and prediction.is_file() and report.get('passed') and report.get('sourceSha256')==item['sourceSha256'] and report.get('canonicalizationFitSha256')==fit_hash:
+                    task['reusePrediction']=str(prediction);break
+        else:
+            s.assert_approved(p,'art','art');task.update(image=str(s.output(p,p['art'])),seed=s.settings()['seed'])
+            item['referenceSha256']=s.digest(s.output(p,p['art']))
+        p.setdefault('researchCandidates',[]).append(item)
+        return item,task
+
+    def prepare_motion(p):
+        """The normal Paint -> Motion route; no generic proximity rig fallback."""
+        if not available()['mia'] or not available()['mixamo']:
+            raise ValueError('Local rigging runtime is unavailable. Check Motion library setup before retrying.')
+        captures=motions()
+        motion=next((m for m in captures if m['id']=='mixamo-walk'),None)
+        if not motion:
+            motion=next((m for m in captures if str(m.get('name','')).lower() in ['walking','mixamo walking','walk']),None)
+        if not motion:raise ValueError('Import a Walking capture in Motion library, then retry Rig and animate.')
+        source=source_model(p);source_hash=s.digest(s.output(p,source))
+        rig=None
+        for previous in reversed(p.get('researchCandidates',[])):
+            if previous.get('method')!='mia' or not previous.get('passed') or previous.get('sourceSha256')!=source_hash:continue
+            path=s.output(p,previous.get('file','missing'))
+            if path.is_file() and path.with_suffix('.blend').is_file() and s.digest(path)==previous.get('sha256') and s.read(path.with_suffix('.json'),{}).get('pipelineVersion')==3:
+                rig=previous;break
+        if rig is None:
+            rig,task=candidate_task(p,'mia',{})
+            s.save(p);execute(p['id'],rig,task,production=p)
+        s.cancelled(p)
+        item,task=candidate_task(p,'mixamo',{'motion':motion['id'],'target':rig['id'],'carryAction':'Walk'})
+        s.save(p);execute(p['id'],item,task,production=p)
+        s.cancelled(p)
+        # Publish only the fully checked motion. Keep any earlier production output
+        # and all candidate failures, and never grant visual/owner approval here.
+        p.setdefault('refinementHistory',[]).append({k:p.get(k) for k in ['animation','polished','motionInput','reviewReports']})
+        p['animation']=item['file'];p['motionInput']=source_hash;p['polished']=None
+        p.setdefault('reviewReports',{})['animation']=[item['report']]
+        p.setdefault('approvals',{}).pop('animation',None);p.setdefault('reviews',{}).pop('animation',None)
+        p['motionRecipe']={'method':'mia-mixamo','sourceSha256':source_hash,'rigCandidate':rig['id'],
+            'motionCandidate':item['id'],'capture':motion['id'],'captureSha256':s.digest(library/(motion['id']+'.npz'))}
+        s.require_valid_output(p,'animation')
+        s.update(p,'animation','review','Rig and captured walk ready. Inspect the hands, boots and a full cycle, then approve animation to unlock Polish & package. More clips are available in Motion library.')
+        return p
+
+    s.prepare_learned_motion=prepare_motion
 
     @app.post('/api/projects/{key}/research')
     def generate(key,body:dict=Body(...)):
@@ -170,31 +241,8 @@ def register(app, s):
         if method not in ['mixamo','mia','instantmesh']:raise HTTPException(400,'Unknown research method.')
         if not engines[method]:raise HTTPException(409,'Run the pinned research setup and runtime trial first.')
         with s.LOCK:
-            idle(p);source=source_model(p);identifier=uuid.uuid4().hex[:12];folder='research-'+identifier
-            item={'id':identifier,'method':method,'folder':folder,'sourceSha256':s.digest(s.output(p,source)),
-                'createdAt':time.time(),'status':'queued','passed':False,'ownerApproved':False}
-            dest=s.output(p,folder);task={'runtime':str(s.RUNTIME),'input':str(s.output(p,source)),'output':str(dest/'candidate.glb')}
-            if method=='mixamo':
-                motion=next((m for m in motions() if m['id']==body.get('motion')),None)
-                if not motion:raise HTTPException(400,'Choose an imported locomotion capture.')
-                target=source_rig(p,body.get('target'))
-                label=str(motion.get('name') or motion.get('label') or motion['id'])
-                carry=body.get('carryAction') or ('Run' if 'run' in label.lower() else 'Walk' if 'walk' in label.lower() else None)
-                if carry not in ['Walk','Run']:raise HTTPException(400,'Choose walk or run to match the fitted appendage cycle.')
-                task.update(input=str(target),motion=str(library/(motion['id']+'.npz')),name='Mixamo '+label.removeprefix('Mixamo ')[:90],fps=60,carryAction=carry)
-            elif method=='mia':
-                task['output']=str(dest/'prediction.npz')
-                if p.get('rigProfile'):task['rigProfile']=str(s.output(p,p['rigProfile']['file']))
-                fit_hash=s.digest(Path(task['rigProfile'])) if task.get('rigProfile') else None
-                for previous in ([] if body.get('freshInference') else reversed(p.get('researchCandidates',[]))):
-                    prediction=s.output(p,previous['folder']+'/prediction.npz')
-                    report=s.read(prediction.with_suffix('.json'),{})
-                    if previous['method']=='mia' and prediction.is_file() and report.get('passed') and report.get('sourceSha256')==item['sourceSha256'] and report.get('canonicalizationFitSha256')==fit_hash:
-                        task['reusePrediction']=str(prediction);break
-            else:
-                s.assert_approved(p,'art','art');task.update(image=str(s.output(p,p['art'])),seed=s.settings()['seed'])
-                item['referenceSha256']=s.digest(s.output(p,p['art']))
-            p.setdefault('researchCandidates',[]).append(item);s.CANCEL[key]=False;s.update(p,'research-'+method,'queued','Waiting for the local worker.')
+            idle(p);item,task=candidate_task(p,method,body)
+            s.CANCEL[key]=False;s.update(p,'research-'+method,'queued','Waiting for the local worker.')
             s.POOL.submit(execute,key,item,task)
         return p
 

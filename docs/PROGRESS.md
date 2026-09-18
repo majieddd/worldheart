@@ -1,4 +1,10 @@
+## Siria final storage checkpoint
+
+Rig, captured walk and polished GLB/FBX/Blender verified locally; dedicated T-pose guide saved (latest generation 108.682 s). The initial ZIP passed CRC/hash validation, then was removed to recover disk space when C: filled again. ZIP regeneration currently needs space. Atomic state/package writes and failure tests preserve existing outputs. See [recovery evidence](qa/implementation/SIRIA-RIGGING-RECOVERY.md).
+
 # 99 Planets development progress
+
+Siria painted-model pipeline locally verified through download: main Rig & Motion now fits a learned rig and captured walk; conservative bridge/plinth repair preserves the source paint; a T-pose guide is saved and new reference packs include the pose. Final ZIP/GLB and browser checks pass, with 74 Studio tests. Underarm/hip surface refinement and a failed optional image retry remain explicit. [Evidence, timings and limits](qa/implementation/SIRIA-RIGGING-RECOVERY.md).
 
 Asset Studio shaping recovery locally verified: Siria now generates one character in 155.614s; fixed multiview budget misuse, isolated multi-figure references through Studio and corrected black rear shading on material-less meshes. Fresh local MIA v2 rig (108.069s) and captured walk (93.431s) remain separate comparisons. 62 Studio tests pass. Prior low-effort usage audited from exact-turn records; Aegis method updated and installed. [Evidence and remaining quality limits](qa/implementation/ASSET-SHAPE-RECOVERY.md).
 

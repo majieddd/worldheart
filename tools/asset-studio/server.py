@@ -27,7 +27,13 @@ app=FastAPI(docs_url=None,redoc_url=None)
 def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def read(path,default=None):return json.loads(path.read_text('utf-8')) if path.exists() else default
 def write(path,data):
-    temp=path.with_suffix('.tmp');temp.write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8');temp.replace(path)
+    path=Path(path);temp=path.with_name(path.name+'.'+uuid.uuid4().hex+'.tmp')
+    try:
+        with temp.open('w',encoding='utf-8') as stream:
+            stream.write(json.dumps(data,indent=2)+'\n');stream.flush();os.fsync(stream.fileno())
+        temp.replace(path)
+    finally:
+        temp.unlink(missing_ok=True)
 def pid(value):
     if not re.fullmatch(r'[a-z0-9-]{1,60}',value):raise HTTPException(400,'Invalid project ID')
     return value
@@ -362,7 +368,7 @@ def clear_rig_profile(key):
     source=output(p,'rig-profile.json')
     if source.exists():shutil.move(str(source),str(output(p,'rig-profile-'+uuid.uuid4().hex[:8]+'.json')))
     p.pop('rigProfile',None);p['approvals'].pop('animation',None);p['polished']=None
-    update(p,'paint','review','Fit archived. Preparing motion now uses the generic biped draft; it will need anatomy and motion review.');return p
+    update(p,'paint','review','Fit archived. Rig and animate now uses the local learned rig and captured walk; inspect anatomy and motion before approval.');return p
 
 def assert_approved(p,stage,field):
     if not p.get(field) or p['approvals'].get(stage)!=digest(output(p,p[field])):raise HTTPException(409,f'Approve the current {stage} first')
@@ -379,7 +385,7 @@ def run_process(p,args,timeout=None):
     last_message='';last_read=0;start_offset=log.stat().st_size if log.exists() else 0
     started=time.monotonic()
     with log.open('a',encoding='utf-8') as handle:
-        child=subprocess.Popen([str(x) for x in args],cwd=ROOT,stdout=handle,stderr=subprocess.STDOUT,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+        child=subprocess.Popen([str(x) for x in args],cwd=ROOT,stdout=handle,stderr=subprocess.STDOUT,env={**os.environ,'PYTHONUNBUFFERED':'1'},creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
         while child.poll() is None:
             if timeout and time.monotonic()-started>=timeout:
                 child.terminate();child.wait(timeout=20)
@@ -397,7 +403,10 @@ def run_process(p,args,timeout=None):
                     if message!=last_message:last_message=message;p['message']=message;save(p)
                     break
             time.sleep(.4)
-    if child.returncode:raise RuntimeError(log.read_text('utf-8',errors='replace')[-1800:])
+    if child.returncode:
+        with log.open('rb') as tail:
+            tail.seek(max(start_offset,log.stat().st_size-1800));detail=tail.read().decode('utf-8',errors='replace').strip()
+        raise RuntimeError(f'{Path(args[1]).name} exited with code {child.returncode} (0x{child.returncode & 0xffffffff:08X}).\n'+(detail or 'Worker produced no diagnostic output for this attempt.'))
 
 def generate_image(p,s,prompt,references,name):
     if not (COMFY/'models/text_encoders/qwen3vl_4b_fp8_scaled.safetensors').exists() and (COMFY/'models/text_encoders/qwen3vl_4b_native_bf16.safetensors').exists():s={**s,'encoder':'qwen3vl_4b_native_bf16.safetensors'}
@@ -425,6 +434,22 @@ def generate_image(p,s,prompt,references,name):
         time.sleep(1.5)
     raise RuntimeError('Generation exceeded two hours; inspect ComfyUI before retrying')
 
+def make_rig_reference(p,s):
+    """Supplement an existing approved pack without replacing its geometry views."""
+    if not p.get('art'):raise ValueError('Create the hero concept first.')
+    if s['family']!='krea':raise ValueError('Choose Krea for an identity-conditioned T-pose.')
+    hero=output(p,p['art']);refs=[hero]
+    front=p.get('referencePack',{}).get('outputs',{}).get('front',{}).get('file')
+    # An isolated full-body front is safer than a hero sheet: layout conditioning
+    # otherwise tends to copy the sheet's extra figures into the T-pose image.
+    if front:refs=[output(p,front)]
+    name='tpose-'+uuid.uuid4().hex[:10]+'.png'
+    prompt=packets.prompts(p['description'],p['style'])['tpose']
+    receipt=generate_image(p,{**s,'identityEdit':s.get('referenceMethod')=='identity-edit','width':1280,'height':1024},prompt,refs,name)
+    if p.get('rigReference'):p.setdefault('rigReferenceHistory',[]).append(p['rigReference'])
+    p['rigReference']={'file':name,'sha256':receipt['sha256'],'heroSha256':digest(hero),'receipt':name+'.json','visualAcceptance':'pending'}
+    update(p,'reference-tpose','review','T-pose guide saved. Check identity, level arms, separated fingers and flat feet. Existing model and approvals are retained.')
+
 def make_reference_pack(p,s,roles=None):
     if not p.get('art') or p.get('artBrief')!=brief_digest(p):raise RuntimeError('Create a current hero concept first')
     if s['family']!='krea':raise RuntimeError('Choose Krea for identity-conditioned directional views; the checkpoint route is text-only')
@@ -441,17 +466,18 @@ def make_reference_pack(p,s,roles=None):
         cancelled(p);old=pack['outputs'].get(role)
         if old and not roles and output(p,old['file']).is_file() and digest(output(p,old['file']))==old['sha256']:continue
         if old:pack.setdefault('attemptHistory',[]).append({'role':role,**old})
-        name=pack['folder']+'/'+role+('-'+uuid.uuid4().hex[:6] if old else '')+'.png';size={'width':768,'height':1024} if role!='motion' else {'width':1280,'height':768}
+        name=pack['folder']+'/'+role+('-'+uuid.uuid4().hex[:6] if old else '')+'.png';size={'width':1280,'height':1024} if role=='tpose' else {'width':768,'height':1024} if role!='motion' else {'width':1280,'height':768}
         update(p,'references','running','Reference pack: '+role+' / completed views are cached')
         # Shared seed and immutable hero: never recursively feed an unreviewed
         # generated view back as identity, which compounds drift across angles.
-        with timed_stage(p,'reference '+role):receipt=generate_image(p,{**s,**size,'seed':s['seed']},prompt,[hero],name)
+        refs=[output(p,pack['outputs']['front']['file'])] if role=='tpose' and pack['outputs'].get('front') else [hero]
+        with timed_stage(p,'reference '+role):receipt=generate_image(p,{**s,**size,'seed':s['seed']},prompt,refs,name)
         pack['outputs'][role]={'file':name,'sha256':receipt['sha256'],'prompt':prompt,'receipt':name+'.json'};save(p);write(output(p,pack['folder']+'/manifest.json'),pack)
-    if not all(role in pack['outputs'] for role in [*packets.VIEWS,'motion']):
+    if not all(role in pack['outputs'] for role in [*packets.VIEWS,'motion','tpose']):
         pack['complete']=False;save(p);update(p,'concept','review','Inspect the test angle against the hero. Retry this angle if identity drifts; build the remaining references when it matches.');return
     with timed_stage(p,'palette and turnaround sheet'):pack['palette']=packets.assemble(PROJECTS/p['id'],pack,p['description'])
     pack['complete']=True;write(output(p,pack['folder']+'/manifest.json'),pack);save(p)
-    update(p,'concept','review','Review hero, all six views, palette and walk/strike guide. Approve 2D before reconstruction. Generated views require fitting before texture projection.')
+    update(p,'concept','review','Review hero, six views, T-pose, palette and walk/strike guide. Approve 2D before reconstruction. Generated views require fitting before texture projection.')
 
 def render_reference_pack(p,s):
     model=p.get('animation') or p.get('paint') or p.get('mesh')
@@ -466,7 +492,7 @@ def render_reference_pack(p,s):
 def production_contract(p,s):
     contract={'version':1,'hero':{'file':p.get('art'),'sha256':digest(output(p,p['art'])) if p.get('art')else None},'referencePack':p.get('referencePack'),'engines':{'shape':s['meshEngine'],'paint':s['paintEngine']},'style':p['style'],
       'steps':[
-        {'stage':'concept','gate':'Hero identity, all six views, palette and walk/strike references reviewed together. A generated back is a proposal until approved.'},
+        {'stage':'concept','gate':'Hero identity, six views, T-pose with level arms and separated fingers, palette and walk/strike references reviewed together. A generated back is a proposal until approved.'},
         {'stage':'shape','gate':'Compare silhouette and limb separation in six cameras. Preserve raw reconstruction. Do not infer geometry from a composite sheet.'},
         {'stage':'paint','gate':'Inspect lit, albedo and clay. Use calibrated visible views and material regions; reject front-to-back leakage. Preserve 4K paint when supplied.'},
         {'stage':'motion','gate':'Fit joints and weights to this anatomy. Check both soles: heel-flat-toe, lateral bank, contact and clearance. Inspect wrist fit, digit webbing max strain and all clip seams.'},
@@ -604,6 +630,15 @@ def articulate_vey(p,s):
     require_valid_output(p,'paint');require_valid_output(p,'animation')
     update(p,'animation','review','Hands and boot roll refined. Review heel contact, flat support, toe-off and relaxed digits through full walk/run cycles before approval.')
 
+def has_authored_motion(p):
+    """Importing a GLB does not imply that it has a usable animated skeleton."""
+    path=output(p,p.get('paint') or p['mesh'])
+    with path.open('rb') as stream:
+        header=stream.read(20)
+        if header[:4]!=b'glTF' or header[16:20]!=b'JSON':return False
+        document=json.loads(stream.read(int.from_bytes(header[12:16],'little')))
+    return bool(document.get('skins') and document.get('animations'))
+
 def worker(key,stage,s):
     global ACTIVE
     p=project(key);ACTIVE={'project':key,'stage':stage};update(p,stage,'running','Working locally. You can leave this tab open.');log_event(p,stage+' started')
@@ -615,6 +650,7 @@ def worker(key,stage,s):
                 if step=='concept':make_art(p,s)
                 elif step=='hero':make_art(p,s,with_pack=False)
                 elif step=='references':make_reference_pack(p,s)
+                elif step=='reference-tpose':make_rig_reference(p,s)
                 elif step.startswith('reference-'):make_reference_pack(p,s,[step.removeprefix('reference-')])
                 elif step=='model-references':render_reference_pack(p,s)
                 elif step=='refined-production':
@@ -624,17 +660,25 @@ def worker(key,stage,s):
                 elif step=='articulate':articulate_vey(p,s)
                 elif step=='clean-paint':clean_paint(p,s)
                 elif step=='replay-fitted':replay_fitted(p,s)
+                elif step=='animation' and not p.get('rigProfile') and not has_authored_motion(p):
+                    prepare_learned_motion(p)
                 else:blender_stage(p,s,step)
         production_contract(p,s);log_event(p,stage+' completed')
-    except Exception as e:update(p,stage,'error',str(e));log_event(p,'Failed: '+str(e)[:500])
+    except Exception as e:
+        diagnostic='failure-'+str(int(time.time()))+'.txt';output(p,diagnostic).write_text(str(e),encoding='utf-8')
+        p['failureDiagnostic']=diagnostic
+        message=str(e).strip().splitlines()[-1][:360] or 'Local job failed. Inspect its saved diagnostic.'
+        update(p,stage,'error',message);log_event(p,'Failed: '+message)
     finally:ACTIVE=None;CANCEL.pop(key,None)
 
 @app.post('/api/projects/{key}/run/{stage}')
-def run(key,stage):
+def run(key,stage,queue:bool=False):
     p=project(key)
-    if stage not in ['concept','hero','mesh','paint','animation','production','polish','refine','articulate','references','model-references','refined-production','clean-paint','replay-fitted']+['reference-'+r for r in [*packets.VIEWS,'motion']]:raise HTTPException(400,'Unknown stage')
+    if stage not in ['concept','hero','mesh','paint','animation','production','polish','refine','articulate','references','model-references','refined-production','clean-paint','replay-fitted']+['reference-'+r for r in [*packets.VIEWS,'motion','tpose']]:raise HTTPException(400,'Unknown stage')
     with LOCK:
-        if ACTIVE or any(x['status'] in ['queued','running'] for x in list_projects()):raise HTTPException(409,'One local GPU job at a time. Wait for or cancel the active job.')
+        busy=ACTIVE or any(x['status'] in ['queued','running'] for x in list_projects())
+        if busy and not (queue and ACTIVE and ACTIVE['project']!=key and p['status'] not in ['queued','running']):
+            raise HTTPException(409,'One local GPU job at a time. Wait for or cancel the active job.')
         if stage in ['concept','hero'] and len(p['description'].strip())<8:raise HTTPException(400,'Describe the asset first')
         if (stage=='references' or stage.startswith('reference-')) and not p.get('art'):raise HTTPException(409,'Create or import a hero first')
         if stage in ['refine','refined-production']:require_refinement_source(p)
@@ -646,7 +690,7 @@ def run(key,stage):
         if stage=='paint':require_valid_output(p,'mesh')
         if stage=='animation':require_valid_output(p,'paint' if p.get('paint') else 'mesh')
         if stage=='polish':require_valid_output(p,'animation')
-        CANCEL[key]=False;update(p,stage,'queued','Waiting for the local worker.');POOL.submit(worker,key,stage,settings())
+        CANCEL[key]=False;update(p,stage,'queued','Waiting behind the active local job.' if busy else 'Waiting for the local worker.');POOL.submit(worker,key,stage,settings())
     return p
 @app.post('/api/projects/{key}/cancel')
 def cancel(key):
@@ -673,22 +717,32 @@ def export(key):
     if p.get('motionInput')!=digest(output(p,p.get('paint') or p['mesh'])):raise HTTPException(409,'The model changed after motion was prepared')
     if p.get('polishInput')!=digest(output(p,p['animation'])):raise HTTPException(409,'Polish belongs to an older animation')
     require_valid_output(p,'polished')
-    archive=output(p,'asset-package.zip')
-    with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
-        for name in [p.get('art'),p.get('mesh'),p.get('paint'),p.get('animation'),p['polished'],Path(p['polished']).with_suffix('.blend').name,Path(p['polished']).with_suffix('.fbx').name,Path(p['polished']).with_suffix('.json').name,'project.json','timings.json','production-contract.json']+[q['reportFile'] for q in p.get('quality',{}).values() if q.get('reportFile')]:
-            if not name:continue
-            path=output(p,name)
-            if path.exists():z.write(path,name)
-        if p.get('referencePack'):
-            for path in output(p,p['referencePack']['folder']).glob('*'):
-                if path.is_file():z.write(path,str(path.relative_to(PROJECTS/p['id'])))
-        extra=['paint-profile.json','rig-profile.json']
-        if p.get('productionRecipe'):
-            recipe=require_recipe(p);extra.extend([p['productionRecipe']['file'],recipe['sourcePaint']])
-        extra.extend(name for names in p.get('reviewReports',{}).values() for name in names)
-        existing=set(z.namelist())
-        for name in extra:
-            if name not in existing and output(p,name).is_file():z.write(output(p,name),name);existing.add(name)
+    archive=output(p,'asset-package.zip');temp=archive.with_suffix('.zip.part')
+    required=sum(output(p,name).stat().st_size for name in [p.get('mesh'),p.get('paint'),p.get('animation'),p['polished']] if name and output(p,name).is_file())+128*1024*1024
+    if shutil.disk_usage(archive.parent).free<required:
+        raise HTTPException(507,'Not enough free disk space to build the ZIP. Free at least '+str(round(required/1024/1024))+' MB, then retry. Saved models remain available individually.')
+    try:
+        with zipfile.ZipFile(temp,'w',zipfile.ZIP_DEFLATED) as z:
+            for name in [p.get('art'),p.get('mesh'),p.get('paint'),p.get('animation'),p['polished'],Path(p['polished']).with_suffix('.blend').name,Path(p['polished']).with_suffix('.fbx').name,Path(p['polished']).with_suffix('.json').name,'project.json','timings.json','production-contract.json']+[q['reportFile'] for q in p.get('quality',{}).values() if q.get('reportFile')]:
+                if not name:continue
+                path=output(p,name)
+                if path.exists():z.write(path,name)
+            if p.get('referencePack'):
+                for path in output(p,p['referencePack']['folder']).glob('*'):
+                    if path.is_file():z.write(path,str(path.relative_to(PROJECTS/p['id'])))
+            extra=['paint-profile.json','rig-profile.json']
+            if p.get('rigReference'):
+                extra.extend([p['rigReference']['file'],p['rigReference']['receipt']])
+                if p['rigReference'].get('rawFile'):extra.append(p['rigReference']['rawFile'])
+            if p.get('productionRecipe'):
+                recipe=require_recipe(p);extra.extend([p['productionRecipe']['file'],recipe['sourcePaint']])
+            extra.extend(name for names in p.get('reviewReports',{}).values() for name in names)
+            existing=set(z.namelist())
+            for name in extra:
+                if name not in existing and output(p,name).is_file():z.write(output(p,name),name);existing.add(name)
+        temp.replace(archive)
+    finally:
+        temp.unlink(missing_ok=True)
     return FileResponse(archive,filename=p['id']+'-asset.zip')
 
 import research_pipeline

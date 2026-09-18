@@ -150,3 +150,33 @@ prediction option. Leave fresh prediction off to reuse a compatible validated
 prediction; turn it on when comparing the actual inference path. Each candidate
 can be linked with `motion.html?project=ID&candidate=ID`.
 See [recovery and measured comparison](../../docs/qa/implementation/ASSET-SHAPE-RECOVERY.md).
+
+## Paint to rigging and export
+
+The main **Rig and animate** action fits a local MIA skeleton and skin weights
+for a new unrigged humanoid, then retargets the imported `Mixamo Walking` capture.
+It preserves the painted GLB and retains candidate files, substep timings and
+quality reports. Existing fitted profiles and imported authored motion keep
+their established route. Imported static meshes also use learned rigging.
+
+Review a complete cycle, including hands and both boots. **Approve animation**
+unlocks **Polish & package**, then **Download asset package** provides GLB,
+editable Blender source, FBX, textures, reference packet and receipts. Checks do
+not grant visual acceptance. Missing runtimes, anatomy failures or missing walking
+capture produce an actionable error with a retained diagnostic. The advanced
+Motion library remains available for other captures and comparisons.
+
+New generated concept packs include a separate full-body **T-pose** beside the
+six camera views, palette and walk/strike sheet. For an existing approved asset,
+**Make T-pose guide** adds a supplemental image without regenerating shape/paint
+or revoking their approvals. This image guides anatomical review and manual
+fitting; MIA inference currently consumes the 3D mesh, not this 2D image.
+
+The main action can queue behind another job managed by this Studio process;
+inference stays serial. Another runtime's active jobs still require waiting.
+Learned binding checks for long stretched reconstruction bridges and a shallow
+base spanning the anatomical foot gap. Bounded repairs are separate rig
+candidates with removed-face receipts; accepted source paint is retained.
+Sole fitting keeps foot/toe weights and excludes distant shin influence. This
+cannot certify anatomy or repair arbitrary clothing: inspect the rest T-pose
+and all angles, and reconstruct extensively fused characters with separated limbs.

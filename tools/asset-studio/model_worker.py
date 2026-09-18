@@ -138,7 +138,14 @@ for rig in rigs:
 report.update(meshes=len(meshes),bones=sum(len(o.data.bones) for o in rigs),animations=[a.name for a in bpy.data.actions],images=[{'name':i.name,'width':i.size[0],'height':i.size[1]} for i in bpy.data.images if i.type=='IMAGE'],seconds=time.time()-start)
 scene.frame_set(1);dest=Path(task['output']);bpy.ops.wm.save_as_mainfile(filepath=str(dest.with_suffix('.blend')))
 if task['stage']=='polish':
-    shutil.copy2(task['input'],dest);report['portableGLB']='Approved source retained byte-for-byte';report['sourceSha256']=hashlib.sha256(Path(task['input']).read_bytes()).hexdigest()
+    temporary=dest.with_suffix('.glb.part')
+    required=Path(task['input']).stat().st_size
+    if shutil.disk_usage(dest.parent).free<required*3:raise OSError('Free more disk space before packaging. Approved animation is retained.')
+    try:
+        shutil.copy2(task['input'],temporary);temporary.replace(dest)
+    finally:
+        if temporary.exists():temporary.unlink()
+    report['portableGLB']='Approved source retained byte-for-byte';report['sourceSha256']=hashlib.sha256(Path(task['input']).read_bytes()).hexdigest()
 else:bpy.ops.export_scene.gltf(filepath=str(dest),export_format='GLB',export_animations=True,export_animation_mode='ACTIONS',export_skins=True,export_yup=True,export_apply=False)
 if task['stage']=='polish':
     bpy.ops.export_scene.fbx(filepath=str(dest.with_suffix('.fbx')),use_selection=False,object_types={'ARMATURE','MESH'},add_leaf_bones=False,bake_anim=True,bake_anim_use_all_actions=True,bake_anim_use_nla_strips=False,path_mode='COPY',embed_textures=True)

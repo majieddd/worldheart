@@ -6,7 +6,7 @@ import reference_pack as packs
 class ReferencePackTests(unittest.TestCase):
  def test_six_views_and_motion_preserve_identity_contract(self):
   p=packs.prompts('Small alien with ivory cuffs','painted-anime-inkline')
-  self.assertEqual(set(p),{*packs.VIEWS,'motion'});self.assertIn('NO face visible',p['back']);self.assertIn('anatomical LEFT',p['left']);self.assertIn('toe-off',p['motion'])
+  self.assertEqual(set(p),{*packs.VIEWS,'motion','tpose'});self.assertIn('NO face visible',p['back']);self.assertIn('anatomical LEFT',p['left']);self.assertIn('toe-off',p['motion']);self.assertIn('horizontally at shoulder height',p['tpose']);self.assertIn('soles flat',p['tpose']);self.assertNotIn('alter pose,',p['tpose'])
  def test_alpha_does_not_become_black_palette(self):
   with tempfile.TemporaryDirectory()as folder:
    root=Path(folder);(root/'pack').mkdir();im=Image.new('RGBA',(32,32),(0,0,0,0))
