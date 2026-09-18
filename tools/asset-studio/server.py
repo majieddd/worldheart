@@ -13,6 +13,7 @@ from workflows import STYLE,compose_prompt,krea_graph,checkpoint_graph
 from asset_quality import inspect_asset,VERSION as QUALITY_VERSION
 import reference_pack as packets
 from shape_inputs import conditioning
+from shape_budget import plan as shape_plan
 
 ROOT=Path(__file__).resolve().parents[2]
 RUNTIME=Path(os.environ.get('WH_STUDIO_RUNTIME',ROOT.parent/'local-asset-runtime')).resolve()
@@ -217,6 +218,35 @@ def use_reference(key,index:int):
     if p.get('referencePack'):p.setdefault('referencePackHistory',[]).append(p.pop('referencePack'))
     p.update(art=name,artBrief=brief_digest(p),mesh=None,paint=None,animation=None,polished=None,imported=False,approvals={})
     update(p,'concept','review','Imported reference is the concept. Review it and approve 2D before reconstruction.');return p
+
+@app.get('/api/projects/{key}/reference-figures/{role}')
+def reference_figures(key,role):
+    from shape_images import prepare,figures
+    p=project(key)
+    if role not in packets.VIEWS:raise HTTPException(400,'Choose a directional reference')
+    item=p.get('referencePack',{}).get('outputs',{}).get(role)
+    if not item:raise HTTPException(409,'Create this reference first')
+    image=prepare(output(p,item['file']),RUNTIME)
+    return {'sourceSha256':digest(output(p,item['file'])),'figures':figures(image)}
+
+@app.post('/api/projects/{key}/reference-figures/{role}')
+def isolate_reference(key,role,body:dict=Body(...)):
+    from shape_images import prepare,crop_figure
+    p=project(key)
+    if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the current job')
+    if role not in packets.VIEWS:raise HTTPException(400,'Choose a directional reference')
+    pack=p.get('referencePack',{});item=pack.get('outputs',{}).get(role)
+    if not item:raise HTTPException(409,'Create this reference first')
+    if body.get('sourceSha256')!=digest(output(p,item['file'])):raise HTTPException(409,'Reference changed; inspect the figures again')
+    try:image,box=crop_figure(prepare(output(p,item['file']),RUNTIME),body.get('index'))
+    except ValueError as e:raise HTTPException(400,str(e))
+    name=pack['folder']+'/'+role+'-isolated-'+uuid.uuid4().hex[:6]+'.png';image.save(output(p,name))
+    pack.setdefault('attemptHistory',[]).append({'role':role,**item})
+    pack['outputs'][role]={'file':name,'sha256':digest(output(p,name)),'crop':{'source':item['file'],'sourceSha256':item['sha256'],'box':box,'figureIndex':body['index']}}
+    pack['approval']='pending';p['approvals'].pop('art',None);p['approvals'].pop('referencePack',None)
+    if pack.get('complete'):packets.assemble(PROJECTS/key,pack,p['description'])
+    write(output(p,pack['folder']+'/manifest.json'),pack)
+    update(p,'concept','review','Figure isolated without regenerating artwork. Review the updated views and approve before shaping.');return p
 
 @app.post('/api/projects/{key}/approve/{stage}')
 def approve(key,stage,review:dict=Body(default={})):
@@ -464,11 +494,14 @@ def make_art(p,s,with_pack=True):
     else:update(p,'concept','review','Review the hero face, silhouette, costume and full framing. Build the reference pack next when this direction is right.')
 
 def make_mesh(p,s):
+    previous={k:p.get(k) for k in ['mesh','paint','animation','polished','shapeConditioning']}
     comfy_free();name='shape-'+str(int(time.time()))+'.glb'
-    receipt=conditioning(p,PROJECTS/p['id'],s['meshEngine']);receipt_file=output(p,name+'.conditioning.json');write(receipt_file,receipt)
+    budget=shape_plan(s);p['shapeBudget']=budget;save(p)
+    receipt=conditioning(p,PROJECTS/p['id'],s['meshEngine']);receipt['budget']=budget;receipt_file=output(p,name+'.conditioning.json');write(receipt_file,receipt)
     if s.get('meshEngine')=='trellis2':trellis_stage(p,s,'shape',name)
-    else:run_process(p,[RUNTIME/'.venv/Scripts/python.exe',Path(__file__).with_name('mesh_worker.py'),'--runtime',RUNTIME,'--image',output(p,p['art']),'--conditioning',receipt_file,'--output',output(p,name),'--steps',s['meshSteps'],'--resolution',s['meshResolution'],'--seed',s['seed']],timeout=300)
+    else:run_process(p,[RUNTIME/'.venv/Scripts/python.exe',Path(__file__).with_name('mesh_worker.py'),'--runtime',RUNTIME,'--image',output(p,p['art']),'--conditioning',receipt_file,'--output',output(p,name),'--steps',budget['effective']['steps'],'--resolution',budget['effective']['resolution'],'--seed',s['seed']],timeout=300)
     p['shapeConditioning']={'file':receipt_file.name,**receipt}
+    if p.get('mesh'):p.setdefault('meshHistory',[]).append(previous)
     p.pop('paintHistory',None);p['mesh']=name;p['paint']=None;p['animation']=None;p['polished']=None;p['approvals'].pop('animation',None);update(p,'mesh','review','Local image-to-3D complete. Orbit the model and compare the face, silhouette and back before continuing.')
     require_valid_output(p,'mesh')
 

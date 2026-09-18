@@ -9,6 +9,31 @@ import server
 from fastapi.testclient import TestClient
 
 class StudioTests(unittest.TestCase):
+    def test_reference_isolation_preserves_source_and_invalidates_review(self):
+        from PIL import ImageDraw
+        p=self.concept();folder=server.output(p,'refs');folder.mkdir()
+        im=Image.new('RGBA',(300,400));d=ImageDraw.Draw(im)
+        d.rectangle((20,10,90,380),fill='red');d.rectangle((180,10,260,380),fill='blue');im.save(folder/'front.png')
+        original=(folder/'front.png').read_bytes();sha=server.digest(folder/'front.png')
+        p['referencePack']={'folder':'refs','outputs':{'front':{'file':'refs/front.png','sha256':sha}},'complete':False}
+        p['approvals']={'art':'old','referencePack':'old'};server.save(p)
+        route=self.base+'/reference-figures/front';self.assertEqual(len(self.client.get(route).json()['figures']),2)
+        self.assertEqual(self.client.post(route,json={'index':1,'sourceSha256':'stale'}).status_code,409)
+        r=self.client.post(route,json={'index':1,'sourceSha256':sha});self.assertEqual(r.status_code,200)
+        self.assertEqual(r.json()['approvals'],{});self.assertEqual((folder/'front.png').read_bytes(),original)
+        self.assertEqual(r.json()['referencePack']['outputs']['front']['crop']['figureIndex'],1)
+
+    def test_fresh_mia_request_bypasses_compatible_cache(self):
+        p=self.concept();server.output(p,'model.glb').write_bytes(fixture(motion=False));p.update(mesh='model.glb',status='review')
+        interpreter=server.RUNTIME/'mia-env/Scripts/python.exe';interpreter.parent.mkdir(parents=True,exist_ok=True);interpreter.touch()
+        server.write(server.DATA/'research-runtime.json',{'mia':{'runtimeVerified':True}})
+        folder=server.output(p,'prior');folder.mkdir();(folder/'prediction.npz').write_bytes(b'saved')
+        server.write(folder/'prediction.json',{'passed':True,'sourceSha256':server.digest(server.output(p,'model.glb')),'canonicalizationFitSha256':None})
+        p['researchCandidates']=[{'method':'mia','folder':'prior'}];server.save(p)
+        with patch.object(server.POOL,'submit') as submit:
+            r=self.client.post(self.base+'/research',json={'method':'mia','freshInference':True});self.assertEqual(r.status_code,200)
+            self.assertNotIn('reusePrediction',submit.call_args.args[-1])
+
     def test_fork_inputs_does_not_replace_original_or_inherit_acceptance(self):
         p=self.concept();self.client.post(self.base+'/approve/art')
         r=self.client.post(self.base+'/fork-inputs',json={'name':'Independent trial'})

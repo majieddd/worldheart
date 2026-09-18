@@ -186,7 +186,7 @@ def register(app, s):
                 task['output']=str(dest/'prediction.npz')
                 if p.get('rigProfile'):task['rigProfile']=str(s.output(p,p['rigProfile']['file']))
                 fit_hash=s.digest(Path(task['rigProfile'])) if task.get('rigProfile') else None
-                for previous in reversed(p.get('researchCandidates',[])):
+                for previous in ([] if body.get('freshInference') else reversed(p.get('researchCandidates',[]))):
                     prediction=s.output(p,previous['folder']+'/prediction.npz')
                     report=s.read(prediction.with_suffix('.json'),{})
                     if previous['method']=='mia' and prediction.is_file() and report.get('passed') and report.get('sourceSha256')==item['sourceSha256'] and report.get('canonicalizationFitSha256')==fit_hash:

@@ -130,3 +130,23 @@ Unrigged meshes now require explicit fitting or the learned MIA rig experiment.
 There is no automatic proximity-weight/sine-wave animation fallback. All trials
 stay separate until visual review; checks alone never grant owner approval.
 See [reference integrity evidence](../../docs/qa/implementation/ASSET-REFERENCE-INTEGRITY.md).
+
+
+### Recovering a failed shape
+
+Multiview uses a separate five-minute profile (maximum 384 grid / 30 steps);
+mini timings do not apply to it. Studio records both requested and effective
+values. Geometry progress appears during the local job. Higher texture pixels
+do not change the extraction grid.
+
+A directional image must show one subject. If it contains multiple full-height
+figures, choose that image in Concept and click **Isolate one figure**. Select
+its left-to-right number, review the crop and approve the updated pack. Sources
+and crop coordinates are retained; detection is conservative, not a substitute
+for visual review. Mesh history retains previous outputs.
+
+Motion comparisons expose **Make-It-Animatable v2 / local rig** and a fresh
+prediction option. Leave fresh prediction off to reuse a compatible validated
+prediction; turn it on when comparing the actual inference path. Each candidate
+can be linked with `motion.html?project=ID&candidate=ID`.
+See [recovery and measured comparison](../../docs/qa/implementation/ASSET-SHAPE-RECOVERY.md).
