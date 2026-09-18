@@ -103,3 +103,10 @@ write fails. Regression tests cover both failure paths. The truncated test sourc
 restored and all 74 tests passed. A fresh ZIP needs free disk space; the earlier
 verified archive is not currently on disk. Direct final model downloads remain usable.
 The owner was asked to pause large downloads and free 10 GB.
+
+Final local verification at 12:09 UTC: 111 minutes from the measured 10:18 start,
+including all repair attempts, concurrent-job waits and storage recovery. Latest UI
+reload passed with no console errors, the final GLB returned HTTP 200, and ZIP export
+returned the intended HTTP 507 with 25 MB free. Code checkpoint: 9f3b3c0 on PR #76.
+Public game files did not change; no destructive mirror rebuild was attempted on
+the full drive.
