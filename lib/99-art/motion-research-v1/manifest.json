@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "artStyle": "Painted-Anime-Inkline",
+  "rendererRecipe": "Atmospheric Ink 1.3.2 unchanged",
+  "hero": "../reptilian-pilot-v1/hero.png",
+  "default": "mixamo",
+  "candidates": {
+    "fitted": {
+      "model": "../reptilian-pilot-v1/reptilian-motion.glb",
+      "title": "Retained fitted candidate",
+      "status": "Current fitted model. Retained for direct comparison.",
+      "groundSpeeds": {
+        "Idle": 0,
+        "Run": 2.997952128402039,
+        "Walk": 1.3427657877060182
+      }
+    },
+    "mixamo": {
+      "model": "reptilian-mixamo.glb",
+      "title": "Mixamo walk + run",
+      "status": "Ground contact and loop checks passed. Owner visual review pending.",
+      "groundSpeeds": {
+        "Idle": 0,
+        "Run": 2.997952128402039,
+        "Walk": 1.3427657877060182,
+        "Mixamo Mixamo Walking": 1.6611193061717726,
+        "Mixamo Mixamo Standard Run": 4.108499415072176
+      },
+      "preferredClip": "Mixamo Mixamo Standard Run",
+      "sha256": "e0afcb4b27b3668243c2842c9e17695f9eb0a6fb39716aefe3496e72468986c0"
+    },
+    "instantmesh": {
+      "model": "reptilian-instantmesh.glb",
+      "title": "InstantMesh experiment",
+      "status": "Rejected for this commander: head, hands and thin details trail the retained model. Inspect clay and unlit paint.",
+      "groundSpeeds": {},
+      "sha256": "7fd805e57ddb255dc4ed7ced80ae4bb2746cc2422f408adf005ffa5ca33cc947"
+    }
+  },
+  "mia": {
+    "status": "Experimental. Standard humanoid control passes; current aliens fail anatomy/deformation checks. No automatic replacement.",
+    "reports": [
+      "control-mia-prediction.checks.json",
+      "vey-mia-prediction.checks.json",
+      "reptilian-mia-prediction.checks.json",
+      "reptilian-mia-guided-prediction.checks.json"
+    ]
+  }
+}

@@ -75,3 +75,28 @@ The Reptilian pilot runs locally through Krea 2, Modly Trellis.2, unsigned surfa
 Setup also runs `prepare_motion.py` to cache and process the two pinned CMU takes used by fitted motion. Existing installations can run that script with the Studio Python once; cached source bytes are checked and reused. Trellis.2 remains a separately installed optional engine; this pilot validates the configured local installation, not a fresh Trellis setup on another machine. Keep the CMU credit in the reference packet and derived asset documentation.
 
 Surface finishing reuses the dense reconstruction, and shape/paint share the saved foreground mask. Failures stay in the project history and timing receipts. The current production study and timings are in `docs/qa/implementation/REPTILIAN-STUDIO-PILOT.md`.
+
+
+## Captured motion and research engines
+
+Open **Motion & engine comparisons** from the asset page. Import a local Mixamo
+locomotion FBX, choose the fitted rig and create a separate candidate. The worker
+preserves source timing and rig identity, fits real sole contact, calibrates
+travel, retains authored tail motion and checks floor and full loop continuity.
+Use a passed candidate as the target to add another clip. Selection requires
+visual review; final animation approval and polish stay separate. A technical
+pass never records owner acceptance automatically.
+
+`setup-research.ps1` installs the pinned MIA v2 and InstantMesh experiments.
+Use `-VerifyOnly` to check existing source/weight identities and actual imports
+without another download. The runtime must already have Studio and the working
+Modly Torch/nvdiffrast environment. Dependencies stay isolated. The 25 pinned
+files are in `research-lock.json`; original downloaded motion files stay local.
+MIA predicts 52 humanoid bones and may fail unusual alien anatomy or appendages.
+InstantMesh generates fixed-camera views and UV paint but lost fine detail on
+this commander. Both remain experimental and preserve the current model.
+
+See [measured research and limitations](../../lib/99-art/motion-research-v1/research.md)
+and [implementation evidence](../../docs/qa/implementation/MIXAMO-RESEARCH-PIPELINE.md).
+Run `python -m unittest discover -s tools/asset-studio -p 'test_*.py' -q` for the
+pipeline regression suite. Failures and raw worker logs remain in the project.

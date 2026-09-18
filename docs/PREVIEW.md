@@ -28,6 +28,7 @@ alongside the stable game without merging gameplay PRs into main.
 | [Atmospheric Ink proving ground](https://majieddd.github.io/worldheart/v2/atmospheric-arena.html) | preview/v2 | Locked 1.3.1, FPS sword/plasma, moving units, three environments, infinite-life rounds, flight and graphics tuning |
 | [Atmospheric Ink asset stage](https://majieddd.github.io/worldheart/v2/asset-stage.html) | preview/v2 | Seventeen specimens, exact presets, clip scrubbing, FPS weapon and effects inspection |
 | [Worldheart artboard](https://majieddd.github.io/worldheart/v2/artboard.html) | preview/v2 | Six concept plates, Roblox units/UI, three weapon manufacturers and embedded live 3D |
+| [Commander method comparison](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/commander-research.html) | preview/v2 | Retained fitted Reptilian, captured Mixamo walk/run, and labeled InstantMesh experiment; owner review pending |
 | [Live build identity](https://majieddd.github.io/worldheart/v2/build.json) | Deployment artifact | Exact preview/main commits and preview asset hashes |
 | [Terrain workshop](https://majieddd.github.io/worldheart/v2/procgen-lab.html) | preview/v2 | Seeded current/guided terrain A/B; shared-corner profiles, routes and fitted overlooks; local experiment only |
 | /worldheart/dist/worldheart.html | main | Stable single-file download |

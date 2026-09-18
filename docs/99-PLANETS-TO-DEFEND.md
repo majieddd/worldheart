@@ -792,3 +792,13 @@ blueprint-checker pass is claimed because that checker was unavailable.
 2026-09-15 published V2 fc5299c follow-up U146-U148: grip-constrained melee choreography and
 family swing audio, measured world/quake optimization, and five instrumental
 reference-derived planet music auditions (approval-only). Public behavior and identity checks pass; owner listening/feel remains open. [Ledger](qa/implementation/COMBAT-WORLD-PERFORMANCE.md).
+
+
+### Captured commander motion research checkpoint
+
+The Reptilian has a separate Mixamo walk/run comparison. Its fitted shape, paint
+and original clips remain available. Asset Studio imports local captures and
+checks source identity, anatomy, skin weights, sole contact and complete loop
+continuity before candidate review. Learned MIA rigs and InstantMesh shapes remain
+experimental after actual alien failures. The art direction and 1.3.2 renderer
+are unchanged. [Production evidence and open acceptance](qa/implementation/MIXAMO-RESEARCH-PIPELINE.md).

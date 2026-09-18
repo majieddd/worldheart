@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "sha256": "7d0065869ad15b35b7d374eeb68ba17f3d948efd83bfb1e6ef70152d99ef8d0f",
+  "clip": "Mixamo Mixamo Walking",
+  "checks": [
+    {
+      "name": "Surface above floor",
+      "status": "pass",
+      "detail": "Minimum 0.00095 m"
+    },
+    {
+      "name": "Loop surface position",
+      "status": "pass",
+      "detail": "Maximum seam 0.000001 m"
+    },
+    {
+      "name": "Loop surface velocity",
+      "status": "pass",
+      "detail": "95th percentile change 0.151 m/s"
+    },
+    {
+      "name": "Left foot makes contact",
+      "status": "pass",
+      "detail": "Minimum sole 0.00300 m"
+    },
+    {
+      "name": "Left stance travel",
+      "status": "pass",
+      "detail": "95th percentile ground-relative toe speed 0.152 m/s"
+    },
+    {
+      "name": "Right foot makes contact",
+      "status": "pass",
+      "detail": "Minimum sole 0.00166 m"
+    },
+    {
+      "name": "Right stance travel",
+      "status": "pass",
+      "detail": "95th percentile ground-relative toe speed 0.132 m/s"
+    }
+  ],
+  "passed": true,
+  "feet": {
+    "Left": {
+      "contactFraction": 0.42857142857142855,
+      "stanceSpeedP95": 0.1518301041680425,
+      "minimumSole": 0.003000033786520362
+    },
+    "Right": {
+      "contactFraction": 0.42857142857142855,
+      "stanceSpeedP95": 0.13209138368352566,
+      "minimumSole": 0.0016627977602183819
+    }
+  },
+  "loopSurfaceMaxMetres": 7.21437837893379e-07,
+  "loopVelocityP95": 0.15102941802143027,
+  "visualReviewStillRequired": true,
+  "ownerApproved": false
+}

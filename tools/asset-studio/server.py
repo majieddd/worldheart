@@ -622,6 +622,9 @@ def export(key):
             if name not in existing and output(p,name).is_file():z.write(output(p,name),name);existing.add(name)
     return FileResponse(archive,filename=p['id']+'-asset.zip')
 
+import research_pipeline
+research_pipeline.register(app,sys.modules[__name__])
+
 for stale in PROJECTS.glob('*/project.json'):
     p=read(stale)
     if p['status'] in ['queued','running']:p.update(status='error',message='The previous local job was interrupted. Saved outputs are intact.');save(p)

@@ -9,6 +9,43 @@ import server
 from fastapi.testclient import TestClient
 
 class StudioTests(unittest.TestCase):
+    def test_failed_research_preserves_asset_and_summarizes_saved_diagnostics(self):
+        p=self.concept();server.output(p,'model.glb').write_bytes(fixture(motion=False))
+        p.update(mesh='model.glb',animation='retained.glb',status='review');server.save(p)
+        interpreter=server.RUNTIME/'mia-env/Scripts/python.exe';interpreter.parent.mkdir(parents=True,exist_ok=True);interpreter.touch()
+        server.write(server.DATA/'research-runtime.json',{'mia':{'runtimeVerified':True}})
+        with patch.object(server.POOL,'submit') as submit:
+            response=self.client.post(self.base+'/research',json={'method':'mia'})
+            self.assertEqual(response.status_code,200)
+        execute,key,item,task=submit.call_args.args
+        def fail(project,args):
+            server.write(server.output(project,item['folder']+'/prediction.json'),{'checks':[{'name':'Head above pelvis','status':'fail','detail':'Invalid anatomy'}]})
+            raise RuntimeError('Raw worker trace\nValueError: wrong anatomy')
+        with patch.object(server,'run_process',side_effect=fail):execute(key,item,task)
+        saved=server.project(key);candidate=saved['researchCandidates'][-1]
+        self.assertEqual(saved['animation'],'retained.glb');self.assertFalse(candidate['passed'])
+        self.assertIn('Head above pelvis',candidate['message']);self.assertNotIn('Raw worker trace',saved['message'])
+        self.assertIn('Raw worker trace',server.output(saved,candidate['diagnostic']).read_text())
+        self.assertEqual(saved['timings'][-1]['status'],'failed')
+        self.assertEqual(self.client.post(self.base+'/research/'+item['id']+'/use',json={'visualReviewConfirmed':True}).status_code,409)
+    def test_research_rejects_invalid_import_and_unknown_method(self):
+        self.assertEqual(self.client.post(self.base+'/research',json={'method':'shell'}).status_code,400)
+        self.assertEqual(self.client.post(self.base+'/motion-library',files={'file':('bad.fbx',b'not fbx','application/octet-stream')}).status_code,400)
+        self.assertEqual(self.client.get(self.base+'/research').status_code,200)
+    def test_research_selection_preserves_stages_and_requires_current_bytes(self):
+        p=self.concept();server.output(p,'paint.glb').write_bytes(fixture(motion=False));server.output(p,'candidate.glb').write_bytes(fixture())
+        p.update(mesh='paint.glb',paint='paint.glb',animation='previous.glb',status='review')
+        item={'id':'example','method':'mixamo','file':'candidate.glb','report':'checks.json','passed':False,'sha256':server.digest(server.output(p,'candidate.glb')),'sourceSha256':server.digest(server.output(p,'paint.glb'))}
+        p['researchCandidates']=[item];server.save(p);route=self.base+'/research/example/use'
+        self.assertEqual(self.client.post(route,json={'visualReviewConfirmed':True}).status_code,409)
+        item['passed']=True;server.save(p)
+        self.assertEqual(self.client.post(route,json={}).status_code,409)
+        server.output(p,'candidate.glb').write_bytes(b'changed')
+        self.assertEqual(self.client.post(route,json={'visualReviewConfirmed':True}).status_code,409)
+        server.output(p,'candidate.glb').write_bytes(fixture())
+        r=self.client.post(route,json={'visualReviewConfirmed':True});self.assertEqual(r.status_code,200)
+        self.assertEqual(r.json()['animation'],'candidate.glb');self.assertNotIn('animation',r.json()['approvals'])
+        self.assertEqual(r.json()['refinementHistory'][-1]['animation'],'previous.glb')
     def test_recipe_rejects_changed_identity(self):
         p=self.concept();server.output(p,'mesh.glb').write_bytes(fixture(motion=False));server.output(p,'paint.glb').write_bytes(fixture(motion=False))
         sha=server.digest(server.output(p,'paint.glb'));server.write(server.output(p,'rig-profile.json'),{'name':'fixture fit','sourceSha256':sha});server.write(server.output(p,'paint-profile.json'),{'sourceSha256':sha,'palette':[[128,128,128]]*5})

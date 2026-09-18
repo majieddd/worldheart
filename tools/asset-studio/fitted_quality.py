@@ -22,10 +22,10 @@ for action in bpy.data.actions:
   stance=velocity[contact&(velocity>0)]
   if len(stance):speeds.extend(stance.tolist())
   feet_report[s]={'floorMin':float(heights.min()),'liftMax':float(heights.max()),'contactFraction':float(contact.mean()),'stanceSpeedMedian':float(np.median(stance)) if len(stance)else None}
- name=action.name.split(' ')[0];report['clips'][name]={'seconds':seconds,'frames':hi-lo+1,'floorMinimum':min(minima),'floorMaximum':max(minima),'loopSurfaceMaxMetres':float(np.linalg.norm(samples[-1]-samples[0],axis=1).max()),'feet':feet_report,'contactSpeedMedian':float(np.median(speeds))if speeds else 0}
+ name=action.name.split(' / ')[0];report['clips'][name]={'seconds':seconds,'frames':hi-lo+1,'floorMinimum':min(minima),'floorMaximum':max(minima),'loopSurfaceMaxMetres':float(np.linalg.norm(samples[-1]-samples[0],axis=1).max()),'feet':feet_report,'contactSpeedMedian':float(np.median(speeds))if speeds else 0}
 report['seconds']=time.perf_counter()-start
 report['passed']=all(c['floorMinimum']>=-.005 and c['loopSurfaceMaxMetres']<.025 for c in report['clips'].values())
-report['passed']&=all(all(f['contactFraction']>0 for f in report['clips'][name]['feet'].values())for name in ['Walk','Run']if name in report['clips'])
+report['passed']&=all(all(f['contactFraction']>0 for f in c['feet'].values())for name,c in report['clips'].items() if any(role in name.lower() for role in ['walk','run']))
 report['sha256']=hashlib.sha256(Path(source).with_suffix('.glb').read_bytes()).hexdigest()
 report['checks']=[]
 for name,c in report['clips'].items():
