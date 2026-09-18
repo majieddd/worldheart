@@ -1,0 +1,29 @@
+# MIA v2 inference only. PyTorch3D's Python transforms are pinned separately;
+# the compiled renderers are not imported by this adapter.
+--extra-index-url https://download.pytorch.org/whl/cu129
+--extra-index-url https://download.blender.org/pypi/
+--find-links https://data.pyg.org/whl/torch-2.8.0+cu129.html
+torch==2.8.0+cu129
+torchvision==0.23.0+cu129
+torch-cluster==1.6.3+pt28cu129
+bpy==4.3.0
+numpy==1.26.4
+gradio>=5.50,<6
+spaces
+einops
+timm
+PyMCubes
+matplotlib
+plyfile
+potpourri3d
+shapely
+tqdm
+trimesh[easy]
+accelerate<1.10
+diffusers==0.35.1
+huggingface_hub
+scikit-image
+omegaconf
+transformers==4.46.0
+pymeshlab==2023.12.post3
+opencv-contrib-python

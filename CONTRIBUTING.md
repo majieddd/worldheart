@@ -3,21 +3,54 @@
 This is the front door. If you are new to the repo, read this page first, then
 `CLAUDE.md`, then whichever document below matches what you are about to touch.
 
-Art contributors: Atmospheric Ink 1.3.1 is now the selected direction. Preserve
+Terrain contributors: the owner selected [Guided Terrain Kit 1.0.0](terrain-baselines/GUIDED-KIT.md)
+on 2026-09-16. Preserve its reference tag and manifest. Future V2 terrain work
+should carry its approved shelves, connected passages and irregular shared-corner
+shapes into the game, with separately versioned comparisons for major revisions.
+The existing evidence distinguishes visual approval from spherical gameplay QA.
+
+Art contributors: Painted-Anime-Inkline 1.3.2 is the selected graphics default. Preserve
 its [locked archive and recipe](art-candidates/ATMOSPHERIC-INK.md) and the previous
 Hard Cel archive. Complement collaborators' existing work, methods and evidence;
 add a scoped extension or separately versioned experiment instead of replacing
 their branch, approved baseline or contribution record. Refresh shared preview
 and the current Aegis release before integrating changes.
+For repeatable local asset work, see the [Trellis/Vey recipe](tools/asset-studio/pilots/vey-trellis/README.md). Preserve raw candidates, time setup separately from per-asset work, keep failed attempts, and bind checks to the exact exported model. File validity never grants visual acceptance. Character-specific paint and rig recipes supplement the general pipeline; they are not universal defaults.
+For painted humanoids, test the ordinary Rig and animate -> review -> polish -> export path, not only research candidates. Include a separate T-pose in the concept packet, preserve painted sources, and inspect raised-arm bridge deformation before accepting locomotion. See [Siria rigging recovery](docs/qa/implementation/SIRIA-RIGGING-RECOVERY.md).
 For art debugging, inspect full motion cycles, test both captured and denied
 cursor input, and distinguish texture resolution from its scale on the model.
 Use the shared asset stage and runtime builders so inspection fixes carry into
 the demo. Keep source posters, static meshes and animated adaptations identified.
-The current demo default is the owner's revised Vivid Paint. Original 1.3.1
+The current demo default is the owner's supplied 1.3.2 preset (contour 1.81). Original 1.3.1
 remains independently selectable and archived. The artboard supplements the
 collaborator's Paintline direction with proposed Roblox concepts and saved prompts.
 For FPS input, test simultaneous mouse buttons: pointer events alone do not report
 every button in a chord. Inspect complete ADS, fire, slide and recovery cycles.
+
+The owner has moved the earlier artboard to a future medieval-planet study.
+Preserve its originals. The new [99 Planets art collection](99-art.html) and
+[design foundation](lib/99-art/design-foundation.md) start with modern Earth and
+six owner-defined factions: Xeno, Brainshot, RainBOOM,
+Anomalous, Axiom and Robloxian. The accepted demo robot belongs to Axiom. B / Arcade is the selected UI composition; A, C and original B are archived. Vey is a Xeno Commander; his accepted model runs in Atmospheric Arena using the shared painted renderer.
+The unified artbook has five current-content tabs plus Archives and uses the Painted-Anime-Inkline style contract.
+Read docs/art/99-planets/unified-artbook.md for current Xeno elemental canon and
+the fictional Adamic-inspired alphabet. Preserve historical prompts and images;
+apply current content overrides after generation prompts are composed.
+Keep concept art, current runtime models and future mesh-production work labeled.
+For crossover characters, preserve canonical silhouette, anatomy, face, palette
+and signature props before applying our paint treatment. Use the revised
+identity-v2 roster over superseded character studies. Keep method receipts and
+label unexecuted Krea or Meshy work honestly; see the
+[production guide](lib/99-art/identity-v2/production-guide.md).
+Xeno race, element and battlefield role are separate axes.
+For local asset production, inventory cached engines and models before installing
+more, then validate one actual reference-driven pilot before expanding the UI or
+batch. Preserve successful artifacts and approval gates. Save complete check logs
+with `tools/asset-studio/run_logged.py`; return bounded summaries and inspect only
+relevant failures. Re-run checks when changes or unresolved evidence justify it.
+See the [efficiency correction](docs/qa/implementation/LOCAL-PRODUCTION-EFFICIENCY.md).
+Read the [scope and evidence ledger](docs/qa/implementation/99-ART-DIRECTION.md)
+before changing this collection; supplement collaborators' work in a scoped branch.
 
 The current owner-directed work is tracked in **[docs/PROGRESS.md](docs/PROGRESS.md)**:
 the blind QA baseline, the **[99 Planets To Defend blueprint](docs/99-PLANETS-TO-DEFEND.md)**,

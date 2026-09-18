@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "sha256": "85c72008c3242669f609798de972cd475f3b41bad8a5f5959cae3472e5ece2c0",
+  "clip": "Mixamo Standard Run",
+  "checks": [
+    {
+      "name": "Surface above floor",
+      "status": "pass",
+      "detail": "Minimum 0.00300 m"
+    },
+    {
+      "name": "Loop surface position",
+      "status": "pass",
+      "detail": "Maximum seam 0.000001 m"
+    },
+    {
+      "name": "Loop surface velocity",
+      "status": "pass",
+      "detail": "95th percentile change 0.794 m/s"
+    },
+    {
+      "name": "Left foot makes contact",
+      "status": "pass",
+      "detail": "Minimum sole 0.00300 m"
+    },
+    {
+      "name": "Left stance travel",
+      "status": "pass",
+      "detail": "Interior stance: 95th percentile ground-relative toe speed 0.078 m/s"
+    },
+    {
+      "name": "Right foot makes contact",
+      "status": "pass",
+      "detail": "Minimum sole 0.00300 m"
+    },
+    {
+      "name": "Right stance travel",
+      "status": "pass",
+      "detail": "Interior stance: 95th percentile ground-relative toe speed 0.167 m/s"
+    }
+  ],
+  "passed": true,
+  "feet": {
+    "Left": {
+      "contactFraction": 0.26666666666666666,
+      "stanceSpeedP95": 0.07771936435364772,
+      "minimumSole": 0.0030000428669154644
+    },
+    "Right": {
+      "contactFraction": 0.24444444444444444,
+      "stanceSpeedP95": 0.16741547967358877,
+      "minimumSole": 0.002999980002641678
+    }
+  },
+  "loopSurfaceMaxMetres": 1.3424284016555796e-06,
+  "loopVelocityP95": 0.7937331700853872,
+  "stanceMetric": "Source contact windows minus their immediate transition neighbors; full cycle retained for floor and loop checks",
+  "visualReviewStillRequired": true,
+  "ownerApproved": false
+}

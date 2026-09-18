@@ -147,3 +147,10 @@ addEventListener('pagehide',e=>{if(!e.persisted){disposed=true;renderer.dispose(
 const lobbySoundtrack = new Soundtrack(new AudioEngine(), () => ({ lobby: true }));
 lobbySoundtrack.controls(document.querySelector('header .account'));
 window.lobbySoundtrack = lobbySoundtrack;
+
+// Opening presentation is independent of campaign saves and can be replayed.
+const {playOpening,showStory}=await import('./first-expedition.js');
+const replayOpening=document.createElement('button');replayOpening.className='first-replay';replayOpening.textContent='Replay opening';
+replayOpening.onclick=async()=>{keys.clear();moveGoal=null;await playOpening({replay:true});await showStory();};
+document.querySelector('header .account').append(replayOpening);
+if(!campaignStore.snapshot().expedition||new URLSearchParams(location.search).get('onboarding')==='1')void playOpening();

@@ -1,0 +1,14 @@
+{
+  "base": "http://127.0.0.1:8157",
+  "checks": [
+    {
+      "name": "Harness completed",
+      "ok": false,
+      "detail": "Error: locator.waitFor: Error: strict mode violation: locator('[data-mode=\"combat\"]') resolved to 2 elements:\n    1) <section class=\"game\" data-mode=\"combat\" aria-label=\"99 Planets To Defend interface concept\">…</section> aka getByRole('region', { name: '99 Planets To Defend' })\n    2) <button role=\"tab\" class=\"mode\" data-mode=\"combat\" aria-selected=\"true\">…</button> aka getByRole('tab', { name: 'C Combat' })\n\nCall log:\n\u001b[2m  - waiting for locator('[data-mode=\"combat\"]') to be visible\u001b[22m\n"
+    }
+  ],
+  "errors": [
+    "Error: locator.waitFor: Error: strict mode violation: locator('[data-mode=\"combat\"]') resolved to 2 elements:\n    1) <section class=\"game\" data-mode=\"combat\" aria-label=\"99 Planets To Defend interface concept\">…</section> aka getByRole('region', { name: '99 Planets To Defend' })\n    2) <button role=\"tab\" class=\"mode\" data-mode=\"combat\" aria-selected=\"true\">…</button> aka getByRole('tab', { name: 'C Combat' })\n\nCall log:\n\u001b[2m  - waiting for locator('[data-mode=\"combat\"]') to be visible\u001b[22m\n"
+  ],
+  "httpFailures": []
+}
