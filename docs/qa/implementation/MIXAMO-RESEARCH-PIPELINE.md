@@ -96,3 +96,5 @@ The local generator runs at `http://127.0.0.1:8773/`. Public source identity and
 browser evidence remain in `artifacts/motion-research/live-identity.json` and
 `public-final-live/`. This publication is a review checkpoint, not owner acceptance
 or a claim of Tripo/Meshy parity.
+
+Total measured through handoff preparation: 10668.15 seconds (177.80 minutes). [Complete timing record](MIXAMO-RESEARCH-TIMING.json). Includes setup, research, failed attempts, integration and public QA; earlier pre-inventory work is unmeasured.
