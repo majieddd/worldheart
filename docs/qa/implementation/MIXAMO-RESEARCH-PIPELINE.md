@@ -1,6 +1,6 @@
 # Character pipeline / Mixamo research integration
 
-Status: initial review published and publicly verified at `220c92a` (PR #74); final tail-selection refinement verified locally on `feature/mixamo-research-pipeline`.
+Status: final review published and publicly verified at `d278684` (PR #74) on `feature/mixamo-research-pipeline`.
 Base preview: `4531bbd0db27efeda7550cfea88567709d240e84`.
 Coordination: [issue claim](https://github.com/majieddd/worldheart/issues/1#issuecomment-5721607575).
 This supplements the Reptilian pilot and preserves Vey, the fitted Reptilian,
@@ -84,3 +84,15 @@ The final walk improves loop velocity change to 0.151 m/s. New cycle renders
 are in `artifacts/motion-research/final-motion-browser/`; public first-release
 views are in `public-live/`, with zero console errors. Failed predictions hide
 the empty viewer and irrelevant playback controls.
+
+## Public handoff
+
+Final deployment: [Pages run 35291710464](https://github.com/majieddd/worldheart/actions/runs/35291710464),
+preview SHA `d278684e82882f6fbaaba43367803bd06883002f`. All 17 selected public
+files match local bytes, including both new experimental models and the unchanged
+accepted Vey/fitted Reptilian. The comparison viewer is
+[commander-research.html](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/commander-research.html).
+The local generator runs at `http://127.0.0.1:8773/`. Public source identity and
+browser evidence remain in `artifacts/motion-research/live-identity.json` and
+`public-final-live/`. This publication is a review checkpoint, not owner acceptance
+or a claim of Tripo/Meshy parity.
