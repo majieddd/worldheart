@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../lib/three.module.min.js';
 import {ASTRONOMICAL_BIOMES,SOLAR_THEMES} from './run/solar-worlds.js';
 import {NEW_BIOMES,NEW_PLANET_THEMES} from './run/world-catalogue.js';
 import {appendBiomeDressing} from './biome-dressing.js';

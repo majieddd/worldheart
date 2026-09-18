@@ -1,5 +1,5 @@
 import {ecologyScatter} from './scatter.js';
-import * as THREE from 'three';
+import * as THREE from '../../lib/three.module.min.js';
 import {mulberry32} from '../noise.js';
 import {ACTIVE_FEATURES,featureFits,environmentalPulse} from '../run/environment-catalogue.js';
 

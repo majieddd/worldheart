@@ -1,0 +1,426 @@
+{
+  "name": "Albino Reptilian / fitted anatomical draft",
+  "sourceSha256": "9d0c65a2766a3929282a01dfdd290796245b0df82a8ace3a00b7aa5c7cd4ca71",
+  "coordinateSystem": "Blender metres, Z up, -Y front",
+  "sourceYawDegrees": 20,
+  "sourceOffset": [
+    -0.13,
+    0.27,
+    0
+  ],
+  "joints": [
+    {
+      "name": "root",
+      "head": [
+        0,
+        0,
+        0
+      ],
+      "tail": [
+        0,
+        0,
+        0.1
+      ],
+      "parent": null
+    },
+    {
+      "name": "hips",
+      "head": [
+        0,
+        0,
+        0.97
+      ],
+      "tail": [
+        0,
+        0,
+        1.06
+      ],
+      "parent": "root"
+    },
+    {
+      "name": "spine",
+      "head": [
+        0,
+        0,
+        1.06
+      ],
+      "tail": [
+        0,
+        0,
+        1.28
+      ],
+      "parent": "hips"
+    },
+    {
+      "name": "chest",
+      "head": [
+        0,
+        0,
+        1.28
+      ],
+      "tail": [
+        0,
+        0,
+        1.53
+      ],
+      "parent": "spine"
+    },
+    {
+      "name": "neck",
+      "head": [
+        0,
+        0,
+        1.53
+      ],
+      "tail": [
+        0,
+        -0.015,
+        1.69
+      ],
+      "parent": "chest"
+    },
+    {
+      "name": "head",
+      "head": [
+        0,
+        -0.015,
+        1.69
+      ],
+      "tail": [
+        0,
+        -0.07,
+        1.93
+      ],
+      "parent": "neck"
+    },
+    {
+      "name": "clavicle.L",
+      "head": [
+        0,
+        0,
+        1.49
+      ],
+      "tail": [
+        0.3,
+        0,
+        1.49
+      ],
+      "parent": "chest"
+    },
+    {
+      "name": "upper_arm.L",
+      "head": [
+        0.3,
+        0,
+        1.49
+      ],
+      "tail": [
+        0.46,
+        -0.035,
+        1.2
+      ],
+      "parent": "clavicle.L"
+    },
+    {
+      "name": "forearm.L",
+      "head": [
+        0.46,
+        -0.035,
+        1.2
+      ],
+      "tail": [
+        0.535,
+        -0.12,
+        0.9
+      ],
+      "parent": "upper_arm.L"
+    },
+    {
+      "name": "hand.L",
+      "head": [
+        0.535,
+        -0.12,
+        0.9
+      ],
+      "tail": [
+        0.54,
+        -0.15,
+        0.75
+      ],
+      "parent": "forearm.L"
+    },
+    {
+      "name": "thigh.L",
+      "head": [
+        0.2,
+        0,
+        0.95
+      ],
+      "tail": [
+        0.25,
+        -0.015,
+        0.53
+      ],
+      "parent": "hips"
+    },
+    {
+      "name": "shin.L",
+      "head": [
+        0.25,
+        -0.015,
+        0.53
+      ],
+      "tail": [
+        0.24,
+        0.035,
+        0.145
+      ],
+      "parent": "thigh.L"
+    },
+    {
+      "name": "foot.L",
+      "head": [
+        0.24,
+        0.035,
+        0.145
+      ],
+      "tail": [
+        0.3,
+        -0.13,
+        0.065
+      ],
+      "parent": "shin.L"
+    },
+    {
+      "name": "toe.L",
+      "head": [
+        0.3,
+        -0.13,
+        0.065
+      ],
+      "tail": [
+        0.34,
+        -0.225,
+        0.05
+      ],
+      "parent": "foot.L"
+    },
+    {
+      "name": "clavicle.R",
+      "head": [
+        0,
+        0,
+        1.49
+      ],
+      "tail": [
+        -0.3,
+        0,
+        1.49
+      ],
+      "parent": "chest"
+    },
+    {
+      "name": "upper_arm.R",
+      "head": [
+        -0.3,
+        0,
+        1.49
+      ],
+      "tail": [
+        -0.46,
+        -0.035,
+        1.2
+      ],
+      "parent": "clavicle.R"
+    },
+    {
+      "name": "forearm.R",
+      "head": [
+        -0.46,
+        -0.035,
+        1.2
+      ],
+      "tail": [
+        -0.535,
+        -0.12,
+        0.9
+      ],
+      "parent": "upper_arm.R"
+    },
+    {
+      "name": "hand.R",
+      "head": [
+        -0.535,
+        -0.12,
+        0.9
+      ],
+      "tail": [
+        -0.54,
+        -0.15,
+        0.75
+      ],
+      "parent": "forearm.R"
+    },
+    {
+      "name": "thigh.R",
+      "head": [
+        -0.2,
+        0,
+        0.95
+      ],
+      "tail": [
+        -0.25,
+        -0.015,
+        0.53
+      ],
+      "parent": "hips"
+    },
+    {
+      "name": "shin.R",
+      "head": [
+        -0.25,
+        -0.015,
+        0.53
+      ],
+      "tail": [
+        -0.32,
+        0.065,
+        0.145
+      ],
+      "parent": "thigh.R"
+    },
+    {
+      "name": "foot.R",
+      "head": [
+        -0.32,
+        0.065,
+        0.145
+      ],
+      "tail": [
+        -0.38,
+        -0.105,
+        0.065
+      ],
+      "parent": "shin.R"
+    },
+    {
+      "name": "toe.R",
+      "head": [
+        -0.38,
+        -0.105,
+        0.065
+      ],
+      "tail": [
+        -0.43,
+        -0.205,
+        0.05
+      ],
+      "parent": "foot.R"
+    },
+    {
+      "name": "tail1",
+      "head": [
+        0,
+        0.2,
+        0.91
+      ],
+      "tail": [
+        0.16,
+        0.47,
+        0.56
+      ],
+      "parent": "hips"
+    },
+    {
+      "name": "tail2",
+      "head": [
+        0.16,
+        0.47,
+        0.56
+      ],
+      "tail": [
+        0.17,
+        0.74,
+        0.25
+      ],
+      "parent": "tail1"
+    },
+    {
+      "name": "tail3",
+      "head": [
+        0.17,
+        0.74,
+        0.25
+      ],
+      "tail": [
+        -0.05,
+        0.9,
+        0.075
+      ],
+      "parent": "tail2"
+    },
+    {
+      "name": "tail4",
+      "head": [
+        -0.05,
+        0.9,
+        0.075
+      ],
+      "tail": [
+        -0.4,
+        0.86,
+        0.04
+      ],
+      "parent": "tail3"
+    }
+  ],
+  "preserveRestDirection": [
+    "head",
+    "hand.L",
+    "hand.R"
+  ],
+  "armClearance": 0.27,
+  "footRoll": true,
+  "tailLiftDegrees": 22,
+  "soleForward": {
+    "L": [
+      0.35,
+      -1,
+      0
+    ],
+    "R": [
+      -0.35,
+      -1,
+      0
+    ]
+  },
+  "rigidRegions": [
+    {
+      "bone": "foot.L",
+      "min": [
+        0.06,
+        -0.4,
+        -0.02
+      ],
+      "max": [
+        0.53,
+        0.19,
+        0.19
+      ]
+    },
+    {
+      "bone": "foot.R",
+      "min": [
+        -0.57,
+        -0.4,
+        -0.02
+      ],
+      "max": [
+        -0.12,
+        0.19,
+        0.19
+      ]
+    }
+  ],
+  "ownerApproved": false
+}

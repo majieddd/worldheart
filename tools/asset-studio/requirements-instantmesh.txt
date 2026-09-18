@@ -1,0 +1,13 @@
+# Isolated overrides; reuse the already verified Modly Torch/nvdiffrast runtime.
+diffusers==0.20.2
+transformers==4.34.1
+huggingface-hub==0.25.2
+tokenizers==0.14.1
+pytorch-lightning==2.1.2
+torchmetrics==1.5.2
+lightning-utilities==0.11.9
+timm==0.9.16
+accelerate==0.34.2
+omegaconf==2.3.0
+antlr4-python3-runtime==4.9.3
+xatlas==0.0.11
