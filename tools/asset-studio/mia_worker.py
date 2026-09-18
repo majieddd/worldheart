@@ -23,6 +23,22 @@ def run(task):
     if destination.exists():
         raise ValueError('Keep the previous prediction and choose a new output name.')
     destination.parent.mkdir(parents=True, exist_ok=True)
+    if task.get('reusePrediction'):
+        previous=Path(task['reusePrediction']);receipt=json.loads(previous.with_suffix('.json').read_text('utf-8'))
+        fit_hash=hashlib.sha256(Path(task['rigProfile']).read_bytes()).hexdigest() if task.get('rigProfile') else None
+        if receipt.get('sourceSha256')!=source_hash or receipt.get('canonicalizationFitSha256')!=fit_hash:
+            raise ValueError('Cached prediction belongs to a different model or anatomical fit')
+        if hashlib.sha256(previous.read_bytes()).hexdigest()!=receipt.get('predictionSha256'):raise ValueError('Cached prediction bytes changed')
+        import numpy as np
+        from rig_contract import inspect_prediction
+        data=np.load(previous,allow_pickle=False)
+        extra=bool(fit_hash and any(j['name'].startswith('tail') for j in json.loads(Path(task['rigProfile']).read_text())['joints']))
+        checks=inspect_prediction(data['vertices'],data['faces'],data['heads'],data['weights'],data['to_rest'],list(data['names']),extra)
+        if not checks['passed']:raise ValueError('Cached prediction fails current rig checks')
+        shutil.copy2(previous,destination);receipt.update(checks=checks['checks'],passed=True,reusedPrediction=str(previous),seconds=time.perf_counter()-began)
+        destination.with_suffix('.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')
+        print(json.dumps({'reusedPrediction':str(previous),'passed':True}),flush=True)
+        return receipt
     sys.path.insert(0, str(runtime/'pytorch3d-transforms'))
     sys.path.insert(0, str(repo))
     os.environ['HF_HUB_OFFLINE'] = '1'
@@ -132,3 +148,8 @@ if __name__ == '__main__':
     parser.add_argument('task')
     args = parser.parse_args()
     run(json.loads(Path(args.task).read_text('utf-8')))
+    if os.name=='nt':
+        # All artifacts are closed and validated at this point. Blender and Torch
+        # share native DLLs; bypass interpreter teardown in the one-shot worker.
+        # Exceptions still exit normally with a failure before reaching here.
+        sys.stdout.flush();sys.stderr.flush();os._exit(0)

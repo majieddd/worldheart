@@ -11,6 +11,8 @@ def compose_prompt(description, style, count=0):
     return f'{description.strip()} {reference}{STYLE[style][1]} Single isolated full-body asset, three-quarter front, neutral relaxed A-pose with hands separated from body, complete feet and extremities, generous margins, even neutral lighting, plain light gray background. No scenery, text, watermark or ground shadow.'
 
 def krea_graph(prompt, settings, references, prefix):
+    if settings.get('identityEdit') and references:
+        return identity_edit_graph(prompt,settings,references,prefix)
     width, height = settings.get('width', 768), settings.get('height', 1024)
     graph = {}
     def node(key, kind, **inputs):
@@ -37,6 +39,31 @@ def krea_graph(prompt, settings, references, prefix):
     samples = node(13, 'SamplerCustomAdvanced', noise=noise, guider=guider, sampler=sampler, sigmas=sigmas, latent_image=latent)
     image = node(14, 'VAEDecode', samples=samples, vae=vae)
     node(15, 'SaveImage', images=image, filename_prefix=prefix)
+    return graph
+
+def identity_edit_graph(prompt,settings,references,prefix):
+    """Training-matched dual conditioning, not the style-reference latent path."""
+    graph={}
+    def node(key,kind,**inputs):
+        graph[str(key)]={'class_type':kind,'inputs':inputs};return [str(key),0]
+    model=node(1,'UNETLoader',unet_name=settings['model'],weight_dtype='default')
+    clip=node(2,'CLIPLoader',clip_name=settings.get('encoder','qwen3vl_4b_fp8_scaled.safetensors'),type='krea2',device='cpu')
+    vae=node(3,'VAELoader',vae_name='qwen_image_vae.safetensors')
+    model=node(4,'LoraLoaderModelOnly',model=model,lora_name='krea2_identity_edit_v1_2.safetensors',strength_model=1.0)
+    for i,lora in enumerate(settings.get('loras',[])):
+        if 'style_reference' in lora['name'] or 'identity_edit' in lora['name']:continue
+        model=node(40+i,'LoraLoaderModelOnly',model=model,lora_name=lora['name'],strength_model=lora['strength'])
+    image=node(5,'LoadImage',image=references[0])
+    latent=node(6,'EmptySD3LatentImage',width=settings['width'],height=settings['height'],batch_size=1)
+    source=node(7,'VAEEncode',pixels=image,vae=vae)
+    model=node(8,'Krea2EditModelPatch',model=model,source_latent=source,vae=vae,source_image=image,
+               target_latent=latent,fit_mode='fit',ref_boost=settings.get('referenceFidelity',2.0),ref_boost_a=1.0)
+    positive=node(9,'Krea2EditGroundedEncode',clip=clip,prompt=prompt,image=image,grounding_px=768,system_prompt='')
+    negative=node(10,'Krea2EditGroundedEncode',clip=clip,prompt='',image=image,grounding_px=768,system_prompt='')
+    samples=node(11,'KSampler',model=model,positive=positive,negative=negative,latent_image=latent,
+                 seed=settings['seed'],steps=settings.get('steps',8),cfg=1.0,sampler_name='euler',scheduler='simple',denoise=1.0)
+    decoded=node(12,'VAEDecode',samples=samples,vae=vae)
+    node(13,'SaveImage',images=decoded,filename_prefix=prefix)
     return graph
 
 def checkpoint_graph(prompt, settings, prefix):

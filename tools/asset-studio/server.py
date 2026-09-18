@@ -12,6 +12,7 @@ from PIL import Image
 from workflows import STYLE,compose_prompt,krea_graph,checkpoint_graph
 from asset_quality import inspect_asset,VERSION as QUALITY_VERSION
 import reference_pack as packets
+from shape_inputs import conditioning
 
 ROOT=Path(__file__).resolve().parents[2]
 RUNTIME=Path(os.environ.get('WH_STUDIO_RUNTIME',ROOT.parent/'local-asset-runtime')).resolve()
@@ -19,7 +20,7 @@ DATA=RUNTIME/'studio-data';DATA.mkdir(parents=True,exist_ok=True)
 PROJECTS=DATA/'projects';PROJECTS.mkdir(exist_ok=True)
 COMFY=RUNTIME/'ComfyUI';COMFY_URL='http://127.0.0.1:8188'
 POOL=ThreadPoolExecutor(max_workers=1);LOCK=threading.RLock();CANCEL={};ACTIVE=None
-DEFAULT={'family':'krea','model':'krea2_turbo_int8_convrot.safetensors','loras':[{'name':'krea2_style_reference.safetensors','strength':.8}],'seed':99131,'width':768,'height':1024,'steps':8,'meshSteps':30,'meshResolution':256,'textureSize':2048,'meshEngine':'hunyuan','paintEngine':'projection','trellisSteps':25}
+DEFAULT={'family':'krea','model':'krea2_turbo_int8_convrot.safetensors','loras':[{'name':'krea2_style_reference.safetensors','strength':.8}],'seed':99131,'width':768,'height':1024,'steps':8,'meshSteps':30,'meshResolution':256,'textureSize':2048,'meshEngine':'hunyuan','paintEngine':'projection','trellisSteps':25,'referenceMethod':'style-reference','referenceFidelity':2.0}
 app=FastAPI(docs_url=None,redoc_url=None)
 
 def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -127,11 +128,15 @@ async def put_config(request:Request):
     for lora in data.get('loras',[]):
         if lora.get('name') not in available['loras'] or not -2<=float(lora.get('strength',0))<=2:raise HTTPException(400,'Invalid LoRA')
     clean={k:data.get(k,v) for k,v in DEFAULT.items()}
-    if clean['meshEngine'] not in ['hunyuan','trellis2'] or clean['paintEngine'] not in ['projection','trellis2']:raise HTTPException(400,'Unknown 3D engine')
+    if clean['meshEngine'] not in ['hunyuan','hunyuan-mv','trellis2'] or clean['paintEngine'] not in ['projection','trellis2']:raise HTTPException(400,'Unknown 3D engine')
+    if clean['meshEngine']=='hunyuan-mv' and not (RUNTIME/'models/Hunyuan3D-2mv/hunyuan3d-dit-v2-mv/model.fp16.safetensors').is_file():raise HTTPException(409,'Install the Hunyuan multiview weights first')
     if 'trellis2' in [clean['meshEngine'],clean['paintEngine']] and not available['trellisReady']:raise HTTPException(409,'Finish and verify the local Trellis installation first')
     if not isinstance(clean['trellisSteps'],int) or not 5<=clean['trellisSteps']<=50:raise HTTPException(400,'Invalid Trellis steps')
-    for key,lo,hi in [('seed',0,2**48),('width',256,1536),('height',256,1536),('steps',1,60),('meshSteps',5,60),('meshResolution',128,384),('textureSize',512,4096)]:
+    for key,lo,hi in [('seed',0,2**48),('width',256,1536),('height',256,1536),('steps',1,60),('meshSteps',5,60),('meshResolution',128,512),('textureSize',512,4096)]:
         if not isinstance(clean[key],int) or not lo<=clean[key]<=hi:raise HTTPException(400,'Invalid '+key)
+    if clean['referenceMethod'] not in ['style-reference','identity-edit']:raise HTTPException(400,'Unknown reference method')
+    if not isinstance(clean['referenceFidelity'],(int,float)) or not .5<=clean['referenceFidelity']<=8:raise HTTPException(400,'Reference fidelity must be 0.5 to 8')
+    if clean['referenceMethod']=='identity-edit' and not (COMFY/'models/loras/krea2_identity_edit_v1_2.safetensors').is_file():raise HTTPException(409,'Install the identity edit LoRA and nodes first')
     if clean['width']%64 or clean['height']%64:raise HTTPException(400,'Image dimensions must be multiples of 64')
     write(DATA/'settings.json',clean);return config()
 
@@ -143,6 +148,27 @@ async def new_project(request:Request):
     p={'id':key,'name':str(body.get('name','Untitled asset'))[:100],'description':'','style':'painted-anime-inkline','references':[],'art':None,'mesh':None,'paint':None,'animation':None,'polished':None,'approvals':{},'stage':'concept','status':'draft','message':'Describe an asset or import an existing model.','created':time.time(),'events':[]};save(p);return p
 @app.get('/api/projects/{key}')
 def get_project(key):return project(key)
+@app.post('/api/projects/{key}/fork-inputs')
+def fork_inputs(key,body:dict=Body(default={})):
+    source=project(key)
+    if source['status'] in ['running','queued']:raise HTTPException(409,'Wait for the source job to finish')
+    pack=source.get('referencePack')
+    if 'referenceHistory' in body:
+        index=body['referenceHistory'];history=source.get('referencePackHistory',[])
+        if not isinstance(index,int) or not 0<=index<len(history):raise HTTPException(400,'Unknown reference history entry')
+        pack=history[index]
+        if pack.get('heroSha256')!=digest(output(source,source['art'])):raise HTTPException(409,'Historical pack belongs to a different hero')
+    identifier=uuid.uuid4().hex[:12];(PROJECTS/identifier).mkdir()
+    clone={k:source[k] for k in ['description','style','references','art','artBrief'] if k in source}
+    clone.update(id=identifier,name=str(body.get('name',source['name']+' / comparison'))[:100],mesh=None,paint=None,animation=None,polished=None,
+                 approvals={},stage='concept',status='review',message='Independent input comparison. Source model retained.',created=time.time(),events=[],forkedFrom=key)
+    files=set(source.get('references',[]));files.update([source['art']] if source.get('art') else [])
+    if pack and not pack.get('sourceModel'):
+        clone['referencePack']=json.loads(json.dumps(pack));clone['referencePackExpected']=source.get('referencePackExpected',True)
+        files.update([pack['hero'],pack['folder']+'/manifest.json']);files.update(v['file'] for v in pack['outputs'].values())
+    for name in files:
+        dest=output(clone,name);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(output(source,name),dest)
+    save(clone);return clone
 @app.put('/api/projects/{key}')
 async def edit_project(key,request:Request):
     p=project(key);body=await request.json()
@@ -158,8 +184,9 @@ async def edit_project(key,request:Request):
 async def upload(key,file:UploadFile=File(...)):
     p=project(key)
     if p['status'] in ['queued','running']:raise HTTPException(409,'A job is running')
-    raw=await file.read(32*1024*1024+1)
-    if len(raw)>32*1024*1024:raise HTTPException(413,'Maximum upload size is 32 MB')
+    limit=(256 if Path(file.filename or '').suffix.lower()=='.glb' else 32)*1024*1024
+    raw=await file.read(limit+1)
+    if len(raw)>limit:raise HTTPException(413,'Maximum upload size is 256 MB for GLB models, 32 MB for reference images')
     ext=Path(file.filename or '').suffix.lower();name='import-'+uuid.uuid4().hex[:10]+ext;dest=output(p,name)
     if ext=='.glb':
         if raw[:4]!=b'glTF':raise HTTPException(400,'Not a GLB model')
@@ -317,12 +344,16 @@ def cancelled(p):
 def comfy_free():
     try:requests.post(COMFY_URL+'/free',json={'unload_models':True,'free_memory':True},timeout=10)
     except requests.RequestException:pass
-def run_process(p,args):
+def run_process(p,args,timeout=None):
     log=output(p,'worker.log')
     last_message='';last_read=0;start_offset=log.stat().st_size if log.exists() else 0
+    started=time.monotonic()
     with log.open('a',encoding='utf-8') as handle:
         child=subprocess.Popen([str(x) for x in args],cwd=ROOT,stdout=handle,stderr=subprocess.STDOUT,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
         while child.poll() is None:
+            if timeout and time.monotonic()-started>=timeout:
+                child.terminate();child.wait(timeout=20)
+                raise RuntimeError(f'Step exceeded {timeout} seconds. Previous accepted output retained. Reduce shape steps or extraction grid; the timed-out attempt remains in the log.')
             if CANCEL.get(p['id']):child.terminate();child.wait(timeout=20);cancelled(p)
             if time.time()-last_read>3:
                 last_read=time.time()
@@ -367,6 +398,7 @@ def generate_image(p,s,prompt,references,name):
 def make_reference_pack(p,s,roles=None):
     if not p.get('art') or p.get('artBrief')!=brief_digest(p):raise RuntimeError('Create a current hero concept first')
     if s['family']!='krea':raise RuntimeError('Choose Krea for identity-conditioned directional views; the checkpoint route is text-only')
+    s={**s,'identityEdit':s.get('referenceMethod')=='identity-edit'}
     hero=output(p,p['art']);token=packets.identity(hero,p['description'],p['style'],s)
     pack=p.get('referencePack')
     if not pack or pack.get('recipeSha256')!=token:
@@ -381,7 +413,9 @@ def make_reference_pack(p,s,roles=None):
         if old:pack.setdefault('attemptHistory',[]).append({'role':role,**old})
         name=pack['folder']+'/'+role+('-'+uuid.uuid4().hex[:6] if old else '')+'.png';size={'width':768,'height':1024} if role!='motion' else {'width':1280,'height':768}
         update(p,'references','running','Reference pack: '+role+' / completed views are cached')
-        with timed_stage(p,'reference '+role):receipt=generate_image(p,{**s,**size,'seed':s['seed']+101+i},prompt,[hero],name)
+        # Shared seed and immutable hero: never recursively feed an unreviewed
+        # generated view back as identity, which compounds drift across angles.
+        with timed_stage(p,'reference '+role):receipt=generate_image(p,{**s,**size,'seed':s['seed']},prompt,[hero],name)
         pack['outputs'][role]={'file':name,'sha256':receipt['sha256'],'prompt':prompt,'receipt':name+'.json'};save(p);write(output(p,pack['folder']+'/manifest.json'),pack)
     if not all(role in pack['outputs'] for role in [*packets.VIEWS,'motion']):
         pack['complete']=False;save(p);update(p,'concept','review','Inspect the test angle against the hero. Retry this angle if identity drifts; build the remaining references when it matches.');return
@@ -431,8 +465,10 @@ def make_art(p,s,with_pack=True):
 
 def make_mesh(p,s):
     comfy_free();name='shape-'+str(int(time.time()))+'.glb'
+    receipt=conditioning(p,PROJECTS/p['id'],s['meshEngine']);receipt_file=output(p,name+'.conditioning.json');write(receipt_file,receipt)
     if s.get('meshEngine')=='trellis2':trellis_stage(p,s,'shape',name)
-    else:run_process(p,[RUNTIME/'.venv/Scripts/python.exe',Path(__file__).with_name('mesh_worker.py'),'--runtime',RUNTIME,'--image',output(p,p['art']),'--output',output(p,name),'--steps',s['meshSteps'],'--resolution',s['meshResolution'],'--seed',s['seed']])
+    else:run_process(p,[RUNTIME/'.venv/Scripts/python.exe',Path(__file__).with_name('mesh_worker.py'),'--runtime',RUNTIME,'--image',output(p,p['art']),'--conditioning',receipt_file,'--output',output(p,name),'--steps',s['meshSteps'],'--resolution',s['meshResolution'],'--seed',s['seed']],timeout=300)
+    p['shapeConditioning']={'file':receipt_file.name,**receipt}
     p.pop('paintHistory',None);p['mesh']=name;p['paint']=None;p['animation']=None;p['polished']=None;p['approvals'].pop('animation',None);update(p,'mesh','review','Local image-to-3D complete. Orbit the model and compare the face, silhouette and back before continuing.')
     require_valid_output(p,'mesh')
 

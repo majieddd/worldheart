@@ -1,4 +1,4 @@
-"""Local mesh finishing. Preserves imported rigs; generated bipeds get a review draft."""
+"""Local mesh finishing. Animation requires an existing rig or an explicit anatomical fit."""
 import bpy,json,math,sys,time,shutil,hashlib
 from pathlib import Path
 from mathutils import Vector
@@ -117,7 +117,8 @@ elif task['stage']=='animation':
     if not rigs and profile.exists():
         from fitted_motion import build
         rigs.append(build(task,meshes,scene,report,profile))
-    elif not rigs:draft_rig()
+    elif not rigs:
+        raise ValueError('Rigging is required before animation. Use Fit joints visually and save this model\'s anatomical profile, or prepare a MIA rig in Motion library. The generic proximity rig and sine-wave clips are no longer generated as production motion.')
     else:report['rigMethod']='Existing skeleton, skin weights and authored clips preserved. No replacement motion generated.'
 elif task['stage']=='polish':
     # Keep silhouette, topology and approved motion intact. Polish validates and

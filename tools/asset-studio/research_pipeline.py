@@ -26,6 +26,44 @@ def register(app, s):
                 result.append({**row,'id':path.stem})
         return result
 
+    def dataset_root():
+        # Reuse the owner's HF download, including Windows' non-symlink cache.
+        from huggingface_hub.constants import HF_HUB_CACHE
+        return Path(HF_HUB_CACHE)/'datasets--jasongzy--Mixamo/snapshots/b1c7f4975ea3261d3d0aa2379f6e24754ccde9d8'
+
+    @app.get('/api/projects/{key}/dataset-motions')
+    def dataset_motions(key):
+        s.project(key);root=dataset_root()
+        inventory=s.read(library/'dataset/manifest.json',{}).get('files',[])
+        files=[]
+        for entry in inventory:
+            name=entry['path']
+            if not name.startswith(('animation/','animation_extra/')):continue
+            path=root/name
+            if path.is_file() and path.stat().st_size==entry['bytes']:
+                files.append({'id':name,'bytes':entry['bytes']})
+        return {'available':files,'total':sum(x['path'].startswith(('animation/','animation_extra/')) for x in inventory),
+                'note':'Original dataset IDs. Import a selected capture to inspect its timing. Captures are not assumed to be walk/run loops.'}
+
+    @app.post('/api/projects/{key}/dataset-motions/import')
+    def import_dataset_motion(key,body:dict=Body(...)):
+        p=s.project(key)
+        with s.LOCK:
+            idle(p);name=body.get('id')
+            inventory=s.read(library/'dataset/manifest.json',{}).get('files',[])
+            entry=next((x for x in inventory if x['path']==name and x['path'].startswith(('animation/','animation_extra/'))),None)
+            if not entry:raise HTTPException(400,'Choose an indexed dataset capture')
+            source=dataset_root()/name
+            if not source.is_file() or source.stat().st_size!=entry['bytes']:raise HTTPException(409,'Capture is still downloading')
+            if entry.get('sha256') and s.digest(source)!=entry['sha256']:raise HTTPException(409,'Dataset hash mismatch')
+            filename='dataset-'+Path(name).stem+'.fbx'
+            if (library/filename).with_suffix('.npz').exists():return {'message':'Capture already imported'}
+            import shutil
+            shutil.copy2(source,library/filename)
+            s.update(p,'motion-import','queued','Preparing the selected original dataset capture.')
+            s.POOL.submit(import_job,key,filename,Path(name).stem,'https://huggingface.co/datasets/jasongzy/Mixamo')
+        return {'message':'Capture import queued; source timing is preserved'}
+
     def idle(p):
         if s.ACTIVE or p['status'] in ['queued','running'] or any(x['status'] in ['queued','running'] for x in s.list_projects()):
             raise HTTPException(409,'Wait for the current local job.')
@@ -147,6 +185,12 @@ def register(app, s):
             elif method=='mia':
                 task['output']=str(dest/'prediction.npz')
                 if p.get('rigProfile'):task['rigProfile']=str(s.output(p,p['rigProfile']['file']))
+                fit_hash=s.digest(Path(task['rigProfile'])) if task.get('rigProfile') else None
+                for previous in reversed(p.get('researchCandidates',[])):
+                    prediction=s.output(p,previous['folder']+'/prediction.npz')
+                    report=s.read(prediction.with_suffix('.json'),{})
+                    if previous['method']=='mia' and prediction.is_file() and report.get('passed') and report.get('sourceSha256')==item['sourceSha256'] and report.get('canonicalizationFitSha256')==fit_hash:
+                        task['reusePrediction']=str(prediction);break
             else:
                 s.assert_approved(p,'art','art');task.update(image=str(s.output(p,p['art'])),seed=s.settings()['seed'])
                 item['referenceSha256']=s.digest(s.output(p,p['art']))

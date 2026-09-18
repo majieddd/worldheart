@@ -9,6 +9,17 @@ import server
 from fastapi.testclient import TestClient
 
 class StudioTests(unittest.TestCase):
+    def test_fork_inputs_does_not_replace_original_or_inherit_acceptance(self):
+        p=self.concept();self.client.post(self.base+'/approve/art')
+        r=self.client.post(self.base+'/fork-inputs',json={'name':'Independent trial'})
+        self.assertEqual(r.status_code,200);clone=r.json()
+        self.assertNotEqual(clone['id'],p['id']);self.assertEqual(clone['approvals'],{})
+        self.assertEqual(server.output(clone,clone['art']).read_bytes(),server.output(p,p['art']).read_bytes())
+        server.output(clone,clone['art']).write_bytes(b'changed')
+        self.assertNotEqual(server.output(clone,clone['art']).read_bytes(),server.output(p,p['art']).read_bytes())
+    def test_dataset_import_refuses_unindexed_paths(self):
+        r=self.client.post(self.base+'/dataset-motions/import',json={'id':'../../private.fbx'})
+        self.assertEqual(r.status_code,400)
     def test_failed_research_preserves_asset_and_summarizes_saved_diagnostics(self):
         p=self.concept();server.output(p,'model.glb').write_bytes(fixture(motion=False))
         p.update(mesh='model.glb',animation='retained.glb',status='review');server.save(p)

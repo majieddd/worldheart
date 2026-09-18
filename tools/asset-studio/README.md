@@ -100,3 +100,33 @@ See [measured research and limitations](../../lib/99-art/motion-research-v1/rese
 and [implementation evidence](../../docs/qa/implementation/MIXAMO-RESEARCH-PIPELINE.md).
 Run `python -m unittest discover -s tools/asset-studio -p 'test_*.py' -q` for the
 pipeline regression suite. Failures and raw worker logs remain in the project.
+
+
+### Reference integrity and full motion library
+
+Hunyuan mini uses the hero only. Experimental Hunyuan multiview uses the reviewed
+front/left/back/right images with a dedicated checkpoint; every run writes a
+hash-bound conditioning receipt listing consumed and unused views. Top/bottom
+remain inspection guides. Model-derived turnarounds are not independent inputs.
+Install the pinned checkpoint with `setup_hunyuan_mv.py` in the Studio runtime.
+
+Geometry extraction grid (up to 512) and texture pixels (up to 4096) are separate
+settings. Hunyuan workers stop at 300 seconds and preserve the previous output.
+Measured mini 512/60 completed in 173.7 seconds on the test RTX 4080 Laptop;
+this is not a promise for every model or cold start.
+
+`setup_identity_edit.py` installs the pinned Krea2 identity adapter. Select it in
+settings for comparisons; it remains experimental because strong reference
+conditioning can preserve the original view instead of rotating the character.
+Review every angle, especially asymmetry, garment lengths and soles.
+
+`sync_mixamo.py --metadata-only` builds the pinned dataset catalogue. Studio
+also reads the authenticated user's existing Hugging Face cache, avoiding a
+second download. The Motion page indexes all 2,455 captures and imports selected
+files with hash verification. Current retargeting supports walks/runs; availability
+of a capture does not establish support for arbitrary actions or unusual rigs.
+
+Unrigged meshes now require explicit fitting or the learned MIA rig experiment.
+There is no automatic proximity-weight/sine-wave animation fallback. All trials
+stay separate until visual review; checks alone never grant owner approval.
+See [reference integrity evidence](../../docs/qa/implementation/ASSET-REFERENCE-INTEGRITY.md).
