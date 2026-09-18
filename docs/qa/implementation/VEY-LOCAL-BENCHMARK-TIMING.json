@@ -1,0 +1,576 @@
+{
+  "startedAt": "2026-09-17T03:42:02.501Z",
+  "status": "published_and_verified_review_candidate",
+  "timeBasis": "Actual elapsed wall time from task start through successful public verification. Includes research, implementation, visual review, setup, downloads, failures and deployment. Excludes subsequent documentation and handoff writing. Parallel command timings overlap and must not be summed.",
+  "steps": [
+    {
+      "step": "Benchmark inspection and route selection",
+      "startedAt": "2026-09-17T03:42:02.501Z",
+      "endedAt": "2026-09-17T03:48:20.416Z",
+      "seconds": 377.915,
+      "category": "research",
+      "result": "Inspected owner Tripo P2.0 model; export returned 403. Selected local Modly Trellis.2 GGUF."
+    },
+    {
+      "step": "trellis-setup",
+      "category": "one-time setup",
+      "startedAt": "2026-09-17T03:48:21.090012+00:00",
+      "status": "completed",
+      "timingSource": "log creation time; process receipt will supply elapsed seconds",
+      "log": "trellis-setup.log",
+      "seconds": 3876.23,
+      "endedAt": "2026-09-17T04:52:57.320012+00:00",
+      "result": "Installer completed with CUDA wheel errors; repairs below were required."
+    },
+    {
+      "step": "trellis-weights",
+      "category": "one-time setup",
+      "startedAt": "2026-09-17T03:50:22.934647+00:00",
+      "status": "completed",
+      "timingSource": "log creation time; process receipt will supply elapsed seconds",
+      "log": "trellis-weights.log",
+      "seconds": 4376.36,
+      "endedAt": "2026-09-17T05:03:19.294647+00:00"
+    },
+    {
+      "step": "priority-shape",
+      "category": "one-time setup",
+      "startedAt": "2026-09-17T04:22:23.090049+00:00",
+      "status": "completed",
+      "timingSource": "log creation time; process receipt will supply elapsed seconds",
+      "log": "priority-shape.log",
+      "seconds": 1761.12,
+      "endedAt": "2026-09-17T04:51:44.210049+00:00"
+    },
+    {
+      "startedAt": "2026-09-17T04:54:03.093173+00:00",
+      "status": "passed",
+      "fullLog": "motion-contract.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T04:54:05.467634+00:00",
+      "seconds": 2.37,
+      "step": "motion contract",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T04:55:14.433446+00:00",
+      "status": "failed",
+      "fullLog": "shape-attempt-01.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T04:55:28.644032+00:00",
+      "seconds": 14.21,
+      "step": "Shape launch / rejected environment",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T04:58:14.228844+00:00",
+      "status": "failed",
+      "fullLog": "repair-cuda.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T04:58:51.856131+00:00",
+      "seconds": 37.63,
+      "step": "repair cuda",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T04:59:46.851237+00:00",
+      "status": "passed",
+      "fullLog": "studio-timing-tests.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T04:59:49.023921+00:00",
+      "seconds": 2.17,
+      "step": "studio timing tests",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:03:18.721084+00:00",
+      "status": "passed",
+      "fullLog": "repair-wheel-metadata.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:03:26.819832+00:00",
+      "seconds": 8.1,
+      "step": "repair wheel metadata",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:03:59.715000+00:00",
+      "status": "passed",
+      "fullLog": "shape-attempt-02.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:09:23.409299+00:00",
+      "seconds": 323.69,
+      "step": "Shape inference / first successful run",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:10:21.721049+00:00",
+      "status": "passed",
+      "fullLog": "prepare-shape.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:11:17.026889+00:00",
+      "seconds": 55.31,
+      "step": "Topology reduction",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:11:53.721167+00:00",
+      "status": "passed",
+      "fullLog": "paint-attempt-01.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:12:59.383790+00:00",
+      "seconds": 65.66,
+      "step": "Texture pass 1 / visually rejected",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:12:38.507314+00:00",
+      "status": "passed",
+      "fullLog": "shape-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:12:43.932336+00:00",
+      "seconds": 5.43,
+      "step": "shape browser",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:13:40.233387+00:00",
+      "status": "passed",
+      "fullLog": "paint-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:13:45.267421+00:00",
+      "seconds": 5.03,
+      "step": "paint browser",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:16:47.982400+00:00",
+      "status": "passed",
+      "fullLog": "paint-attempt-02.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:17:55.882075+00:00",
+      "seconds": 67.9,
+      "step": "Texture pass 2 / stronger reference",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:18:53.258910+00:00",
+      "status": "passed",
+      "fullLog": "paint-strong-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:18:58.283689+00:00",
+      "seconds": 5.03,
+      "step": "paint strong browser",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:20:40.154482+00:00",
+      "status": "passed",
+      "fullLog": "finish-palette.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:20:43.292557+00:00",
+      "seconds": 3.14,
+      "step": "Palette correction",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:20:43.385273+00:00",
+      "status": "passed",
+      "fullLog": "finished-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:20:48.492106+00:00",
+      "seconds": 5.11,
+      "step": "finished browser",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:22:50.021205+00:00",
+      "status": "passed",
+      "fullLog": "rig-prepare.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:22:51.268891+00:00",
+      "seconds": 1.25,
+      "step": "rig prepare",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:22:51.368045+00:00",
+      "status": "failed",
+      "fullLog": "rig-and-motion.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T05:22:52.584289+00:00",
+      "seconds": 1.22,
+      "step": "Automatic skin binding / rejected",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:24:38.974529+00:00",
+      "status": "passed",
+      "fullLog": "rig-transfer-motion.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:24:43.418857+00:00",
+      "seconds": 4.44,
+      "step": "Surface-weight transfer and motion",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:25:25.859493+00:00",
+      "status": "passed",
+      "fullLog": "new-motion-quality.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:25:30.981028+00:00",
+      "seconds": 5.12,
+      "step": "new motion quality",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:31:25.172121+00:00",
+      "status": "passed",
+      "fullLog": "motion-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:31:30.977050+00:00",
+      "seconds": 5.8,
+      "step": "motion browser",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:33:54.039916+00:00",
+      "status": "passed",
+      "fullLog": "correct-winding.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:33:55.347674+00:00",
+      "seconds": 1.31,
+      "step": "correct winding",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:33:55.453162+00:00",
+      "status": "passed",
+      "fullLog": "rig-transfer-motion-final.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:33:59.774033+00:00",
+      "seconds": 4.32,
+      "step": "rig transfer motion final",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:33:59.873989+00:00",
+      "status": "passed",
+      "fullLog": "motion-browser-final.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:34:05.631736+00:00",
+      "seconds": 5.76,
+      "step": "motion browser final",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:36:25.746994+00:00",
+      "status": "passed",
+      "fullLog": "contour-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:36:31.452172+00:00",
+      "seconds": 5.7,
+      "step": "contour browser",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:40:58.887237+00:00",
+      "status": "passed",
+      "fullLog": "finish-details.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:41:04.737593+00:00",
+      "seconds": 5.85,
+      "step": "Eye and badge detail",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:42:25.053223+00:00",
+      "status": "passed",
+      "fullLog": "detail-winding.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:42:26.455235+00:00",
+      "seconds": 1.4,
+      "step": "detail winding",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:42:26.566365+00:00",
+      "status": "passed",
+      "fullLog": "detail-rig-motion.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:42:31.025848+00:00",
+      "seconds": 4.46,
+      "step": "detail rig motion",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:42:31.133396+00:00",
+      "status": "passed",
+      "fullLog": "motion-final-probe.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:42:36.606826+00:00",
+      "seconds": 5.47,
+      "step": "motion final probe",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:47:22.950889+00:00",
+      "status": "passed",
+      "fullLog": "python-final.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:47:25.053522+00:00",
+      "seconds": 2.1,
+      "step": "python final",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:47:25.170106+00:00",
+      "status": "passed",
+      "fullLog": "syntax-final.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:47:33.210971+00:00",
+      "seconds": 8.04,
+      "step": "syntax final",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:47:33.333533+00:00",
+      "status": "passed",
+      "fullLog": "repo-tests.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:47:43.164165+00:00",
+      "seconds": 9.83,
+      "step": "repo tests",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:47:43.275743+00:00",
+      "status": "passed",
+      "fullLog": "style-final.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:47:44.562518+00:00",
+      "seconds": 1.29,
+      "step": "style final",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:48:28.114033+00:00",
+      "status": "passed",
+      "fullLog": "rig-unique-clips.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:48:31.975084+00:00",
+      "seconds": 3.86,
+      "step": "Remove duplicate source clips / rebuild",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:49:37.041126+00:00",
+      "status": "passed",
+      "fullLog": "adapter-paint-smoke.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:51:16.702448+00:00",
+      "seconds": 99.66,
+      "step": "Final adapter integration trial",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:53:36.995652+00:00",
+      "status": "passed",
+      "fullLog": "studio-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:53:42.831743+00:00",
+      "seconds": 5.84,
+      "step": "studio browser",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:53:42.939317+00:00",
+      "status": "passed",
+      "fullLog": "old-viewer-regression.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:53:49.250907+00:00",
+      "seconds": 6.31,
+      "step": "old viewer regression",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:54:59.767562+00:00",
+      "status": "passed",
+      "fullLog": "motion-release-probe.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:55:02.989192+00:00",
+      "seconds": 3.22,
+      "step": "motion release probe",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:55:03.085133+00:00",
+      "status": "passed",
+      "fullLog": "browser-release.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:55:08.929752+00:00",
+      "seconds": 5.84,
+      "step": "browser release",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T05:58:30.044299+00:00",
+      "status": "passed",
+      "fullLog": "build-mirrors.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T05:58:35.940013+00:00",
+      "seconds": 5.89,
+      "step": "build mirrors",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T06:00:29.475257+00:00",
+      "status": "passed",
+      "fullLog": "cache-reuse.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T06:00:29.685775+00:00",
+      "seconds": 0.21,
+      "step": "cache reuse",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T06:03:52.188015+00:00",
+      "status": "passed",
+      "fullLog": "build-release.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T06:03:56.254525+00:00",
+      "seconds": 4.07,
+      "step": "build release",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T06:03:56.351029+00:00",
+      "status": "passed",
+      "fullLog": "commit.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T06:04:00.102450+00:00",
+      "seconds": 3.75,
+      "step": "commit",
+      "category": "measured command"
+    },
+    {
+      "startedAt": "2026-09-17T06:04:00.198826+00:00",
+      "status": "passed",
+      "fullLog": "commit-release.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T06:04:00.617523+00:00",
+      "seconds": 0.42,
+      "step": "commit release",
+      "category": "publication/verification"
+    },
+    {
+      "startedAt": "2026-09-17T06:10:08.145507+00:00",
+      "status": "failed",
+      "fullLog": "push-feature.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T06:13:18.568446+00:00",
+      "seconds": 190.42,
+      "step": "push feature",
+      "category": "publication/verification"
+    },
+    {
+      "startedAt": "2026-09-17T06:13:19.722241+00:00",
+      "status": "failed",
+      "fullLog": "publish-preview.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T06:17:09.301480+00:00",
+      "seconds": 229.58,
+      "step": "publish preview",
+      "category": "publication/verification"
+    },
+    {
+      "startedAt": "2026-09-17T06:19:14.354849+00:00",
+      "status": "passed",
+      "fullLog": "push-feature-retry.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T06:20:14.554747+00:00",
+      "seconds": 60.2,
+      "step": "push feature retry",
+      "category": "publication/verification"
+    },
+    {
+      "startedAt": "2026-09-17T06:21:27.082715+00:00",
+      "status": "passed",
+      "fullLog": "publish-preview-retry.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T06:21:30.142917+00:00",
+      "seconds": 3.06,
+      "step": "publish preview retry",
+      "category": "publication/verification"
+    },
+    {
+      "startedAt": "2026-09-17T06:23:10.842314+00:00",
+      "status": "passed",
+      "fullLog": "deploy-action.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T06:24:14.566412+00:00",
+      "seconds": 63.72,
+      "step": "deploy action",
+      "category": "publication/verification"
+    },
+    {
+      "startedAt": "2026-09-17T06:25:48.247293+00:00",
+      "status": "failed",
+      "fullLog": "live-identity.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T06:26:11.168062+00:00",
+      "seconds": 22.92,
+      "step": "live identity",
+      "category": "publication/verification"
+    },
+    {
+      "startedAt": "2026-09-17T06:26:11.280576+00:00",
+      "status": "passed",
+      "fullLog": "live-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T06:26:18.575244+00:00",
+      "seconds": 7.29,
+      "step": "live browser",
+      "category": "publication/verification"
+    },
+    {
+      "startedAt": "2026-09-17T06:30:41.796851+00:00",
+      "status": "passed",
+      "fullLog": "live-identity-committed.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T06:30:45.042448+00:00",
+      "seconds": 3.25,
+      "step": "live identity committed",
+      "category": "publication/verification"
+    }
+  ],
+  "totalSeconds": 10122.541,
+  "endedAt": "2026-09-17T06:30:45.042448+00:00",
+  "previewSha": "7db5236b6ffd317c6a055c2af3c445fe644a1f5e",
+  "ownerApproved": false,
+  "nonOverlappingWallPhases": [
+    {
+      "phase": "Research and benchmark",
+      "startedAt": "2026-09-17T03:42:02.501Z",
+      "endedAt": "2026-09-17T03:48:21.090012Z",
+      "seconds": 378.589
+    },
+    {
+      "phase": "Initial setup/download window, with implementation in parallel",
+      "startedAt": "2026-09-17T03:48:21.090012Z",
+      "endedAt": "2026-09-17T05:03:26.819832Z",
+      "seconds": 4505.73
+    },
+    {
+      "phase": "Generation, revisions, tool integration and local validation",
+      "startedAt": "2026-09-17T05:03:26.819832Z",
+      "endedAt": "2026-09-17T06:10:08.145507Z",
+      "seconds": 4001.326
+    },
+    {
+      "phase": "Publication, upload retries and public verification",
+      "startedAt": "2026-09-17T06:10:08.145507Z",
+      "endedAt": "2026-09-17T06:30:45.042448+00:00",
+      "seconds": 1236.897
+    }
+  ]
+}

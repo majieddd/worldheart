@@ -17,7 +17,7 @@ camera.layers.enable(1);handsCamera.layers.enable(1);scene.background=new THREE.
 const sun=new THREE.DirectionalLight('#ffe6b8',2.1);sun.position.set(-13,24,13);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-26,right:26,top:24,bottom:-24,near:1,far:85});sun.shadow.bias=-.0001;sun.shadow.normalBias=.035;sun.shadow.radius=1.6;
 scene.add(sun,new THREE.HemisphereLight('#e2ebdc','#83765f',1.15));const fill=new THREE.DirectionalLight('#bdced7',.35);fill.position.set(15,10,-15);scene.add(fill);
 const handLight=new THREE.DirectionalLight('#ffe6b8',2.1);handLight.position.set(-3,5,4);handsScene.add(handLight,new THREE.HemisphereLight('#e2ebdc','#83765f',1.15));
-const items=[],graphics={...GRAPHICS_DEFAULTS},state={selected:0,category:'all',playing:!reduced.matches,speed:1,time:0,clip:'Idle',fps:false,turn:false,preset:'vivid',overview:true};
+const items=[],graphics={...GRAPHICS_DEFAULTS},state={selected:0,category:'all',playing:!reduced.matches,speed:1,time:0,clip:'Idle',fps:false,turn:false,preset:'ink132',overview:true};
 const orbit={yaw:.08,pitch:.68,distance:36,target:new THREE.Vector3(0,.5,2)},timings=[];
 let exhibitTime=0,renderer,paint,k,rig,fx,worlds,ready=false,last=performance.now(),drag=null,shotTime=-1,shotOrigin=new THREE.Vector3(),lost=false;
 const projectile=plasmaMesh();projectile.visible=false;scene.add(projectile);
@@ -49,7 +49,7 @@ function select(index,focus=false){
 function focusCurrent(){const i=current();state.overview=false;orbit.target.copy(i.station.position).add(new THREE.Vector3(0,1.15,0));orbit.distance=i.category==='worlds'?10:7.6;orbit.yaw=.5;orbit.pitch=.27;}
 function overview(){state.overview=true;setFPS(false);orbit.target.set(0,.5,2);orbit.yaw=.08;orbit.pitch=.68;orbit.distance=36;}
 function setFPS(value){state.fps=value&&!!current()?.weapon;$('#fps').setAttribute('aria-pressed',String(state.fps));$('#view-note').textContent=state.fps?'Actual held rig · Use timeline to inspect every pose · Play loops the selected action':'Drag to orbit · Scroll to zoom · Click a label to focus';}
-function applyPreset(id){if(!GRAPHICS_PRESETS[id])id='vivid';state.preset=id;Object.assign(graphics,GRAPHICS_PRESETS[id].graphics);if(renderer){renderer.setPixelRatio(Math.min(devicePixelRatio,2)*graphics.resolution);renderer.toneMappingExposure=graphics.exposure;}document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===id)));}
+function applyPreset(id){if(!GRAPHICS_PRESETS[id])id='ink132';state.preset=id;Object.assign(graphics,GRAPHICS_PRESETS[id].graphics);if(renderer){renderer.setPixelRatio(Math.min(devicePixelRatio,2)*graphics.resolution);renderer.toneMappingExposure=graphics.exposure;}document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===id)));}
 function pose(){
   if(!ready)return;
   for(const i of items){
@@ -98,7 +98,7 @@ canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','A
 document.addEventListener('visibilitychange',()=>{last=performance.now();drag=null;});reduced.addEventListener('change',()=>{if(reduced.matches){setPlaying(false);state.turn=false;$('#turn').setAttribute('aria-pressed','false');}});
 
 async function boot(){try{
-  renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;renderer.info.autoReset=false;applyPreset(new URLSearchParams(location.search).get('preset')||'vivid');
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.VSMShadowMap;renderer.info.autoReset=false;applyPreset(new URLSearchParams(location.search).get('preset')||'ink132');
   paint=await createSurfaceMaterials();k=kit(paint);fx=createEffects(scene);rig=createWeapons(paint);handsScene.add(rig.root);
   k.mesh(scene,new THREE.PlaneGeometry(160,160),paint.material('#a2b29a'),[0,-.25,0],[-Math.PI/2,0,0],false);
   const hero=await createActor(paint,{color:'#c1b388'});add('Commander','units',hero.root,'Accepted automaton rig. Fourteen authored clips, with articulated fingers and calibrated locomotion.',{actor:hero});

@@ -23,6 +23,7 @@ export function moduleKey(relPath) {
 // return the import-map key it should point at. './rng.js' inside 'run/run'
 // resolves to 'run/rng'; '../run/run.js' inside 'modes/ninetynine' to 'run/run'.
 export function resolveSpecifier(fromKey, spec) {
+  if(spec.endsWith('/lib/three.module.min.js'))return 'three';
   const fromDir = fromKey.includes('/') ? fromKey.slice(0, fromKey.lastIndexOf('/')) : '';
   const parts = fromDir ? fromDir.split('/') : [];
   for (const seg of spec.replace(/\.js$/, '').split('/')) {
@@ -92,10 +93,11 @@ async function build() {
     imports[key] = toDataUri(rewriteSpecifiers(src, key));
   }
 
-  const css = await readText(root, 'css', 'style.css') + '\n' + await readText(root, 'css', 'mobile.css') + '\n' + await readText(root, 'css', 'weapon-cards.css');
+  const css = await readText(root, 'css', 'style.css') + '\n' + await readText(root, 'css', 'mobile.css') + '\n' + await readText(root, 'css', 'weapon-cards.css') + '\n' + await readText(root, 'css', 'first-expedition.css');
   let html = await readText(root, 'index.html');
   html = html.replace('<link rel="stylesheet" href="css/mobile.css">', '');
   html = html.replace('<link rel="stylesheet" href="css/weapon-cards.css">', '');
+  html = html.replace('<link rel="stylesheet" href="css/first-expedition.css">', '');
 
   html = html.replace(
     /<link rel="stylesheet" href="css\/style.css">/,

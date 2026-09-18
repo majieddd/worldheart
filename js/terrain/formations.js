@@ -416,7 +416,12 @@ export function createFormationField(seed, radius, profile, mix = 'varied', over
     }
     return coast;
   }
+  // Conservative bounds only for explicitly proven incision recipes. Unknown
+  // families disable the shortcut instead of inheriting a guessed ceiling.
+  const positiveGain={grand:0,gorge:0,karst:0,spider:0,box:0,crevice:1,ravine:1,labyrinth:.65,oxbow:.16};
+  const upperBound=Math.max(...modules.map(m=>Object.hasOwn(positiveGain,m.type)?m.height*positiveGain[m.type]:Infinity))*(mix==='canyon'?profile.range/Math.max(1,profile.canyon):1);
   return {
+    upperBound,maxNoise:Math.max(...modules.map(m=>m.noise)),
     version: LANDFORM_VERSION, seed, radius, mix, settings,
     modules, height: (x, y, z,detail=null) => evaluate(x, y, z,detail),landmass,lagoonAt,project,coordinates,warped,
     volcanic:(x,y,z)=>within(volcanoes,x,y,z),

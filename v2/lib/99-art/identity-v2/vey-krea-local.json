@@ -1,0 +1,31 @@
+{
+  "provider": "local ComfyUI",
+  "model": "krea2-turbo-local-fp8.safetensors",
+  "settings": {
+    "family": "krea",
+    "model": "krea2-turbo-local-fp8.safetensors",
+    "loras": [
+      {
+        "name": "krea2_style_reference.safetensors",
+        "strength": 0.8
+      }
+    ],
+    "seed": 99131,
+    "width": 768,
+    "height": 1024,
+    "steps": 8,
+    "meshSteps": 30,
+    "meshResolution": 256,
+    "textureSize": 2048,
+    "encoder": "qwen3vl_4b_native_bf16.safetensors"
+  },
+  "prompt": "Original character asset poster for 99 Planets To Defend. Full body isolated on transparent background, three-quarter front, neutral A-pose, arms slightly out with hands separate from torso, centered with generous margin; no ground, no cast shadow, no scenery, no text, no glow cloud. Subject: VEY, THE SURVEYOR, proposed Xeno Zeta Reticuli Gray commander, recognizable oversized smooth pear-shaped pale cool-gray head, enormous solid obsidian almond eyes sloping upward, two small nostrils, tiny closed mouth, slender neck, slender short humanoid body 4 heads tall, two arms with three long fingers and thumb each, two legs with broad boots. Deep aubergine fitted technician suit, short layered teal-gray shoulder mantle with asymmetric right clasp, ceramic ivory collar and forearm cuffs, one tiny triangular mint instrument on breast, violet oval belt lens. NO insect chitin, NO horns, NO sword, NO weapon held, no floating parts. Express clever curious composure with slightly tilted head. Painted-Anime-Inkline render matching attached reference surface quality: Studio Ghibli painted gentleness plus Borderlands confident black silhouette, fine broken contour and material wear, dark colored cel shadows, crisp handpainted brush variation in suit and skin, whimsical grounded sci-fi, nuanced painted broad volumes rather than low-poly facets, sharp production concept art. Small restrained mint accent only. Model reconstruction ready silhouette. Reference pictures preserve identity and rendering; do not add their background to the asset. Hand-painted anime illustration with whimsical environmental light, confident dark outer contours, fine broken interior ink, rich colored cel shadows, broad opaque gouache color, selective material wear and crisp facial detail. Studio Ghibli painted warmth meets Borderlands comic grit. Preserve the subject anatomy, proportions, colors and signature props. No crosshatch shadow fill, glossy toy look, blurry texture, or screen-space pattern. Single isolated full-body asset, three-quarter front, neutral relaxed A-pose with hands separated from body, complete feet and extremities, generous margins, even neutral lighting, plain light gray background. No scenery, text, watermark or ground shadow.",
+  "references": [
+    "e8f1a007d1f5-import-bf5d6ddbd4.png"
+  ],
+  "seconds": 150.41432929039001,
+  "sha256": "cea82c611970a3ac6ddf910720c51acfda8e76e90cceb1cea0751fbaa2d197fc",
+  "job": "7eff5c49-438c-40ba-b6d9-898ee3d7f1a2",
+  "review": "Actual local reference-conditioned result. Identity and painted style read well; top/bottom framing is too tight. Built-in remains owner-preferred anchor.",
+  "ownerApproval": false
+}

@@ -2,6 +2,13 @@
 // between levels, so a Battlefield can afford a much finer graph than the
 // whole globe would: the cost tracks the played area, not the planet.
 export function buildIcosphere(detail, capCenter = null, capTheta = 0, globalDetail = 0) {
+  const steps=buildIcosphereSteps(detail,capCenter,capTheta,globalDetail);let step;
+  do{step=steps.next();}while(!step.done);return step.value;
+}
+
+// Same vertex/face ordering and arithmetic as the synchronous entry. Boot can
+// yield between batches instead of freezing input during the final globe split.
+export function* buildIcosphereSteps(detail, capCenter = null, capTheta = 0, globalDetail = 0) {
   const t = (1 + Math.sqrt(5)) / 2;
   let verts = [
     [-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0],
@@ -19,6 +26,7 @@ export function buildIcosphere(detail, capCenter = null, capTheta = 0, globalDet
   ];
 
   for (let d = 0; d < detail; d++) {
+    let visited=0;
     const cache = new Map();
     const mid = (a, b) => {
       const key = a < b ? a * 1048576 + b : b * 1048576 + a;
@@ -39,9 +47,10 @@ export function buildIcosphere(detail, capCenter = null, capTheta = 0, globalDet
     if (globalDetail && d >= globalDetail && capCenter) {
       const limit = Math.cos(capTheta + .08 + (detail - d) * .04);
       const inside = i => verts[i][0]*capCenter.x + verts[i][1]*capCenter.y + verts[i][2]*capCenter.z >= limit;
-      for (const [a,b,c] of faces) if (inside(a)||inside(b)||inside(c)) { mid(a,b); mid(b,c); mid(c,a); }
+      for (const [a,b,c] of faces) {if(visited++%2048===0)yield;if (inside(a)||inside(b)||inside(c)) { mid(a,b); mid(b,c); mid(c,a); }}
       const at = (a,b) => cache.get(a < b ? a*1048576+b : b*1048576+a);
       for (const [a,b,c] of faces) {
+        if(visited++%2048===0)yield;
         const ab=at(a,b),bc=at(b,c),ca=at(c,a),mask=(ab!==undefined?1:0)|(bc!==undefined?2:0)|(ca!==undefined?4:0);
         if(mask===7)next.push([a,ab,ca],[b,bc,ab],[c,ca,bc],[ab,bc,ca]);
         else if(mask===0)next.push([a,b,c]);
@@ -56,6 +65,7 @@ export function buildIcosphere(detail, capCenter = null, capTheta = 0, globalDet
       continue;
     }
     for (const [a, b, c] of faces) {
+      if(visited++%2048===0)yield;
       const ab = mid(a, b), bc = mid(b, c), ca = mid(c, a);
       next.push([a, ab, ca], [b, bc, ab], [c, ca, bc], [ab, bc, ca]);
     }
@@ -69,7 +79,7 @@ export function buildIcosphere(detail, capCenter = null, capTheta = 0, globalDet
         const v = verts[vi];
         return v[0] * capCenter.x + v[1] * capCenter.y + v[2] * capCenter.z >= cosLimit;
       };
-      faces = faces.filter(([a, b, c]) => inCap(a) || inCap(b) || inCap(c));
+      const retained=[];for(const face of faces){if(visited++%2048===0)yield;const [a,b,c]=face;if(inCap(a)||inCap(b)||inCap(c))retained.push(face);}faces=retained;
     }
   }
   return { verts, faces };

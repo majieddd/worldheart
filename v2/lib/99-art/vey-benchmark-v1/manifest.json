@@ -1,0 +1,55 @@
+{
+  "verdict": "Review candidate: clearer identity and material colors. Face likeness, fine surface detail and hand articulation still need your judgment; this is not certified equivalent to Tripo.",
+  "models": {
+    "shape": {
+      "file": "shape-review.glb",
+      "summary": "Local Trellis.2 geometry / inspect before paint",
+      "sha256": "380c40d3b3b944f06c5334ae9da0cba5bbf0fb65a989bd01caed1d33f0de5fc5"
+    },
+    "paint": {
+      "file": "paint-corrected.glb",
+      "summary": "Local Trellis.2 generative texture / review candidate",
+      "sha256": "1d0eae44371f634c4b0faa239d3d86ac973e1ea3a294e812405a06a27e2e7602"
+    },
+    "previous": {
+      "summary": "Previous Hunyuan + reference-projection pilot"
+    },
+    "motion": {
+      "file": "vey-motion.glb",
+      "summary": "CMU walk/run / Vey surface-weight transfer / review candidate",
+      "sha256": "8c1de1d12d9ae2b08fd83b5bd5187ce7f9a1545172acffc9d7fba1add8babaee"
+    },
+    "raw": {
+      "file": "paint-strong.glb",
+      "summary": "Uncorrected Trellis texture / retained for comparison",
+      "sha256": "46f18b2c7910837364f3c23498860ff47e93f75673a5721074b782bcdf7400e6"
+    }
+  },
+  "version": "0.2.0-review",
+  "character": "Vey, the Surveyor",
+  "style": "Painted-Anime-Inkline",
+  "ownerApproved": false,
+  "promotionAllowed": false,
+  "referenceSha256": "670f30a50a1cfdc2f31f3b5bb52514e37a229b6ff0a8ef8b9dc6143b814d9ec3",
+  "engine": {
+    "name": "Modly Trellis.2 GGUF",
+    "extensionCommit": "caa85c7a1aa6c6ba9cb3f07f13878ba8e3864912",
+    "hostCommit": "1476fd0b1c19c9ab177c1ca3ee4d1842119e9f65",
+    "weightsRevision": "edf81aef93af0823ac8721da3c9cd3c52d539f87",
+    "quantization": "Q5_K_M",
+    "seed": 99131,
+    "shapeSteps": 25,
+    "shapeResolution": "1024_cascade",
+    "textureSteps": 24,
+    "textureGuidance": 2.5,
+    "textureAtlas": 2048
+  },
+  "limitations": [
+    "Not equivalent to proprietary Tripo P2.0",
+    "Vey palette and detail finishing are character-specific recipes, not universal auto-paint",
+    "Rig is adapted from the prior Vey rest pose; not a generic auto-rigger",
+    "No finger, facial or battle animation is claimed",
+    "Roblox import and deployment budget acceptance remain separate",
+    "Visual and owner acceptance remain pending"
+  ]
+}

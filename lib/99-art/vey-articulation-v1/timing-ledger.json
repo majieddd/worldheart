@@ -1,0 +1,224 @@
+{
+  "startedAt": "2026-09-17T14:14:58+00:00",
+  "checkpointAt": "2026-09-17T14:44:31.936304+00:00",
+  "totalSeconds": 1773.936304,
+  "timeBasis": "Includes diagnosis, authoring, visual inspection and rejected attempts. Publication follows this checkpoint. The saved surface and paint were reused.",
+  "steps": [
+    {
+      "startedAt": "2026-09-17T14:16:48.330042+00:00",
+      "status": "passed",
+      "fullLog": "baseline-probe.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:16:52.922890+00:00",
+      "seconds": 4.59,
+      "step": "baseline-probe.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:20:26.552318+00:00",
+      "status": "passed",
+      "fullLog": "first-build.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:20:32.969600+00:00",
+      "seconds": 6.42,
+      "step": "first-build.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:21:02.507970+00:00",
+      "status": "passed",
+      "fullLog": "candidate-probe.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:21:06.966159+00:00",
+      "seconds": 4.46,
+      "step": "candidate-probe.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:21:58.630194+00:00",
+      "status": "passed",
+      "fullLog": "sequence.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:22:07.387197+00:00",
+      "seconds": 8.76,
+      "step": "sequence.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:21:58.928077+00:00",
+      "status": "passed",
+      "fullLog": "motion-gates.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:22:02.654403+00:00",
+      "seconds": 3.73,
+      "step": "motion-gates.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:22:02.764280+00:00",
+      "status": "passed",
+      "fullLog": "sole-gates.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:22:19.112009+00:00",
+      "seconds": 16.35,
+      "step": "sole-gates.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:25:31.046214+00:00",
+      "status": "passed",
+      "fullLog": "digit-build.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:25:38.850966+00:00",
+      "seconds": 7.8,
+      "step": "digit-build.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:25:38.973605+00:00",
+      "status": "passed",
+      "fullLog": "digit-sequence.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:25:47.590180+00:00",
+      "seconds": 8.62,
+      "step": "digit-sequence.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:26:47.529167+00:00",
+      "status": "failed",
+      "fullLog": "articulation-gates.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T14:27:03.525118+00:00",
+      "seconds": 16.0,
+      "step": "articulation-gates.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:27:54.056186+00:00",
+      "status": "passed",
+      "fullLog": "smoothed-digit-build.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:28:01.816909+00:00",
+      "seconds": 7.76,
+      "step": "smoothed-digit-build.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:28:01.927869+00:00",
+      "status": "passed",
+      "fullLog": "smoothed-digit-gates.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:28:17.701826+00:00",
+      "seconds": 15.77,
+      "step": "smoothed-digit-gates.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:30:05.711157+00:00",
+      "status": "passed",
+      "fullLog": "tests.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:30:09.440579+00:00",
+      "seconds": 3.73,
+      "step": "tests.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:31:05.598782+00:00",
+      "status": "failed",
+      "fullLog": "baseline-negative.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T14:31:21.855632+00:00",
+      "seconds": 16.26,
+      "step": "baseline-negative.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:35:24.145435+00:00",
+      "status": "passed",
+      "fullLog": "sole-frame-build.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:35:31.817708+00:00",
+      "seconds": 7.67,
+      "step": "sole-frame-build.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:35:31.933722+00:00",
+      "status": "passed",
+      "fullLog": "sole-frame-gates.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:35:48.117765+00:00",
+      "seconds": 16.18,
+      "step": "sole-frame-gates.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:36:27.957911+00:00",
+      "status": "passed",
+      "fullLog": "final-motion-gates.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:36:31.346179+00:00",
+      "seconds": 3.39,
+      "step": "final-motion-gates.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:37:39.529146+00:00",
+      "status": "passed",
+      "fullLog": "final-sequence.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:37:51.044385+00:00",
+      "seconds": 11.51,
+      "step": "final-sequence.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:41:53.154996+00:00",
+      "status": "failed",
+      "fullLog": "pipeline-tests.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T14:41:56.194943+00:00",
+      "seconds": 3.04,
+      "step": "pipeline-tests.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:42:26.483295+00:00",
+      "status": "passed",
+      "fullLog": "pipeline-tests-final.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:42:37.625076+00:00",
+      "seconds": 11.14,
+      "step": "pipeline-tests-final.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:42:26.785238+00:00",
+      "status": "passed",
+      "fullLog": "repo-tests.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:42:40.223064+00:00",
+      "seconds": 13.44,
+      "step": "repo-tests.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:42:27.541784+00:00",
+      "status": "passed",
+      "fullLog": "syntax.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:42:42.734616+00:00",
+      "seconds": 15.19,
+      "step": "syntax.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:42:29.559039+00:00",
+      "status": "passed",
+      "fullLog": "style.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:42:34.846507+00:00",
+      "seconds": 5.29,
+      "step": "style.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:42:30.092215+00:00",
+      "status": "passed",
+      "fullLog": "viewer-check.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:42:39.629807+00:00",
+      "seconds": 9.54,
+      "step": "viewer-check.timing"
+    },
+    {
+      "startedAt": "2026-09-17T14:42:30.431403+00:00",
+      "status": "passed",
+      "fullLog": "studio-ui.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T14:42:48.336772+00:00",
+      "seconds": 17.9,
+      "step": "studio-ui.timing"
+    }
+  ]
+}

@@ -188,6 +188,7 @@ export class WaveDirector {
   }
 
   callEarly() {
+    if(this.game.onboardingHold)return 0;
     if (this.siteBlocked) return 0;
     if (this.state !== 'countdown' && !(this.timedNests && this.state !== 'idle' && this.wave < this.limit)) return 0;
     const bonus = Math.floor(this.countdown) * CONFIG.waves.earlyBonusPerSec;
