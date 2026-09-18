@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "sha256": "e0afcb4b27b3668243c2842c9e17695f9eb0a6fb39716aefe3496e72468986c0",
-  "clip": "Mixamo Mixamo Standard Run",
+  "sha256": "85c72008c3242669f609798de972cd475f3b41bad8a5f5959cae3472e5ece2c0",
+  "clip": "Mixamo Standard Run",
   "checks": [
     {
       "name": "Surface above floor",
@@ -26,7 +26,7 @@
     {
       "name": "Left stance travel",
       "status": "pass",
-      "detail": "95th percentile ground-relative toe speed 0.078 m/s"
+      "detail": "Interior stance: 95th percentile ground-relative toe speed 0.078 m/s"
     },
     {
       "name": "Right foot makes contact",
@@ -36,7 +36,7 @@
     {
       "name": "Right stance travel",
       "status": "pass",
-      "detail": "95th percentile ground-relative toe speed 0.167 m/s"
+      "detail": "Interior stance: 95th percentile ground-relative toe speed 0.167 m/s"
     }
   ],
   "passed": true,
@@ -54,6 +54,7 @@
   },
   "loopSurfaceMaxMetres": 1.3424284016555796e-06,
   "loopVelocityP95": 0.7937331700853872,
+  "stanceMetric": "Source contact windows minus their immediate transition neighbors; full cycle retained for floor and loop checks",
   "visualReviewStillRequired": true,
   "ownerApproved": false
 }

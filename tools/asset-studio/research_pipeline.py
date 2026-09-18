@@ -140,7 +140,10 @@ def register(app, s):
                 motion=next((m for m in motions() if m['id']==body.get('motion')),None)
                 if not motion:raise HTTPException(400,'Choose an imported locomotion capture.')
                 target=source_rig(p,body.get('target'))
-                task.update(input=str(target),motion=str(library/(motion['id']+'.npz')),name='Mixamo '+str(motion.get('name') or motion.get('label') or motion['id']).removeprefix('Mixamo ')[:90],fps=60)
+                label=str(motion.get('name') or motion.get('label') or motion['id'])
+                carry=body.get('carryAction') or ('Run' if 'run' in label.lower() else 'Walk' if 'walk' in label.lower() else None)
+                if carry not in ['Walk','Run']:raise HTTPException(400,'Choose walk or run to match the fitted appendage cycle.')
+                task.update(input=str(target),motion=str(library/(motion['id']+'.npz')),name='Mixamo '+label.removeprefix('Mixamo ')[:90],fps=60,carryAction=carry)
             elif method=='mia':
                 task['output']=str(dest/'prediction.npz')
                 if p.get('rigProfile'):task['rigProfile']=str(s.output(p,p['rigProfile']['file']))

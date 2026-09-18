@@ -1,6 +1,6 @@
 # Character pipeline / Mixamo research integration
 
-Status: locally verified, preparing V2 publication on `feature/mixamo-research-pipeline`.
+Status: initial review published and publicly verified at `220c92a` (PR #74); final tail-selection refinement verified locally on `feature/mixamo-research-pipeline`.
 Base preview: `4531bbd0db27efeda7550cfea88567709d240e84`.
 Coordination: [issue claim](https://github.com/majieddd/worldheart/issues/1#issuecomment-5721607575).
 This supplements the Reptilian pilot and preserves Vey, the fitted Reptilian,
@@ -31,7 +31,7 @@ Y-up; correcting the retained original took 1.470 seconds without regeneration.
 Both full paper/code findings and actual inferior results are retained.
 
 Captured walk/run both contact the floor. Maximum loop surface displacement is
-below 0.000002 m; velocity change p95 is 0.672/0.794 m/s under the unchanged
+below 0.000002 m; velocity change p95 is 0.151/0.794 m/s under the unchanged
 1.0 m/s limit. The run initially failed at 2.183 m/s. Interior stance speed is
 explicitly distinguished from contact transitions; full-cycle floor and loop
 checks retain all frames. Hands, feet, knees and tail were reviewed in 12 side
@@ -71,3 +71,16 @@ Owner comparison; shape/detail refinement to match the hero more closely;
 generalization to new anatomy; authored attack clips; Roblox import and budgets;
 matched Tripo/Meshy output comparison. The local runtime is installed and tested,
 but a completely clean installation on another machine is not certified.
+
+## Final repeatability check
+
+The first published comparison used imported display names to find the existing
+tail cycle, which could miss `Walk`/`Run`. The Studio now passes the explicit
+movement type and refuses a missing tail cycle instead of silently dropping it.
+Replayed through the actual program: walk 10.350 seconds, run 8.671 seconds;
+both pass the unchanged motion checks. The updated combined asset is
+`85c72008c3242669f609798de972cd475f3b41bad8a5f5959cae3472e5ece2c0`.
+The final walk improves loop velocity change to 0.151 m/s. New cycle renders
+are in `artifacts/motion-research/final-motion-browser/`; public first-release
+views are in `public-live/`, with zero console errors. Failed predictions hide
+the empty viewer and irrelevant playback controls.

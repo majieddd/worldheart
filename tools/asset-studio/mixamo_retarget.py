@@ -105,6 +105,8 @@ def retarget(task):
     carry_name=task.get('carryAction',task.get('name','Mixamo Walk').replace('Mixamo ',''))
     carry=next((a for a in bpy.data.actions if a.name.split(' / ')[0]==carry_name),None)
     appendage_poses={b.name:[] for b in parents_first if b.name.startswith('tail') and b.name not in mapping}
+    if appendage_poses and not carry:
+        raise ValueError('Choose an existing fitted walk/run cycle to retain the unmapped tail motion.')
     if carry and appendage_poses:
         rig.animation_data.action=carry
         lo,hi=carry.frame_range

@@ -15,14 +15,17 @@ each full cycle plus front/back views. Owner visual acceptance is still pending.
 | Final capture | Walk | Run |
 |---|---:|---:|
 | In-world travel calibration | 1.661 m/s | 4.108 m/s |
-| Left/right interior stance speed, p95 | 0.166 / 0.142 m/s | 0.078 / 0.167 m/s |
-| Loop surface position difference, maximum | 0.00000093 m | 0.00000134 m |
-| Loop surface velocity change, p95 | 0.672 m/s | 0.794 m/s |
-| Minimum surface height | 0.003 m | 0.003 m |
+| Left/right interior stance speed, p95 | 0.152 / 0.132 m/s | 0.078 / 0.167 m/s |
+| Loop surface position difference, maximum | 0.00000072 m | 0.00000134 m |
+| Loop surface velocity change, p95 | 0.151 m/s | 0.794 m/s |
+| Minimum surface height | 0.00095 m | 0.003 m |
 
 Interior stance excludes immediate contact transitions; it is not a claim of
 zero sliding throughout a game. Whole-cycle floor and loop checks retain every
 sample. See [walk checks](walk-quality.json) and [run checks](run-quality.json).
+The final Studio replay took 10.350 seconds for walk and 8.671 seconds for run.
+An explicit movement type selects the existing tail cycle even when a capture
+has a different display name; missing tail correspondence now stops the job.
 The run's initial velocity discontinuity was 2.183 m/s, despite almost identical
 endpoint poses. Cyclic filtering and fitted endpoint tangents brought it below
 the unchanged 1.0 m/s project limit. No thresholds were relaxed to pass.

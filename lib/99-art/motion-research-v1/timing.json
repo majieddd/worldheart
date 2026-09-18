@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "trackedStartUtc": "2026-09-17T21:42:15.617969+00:00",
-  "throughCheckpointUtc": "2026-09-18T00:18:58.751096+00:00",
-  "elapsedThroughCheckpointSeconds": 9403.13,
+  "throughCheckpointUtc": "2026-09-18T00:31:25.110500+00:00",
+  "elapsedThroughCheckpointSeconds": 10149.49,
   "scope": "Elapsed research, local setup, downloads, integration, failed attempts, refinement and QA from tracked inventory start. Earlier work is unmeasured. Publication and final handoff follow this checkpoint. Overlapping and nested step times must not be summed as total.",
   "hardware": {
     "gpu": "NVIDIA RTX 4080 Laptop",
@@ -63,6 +63,42 @@
       "seconds": 226.10012780001853,
       "file": "model.safetensors",
       "log": "instantmesh-download.log"
+    },
+    {
+      "size": 1088610874,
+      "sha256": "63ca0f5970109e056c652a40088274870cac87959b359c13ec55d58cdc351d4c",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 371.18016580003314,
+      "file": "bw_joints.pth",
+      "log": "runtime download receipt"
+    },
+    {
+      "size": 1088610874,
+      "sha256": "85b4f8cbac6bfcdc5ac130f1776fe2869f934a615c14fe9751bb52e0baea152b",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 376.3321670999867,
+      "file": "joints_coarse.pth",
+      "log": "runtime download receipt"
+    },
+    {
+      "size": 1097218118,
+      "sha256": "4b501618bbcd9398fd6839c666cb5a120bde4257f9ca6d5eb68987d886530b3d",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 416.25693680002587,
+      "file": "pose.pth",
+      "log": "runtime download receipt"
+    },
+    {
+      "size": 655648152,
+      "sha256": "5cbe97f25e6e7abd4bccc80ab07524ec0c86d24118486a9ba49bb5dfb070288a",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 165.5015493000392,
+      "file": "model.fp16.ckpt",
+      "log": "runtime download receipt"
     }
   ],
   "processAttempts": [
@@ -308,6 +344,24 @@
       "endedAt": "2026-09-17T23:18:31.433731+00:00",
       "seconds": 28.19,
       "attempt": "vey-mia-pilot"
+    },
+    {
+      "startedAt": "2026-09-18T00:23:40.642245+00:00",
+      "status": "passed",
+      "fullLog": "studio-recheck.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-18T00:23:47.967114+00:00",
+      "seconds": 7.32,
+      "attempt": "studio-recheck"
+    },
+    {
+      "startedAt": "2026-09-18T00:29:40.235291+00:00",
+      "status": "passed",
+      "fullLog": "public-live.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-18T00:30:04.209227+00:00",
+      "seconds": 23.97,
+      "attempt": "public-live"
     }
   ],
   "studioAttempts": [
@@ -346,6 +400,20 @@
       "status": "completed",
       "endedAt": "2026-09-18T00:08:07.053193+00:00",
       "seconds": 8.06
+    },
+    {
+      "stage": "mixamo candidate",
+      "startedAt": "2026-09-18T00:29:30.025861+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-18T00:29:40.375760+00:00",
+      "seconds": 10.35
+    },
+    {
+      "stage": "mixamo candidate",
+      "startedAt": "2026-09-18T00:29:41.154651+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-18T00:29:49.826863+00:00",
+      "seconds": 8.671
     }
   ],
   "microSteps": [
