@@ -1,6 +1,30 @@
 """Contact measurements shared by retargeting and its independent checks."""
 import numpy as np
 
+def in_place_travel(feet,fps):
+    """Infer treadmill travel from the slower signed fore-aft phase, not foot height."""
+    estimates=[]
+    for points in feet:
+        velocity=np.gradient(np.asarray(points)[:,1],1/fps)
+        positive=velocity[velocity>.05];negative=velocity[velocity<-.05]
+        if len(positive)<4 or len(negative)<4:continue
+        slow=positive if np.median(abs(positive))<=np.median(abs(negative)) else negative
+        estimates.append(-float(np.median(slow)))
+    if not estimates:return np.zeros(3)
+    return np.array([0.,float(np.median(estimates)),0.])
+
+def in_place_stance(points,fps,cyclic=False):
+    p=np.asarray(points);v=np.gradient(p[:,1],1/fps);positive=v>.05;negative=v<-.05
+    if positive.sum()<4 or negative.sum()<4:raise ValueError('Not enough alternating travel to measure a gait.')
+    stance=positive if np.median(abs(v[positive]))<=np.median(abs(v[negative])) else negative
+    # Remove isolated detections and bridge one-frame holes, bounded to video cadence.
+    from scipy.ndimage import binary_closing,binary_opening
+    if cyclic:stance=np.pad(stance,3,mode='wrap')
+    stance=binary_opening(binary_closing(stance,iterations=1),iterations=1)
+    if cyclic:stance=stance[3:-3]
+    if stance.sum()<4:raise ValueError('No sustained measured stance phase.')
+    return stance,float(np.median(p[stance,2]))
+
 
 def source_contacts(positions, fps, height_band=.025, speed_limit=.5):
     p = np.asarray(positions, dtype=float)

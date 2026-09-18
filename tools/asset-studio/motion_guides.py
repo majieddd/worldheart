@@ -5,6 +5,7 @@ from fastapi import HTTPException,UploadFile,File,Body,Form
 from fastapi.responses import JSONResponse
 from PIL import Image,ImageDraw
 from workflows import STYLE
+from motion_catalogue import CLIPS,clip_brief
 
 MODEL='MiniMax-H3'
 PHASES=[('neutral',0,1),('walk',1,5),('settle',5,6),('anticipation',6,7),('strike',7,8),('recovery',8,10),('neutral',10,12)]
@@ -48,17 +49,27 @@ def inspect_video(path,sheet):
 
 def register(app,s):
     @app.get('/api/projects/{key}/motion-guide/brief')
-    def get_brief(key,reference:str='front'):
-        return JSONResponse(brief(s.project(key),s,reference),headers={'Content-Disposition':'attachment; filename="minimax-h3-motion-brief.json"'})
+    def get_brief(key,reference:str='front',clip:str='combined'):
+        recipe=brief(s.project(key),s,reference)
+        if clip!='combined':
+            if clip not in CLIPS:raise HTTPException(400,'Unknown animation.')
+            recipe=clip_brief(recipe,clip)
+        return JSONResponse(recipe,headers={'Content-Disposition':f'attachment; filename="minimax-h3-{clip}-brief.json"'})
+
+    @app.get('/api/motion-catalogue')
+    def catalogue():return {key:{'label':v[0],'loop':v[1],'action':v[2]} for key,v in CLIPS.items()}
 
     @app.post('/api/projects/{key}/motion-guide')
-    async def import_guide(key,file:UploadFile=File(...),model:str=MODEL,job_id:str='',reference:str='front',generation_prompt:str=Form('')):
+    async def import_guide(key,file:UploadFile=File(...),model:str=MODEL,job_id:str='',reference:str='front',clip:str='combined',generation_prompt:str=Form('')):
         p=s.project(key)
         if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the current project job.')
         if model not in [MODEL,'MiniMax-H3-Max','Other / imported']:raise HTTPException(400,'Unknown guide model.')
         if Path(file.filename or '').suffix.lower()!='.mp4':raise HTTPException(400,'Import an MP4 video.')
         if len(generation_prompt)>7000:raise HTTPException(400,'Generation prompt exceeds 7000 characters.')
-        recipe=brief(p,s,reference);name='motion-guide-'+uuid.uuid4().hex[:10]+'.mp4';path=s.output(p,name);size=0;start=time.perf_counter()
+        if clip!='combined' and clip not in CLIPS:raise HTTPException(400,'Unknown animation.')
+        recipe=brief(p,s,reference)
+        if clip!='combined':recipe=clip_brief(recipe,clip)
+        name='motion-guide-'+uuid.uuid4().hex[:10]+'.mp4';path=s.output(p,name);size=0;start=time.perf_counter()
         try:
             with path.open('wb') as dest:
                 while chunk:=await file.read(1024*1024):
@@ -70,15 +81,17 @@ def register(app,s):
             path.unlink(missing_ok=True);path.with_suffix('.jpg').unlink(missing_ok=True)
             if isinstance(e,HTTPException):raise
             raise HTTPException(400,str(e)) from e
-        guide={'file':name,'sha256':s.digest(path),'sheet':path.with_suffix('.jpg').name,'receipt':name+'.json','model':model,
+        guide={'file':name,'sha256':s.digest(path),'sheet':path.with_suffix('.jpg').name,'receipt':name+'.json','model':model,'clip':clip,
           'jobId':job_id[:100],'providerIdentity':'Importer-reported; verify against provider receipt','recipe':recipe,'metadata':metadata,
           'generationPrompt':generation_prompt or None,'status':'review','review':None,'importSeconds':round(time.perf_counter()-start,3),'skeletalMotionExtracted':False}
         if p.get('motionGuide'):p.setdefault('motionGuideHistory',[]).append(p['motionGuide'])
+        if p.get('motionGuide'):p.setdefault('motionGuides',{}).setdefault(p['motionGuide'].get('clip','combined'),p['motionGuide'])
+        p.setdefault('motionGuides',{})[clip]=guide
         p['motionGuide']=guide;s.write(s.output(p,guide['receipt']),guide);s.save(p);return p
 
     @app.post('/api/projects/{key}/motion-guide/review')
-    def review_guide(key,body:dict=Body(...)):
-        p=s.project(key);guide=p.get('motionGuide')
+    def review_guide(key,body:dict=Body(...),clip:str='combined'):
+        p=s.project(key);guide=p.get('motionGuides',{}).get(clip) or (p.get('motionGuide') if p.get('motionGuide',{}).get('clip','combined')==clip else None)
         if p['status'] in ['running','queued']:raise HTTPException(409,'Wait for the current project job.')
         if not guide:raise HTTPException(409,'Import a video guide first.')
         recipe=brief(p,s,guide['recipe'].get('referenceMode','front'))
@@ -89,4 +102,5 @@ def register(app,s):
         if body['decision']=='accept' and not all(checks.get(k) is True for k in CHECKS):raise HTTPException(400,'Watch the entire clip and confirm each reference check.')
         guide['status']='accepted-reference' if body['decision']=='accept' else 'rejected-reference'
         guide['review']={'checks':checks,'notes':str(body.get('notes',''))[:1500],'reviewer':str(body.get('reviewer','owner'))[:30],'time':time.time()}
+        if p.get('motionGuide',{}).get('file')==guide['file']:p['motionGuide']=guide
         s.write(s.output(p,guide['receipt']),guide);s.save(p);return p

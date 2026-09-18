@@ -195,3 +195,22 @@ The optional pilot used H3 through Higgsfield: 12.25 s, 2560x1440, 24 fps.
 Generation is external; import and playback are local. This does not extract
 a skeleton or replace captured motion. Automatic video-to-rig conversion remains
 unimplemented. Reference acceptance never changes animation approval.
+# Independent animation videos and local conversion
+
+In Concept or Rig & Motion, expand **Animation videos & local conversion**. Choose
+an animation, download its identity-bound MiniMax brief, and import that clip's MP4.
+Each animation keeps its own guide, receipt and review. Cloud generation is optional;
+run `setup_video_motion.py` to install the isolated local body-tracking worker.
+
+**Track, rig & create animation** extracts pose locally, reuses a fitted rig or
+fits one with MIA, and saves a separate candidate. Inspect the tracking overlay,
+full model animation and quality report. Accept the video reference separately;
+only candidates passing current checks can be applied. Existing models, clips and
+approvals remain saved until application. Detailed finger grips and hidden limbs
+are not reliably recovered by this body tracker. Failed running clips are retained.
+
+**Explain the current issue locally** is experimental Laya advice. Rules handle
+known errors; the local text model can suggest a category for uncertain diagnostics.
+It cannot inspect pixels, repair models or approve them. First load can take about
+a minute. See the [measured trial](../../docs/qa/implementation/VIDEO-MOTION-AND-DECISION-TRIAL.md)
+for accuracy, timing, Open-Higgsfield evaluation and remaining gaps.

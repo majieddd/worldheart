@@ -9,6 +9,55 @@ import server
 from fastapi.testclient import TestClient
 
 class StudioTests(unittest.TestCase):
+    def test_atomic_state_write_retries_transient_windows_file_lock(self):
+        path=server.output(self.p,'atomic.json');server.write(path,{'before':True});original=Path.replace;calls=[]
+        def replace(source,target):
+            calls.append(str(source))
+            if len(calls)==1:raise PermissionError('Transient reader lock')
+            return original(source,target)
+        with patch.object(Path,'replace',replace),patch.object(server.time,'sleep'):
+            server.write(path,{'after':True})
+        self.assertEqual(server.read(path),{'after':True});self.assertEqual(len(calls),2);self.assertEqual(list(path.parent.glob('atomic.json.*.tmp')),[])
+    def test_independent_video_bank_and_per_clip_review(self):
+        import motion_guides
+        p=self.concept();p.update(animation='accepted.glb',approvals={'animation':'retained'});server.save(p)
+        with patch.object(motion_guides,'inspect_video',return_value={'duration':8,'fps':24}):
+            for clip in ['walk','strike']:
+                r=self.client.post(self.base+'/motion-guide?reference=hero&clip='+clip,files={'file':(clip+'.mp4',clip.encode(),'video/mp4')});self.assertEqual(r.status_code,200)
+        p=server.project(self.p['id']);self.assertEqual(set(p['motionGuides']),{'walk','strike'});self.assertNotEqual(p['motionGuides']['walk']['sha256'],p['motionGuides']['strike']['sha256'])
+        r=self.client.post(self.base+'/motion-guide/review?clip=walk',json={'decision':'accept','checks':dict.fromkeys(motion_guides.CHECKS,True)})
+        self.assertEqual(r.status_code,200);self.assertEqual(r.json()['motionGuides']['walk']['status'],'accepted-reference');self.assertEqual(r.json()['motionGuides']['strike']['status'],'review');self.assertEqual(r.json()['approvals']['animation'],'retained')
+        self.assertEqual(self.client.get(self.base+'/motion-guide/brief?clip=missing').status_code,400)
+
+    def test_video_conversion_rejects_missing_guide_and_failed_candidate(self):
+        self.concept();self.assertEqual(self.client.post(self.base+'/video-motion',json={'clip':'walk'}).status_code,409)
+        self.assertEqual(self.client.post(self.base+'/video-motion/unknown/use',json={'visualReviewConfirmed':True}).status_code,409)
+
+    def test_video_candidate_requires_current_checks_and_explicit_review(self):
+        import motion_guides
+        p=self.concept();server.output(p,'paint.glb').write_bytes(fixture());server.output(p,'candidate.glb').write_bytes(fixture());server.output(p,'rig.blend').write_bytes(b'rig fixture')
+        p['paint']='paint.glb';server.save(p)
+        with patch.object(motion_guides,'inspect_video',return_value={'duration':8,'fps':24}):self.client.post(self.base+'/motion-guide?reference=hero&clip=walk',files={'file':('walk.mp4',b'video','video/mp4')})
+        self.client.post(self.base+'/motion-guide/review?clip=walk',json={'decision':'accept','checks':dict.fromkeys(motion_guides.CHECKS,True)})
+        p=server.project(self.p['id']);p['videoConversions']=[{'id':'candidate','clip':'walk','passed':True,'file':'candidate.glb','sourceSha256':server.digest(server.output(p,'paint.glb')),'videoSha256':p['motionGuides']['walk']['sha256'],'sha256':server.digest(server.output(p,'candidate.glb')),'rigFile':'rig.blend','rigSha256':server.digest(server.output(p,'rig.blend')),'report':'quality.json','trackingReport':'tracking.json'}];server.save(p)
+        route=self.base+'/video-motion/candidate/use'
+        self.assertEqual(self.client.post(route,json={'visualReviewConfirmed':True}).status_code,409)
+        p['videoConversions'][0]['qualityContract']=2;server.save(p)
+        self.assertEqual(self.client.post(route,json={}).status_code,409)
+        result=self.client.post(route,json={'visualReviewConfirmed':True});self.assertEqual(result.status_code,200);self.assertEqual(result.json()['animation'],'candidate.glb');self.assertNotIn('animation',result.json()['approvals'])
+
+    def test_video_bank_exports_every_guide(self):
+        import zipfile
+        p=server.project(self.p['id']);server.output(p,'model.glb').write_bytes(fixture());sha=server.digest(server.output(p,'model.glb'))
+        p.update(mesh='model.glb',animation='model.glb',polished='model.glb',motionInput=sha,polishInput=sha)
+        p['motionGuides']={c:{'file':c+'.mp4','sheet':c+'.jpg','receipt':c+'.json'} for c in ['walk','strike']}
+        for g in p['motionGuides'].values():
+            for name in g.values():server.output(p,name).write_bytes(b'fixture')
+        server.save(p)
+        with patch.object(server,'assert_approved'),patch.object(server,'require_valid_output'):r=self.client.get(self.base+'/export')
+        self.assertEqual(r.status_code,200)
+        with zipfile.ZipFile(io.BytesIO(r.content)) as archive:self.assertTrue({'walk.mp4','strike.mp4','walk.json','strike.json'}<=set(archive.namelist()))
+
     def test_export_includes_independent_pose_and_video_guides(self):
         import zipfile
         p=server.project(self.p['id']);server.output(p,'model.glb').write_bytes(fixture());sha=server.digest(server.output(p,'model.glb'))

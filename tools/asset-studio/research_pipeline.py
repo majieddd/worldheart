@@ -198,6 +198,21 @@ def register(app, s):
         p.setdefault('researchCandidates',[]).append(item)
         return item,task
 
+    def prepare_video_rig(p):
+        source=source_model(p);source_hash=s.digest(s.output(p,source))
+        if p.get('animation') and p.get('motionInput')==source_hash:
+            path=s.output(p,p['animation']).with_suffix('.blend')
+            if path.is_file():return path
+        for previous in reversed(p.get('researchCandidates',[])):
+            if previous.get('method')=='mia' and previous.get('passed') and previous.get('sourceSha256')==source_hash:
+                path=s.output(p,previous.get('file','missing'))
+                if path.is_file() and path.with_suffix('.blend').is_file() and s.digest(path)==previous.get('sha256') and s.read(path.with_suffix('.json'),{}).get('pipelineVersion')==3:return path.with_suffix('.blend')
+        if not available()['mia']:raise ValueError('Install the local MIA rigging runtime first.')
+        item,task=candidate_task(p,'mia',{});s.save(p);execute(p['id'],item,task,production=p)
+        return s.output(p,item['file']).with_suffix('.blend')
+
+    s.prepare_video_rig=prepare_video_rig
+
     def prepare_motion(p):
         """The normal Paint -> Motion route; no generic proximity rig fallback."""
         if not available()['mia'] or not available()['mixamo']:

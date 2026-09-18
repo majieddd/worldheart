@@ -1,4 +1,6 @@
-MiniMax H3 video-reference pilot locally verified: one Vey clip (12.25 s, 2K/24 fps) imported through Studio with slow playback, sampled frames, source hashes and separate review. 78 Studio tests and desktop/mobile playback pass. Video-to-skeleton extraction remains unimplemented. Siria ZIP storage blocker resolved and download reverified. [Evidence](qa/implementation/MINIMAX-MOTION-GUIDE.md).
+Asset Studio video-motion checkpoint: nine animation slots, six real MiniMax H3 guides, local tracking/rig/retarget candidates with source-bound cache and contact/loop gates. Original Vey is retained; owner review and the failed running capture remain open. Three additional guides are blocked by provider credits. Laya and Open-Higgsfield were tested locally; Laya stays advisory. Aegis method updated and installed. [Scope and measured evidence](qa/implementation/VIDEO-MOTION-AND-DECISION-TRIAL.md).
+
+Earlier MiniMax H3 video-reference checkpoint: one Vey clip (12.25 s, 2K/24 fps) imported through Studio with slow playback, sampled frames, source hashes and separate review. 78 Studio tests and desktop/mobile playback passed. Video-to-skeleton extraction was not implemented at that checkpoint; the current candidate workflow is described above. Siria ZIP storage blocker resolved and download reverified. [Historical evidence](qa/implementation/MINIMAX-MOTION-GUIDE.md).
 
 ## Siria final storage checkpoint
 

@@ -11,7 +11,7 @@ from scipy.ndimage import gaussian_filter1d
 from motion_contact import source_contacts
 
 
-def refine(rig, meshes, action, data, samples, mapping, scale, travel, count):
+def refine(rig, meshes, action, data, samples, mapping, scale, travel, count, reach_margin=.998, cyclic=True, stable_knee_pole=False, contact_overrides=None):
     scene = bpy.context.scene
     inverse = {v:k for k,v in mapping.items()}
     names = list(data['names']); lookup = {n:i for i,n in enumerate(names)}
@@ -42,6 +42,7 @@ def refine(rig, meshes, action, data, samples, mapping, scale, travel, count):
     for side in chains:
         points = samples[:,lookup[side+'ToeBase'],:3,3]
         contact, minimum, speed = source_contacts(points,float(data['fps']))
+        if contact_overrides and side in contact_overrides:contact,minimum=contact_overrides[side]
         if not contact.any():raise ValueError(side+' has no measured source stance; trim or choose another capture.')
         source[side] = {'points':points,'contact':contact,'floor':minimum,'speed':speed}
     cached = []; drops = []
@@ -57,19 +58,27 @@ def refine(rig, meshes, action, data, samples, mapping, scale, travel, count):
             target=foot.head.copy()
             target.x+=toe_goal.x-toe.head.x; target.y+=toe_goal.y-toe.head.y
             desired_floor=.003+max(0,point[2]-source[side]['floor'])*scale
+            if contact_overrides and source[side]['contact'][round(t)]:desired_floor=.003
             target.z+=desired_floor-floor(side)
             length=(shin.head-thigh.head).length+(foot.head-shin.head).length
             d=thigh.head-target; horizontal=d.x*d.x+d.y*d.y
-            if horizontal>=(length*.998)**2:raise ValueError('Captured stride exceeds this target leg reach; fit stride scale.')
-            drop=max(drop,d.z-math.sqrt((length*.998)**2-horizontal))
+            if horizontal>=(length*reach_margin)**2:raise ValueError('Captured stride exceeds this target leg reach; fit stride scale.')
+            drop=max(drop,d.z-math.sqrt((length*reach_margin)**2-horizontal))
             record['goals'][side]=target
             record['contact'][side]=bool(source[side]['contact'][round(t)])
         cached.append(record);drops.append(max(0,drop))
     # A smooth pelvis adjustment keeps the captured goals reachable without leg
     # stretching. Preserve captured bob and flight; reject excessive corrections.
-    drops=np.maximum(drops,gaussian_filter1d(drops,1.5,mode='wrap'))
+    drops=np.maximum(drops,gaussian_filter1d(drops,1.5,mode='wrap' if cyclic else 'nearest'))
     if max(drops)>.15*scale:raise ValueError('Contact needs excessive pelvis correction; review anatomical mapping.')
     tail=rig.pose.bones.get('tail1'); max_tail_angle=0.; max_reach_error=0.
+    def aim_with_pole(bone,head,end,lateral):
+        def frame(direction,side_axis):
+            y=direction.normalized();x=(side_axis-y*side_axis.dot(y)).normalized();z=x.cross(y).normalized()
+            return Matrix((x,y,z)).transposed().to_4x4()
+        rest=rig.data.bones[bone.name]
+        matrix=frame(end-head,lateral)@frame(rest.tail_local-rest.head_local,Vector((-1,0,0))).inverted()@rest.matrix_local
+        matrix.translation=head;bone.matrix=matrix;bpy.context.view_layer.update()
     contact_records={s:[] for s in chains}; soles={s:[] for s in chains}
     for frame,record in enumerate(cached):
         scene.frame_set(frame)
@@ -78,14 +87,22 @@ def refine(rig, meshes, action, data, samples, mapping, scale, travel, count):
             thigh,shin,foot,toe=[rig.pose.bones[n] for n in chain]
             h=thigh.head.copy();k=shin.head.copy();ankle=foot.head.copy();target=record['goals'][side]
             l1=(k-h).length;l2=(ankle-k).length;delta=target-h;distance=delta.length;axis=delta.normalized()
-            if distance>l1+l2+1e-4:raise ValueError('Unreachable foot goal after pelvis fitting.')
+            if distance>l1+l2+1e-4:raise ValueError(f'Unreachable {side} foot goal at frame {frame}: distance {distance:.6f}, leg length {l1+l2:.6f}, pelvis drop {drops[frame]:.6f}.')
             along=(l1*l1-l2*l2+distance*distance)/(2*distance)
             pole=k-h-axis*(k-h).dot(axis)
+            if stable_knee_pole:
+                facing=hip.matrix.to_quaternion()@rig.data.bones[hip.name].matrix_local.to_quaternion().inverted()@Vector((0,-1,0))
+                pole=facing-axis*facing.dot(axis)
             if pole.length<.0001:pole=Vector((0,-1,0))-axis*Vector((0,-1,0)).dot(axis)
             knee=h+axis*along+pole.normalized()*math.sqrt(max(0,l1*l1-along*along))
             fm=record['matrices'][foot.name].copy();tm=record['matrices'][toe.name].copy()
             m=thigh.matrix.copy();rot=(k-h).rotation_difference(knee-h);m=rot.to_matrix().to_4x4()@m;m.translation=h;thigh.matrix=m;bpy.context.view_layer.update()
             m=shin.matrix.copy();rot=(foot.head-shin.head).rotation_difference(target-knee);m=rot.to_matrix().to_4x4()@m;m.translation=knee;shin.matrix=m;bpy.context.view_layer.update()
+            if stable_knee_pole:
+                # Both segments share the knee plane. Crossing a horizontal shin
+                # must not reverse roll as direction.cross(facing) would do.
+                lateral=axis.cross(pole).normalized()
+                aim_with_pole(thigh,h,knee,lateral);aim_with_pole(shin,knee,target,lateral)
             fm.translation=target;foot.matrix=fm;bpy.context.view_layer.update()
             toe.matrix=fm@record['matrices'][foot.name].inverted()@tm;bpy.context.view_layer.update()
             max_reach_error=max(max_reach_error,abs((shin.head-thigh.head).length-l1),abs((foot.head-shin.head).length-l2))

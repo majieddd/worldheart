@@ -31,7 +31,12 @@ def write(path,data):
     try:
         with temp.open('w',encoding='utf-8') as stream:
             stream.write(json.dumps(data,indent=2)+'\n');stream.flush();os.fsync(stream.fileno())
-        temp.replace(path)
+        for attempt in range(6):
+            try:temp.replace(path);break
+            except PermissionError:
+                if attempt==5:raise
+                # Windows readers/indexers can briefly deny an otherwise atomic swap.
+                time.sleep(.02*(2**attempt))
     finally:
         temp.unlink(missing_ok=True)
 def pid(value):
@@ -733,6 +738,9 @@ def export(key):
             extra=['paint-profile.json','rig-profile.json']
             if p.get('motionGuide'):
                 extra.extend(p['motionGuide'][k] for k in ['file','sheet','receipt'])
+            for guide in p.get('motionGuides',{}).values():extra.extend(guide[k] for k in ['file','sheet','receipt'])
+            for candidate in p.get('videoConversions',[]):
+                extra.extend(candidate[k] for k in ['file','report','overlay','trackingReport'] if candidate.get(k))
             if p.get('rigReference'):
                 extra.extend([p['rigReference']['file'],p['rigReference']['receipt']])
                 if p['rigReference'].get('rawFile'):extra.append(p['rigReference']['rawFile'])
@@ -751,6 +759,10 @@ import research_pipeline
 research_pipeline.register(app,sys.modules[__name__])
 import motion_guides
 motion_guides.register(app,sys.modules[__name__])
+import video_pipeline
+video_pipeline.register(app,sys.modules[__name__])
+import decision_advisor
+decision_advisor.register(app,sys.modules[__name__])
 
 for stale in PROJECTS.glob('*/project.json'):
     p=read(stale)
