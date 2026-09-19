@@ -1,6 +1,7 @@
 # Painted Earth / U256-U261
 
 Owner: Codex. Branch: `feature/painted-earth`. Base: preview/v2 `14b9dd7`.
+Published runtime: `c015fd2`. [PR #77](https://github.com/majieddd/worldheart/pull/77).
 September 19, 2026. The initial tracker claim reused U244-U249; those belong to
 the Vey collaborator and are preserved. This work uses U256-U261.
 
@@ -11,7 +12,7 @@ the Vey collaborator and are preserved. This work uses U256-U261.
 | U258 | Action-driven spotlight tutorial, beginner wave gate, powers, loot and boss guidance | Opening, priority briefings and 10-wave lifecycle verified |
 | U259 | Five wooden walls per scrap, enemy detours and breach behavior | Core routes and browser breach fixture verified |
 | U260 | Procedural explorable structures/chests, debug lane, crystal scarcity and Solar relief | Rewards, visuals, home autosave/reload verified |
-| U261 | Adversarial, desktop/touch, persistence, performance and public V2 verification | Local checks verified; publication pending |
+| U261 | Adversarial, desktop/touch, persistence, performance and public V2 verification | Published; 32 public opening/touch checks, 6 debug checks and 863 identities pass |
 
 The existing approved art references and archived renders remain unchanged.
 The production art pass reuses their surface treatment; it does not promote
@@ -119,6 +120,23 @@ performance remain acceptance work, distinct from the automated checks.
 
 ## Publication
 
-V2 publication and live build identity are pending. Main remains at `6133d07`.
-The deployment receipt will be linked here and on tracker #1 after the public
-browser check succeeds.
+The [V2 deployment](https://github.com/majieddd/worldheart/actions/runs/35440915160)
+succeeded for `c015fd263e23876bca758067640d6b857677f53e`. All 863 deployed
+preview/production files matched the manifest and their exact Git sources.
+Main remains `6133d0713f4e93e6fc743c35d9dd0fd1834bc98f`.
+
+All 32 public opening/touch checks pass, including normal Earth entry,
+centered paintings, FPS arrival, real build/upgrade/deposit controls, tutorial
+briefing priorities, returning-assault behavior and portrait/landscape touch.
+The public Structures lane renders all four buildings and the wooden wall;
+its six checks pass without runtime or shader errors. Reports:
+[opening](../painted-earth/public-opening.json),
+[debug](../painted-earth/public-debug.json),
+[exact identities](../painted-earth/public-identity.json).
+
+Play [V2](https://majieddd.github.io/worldheart/v2/) or inspect
+[Structures](https://majieddd.github.io/worldheart/v2/debug.html#structures/outpost).
+For an isolated replay that leaves campaign progress alone, use the
+[Earth first-defense sample](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=0&planet=earth&seed=12345&onboarding=1).
+Later documentation-only commits can update the deployment identity without
+changing these verified runtime assets.

@@ -28,3 +28,7 @@ lifecycle; its earlier manually-triggered save check is superseded by
 The `superseded-*` reports intentionally retain disproven checks.
 Full uncompressed captures and other exploratory failures remain locally under
 `artifacts/painted-earth/`. See the implementation ledger for limitations.
+
+Public acceptance at runtime `c015fd2` is captured by `public-opening.json`,
+`public-debug.json` and `public-identity.json`: 32 gameplay/UI checks, six
+debug-lane checks and 863 actual deployed-file/source SHA-256 comparisons.
