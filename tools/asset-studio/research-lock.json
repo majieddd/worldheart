@@ -1,0 +1,196 @@
+{
+  "schema": 1,
+  "repos": [
+    {
+      "path": "make-it-animatable-v2",
+      "url": "https://github.com/jasongzy/Make-It-Animatable.git",
+      "commit": "bbd8b158d88879c310ad130f9b25056935d221e9",
+      "submodules": true
+    },
+    {
+      "path": "InstantMesh",
+      "url": "https://github.com/TencentARC/InstantMesh.git",
+      "commit": "08822c52fdc399b93ea00e4fa9e596344ed52ccc"
+    },
+    {
+      "path": "pytorch3d-transforms",
+      "url": "https://github.com/facebookresearch/pytorch3d.git",
+      "commit": "978cd99221b9e0a6a568f1d427854d73363265cf"
+    }
+  ],
+  "files": [
+    {
+      "url": "https://huggingface.co/jasongzy/Make-It-Animatable/resolve/ca0daf6cb164f939e77bf32667513fc7558d5f98/data/Standard Run.fbx",
+      "path": "make-it-animatable-v2/data/Standard Run.fbx",
+      "size": 344000,
+      "sha256": "d1666a78831cd14368c19aadb023ea98670d5d69e1bc50d96149b95cba519533",
+      "gitBlob": "b9f7ccae2e4ba4de336e5812d36590e511c487ee"
+    },
+    {
+      "url": "https://huggingface.co/jasongzy/Make-It-Animatable/resolve/ca0daf6cb164f939e77bf32667513fc7558d5f98/output/best/v2/bw_joints.pth",
+      "path": "make-it-animatable-v2/output/best/v2/bw_joints.pth",
+      "size": 1088610874,
+      "sha256": "63ca0f5970109e056c652a40088274870cac87959b359c13ec55d58cdc351d4c",
+      "gitBlob": "64b2a58323d7404a799e6cd35a6afda64fac4904"
+    },
+    {
+      "url": "https://huggingface.co/jasongzy/Make-It-Animatable/resolve/ca0daf6cb164f939e77bf32667513fc7558d5f98/output/best/v2/joints_coarse.pth",
+      "path": "make-it-animatable-v2/output/best/v2/joints_coarse.pth",
+      "size": 1088610874,
+      "sha256": "85b4f8cbac6bfcdc5ac130f1776fe2869f934a615c14fe9751bb52e0baea152b",
+      "gitBlob": "bc190b4df11a2f1c7e616986ea47b1c3735fdfd0"
+    },
+    {
+      "url": "https://huggingface.co/jasongzy/Make-It-Animatable/resolve/ca0daf6cb164f939e77bf32667513fc7558d5f98/output/best/v2/pose.pth",
+      "path": "make-it-animatable-v2/output/best/v2/pose.pth",
+      "size": 1097218118,
+      "sha256": "4b501618bbcd9398fd6839c666cb5a120bde4257f9ca6d5eb68987d886530b3d",
+      "gitBlob": "7796a805162e52bca4a33c43c138e0d1317f8043"
+    },
+    {
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2.1/resolve/0b94677654c57bb9a6b6845cd7b704ccf551d327/hunyuan3d-vae-v2-1/config.yaml",
+      "path": "models/Hunyuan3D-2.1/hunyuan3d-vae-v2-1/config.yaml",
+      "size": 409,
+      "sha256": null,
+      "gitBlob": "2421cf01f208851258a045d3d85ac4a01f93b6ed"
+    },
+    {
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2.1/resolve/0b94677654c57bb9a6b6845cd7b704ccf551d327/hunyuan3d-vae-v2-1/model.fp16.ckpt",
+      "path": "models/Hunyuan3D-2.1/hunyuan3d-vae-v2-1/model.fp16.ckpt",
+      "size": 655648152,
+      "sha256": "5cbe97f25e6e7abd4bccc80ab07524ec0c86d24118486a9ba49bb5dfb070288a",
+      "gitBlob": "6ae3b357c2d6d25b68ae2cd9593d5acd9953c003"
+    },
+    {
+      "url": "https://huggingface.co/TencentARC/InstantMesh/resolve/b785b4ecfb6636ef34a08c748f96f6a5686244d0/diffusion_pytorch_model.bin",
+      "path": "models/InstantMesh/diffusion_pytorch_model.bin",
+      "size": 1732056502,
+      "sha256": "9d78d78421d1feb6871d13e13e86ed8099628648d7d9c51ffca9015b7d5fa3c4",
+      "gitBlob": "97e2160cc653d4a7663abbda96b9abe49f36679b"
+    },
+    {
+      "url": "https://huggingface.co/TencentARC/InstantMesh/resolve/b785b4ecfb6636ef34a08c748f96f6a5686244d0/instant_mesh_large.ckpt",
+      "path": "models/InstantMesh/instant_mesh_large.ckpt",
+      "size": 1514818077,
+      "sha256": "329f7aae9b583fd7c1b27d0221463db7b808a03c48a1f7aa26649af6a03b91a1",
+      "gitBlob": "ab38aebf588781e26ab92eb0e887cf93ecda649c"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/feature_extractor_clip/preprocessor_config.json",
+      "path": "models/zero123plus-v1.2/feature_extractor_clip/preprocessor_config.json",
+      "size": 466,
+      "sha256": null,
+      "gitBlob": "fb1692ff11ed6b3dee0634f577193bb23c0d37ec"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/feature_extractor_vae/preprocessor_config.json",
+      "path": "models/zero123plus-v1.2/feature_extractor_vae/preprocessor_config.json",
+      "size": 369,
+      "sha256": null,
+      "gitBlob": "66cc2672c5eea294cc00cb94b9a6444e4da950fd"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/model_index.json",
+      "path": "models/zero123plus-v1.2/model_index.json",
+      "size": 2630,
+      "sha256": null,
+      "gitBlob": "02bcecc7fdb740f9d0563bb71c10c5ea573008cd"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/scheduler/scheduler_config.json",
+      "path": "models/zero123plus-v1.2/scheduler/scheduler_config.json",
+      "size": 391,
+      "sha256": null,
+      "gitBlob": "9844a9765ea842d027971d9e85f28b0d73df6822"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/text_encoder/config.json",
+      "path": "models/zero123plus-v1.2/text_encoder/config.json",
+      "size": 708,
+      "sha256": null,
+      "gitBlob": "43336e254692abad546f2515a06c8cd258a8565f"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/text_encoder/model.safetensors",
+      "path": "models/zero123plus-v1.2/text_encoder/model.safetensors",
+      "size": 680820392,
+      "sha256": "bc1827c465450322616f06dea41596eac7d493f4e95904dcb51f0fc745c4e13f",
+      "gitBlob": "a55e85a6b511d04d31fbcc67af976a8b0adf8030"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/tokenizer/merges.txt",
+      "path": "models/zero123plus-v1.2/tokenizer/merges.txt",
+      "size": 524619,
+      "sha256": null,
+      "gitBlob": "76e821f1b6f0a9709293c3b6b51ed90980b3166b"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/tokenizer/special_tokens_map.json",
+      "path": "models/zero123plus-v1.2/tokenizer/special_tokens_map.json",
+      "size": 460,
+      "sha256": null,
+      "gitBlob": "ae0c5be6f35217e51c4c000fd325d8de0294e99c"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/tokenizer/tokenizer_config.json",
+      "path": "models/zero123plus-v1.2/tokenizer/tokenizer_config.json",
+      "size": 855,
+      "sha256": null,
+      "gitBlob": "bd2abe19377557ff5771584921f9b65fa041fef0"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/tokenizer/vocab.json",
+      "path": "models/zero123plus-v1.2/tokenizer/vocab.json",
+      "size": 1059962,
+      "sha256": null,
+      "gitBlob": "469be27c5c010538f845f518c4f5e8574c78f7c8"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/vae/config.json",
+      "path": "models/zero123plus-v1.2/vae/config.json",
+      "size": 745,
+      "sha256": null,
+      "gitBlob": "96a7aaac46411ba82846c1148ee5bc93b2c4363f"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/vae/diffusion_pytorch_model.safetensors",
+      "path": "models/zero123plus-v1.2/vae/diffusion_pytorch_model.safetensors",
+      "size": 167335342,
+      "sha256": "3e4c08995484ee61270175e9e7a072b66a6e4eeb5f0c266667fe1f45b90daf9a",
+      "gitBlob": "9a75e3c8e7cf4387be816cdebb751fbd5fc4e1e2"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/vision_encoder/config.json",
+      "path": "models/zero123plus-v1.2/vision_encoder/config.json",
+      "size": 672,
+      "sha256": null,
+      "gitBlob": "5e55ea193b10796eed579de463bec7a3c6dc45ad"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/vision_encoder/model.safetensors",
+      "path": "models/zero123plus-v1.2/vision_encoder/model.safetensors",
+      "size": 1264217240,
+      "sha256": "ae616c24393dd1854372b0639e5541666f7521cbe219669255e865cb7f89466a",
+      "gitBlob": "29848b356a3062d1da3b773a82d62de5e49a8f89"
+    },
+    {
+      "url": "https://huggingface.co/sudo-ai/zero123plus-v1.2/resolve/2da07e89919e1a130c9b5add1584c70c7aa065fd/unet/config.json",
+      "path": "models/zero123plus-v1.2/unet/config.json",
+      "size": 1964,
+      "sha256": null,
+      "gitBlob": "cacbdd98e2d080bc6551cc69663d52a8dba63538"
+    },
+    {
+      "url": "https://huggingface.co/facebook/dino-vitb16/resolve/f205d5d8e640a89a2b8ef0369670dfc37cc07fc2/config.json",
+      "path": "models/dino-vitb16/config.json",
+      "size": 454,
+      "sha256": "b87c0270b97db085fd82cf114a761fd0f62ae7914fbd407c752a2260646b689c"
+    },
+    {
+      "url": "https://huggingface.co/facebook/dino-vitb16/resolve/f205d5d8e640a89a2b8ef0369670dfc37cc07fc2/preprocessor_config.json",
+      "path": "models/dino-vitb16/preprocessor_config.json",
+      "size": 244,
+      "sha256": "44298553bf686c8c3d1b128f24fae01f76235f66bda5516f1c6c0c57bba1b47f"
+    }
+  ]
+}

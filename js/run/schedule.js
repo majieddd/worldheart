@@ -48,16 +48,16 @@ export function tierCapForHeart(level) {
 const TOWER_UNLOCK_WAVES = [2, 4, 6, 8, 10];
 const EVOLUTION_WAVES = [3, 6, 9, 12];
 
-// The two rewards ALTERNATE rather than both arriving every wave: a tower card
-// on the odd waves and a drafted power on the even ones. Each wave therefore
+// The two rewards ALTERNATE: a drafted power after the first and odd waves,
+// and a tower card after the even waves. Each wave therefore
 // gives exactly one thing, which makes the wave you are about to fight carry a
 // specific expectation instead of a handful.
 export function drawsCardAfter(wave) {
-  return wave % 2 === 1;
+  return wave % 2 === 0;
 }
 
 export function draftsPowerAfter(wave) {
-  return wave % 2 === 0;
+  return wave % 2 === 1;
 }
 
 export function isBossWave(wave) {

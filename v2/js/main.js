@@ -5,6 +5,7 @@ import { OrbitRig } from './camera.js';
 import { PostPipeline } from './postfx.js';
 import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight, TERRAIN_TOP, surfaceElevation } from './world.js';
 import { NavGraph } from './nav.js';
+import {TerrainSamplePool} from './terrain-sample-pool.js';
 import { SIM_RANDOM } from './noise.js';
 import { makeRng } from './run/rng.js';
 import { EnemyManager, EVO as ENEMY_EVO } from './enemies.js';
@@ -19,6 +20,7 @@ import { WaveDirector, portalCount } from './waves.js';
 import { HUD } from './ui.js';
 import { AudioEngine } from './audio.js';
 import { WorldContext } from './world-context.js';
+import {productionPaint} from './production-paint.js';
 
 const canvas = document.getElementById('view');
 const renderer = new THREE.WebGLRenderer({
@@ -130,6 +132,7 @@ let possession = null;  // direct control of a unit, first person
 let viewModel = null;   // the first-person weapon overlay
 let combatFx = null;    // tracers, beams, shells and melee tells
 let caches = null;      // gold hidden in the fog
+let painted = null;
 
 /* ---- environment map and sun shadows ---------------------------------- */
 const _shadowFocus = new THREE.Vector3();
@@ -257,15 +260,17 @@ function yieldBootTask(){
   return new Promise(resolve=>{bootChannel.port1.onmessage=resolve;bootChannel.port2.postMessage(0);});
 }
 async function finishBootSteps(steps){
-  let step;
+  let step,input;
   do{
     const slice=performance.now();
-    do{step=steps.next();}while(!step.done&&performance.now()-slice<8);
+    do{step=steps.next(input);input=undefined;if(step.value?.then){input=await step.value;break;}}while(!step.done&&performance.now()-slice<8);
     if(!step.done)await yieldBootTask();
   }while(!step.done);
 }
 
 async function boot() {
+  painted=await productionPaint(renderer);
+  window.WH.paint=painted;
   resize();
   const totalSteps = world.buildStepCount + 2;
   let step = 0;const bootStages=[];
@@ -279,7 +284,12 @@ async function boot() {
   await progress(BOOT_LABELS[0]);
   world.buildStep(0);
   await progress(BOOT_LABELS[1]);
-  await finishBootSteps(nav.buildSteps());
+  const parallel=new URLSearchParams(location.search).get('generation')==='parallel'&&CONFIG.terrain;
+  CONFIG.fastGeneration=!!parallel;
+  const pool=parallel?new TerrainSamplePool():null;
+  if(pool)nav.parallelMetrics=pool.metrics;
+  if(pool)nav.sampleTerrain=(points,options)=>pool.sample(points,options);
+  try{await finishBootSteps(nav.buildSteps());}finally{pool?.dispose();delete nav.sampleTerrain;}
   if (CONFIG.terrain) {
     rig.heightProbe = dir => surfaceElevation(dir);
     rig.terrainTop = TERRAIN_TOP;
@@ -532,6 +542,8 @@ async function boot() {
   }
   window.WH.heartPos = heartPos;
   game.context = new WorldContext({game,ui,rig,possession,mode:mode99});
+  viewModel.scene.userData.heldEquipment=true;
+  painted.apply(scene);painted.apply(viewModel.scene);
   const { MobileControls } = await import('./mobile-controls.js');
   window.WH.mobile = new MobileControls({game,ui,rig,possession,mode:mode99});
   window.WH.portalPositions = portalPositions;
@@ -546,6 +558,11 @@ async function boot() {
   rig.autoOrbit = rig.confine ? 0 : 0.045;
   ui.showTitle();
   if(CONFIG.homeSnapshot)mode99.enterHome();
+  if(mode99){
+    const {installFirstExpedition}=await import('./first-expedition.js');
+    window.WH.onboarding=installFirstExpedition({game,ui,waves,mode:mode99,possession,allies,nav,config:CONFIG});
+    void window.WH.onboarding?.arrive();
+  }
   if (CONFIG.worldgen) {
     const { WorldgenPanel } = await import('./ui-worldgen.js');
     window.WH.worldgen = new WorldgenPanel({ui, game, world, nav, rig, possession, scene});
@@ -659,7 +676,7 @@ function stepFrame(dt, render) {
   if (simDt > 0) {
     allies?.update(simDt);
     caches?.update(simDt);
-    waves.update(simDt);
+    if(!game.onboardingHold)waves.update(simDt);
     enemies.update(simDt);
     towerMgr.update(simDt);
   } else {
@@ -671,6 +688,7 @@ function stepFrame(dt, render) {
   mode99?.renderEffects?.(simDt);
   if (ui) ui.update(dt);
   game?.context?.update();
+  window.WH.onboarding?.update();
   window.WH?.mobile?.update(dt);
   if (fx) {
     // Strategic scale: swell models with zoom, then hand over to icons.
@@ -705,7 +723,7 @@ function stepFrame(dt, render) {
     // on; the beam is gated on being fed this frame, not on dt.
     combatFx?.update(simDt);
   }
-  if (render) {world.syncDecorBatches();post.render(scene, rig.camera, dt);}
+  if (render) {world.syncDecorBatches();painted?.update(performance.now()/1000,scene,viewModel?.scene);post.render(scene, rig.camera, dt);}
 }
 
 // Every tower needs an entry or the strategic layer lies about what is on the
@@ -1089,7 +1107,7 @@ window.WH = {
   step(seconds = 1, fps60 = 60, draw = true) {
     const n = Math.round(seconds * fps60);
     for (let i = 0; i < n; i++) stepFrame(1 / fps60, false);
-    if (draw) {world.syncDecorBatches();post.render(scene, rig.camera, 1 / fps60);}
+    if (draw) {world.syncDecorBatches();painted?.update(performance.now()/1000,scene,viewModel?.scene);post.render(scene, rig.camera, 1 / fps60);}
   },
   // Scripted placement for testing: drop a tower N hops down a portal's path,
   // offset sideways so it shapes the route instead of blocking it.

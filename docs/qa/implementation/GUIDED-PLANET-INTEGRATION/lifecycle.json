@@ -1,0 +1,64 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "checks": [
+    {
+      "name": "New campaign assault saves the guided terrain version",
+      "ok": true
+    },
+    {
+      "name": "Capture snapshot carries the terrain version",
+      "ok": true
+    },
+    {
+      "name": "New Earth Homeworld opens on guided terrain in peaceful third person",
+      "ok": true
+    },
+    {
+      "name": "Earth starter anchors still have complete ground routes",
+      "ok": true,
+      "detail": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "name": "Real held movement moves the commander on the new surface",
+      "ok": true,
+      "detail": {
+        "metres": 7.448190138838994
+      }
+    },
+    {
+      "name": "Commander collision and grounding can climb a fitted overlook ramp",
+      "ok": true,
+      "detail": {
+        "steps": 565,
+        "remaining": 1.7750313357840295,
+        "climbed": 7.991289935341997,
+        "maxStep": 0.02064772648876989
+      }
+    },
+    {
+      "name": "Home defense starts nests on the integrated world",
+      "ok": true
+    },
+    {
+      "name": "A pre-kit saved home reloads the legacy field",
+      "ok": true
+    },
+    {
+      "name": "Debug terrain and themed globes use production version one",
+      "ok": true
+    },
+    {
+      "name": "No game, debug or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "httpFailures": []
+}

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {paintedBox} from './painted-geometry.js';
 import { terrainTowerStats, swimOffset } from './traversal.js';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { clamp, lerp, SIM_RANDOM } from './noise.js';
@@ -199,7 +200,7 @@ const _m4 = new THREE.Matrix4();
 const _s = new THREE.Vector3();
 
 function box(w, h, d, mat, x = 0, y = 0, z = 0, ry = 0, rz = 0, rx = 0) {
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  const m = new THREE.Mesh(paintedBox(w, h, d), mat);
   m.position.set(x, y, z);
   m.rotation.set(rx, ry, rz);
   return m;

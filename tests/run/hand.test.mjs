@@ -47,6 +47,7 @@ test('the opening hand can only hold the starting tower', () => {
 test('playing a card spends it', () => {
   const run = newRun();
   clearWave(run);
+  clearWave(run);
   const before = run.getHand();
   assert.equal(before.length, 2, 'one drawn per wave on top of the loadout');
   const played = run.playCard(1);
@@ -64,23 +65,23 @@ test('an out-of-range or stale index plays nothing', () => {
   assert.equal(run.playCard(0), null, 'an empty hand must play nothing');
 });
 
-test('a card arrives on the odd waves only', () => {
+test('a card arrives on the even waves only', () => {
   const run = newRun();
   assert.equal(run.getHand().length, 1, 'the loadout card');
   clearWave(run);                                   // wave 1, odd
-  assert.equal(run.getHand().length, 2, 'odd wave pays a card');
+  assert.equal(run.getHand().length, 1, 'odd wave pays a power');
   clearWave(run);                                   // wave 2, even
-  assert.equal(run.getHand().length, 2, 'even wave pays a power, not a card');
+  assert.equal(run.getHand().length, 2, 'even wave pays a card');
   clearWave(run);                                   // wave 3, odd
-  assert.equal(run.getHand().length, 3);
+  assert.equal(run.getHand().length, 2);
 });
 
-test('a power arrives on the even waves only', () => {
+test('a power arrives on the first and subsequent odd waves', () => {
   const run = newRun();
   clearWave(run);
-  assert.equal(run.getPowers().length, 0, 'odd wave pays no power');
+  assert.equal(run.getPowers().length, 1, 'odd wave pays a power');
   clearWave(run);
-  assert.equal(run.getPowers().length, 1, 'even wave pays a power');
+  assert.equal(run.getPowers().length, 1, 'even wave pays no additional power');
 });
 
 test('unplayed cards are kept but never past the cap', () => {
@@ -94,6 +95,7 @@ test('a spent hand refills one card at a time', () => {
   const run = newRun();
   run.playCard(0);
   assert.equal(run.getHand().length, 0);
+  clearWave(run);
   clearWave(run);
   assert.equal(run.getHand().length, 1);
 });
@@ -157,8 +159,7 @@ test('the same seed draws the same hands', () => {
 
 test('a wave clear emits handDrawn', () => {
   const run = newRun();
-  // Wave 1 is odd, so the card arrives in completeWave's own events rather
-  // than after a draft resolves.
+  clearWave(run); // Resolve the first power; wave 2 gives the card.
   const events = run.completeWave();
   const drawn = events.find((e) => e.type === 'handDrawn');
   assert.ok(drawn, 'no handDrawn event');

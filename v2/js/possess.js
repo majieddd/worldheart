@@ -309,7 +309,7 @@ export class Possession {
 
   _bind() {
     addEventListener('keydown', (e) => {
-      if (!this.active) return;
+      if (!this.active || e.defaultPrevented) return;
       // Never swallow keys aimed at a text field.
       const t = e.target;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
@@ -355,6 +355,7 @@ export class Possession {
     this.canvas.addEventListener('mousedown', (e) => {
       if (e.sourceCapabilities?.firesTouchEvents) return;
       if (!this.active || this.suspended) return;
+      if(this.game.mode99?.walls?.placing)return;
       if (e.button === 2 && this.boom < .35 && !this.game.buildType) { e.preventDefault(); this.aiming = true; }
       if (e.button === 0) {
         e.preventDefault();

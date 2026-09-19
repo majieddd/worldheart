@@ -98,7 +98,7 @@ const COMPOSITE_FRAG = /* glsl */ `
     float r2 = dot(d, d);
 
     // Edge chromatic aberration, radial and subtle.
-    vec2 ca = d * r2 * 0.014;
+    vec2 ca = vec2(0.0);
     vec3 scene;
     scene.r = texture2D(uScene, uv - ca).r;
     scene.g = texture2D(uScene, uv).g;
@@ -107,7 +107,7 @@ const COMPOSITE_FRAG = /* glsl */ `
     vec3 bloom = texture2D(uBloom, uv).rgb;
     vec3 c = scene + bloom * uBloomStrength;
 
-    c *= 1.05;
+    c *= 0.77;
     c = aces(c);
 
     // Grade: lift shadows toward deep indigo, warm the highlights.
@@ -115,7 +115,7 @@ const COMPOSITE_FRAG = /* glsl */ `
     c += vec3(0.020, 0.026, 0.052) * (1.0 - luma) * 0.9;
     c = mix(c, c * vec3(1.045, 1.01, 0.955), smoothstep(0.55, 1.0, luma) * 0.5);
 
-    float vig = 1.0 - smoothstep(0.18, 0.78, r2) * 0.30;
+    float vig = 1.0 - smoothstep(0.18, 0.78, r2) * 0.10;
     c *= vig;
 
     float g = hash(uv * uRes + vec2(uTime * 60.0, uTime * 37.0));
@@ -141,7 +141,7 @@ export class PostPipeline {
   constructor(renderer) {
     this.renderer = renderer;
     this.enabled = true;
-    this.bloomStrength = 0.62;
+    this.bloomStrength = 0.20;
     this.renderScale = 1;
     this.grainStrength = .028;
     // The kernel spans 2^levels pixels, so a fixed level count is a fixed PIXEL
@@ -274,7 +274,7 @@ export class PostPipeline {
     cu.uBloom.value = lower.texture;
     cu.uBloomStrength.value = this.bloomStrength;
     cu.uTime.value = REDUCED_MOTION ? 0 : this.time;
-    cu.uGrain.value = PRESENTATION.grain ? this.grainStrength : 0;
+    cu.uGrain.value = 0; // Pigment lives on the surfaces, never over the lens.
     r.setRenderTarget(null);
     r.render(this._scene, this._cam);
   }

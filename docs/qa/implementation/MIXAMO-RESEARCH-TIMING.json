@@ -1,0 +1,464 @@
+{
+  "schema": 1,
+  "trackedStartUtc": "2026-09-17T21:42:15.617969+00:00",
+  "throughCheckpointUtc": "2026-09-18T00:31:25.110500+00:00",
+  "elapsedThroughCheckpointSeconds": 10149.49,
+  "scope": "Elapsed research, local setup, downloads, integration, failed attempts, refinement and QA from tracked inventory start. Earlier work is unmeasured. Publication and final handoff follow this checkpoint. Overlapping and nested step times must not be summed as total.",
+  "hardware": {
+    "gpu": "NVIDIA RTX 4080 Laptop",
+    "physicalVramMiB": 12282,
+    "platform": "Windows"
+  },
+  "downloads": [
+    {
+      "size": 3571828172,
+      "sha256": "8a92b6ac49be932a8e4f70282d0d396a95a0fc877a9fbe0bd36be5f765707c84",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 1224.7033025000128,
+      "file": "torch-2.8.0+cu129-cp311-cp311-win_amd64.whl",
+      "log": "torch-ranges.log"
+    },
+    {
+      "size": 1732056502,
+      "sha256": "9d78d78421d1feb6871d13e13e86ed8099628648d7d9c51ffca9015b7d5fa3c4",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 622.1355115000042,
+      "file": "diffusion_pytorch_model.bin",
+      "log": "instantmesh-download.log"
+    },
+    {
+      "size": 1514818077,
+      "sha256": "329f7aae9b583fd7c1b27d0221463db7b808a03c48a1f7aa26649af6a03b91a1",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 521.4890149999992,
+      "file": "instant_mesh_large.ckpt",
+      "log": "instantmesh-download.log"
+    },
+    {
+      "size": 680820392,
+      "sha256": "bc1827c465450322616f06dea41596eac7d493f4e95904dcb51f0fc745c4e13f",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 196.65580150001915,
+      "file": "model.safetensors",
+      "log": "instantmesh-download.log"
+    },
+    {
+      "size": 167335342,
+      "sha256": "3e4c08995484ee61270175e9e7a072b66a6e4eeb5f0c266667fe1f45b90daf9a",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 69.3521974000032,
+      "file": "diffusion_pytorch_model.safetensors",
+      "log": "instantmesh-download.log"
+    },
+    {
+      "size": 1264217240,
+      "sha256": "ae616c24393dd1854372b0639e5541666f7521cbe219669255e865cb7f89466a",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 226.10012780001853,
+      "file": "model.safetensors",
+      "log": "instantmesh-download.log"
+    },
+    {
+      "size": 1088610874,
+      "sha256": "63ca0f5970109e056c652a40088274870cac87959b359c13ec55d58cdc351d4c",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 371.18016580003314,
+      "file": "bw_joints.pth",
+      "log": "runtime download receipt"
+    },
+    {
+      "size": 1088610874,
+      "sha256": "85b4f8cbac6bfcdc5ac130f1776fe2869f934a615c14fe9751bb52e0baea152b",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 376.3321670999867,
+      "file": "joints_coarse.pth",
+      "log": "runtime download receipt"
+    },
+    {
+      "size": 1097218118,
+      "sha256": "4b501618bbcd9398fd6839c666cb5a120bde4257f9ca6d5eb68987d886530b3d",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 416.25693680002587,
+      "file": "pose.pth",
+      "log": "runtime download receipt"
+    },
+    {
+      "size": 655648152,
+      "sha256": "5cbe97f25e6e7abd4bccc80ab07524ec0c86d24118486a9ba49bb5dfb070288a",
+      "partSize": 8388608,
+      "status": "downloaded",
+      "seconds": 165.5015493000392,
+      "file": "model.fp16.ckpt",
+      "log": "runtime download receipt"
+    }
+  ],
+  "processAttempts": [
+    {
+      "startedAt": "2026-09-17T23:22:47.987074+00:00",
+      "status": "passed",
+      "fullLog": "control-mia-bind.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:22:49.697096+00:00",
+      "seconds": 1.71,
+      "attempt": "control-mia-bind"
+    },
+    {
+      "startedAt": "2026-09-17T23:20:27.489456+00:00",
+      "status": "failed",
+      "fullLog": "control-mia-pilot.log",
+      "exitCode": 3221225477,
+      "endedAt": "2026-09-17T23:20:54.474201+00:00",
+      "seconds": 26.98,
+      "attempt": "control-mia-pilot"
+    },
+    {
+      "startedAt": "2026-09-17T23:15:45.210963+00:00",
+      "status": "passed",
+      "fullLog": "instantmesh-pilot-v2.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:17:04.786244+00:00",
+      "seconds": 79.57,
+      "attempt": "instantmesh-pilot-v2"
+    },
+    {
+      "startedAt": "2026-09-17T23:13:46.906096+00:00",
+      "status": "failed",
+      "fullLog": "instantmesh-pilot.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T23:13:51.517989+00:00",
+      "seconds": 4.61,
+      "attempt": "instantmesh-pilot"
+    },
+    {
+      "startedAt": "2026-09-17T23:06:54.587415+00:00",
+      "status": "passed",
+      "fullLog": "mia-bind.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:06:57.275871+00:00",
+      "seconds": 2.69,
+      "attempt": "mia-bind"
+    },
+    {
+      "startedAt": "2026-09-17T23:22:37.411210+00:00",
+      "status": "passed",
+      "fullLog": "mia-guided-pilot.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:22:58.020906+00:00",
+      "seconds": 20.61,
+      "attempt": "mia-guided-pilot"
+    },
+    {
+      "startedAt": "2026-09-17T23:05:08.333570+00:00",
+      "status": "failed",
+      "fullLog": "mia-pilot-v2.log",
+      "exitCode": 3221225477,
+      "endedAt": "2026-09-17T23:05:34.060409+00:00",
+      "seconds": 25.73,
+      "attempt": "mia-pilot-v2"
+    },
+    {
+      "startedAt": "2026-09-17T22:55:53.438812+00:00",
+      "status": "failed",
+      "fullLog": "mia-pilot.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T22:56:50.286415+00:00",
+      "seconds": 56.85,
+      "attempt": "mia-pilot"
+    },
+    {
+      "startedAt": "2026-09-17T22:06:10.708192+00:00",
+      "status": "passed",
+      "fullLog": "mixamo-import.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T22:06:12.230118+00:00",
+      "seconds": 1.52,
+      "attempt": "mixamo-import"
+    },
+    {
+      "startedAt": "2026-09-17T22:37:08.961399+00:00",
+      "status": "passed",
+      "fullLog": "mixamo-run-import.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T22:37:09.795821+00:00",
+      "seconds": 0.83,
+      "attempt": "mixamo-run-import"
+    },
+    {
+      "startedAt": "2026-09-18T00:01:46.369694+00:00",
+      "status": "passed",
+      "fullLog": "public-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-18T00:01:54.252826+00:00",
+      "seconds": 7.88,
+      "attempt": "public-browser"
+    },
+    {
+      "startedAt": "2026-09-17T23:28:08.035263+00:00",
+      "status": "failed",
+      "fullLog": "retarget-final-quality.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T23:28:10.198434+00:00",
+      "seconds": 2.16,
+      "attempt": "retarget-final-quality"
+    },
+    {
+      "startedAt": "2026-09-17T23:25:51.292115+00:00",
+      "status": "passed",
+      "fullLog": "retarget-final.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:25:57.040979+00:00",
+      "seconds": 5.75,
+      "attempt": "retarget-final"
+    },
+    {
+      "startedAt": "2026-09-17T22:40:57.843734+00:00",
+      "status": "failed",
+      "fullLog": "retarget-quality.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T22:40:59.370772+00:00",
+      "seconds": 1.53,
+      "attempt": "retarget-quality"
+    },
+    {
+      "startedAt": "2026-09-17T23:29:30.401507+00:00",
+      "status": "failed",
+      "fullLog": "retarget-run-v4-quality.log",
+      "exitCode": 1,
+      "endedAt": "2026-09-17T23:29:32.558127+00:00",
+      "seconds": 2.16,
+      "attempt": "retarget-run-v4-quality"
+    },
+    {
+      "startedAt": "2026-09-17T23:29:24.687067+00:00",
+      "status": "passed",
+      "fullLog": "retarget-run-v4.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:29:30.323367+00:00",
+      "seconds": 5.64,
+      "attempt": "retarget-run-v4"
+    },
+    {
+      "startedAt": "2026-09-17T23:30:41.045702+00:00",
+      "status": "passed",
+      "fullLog": "retarget-run-v5-quality.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:30:43.220634+00:00",
+      "seconds": 2.17,
+      "attempt": "retarget-run-v5-quality"
+    },
+    {
+      "startedAt": "2026-09-17T23:30:35.310068+00:00",
+      "status": "passed",
+      "fullLog": "retarget-run-v5.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:30:40.968627+00:00",
+      "seconds": 5.66,
+      "attempt": "retarget-run-v5"
+    },
+    {
+      "startedAt": "2026-09-17T22:41:00.019634+00:00",
+      "status": "passed",
+      "fullLog": "retarget-run.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T22:41:02.736065+00:00",
+      "seconds": 2.72,
+      "attempt": "retarget-run"
+    },
+    {
+      "startedAt": "2026-09-17T22:54:57.311494+00:00",
+      "status": "passed",
+      "fullLog": "retarget-v2.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T22:55:00.676919+00:00",
+      "seconds": 3.37,
+      "attempt": "retarget-v2"
+    },
+    {
+      "startedAt": "2026-09-17T23:10:21.120909+00:00",
+      "status": "passed",
+      "fullLog": "retarget-v3-quality.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:10:22.702077+00:00",
+      "seconds": 1.58,
+      "attempt": "retarget-v3-quality"
+    },
+    {
+      "startedAt": "2026-09-17T23:09:38.526240+00:00",
+      "status": "passed",
+      "fullLog": "retarget-v3.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:09:45.854248+00:00",
+      "seconds": 7.33,
+      "attempt": "retarget-v3"
+    },
+    {
+      "startedAt": "2026-09-17T23:28:10.278631+00:00",
+      "status": "passed",
+      "fullLog": "retarget-walk-quality.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:28:12.982594+00:00",
+      "seconds": 2.7,
+      "attempt": "retarget-walk-quality"
+    },
+    {
+      "startedAt": "2026-09-17T22:34:10.847722+00:00",
+      "status": "passed",
+      "fullLog": "retarget.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T22:34:13.989176+00:00",
+      "seconds": 3.14,
+      "attempt": "retarget"
+    },
+    {
+      "startedAt": "2026-09-17T23:41:11.435094+00:00",
+      "status": "passed",
+      "fullLog": "setup-verify.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-17T23:41:25.622213+00:00",
+      "seconds": 14.19,
+      "attempt": "setup-verify"
+    },
+    {
+      "startedAt": "2026-09-18T00:14:43.149360+00:00",
+      "status": "passed",
+      "fullLog": "studio-final-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-18T00:14:50.384080+00:00",
+      "seconds": 7.23,
+      "attempt": "studio-final-browser"
+    },
+    {
+      "startedAt": "2026-09-17T23:18:03.244411+00:00",
+      "status": "failed",
+      "fullLog": "vey-mia-pilot.log",
+      "exitCode": 3221225477,
+      "endedAt": "2026-09-17T23:18:31.433731+00:00",
+      "seconds": 28.19,
+      "attempt": "vey-mia-pilot"
+    },
+    {
+      "startedAt": "2026-09-18T00:23:40.642245+00:00",
+      "status": "passed",
+      "fullLog": "studio-recheck.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-18T00:23:47.967114+00:00",
+      "seconds": 7.32,
+      "attempt": "studio-recheck"
+    },
+    {
+      "startedAt": "2026-09-18T00:29:40.235291+00:00",
+      "status": "passed",
+      "fullLog": "public-live.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-18T00:30:04.209227+00:00",
+      "seconds": 23.97,
+      "attempt": "public-live"
+    },
+    {
+      "startedAt": "2026-09-18T00:33:21.947334+00:00",
+      "status": "passed",
+      "fullLog": "final-studio-tests.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-18T00:33:25.487111+00:00",
+      "seconds": 3.54,
+      "attempt": "final-studio-tests"
+    },
+    {
+      "startedAt": "2026-09-18T00:31:25.248059+00:00",
+      "status": "passed",
+      "fullLog": "final-motion-browser.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-18T00:31:33.335326+00:00",
+      "seconds": 8.09,
+      "attempt": "final-motion-browser"
+    },
+    {
+      "startedAt": "2026-09-18T00:37:48.501388+00:00",
+      "status": "passed",
+      "fullLog": "public-final-live.log",
+      "exitCode": 0,
+      "endedAt": "2026-09-18T00:37:58.868211+00:00",
+      "seconds": 10.37,
+      "attempt": "public-final-live"
+    }
+  ],
+  "studioAttempts": [
+    {
+      "stage": "mixamo candidate",
+      "startedAt": "2026-09-17T23:43:32.450744+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T23:43:51.184069+00:00",
+      "seconds": 18.733
+    },
+    {
+      "stage": "mixamo candidate",
+      "startedAt": "2026-09-17T23:49:29.667449+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-17T23:49:38.319235+00:00",
+      "seconds": 8.651
+    },
+    {
+      "stage": "mia candidate",
+      "startedAt": "2026-09-18T00:00:52.755399+00:00",
+      "status": "failed",
+      "error": "Failed candidate; full diagnostics retained in local project worker log and report.",
+      "endedAt": "2026-09-18T00:01:14.025357+00:00",
+      "seconds": 21.27
+    },
+    {
+      "stage": "instantmesh candidate",
+      "startedAt": "2026-09-18T00:04:32.927865+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-18T00:05:11.080684+00:00",
+      "seconds": 38.152
+    },
+    {
+      "stage": "instantmesh candidate",
+      "startedAt": "2026-09-18T00:07:58.993676+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-18T00:08:07.053193+00:00",
+      "seconds": 8.06
+    },
+    {
+      "stage": "mixamo candidate",
+      "startedAt": "2026-09-18T00:29:30.025861+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-18T00:29:40.375760+00:00",
+      "seconds": 10.35
+    },
+    {
+      "stage": "mixamo candidate",
+      "startedAt": "2026-09-18T00:29:41.154651+00:00",
+      "status": "completed",
+      "endedAt": "2026-09-18T00:29:49.826863+00:00",
+      "seconds": 8.671
+    }
+  ],
+  "microSteps": [
+    {
+      "step": "Original InstantMesh complete worker",
+      "seconds": 77.3048
+    },
+    {
+      "step": "Correct existing mesh Z-up to glTF Y-up",
+      "seconds": 1.4702
+    }
+  ],
+  "notes": [
+    "Actual source-file hashes and model revisions are in research-lock.json and individual asset receipts.",
+    "Some initial install failures and the paper/browser reading intervals have no separate timer; they are included in elapsed wall time.",
+    "Setup and model download durations are not normal per-asset creation costs."
+  ],
+  "finishedAtUtc": "2026-09-18T00:40:03.767227+00:00",
+  "totalThroughHandoffSeconds": 10668.15,
+  "totalScope": "Tracked inventory start through successful public QA, publication evidence and handoff preparation. The public scene timing download is an earlier checkpoint. Earlier pre-inventory work is unmeasured."
+}

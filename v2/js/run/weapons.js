@@ -170,6 +170,7 @@ export function createInventory(commander, initial = null) {
       const result = grant(); if (!result) return null;
       scrap -= cost; return result;
     },
+    awardScrap(amount) { if(!Number.isInteger(amount)||amount<1||amount>20)return false;scrap+=amount;return true; },
     request(op, busy = false) {
       // Validate on a disposable transaction state before accepting a queue.
       const oldItems = clone(items), oldSlots = [...slots], oldActive = active;

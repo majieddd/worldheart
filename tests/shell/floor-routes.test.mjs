@@ -24,3 +24,13 @@ test('directed impassable edges and temporary placement do not invent a mountain
  assert.deepEqual(m._previewRoute(3,new Set([1]),{next:m.march.next,walk:m.floorWalk,cost:m.cost}),[]);
  assert.deepEqual(m._previewRoute(3,new Set([1]),{next:m.march.next,walk:m.walk,cost:m.march.cost}),[3,2,0]);assert.deepEqual(m.march.next,before);
 });
+test('wood walls prefer an available detour, preserve a sealed breach route and leave air routes unchanged',()=>{
+ const n=fixture();n.floorWalk.fill(1);n.cost.fill(1);n.cost[0]=n.cost[2]=n.cost[3]=n.cost[6]=3;
+ n.wallPenalty=new Float32Array([0,0,90,0]);n.march=null;n._dijkstra(0,null);n._marchFlow();
+ assert.equal(n.march.next[3],1,'the longer unobstructed floor route wins');
+ const air={dist:new Float64Array(4),next:new Int32Array(4),walk:n.walk,cost:n.cost};n._dijkstra(0,null,air);
+ assert.equal(air.next[3],2,'the airborne shortcut ignores wooden walls');
+ n.cost[0]=n.cost[2]=n.cost[3]=n.cost[6]=Infinity;n.march=null;n._dijkstra(0,null);n._marchFlow();
+ assert.equal(n.march.next[3],2);assert.ok(Number.isFinite(n.march.dist[3]),'a sealed lane remains reachable by breaking its wall');
+ n.wallPenalty.fill(0);n.march=null;n._dijkstra(0,null);n._marchFlow();assert.equal(n.march.dist[3],2);
+});

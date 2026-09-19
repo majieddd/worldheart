@@ -328,6 +328,19 @@ grants 100 base-only credit; deposit does not expand territory or grant tower
 gold. The next explicit base upgrade uses credit first, then quotes the gold
 remainder. Deposit and pickup identities cannot pay twice.
 
+September 19 opening: two caches per expansion, a 24-cache maximum and nine-unit
+spacing make crystal searches deliberate. Initial caches sit outside the base.
+The first-expedition guide holds waves and disasters through the first base
+upgrade; skipping explicitly releases the hold. Drafted powers begin after wave
+one and alternate with tower cards. The final owed wave-two creature guarantees
+a weapon. Boss contact removes half of maximum base HP.
+
+Wooden walls cost one scrap for five segments and each has 180 HP. They add a
+finite path cost: enemies detour when possible and attack a wall when a lane is
+sealed. Flying units pass above. Four procedurally placed structure types have
+open entrances and E/touch-interactive chests containing seeded scraps, weapons
+or crystals. Chest claims persist in home saves; walls save their stock and HP.
+
 Cargo and base credit belong to the current assault. Death loses carried
 crystals; reload starts a fresh assault, just like towers and run gold. This
 is separate from the saved inventory extracted between planets.

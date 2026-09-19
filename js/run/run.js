@@ -140,6 +140,10 @@ export function createRun({ seed, playerIds, startGold, profile, draftSeconds = 
     getHeartLevel: () => state.heartLevel,
     hasConquered: () => state.conquest === 'won',
     getConquestWave: () => state.conquestWave || null,
+    retryConquestBoss(wave) {
+      if(state.conquest!=='pending'||state.conquestWave!==wave)return false;
+      state.conquestWave=wave+1;return true;
+    },
     queueConquest(wave) {
       if (state.heartLevel !== MAX_HEART_LEVEL || state.conquest || !Number.isInteger(wave) || wave <= state.wavesCleared) return false;
       state.conquest='pending';state.conquestWave=wave;state.endless=true;return true;

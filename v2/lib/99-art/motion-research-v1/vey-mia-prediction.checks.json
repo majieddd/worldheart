@@ -1,0 +1,38 @@
+{
+  "checks": [
+    {
+      "name": "Upright biped anatomy",
+      "status": "fail",
+      "detail": "Head Y 0.533, pelvis Y 1.154; neutral upright input required"
+    },
+    {
+      "name": "Ankles near the lower body",
+      "status": "fail",
+      "detail": "Ankle heights [1.319313883781433, 1.5515245199203491]; model height 2.004"
+    },
+    {
+      "name": "All vertices have normalized skin weights",
+      "status": "pass",
+      "detail": "Normalize after limiting influences"
+    },
+    {
+      "name": "At most four skin influences",
+      "status": "pass",
+      "detail": "Exact top-k, including tied values"
+    },
+    {
+      "name": "Rest conversion retains local surface scale",
+      "status": "fail",
+      "detail": "99th percentile edge stretch 8.124; check still requires rendered inspection"
+    },
+    {
+      "name": "Appendage coverage declared",
+      "status": "pass",
+      "detail": "Standard MIA predicts 52 humanoid bones; a fitted tail/ear extension is required for extra anatomy"
+    }
+  ],
+  "passed": false,
+  "edgeStretchP99": 8.124086915411645,
+  "visualReviewStillRequired": true,
+  "predictionSha256": "85af8c04ca6d7ee3984997fcb70e07944bf565079ff5106348bc07f1195fad30"
+}

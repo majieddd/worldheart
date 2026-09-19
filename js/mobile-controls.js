@@ -259,7 +259,7 @@ export class MobileControls {
     this.el('camera').hidden=!drive;text(this.el('camera'),p.boomWant>.35?'1st person':'3rd person');
     this.el('build').hidden=!!g.buildType||g.context.editing;this.el('resume').hidden=!g.paused;
     this.el('interact').hidden=!drive||!!g.buildType||!g.context.target;
-    this.el('interact').textContent=g.context.target?.kind==='loot'?'Inspect loot':'Manage tower';
+    this.el('interact').textContent=g.context.target?.kind==='loot'?'Inspect loot':g.context.target?.kind==='base'?'Manage base':'Manage tower';
     this.el('deposit').hidden=!drive||!m?.crystals.carried.length||this.ui.el['btn-deposit'].disabled;
     this.el('sprint').setAttribute('aria-pressed',String(p.touchInput.sprint));this.el('aim').setAttribute('aria-pressed',String(p.aiming));this.el('aim').hidden=p.boomWant>.35;
     text(this.el('jump'),a?.mountKey==='skyray'?'Rise':'Jump');

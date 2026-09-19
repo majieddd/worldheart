@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/mobile.css">
 <link rel="stylesheet" href="css/weapon-cards.css">
+<link rel="stylesheet" href="css/first-expedition.css">
 </head>
 <body>
 <canvas id="view"></canvas>
@@ -30,9 +31,7 @@
 { "imports": { "three": "./lib/three.module.min.js" } }
 </script>
 <script type="module">
-const entry=new URLSearchParams(location.search);
-if(location.protocol!=='file:'&&!['map','seed','campaign','worldgen'].some(k=>entry.has(k)))location.replace(new URL('lobby.html',location.href));
-else import('./js/main.js');
+import('./js/main.js');
 </script>
 </body>
 </html>

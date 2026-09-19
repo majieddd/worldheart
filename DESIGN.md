@@ -1,5 +1,19 @@
 # DESIGN.md (WORLDHEART brand contract)
 
+Production direction, September 19: the game and Debug World now use the locked
+Painted-Anime-Inkline 1.3.2 surface recipe (line 1.81, texture 1.5, saturation 1.3,
+shadow depth .35, exposure .77). Materials carry pigment; contours follow the
+mesh and foliage deformation. Broad crowns, sage/olive foliage, worn warm stone,
+muted armor and restrained bloom carry the arena language into the spherical
+world. Ground daylight follows the local normal and recedes to space at altitude.
+The story uses warm paper, ink borders, red condensed headings and four original
+paintings. Guide cards remain readable navy/sage and leave touch controls clear.
+Accepted art archives and collaborator assets are preserved. Existing production
+rigs receive the treatment; unapproved captured-motion candidates are separate.
+See `docs/qa/implementation/PAINTED-EARTH.md` for comparison evidence and limits.
+
+Latest owner direction, 2026-09-16: **Painted-Anime-Inkline** names the concept art style. Combine lush, whimsical painted anime environments with confident ink contours, deep colored cel shadows, material wear and darker comic grit. The earlier built-in paintings and Paintline/Inked Cel source remain binding references; the later Higgsfield batch is retained as a catalogue study, not a replacement of that preference. The unified artbook uses five top-level tabs, quiet warm-white surfaces, Barlow type and large unframed illustrations. Dials: variance 4, motion 1, density 5. Existing Atmospheric Ink 1.3.1, Vivid Paint and selected B UI composition remain preserved. See docs/art/99-planets/unified-artbook.md.
+
 ## North star
 A hand-carved museum diorama of a living pocket planet, floating in deep indigo space under warm sunlight: faceted terrain like cut gemstone, water like poured glass, and a single luminous crystal heart worth defending. Player technology is machined gunmetal that runs on cyan light. The void enemy is wet obsidian lit from inside by magenta. Everything glows only where it means something.
 
@@ -28,7 +42,8 @@ environments, moving articulated units, sword/plasma weapons and illustrative
 feedback. Graphics overrides are temporary; original and Vivid are separate presets.
 The current treatment uses object/rest-space pigment with separate deformed
 world-space lighting, fixing texture swimming without changing the selected palette.
-Earlier preferences below are historical. Production campaign art is not migrated.
+Earlier preferences below are historical. The production migration is recorded
+in the September 19 contract above.
 
 `style-playground.html` applies the preserved 1.0 and refined 1.3.1 recipes to
 a walkable meadow. Authored character clips crossfade in 0.18 s; world-space ink

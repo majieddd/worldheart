@@ -38,7 +38,7 @@ export function terrainCollection(key,seed=MINIATURE_SEED){
       for(const j of ids){wet.push(p.getX(j),.02,p.getZ(j));sea.setHex(0x329fa6);wetColors.push(sea.r,sea.g,sea.b);}}
     const group=new THREE.Group();group.add(new THREE.Mesh(geo,material({})));const water=new THREE.BufferGeometry();water.setAttribute('position',new THREE.Float32BufferAttribute(wet,3));water.setAttribute('color',new THREE.Float32BufferAttribute(wetColors,3));water.computeVertexNormals();group.add(new THREE.Mesh(water,material({roughness:.35})));
     const art=FEATURES.build({paint:(c,d,h,s)=>faceColor(new THREE.Vector3(...d),h,s*3.2,.5,c),scale:.2,spherical:false,include:dir=>centre.dot(new THREE.Vector3(...dir))>Math.cos(.5),point:(dir,h)=>{const d=new THREE.Vector3(...dir),dot=d.dot(centre);return new THREE.Vector3(d.dot(axis)*48/dot,h*.2,d.dot(side)*48/dot);}});group.add(art);group.userData.update=art.userData.update;
-    group.userData.terrain={key,seed,min,max,formations:[...new Set(modules.filter(m=>centre.dot(new THREE.Vector3(...m.dir))>Math.cos(.65)).map(m=>m.type))]};return group;
+    group.userData.terrain={key,seed,terrainVersion:CONFIG.terrainVersion,min,max,formations:[...new Set(modules.filter(m=>centre.dot(new THREE.Vector3(...m.dir))>Math.cos(.65)).map(m=>m.type))]};return group;
   }finally{Object.assign(CONFIG,saved);initTerrainField(saved.seed);}
 }
 
@@ -49,7 +49,7 @@ export function miniaturePlanet(theme,seed=MINIATURE_SEED){
   if(!/\/debug\.html$/.test(location.pathname)||R!==240)throw Error('Planet miniatures require the isolated Debug World');
   const saved={planetRadius:CONFIG.planetRadius,seed:CONFIG.seed,environment:CONFIG.environment,terrain:CONFIG.terrain,terrainKey:CONFIG.terrainKey,biomeKey:CONFIG.biomeKey};
   const environment=planetEnvironment(seed,theme),scale=10/environment.radius,group=new THREE.Group();
-  const data={theme,seed,biomes:{},formations:[],min:Infinity,max:-Infinity,waterFaces:0,vertices:0};
+  const data={theme,seed,terrainVersion:CONFIG.terrainVersion,biomes:{},formations:[],min:Infinity,max:-Infinity,waterFaces:0,vertices:0};
   try{
     Object.assign(CONFIG,{planetRadius:environment.radius,seed,environment,terrain:{...TERRAIN_PROFILES.varied,ocean:TERRAIN_PROFILES.varied.ocean+environment.oceanShift},terrainKey:'varied',biomeKey:'auto'});
     initTerrainField(seed);

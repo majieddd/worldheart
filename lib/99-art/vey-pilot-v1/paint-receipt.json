@@ -1,0 +1,44 @@
+{
+  "method": "Four-view depth-tested UV painting with registered silhouette spans",
+  "vertices": 19564,
+  "triangles": 39124,
+  "textureSize": 2048,
+  "referenceCoverage": 0.6537,
+  "unseenFill": "Explicit semantic palette fill on uncovered surfaces; orange in coverage map",
+  "views": {
+    "front": {
+      "visibleTexels": 57298,
+      "depthTest": true,
+      "sourceCrop": [
+        7,
+        503
+      ]
+    },
+    "back": {
+      "visibleTexels": 60187,
+      "depthTest": true,
+      "sourceCrop": [
+        5,
+        498
+      ]
+    },
+    "left": {
+      "visibleTexels": 38321,
+      "depthTest": true,
+      "sourceCrop": [
+        6,
+        503
+      ]
+    },
+    "right": {
+      "visibleTexels": 36850,
+      "depthTest": true,
+      "sourceCrop": [
+        6,
+        503
+      ]
+    }
+  },
+  "seconds": 33.75,
+  "ownerApproval": false
+}

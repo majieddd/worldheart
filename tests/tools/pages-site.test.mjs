@@ -16,7 +16,9 @@ function fixture(t) {
     const root = join(dir, name); mkdirSync(root);
     const files = {
       'index.html': name, 'debug.html': name, 'style-lab.html': name, 'painted-lab.html': name, 'hard-cel-lab.html': name, 'style-playground.html': name, 'atmospheric-arena.html': name, 'asset-stage.html': name, 'art-candidates/hard-cel-v1/candidate.json': name, 'js/main.js': name, 'css/style.css': name,
-      'lib/three.module.min.js': name, 'dist/worldheart.html': name,
+      'lib/three.module.min.js': name, 'dist/worldheart.html': name, 'procgen-lab.html': name,
+      '99-art.html': name, 'design-demos/99-planets/field.html': name,
+      'design-demos/unrelated/private.html': 'unrelated draft',
       'v2/obsolete.js': 'stale mirror', '.github/workflows/private.yml': 'workflow',
     };
     for (const [path, value] of Object.entries(files)) {
@@ -46,11 +48,15 @@ test('Pages preserves production bytes and replaces only the v2 game with previe
   assert.equal(readFileSync(join(out, 'v2/art-candidates/hard-cel-v1/candidate.json'), 'utf8'), 'preview');
   assert.equal(readFileSync(join(out, 'v2/style-playground.html'), 'utf8'), 'preview');
   assert.equal(readFileSync(join(out, 'v2/asset-stage.html'), 'utf8'), 'preview');
+  assert.equal(readFileSync(join(out, 'v2/procgen-lab.html'), 'utf8'), 'preview');
+  assert.equal(readFileSync(join(out, 'v2/99-art.html'), 'utf8'), 'preview');
+  assert.equal(readFileSync(join(out, 'v2/design-demos/99-planets/field.html'), 'utf8'), 'preview');
+  assert.equal(existsSync(join(out, 'v2/design-demos/unrelated')), false);
   assert.equal(existsSync(join(out, 'v2/obsolete.js')), false);
   assert.equal(existsSync(join(out, '.github')), false);
   assert.equal(existsSync(join(out, 'v2/dist')), false);
   assert.equal(JSON.parse(readFileSync(join(out, 'v2/build.json'))).previewSha, build.previewSha);
-  assert.equal(Object.keys(build.previewHashes).length, 12);
+  assert.equal(Object.keys(build.previewHashes).length, 15);
 });
 
 test('Pages refuses stale output or a destination that would contain source', t => {
