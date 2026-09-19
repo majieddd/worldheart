@@ -26,22 +26,20 @@ export function weaponCard(item,{stats,baseline=null,comparison='',image='',comp
   const s=stats,make=item.make,brand=MANUFACTURERS[make?.brand],skill=MAKER_SKILLS[make?.skill]||WEAPON_ABILITIES[item.family];
   if(!s)return '';
   const diff=(value,old)=>{if(old==null||Math.abs(value-old)<.05)return '';const n=value-old;return `<small class="wc-delta ${n>0?'wc-up':'wc-down'}" aria-label="${n>0?'increase':'decrease'} ${fmt(Math.abs(n))}">${n>0?'▲ +':'▼ '}${fmt(n)}</small>`;};
-  const row=(key,label,value,unit,old)=>`<div>${icon(key)}<span class="wc-stat-label">${label}</span><strong>${fmt(value)}<small>${unit}</small></strong>${diff(value,old)}</div>`;
+  const row=(key,label,value,unit,old)=>`<div><span class="wc-symbol" aria-hidden="true">${{damage:'⚔️',rate:'⚡',reach:'🎯'}[key]||'◈'}</span><span class="wc-stat-label">${label}</span><strong>${fmt(value)}<small>${unit}</small></strong>${diff(value,old)}</div>`;
   const continuous=s.kind==='beam',reach=s.radius||s.range||s.aoe;
   const same=baseline?.kind===s.kind,armor=s.pierce+(s.armorPierce||0);
   const band=row('damage',continuous?'Beam DPS':'Impact',s.dmg,'',(baseline?.kind==='beam')===continuous?baseline?.dmg:null)
     +row('rate',continuous?'Ramp':'Attacks / s',continuous?s.ramp:1/s.cd,continuous?'x':'',same?(continuous?baseline.ramp:1/baseline.cd):null)
-    +row('reach',s.kind==='lob'?'Blast':'Reach',reach,'m',same?(baseline.radius||baseline.range||baseline.aoe):null)
-    +row('armor','Armor pen.',armor,'',baseline?baseline.pierce+(baseline.armorPierce||0):null);
+    +row('reach',s.kind==='lob'?'Blast':'Reach',reach,'m',same?(baseline.radius||baseline.range||baseline.aoe):null);
   return `<section class="weapon-card wc-${escape(item.rarity)} ${compact?'wc-compact':''}" data-weapon-card="${escape(item.id)}" style="--maker:${brand?.color||'#aec4d6'}">
-    <div class="wc-heading"><span class="wc-rarity">${escape(item.rarity)} · ${escape(materialForWeapon(item))}</span><h3>${escape(weaponName(item))}</h3><span class="wc-family">${escape(FAMILIES[item.family].name)} · ${continuous?'Continuous beam':s.kind==='melee'?'Melee':'Ranged'}</span></div>
+    <div class="wc-heading"><span class="wc-rarity">${escape(item.rarity)} · ${escape(materialForWeapon(item))}</span><h3 title="${escape(weaponName(item))}">${escape(make?MODIFIERS[make.perk].name+' ':'')}${escape(FAMILIES[item.family].name)}</h3><span class="wc-family">${continuous?'Continuous beam':s.kind==='melee'?'Melee weapon':'Ranged weapon'} · ${escape(brand?.name||'Worldheart')}</span></div>
     <div class="wc-showcase"><div class="wc-dps"><strong>${fmt(damageRate(s))}</strong><span>${continuous?'Base beam DPS':'Direct DPS'}</span>${diff(damageRate(s),baseline?damageRate(baseline):null)}</div>${image?`<img src="${image}" alt="${escape(brand?.name||'Worldheart')} ${escape(FAMILIES[item.family].name)} model" width="480" height="176">`:''}</div>
     <div class="wc-stats">${band}</div>
     ${comparison?`<p class="wc-compare">Compared with ${escape(comparison)}. ▲ stronger · ▼ weaker</p>`:''}
-    <div class="wc-traits">${brand?`<p><b>${escape(brand.trait)}</b><span>${escape(brand.note)}</span></p><p><b>${escape(MODIFIERS[make.perk].name)} · ${['','Standard','Refined','Pristine'][make.quality]} roll</b><span>${escape(modifierText(make))}</span></p>`:''}
-    <p class="wc-skill">${icon('skill')}<b>${escape(skill.name)} <small>${skill.cooldown}s cooldown</small></b><span>${escape(skill.description)}</span></p></div>
-    ${!compact?`<p class="wc-parts">${Object.keys(PARTS).map(k=>escape(PARTS[k][item.parts[k]].name)).join(' / ')}${item.affixes.length?' · '+escape(item.affixes.join(', ')):''}</p><p class="wc-flavor">${escape(brand?.tagline||'A reliable companion on a distant world.')}</p>`:''}
+    <div class="wc-traits"><p class="wc-skill">${icon('skill')}<b>${escape(skill.name)} <small>${skill.cooldown}s</small></b><span>${escape(skill.description)}</span></p></div>
+    <details class="wc-details" data-item="${escape(item.id)}-stats"><summary>🔎 Traits & details</summary><div class="wc-traits">${brand?`<p><b>${escape(brand.trait)}</b><span>${escape(brand.note)}</span></p><p><b>${['','Standard','Refined','Pristine'][make.quality]} roll</b><span>${escape(modifierText(make))}</span></p>`:''}<p>Armor penetration <b>${fmt(armor)}</b></p><p>${Object.keys(PARTS).map(k=>escape(PARTS[k][item.parts[k]].name)).join(' / ')}${item.affixes.length?' · '+escape(item.affixes.join(', ')):''}</p><p>${escape(weaponName(item))}</p></div></details>
     <div class="wc-footer"><span class="wc-mark">${brand?.mark||'WH'}</span><strong>${escape(brand?.name||'Worldheart originals')}</strong><span>1 scrap</span></div>
-    ${continuous?'<small class="wc-method">Beam ramps while held; heat limits uptime.</small>':'<small class="wc-method">DPS before armor, area hits and status damage.</small>'}
+    ${continuous?'<small class="wc-method">Beam ramps while held; heat limits uptime.</small>':''}
   </section>`;
 }

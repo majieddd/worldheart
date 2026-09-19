@@ -1,10 +1,11 @@
-import * as THREE from 'three';
+import * as THREE from '../../lib/three.module.min.js';
 import {placeActiveFeatures,buildActiveFeature} from './active-features.js';
+import {ACTIVE_FEATURE_SCALE} from '../run/environment-catalogue.js';
 
 // Additional surfaces make actual open space under bridges, cave roofs and
 // floating slabs. Both navigation layers, collision and art sample these data.
 export function createTerrainFeatures(field,radius,ground,ecology=null){
- const surfaces=[],vents=[];
+ const surfaces=[],vents=[],featureScale=(ecology?.version??3)>=3?ACTIVE_FEATURE_SCALE:1;
  const active=[];
  const at=(m,u,v)=>ground(...field.project(m,u,v));
  const add=(m,key,u,v,halfU,halfV,top,bottom,round=false,angle=0)=>{
@@ -21,7 +22,8 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
    // rather than balancing a rectangular slab on two unrelated heights.
    const banks=Array.from({length:33},(_,i)=>{const u=(i/16-1)*width;return [at(m,u,-span),at(m,u,span)];});
    const bank=(u,side)=>{const t=Math.max(0,Math.min(31.999,(u/width+1)*16)),i=Math.floor(t);return banks[i][side]+(banks[i+1][side]-banks[i][side])*(t-i);};
-   const top=(u,v)=>{const t=(v/span+1)/2,cap=Math.max(0,1-(v/span)**2);return bank(u,0)*(1-t)+bank(u,1)*t+(cave?7.5:7)*cap*(.58+.42*Math.cos(u/width*Math.PI/2))+.28*Math.sin(u*.43+m.phase)*Math.cos(v*.32)*cap*cap;};
+   const modern=(ecology?.version??3)>=3,crown=modern?(cave?5:3.2):(cave?7.5:7),roughness=modern?.16:.28;
+   const top=(u,v)=>{const t=(v/span+1)/2,cap=Math.max(0,1-(v/span)**2);return bank(u,0)*(1-t)+bank(u,1)*t+crown*cap*(.58+.42*Math.cos(u/width*Math.PI/2))+roughness*Math.sin(u*.43+m.phase)*Math.cos(v*.32)*cap*cap;};
    add(m,cave?'cave-roof':'glacial-bridge',0,0,width,span,top,(u,v)=>top(u,v)-5.8-2.4*(u/width)**4-7*Math.pow(Math.abs(v/span),3),false);
    surfaces.at(-1).widthAt=v=>.78+.18*Math.cos(v/span*2.2)+.04*Math.sin(v/span*7+m.phase);
   }else if(m.type==='arcade'||m.type==='caverns'){
@@ -89,19 +91,23 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
   list=surfaces.filter(s=>d.x*s.dir[0]+d.y*s.dir[1]+d.z*s.dir[2]>s.bucketCos);buckets.set(key,list);return list;
  }
  function support(dir,ceiling,floor){
-  const w=field.warped(dir);let best=floor;for(const s of nearby(dir)){const p=local(s,dir,w);if(!p)continue;const h=s.top(p.u,p.v);if(h<=ceiling+.12&&h>best)best=h;}return best;
+  const list=nearby(dir);if(!list.length)return floor;
+  const w=field.warped(dir);let best=floor;for(const s of list){const p=local(s,dir,w);if(!p)continue;const h=s.top(p.u,p.v);if(h<=ceiling+.12&&h>best)best=h;}return best;
  }
- function ceiling(dir,feet){const w=field.warped(dir);let best=Infinity;for(const s of nearby(dir)){const p=local(s,dir,w);if(!p)continue;const h=s.bottom(p.u,p.v);if(h>feet+.1)best=Math.min(best,h);}return best;}
- function intersects(dir,feet,height){const w=field.warped(dir);for(const s of nearby(dir)){const p=local(s,dir,w);if(p&&feet<s.top(p.u,p.v)-.1&&feet+height>s.bottom(p.u,p.v)+.05)return true;}return false;}
+ function ceiling(dir,feet){const list=nearby(dir);if(!list.length)return Infinity;const w=field.warped(dir);let best=Infinity;for(const s of list){const p=local(s,dir,w);if(!p)continue;const h=s.bottom(p.u,p.v);if(h>feet+.1)best=Math.min(best,h);}return best;}
+ function intersects(dir,feet,height){const list=nearby(dir);if(!list.length)return false;const w=field.warped(dir);for(const s of list){const p=local(s,dir,w);if(p&&feet<s.top(p.u,p.v)-.1&&feet+height>s.bottom(p.u,p.v)+.05)return true;}return false;}
+ // Signed distance to the vertical interval, used by the same ray picker for
+ // building and orders. A ray below an arch must still reach its floor.
+ function depth(dir,height){const list=nearby(dir);if(!list.length)return Infinity;const w=field.warped(dir);let best=Infinity;for(const s of list){const p=local(s,dir,w);if(p)best=Math.min(best,Math.max(height-s.top(p.u,p.v),s.bottom(p.u,p.v)-height));}return best;}
  // Resolve recipe fits only after the structural surfaces exist. Floating
  // islands must host their own ecology, rather than placing every feature on
  // the ocean underneath them. Keep ground-level features under normal caves.
  if(ecology){
   const featureGround=ecology.floating?(x,y,z)=>support([x,y,z],Infinity,ground(x,y,z)):ground;
-  active.push(...placeActiveFeatures(field,radius,featureGround,ecology.biome,ecology.water,ecology.seed));
+  active.push(...placeActiveFeatures(field,radius,featureGround,ecology.biome,ecology.water,ecology.seed,featureScale));
   for(const site of active){
    if(site.key==='geyser')vents.push(site);
-   if(site.key==='trunks')add(site.m,'fossil-log',site.u,site.v,1.05,6,(u,v)=>site.height+1.35+Math.sqrt(Math.max(0,(.975-v*.0125)**2-u*u)),(u,v)=>site.height+1.35-Math.sqrt(Math.max(0,(.975-v*.0125)**2-u*u)),false);
+   if(site.key==='trunks'){const k=featureScale;add(site.m,'fossil-log',site.u,site.v,1.05*k,6*k,(u,v)=>site.height+1.35*k+Math.sqrt(Math.max(0,(.975*k-v*.0125)**2-u*u)),(u,v)=>site.height+1.35*k-Math.sqrt(Math.max(0,(.975*k-v*.0125)**2-u*u)),false);}
   }
   buckets.clear();
  }
@@ -132,8 +138,9 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
    if(paint){const p=geo.attributes.position,c=geo.attributes.color,normal=new THREE.Vector3(),a=new THREE.Vector3(),b=new THREE.Vector3(),d=new THREE.Vector3(),shade=new THREE.Color();
     for(let i=0;i<p.count;i+=3){a.fromBufferAttribute(p,i);b.fromBufferAttribute(p,i+1);d.fromBufferAttribute(p,i+2);normal.crossVectors(b.clone().sub(a),d.clone().sub(a)).normalize();const centre=a.add(b).add(d).multiplyScalar(1/3),up=spherical?centre.clone().normalize():new THREE.Vector3(0,1,0),height=spherical?centre.length()/scale-radius:centre.y/scale,slope=1-Math.abs(normal.dot(up));paint(shade,spherical?up.toArray():s.dir,height,slope);shade.multiplyScalar(.96+.04*Math.sin(centre.x*17.7+centre.y*3.7+centre.z*31.9));for(let k=0;k<3;k++)c.setXYZ(i+k,shade.r,shade.g,shade.b);}
    }
-   const c=geo.attributes.color;for(let i=0;i<c.count;i+=3){const light=tops[i]+tops[i+1]+tops[i+2]===3?1:tops[i]+tops[i+1]+tops[i+2]===0?.60:.83;for(let k=0;k<3;k++)c.setXYZ(i+k,c.getX(i+k)*light,c.getY(i+k)*light,c.getZ(i+k)*light);}
-   const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:tint,vertexColors:true,flatShading:true,roughness,side:THREE.DoubleSide}));mesh.castShadow=mesh.receiveShadow=true;mesh.name=s.key;mesh.userData.surface=s;group.add(mesh);
+   const c=geo.attributes.color,stone=new THREE.Color(color(s.dir)),face=new THREE.Color();for(let i=0;i<c.count;i+=3){const topCount=tops[i]+tops[i+1]+tops[i+2],light=topCount===3?1:topCount===0?.8:.94;for(let k=0;k<3;k++){face.setRGB(c.getX(i+k),c.getY(i+k),c.getZ(i+k));if(topCount<3)face.lerp(stone,.72);c.setXYZ(i+k,face.r*light,face.g*light,face.b*light);}}
+   const material=new THREE.MeshStandardMaterial({color:tint,vertexColors:true,flatShading:true,roughness,side:THREE.DoubleSide});material.userData.noContour=true;
+   const mesh=new THREE.Mesh(geo,material);mesh.castShadow=mesh.receiveShadow=true;mesh.name=s.key;mesh.userData.surface=s;group.add(mesh);
   }
   for(const vent of vents.filter(v=>!v.key)){
    if(!include(vent.dir.toArray()))continue;
@@ -145,7 +152,7 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
   const activeArt=[];
   for(const site of active){
    if(!include(site.dir.toArray()))continue;
-   const model=buildActiveFeature(site.key),origin=point?point(site.dir.toArray(),site.height):site.dir.clone().multiplyScalar(radius+site.height);model.position.copy(origin);
+   const model=buildActiveFeature(site.key,featureScale),origin=point?point(site.dir.toArray(),site.height):site.dir.clone().multiplyScalar(radius+site.height);model.position.copy(origin);
    if(site.key==='trunks'){
     // Bend the visible log through the same projected coordinates as its
     // collider. A straight tangent prop otherwise misses the warped end caps.
@@ -160,5 +167,5 @@ export function createTerrainFeatures(field,radius,ground,ecology=null){
   group.userData.update=time=>{for(const a of activeArt){if(!a.model.visible)continue;a.model.position.copy(point?point(a.site.dir.toArray(),a.site.height):a.site.dir.clone().multiplyScalar(radius+a.site.height));a.model.userData.update(time+a.site.phase);}for(const r of roots)if(r.height!==r.vent.height){r.height=r.vent.height;r.root.position.copy(point?point(r.vent.dir.toArray(),r.height):r.vent.dir.clone().multiplyScalar(radius+r.height));}for(const p of steam){const phase=(time+p.vent.phase)%12,on=phase<2.8;p.cloud.visible=on;if(on){const h=((time*5+p.k*.9)%9);p.cloud.position.set(Math.sin(p.k+time)*.5,h,Math.cos(p.k+time)*.5);p.cloud.scale.setScalar(.4+h*.12);}}};
   return group;
  }
- return {surfaces,vents,active,support,ceiling,intersects,build,field};
+ return {surfaces,vents,active,support,ceiling,intersects,depth,build,field};
 }

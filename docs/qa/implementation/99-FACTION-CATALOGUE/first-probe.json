@@ -1,0 +1,1725 @@
+{
+  "base": "http://127.0.0.1:8157",
+  "checks": [
+    {
+      "name": "Six factions and ninety authored concepts",
+      "ok": true
+    },
+    {
+      "name": "Every faction has three commanders, three units, three towers and all six game weapon families",
+      "ok": true
+    },
+    {
+      "name": "All 54 commander and weapon actives have icons, conditions, feedback and a limitation",
+      "ok": true
+    },
+    {
+      "name": "All ratings use five steps",
+      "ok": true
+    },
+    {
+      "name": "Common category budgets are respected without counting complexity as strength",
+      "ok": true
+    },
+    {
+      "name": "rainboom commanders route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "rainboom-commander-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Blue",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Crown crash",
+        "paths": 2
+      }
+    },
+    {
+      "name": "rainboom-commander-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Green",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Color snare",
+        "paths": 3
+      }
+    },
+    {
+      "name": "rainboom-commander-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Orange",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Feeding frenzy",
+        "paths": 4
+      }
+    },
+    {
+      "name": "rainboom units route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "rainboom-unit-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Lookie courier",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "rainboom-unit-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Crown shieldcart",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "rainboom-unit-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Hosehand",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "rainboom weapons route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "rainboom-twinblade inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Twin splashers",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Crossfade",
+        "paths": 5
+      }
+    },
+    {
+      "name": "rainboom-sword inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Crown cleaver",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Royal splash",
+        "paths": 4
+      }
+    },
+    {
+      "name": "rainboom-spear inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Color lance",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Color tether",
+        "paths": 2
+      }
+    },
+    {
+      "name": "rainboom-carbine inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Pigment carbine",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Paintburst",
+        "paths": 10
+      }
+    },
+    {
+      "name": "rainboom-scepter inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Prism scepter",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Spectrum sweep",
+        "paths": 3
+      }
+    },
+    {
+      "name": "rainboom-lobber inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Confetti lobber",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Party pop",
+        "paths": 9
+      }
+    },
+    {
+      "name": "rainboom towers route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "rainboom-tower-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Pigment popper",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "rainboom-tower-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Crown prism",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "rainboom-tower-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Box ambush",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "rainboom world route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "axiom commanders route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "axiom-commander-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Custodian",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Equalize",
+        "paths": 2
+      }
+    },
+    {
+      "name": "axiom-commander-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Vector",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Vector step",
+        "paths": 2
+      }
+    },
+    {
+      "name": "axiom-commander-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Mender",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Reconstruct",
+        "paths": 2
+      }
+    },
+    {
+      "name": "axiom units route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "axiom-unit-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Surveyor",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "axiom-unit-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Bastion frame",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "axiom-unit-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Link drone",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "axiom weapons route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "axiom-twinblade inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Split vectors",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Converge",
+        "paths": 3
+      }
+    },
+    {
+      "name": "axiom-sword inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Parity blade",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Countermeasure",
+        "paths": 2
+      }
+    },
+    {
+      "name": "axiom-spear inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Survey lance",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Measure line",
+        "paths": 5
+      }
+    },
+    {
+      "name": "axiom-carbine inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Vector carbine",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Corrective shot",
+        "paths": 5
+      }
+    },
+    {
+      "name": "axiom-scepter inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Restoration scepter",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Stabilize",
+        "paths": 1
+      }
+    },
+    {
+      "name": "axiom-lobber inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Orbit lobber",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Gravity correction",
+        "paths": 5
+      }
+    },
+    {
+      "name": "axiom towers route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "axiom-tower-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Parity rail",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "axiom-tower-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Balance array",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "axiom-tower-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Correction well",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "axiom world route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "anomalous commanders route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "anomalous-commander-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Barney",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Friendly visit",
+        "paths": 4
+      }
+    },
+    {
+      "name": "anomalous-commander-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Stalker",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Corner of the eye",
+        "paths": 4
+      }
+    },
+    {
+      "name": "anomalous-commander-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Dr. Harlow",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Second opinion",
+        "paths": 4
+      }
+    },
+    {
+      "name": "anomalous units route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "anomalous-unit-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Head Banger",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "anomalous-unit-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Hider",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "anomalous-unit-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Twitch patient",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "anomalous weapons route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "anomalous-twinblade inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Double incision",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "False negative",
+        "paths": 5
+      }
+    },
+    {
+      "name": "anomalous-sword inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Discharge blade",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Last visitor",
+        "paths": 5
+      }
+    },
+    {
+      "name": "anomalous-spear inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "IV lance",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Vital tether",
+        "paths": 6
+      }
+    },
+    {
+      "name": "anomalous-carbine inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Witness rifle",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Caught on film",
+        "paths": 2
+      }
+    },
+    {
+      "name": "anomalous-scepter inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Night-shift scepter",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Lights out",
+        "paths": 3
+      }
+    },
+    {
+      "name": "anomalous-lobber inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Patient zero lobber",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Unscheduled arrival",
+        "paths": 4
+      }
+    },
+    {
+      "name": "anomalous towers route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "anomalous-tower-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Check-in shutter",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "anomalous-tower-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Witness camera",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "anomalous-tower-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Bedside visitor",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "anomalous world route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "brainshot commanders route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "brainshot-commander-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Tralalero Tralala",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Triple step",
+        "paths": 3
+      }
+    },
+    {
+      "name": "brainshot-commander-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Ballerina Cappuccina",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Steam pirouette",
+        "paths": 3
+      }
+    },
+    {
+      "name": "brainshot-commander-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Tung Tung Tung Sahur",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Wake-up call",
+        "paths": 7
+      }
+    },
+    {
+      "name": "brainshot units route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "brainshot-unit-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Sneaker scout",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "brainshot-unit-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Espresso loader",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "brainshot-unit-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Beat keeper",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "brainshot weapons route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "brainshot-twinblade inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Double shot",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Double espresso",
+        "paths": 4
+      }
+    },
+    {
+      "name": "brainshot-sword inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Wake-up bat",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Punchline",
+        "paths": 3
+      }
+    },
+    {
+      "name": "brainshot-spear inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Skewer special",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Dinner bell",
+        "paths": 4
+      }
+    },
+    {
+      "name": "brainshot-carbine inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Sharkbite carbine",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Bite back",
+        "paths": 6
+      }
+    },
+    {
+      "name": "brainshot-scepter inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Cappuccino scepter",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Hot foam",
+        "paths": 1
+      }
+    },
+    {
+      "name": "brainshot-lobber inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Beatbox lobber",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Bass rebound",
+        "paths": 6
+      }
+    },
+    {
+      "name": "brainshot towers route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "brainshot-tower-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Espresso press",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "brainshot-tower-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Bass drop",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "brainshot-tower-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Sneaker launcher",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "brainshot world route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "robloxian commanders route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "robloxian-commander-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Noob",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Second wind",
+        "paths": 1
+      }
+    },
+    {
+      "name": "robloxian-commander-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Guest",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Off the list",
+        "paths": 4
+      }
+    },
+    {
+      "name": "robloxian-commander-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Builderman",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Quick build",
+        "paths": 8
+      }
+    },
+    {
+      "name": "robloxian units route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "robloxian-unit-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Brickguard",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "robloxian-unit-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Builder crew",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "robloxian-unit-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Bacon runner",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "robloxian weapons route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "robloxian-twinblade inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Paired classics",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Quick swap",
+        "paths": 4
+      }
+    },
+    {
+      "name": "robloxian-sword inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Classic sword",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Lunge",
+        "paths": 4
+      }
+    },
+    {
+      "name": "robloxian-spear inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Stud pike",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Hold the bridge",
+        "paths": 7
+      }
+    },
+    {
+      "name": "robloxian-carbine inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Brickbolt rifle",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Overclock",
+        "paths": 1
+      }
+    },
+    {
+      "name": "robloxian-scepter inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Spawnfire staff",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Rally point",
+        "paths": 1
+      }
+    },
+    {
+      "name": "robloxian-lobber inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Blockbuster",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Demolition day",
+        "paths": 8
+      }
+    },
+    {
+      "name": "robloxian towers route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "robloxian-tower-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Stud sentry",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "robloxian-tower-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Brickwork bastion",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "robloxian-tower-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Spawn beacon",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "robloxian world route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "alien commanders route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "alien-commander-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "The Herald",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Breach call",
+        "paths": 7
+      }
+    },
+    {
+      "name": "alien-commander-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Broodwarden",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Carapace wall",
+        "paths": 1
+      }
+    },
+    {
+      "name": "alien-commander-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Riftwalker",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Slip between",
+        "paths": 5
+      }
+    },
+    {
+      "name": "alien units route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "alien-unit-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Skitter",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "alien-unit-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Shellback",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "alien-unit-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Spore eye",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "alien weapons route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "alien-twinblade inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Split talons",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Predator mark",
+        "paths": 5
+      }
+    },
+    {
+      "name": "alien-sword inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Meteor fang",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Fault line",
+        "paths": 4
+      }
+    },
+    {
+      "name": "alien-spear inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Arrival pike",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Harpoon",
+        "paths": 4
+      }
+    },
+    {
+      "name": "alien-carbine inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Chitin carbine",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Living burst",
+        "paths": 11
+      }
+    },
+    {
+      "name": "alien-scepter inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Rift ember",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Molting heat",
+        "paths": 2
+      }
+    },
+    {
+      "name": "alien-lobber inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Spore lobber",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "power": "Hatchfall",
+        "paths": 1
+      }
+    },
+    {
+      "name": "alien towers route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "alien-tower-0 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Breach spine",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "alien-tower-1 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Brood kettle",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "alien-tower-2 inspector has correct identity, bars and active",
+      "ok": true,
+      "detail": {
+        "name": "Rift thorn",
+        "bars": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "paths": 0
+      }
+    },
+    {
+      "name": "alien world route, artwork and title load",
+      "ok": true
+    },
+    {
+      "name": "rainboom-roster.png served identity",
+      "ok": true
+    },
+    {
+      "name": "rainboom-roster.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "rainboom-arsenal.png served identity",
+      "ok": true
+    },
+    {
+      "name": "rainboom-arsenal.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "rainboom-towers.png served identity",
+      "ok": true
+    },
+    {
+      "name": "rainboom-towers.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "rainboom-world.png served identity",
+      "ok": true
+    },
+    {
+      "name": "rainboom-world.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "axiom-roster.png served identity",
+      "ok": true
+    },
+    {
+      "name": "axiom-roster.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "axiom-arsenal.png served identity",
+      "ok": true
+    },
+    {
+      "name": "axiom-arsenal.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "axiom-towers.png served identity",
+      "ok": true
+    },
+    {
+      "name": "axiom-towers.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "axiom-world.png served identity",
+      "ok": true
+    },
+    {
+      "name": "axiom-world.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "anomalous-roster.png served identity",
+      "ok": true
+    },
+    {
+      "name": "anomalous-roster.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "anomalous-arsenal.png served identity",
+      "ok": true
+    },
+    {
+      "name": "anomalous-arsenal.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "anomalous-towers.png served identity",
+      "ok": true
+    },
+    {
+      "name": "anomalous-towers.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "anomalous-world.png served identity",
+      "ok": true
+    },
+    {
+      "name": "anomalous-world.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "brainshot-roster.png served identity",
+      "ok": true
+    },
+    {
+      "name": "brainshot-roster.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "brainshot-arsenal.png served identity",
+      "ok": true
+    },
+    {
+      "name": "brainshot-arsenal.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "brainshot-towers.png served identity",
+      "ok": true
+    },
+    {
+      "name": "brainshot-towers.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "brainshot-world.png served identity",
+      "ok": true
+    },
+    {
+      "name": "brainshot-world.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "robloxian-roster.png served identity",
+      "ok": true
+    },
+    {
+      "name": "robloxian-roster.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "robloxian-arsenal.png served identity",
+      "ok": true
+    },
+    {
+      "name": "robloxian-arsenal.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "robloxian-towers.png served identity",
+      "ok": true
+    },
+    {
+      "name": "robloxian-towers.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "robloxian-world.png served identity",
+      "ok": true
+    },
+    {
+      "name": "robloxian-world.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "alien-roster.png served identity",
+      "ok": true
+    },
+    {
+      "name": "alien-roster.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "alien-arsenal.png served identity",
+      "ok": true
+    },
+    {
+      "name": "alien-arsenal.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "alien-towers.png served identity",
+      "ok": true
+    },
+    {
+      "name": "alien-towers.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "alien-world.png served identity",
+      "ok": true
+    },
+    {
+      "name": "alien-world.webp served identity",
+      "ok": true
+    },
+    {
+      "name": "Back restores selected asset",
+      "ok": true
+    },
+    {
+      "name": "Full-resolution viewer opens",
+      "ok": true
+    },
+    {
+      "name": "Full-resolution zoom works",
+      "ok": true
+    },
+    {
+      "name": "Escape closes viewer and restores focus",
+      "ok": true
+    },
+    {
+      "name": "Keyboard focus has a visible outline",
+      "ok": true
+    },
+    {
+      "name": "Catalogue measured text contrast meets AA",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "Catalogue fits 375",
+      "ok": true
+    },
+    {
+      "name": "Primary navigation is one row at 375",
+      "ok": true
+    },
+    {
+      "name": "Catalogue fits 768",
+      "ok": true
+    },
+    {
+      "name": "Primary navigation is one row at 768",
+      "ok": true
+    },
+    {
+      "name": "Catalogue fits 1280",
+      "ok": true
+    },
+    {
+      "name": "Primary navigation is one row at 1280",
+      "ok": true
+    },
+    {
+      "name": "B removes planet and date block",
+      "ok": true
+    },
+    {
+      "name": "B preserves three mode controls and adds semantic icons",
+      "ok": true
+    },
+    {
+      "name": "B commander ability retains input feedback",
+      "ok": true
+    },
+    {
+      "name": "B weapon ability retains input feedback",
+      "ok": true
+    },
+    {
+      "name": "Harness completed",
+      "ok": false,
+      "detail": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#place-tower')\u001b[22m\n"
+    }
+  ],
+  "errors": [
+    "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#place-tower')\u001b[22m\n"
+  ],
+  "httpFailures": []
+}

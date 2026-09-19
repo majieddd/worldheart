@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../lib/three.module.min.js';
 import {NEW_BIOMES} from './run/world-catalogue.js';
 
 // Each added habitat owns a silhouette, not just a tint of the same tree.
@@ -6,7 +6,7 @@ import {NEW_BIOMES} from './run/world-catalogue.js';
 export function appendBiomeDressing(kind,add){
  if(!NEW_BIOMES[kind])return false;
  const c=NEW_BIOMES[kind].accent;
- const cylinder=(r1,r2,h,color,x=0,y=h/2,z=0)=>add(new THREE.CylinderGeometry(r1,r2,h,7),color,x,y,z);
+ const cylinder=(r1,r2,h,color,x=0,y=h/2,z=0)=>add(new THREE.CylinderGeometry(r1,r2,h,10,2),color,x,y,z);
  const crown=(x,y,z,r,color,squash=1)=>{const g=new THREE.IcosahedronGeometry(r,1);g.scale(1,squash,1);add(g,color,x,y,z);};
  const limb=(a,b,r,color)=>{const start=new THREE.Vector3(...a),end=new THREE.Vector3(...b),g=new THREE.CylinderGeometry(r*.65,r,start.distanceTo(end),6);g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),end.clone().sub(start).normalize()));const p=start.add(end).multiplyScalar(.5);add(g,color,p.x,p.y,p.z);};
  if(kind==='redwood'){

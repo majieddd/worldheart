@@ -1,4 +1,7 @@
 import { weaponWorkbench } from './debug-weapons.js';
+import {STRUCTURES} from './run/structures.js';
+import {buildStructure,buildWall} from './structure-models.js';
+import {productionPaint} from './production-paint.js';
 import {patchScatter} from './terrain/scatter.js';
 import {TouchGesture,bindTouchActivation,hasTouch,clamp} from './touch-input.js';
 import {createTerrainFeatures} from './terrain/features.js';
@@ -101,13 +104,14 @@ function weaponExhibit(assembly){
 }
 
 function terrainPaint(c,dir,h,slope){
-  paintBiome(c,h>3||h<-.8?'desert':'meadow',h,slope,.5);
-  if(h>3)c.lerp(new THREE.Color(0x937765),.45+.15*Math.sin(h*.6));
+  paintBiome(c,'meadow',h,slope,.5);
+  const rock=new THREE.Color();paintBiome(rock,'desert',h,slope,.5);rock.lerp(new THREE.Color(0x937765),.45+.15*Math.sin(h*.6));
+  const blend=Math.max(THREE.MathUtils.smoothstep(h,1.6,4.6),1-THREE.MathUtils.smoothstep(h,-1.8,.5),THREE.MathUtils.smoothstep(slope,.08,.4));c.lerp(rock,blend);
 }
 
 function terrainTile(type,seed){
   const sample=formationSample(type,seed),n=type==='grand'||type==='labyrinth'?128:96,half=sample.half;
-  const features=createTerrainFeatures(sample.field,240,(x,y,z)=>sample.field.height(x,y,z)),a=sample.anchor;
+  const features=createTerrainFeatures(sample.field,240,sample.surface),a=sample.anchor;
   const geo=new THREE.PlaneGeometry(half*2*SCALE,half*2*SCALE,n,n);geo.rotateX(-Math.PI/2);
   const p=geo.attributes.position;let low=0,high=0;
   for(let i=0;i<p.count;i++){const h=sample.height(p.getX(i)/SCALE,p.getZ(i)/SCALE);p.setY(i,h*SCALE);low=Math.min(low,h);high=Math.max(high,h);}
@@ -161,12 +165,13 @@ function biomeTile(key,theme=null){
 
 export async function startDebugWorld(){
   const el=id=>document.getElementById(id),viewport=el('viewport'),labels=el('labels');
-  const renderer=new THREE.WebGLRenderer({antialias:true});renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setClearColor(0x152334);viewport.prepend(renderer.domElement);
+  const renderer=new THREE.WebGLRenderer({antialias:true});renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.77;renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setClearColor(0x152334);viewport.prepend(renderer.domElement);
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,10000);
-  scene.add(new THREE.HemisphereLight(0xdbecff,0x566276,2.4));
-  const sun=new THREE.DirectionalLight(0xffedcf,3);sun.position.set(100,180,70);scene.add(sun);
+  scene.add(new THREE.HemisphereLight(0xe2ebdc,0x83765f,1.15));
+  const sun=new THREE.DirectionalLight(0xffe6b8,2.1);sun.position.set(100,180,70);scene.add(sun);
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(3300,900),mat(0x1d3040));floor.rotation.x=-Math.PI/2;floor.position.set(1100,-12,315);scene.add(floor);
-  const lanes=[['units','Units'],['mounts','Mounts'],['towers','Towers'],['weapons','Weapons'],['formations','Land formations'],['terrain','Terrain'],['biomes','Biomes'],['features','Active land features'],['disasters','Natural disasters'],['themes','Planet themes']].map(([key,name],i)=>({key,name,z:i*90,items:[],width:0}));
+  const paint=await productionPaint(renderer);
+  const lanes=[['units','Units'],['mounts','Mounts'],['towers','Towers'],['weapons','Weapons'],['formations','Land formations'],['terrain','Terrain'],['biomes','Biomes'],['structures','Structures'],['features','Active land features'],['disasters','Natural disasters'],['themes','Planet themes']].map(([key,name],i)=>({key,name,z:i*90,items:[],width:0}));
   const exhibits=[],animated=[],target=new THREE.Vector3(),view={yaw:.65,pitch:.65,distance:40},reduced=matchMedia('(prefers-reduced-motion: reduce)');let selected=null,time=0,last=performance.now(),disposed=false;
   function add(lane,key,name,group,description,metrics={},width=30,update=null){
     const x=lane.width+width/2;lane.width+=width+8;group.position.set(x,0,lane.z);scene.add(group);
@@ -179,6 +184,10 @@ export async function startDebugWorld(){
   }
   for(const lane of lanes){
     el('status').textContent=`Building ${lane.name.toLowerCase()}…`;await waitFrame();
+    if(lane.key==='structures'){
+      for(const [key,spec]of Object.entries(STRUCTURES)){const art=buildStructure(key);art.root.scale.setScalar(2);add(lane,key,spec.name,art.root,spec.note,{Reward:spec.reward,Interaction:'E / Open chest',Access:'Open doorway'},24,t=>{art.lid.rotation.x=-(.5+.5*Math.sin(t*.7))*1.45;});}
+      const wall=buildWall();wall.scale.setScalar(2);add(lane,'wood-wall','Wooden wall',wall,'Buy five segments for one scrap. Ground enemies detour; if sealed in, they attack and break the wall.',{HP:180,Cost:'1 scrap / 5'},14);
+    }
     if(lane.key==='units'){
       for(const [key,type]of Object.entries(ALLY_TYPES)){
         const b=articulated(buildSoldier(key,modelMats()),false,key);b.group.scale.setScalar(4);
@@ -312,7 +321,7 @@ export async function startDebugWorld(){
     for(const {item,update}of animated)if(item.lane==='units'||item.group.visible)update(motion==='still'?0:time,motion);
     const clip=reduced.matches?'Motion paused by reduced-motion preference':motion==='still'?'Motion paused':selected.lane==='units'?`Playing: ${selected.group.userData.animation}`:motion==='cycle'?'Units cycle in their lane; planet previews rotate.':`Unit motion: ${motion}. Planet previews rotate.`;
     if(el('clip').textContent!==clip)el('clip').textContent=clip;
-    renderer.render(scene,camera);
+    paint.update(performance.now()/1000,scene);renderer.render(scene,camera);
     for(const item of exhibits){projected.set(item.x,0,item.z+item.width*.45).project(camera);
       const visible=item.lane===selected.lane&&(item.lane!=='themes'||item===selected)&&projected.z>0&&projected.z<1&&Math.abs(projected.x)<.94&&Math.abs(projected.y)<.92&&view.distance<190;
       item.label.hidden=!visible;if(visible){item.label.style.left=`${(projected.x*.5+.5)*viewport.clientWidth}px`;item.label.style.top=`${(-projected.y*.5+.5)*viewport.clientHeight}px`;}}

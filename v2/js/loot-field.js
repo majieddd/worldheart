@@ -14,7 +14,7 @@ export class LootField {
     this.boltMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.12, 6, 4), this.materials.rare, 32);
     this.boltMesh.frustumCulled = false; this.boltMesh.count = 0; scene.add(this.boltMesh);
   }
-  add(item, direction, height = null) {
+  add(item, direction, height = null, launch = null) {
     if (this.entries.has(item.id)) return;
     const group = new THREE.Group(), token = this.model(item);
     token.rotation.x=-.45;token.rotation.z=.5;
@@ -23,18 +23,18 @@ export class LootField {
     const position = height===null ? surfacePoint(direction, new THREE.Vector3())
       : direction.clone().multiplyScalar(R+surfaceElevation(direction,supportHeight(direction,height+.3)));
     group.position.copy(position); group.quaternion.setFromUnitVectors(_up, direction);
-    this.scene.add(group); this.entries.set(item.id, { item, position, group, token });
+    this.scene.add(group); this.entries.set(item.id, { item, position, group, token,flight:launch?{from:launch.clone(),age:0}:null });
   }
   remove(id) { const e = this.entries.get(id); if (!e) return; this.scene.remove(e.group); this.entries.delete(id); }
   nearby(position, reach = 2.8) {
-    return [...this.entries.values()].filter(e => e.position.distanceTo(position) <= reach).sort((a,b) => a.position.distanceToSquared(position)-b.position.distanceToSquared(position)).map(e=>e.item);
+    return [...this.entries.values()].filter(e => !e.flight&&e.position.distanceTo(position) <= reach).sort((a,b) => a.position.distanceToSquared(position)-b.position.distanceToSquared(position)).map(e=>e.item);
   }
   update(dt) {
     this.time += dt;
-    for (const e of this.entries.values()) { e.token.rotation.y = this.time * 0.8; e.token.position.y = 0.7 + Math.sin(this.time * 2) * 0.07; }
+    for (const e of this.entries.values()) { e.token.rotation.y = this.time * 0.8; e.token.position.y = 0.7 + Math.sin(this.time * 2) * 0.07;if(e.flight){e.flight.age+=dt;const t=Math.min(1,e.flight.age/.85);e.group.position.lerpVectors(e.flight.from,e.position,t).addScaledVector(_radial.copy(e.position).normalize(),Math.sin(t*Math.PI)*2.7);e.token.rotation.z=.5+Math.sin(t*Math.PI)*1.2;if(t===1)e.flight=null;} }
     let i = 0;
     for (const b of this.allies._bolts) if (b.live) { _matrix.makeTranslation(b.pos.x,b.pos.y,b.pos.z); this.boltMesh.setMatrixAt(i++, _matrix); }
     this.boltMesh.count = i; this.boltMesh.instanceMatrix.needsUpdate = true;
   }
 }
-const _up = new THREE.Vector3(0,1,0), _matrix = new THREE.Matrix4();
+const _up = new THREE.Vector3(0,1,0), _matrix = new THREE.Matrix4(),_radial=new THREE.Vector3();

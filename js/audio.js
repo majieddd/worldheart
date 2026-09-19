@@ -152,6 +152,14 @@ export class AudioEngine {
 
   // -- recipes --------------------------------------------------------------
 
+  chest() {
+    if(!this.started||this.muted||!this.ctx)return;
+    // A low wooden latch and short, clean bell chord. No continuous noise bed.
+    this._osc('sine',165,67,.17,this._env(.17,.16));
+    for(const [i,hz]of [392,587.33,783.99,1174.66].entries())this._tone(hz,.24,i*.07+.09,.045,'sine');
+    this._tone(196,.32,.08,.045,'triangle');
+  }
+
   play(name, context = {}) {
     if (!this.started || this.muted || !this.ctx) return;
     switch (name) {

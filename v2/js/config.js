@@ -1,4 +1,5 @@
 import {TERRAIN_PACKS} from './run/world-catalogue.js';
+import {CURRENT_TERRAIN_VERSION,savedTerrainVersion} from './run/terrain-version.js';
 // WORLDHEART: single source of tuning. Scene palette here is canonical for WebGL;
 // css/style.css :root is canonical for the DOM HUD. Keep the two in sync with DESIGN.md.
 
@@ -110,8 +111,7 @@ const mapKey = (() => {
   if (/\/(debug|lobby)\.html$/.test(location.pathname || '')) return 'ninetynine';
   const q = url.get('map');
   if (q && MAPS[q]) return q;
-  const s = stored('whMap');
-  return s && MAPS[s] ? s : preview ? 'ninetynine' : 'pocket';
+  return 'ninetynine';
 })();
 const MAP = MAPS[mapKey];
 const R0 = MAP.radius;
@@ -120,7 +120,7 @@ export const TERRAIN_PROFILES = Object.fromEntries(Object.entries(TERRAIN_PACKS)
 const rawSeed=Number(url.get('seed')) || Number(stored('whSeed')) || 20260830;
 const requestedSeed=worldgen&&(!Number.isInteger(rawSeed)||rawSeed<1||rawSeed>0xffffffff)?20260830:rawSeed;
 const homeSnapshot=url.has('home')?homeStore.get(url.get('home')):null;
-const campaign=campaignLaunch(!homeSnapshot&&!url.has('home')&&!worldgen&&mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':preview),requestedSeed);
+const campaign=campaignLaunch(!homeSnapshot&&!url.has('home')&&!worldgen&&mapKey==='ninetynine'&&(url.has('campaign')?url.get('campaign')==='1':true),requestedSeed);
 const terrainKey = homeSnapshot?.world.terrain || campaign?.terrain || url.get('terrain') || 'varied';
 const planetKey=!campaign&&Object.hasOwn(PLANET_THEMES,url.get('planet'))?url.get('planet'):'auto';
 let environment=MAP.mode==='ninetynine'?homeSnapshot?.world.environment||campaign?.environment||planetEnvironment((requestedSeed>>>0)||1,planetKey):null;
@@ -130,6 +130,7 @@ const terrainProfile=TERRAIN_PROFILES[terrainKey]||TERRAIN_PROFILES.varied;
 export const CONFIG = {
   worldgen,
   homeSnapshot,
+  terrainVersion:homeSnapshot?savedTerrainVersion(homeSnapshot.world):campaign?.terrainVersion??CURRENT_TERRAIN_VERSION,
   homeMissing:url.has('home')&&!homeSnapshot,
   hostility:url.has('hostility')?Math.max(0,Math.min(2,Number(url.get('hostility')))):null,
   requestedSeed,
@@ -256,16 +257,16 @@ export const PALETTE = {
   snow: 0xe9f1fb,
   soil: 0x8a6a4f,
 
-  trunk: 0x6d5140,
-  pine: 0x2e8f6a,
-  pineDark: 0x257a5c,
-  leaf: 0x5ed494,
-  rock: 0x7c8aa0,
+  trunk: 0x777759,
+  pine: 0x7e9b58,
+  pineDark: 0x5e824e,
+  leaf: 0x9cad64,
+  rock: 0xb4a89a,
   crystal: 0xa9f0ff,
 
-  techBody: 0x3d4757,
-  techTrim: 0xcdd8e6,
-  techDark: 0x2a3140,
+  techBody: 0x647982,
+  techTrim: 0xc7d0c3,
+  techDark: 0x293844,
   energy: 0x59f2ff,
   energyHot: 0xbdfaff,
   gold: 0xffc857,

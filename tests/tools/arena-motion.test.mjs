@@ -24,5 +24,10 @@ test('owner screenshot presets preserve all supplied values and original reset',
   assert.deepEqual(keys.map(k=>GRAPHICS_PRESETS.vivid.graphics[k]),[2.8,.0225,.35,1.3,1.5,.77,1.25,81,.45,.45,1]);
   assert.deepEqual(keys.map(k=>GRAPHICS_PRESETS.deep.graphics[k]),[2.8,.021,.3,1.5,1.69,.84,1.25,81,.45,.45,1]);
   const before=JSON.stringify(GRAPHICS_DEFAULTS),custom=normalizeGraphics({...GRAPHICS_PRESETS.vivid.graphics,line:99,texture:NaN});
-  assert.equal(custom.line,4);assert.equal(custom.texture,1.5);assert.equal(matchingPreset(custom),'custom');assert.equal(matchingPreset(GRAPHICS_DEFAULTS),'vivid');assert.equal(JSON.stringify(GRAPHICS_DEFAULTS),before);assert.ok(Object.isFrozen(GRAPHICS_PRESETS.vivid.graphics));
+  assert.equal(custom.line,4);assert.equal(custom.texture,1.5);assert.equal(matchingPreset(custom),'custom');assert.equal(matchingPreset(GRAPHICS_DEFAULTS),'ink132');assert.equal(JSON.stringify(GRAPHICS_DEFAULTS),before);assert.ok(Object.isFrozen(GRAPHICS_PRESETS.vivid.graphics));
+});
+
+test('1.3.2 exactly matches the supplied owner recipe without changing older presets',()=>{
+ assert.deepEqual(GRAPHICS_DEFAULTS,{line:1.81,fog:.0225,shadowDepth:.35,saturation:1.3,texture:1.5,exposure:.77,resolution:1.25,fov:81,bob:.45,shake:.45,sensitivity:1});
+ assert.equal(GRAPHICS_PRESETS.vivid.graphics.line,2.8);assert.equal(GRAPHICS_PRESETS.default.graphics.line,1.4);
 });

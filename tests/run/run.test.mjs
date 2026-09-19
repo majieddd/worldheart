@@ -26,28 +26,24 @@ test('a new run opens at the starting frontier with one tower', () => {
   assert.equal(run.getWave(), 1);
 });
 
-test('an EVEN wave opens a draft of three, an odd wave does not', () => {
+test('the first wave opens three power choices; the second pays a card', () => {
   const run = newRun();
-  // Wave 1 is odd: it pays a tower card, so no draft opens and the run
-  // advances straight through.
-  run.completeWave();
-  assert.equal(run.getDraft(), null, 'wave 1 should pay a card, not a power');
-  assert.equal(run.getWave(), 2, 'an odd wave must advance without a draft');
-  // Wave 2 is even: this is where the power comes from.
   run.completeWave();
   const draft = run.getDraft();
-  assert.ok(draft, 'expected a draft after the even wave');
+  assert.ok(draft, 'expected the first power after wave one');
   assert.equal(draft.offers.length, 3);
+  run.vote('p1',0);run.tick(0);run.completeWave();
+  assert.equal(run.getDraft(),null);assert.equal(run.getWave(),3);
 });
 
 test('a wave does not advance until its draft resolves', () => {
   const run = newRun();
-  run.completeWave();          // wave 1, odd: advances on its own
-  run.completeWave();          // wave 2, even: opens a draft and holds
-  assert.equal(run.getWave(), 2, 'wave should hold while drafting');
+  run.completeWave();
+  run.completeWave(); // A duplicate clear while drafting cannot advance.
+  assert.equal(run.getWave(), 1, 'wave should hold while drafting');
   run.vote('p1', 0);
   run.tick(0);
-  assert.equal(run.getWave(), 3);
+  assert.equal(run.getWave(), 2);
 });
 
 test('the drafted power is added to the run and reaches the modifiers', () => {
@@ -147,11 +143,12 @@ test('completeWave emits the beats the shell needs', () => {
   const odd = run.completeWave().map((e) => e.type);
   assert.ok(odd.includes('waveCleared'));
   assert.ok(!odd.includes('frontierGrew'));
-  assert.ok(odd.includes('handDrawn'), 'an odd wave pays a card');
-  assert.ok(!odd.includes('draftOpened'), 'an odd wave must not open a draft');
+  assert.ok(odd.includes('draftOpened'), 'an odd wave opens the power choice');
+  assert.ok(!odd.includes('handDrawn'), 'an odd wave does not also pay a card');
+  run.vote('p1',0);run.tick(0);
   const even = run.completeWave().map((e) => e.type);
-  assert.ok(even.includes('draftOpened'), 'an even wave pays a power');
-  assert.ok(!even.includes('handDrawn'), 'an even wave must not also pay a card');
+  assert.ok(even.includes('handDrawn'), 'an even wave pays a card');
+  assert.ok(!even.includes('draftOpened'), 'an even wave does not also pay a power');
 });
 
 test('losing the run ends it', () => {

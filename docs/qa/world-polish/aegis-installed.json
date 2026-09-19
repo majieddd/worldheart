@@ -1,0 +1,3721 @@
+{
+  "schemaVersion": 1,
+  "project": "worldheart",
+  "suite": "exploration",
+  "status": "pass",
+  "results": [
+    {
+      "status": "pass",
+      "checks": [
+        {
+          "name": "Revised Earth home retains connected anchor routes",
+          "status": "pass",
+          "actual": {
+            "ms": 22684.39999999851,
+            "stages": [
+              {
+                "label": "seeding the noise fields",
+                "start": 616.3000000044703,
+                "ms": 510.5
+              },
+              {
+                "label": "charting the ley lines",
+                "start": 1126.8000000044703,
+                "ms": 16685
+              },
+              {
+                "label": "carving the continents",
+                "start": 17811.80000000447,
+                "ms": 2416.2999999970198
+              },
+              {
+                "label": "pouring the oceans",
+                "start": 20228.10000000149,
+                "ms": 399.3999999985099
+              },
+              {
+                "label": "hanging the stars",
+                "start": 20627.5,
+                "ms": 9.399999998509884
+              },
+              {
+                "label": "planting the forests",
+                "start": 20636.89999999851,
+                "ms": 858.9000000059605
+              },
+              {
+                "label": "raising the light",
+                "start": 21495.80000000447,
+                "ms": 132.39999999850988
+              },
+              {
+                "label": "waking the worldheart",
+                "start": 21628.20000000298,
+                "ms": 925
+              }
+            ],
+            "centre": [
+              0.9078024509717959,
+              0.15408265393676962,
+              -0.3900682578285518
+            ],
+            "heart": [
+              0.9078024625778198,
+              0.15408265590667725,
+              -0.39006826281547546
+            ],
+            "portals": [
+              [
+                0.6801780462265015,
+                0.6080736517906189,
+                -0.4093950390815735
+              ],
+              [
+                0.8955681920051575,
+                -0.34300386905670166,
+                -0.28338295221328735
+              ],
+              [
+                0.9667618274688721,
+                0.23208756744861603,
+                0.10727029293775558
+              ],
+              [
+                0.6846683621406555,
+                0.059442877769470215,
+                -0.7264267206192017
+              ],
+              [
+                0.8377180099487305,
+                0.5415445566177368,
+                -0.0704130157828331
+              ]
+            ],
+            "healthy": true,
+            "attempts": 1,
+            "loadMs": 22694
+          }
+        },
+        {
+          "name": "Walls join on the globe and reject duplicates",
+          "status": "pass",
+          "actual": {
+            "first": true,
+            "second": true,
+            "gap": 0.020997867812573814,
+            "duplicate": false,
+            "count": 2
+          }
+        },
+        {
+          "name": "A rotated corner snaps without blocking its own adjoining segment",
+          "status": "pass",
+          "actual": {
+            "gap": 0.005145662674884705,
+            "snapped": true,
+            "placed": true
+          }
+        },
+        {
+          "name": "Wheel rotates the selected wall without zooming",
+          "status": "pass",
+          "actual": {
+            "before": {
+              "turn": 0,
+              "zoom": 1148.5607762323696
+            },
+            "after": {
+              "turn": 0.7853981633974483,
+              "zoom": 1148.5607762323696
+            }
+          }
+        },
+        {
+          "name": "Touch action bar has usable towers and a wall card",
+          "status": "pass",
+          "actual": {
+            "enabled": true,
+            "paused": false,
+            "worldgen": false,
+            "hidden": false,
+            "blocked": false,
+            "cards": 3,
+            "mode": true,
+            "wall": true,
+            "wallHidden": false
+          }
+        },
+        {
+          "name": "Touch wall card enters the same placement flow",
+          "status": "pass",
+          "actual": {
+            "placing": true,
+            "canAct": true,
+            "stock": 5,
+            "paused": false,
+            "overlay": false
+          }
+        },
+        {
+          "name": "Two-finger spreading zooms in; pinching zooms out without rotating the map",
+          "status": "pass",
+          "actual": {
+            "initial": {
+              "distance": 150,
+              "lon": 0.8766277184733138,
+              "lat": 0.4346989545623505
+            },
+            "spread": {
+              "distance": 92.85714285714285,
+              "lon": 0.8766277184733138,
+              "lat": 0.4346989545623505
+            },
+            "pinched": {
+              "distance": 149.99999999999997,
+              "lon": 0.8766277184733138,
+              "lat": 0.4346989545623505
+            }
+          }
+        },
+        {
+          "name": "No browser runtime or shader errors",
+          "status": "pass",
+          "actual": []
+        }
+      ],
+      "faults": [],
+      "evidence": [
+        {
+          "path": "touch-before-build.png",
+          "sha256": "ff7f06aa3ba1ee2fd2be301033c44413b99624fea9ab78b68ece5b2d497dcad2"
+        },
+        {
+          "path": "touch-strategy.png",
+          "sha256": "5b41c505d4215c7222913a2cb6d6979e3a74b988a57b610670ca230501c5c7f1"
+        },
+        {
+          "path": "wall-building.png",
+          "sha256": "cc9b330d5b792cdf064e9d06844b98de14e08f61c4eba1856d96b40f68096c29"
+        }
+      ],
+      "schemaVersion": 1,
+      "runner": {
+        "name": "aegis-workflows",
+        "version": "3.18.14"
+      },
+      "project": "worldheart",
+      "engine": {
+        "name": "three",
+        "version": "r180"
+      },
+      "source": {
+        "revision": "0036b84932792291a4591fc920bb23946e3580b4",
+        "dirty": true,
+        "profileSha256": "1620bd68f36026c6c67876a9bf2f2696d80c5e1ef370fc6eccdb9d369000f10d",
+        "scope": "declared files only",
+        "files": [
+          {
+            "path": "css/99-art.css",
+            "sha256": "5e5fcb96dc77512b498810a7db21aab38ea3f93c3eaf0c14b48435477c7fbb38"
+          },
+          {
+            "path": "css/99-artbook.css",
+            "sha256": "a08ff2b8741e8b96d53af8e4fe596511895607f35b1bc69aca0eaabb4daa33ea"
+          },
+          {
+            "path": "css/99-factions.css",
+            "sha256": "327fd45a3136066dbe8b8384f4bf7d72c75f4f57fb32c235ee5dac113743423f"
+          },
+          {
+            "path": "css/arena.css",
+            "sha256": "626ec9e40d95213cba00c9f19abfa410fab19f7fd2ba75b3634c22072e224f3f"
+          },
+          {
+            "path": "css/artboard.css",
+            "sha256": "c13741f32eff25de9b4341cdfa67e68583bfb84b21ee70e82458891e8ad69879"
+          },
+          {
+            "path": "css/asset-stage.css",
+            "sha256": "d1b0ff0889830677a41f8c355bbddf71c06b1bcf0110854b7ed247d7fee867a7"
+          },
+          {
+            "path": "css/audio-lab.css",
+            "sha256": "37c5cdefa8b91429340cf2a7b20090578c0d67c522fb912a4bbb7daa3763c190"
+          },
+          {
+            "path": "css/debug.css",
+            "sha256": "c491f0ef0b89b2ccf22875cc1b74bf21040c5ac9959b97ad3af3a5f8731b3075"
+          },
+          {
+            "path": "css/first-expedition.css",
+            "sha256": "b1c9ce7d7d19b2aecfdc43764e46195e6b324f975aa8ba32907b7278c2117ea9"
+          },
+          {
+            "path": "css/generation-lab.css",
+            "sha256": "15a4ff0bb5095e431bcf119fcbef1dc2061c05db835901b1c4a779cfb6b1d651"
+          },
+          {
+            "path": "css/hard-cel-lab.css",
+            "sha256": "a8a9c58be5bd3199c976448ec2c92cab5253abc37841f0ec7da405f0249237f6"
+          },
+          {
+            "path": "css/lobby.css",
+            "sha256": "c0e9b2538b6eb6fae277223550c66c5a64ad25d838446839a6c46fdda6f92420"
+          },
+          {
+            "path": "css/mascot-study.css",
+            "sha256": "d9c28a77fa3fe0ca82c0f015a62696e3ba308e95ba702ad537f42aebe5904cfc"
+          },
+          {
+            "path": "css/mobile.css",
+            "sha256": "50c99f4b83ccb814e1bb58c4d1ce5601d40aaec4b1f433387c247e2b9fbef817"
+          },
+          {
+            "path": "css/painted-hud.css",
+            "sha256": "a68af094b907012fec6cc145ef27fd968358f1d326c3b94ff933f29367ddf625"
+          },
+          {
+            "path": "css/painted-lab.css",
+            "sha256": "933ed56b9c053dd919aac98d94f22fbe1bdcab984f6fe197236e22564a560960"
+          },
+          {
+            "path": "css/playground.css",
+            "sha256": "36289e448381dbf703df616ba36053213c47add053f03b18790272259e219f57"
+          },
+          {
+            "path": "css/procgen-lab.css",
+            "sha256": "4ac07caa9aa8223da9acdd78d5d6c509c62083827c068f2d6e6d12b0c09d98e7"
+          },
+          {
+            "path": "css/style-lab.css",
+            "sha256": "831b051f865e92fdccc74ed9b1de89334ee10ed54c1ab4c895568289999a53ec"
+          },
+          {
+            "path": "css/style.css",
+            "sha256": "29f7a9a7a604d71a589f7633c0915531308515446b8b26192c7ab8f3ac7d7b71"
+          },
+          {
+            "path": "css/vey-benchmark.css",
+            "sha256": "40c7baec832412c15c0032cf45a53a3b60e4555392226caf2852ce098121cb40"
+          },
+          {
+            "path": "css/vey-field.css",
+            "sha256": "0194c1fbfeb4234962374d5044f78b2090ccf678ba5c937b2e218c16893699d0"
+          },
+          {
+            "path": "css/vey-pilot.css",
+            "sha256": "c1bed52c15cf40f63fff38c5a52a6f0153a99c320171440622aac8e92d34c8f3"
+          },
+          {
+            "path": "css/weapon-cards.css",
+            "sha256": "4d4ab479c21b87d8fb5e7fcd49e51b2c421fee4d7603ff3b8d5f09561446bda4"
+          },
+          {
+            "path": "docs/99-PLANETS-TO-DEFEND.md",
+            "sha256": "a87ac40fe3e370d8daab28d0938db084ea8dd9030f7f573e73adbc398e55d092"
+          },
+          {
+            "path": "index.html",
+            "sha256": "a1f242176d28ab7084c95436993d00a8c035038856ecff8a4a55a687a76deacf"
+          },
+          {
+            "path": "js/99-art.js",
+            "sha256": "c55d1b80456b0c0f37bdb927782f397ccfd668ba9e50847b1c2cdb394409dce6"
+          },
+          {
+            "path": "js/99-artbook.js",
+            "sha256": "283582b1fc31507400a60f1d5ff459a61ef4ee8c9453911e3211c8dbebdd68a1"
+          },
+          {
+            "path": "js/99-factions.js",
+            "sha256": "c094ddb179ef302365a4a599b6fcf4a97d6eecb56d239d7f1d739486ac1b0185"
+          },
+          {
+            "path": "js/abilities.js",
+            "sha256": "b43ef18ab8d25ced02bb383ba9a0f88088df56659bc597628d6ab40d815c224c"
+          },
+          {
+            "path": "js/allies.js",
+            "sha256": "8fab01e96df8555abcd1a3983071ab73751103e0af6a34e470d32ff538d11b2a"
+          },
+          {
+            "path": "js/arena-effects.js",
+            "sha256": "5d71000cd1f5632bf154bd3c0134e45ca215e0822811eaa253825b625685bf0c"
+          },
+          {
+            "path": "js/arena-foliage.js",
+            "sha256": "1d419dcabac498a71f0a6689a75f1d2b61d5d46493ee766018ff1500b6f8f420"
+          },
+          {
+            "path": "js/arena-handling.js",
+            "sha256": "c303d3927dd84f46601dd6ccba442965cd85bd3185398281f770703d4c4d0e02"
+          },
+          {
+            "path": "js/arena-kit.js",
+            "sha256": "c926304e42883b6bf7f94fef7a2300fbc37a361f7c3a74e22370ec91bfccd19e"
+          },
+          {
+            "path": "js/arena-materials.js",
+            "sha256": "f493bf3520aaa49e416220ba8044102291431c6fbaa9acbc3accecea19be1b3b"
+          },
+          {
+            "path": "js/arena-motion.js",
+            "sha256": "dbdd85e403e1a568cc987014a9432005820f8ade53c7cea63354f32820223bd1"
+          },
+          {
+            "path": "js/arena-presets.js",
+            "sha256": "4f4cd75a7cc702e6726bbc543bf97e4f19522bed2746d13f67921ea941371776"
+          },
+          {
+            "path": "js/arena-reference.js",
+            "sha256": "daa83c5ae23d8147fefeada68cda204fe77547401604f2a33fab40cdd41bac12"
+          },
+          {
+            "path": "js/arena-rules.js",
+            "sha256": "61980d7b2e38def9fec840b2f060dc45f401d671f39c7b1e67d3b8552f4f6ae4"
+          },
+          {
+            "path": "js/arena-unit.js",
+            "sha256": "ff73639e6ad25b8028a9320c8b9620a2bf082ed8fcde2d81f403ae2d90542d18"
+          },
+          {
+            "path": "js/arena-vey.js",
+            "sha256": "352c9b0defe6dd7d7356b52991e0f74d95a3b50d32a36539a75ef130bf04850e"
+          },
+          {
+            "path": "js/arena-weapons.js",
+            "sha256": "bd7d07c7b4a9f90529e9ab642c9dd95b4adc2b5d45a8f9729cc76e714ecf0365"
+          },
+          {
+            "path": "js/arena-world.js",
+            "sha256": "6f2d48e0e2bedded1aa81c7205f0fdaca49a63f5da2d49e7e79f2087a3c8f318"
+          },
+          {
+            "path": "js/arena.js",
+            "sha256": "94785e8cf086a9ea7c752ae2f8959703e99e324cde30064a0a955f222c6fb0ea"
+          },
+          {
+            "path": "js/artboard.js",
+            "sha256": "4bbdcd4c654713e2c114f28bc62a364914768519c12974108ffbea5450b44a96"
+          },
+          {
+            "path": "js/artbook-factions.js",
+            "sha256": "767965c0f598e979a80bd844ff6655662e08008007a3cbca168b2ba05a01bc1a"
+          },
+          {
+            "path": "js/asset-model-viewer.js",
+            "sha256": "1fd40e828a950b89e45e5684dc48e7898d08ecd035fc5a54992aee8e77d0059c"
+          },
+          {
+            "path": "js/asset-stage.js",
+            "sha256": "830e5c262c421d0078662b958d350a2fea3e39d5da481ddd6e564d70c94acae7"
+          },
+          {
+            "path": "js/attacks.js",
+            "sha256": "9924b0ce7af87a76a452d10f02d892df39e6160679a211729418badde6970850"
+          },
+          {
+            "path": "js/audio-context.js",
+            "sha256": "4ed83c95b468430c00d155da941363b902c035ed687b422e25d53f46e86d0b4a"
+          },
+          {
+            "path": "js/audio-lab.js",
+            "sha256": "d62ee963930b58b7245f5be8559b865dd1d23d7804c70dd51dddfad39ca7e5d3"
+          },
+          {
+            "path": "js/audio-material.js",
+            "sha256": "7164e6982fa9ce8fdb93877ff98d14f5e7b1d8fc8bc283513043c61353c528b2"
+          },
+          {
+            "path": "js/audio.js",
+            "sha256": "6e0599e842bd35915840ee2a782bc2dcc3accda70a6e456fa2f442f1369cfc9f"
+          },
+          {
+            "path": "js/biome-dressing.js",
+            "sha256": "03d88c69978a34018bf3c8d31ee20d166900d4eea5562c104056bb21ba020b81"
+          },
+          {
+            "path": "js/biome-visuals.js",
+            "sha256": "eace149c7dd6c7566b89a3fc46f6332eec84de6b42685de4780c393c5cc3a265"
+          },
+          {
+            "path": "js/camera.js",
+            "sha256": "331fb1787331470cfaf576246aa4fdfd839839ff541931217f57d6d7de624310"
+          },
+          {
+            "path": "js/combatfx.js",
+            "sha256": "a7a9588f50232980e669dae848ef98d2ab93f27869fa62b60136b7754e1f7514"
+          },
+          {
+            "path": "js/commander-model.js",
+            "sha256": "1da591d5828786d5b2d4c4505d8787d67c8d5b1e53c08f6d52b05e8a704b58c9"
+          },
+          {
+            "path": "js/commander-preview.js",
+            "sha256": "b11bac16b0709c58e6b05c2ba716bd68178fcc000ee9b9b25baed4a72e4d229c"
+          },
+          {
+            "path": "js/commander-research.js",
+            "sha256": "9798df5457d977c00982ff3e10ab58367e8bc47da2600f1ee9e6d54d20a728e7"
+          },
+          {
+            "path": "js/config.js",
+            "sha256": "67cb7cc114942ba77fe29cd2b7ba3c5a3ed6bf46cbd57b6c0bb9ca01b2bb2cb0"
+          },
+          {
+            "path": "js/debug-animation.js",
+            "sha256": "35272ce2a192f240d6946e399075c180f13072438be19b4c2477a50756324108"
+          },
+          {
+            "path": "js/debug-planets.js",
+            "sha256": "b0a22aea326a86da2de639ef8efc2b50aa125a16effe62f853f6a24ee1b38929"
+          },
+          {
+            "path": "js/debug-weapons.js",
+            "sha256": "c661e1e3b0a09bee05dbb3520f37cfe90864afa7cc35fb1cda9494d2b8318dc5"
+          },
+          {
+            "path": "js/debug-world.js",
+            "sha256": "d56b457124dc58dd87f357d268f1aa3b27461681d640635cd1a85576a870cf4a"
+          },
+          {
+            "path": "js/disaster-art.js",
+            "sha256": "3853d863252fbc285af94520855afd43fec8e97e06e7066d1d33338bb5e11dfa"
+          },
+          {
+            "path": "js/disaster-preview.js",
+            "sha256": "13a1b9579ad800002277b0218d4bb13ba8e3057778fb68f684bdac5e58782e3a"
+          },
+          {
+            "path": "js/disaster-weather-art.js",
+            "sha256": "5ff7d6fbd7379a4fe6cd487327e3d28c7e2ebe6c53c8da18e8e29adef5b6b796"
+          },
+          {
+            "path": "js/dotted-path.js",
+            "sha256": "b88492b61f1045cce0c9f56765d2445ed544da3875fd43b33d4df608bd54b8d4"
+          },
+          {
+            "path": "js/effects.js",
+            "sha256": "c97b3626cb455dc63a1f4ce6014676e2930bd4b2c6798a929f6969a8d39f2e99"
+          },
+          {
+            "path": "js/encounters.js",
+            "sha256": "52c7e6ed5c8e2b84b6d4fe022140a0210ba8588e493b02517b113e114131c65c"
+          },
+          {
+            "path": "js/enemies.js",
+            "sha256": "533da1acd59cdacac1515374fdb589ae5d2925e8cac8d8170df5e5588efb0a8c"
+          },
+          {
+            "path": "js/first-expedition.js",
+            "sha256": "000782ab781296835df6dd3e7fbb134da756a3cbf7cc1d16b8d959d1e3daea7f"
+          },
+          {
+            "path": "js/first-guide.js",
+            "sha256": "60c1f3db673d515d29a06e1514cf6a88a7110a7bcdc6ed08c6c8c0d957bb0f4b"
+          },
+          {
+            "path": "js/game.js",
+            "sha256": "69d183fd716b80fc9c53284f2739e09eee652cd5606b56a031ed7ee22bae845b"
+          },
+          {
+            "path": "js/generation-lab.js",
+            "sha256": "e42de1491eec3271af1611109aa4911b1d2e56d01adfa386e83483047e9b4f90"
+          },
+          {
+            "path": "js/geodesic.js",
+            "sha256": "e696cbea893389dee0ea10383e5461b9e72cc5d7213cb473d23aa21521563b60"
+          },
+          {
+            "path": "js/hard-cel-lab.js",
+            "sha256": "ea7b034d4622487a30c39a5fead4b883b6c2a678d290ecf711aac27d762a0a2a"
+          },
+          {
+            "path": "js/hard-cel-materials.js",
+            "sha256": "9e1fb86aa1fdfdccdf22caa86f0aa0b9476ec1c2f5dd80692819ff28f60f4a6e"
+          },
+          {
+            "path": "js/hard-cel-versions.js",
+            "sha256": "cb108184dd05326797a21ded3f50948d5d77f36f109242631cc7b3bfe4542924"
+          },
+          {
+            "path": "js/home-planet.js",
+            "sha256": "94e389398fc0da03fd10597c5c638cce188cee1aac1e31e1b032303b0f6b4fd9"
+          },
+          {
+            "path": "js/identity-canon.js",
+            "sha256": "4e1f1f1cb0a267d80cd26f97e28f50986bb66b700e19f22992592ccf193f700d"
+          },
+          {
+            "path": "js/identity-workshop.js",
+            "sha256": "ad24783f4770cc3882e8cb7cf75a8be0900c7aaad9b47cdc48cdf736d81feddf"
+          },
+          {
+            "path": "js/lobby-homes.js",
+            "sha256": "7a9875a703f89ad8cf8e8b4e13eea18ace365bb5a135ec1fb2adb00a94ee81db"
+          },
+          {
+            "path": "js/lobby-scene.js",
+            "sha256": "162db5ddf40784c73edb2fbf3a13fbc663fa2ed76f3bda0d8ccee7f5f40c4629"
+          },
+          {
+            "path": "js/lobby-weapons.js",
+            "sha256": "4616a19a7b32b7fcdd922e4a1469ac0c32a34a5e62616ba9673b6b1e180c71a6"
+          },
+          {
+            "path": "js/lobby.js",
+            "sha256": "2b16f4d4f97c7110ef58547db2b48f3bdfb5432b2aa5f5b106589a8b791513f1"
+          },
+          {
+            "path": "js/loot-field.js",
+            "sha256": "242e7f0343b884ff75e99f69f2a48296bad43d64b55227406da3707435a2050a"
+          },
+          {
+            "path": "js/main.js",
+            "sha256": "42e9e945f1e5da100557278ab587992ad92a32c1bbfa227c892e7a6cd1ca5cf2"
+          },
+          {
+            "path": "js/mascot-study.js",
+            "sha256": "5bc8f4445df8f94a5a741a2116cc0285883382ed6ee2fb500c0883f74b459348"
+          },
+          {
+            "path": "js/mobile-controls.js",
+            "sha256": "30f177f82df8df051f46a8935a4d2a014784c89fad5f554ffa8420ead96b5423"
+          },
+          {
+            "path": "js/modes/campaign-launch.js",
+            "sha256": "66e3c8e550479b63fd33911b265ac98b93ad729174f0ef221991654f42ac3644"
+          },
+          {
+            "path": "js/modes/campaign-store.js",
+            "sha256": "f1c29aa515d08e216e68227238d8e768b68c4ea0d3b504c886098cf20c73411d"
+          },
+          {
+            "path": "js/modes/home-store.js",
+            "sha256": "c9796afb594f92470c0c47f065e9be4e512f57fded499d5f022f5978121a2906"
+          },
+          {
+            "path": "js/modes/ninetynine.js",
+            "sha256": "d9af76f56c743cf6586ce1a462acf07f478a8e542949d8fe7ef985f1ea0e6604"
+          },
+          {
+            "path": "js/modes/progress.js",
+            "sha256": "4ddad61115e3d8262ea9d8b10ed1d2cfb9e6e167edd1844d9133470a7e5b77e3"
+          },
+          {
+            "path": "js/mounts.js",
+            "sha256": "b8e614783078940c2b13cbcda594cf81e2c93a810ef4277cd018ce45c8954688"
+          },
+          {
+            "path": "js/nav-build.js",
+            "sha256": "fda87fbe4e3f8d98896b2f016e2cf7731c0e4c4b1352910c67c8cef3467d38b7"
+          },
+          {
+            "path": "js/nav.js",
+            "sha256": "eea831f1d5c87c820d698f8513221c5ec3d9f123f14b334a1915462b40bbfb65"
+          },
+          {
+            "path": "js/nest-atlas-view.js",
+            "sha256": "a4f024fb22b7710aa3170a662306ce53baf8d4e718363287d63bfed4cf1c4350"
+          },
+          {
+            "path": "js/nest-sites.js",
+            "sha256": "149162539d74c6648f0a72b390876ee62ecb6ea75598cbadbbdc9666be8742f7"
+          },
+          {
+            "path": "js/noise.js",
+            "sha256": "f59d0548bdd9f359ec6667e521ccf49ba1aa61ddfb81069ad460555d2a5ea435"
+          },
+          {
+            "path": "js/opening-cinema.js",
+            "sha256": "3bd249da989dcc262404ffe46099aae3c6237bc40a181a63b8d3c6e58b28b0fa"
+          },
+          {
+            "path": "js/painted-environment.js",
+            "sha256": "51b105fc797ef3b4321437ca1aae0e808b15f910385f3d2eb16b83975cc28437"
+          },
+          {
+            "path": "js/painted-geometry.js",
+            "sha256": "dd256a044b0eb9fd99a948e6ec2ed9d4b9c640531a1ef2b354433971812ce128"
+          },
+          {
+            "path": "js/painted-lab.js",
+            "sha256": "679fc9d2cf11381ef0584fe41eede9a2777c3b1cd51b4ec481b0e47c594f9a2a"
+          },
+          {
+            "path": "js/painted-materials.js",
+            "sha256": "ecc77d972075c92e593f6e4ac935fd0fe039121c387fbee596da1f549b717a13"
+          },
+          {
+            "path": "js/planet-adornment.js",
+            "sha256": "aefe45667e2aa2b270ab53ac0aa11cebf5522b23f1075d210bd057b66910081e"
+          },
+          {
+            "path": "js/playground-actor.js",
+            "sha256": "7144eb65caa4ab91ca1175b3357de99a921e7d681aaf0dac146b13e41509612a"
+          },
+          {
+            "path": "js/playground-fx.js",
+            "sha256": "efc43593ddc729e0200e736855a234f584a3b1994333e8eed6531a2a0ba874f7"
+          },
+          {
+            "path": "js/playground.js",
+            "sha256": "596861468390f8b4525ad77672fc64e5ea166ef446e57fa0698d5b3cb4626e58"
+          },
+          {
+            "path": "js/possess.js",
+            "sha256": "819ef66927876d73af25b2e90ec6f4d565780876b4c658ce798964a499a11c97"
+          },
+          {
+            "path": "js/postfx.js",
+            "sha256": "0232afd8eba58334b1774da5dfe50959f4e23a412aa04698145519aaf09181e6"
+          },
+          {
+            "path": "js/preparation.js",
+            "sha256": "4923e49151362ee684afc11eec918457d299465d06bda9e03a75ef006e440e00"
+          },
+          {
+            "path": "js/procgen-lab.js",
+            "sha256": "028a301a36a8485b2d8a92c958abed16de4d8e0949c2dfdf71dc546ae6553565"
+          },
+          {
+            "path": "js/production-paint.js",
+            "sha256": "1a941455168505de9f839b63ef9d63ec0744396fa4873926350fbe31989b1d14"
+          },
+          {
+            "path": "js/range-guide.js",
+            "sha256": "fe8e9045832161b2a50a30ab0446d166f300a88ca2401872306daea82881e444"
+          },
+          {
+            "path": "js/rewards.js",
+            "sha256": "6f46c9ea57bc77ad27d85570c597f3552cc4f3a29ef907292e6ee006a131efa2"
+          },
+          {
+            "path": "js/rig.js",
+            "sha256": "0362e7c2c1075a8f8581cae8d52bed7fcd4f3e9c1e980a5d4283fad4c82b98f2"
+          },
+          {
+            "path": "js/run/abilities.js",
+            "sha256": "e50971b43249ae3b3a642e54e3ed0f4109d0ce60731fa29f6ea43a3efced0648"
+          },
+          {
+            "path": "js/run/campaign.js",
+            "sha256": "27da2faefaddd812d0bdd050a3ef85ef474c99cffd7fe4bf8e9dd305945f4a83"
+          },
+          {
+            "path": "js/run/crystals.js",
+            "sha256": "4fe8102678bcebf2016d7f1e492ba39dbf0d7bde27eeac620c56da0d70e981dd"
+          },
+          {
+            "path": "js/run/draft.js",
+            "sha256": "3d38483829fae8a29b3786d49453041abb536d372776ac2ddf3f9bb63d9e1310"
+          },
+          {
+            "path": "js/run/earth-coast.js",
+            "sha256": "ac7fcf649733ca9a2cff0aec579823c2d63ec85ecfa21e78eda7c1075a33d6fe"
+          },
+          {
+            "path": "js/run/environment-catalogue.js",
+            "sha256": "709577a1e18d6cf60d86dc200e3c8b0994f24ba031e37a92cd2de885a35b2e26"
+          },
+          {
+            "path": "js/run/expedition.js",
+            "sha256": "d2b45536939b9586619f178b60bc877c5a9a6545f776f69a15dcff7552164275"
+          },
+          {
+            "path": "js/run/first-expedition.js",
+            "sha256": "2b6c144afcf2395e88f001c4da7b40a568d61d998a9b1723bf0813448cd6c883"
+          },
+          {
+            "path": "js/run/frontier.js",
+            "sha256": "2eb79cf668687ec1971b85f6940aee8e821b79934a20608ae85e6c33a3c7326f"
+          },
+          {
+            "path": "js/run/homeworld.js",
+            "sha256": "3781686385dacc2aa2dfc4d186932e7fffd267e02f5665a967b5ea003e304112"
+          },
+          {
+            "path": "js/run/manufacturers.js",
+            "sha256": "afe5a52b2a9ca5fe85785dbb8edeb672a0b6fe730419ae6f457c33e545c41ce3"
+          },
+          {
+            "path": "js/run/modifiers.js",
+            "sha256": "0f7fc001625d5e54e0051c54e08cc6962354ac005c125478603598b18590cd44"
+          },
+          {
+            "path": "js/run/planet-environments.js",
+            "sha256": "48e9623ef89a8dd87cc1ec2c1896ced84ab3dced8d8c77da9e0e7c3e20b7c43c"
+          },
+          {
+            "path": "js/run/planets.js",
+            "sha256": "7ca1033a118f570011b57f25d2c3688be65658c1b92a7323aeb6822e4547bdbb"
+          },
+          {
+            "path": "js/run/powers.js",
+            "sha256": "314493afbfe65425784095045b70272e5591c32e8b961802e88695265090c9b3"
+          },
+          {
+            "path": "js/run/rng.js",
+            "sha256": "a0d2db43539e7e26fe98c751597177c3b22d670ace02b670145475d301ae6104"
+          },
+          {
+            "path": "js/run/run.js",
+            "sha256": "ef3ec038a8b245bf555f9242ba211bcf7a2211347d636afd4e046dc85ab37f61"
+          },
+          {
+            "path": "js/run/schedule.js",
+            "sha256": "a7e096e64c836c3e35e12c265a8c57f7053f1c78e1a95c37f73cfa09f6ca4207"
+          },
+          {
+            "path": "js/run/solar-tactics.js",
+            "sha256": "fcb9285563f811c8bbfe0524143ec3fd8ab7cccfa7ea76ac471ac785e2875d32"
+          },
+          {
+            "path": "js/run/solar-worlds.js",
+            "sha256": "b852a7d8b335736556121c3f6cc72ff07047e9927335f4aa4d339d43b2fb2e46"
+          },
+          {
+            "path": "js/run/state.js",
+            "sha256": "ddd68b76ee1ef06a20d39c8100425904f4efd7d09138c0e9bf090637512b7854"
+          },
+          {
+            "path": "js/run/structures.js",
+            "sha256": "61503de3ff9131b35ef8f06c03e9ffede847f99abbdee14bb3d654a61da86ab5"
+          },
+          {
+            "path": "js/run/terrain-version.js",
+            "sha256": "82035d127d23cfe5753b247c8fecb81fd8fac276feed33e25fd397287112fe42"
+          },
+          {
+            "path": "js/run/weapon-forge.js",
+            "sha256": "b3baac08f6a52893d972627d1b6e2a5be160ff9fa008dbd95fdbef54b0747ac1"
+          },
+          {
+            "path": "js/run/weapons.js",
+            "sha256": "7a2b0e12fd0f9c97fe3ec15f4bf81a9b73be8b10a61939c2591902f4cd6c462e"
+          },
+          {
+            "path": "js/run/world-catalogue.js",
+            "sha256": "d8c1540f200b38da11f7b9f09f34ddb8e87694c79fa344bc70f3f2449af8937b"
+          },
+          {
+            "path": "js/soldier.js",
+            "sha256": "3d5adcd7047b0dfc300eeca63a44ff65d23d82b389aebf57bb42fd0bb5c6a99b"
+          },
+          {
+            "path": "js/soundtrack.js",
+            "sha256": "0aa0384394d22dfb74dfa8bc651f4265165e7bbb6f0a4a2dc14987ca1072d9ea"
+          },
+          {
+            "path": "js/static-batches.js",
+            "sha256": "a3f6eb2d8200a6944a48275028a601066cb83a25ef0a81a422b2ad517b9a2aef"
+          },
+          {
+            "path": "js/storage.js",
+            "sha256": "3002fdd1cc70379116894b47f9afb521113b5083bc1776a8c4ab084aeb90e44f"
+          },
+          {
+            "path": "js/storm-art.js",
+            "sha256": "285e00dc66039d02dd367aa29d07ee58e62779b516082cc59943277f8aad76c7"
+          },
+          {
+            "path": "js/structure-models.js",
+            "sha256": "fd1c316db180599f5cb6d3e8cd0b6a90b44cd1540320977cb8d55261f2a643d7"
+          },
+          {
+            "path": "js/structures.js",
+            "sha256": "e6adb87dffa22186e775e4bc77e8439ad25741848a2959076e429e5f192fe463"
+          },
+          {
+            "path": "js/style-lab-materials.js",
+            "sha256": "0d2eaf7a2f4455752f4327edeee584c23fc1daeac802d93df352a43dc3712c68"
+          },
+          {
+            "path": "js/style-lab-scene.js",
+            "sha256": "ac480e8597f583e23dc223c3712b2a096c70c4d51bacbe594dc51a6a99f42162"
+          },
+          {
+            "path": "js/style-lab.js",
+            "sha256": "0278219b3f61469e73b8ba8a29b1f49833027dc8fa6c13c8f0fba10b773f7da1"
+          },
+          {
+            "path": "js/terrain-chunks.js",
+            "sha256": "acf4c869b09c73d1f062d8839a87adeda508d13d962f1afcf96d1d0d36b81710"
+          },
+          {
+            "path": "js/terrain-sample-pool.js",
+            "sha256": "707f3889bf3b1ca781438d4549eb0d81b27dbcd08f966ef31fe41664c754b281"
+          },
+          {
+            "path": "js/terrain-sample-worker.js",
+            "sha256": "fc71e21cb0876dd39ca104611040969357eaf94451e374b0925277b87ed66077"
+          },
+          {
+            "path": "js/terrain/acceptance.js",
+            "sha256": "f9d27a1cb5f64c83c28973945726f261a0f73f01fce1eac373cead61febce65c"
+          },
+          {
+            "path": "js/terrain/active-features.js",
+            "sha256": "97ff421dac8c296ae676539ac431fef0e902523c15daaccaced3c11bff8dd33d"
+          },
+          {
+            "path": "js/terrain/additional-formations.js",
+            "sha256": "2c9457504f307004f842b9c1526745d52a69364248546ae4adc696b439ca9fe9"
+          },
+          {
+            "path": "js/terrain/atlas.js",
+            "sha256": "858bffa19baca19d28d663df718148fb48682807e1ec9d3d0cf46f8cc067de22"
+          },
+          {
+            "path": "js/terrain/coast-clearance.js",
+            "sha256": "85f3e91bba97c55eb71888af0574a69e7349357c8abd44ce844c6b4700721321"
+          },
+          {
+            "path": "js/terrain/coverage.js",
+            "sha256": "cad0e19cab741e3c1b29d4486e1d670b7f6bf9afe198d14b8c5e94e5584da066"
+          },
+          {
+            "path": "js/terrain/ecology.js",
+            "sha256": "cede19c3e5a076c88866cabe1ea340941a48227cb29772b9da6ecf54ae887427"
+          },
+          {
+            "path": "js/terrain/exotic-formations.js",
+            "sha256": "d2535d42f6a3063cb803363268ce366dd056f7793c79e01b16fda1e875b3c449"
+          },
+          {
+            "path": "js/terrain/features.js",
+            "sha256": "9f806a161eb86cc9b8d959295ac9a247df499f68dc3ddbaff4bd3c7de9f26099"
+          },
+          {
+            "path": "js/terrain/formations.js",
+            "sha256": "de199811fbe3a3596623210c54c61f55fb1060af670046f8b66605c68ac11987"
+          },
+          {
+            "path": "js/terrain/geysers.js",
+            "sha256": "86958fdd1f7f068db8a1610a089a5e85b6cb691dd119a2b5fb13482b826fc3ae"
+          },
+          {
+            "path": "js/terrain/kit-experiment.js",
+            "sha256": "c9abdd7c61a420109f9405e31b4155beacacf93c1c9a2ed2c0de6a8d19543804"
+          },
+          {
+            "path": "js/terrain/kit-worker.js",
+            "sha256": "518c00534e3b7c3e7337ad131fb7197cdff3b698e82790852188208015aebc59"
+          },
+          {
+            "path": "js/terrain/landmarks.js",
+            "sha256": "cf3445372cb084d6cb84c5f697c93b64f8ceedb1d16689eee22be9808f567ad0"
+          },
+          {
+            "path": "js/terrain/quad-kit.js",
+            "sha256": "4b9aaec5bd262535c78b4210b7ae5f7823ee15480bc905dd1e82a5307fadfcd5"
+          },
+          {
+            "path": "js/terrain/recipes.js",
+            "sha256": "e822855ca2a40432bd4091b1555320ac332c2719dc856b46f12088e4175cf39c"
+          },
+          {
+            "path": "js/terrain/rifts.js",
+            "sha256": "e3cbe706158670c2f2ec0507e88054b9f354f94026542db5fb5c368fb7dbaad2"
+          },
+          {
+            "path": "js/terrain/samples.js",
+            "sha256": "3e05b89b3e1eb9fd2bf78b52c8af9d85c00a9fa09172c028b9329f085ba39880"
+          },
+          {
+            "path": "js/terrain/scatter.js",
+            "sha256": "8aa383af30482baa440fc4c643d7ad8bcdc0875b79dae77591fdda1b9b0aba6c"
+          },
+          {
+            "path": "js/terrain/spherical-kit.js",
+            "sha256": "6262a45a878f252d4ce644df2c19ffd8b4403bc13d3a475a696a61dd00cbd362"
+          },
+          {
+            "path": "js/threat-guides.js",
+            "sha256": "86c3f8ae736183de272c4aaa26ca7841a63b2f67e590aff7744ffa4c94195566"
+          },
+          {
+            "path": "js/touch-input.js",
+            "sha256": "2f95ba516923616b8eb60bcac7dfd86cd44b33f419f1431c33ba7bdb9cae5d92"
+          },
+          {
+            "path": "js/towers.js",
+            "sha256": "f70a1b8ba02fc2ea1586a56c4c13dc51b6ba291d0dbfa540619bae3c7cc95375"
+          },
+          {
+            "path": "js/traversal.js",
+            "sha256": "3683bb413958e90c9d52dd9fb1dce87c60b874b2db7d7b7ad484d5b573aa9c8b"
+          },
+          {
+            "path": "js/ui-campaign.js",
+            "sha256": "0489bdc0e973ab08ab1c9fa4e2244e0a16d5b3cfd0d369b35fd0aa9f4f14738a"
+          },
+          {
+            "path": "js/ui-expedition.js",
+            "sha256": "8333c54463e422fd791f2de53dc05a6165e5921b46803eba5527f5aea1f0724a"
+          },
+          {
+            "path": "js/ui-icons.js",
+            "sha256": "fc391ee3a21bce7a65b7eecaebbb5ad62b64451b85796037f49e7aba1bc9f0b3"
+          },
+          {
+            "path": "js/ui-weapons.js",
+            "sha256": "e415e2f0d0bd451895884e9a828274ac694d044c504d20ae732162c26157a1a2"
+          },
+          {
+            "path": "js/ui-worldgen.js",
+            "sha256": "3ed75a6af006e1fc379c4b3ee5708e4ad3b308639acfe11c596a139a4bb2ebb1"
+          },
+          {
+            "path": "js/ui.js",
+            "sha256": "af62110ddf438cb19fae893862f6112e6d0a3ff87886a183186f2403d91763b5"
+          },
+          {
+            "path": "js/unit-routes.js",
+            "sha256": "8a454e3c68b85e90a81e078892826461ca813ebe13ac60ca590d25744d9c8f71"
+          },
+          {
+            "path": "js/vey-benchmark.js",
+            "sha256": "963ebfa0a2c254cd64e9ea713ab3040e45c5b63cef80ce4287880e01e2284659"
+          },
+          {
+            "path": "js/vey-field.js",
+            "sha256": "d5e65abb4424f79a680a51c2c283a54197c91fda2b5913421b76c8eb4e700900"
+          },
+          {
+            "path": "js/vey-model-study.js",
+            "sha256": "8c9a8a3b79a6881a436aacc1f685a60ca11273ef1f6ede50a7b01652fb37bb73"
+          },
+          {
+            "path": "js/vey-pilot.js",
+            "sha256": "ed3245aa6ab387f6ced14ca51d0ddba8d142e80c124d798fb1a1946256abbbe9"
+          },
+          {
+            "path": "js/vey-refinement.js",
+            "sha256": "64078fba28a3ba3391983a64a3ea10e33f04cd24d385b95977096d063dc57f95"
+          },
+          {
+            "path": "js/viewmodel.js",
+            "sha256": "baead894b156ec9f99cc69ea2cbfa2c26466f84c0933e986f338860f551f2c10"
+          },
+          {
+            "path": "js/waves.js",
+            "sha256": "e51fbcbc1ed8ddc09cad0f0b6f9a26b317acb02e6238e3096a658d858a5ff6fb"
+          },
+          {
+            "path": "js/weapon-card.js",
+            "sha256": "922ee574cad5db188b91e7d046f0caf7d204597498a91dd860a93056b9168895"
+          },
+          {
+            "path": "js/weapon-display.js",
+            "sha256": "bc82f35de9bd42adabcb0d3924ccab75bc8f285fedbcee7fdda1b20ff047cc77"
+          },
+          {
+            "path": "js/weapon-model.js",
+            "sha256": "772e95086ab0b9d91389c3043c72593dc4ea1387be0978f780f85223cfbdbfba"
+          },
+          {
+            "path": "js/weather.js",
+            "sha256": "b235a37883ca21bf82b0a4e3fd8ec8fe586dee4bd44773d74914f0e5da1e0b38"
+          },
+          {
+            "path": "js/wooden-walls.js",
+            "sha256": "fe70ab9a67ccc7dfbe8b86b9cfe4568d498a3dc98caaef48c15a96e3389525e1"
+          },
+          {
+            "path": "js/world-context.js",
+            "sha256": "5ad8fdd7d388149c33cd6218bc29856a422732fa58a7e0eac1016f50580a3999"
+          },
+          {
+            "path": "js/world.js",
+            "sha256": "44f68a93df4bdb198c104e6c2524016c631548244db5b78a901424458b9cd1a5"
+          },
+          {
+            "path": "js/worldgen.js",
+            "sha256": "ee013008823cd90aaf8f2d8f88f5ecb7da8a4110ceafd688ac0d3305b97b632d"
+          },
+          {
+            "path": "js/xeno-canon.js",
+            "sha256": "3c75fe4fca2cd1da7b245bc750cade91082cb0f0a98e47db6731f3a7fdc91b88"
+          },
+          {
+            "path": "js/xeno-codex.js",
+            "sha256": "1fbb158b0acdcc7b0d49e1924b2708619357178cdb36936f2763dd0c6fdfbfc7"
+          },
+          {
+            "path": "lib/99-art/alien.png",
+            "sha256": "72de29250a3aa5e0f73d930a19cbebc4e2b3c6d047de2f4eb1d7599b817bba65"
+          },
+          {
+            "path": "lib/99-art/alien.webp",
+            "sha256": "887b2c322dcbfaba294bcc42376828a01cf866b9d342b2b877de2aea979ee81e"
+          },
+          {
+            "path": "lib/99-art/anomalous.png",
+            "sha256": "6f9c2b7d82bbba4f0d59841856589f93dfc5351909fad4c01db637dc8d0578a8"
+          },
+          {
+            "path": "lib/99-art/anomalous.webp",
+            "sha256": "5ebd9a9a290799c87ea3f9890ac94453ecf9c9934c39d6cc4065347c06a5c3cb"
+          },
+          {
+            "path": "lib/99-art/axiom.png",
+            "sha256": "1c9d0d00a7bc1bc3f7fd8aa11d4703e429d813cc4f387fa93edf34b22549109e"
+          },
+          {
+            "path": "lib/99-art/axiom.webp",
+            "sha256": "a08403c7eb3f4468419772e56cb80c0295c7c794e09ba81f0f8f84475d250243"
+          },
+          {
+            "path": "lib/99-art/brainshot.png",
+            "sha256": "2bfe3dd6be7d7fffb09c83e20a5d3fc26d956f96a9abdc00c7a5b787fa13ee5b"
+          },
+          {
+            "path": "lib/99-art/brainshot.webp",
+            "sha256": "5148af6b3d8dcb1b37a2a7573f39f52624a6432f3dd0cddc1df4f642f7ccc684"
+          },
+          {
+            "path": "lib/99-art/catalogue.json",
+            "sha256": "ced64b02f9a00e89529db93e2deb48e9127174dff2ca2a26fea226124de6c9d9"
+          },
+          {
+            "path": "lib/99-art/design-foundation.md",
+            "sha256": "f59e9a20684b28ffd38b657a8c22ff9b31e3fa858ce5a32a841df54659cd4993"
+          },
+          {
+            "path": "lib/99-art/earth.png",
+            "sha256": "10a8f725cd350d75894281974f0b2faf3e8e5cee9c87ae0a743b1dda3569300b"
+          },
+          {
+            "path": "lib/99-art/earth.webp",
+            "sha256": "cf73e35f9dd31df3e5f3a08770847c03e4c89cc7eec363bb64035c246733e2ba"
+          },
+          {
+            "path": "lib/99-art/factions/LUCIDE-LICENSE",
+            "sha256": "6fc5b7332939dd5c61af3a5f97450f7bc05d4a396dd0bc21ac341716b3b05096"
+          },
+          {
+            "path": "lib/99-art/factions/alien-arsenal.png",
+            "sha256": "54580886af2b22e15e6b6e8496c694baad34aedb9ad6968f2a1c06fef439c36c"
+          },
+          {
+            "path": "lib/99-art/factions/alien-arsenal.webp",
+            "sha256": "c295d9f09436eb827ed39e8ad97ae53243c5352506a2f8a74a560a94e7d171d3"
+          },
+          {
+            "path": "lib/99-art/factions/alien-roster.png",
+            "sha256": "ade1baff7d8da1e24079f5646e57ac37b7c531d46f065c8b86a00a03f68e6fc6"
+          },
+          {
+            "path": "lib/99-art/factions/alien-roster.webp",
+            "sha256": "95ffe9b9c453e13a43688c770d74018613dc698974801c4105aa8e97c54bd140"
+          },
+          {
+            "path": "lib/99-art/factions/alien-towers.png",
+            "sha256": "39d791729d5da6309950caf71a68561285df6d44db61de8acfcbf06ce2e475e1"
+          },
+          {
+            "path": "lib/99-art/factions/alien-towers.webp",
+            "sha256": "c25388cd96f4c673206a8e7b86af0c315d9e317d9e5d78e78e584afc6b9c5625"
+          },
+          {
+            "path": "lib/99-art/factions/alien-world.png",
+            "sha256": "a87fd89e436c7b86f4a9ea998d95cd397779022520a164e6612c6e42237bb0e9"
+          },
+          {
+            "path": "lib/99-art/factions/alien-world.webp",
+            "sha256": "30ce042e8a06c421b1482545e402261878999ff0ce04842d03701728562c4539"
+          },
+          {
+            "path": "lib/99-art/factions/anomalous-arsenal.png",
+            "sha256": "3dd9de98f6ed6389cf2f98dd669df661c15c7a893f4afc41b4d3b3df906cf2d3"
+          },
+          {
+            "path": "lib/99-art/factions/anomalous-arsenal.webp",
+            "sha256": "94224f900b2f69fba1507d7e54b4ff42ed0535acd13c2f977807870bfe46f020"
+          },
+          {
+            "path": "lib/99-art/factions/anomalous-roster.png",
+            "sha256": "9282f465d2b0c4525e80246acda7089c65a29843fbd6f85f781fcd725a058389"
+          },
+          {
+            "path": "lib/99-art/factions/anomalous-roster.webp",
+            "sha256": "8e695e639fb62aee992cec15533af768662ffb998a35932c1696269684f5f368"
+          },
+          {
+            "path": "lib/99-art/factions/anomalous-towers.png",
+            "sha256": "b27315d9a3ab2285639c13d3b534ea365dcdf5fff8a0185d865b432f8bc948a2"
+          },
+          {
+            "path": "lib/99-art/factions/anomalous-towers.webp",
+            "sha256": "4214ed312a9e50dacb6b6d5a67dfa0339160bcc5765e96867b492596ce329842"
+          },
+          {
+            "path": "lib/99-art/factions/anomalous-world.png",
+            "sha256": "ece60f954e72a931a98833aa873db5aa9221e461be343dbd4c925d5754b979bb"
+          },
+          {
+            "path": "lib/99-art/factions/anomalous-world.webp",
+            "sha256": "6d4faf3486a44df30231bf3f7e404aeda350ea34b1d4568a3e3d80f6991a60b3"
+          },
+          {
+            "path": "lib/99-art/factions/archive/brainshot-roster-first.json",
+            "sha256": "75dca3cc326ff87fdf8c7ab266fe3d4be7f2c3cf7dc210f2ace2da0c136280a6"
+          },
+          {
+            "path": "lib/99-art/factions/archive/brainshot-roster-first.png",
+            "sha256": "656afdbd60781ea80874cda277decb72f4e8f22f58d5af48fd5508ea6247c0cc"
+          },
+          {
+            "path": "lib/99-art/factions/archive/robloxian-roster-first.json",
+            "sha256": "f94e3bc9826d6540cea1c65b17228557d4517d04731fae2a28c43160eb22173b"
+          },
+          {
+            "path": "lib/99-art/factions/archive/robloxian-roster-first.png",
+            "sha256": "4310a329d0cd6aac419e1030a6be9ca22fe8afd371566d3974a58906b8568ba1"
+          },
+          {
+            "path": "lib/99-art/factions/axiom-arsenal.png",
+            "sha256": "e7c859bd055a14c68b39ec4888157813afa70bec5e76a5b288b1f6c8f89b8d31"
+          },
+          {
+            "path": "lib/99-art/factions/axiom-arsenal.webp",
+            "sha256": "702b6cab61e2413b486c6e9e0935a91a962c678b03514925993b1d7eddf7a05c"
+          },
+          {
+            "path": "lib/99-art/factions/axiom-roster.png",
+            "sha256": "372e30fa2bd73206f60b12077efad1b3745b3a13f5f2c326f99f5d2b065c4316"
+          },
+          {
+            "path": "lib/99-art/factions/axiom-roster.webp",
+            "sha256": "459b6a2c4e42d539ed187bd534d4cb82001032ff88043b60b76d51dd754fc948"
+          },
+          {
+            "path": "lib/99-art/factions/axiom-towers.png",
+            "sha256": "0daca4b64be13c84c9639dd52a368fd184511bf62e196e6e06a235fec7f7b3d2"
+          },
+          {
+            "path": "lib/99-art/factions/axiom-towers.webp",
+            "sha256": "ed903790b14ae21792d4b4ef9516f63cc02305ee11aae466e8051ca0337866d6"
+          },
+          {
+            "path": "lib/99-art/factions/axiom-world.png",
+            "sha256": "7b543b007daa628c395a0858b4a27d0b973cb8c4d8cb104578ef1226e3c316bc"
+          },
+          {
+            "path": "lib/99-art/factions/axiom-world.webp",
+            "sha256": "5e6fccdbd9eda8dc35f4e8f938156b11dca6b7ba5027256d72d32a4221b5707c"
+          },
+          {
+            "path": "lib/99-art/factions/brainshot-arsenal.png",
+            "sha256": "711c5a2825a74695598a4ff8ff0c7c65e5feef8ad6122bcb0487bf934a8eef24"
+          },
+          {
+            "path": "lib/99-art/factions/brainshot-arsenal.webp",
+            "sha256": "b540d6af58f6d2f8097a61a761ed5ebc61f27e73a4f68e34bfbf14679454a047"
+          },
+          {
+            "path": "lib/99-art/factions/brainshot-roster.png",
+            "sha256": "4435cd3fe90e8a3e169d1d9135d22ce3c5a086c5da8414bc0bbfe83c6ad49ee3"
+          },
+          {
+            "path": "lib/99-art/factions/brainshot-roster.webp",
+            "sha256": "1547fe4c417a2ef9fe50b03512ffe17f99fb8fcd2f6cc4f532c04cee6bb65c6c"
+          },
+          {
+            "path": "lib/99-art/factions/brainshot-towers.png",
+            "sha256": "cd4f279c2bb88cea973ad961331f7740f908d9f069f33af55f9bf5618ac777e9"
+          },
+          {
+            "path": "lib/99-art/factions/brainshot-towers.webp",
+            "sha256": "0a1fcf967977a6236ece1190a9e25e3cdeacac5dd45646dfffba639c58cc93e0"
+          },
+          {
+            "path": "lib/99-art/factions/brainshot-world.png",
+            "sha256": "66ca0d75754a226854960d55175aa15825e84f043f13b8664be849d54cfe1130"
+          },
+          {
+            "path": "lib/99-art/factions/brainshot-world.webp",
+            "sha256": "f491214ef4bbaf3e2ad16c46eb904687294bb480fcde3c7e27af8aa09b134cdf"
+          },
+          {
+            "path": "lib/99-art/factions/catalogue.json",
+            "sha256": "9dab045864019986073cbec83a187b7b57ce657cdf247da5b7371a8eac722ecf"
+          },
+          {
+            "path": "lib/99-art/factions/foundation.md",
+            "sha256": "0a0d1a362927a842e5a067b6cab4e3be9f9dd1ffe9bd7d90c51ca1f8165a59a3"
+          },
+          {
+            "path": "lib/99-art/factions/icon-provenance.md",
+            "sha256": "cb9cb5a16df8a3e2c999df81690d6a8df28c2e244da25b213924af3590523b17"
+          },
+          {
+            "path": "lib/99-art/factions/icons.json",
+            "sha256": "bd5918bbbcf76a8b9b5c55b74d8e8672e600048de2a7ceee9c4557054eabbbb4"
+          },
+          {
+            "path": "lib/99-art/factions/jobs.json",
+            "sha256": "b796c7e034051ea8a0c4d4d4ff281af2c94a8205ab496aaa8326bce4105d05a3"
+          },
+          {
+            "path": "lib/99-art/factions/pilot-receipt.json",
+            "sha256": "0c82d7c5db57cbea26c60249a6f9c27d5aae4092f47f7bbc48ac402f4ba12348"
+          },
+          {
+            "path": "lib/99-art/factions/rainboom-arsenal.png",
+            "sha256": "c79067d534303634bb4fec0942d6e102637bccf37419dfd4aa994d50bf6b9cff"
+          },
+          {
+            "path": "lib/99-art/factions/rainboom-arsenal.webp",
+            "sha256": "9004d78354838ecabc79015fb61c5c5da512d04ec6e5b66245323e15be4cb7fd"
+          },
+          {
+            "path": "lib/99-art/factions/rainboom-roster.png",
+            "sha256": "9fc3c62ec3e43c9270a6b892d5c1230df64b7c59b5bf66a9234f65eeb71ea559"
+          },
+          {
+            "path": "lib/99-art/factions/rainboom-roster.webp",
+            "sha256": "e555f046d8984f4a06bcb8250b3fcfc1aaa298e7882eb330975bb54e7e4312fe"
+          },
+          {
+            "path": "lib/99-art/factions/rainboom-towers.png",
+            "sha256": "2065e771cacdd7e3b45b75fa10f09801b20887b87680845024bad9907b13d0f2"
+          },
+          {
+            "path": "lib/99-art/factions/rainboom-towers.webp",
+            "sha256": "cfd27ca7f2a57497d2273ab4fdfb6c5c859f6f8b87eff7be40d0a74b6f34c91b"
+          },
+          {
+            "path": "lib/99-art/factions/rainboom-world.png",
+            "sha256": "065da6d8e41ddfb2cad933a61862f0fccc952939edd0d0934996bef9d72ff612"
+          },
+          {
+            "path": "lib/99-art/factions/rainboom-world.webp",
+            "sha256": "2b1deee294d49fa8219eaa012d02abe2a5d5ccdbaac6b93e768d840a4183a3e5"
+          },
+          {
+            "path": "lib/99-art/factions/revision-jobs.json",
+            "sha256": "74baa1e2b0f88a319b49def53c5eb10ebf60a735fd9e9d275f63d94179b00a1a"
+          },
+          {
+            "path": "lib/99-art/factions/revision-requests.json",
+            "sha256": "fb01175d4b21478a5255bf8a1fc033533cd07de8ea9131782fea7f8f3b5af4a1"
+          },
+          {
+            "path": "lib/99-art/factions/robloxian-arsenal.png",
+            "sha256": "cee06e708b7c963d35a4226f49550606a071c10c6f27c9bed9e3dca10a606d74"
+          },
+          {
+            "path": "lib/99-art/factions/robloxian-arsenal.webp",
+            "sha256": "489f89d27a24cdd9b440e04acd699ca7bb1a5b27d2f3c0a5f589896d5aa992bf"
+          },
+          {
+            "path": "lib/99-art/factions/robloxian-roster.png",
+            "sha256": "ad3e5e6a2d4c915652d10c9eefec54759e2546c77ed659432930ace5b013d1ec"
+          },
+          {
+            "path": "lib/99-art/factions/robloxian-roster.webp",
+            "sha256": "102b94977e0dbff8b1cc9cff064df3b00668a2224cc8344995d76f6a77adc725"
+          },
+          {
+            "path": "lib/99-art/factions/robloxian-towers.png",
+            "sha256": "e395444631b62eabf70c227b0c966475a832ece8a674a4d1b39cef162879e6a5"
+          },
+          {
+            "path": "lib/99-art/factions/robloxian-towers.webp",
+            "sha256": "a2689d8c3e5be6b3738c763891003de0174e924f43a07cd7920e29940302e328"
+          },
+          {
+            "path": "lib/99-art/factions/robloxian-world.png",
+            "sha256": "239977adc9fa78e91c19b3a5991846d15776d2e01af63763ec98e960b3678edd"
+          },
+          {
+            "path": "lib/99-art/factions/robloxian-world.webp",
+            "sha256": "4f83f1c9151596096d4a320540770140a105dfed228b360a9fd743ffb0aeae28"
+          },
+          {
+            "path": "lib/99-art/fonts/Barlow-Regular.ttf",
+            "sha256": "95aa02c7c43096e0dd44d787ba6216864a67157e402adab59b35572e0c1577ea"
+          },
+          {
+            "path": "lib/99-art/fonts/Barlow-SemiBold.ttf",
+            "sha256": "86577cb32f8abe3673db53ca0f4221e6856751a4f6730c867e00f720f8bb1fc5"
+          },
+          {
+            "path": "lib/99-art/fonts/BarlowCondensed-Bold.ttf",
+            "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65"
+          },
+          {
+            "path": "lib/99-art/fonts/OFL-Barlow.txt",
+            "sha256": "e1d28aeb8efb0f18e2c27e73592a86cf890df3c27c1351bd3dbdb434322f854f"
+          },
+          {
+            "path": "lib/99-art/fonts/OFL-BarlowCondensed.txt",
+            "sha256": "e1d28aeb8efb0f18e2c27e73592a86cf890df3c27c1351bd3dbdb434322f854f"
+          },
+          {
+            "path": "lib/99-art/identity-v2/anomalous-roster-v2.json",
+            "sha256": "2f13b8a688633691a161bb63ca7129010b871f7ada2e192d4b6d76636557aec0"
+          },
+          {
+            "path": "lib/99-art/identity-v2/anomalous-roster-v2.png",
+            "sha256": "94c0f72eb62d77f4082f41aecc2e0505c78edd4a9cec6bb681cdaf556aa26f33"
+          },
+          {
+            "path": "lib/99-art/identity-v2/anomalous-roster-v2.webp",
+            "sha256": "5bcae608e14c5402a7fce9fe71b5d6acd980f7f9302021000b00eb5324f8a392"
+          },
+          {
+            "path": "lib/99-art/identity-v2/brainshot-roster-v2.json",
+            "sha256": "e39f721a74d7358b3b88eae8ec1aa47b20c683d32da2fae622602927e6051907"
+          },
+          {
+            "path": "lib/99-art/identity-v2/brainshot-roster-v2.png",
+            "sha256": "8e66be0444614cdbb5c3048f24f75707617e2625ecbcf92e139f83e50eb8d70a"
+          },
+          {
+            "path": "lib/99-art/identity-v2/brainshot-roster-v2.webp",
+            "sha256": "37cd85d063e0dfcd96e5bff45e682a64e5a1f1cae1ea1d600aa5851a50974387"
+          },
+          {
+            "path": "lib/99-art/identity-v2/catalogue.json",
+            "sha256": "2b40accd71d44ea9ab11e11c841cb98e05420f3d2e2d8031883d0b53d76692f6"
+          },
+          {
+            "path": "lib/99-art/identity-v2/gray-commander.json",
+            "sha256": "4bb981834daec9f562a20236f8d5925aa0cb92f405531dc83cb0ef337a542a49"
+          },
+          {
+            "path": "lib/99-art/identity-v2/gray-commander.png",
+            "sha256": "670f30a50a1cfdc2f31f3b5bb52514e37a229b6ff0a8ef8b9dc6143b814d9ec3"
+          },
+          {
+            "path": "lib/99-art/identity-v2/gray-commander.webp",
+            "sha256": "8aaeaf8e54131a91eb35c7e4678e92c8d8771d471ede3e37e752103c959021c3"
+          },
+          {
+            "path": "lib/99-art/identity-v2/gray-higgsfield.json",
+            "sha256": "7fb528f5e4d3be5bf616ae98debb26d94de2b186f73e2a87019b1b35578e1142"
+          },
+          {
+            "path": "lib/99-art/identity-v2/gray-higgsfield.png",
+            "sha256": "14010be007e4a02eb1a61f4b544e80294637271dd980a6be6994810e1e6cf835"
+          },
+          {
+            "path": "lib/99-art/identity-v2/gray-higgsfield.webp",
+            "sha256": "897b5a6d09f9aa97864ab2e7d3a15161f6bfaa5ae7241f93d904b51db0843f91"
+          },
+          {
+            "path": "lib/99-art/identity-v2/krea2-official-style-reference.json",
+            "sha256": "8ba18523b733432727333d183db918129bf4ba4eaf40ba3c68d690dc72b74fc2"
+          },
+          {
+            "path": "lib/99-art/identity-v2/krea2-official-t2i.json",
+            "sha256": "99ae32dfaba90d7f1076d7d07aeade26c7812d009a51ce133c662016e44e9fb8"
+          },
+          {
+            "path": "lib/99-art/identity-v2/krea2-vey-workflow.json",
+            "sha256": "3d206d5557694ac5824dad20c4aeb6e27f2f05ac4da77e6df9b57d438a933a10"
+          },
+          {
+            "path": "lib/99-art/identity-v2/production-guide.md",
+            "sha256": "12bbc7f9614c1eba6ebf32eeaa3580adad8fe5a9a964d25ec89799b197d6e6ac"
+          },
+          {
+            "path": "lib/99-art/identity-v2/turret-placement-hud.png",
+            "sha256": "59c7f978696bd50af15952da2916dce2158a16790248b8fdddfc3142121cd933"
+          },
+          {
+            "path": "lib/99-art/identity-v2/turret-placement-hud.webp",
+            "sha256": "a4de20ce80f9532cdd83de90fe1c4131e969fe146af948cfd18fa1d67317638c"
+          },
+          {
+            "path": "lib/99-art/identity-v2/turret-placement.json",
+            "sha256": "5be945405bcf3baa842bbd4bd4f88937d350e43fc61ee3959d91a5e2c72776c1"
+          },
+          {
+            "path": "lib/99-art/identity-v2/turret-placement.png",
+            "sha256": "0955a384d48e650c5eba4859cdfd28d1f30ce166c388361c0e368d5a1d068be3"
+          },
+          {
+            "path": "lib/99-art/identity-v2/turret-placement.webp",
+            "sha256": "63cdedcb9756904c6769a38bea7b8d7ddddebe10d2a2bbed66f8f5cf5f849fd4"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-blender-refine.py",
+            "sha256": "c609855a44678d1140fdb3a835931456f1900845dd7d8a095ee6095d84432d39"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-blender.blend",
+            "sha256": "fff25449e1bcbffcaacd868dd6e6a6f421c1ee42b22569e4d2b6e2dc5ee8618e"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-blender.glb",
+            "sha256": "58794dfd4ffeb80a526068c4ea9e0aafb54104a3e0e98f986432af13db5b6d1d"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-blender.gltf",
+            "sha256": "70ab79aa2515258c6d9a5b880873d23bb444cadee4ac3c0651ab1a852d84bb69"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-blender.png",
+            "sha256": "08e43ef61f544ee4fdeccec02873813d1414b8832212e2f9e74051b7a38634c4"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-blender.py",
+            "sha256": "82b0aef198d880adec8836488f1630bd51e2d7d9190d43c5092678276df75584"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-blender.webp",
+            "sha256": "6eaf61558b2b9c0c6b2bdada136444a2eaeaebb67f14f0295c50f2306aaf96e6"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-hunyuan-painted.glb",
+            "sha256": "68c72ea29e2f63c8dd71f2efccfe87b9eb5d5fd74877b8c84a39d26622411d19"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-hunyuan.glb",
+            "sha256": "4135a2194c25b6608a8345c288abc7d493475e5be4873996ac55097be9858314"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-hunyuan.json",
+            "sha256": "9089756f2089a7e86498c667e01a16c3b1f289a638f04d3def5269e064bd2340"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-krea-local.json",
+            "sha256": "cbb10ea73a4a81f69629d9d9192d6d3786e71a9a73137486bdcb5fab619caf13"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-krea-local.png",
+            "sha256": "cea82c611970a3ac6ddf910720c51acfda8e76e90cceb1cea0751fbaa2d197fc"
+          },
+          {
+            "path": "lib/99-art/identity-v2/vey-krea-local.webp",
+            "sha256": "6974fa8988383dad8998f051583073a9bfd2ef36fea9232e7e3fb284908c6d08"
+          },
+          {
+            "path": "lib/99-art/identity-v2/xeno-reptilian.json",
+            "sha256": "e4b8630d2fbc07b3749a74e3bf36268f2a2c2757e7d48cf08d78ceade010182e"
+          },
+          {
+            "path": "lib/99-art/identity-v2/xeno-reptilian.png",
+            "sha256": "eed45a4a76820a7fa41514c1524a13d68da5d362837c70247edcc6e89c3fbb05"
+          },
+          {
+            "path": "lib/99-art/identity-v2/xeno-reptilian.webp",
+            "sha256": "14614fa7d19101032c428f6c8b571d68e7bc9ad411b745e6bb28b476c5c8edb1"
+          },
+          {
+            "path": "lib/99-art/mascot-v1/catalogue.json",
+            "sha256": "1d8677213fe2889fe3b7aead1edcb651cc6960f89327d1e00e944441b9866b0e"
+          },
+          {
+            "path": "lib/99-art/mascot-v1/gray-hybrid-original.glb",
+            "sha256": "ba9bf95c7807f7acbc3fc1c26e23ce2235c021559ab6af624a47e3fa999cbc60"
+          },
+          {
+            "path": "lib/99-art/mascot-v1/gray-hybrid-preview.png",
+            "sha256": "9663469b83f1318e9b53071ff4404f3c107ecdb6ee6e8c5ef77b13f6a30634cc"
+          },
+          {
+            "path": "lib/99-art/mascot-v1/gray-mascot-defense.png",
+            "sha256": "239b5ca9a15ecfaa5038de08ad0a69a55fd2bbc45078b8c175d1be8c525c0584"
+          },
+          {
+            "path": "lib/99-art/mascot-v1/gray-mascot-defense.webp",
+            "sha256": "9ba1186c65c20c956e53a4d53d79cf9a60158b508fc51e72e32f121ab8870dd0"
+          },
+          {
+            "path": "lib/99-art/mascot-v1/gray-mascot-pursuit.png",
+            "sha256": "6a20e5c0fcf3898af293bdde0f8a04449fa40037bd01ded576b4e44be0fcb846"
+          },
+          {
+            "path": "lib/99-art/mascot-v1/gray-mascot-pursuit.webp",
+            "sha256": "d27cd3c9121fa37928e0dc34d9ced91707f63102c34e00ae563365754634eda2"
+          },
+          {
+            "path": "lib/99-art/mascot-v1/source-animation-manifest.json",
+            "sha256": "b9a9aaca1a45b602db3e4f15c1e3ee8de3faeeca3d2b8b8678a068b92461f415"
+          },
+          {
+            "path": "lib/99-art/media.json",
+            "sha256": "82232d7686aa3e2653c0c5130b8ba829a758d37c6894f3b3020bd4f8dfd5bb0d"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/control-mia-prediction.checks.json",
+            "sha256": "5d5fc4183894c8abd826026d013dc2436e2f7071aa2329040711b3563fc6236a"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/instantmesh-views.png",
+            "sha256": "867c38daf630d94db77eea9849a75545d029bc695d015a62a3048da6247cbbde"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/manifest.json",
+            "sha256": "41bea5b836e7fc30ae064ae17ef8f200de403ff72c50eeecba2f7534fa06f302"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/reptilian-instantmesh.glb",
+            "sha256": "7fd805e57ddb255dc4ed7ced80ae4bb2746cc2422f408adf005ffa5ca33cc947"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/reptilian-mia-guided-prediction.checks.json",
+            "sha256": "e1a36938163478d41a088f0084707a65362dd54fcc08d266e2a0cf074addef9d"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/reptilian-mia-prediction.checks.json",
+            "sha256": "4dada924d88acf018476323ad7f7d1b97b2f6ba52f3501e719b9abdb01cb4198"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/reptilian-mixamo.glb",
+            "sha256": "85c72008c3242669f609798de972cd475f3b41bad8a5f5959cae3472e5ece2c0"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/research.md",
+            "sha256": "982aca96a8b7ad2d1eff10cdd26a3aa64bb073bb804df36ace7eb3c91be8db11"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/run-quality.json",
+            "sha256": "e15fcb6fec5928977ec3c1a443ec4e20bca5c5c999eb0873719e251917995bdf"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/timing.json",
+            "sha256": "28a3c515d3428edd1939837fced3d6871a473c673abc12d881e67f3d346a0507"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/vey-mia-prediction.checks.json",
+            "sha256": "6c50e15de229c7269fe64e1c1220eaa6c644e89150f54fcca0d869703249c209"
+          },
+          {
+            "path": "lib/99-art/motion-research-v1/walk-quality.json",
+            "sha256": "69b49283050878ad71083ce75b2a36f41af9ded3f0016bcdcb7e4b7d9d57951e"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/catalogue.json",
+            "sha256": "4e391068de80a216348f2c8fee0781c8502b262d35ec87c72a2d586d9a3c1185"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/earth-void.png",
+            "sha256": "de83cbe1781f7d8d22705c8fe87cbeaf72e85b7901fa49440183b32bda6e1574"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/earth-void.webp",
+            "sha256": "9c4f1a4963ee74fbcac27609d774d917f4fdec05fdd85ba83c47a6be5f4a1f2a"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/garden-rainboom.png",
+            "sha256": "3aab93cea21b089265e793b95efc9641bc1aaf8ba44c29ace277994903c4943e"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/garden-rainboom.webp",
+            "sha256": "f0c8d1a2f112187757ab8768d3793eaabcfe4e057b24471f703227f1cfb5e46e"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/mars-physical.png",
+            "sha256": "9aca5367354a1ea6b0baa7a293627d42483b6fe53d4d020f54fc77b16f37984f"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/mars-physical.webp",
+            "sha256": "0f169cf4366a29de7b11597cae9fc04088038d1cce9589d21f603245c3575b58"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/opening-comic.png",
+            "sha256": "e323c7f08777e0e0eb1ada5e5e2d276ec56b643d96f8a1e397b02969511338b3"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/opening-comic.webp",
+            "sha256": "70fe046eb5a17b84c3c9b59574e4d6f5f62560e81135a2ed981ae968d996a456"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/polar-axiom.png",
+            "sha256": "96a17fd412f64e1397824fa31f8dc0df9ab9541b9b59b4cd3cfd9fc4a225195f"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/polar-axiom.webp",
+            "sha256": "23ffc1e5f502d0cb2cba0ec1c25d41e716511de01ffb998a3755939eddf88a7d"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/wetland-brainshot.png",
+            "sha256": "735590c273ba858c6ba424b3d28553efd62e49baea0ff6a502f29ffe777b44e0"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/wetland-brainshot.webp",
+            "sha256": "8b1b4a75c628380a47e9fc6b84ede9d1374ac7710ed03cb6271a6c1a2da1e93d"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/xeno-elements.png",
+            "sha256": "02d83d767fe30625b5158820f62a201e14f399094eabbeafec645225684ec986"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/xeno-elements.webp",
+            "sha256": "9d4707999b000fd19e355c529083db444aca2b6e276100851bbad65395959abd"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/xeno-roster.png",
+            "sha256": "4b8f14ce08e50be234412d9073e4bcf3b0bb67c6cd1c2705a3bbd8771e8ad8e0"
+          },
+          {
+            "path": "lib/99-art/painted-anime-inkline/xeno-roster.webp",
+            "sha256": "2f93e73da4f1bd96a5e3069a52c37301f5d3274b3b00fd10be7ccade3f97f6fc"
+          },
+          {
+            "path": "lib/99-art/rainboom.png",
+            "sha256": "9a13adc112c4fd22b1daa2fb225820d6f10dcfa2006dc53bdc2e7bb7b4b05799"
+          },
+          {
+            "path": "lib/99-art/rainboom.webp",
+            "sha256": "51d50a6d92b50eabd66f7c4fc4f025570781e28e449afba7c24001e138038963"
+          },
+          {
+            "path": "lib/99-art/references/axiom-runtime.png",
+            "sha256": "8419c1aef044816b3207c2014122ebd97cf9414c6c49024f733e6b1daf1bc307"
+          },
+          {
+            "path": "lib/99-art/references/current-bolt.png",
+            "sha256": "3cbadfa5801460109ffd2420260d880d082b1b3dd4e57d127b96cd27ddb12939"
+          },
+          {
+            "path": "lib/99-art/references/current-bulwark.png",
+            "sha256": "c3895bb8cca6be8c891a11062941cac181423b22cd83ef90cd21391d71e1da5e"
+          },
+          {
+            "path": "lib/99-art/references/current-gear.png",
+            "sha256": "2c688935c17d04ad8dd7afd7507d3e3c1dd2ee502e5cf675294ca616b4578b4b"
+          },
+          {
+            "path": "lib/99-art/references/inkcel_commander.webp",
+            "sha256": "88222f6209c4972a40be48fcdef3c509e6b701d46c6323057f4ef295150fe1b1"
+          },
+          {
+            "path": "lib/99-art/references/inkcel_enemy.webp",
+            "sha256": "0018958c7e8915f5a4ddababdb4d596af4d1af6ec2ca5b59902dafa9c26c452c"
+          },
+          {
+            "path": "lib/99-art/references/inkcel_tower.webp",
+            "sha256": "58954d9a20139f82ef53e7df2fa93e4ce9f63e00c33c3f406509fe97e5eb3f81"
+          },
+          {
+            "path": "lib/99-art/references/paintline_buildgrid.webp",
+            "sha256": "0ba9f8d9537109a1733d5470a6c5d9edcea8c619ca3923deff6ad7b85182a23a"
+          },
+          {
+            "path": "lib/99-art/references/paintline_clash.webp",
+            "sha256": "638f421d35ad56ccabd32242165c7bb6dbec24de5e4887f5888716b2e8ebe21e"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/arena.png",
+            "sha256": "bb2ad11dd549b90c20d5e964805125f8b8aceea18db998238f38169528c491e3"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/cameras.json",
+            "sha256": "24ea303ebdd2f1cb45a3adef99148fc8465d2e88b12990bf4dce737c28b295e8"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/hero-receipt.json",
+            "sha256": "e9505e83347908625992ced68febb14f90cebfafd294f0636cee44f2b6de258e"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/hero.png",
+            "sha256": "b8bd603c64ec3560191ad534766a36f4ab71053370c6bd97665bba39aa299d32"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/manifest.json",
+            "sha256": "f30e385c2d555b4e722dfaeeb2188566a3bcdaea81fe21895a5f6b0444db2f61"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/motion-quality.json",
+            "sha256": "f0b34dc0186c34b718edd06a5aaabb189569345b4202e26ee229a46284a25677"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/motion.png",
+            "sha256": "298e178ed93033ff9e6e80bda3625241eb0851c7c52512b6c39a30c1a3fe2ef3"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/paint-profile.json",
+            "sha256": "64bde33f515a590a0659c14f84a157f89aad5921f9278acd1de02f3178338212"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/palette.json",
+            "sha256": "09e336e4cbf75820e92fdf9d9000e4f99597f6cd46fefb0f9937ea3979a54673"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/portable-prompt.txt",
+            "sha256": "a0c429d551288a0207daf1640a8765af30022b7defba0944e582e16d4631a103"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/recipe.json",
+            "sha256": "28f368bb9020d6e79507ef14bb7ec79b939eb49cf82488c265f413499260ee49"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/reptilian-motion.glb",
+            "sha256": "f32d4816a110c79eedae1d066b824dfdd5cb4116baffd98c87659ba19163a9a4"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/rig-profile.json",
+            "sha256": "d72f8fe47d9028161bf021e2342b1b1abcd68d7fdab5ce8429ab6e0fc6028767"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/timing.json",
+            "sha256": "a8706cf918c5ba2699c1a08e710fdff1c03bb61acc3325535793e86f4f9d02f0"
+          },
+          {
+            "path": "lib/99-art/reptilian-pilot-v1/turnaround.png",
+            "sha256": "331109a1c65def5fc292ce76a2936000d64bc71a4b8812dd442e7ac1859a3a1c"
+          },
+          {
+            "path": "lib/99-art/story.png",
+            "sha256": "5faf39f7b97a1ed2d2a27ed1164fa9a2c2e40908418e60f1909b379d08fc0a82"
+          },
+          {
+            "path": "lib/99-art/story.webp",
+            "sha256": "107780456d49b72ce9e30db98dd606cb8227154217f14b280bd96a6221e9d69d"
+          },
+          {
+            "path": "lib/99-art/towers.png",
+            "sha256": "7188f05590f969da709444b8b619fed4de5b0777da2f0a1eb590c1f28e4f0476"
+          },
+          {
+            "path": "lib/99-art/towers.webp",
+            "sha256": "f88f9b1cbbf36d2a7eab62f1cfe36a3f96eacc6fe4426d5980a3acdc8bb82ea1"
+          },
+          {
+            "path": "lib/99-art/ui-arcade.webp",
+            "sha256": "733619336ae1a9c3a9458051a0ac069cfb54d9cb308fec45c0ccb9684c65052c"
+          },
+          {
+            "path": "lib/99-art/ui-field.webp",
+            "sha256": "d8fac1317d32d24d782d27617080eee44b9158849ed30fb6b27bf1fbe3d79e91"
+          },
+          {
+            "path": "lib/99-art/ui-signal.webp",
+            "sha256": "8d9fcad27c76561af4c63f9d0da89901c429582c1c983b38ba66e54f24530429"
+          },
+          {
+            "path": "lib/99-art/units.png",
+            "sha256": "b8b06b3dab4f0f48db886a685ae949238ca3e362424fd0ba6c0e7aaf87c83999"
+          },
+          {
+            "path": "lib/99-art/units.webp",
+            "sha256": "5b14aff186bb103d8019a6a716ace31b81ec967e02b2cbb534e072e45cc7a904"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/Idle-hands-sheet.jpg",
+            "sha256": "52880467efe8e71f2b4c2ccfc37b5e413381ef2fd431cd1a2ad02dc7a0363719"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/Run-body-sheet.jpg",
+            "sha256": "beafca8b32c7510f65759d425b39b20f08df89f4b1ebdbe77b217b51110cd288"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/Run-hands-sheet.jpg",
+            "sha256": "d03b825ff8f27b441be024b08b8aafe9dfdfc58c9b38bd1e7af199d93f23afc6"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/Walk-boots--1.57-sheet.jpg",
+            "sha256": "9ecf81551b17ae884b3d52f9b4fbef5c892e459e7ce42849e902fca578c86c4f"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/Walk-boots-1.57-sheet.jpg",
+            "sha256": "6b56ce7aac8cd5f0babe8b4a56494ece358c3a32d0d5a368173ef21014c22bd0"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/Walk-hands-sheet.jpg",
+            "sha256": "c617c537d2e45b04e2284d10c64cde1f95c9b1b26af2bdb33a17bf8e90f89bf4"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/articulation-quality.json",
+            "sha256": "d5d3ad8216710803f058b552c2ca2dcd9357ec545a95a70bfca0b12a0d0b69d0"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/articulation.json",
+            "sha256": "f15ebf2d9620c51015cb5aa9fcace368be37934f375cdfd1712da28270d4a583"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/baseline-articulation-failures.json",
+            "sha256": "6862f29947047e41622a83ce8c36e261eb384fa11ec63497f51ad7eeb7a7696b"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/manifest.json",
+            "sha256": "cb3978f514fcce6e712c9148594a6ccc8b4f2cec40c4b86bf9ad94951eebb1f8"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/motion-quality.json",
+            "sha256": "c64db4405eb4e7365291c287295e050c065a5ec8981d2ae8d8e71f19d4a499d4"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/paint-articulated.glb",
+            "sha256": "ad8e52d82f996b4a2afedf02a9bfd04d34d20d63da6375afce3eb068bd9c4e53"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/paint-articulated.quality.json",
+            "sha256": "db812ea915424421ce878f51d822c4f1d6bb06ecec9abfd8900a1cd6866aaaac"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/sole-quality.json",
+            "sha256": "a0f62213d0413e420d73d214627881b58f73390e8d7ca646624e8c531581e1fe"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/studio-timings.json",
+            "sha256": "a40a19fecb11505fdccf8cc5746a0567b2fb620ba5b48eb9782fb0215b567b77"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/surface-quality.json",
+            "sha256": "8097b1a692d7375f6d6983d7c9269645812177f4a209d4b36aaafb4e4a78fab6"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/timing-ledger.json",
+            "sha256": "7339c7fc7262dc3c87a1143ed37ff8610825cbc3657708ad76d9ab98cbb07212"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/vey-motion.blend",
+            "sha256": "d99d0d853ecfd6363f307082788538304e0ac5b5f670faa7e87ad68b72e929ea"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/vey-motion.glb",
+            "sha256": "e6dab674a5b106c0e4573580dcea720cfef8d72feac3adea2d777fb3edd1a814"
+          },
+          {
+            "path": "lib/99-art/vey-articulation-v1/vey-motion.quality.json",
+            "sha256": "684294693b0c182b1d66140d6a5409b0399e895ad8518914e5c4abe7e6af3e20"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/binding-receipt.json",
+            "sha256": "a9c50481917e802dda0c0e195c6bfe1c908d04b7f1b6f0310a4a71d79c1c0af1"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/manifest.json",
+            "sha256": "44c0ba607a3ea6ca4969830981ea2668ccf67b51d7373997f1100794760e85ce"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/motion-chart.json",
+            "sha256": "d333f40c3f27f15043b5f3e5c8e7d34b5852efca6de25044bc89fb18929ff8df"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/motion-probe.json",
+            "sha256": "ba042544f21ca9871d02620357df936c1e42a751f048d69982e056acd2bf251a"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/paint-corrected.glb",
+            "sha256": "1d0eae44371f634c4b0faa239d3d86ac973e1ea3a294e812405a06a27e2e7602"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/paint-corrected.glb.quality.json",
+            "sha256": "a5b7f17e2c184a4c7e63a5e53c184fab78c9855313e3a46773dcb443efcbf998"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/paint-detail.json",
+            "sha256": "e0f467c57d31e90af8a0818c7a06464ede01b5b041df33c98e891bb2f9947423"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/paint-finished.json",
+            "sha256": "2d66a374e69b17f6b3b42a3a7ae57421503b6a1abb0b83c152456b097e299054"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/paint-review.blend",
+            "sha256": "db2b06e3377ebe7d38bf13f37fe8fcff5d89612d854070181f8a8a083c4209c4"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/paint-strong.glb",
+            "sha256": "46f18b2c7910837364f3c23498860ff47e93f75673a5721074b782bcdf7400e6"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/raw-texture-receipt.json",
+            "sha256": "05da5de450215e810b26de879967a406903893c89f95da99de7a1f572e0a835d"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/rig-contract.json",
+            "sha256": "da2ca3b2cb09aeb6efe7f17b1777b53d972f248afa0a4a5ac6ac2187bb84125b"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/rig-receipt.json",
+            "sha256": "89b79c477c07de48644d6053b08da81ec4691f5f37c1c0db33b0d8057dbc0f24"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/shape-review.glb",
+            "sha256": "380c40d3b3b944f06c5334ae9da0cba5bbf0fb65a989bd01caed1d33f0de5fc5"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/shape-review.glb.quality.json",
+            "sha256": "eabfa90c95c09bf2c5e1bd695be704c7dda7b2b8c0fddaa0100ba1885808b625"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/shape.glb",
+            "sha256": "179d765a196a31e48a051c4822f29441c404ce14dd487023bb5801021ed1199f"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/shape.json",
+            "sha256": "1bdb6d512dfad19fee3465dbb1ffdfb656a212eb63d8eedaca5d1dde804c579d"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/timing-ledger.json",
+            "sha256": "0d7723d94422c2125c512c2e221402b1e1e418904251f26af6e19b2441668d69"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/vey-motion.blend",
+            "sha256": "7108b4cf29b4dd9fbd9b714f623cf76fc2b6a82957b24e5cfc132e5dbd361e22"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/vey-motion.glb",
+            "sha256": "8c1de1d12d9ae2b08fd83b5bd5187ce7f9a1545172acffc9d7fba1add8babaee"
+          },
+          {
+            "path": "lib/99-art/vey-benchmark-v1/vey-motion.glb.quality.json",
+            "sha256": "c0f87d493f94726182b7b6c37c83636e95309c28f45030c3ca2c43f36f65a53e"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/arena-132.png",
+            "sha256": "bbcd61b07ae13f05ed063db74f1e3016e55de14ad7c8fe400478a76f8d06386f"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/back.png",
+            "sha256": "876607799e75c7840a92b18dc8bf0a5930c02fc07a2ff1c69064769580902b93"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/bottom.png",
+            "sha256": "3da1f071a196bd68de85ab1f9546583131a1445db5763ad27b942975faae2932"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/cameras.json",
+            "sha256": "6052befb76f0b8b315067e1f251cc6936b4ab95aa25d7de845ad5fe79d193fbf"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/front.png",
+            "sha256": "bfe12f8cd23a30e72298c9785dab86ddf8f5ad1fa48b72efd4f511ef485de458"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/hero.png",
+            "sha256": "670f30a50a1cfdc2f31f3b5bb52514e37a229b6ff0a8ef8b9dc6143b814d9ec3"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/left.png",
+            "sha256": "fac0cd497f24b6031080f03152e28034a6e0f09c315a4482b26798ad927fb25c"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/manifest.json",
+            "sha256": "dcc99bc196394941d1724cfef1bd46e33e96feab03b7fa5cffeb160d2aeb5931"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/motion.png",
+            "sha256": "b7b9e15d54f6fa5c9053a9708b2df2451703067e70a1384f5c7981316e1e20d8"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/owner-acceptance.json",
+            "sha256": "f8a233c0b2e96203e82a8dfee70801b619acbc78dd9080da45f0e1874d9d4548"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/palette.json",
+            "sha256": "382614bf8b03220bae330d6fe894d8af1612b97af07565f5de711838c64c6a40"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/portable-prompt.txt",
+            "sha256": "c2ef697e5e5f6133f182a99bea7500b30996b4cef5ce98dd8be77dcb7f6aa985"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/production-contract.json",
+            "sha256": "238afe1e7e9974d9872041f861657c030ae46e875a5bc0ecdeb5ecaa18f203ca"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/right.png",
+            "sha256": "3376ff563a04ceb32bb0b408c8879194fd14727b82394384bdd5a8c5ff642daa"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/top.png",
+            "sha256": "f5791dfb671f5d4f448b7dbaf8dedd9562dae13e2c6d236af40742866a02ba3a"
+          },
+          {
+            "path": "lib/99-art/vey-field-v1/turnaround.png",
+            "sha256": "a1e168e41f4a208ca7ccbfb6cefd74fd805f98190763f93e61cfd25c1cb2c92b"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/back.png",
+            "sha256": "d6a44824fedd2c8d1e7ffd222c9692bcdfe3f8a4d321a20f3a748ad3e6d3e921"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/bottom.png",
+            "sha256": "242a845e4dde347ba2bef27e6fb4dd208a57b123640afbd986323a266dc99e23"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/front.png",
+            "sha256": "3542de96338a2288746359c2213018f68783024e085ef14ee36af604c3b6ae83"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/left.png",
+            "sha256": "ba4608842cc764d764ba86e632271f514ae4b977c6c0f5e43911027384608636"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/manifest.json",
+            "sha256": "492102910bd8d9ae02c85fa1c25ddaa50449bd19b194be5d06509f7a814b415f"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/motion-chart.json",
+            "sha256": "d333f40c3f27f15043b5f3e5c8e7d34b5852efca6de25044bc89fb18929ff8df"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/motion-source.json",
+            "sha256": "0dab0736b10b76eabdd7f16988488637bde222c6220032f0ca67005a0886b0f8"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/paint-atlas.png",
+            "sha256": "082851355e654e944aba68b0b5b6f2af099221f3a5c3663261f226380c160cea"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/paint-coverage.png",
+            "sha256": "e01f32a3b658593684632e8205b33f283fc59ee7cd8544bae1a388abe575ee9c"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/paint-receipt.json",
+            "sha256": "441ad714476c4ac531e3a2a330b180a1fbaaebf033757e08dec9f1e9c422bebe"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/paint-review.blend",
+            "sha256": "3e7a9a7b6d19d8c9d75bdb2dc53958647a5f09c4aa5271df7c250c7d9f871a77"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/paint-review.glb",
+            "sha256": "4177c85bb5e4776b8968be1a42d2b7bcc3ac4b79d098d683c816375da66ed3fe"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/palette.svg",
+            "sha256": "b71fc14dd6869e2eb8599ce2333af470f78286009db63d64494a4cc0557c65ae"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/portable-prompt.txt",
+            "sha256": "8f606b7ee3fef78ea622ccdedb971d28b779963395d3e1020b0a96fb65cd9984"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/reference-pack.zip",
+            "sha256": "e59b786dca757a5b5204797fe5d5cbd7a697b5784494e2e9ba4380f5a92a7a79"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/rig-contract.json",
+            "sha256": "da2ca3b2cb09aeb6efe7f17b1777b53d972f248afa0a4a5ac6ac2187bb84125b"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/rig-receipt.json",
+            "sha256": "9baf94032b66f29c89ed9c6cd23bbe51d7c896375af5a60848a9c063d8eb4a94"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/right.png",
+            "sha256": "64797d2447a7d1a8fc5fa0c3117121d476a5fe2be78504d17c75f2bef34e65fd"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/top.png",
+            "sha256": "faa84098dc1da593433e7199367881bb5f8075a9cb15b51ec345f16697cbf766"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/turnaround.png",
+            "sha256": "c46e8c9ea607d79dee6c45cb29245c991bda98fdb4514d4e5b5572f8498d8bea"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/vey-motion.blend",
+            "sha256": "33f7cd7b525c9e676c9a1f0c433d6a09e32ee937c12aefb642b133bf09c41e05"
+          },
+          {
+            "path": "lib/99-art/vey-pilot-v1/vey-motion.glb",
+            "sha256": "ca8dba13170d38495fb3eaa527a2321f277716c3fb6846a17b7705533de7288f"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/clean-shape.json",
+            "sha256": "65f967c1cc4e9a5002b53805f66be08dd3248365876915818bd3e5a34068d9c2"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/manifest.json",
+            "sha256": "62e280f3b4cada5149aeb9c1ffa6d0fec34fb222d7a94569436956cc81aff050"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/material-regions.png",
+            "sha256": "394ec318be6e9b2094a1df2be44c137a5472bee401550f7fdcf1ddd3d7c9fef1"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/motion-quality.json",
+            "sha256": "4e758857af1ffcbed6c4fda7ba991c4409d7108017dfde9259f36e6d6918a53e"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/motion-refinement.json",
+            "sha256": "ffccb258c4bb4713d520dec3d711777f32cd7a44e639c4fa3516fad9b800f764"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/original-surface-failures.json",
+            "sha256": "9afb1263d32b68335a6937c71b73e7295ade1b3896c01211ea65fd917d901bbe"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/paint-refined.glb",
+            "sha256": "5a4f25de880075186932be226a5acb6de16d58a407d4d700dd11d38225ac27b8"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/paint-refined.json",
+            "sha256": "5bf5bf4e84b350ecd0bd30157785c8a4fe5ad31285a2622dbe2301b7f152b685"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/paint-refined.png",
+            "sha256": "0ad8d8eecb18bbc9894ca8ef8e7b4838c9c707e508164060cd7e7a84db33f7e3"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/paint-refined.quality.json",
+            "sha256": "da2073ef99ff1fb873aa4fda7fbf79acc5095282aac56058aaa8fc0a7921832e"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/review/body-3.14.png",
+            "sha256": "6d416ca2838199b87375b5d80c60f951a88f0dc2ac8a1f7f7d6d421bf2a78944"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/review/hands-0.00.png",
+            "sha256": "fb15efb809dbb5b9b176327831acb6021c7044d3ec5dd362406d347ee90bab4b"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/review/run.png",
+            "sha256": "a52398f9fbc5de37b8cf20bf8dc19cabb9007a6fe22d4a2022ddad69db865dcb"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/review/walk.png",
+            "sha256": "0ebd87cef8f6bbecb7667112102c3d518c704a339df00bb16bf8afae5d03d179"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/sole-quality.json",
+            "sha256": "9ab283fb3bf6b43c1bec02861ce86d278a11fc835e7be729eafc279a848f2f0c"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/solid-surface.json",
+            "sha256": "d9c4d7c2688a2bfcabce554b60791df22e271ea313efab0dc422d948f437ac8b"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/studio-replay-timings.json",
+            "sha256": "d74b4c88f7a031ff367db844e7b5511c6699f09497921cb5ffd523e889b73425"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/surface-quality.json",
+            "sha256": "7006f39ca3257ae4805b136099d4dc03d0a6a2706b0a55e187242e511a40d2bb"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/timing-ledger.json",
+            "sha256": "9a6d633a5232ec8e477692cba733450552f11039060a53baa181034d18b96391"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/vey-motion.blend",
+            "sha256": "cacd84a1151b835ad924fb92855d235ff29f9122362551ff545ca1ada02a082b"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/vey-motion.glb",
+            "sha256": "f6febcc493537647e5cbc3866571dc337bfa4af44af8026e796cf9498231b390"
+          },
+          {
+            "path": "lib/99-art/vey-refinement-v1/vey-motion.quality.json",
+            "sha256": "701540ed9c5fc65f3939b24181f7e3959fe4534295af8aad0832c51bd969a4f8"
+          },
+          {
+            "path": "lib/THREE-LICENSE.txt",
+            "sha256": "df2a91696186fe58c92518a25d48bc59c8ee2edc7cac9ca6d19a5a0d599a2a05"
+          },
+          {
+            "path": "lib/addons/loaders/GLTFLoader.js",
+            "sha256": "f7b8cfd76ade8b42b33cf924c3e8ba63dd5d70ebaa208207aa6390218d63b61e"
+          },
+          {
+            "path": "lib/addons/utils/BufferGeometryUtils.js",
+            "sha256": "3c791672cadb6796d633adc62445a10357da3ad2f816abda928dafd29817b514"
+          },
+          {
+            "path": "lib/artboard/catalogue.json",
+            "sha256": "b9e217a69a4cf90a397b3d8bbf09380bd322127f86b1765fc262c63f75614c9b"
+          },
+          {
+            "path": "lib/artboard/defenders.png",
+            "sha256": "c08b1876661e7395fbc73b36b131e3a34fe28fabf53544e4bc71d94413c44f3f"
+          },
+          {
+            "path": "lib/artboard/defenders.webp",
+            "sha256": "b6a3ac7e5b0ff071de296a757bf64e81629f1c74ab421494b326b4e5715dc54e"
+          },
+          {
+            "path": "lib/artboard/doors.png",
+            "sha256": "ed11cba8745b86a82a6f629e019a3bec18ef7933ec4f20b63c35f2562e01b0de"
+          },
+          {
+            "path": "lib/artboard/doors.webp",
+            "sha256": "255fe405e98d1e5112068bf7ad693a00df38a4fd25b15e51a72389586ede5084"
+          },
+          {
+            "path": "lib/artboard/frontier.png",
+            "sha256": "4c9d1fc1555b4caeb05ab6117a358f02591e344648ea473299d2a41e6dde47fe"
+          },
+          {
+            "path": "lib/artboard/frontier.webp",
+            "sha256": "a674af99e6462974511202e648340044491042fbc97680ddb9875f6781bc4819"
+          },
+          {
+            "path": "lib/artboard/interface.png",
+            "sha256": "c062dd4b5ad65cbe67902855b050b6f5cfc8adc034de5e65156bbee13a5de4e0"
+          },
+          {
+            "path": "lib/artboard/interface.webp",
+            "sha256": "467d37cdb65a5a3f5557d3edcb7bae22455bcb80f5e155a5f7ed8208a38119d1"
+          },
+          {
+            "path": "lib/artboard/rainbow.png",
+            "sha256": "d7f15836ba7ff09a7e1afb618f9d6eca41a9ce1a1c478155b8d805dfd661e07a"
+          },
+          {
+            "path": "lib/artboard/rainbow.webp",
+            "sha256": "1b129246552276c3b2b5c65d05b682d9d5931305caeef9935d0124875bc7c6ec"
+          },
+          {
+            "path": "lib/artboard/tide.png",
+            "sha256": "d80f3a81bae012fcd3673c9ebd720c8a59e548e5aa95f0a2736f51536680474f"
+          },
+          {
+            "path": "lib/artboard/tide.webp",
+            "sha256": "70ea5f10710f3d670ad62f93d0044963feec4babc5f3534b2862f72a3da5677f"
+          },
+          {
+            "path": "lib/first-expedition/panel-1-v3.webp",
+            "sha256": "405b78f5ceaf576a06461fd0cc50d7e7e24c67e1dbf660396979143fd07191ec"
+          },
+          {
+            "path": "lib/first-expedition/panel-2-v3.webp",
+            "sha256": "7df0c1c061a3a78e0bfa432d86d5fae5990fdbccd6c7010113b521ddc1003b80"
+          },
+          {
+            "path": "lib/first-expedition/panel-3-v3.webp",
+            "sha256": "564eb591339b2a25bd86e01789d39ec2baae5e472725aa3a03bcb11cc6679b00"
+          },
+          {
+            "path": "lib/first-expedition/panel-4-v3.webp",
+            "sha256": "076eb6763fdf042837281b40d962831ec60f4116147d99bd6a0d87929a132cda"
+          },
+          {
+            "path": "lib/first-expedition/panels-v3.json",
+            "sha256": "ee8604dab2f1426c5bc9abcf2bd22752bc3b57aa693d4f9226e5d8b204b4a203"
+          },
+          {
+            "path": "lib/first-expedition/prologue.webp",
+            "sha256": "590ab27ab21e7359607e2838754c1181a887b345419c2a23bc573fbe846c1dc2"
+          },
+          {
+            "path": "lib/first-expedition/provenance.json",
+            "sha256": "6fbcdf4332f200ea23cd562896c98c73efc33eaf51ffdd68d95bff9ea612f759"
+          },
+          {
+            "path": "lib/generation-lab/arid-after.png",
+            "sha256": "58bcaaacaa2a18c9b61b02fa03fb4a700865c5922e51ab5e611c2cfd30a3f4e8"
+          },
+          {
+            "path": "lib/generation-lab/arid-before.png",
+            "sha256": "6110f963c3bb61f6e17bc538ee513e682af02329a573d104af78d5e139014da2"
+          },
+          {
+            "path": "lib/generation-lab/evidence.json",
+            "sha256": "d9d55b168783a27d8f429cd6c5bf6ad677717595bb43c8974c1817d6fd6311bf"
+          },
+          {
+            "path": "lib/generation-lab/io-after.png",
+            "sha256": "47d84a893d524e1fd3a6b48a43b88d0463fccbdce8a2c459771c7790701de3d8"
+          },
+          {
+            "path": "lib/generation-lab/io-before.png",
+            "sha256": "c88366b7fa4207e82a1b538b247d933a3322e138ee07aa2a9650725160d1a899"
+          },
+          {
+            "path": "lib/generation-lab/skyarchipelago-after.png",
+            "sha256": "038430492536de3cf016f6a3ea6c3e0b2f2d5fe53016c9ea3ca151fe3c49c7eb"
+          },
+          {
+            "path": "lib/generation-lab/skyarchipelago-before.png",
+            "sha256": "d89098bbbb6ffc3a1de372f33577916b45de2381cc7206735f5d100f0526918e"
+          },
+          {
+            "path": "lib/generation-lab/temperate-after.png",
+            "sha256": "4324562b5747258f540aebc8598cbb5679646c2a0ce3841118ead551df036d24"
+          },
+          {
+            "path": "lib/generation-lab/temperate-before.png",
+            "sha256": "fbc03d541fd22229f032f353e4cea522c7da442c6686c59998da59ecba0fa0d0"
+          },
+          {
+            "path": "lib/painted/README.md",
+            "sha256": "112c1c683daca18e741e92d2ee1d29b483e3f388235a5391193f402a2b3b421c"
+          },
+          {
+            "path": "lib/painted/commander.gltf",
+            "sha256": "a57aed322e612da9091a5d2d1bd1aeb7b1805b6312b90a0a061d1f71f4c6cb54"
+          },
+          {
+            "path": "lib/painted/enemy.gltf",
+            "sha256": "e514ea889c608a26d5cfc77c7f0fd998d29f4562c031dc4b73667aa2499aca60"
+          },
+          {
+            "path": "lib/painted/gouache.png",
+            "sha256": "3cf37ea545196e7358c446183839dee36bbf686de2834e110b4aaa7957fc09c7"
+          },
+          {
+            "path": "lib/painted/provenance.json",
+            "sha256": "a7f671a2ff80962d2e389f6285241a73e2710143cf750798a0d18eabe29aa764"
+          },
+          {
+            "path": "lib/painted/tower.gltf",
+            "sha256": "1690a96f023964324b15c8f6d892f3193b808ed059cb3bbe74780bc498693e34"
+          },
+          {
+            "path": "lib/paintline/provenance.json",
+            "sha256": "ed8a096d6801c582542c99a9433241537b98fb437aa7db3788d78fd6ce4ced00"
+          },
+          {
+            "path": "lib/paintline/tower.gltf",
+            "sha256": "971a79d708782542092278e96c35e5ad1a1d0d0c7211b52cb93c2a6905691298"
+          },
+          {
+            "path": "lib/playground/README.md",
+            "sha256": "f018dcd613b3b08cffc87b90a27b88b779548ee9ede7c05ab486f36a90b1c29f"
+          },
+          {
+            "path": "lib/playground/RobotExpressive.glb",
+            "sha256": "047f5e5fb3bb6d378bd1df16ca6137f2a596c99b3a1b5690b4020c05aaf6f319"
+          },
+          {
+            "path": "lib/playground/provenance.json",
+            "sha256": "97fe389b4f9ee17c7685de70b5999e12fab30c5161dcfb3ed1de8c2186ca50dd"
+          },
+          {
+            "path": "lib/three.core.min.js",
+            "sha256": "4183cee05f0aa093682fdf551363a16bb20bd92b68e14f7576905f45c461ba82"
+          },
+          {
+            "path": "lib/three.module.min.js",
+            "sha256": "852c06b9fe936cf8ebc2870c86370d1015c310b04de98cdfc07f4efaf6afd2af"
+          },
+          {
+            "path": "tests/attacks.test.mjs",
+            "sha256": "db35baaa2b891342c855885521ee5df584ba30bccb48942a4877e06b3d6fb8e2"
+          },
+          {
+            "path": "tests/encounters.test.mjs",
+            "sha256": "4fca1b4e1ec395523299a876d994add27e00ccedbe30aa1d7cdd5545687c082f"
+          },
+          {
+            "path": "tests/first-expedition.test.mjs",
+            "sha256": "b7b26c64acda3c4f2869c62d4a2d85cd7a86ec0188ccf83ad7b0970e33ee0a69"
+          },
+          {
+            "path": "tests/run/active-worlds.test.mjs",
+            "sha256": "ca7593e92aa08ec96dd83d225c7e7ae9298537330f3168f3d33b8f3ebd9d5547"
+          },
+          {
+            "path": "tests/run/campaign.test.mjs",
+            "sha256": "4a4e8cb7fbb02b4daad4cfecf5ad06799efaa82eb76c59338b90f457f94aada5"
+          },
+          {
+            "path": "tests/run/crystals.test.mjs",
+            "sha256": "c8ae7f1ed1765a55c9ca7a9bcd1be31fc6264117d849b14ea94460f228a3d0a3"
+          },
+          {
+            "path": "tests/run/draft.test.mjs",
+            "sha256": "71657f334b7a149197aeef575319e157f9bd2502e765c3377fb8181590a12018"
+          },
+          {
+            "path": "tests/run/environment-catalogue.test.mjs",
+            "sha256": "6f988e72f0d4715995a8bb916ab77fc6c71cbcf279ec0deafc68700c57f020d5"
+          },
+          {
+            "path": "tests/run/expedition.test.mjs",
+            "sha256": "71d92d00fe508668dad6786169b20f6b002b7dd29b2a824c6de08df6270f7df2"
+          },
+          {
+            "path": "tests/run/frontier.test.mjs",
+            "sha256": "c0529e921142e65b051d4a4de8a78268cc984d9885cc684c86a1d6c03a437b72"
+          },
+          {
+            "path": "tests/run/hand.test.mjs",
+            "sha256": "b357d969ac10fca843c7fd1f13916f2fb1dd1d28d767bbd1bc4bfbc813ccd4f3"
+          },
+          {
+            "path": "tests/run/heart.test.mjs",
+            "sha256": "84855a3e44209948b3d375c48fb3241dab49676352046113601710d24a8160ed"
+          },
+          {
+            "path": "tests/run/homeworld.test.mjs",
+            "sha256": "3815288e639cc4070b76ce25035326f4107408cbe4e73a097fad672e9a1f9be9"
+          },
+          {
+            "path": "tests/run/living-worlds.test.mjs",
+            "sha256": "a71e79ba2c82d7de1412f75e2b8012bdaeb1418abe8fe419559b3f657d758fca"
+          },
+          {
+            "path": "tests/run/manufacturers.test.mjs",
+            "sha256": "aad326dc86a1dba8901058fc40cb9efdbd98b9bd6aef99b242f063fe6f9118e7"
+          },
+          {
+            "path": "tests/run/modifiers.test.mjs",
+            "sha256": "387682b54f2f05c190fbbeab7dd123546fe3344b62b7991d1a93ae27b128d621"
+          },
+          {
+            "path": "tests/run/natural-geography.test.mjs",
+            "sha256": "cb6384bd1df2ea2dc15260be3de4455febcd9a8419f709f583ce6b3139305869"
+          },
+          {
+            "path": "tests/run/planets.test.mjs",
+            "sha256": "638f183e247c5cef49cf86c0968942c63338f162f01ca4a29f26c78cca890539"
+          },
+          {
+            "path": "tests/run/powers.test.mjs",
+            "sha256": "e6e55323270f4c813f2ade8679365f5d227288e5c0c54169658934cfe6a47502"
+          },
+          {
+            "path": "tests/run/purity.test.mjs",
+            "sha256": "218b2c04cb0d5b1f8d707261247ad95a5d514410e14cdc76d849f0dd3b4e306e"
+          },
+          {
+            "path": "tests/run/rng.test.mjs",
+            "sha256": "9e6ab5acac74aa2e21508c515287351663966d00f0b10bf7ff31967a98465a08"
+          },
+          {
+            "path": "tests/run/run.test.mjs",
+            "sha256": "4d2af06aa337864d603bcf30773d18feefe4428c1bba6dfd1a993956f8aad029"
+          },
+          {
+            "path": "tests/run/schedule.test.mjs",
+            "sha256": "d2896b0c7e2ff513d2c0e5d678d56e9c6f93facfe7d708fc64ffbf313c3c72ce"
+          },
+          {
+            "path": "tests/run/solar-tactics.test.mjs",
+            "sha256": "499b0975f6828325ae9c7ce5971c88f64b4f17ddff577f8220c82d25001cc60a"
+          },
+          {
+            "path": "tests/run/state.test.mjs",
+            "sha256": "57e4910fde538a75dd09abe9271c4c6446d7abc4032f5ef8fe63ec9505c7d93d"
+          },
+          {
+            "path": "tests/run/weapon-forge.test.mjs",
+            "sha256": "cfdfc90abb164f1238dde387496f95bd252ef0de3815c8e37334f6c48e6feb7a"
+          },
+          {
+            "path": "tests/shell/bridge-routes.test.mjs",
+            "sha256": "e7ce27e9da183ffc22c0cf30d9e3e276899e23dc093e973375b54aa45c1af34c"
+          },
+          {
+            "path": "tests/shell/camera-overview.test.mjs",
+            "sha256": "5f19a87f6091714f930fdad8ab18a5d6466201982f448fbe7917bd8335c01ed0"
+          },
+          {
+            "path": "tests/shell/camera-poles.test.mjs",
+            "sha256": "b1e658e7477236d91525db55b3dfe937c6f829eadc2ae061008c8b0b3d889773"
+          },
+          {
+            "path": "tests/shell/campaign-store.test.mjs",
+            "sha256": "e0580cf98abf1808edeedb51280e8c8351279411d88c6861378bb560a8d219dc"
+          },
+          {
+            "path": "tests/shell/cosmic-landforms.test.mjs",
+            "sha256": "17f035dd160e6a8b0c1079f4066945b68241b105654c43356dbf0fda236c1138"
+          },
+          {
+            "path": "tests/shell/extreme-worlds.test.mjs",
+            "sha256": "0fdf8d0b15e2b2d1631a543bca5e81345995f26841bc15176a79aac88744ff98"
+          },
+          {
+            "path": "tests/shell/floor-routes.test.mjs",
+            "sha256": "3db45357d8d5030e17fef8b98388e5c6c06203a2c668b65d3393c3f610bf9761"
+          },
+          {
+            "path": "tests/shell/formations.test.mjs",
+            "sha256": "41b8e6b5d79f92c58bafe96e674a4661722d80a823661cf96e297e692ce19e8e"
+          },
+          {
+            "path": "tests/shell/generation-parallel.test.mjs",
+            "sha256": "8c79c544638783a81a3194f0c59a4d12f271b53b825a6f8c1a209c5d1061b554"
+          },
+          {
+            "path": "tests/shell/guided-world.test.mjs",
+            "sha256": "a0451a8d71ab208bfe25854ceb72946353736e3433ea9c9c27447043efd00590"
+          },
+          {
+            "path": "tests/shell/knockback.test.mjs",
+            "sha256": "2e8017708f572e79cdfa8e38ac9fc9a1cb59c51958ab40214754b57dcc0843b2"
+          },
+          {
+            "path": "tests/shell/landform-biomes.test.mjs",
+            "sha256": "bdf6f084bb8619881f5baec6082f006965400651c80fa683a5917678a4043e5c"
+          },
+          {
+            "path": "tests/shell/landscapes.test.mjs",
+            "sha256": "efabc9816f62aca85701b00d0df5ab5aa7e07517df3982e8d7ee69a7aa30c404"
+          },
+          {
+            "path": "tests/shell/nav-build.test.mjs",
+            "sha256": "d87caa0227fd0697819c338a776a894075588caf0775ef80665361385f063f36"
+          },
+          {
+            "path": "tests/shell/nav-placement.test.mjs",
+            "sha256": "68976484d8249aeaf34816dba4a9e3fb7534bec406d2789e80d5b2d25bd5ea17"
+          },
+          {
+            "path": "tests/shell/nest-approaches.test.mjs",
+            "sha256": "93565ac9331cd34aaef042dd16b7626244941dea9a74fbb6d35c949c35a69db9"
+          },
+          {
+            "path": "tests/shell/rewards.test.mjs",
+            "sha256": "5b0013163b0a9db20db458db68fd78179cd0c22405af016818e1c9fb869223d8"
+          },
+          {
+            "path": "tests/shell/runtime-optimization.test.mjs",
+            "sha256": "20088d837aa49b4076f5484830b2cba50d40640561358257ef709f2781d311ec"
+          },
+          {
+            "path": "tests/shell/solar-routing.test.mjs",
+            "sha256": "3a3b37c6b2a4e8a1f2787cb6cdc3440c29567e13cb7285beb7154d6b158c27b5"
+          },
+          {
+            "path": "tests/shell/terrain-atlas.test.mjs",
+            "sha256": "f6c992436ca8b981a2a265f7227f5411fe1fbcf31084064e8210969a6b514480"
+          },
+          {
+            "path": "tests/shell/terrain-surfaces.test.mjs",
+            "sha256": "5c94d6ad75d9ffce9fc173000f685a234185c188a9cf36797807ccb42da392a5"
+          },
+          {
+            "path": "tests/shell/waves.test.mjs",
+            "sha256": "42279b9abc854966aa90a4ce063676c12021cb6de36519fa956f35017ccd3f0e"
+          },
+          {
+            "path": "tests/shell/weapon-assembly.test.mjs",
+            "sha256": "732e3cf621682830bb1916ed0e01d5751aee0008655fdf68cd7c0ced7da69a6b"
+          },
+          {
+            "path": "tests/structures.test.mjs",
+            "sha256": "c2d3c7438cc52a4fce7b77c63f7fced6d8c305f74271fca27c85c95684c6f442"
+          },
+          {
+            "path": "tests/terrain/quad-kit.test.mjs",
+            "sha256": "07c78807ba34f72ecc543249b0829974e2e21f129040d33d1d9f31f99943b0c7"
+          },
+          {
+            "path": "tests/terrain/spherical-kit.test.mjs",
+            "sha256": "88d9703ef5398c0e0bcca4a470eaff16166faa232827a3bdf9e77c1e68e1da63"
+          },
+          {
+            "path": "tests/tools/arena-handling.test.mjs",
+            "sha256": "9a92abc8a6fc083ef9dbc594a71eddef82378e4ee5b6233d2c7ce6d536f57cb6"
+          },
+          {
+            "path": "tests/tools/arena-motion.test.mjs",
+            "sha256": "5a9b328c28e74ce87ac0fa6626cc70890104e1a3f8441126ac0d8b4a10801449"
+          },
+          {
+            "path": "tests/tools/arena-rules.test.mjs",
+            "sha256": "92463caf03084daacb57781b8eaaf75fc714c236a0acd7115c96f6ba211ed277"
+          },
+          {
+            "path": "tests/tools/audio-feedback.test.mjs",
+            "sha256": "213dfffda4d197b97208a6cfabf2fbc732082ae62da3d3ab90c80d3a35b37795"
+          },
+          {
+            "path": "tests/tools/build.test.mjs",
+            "sha256": "49076b43fde40eba038bb6d1b96db5257c039cf6698acaee712ed1f551168d33"
+          },
+          {
+            "path": "tests/tools/hard-cel-candidate.test.mjs",
+            "sha256": "3833352b63645cc4748e7ef374731178729c547b57028895171b1c3f05ebcee4"
+          },
+          {
+            "path": "tests/tools/material-audio.test.mjs",
+            "sha256": "4b73083ab52c5679ca726e5c9336a8dddbf7699e2fdc5b5836379903b3def7c8"
+          },
+          {
+            "path": "tests/tools/pages-site.test.mjs",
+            "sha256": "dceac9187f76d884cea9d3ce74933bf3d2b67f8e40f34a1d408be82b43a089db"
+          },
+          {
+            "path": "tests/tools/storage.test.mjs",
+            "sha256": "4b0561f740e17ebcb48c21c27507d672626a2e293aeeb3f91b4e8370ada97717"
+          },
+          {
+            "path": "tests/tools/worldgen.test.mjs",
+            "sha256": "5082618af535d46f5a15dc21ba47e22ee9467f31e1792ab9a12b90c64af7dac5"
+          },
+          {
+            "path": "tests/traversal.test.mjs",
+            "sha256": "1946b22a0103531d6ece718e2883095f6ad89c00c41a44ee64230d61e1012ae7"
+          },
+          {
+            "path": "tests/weapons.test.mjs",
+            "sha256": "b7d4af1fcd7ba92af467be212d8ddc315aca8a4d60f32e5c98381b7587643051"
+          },
+          {
+            "path": "tools/accept-faction-revisions.mjs",
+            "sha256": "60dabd6da29336358b88c8c8740679e8491a9e7b657ba547ddbe4d1d1d26c2c6"
+          },
+          {
+            "path": "tools/acceptance-input-check.mjs",
+            "sha256": "8e8ad9d7f84e0c3401c7fd71beeb4d614c101f2d987a33dde49dad4a65a829f0"
+          },
+          {
+            "path": "tools/active-combat-check.mjs",
+            "sha256": "efcf3a5d6dbb3488cbcfe03076ea5fac1dd29bd2bb36e198333df9f2528b2950"
+          },
+          {
+            "path": "tools/active-environment-runtime-check.mjs",
+            "sha256": "aee9b956d227233abeb8a4d032eae5e17757362083c2064bf15c01a8d507071f"
+          },
+          {
+            "path": "tools/active-environment-visual-check.mjs",
+            "sha256": "3038aa5bf7eaa1a5dbfe2c486ba199914656970a55ea3acba6cb7b3868dec66d"
+          },
+          {
+            "path": "tools/approved-audio-locks.json",
+            "sha256": "c3abe5902779958147593a14177d2dd43da84ae624803412c1f83fa1f9547dd2"
+          },
+          {
+            "path": "tools/archive-hard-cel.mjs",
+            "sha256": "b3706f8e74bec8ddc95437b1ed0de76e42d66c140ccf5736da3ffd2c2f24ede0"
+          },
+          {
+            "path": "tools/assault-policy.mjs",
+            "sha256": "4bd377d42270496e7202d255b8a4250e29f85567ca2a28580d9e81e1396bf5be"
+          },
+          {
+            "path": "tools/assemble-artbook.mjs",
+            "sha256": "7f6a288eb4054bfa557b762864753766a605429690465afed6fc92a656635680"
+          },
+          {
+            "path": "tools/assemble-identity-art.mjs",
+            "sha256": "8dc6e6668ae5c4fc278a5f5e7585815cce2e10265ea749e4335a72b545728236"
+          },
+          {
+            "path": "tools/asset-studio/.gitignore",
+            "sha256": "01d8d0360f02a0c00e236a4eb2a1d8bdf83377acf442eaafad7a136bf14d6bb0"
+          },
+          {
+            "path": "tools/asset-studio/README.md",
+            "sha256": "c81579eeef94dd411bf1d9f2ec1372bdf170ed2d732f0129a89d7ddf668200fa"
+          },
+          {
+            "path": "tools/asset-studio/articulation_quality.py",
+            "sha256": "54eccf4cceeeb0a5b5c905117fd6cd76663836223b693e879c139cd0a3977187"
+          },
+          {
+            "path": "tools/asset-studio/asset_quality.py",
+            "sha256": "656728b30a949bc76bbfcbec5211a416555159c4c7ade514ee44802f0c122fff"
+          },
+          {
+            "path": "tools/asset-studio/benchmark_laya.py",
+            "sha256": "55a6a9b0a2205a7ec2b412d443c65dc507fe01e9b8b6ab77c71174d590c034e9"
+          },
+          {
+            "path": "tools/asset-studio/benchmark_procedural_laya.py",
+            "sha256": "af48ad0044e0891070e4164e12aa1fe288c6d676eb686811137a4fc6f1bf2954"
+          },
+          {
+            "path": "tools/asset-studio/convert_cached_krea.py",
+            "sha256": "0edb125535ff7b112e23a1ee19cc5dfba361f52fce6ace87e6c4a4e72eec4484"
+          },
+          {
+            "path": "tools/asset-studio/decision_advisor.py",
+            "sha256": "8e7e681dec3b8595b39202ee3d67590599e4b0783a31cf49d5c039a6ee9ba090"
+          },
+          {
+            "path": "tools/asset-studio/download_models.py",
+            "sha256": "e7e9fa7052190cf672a68888549df3bbbdc193563567860fd4312bab8f6df3d6"
+          },
+          {
+            "path": "tools/asset-studio/download_verified.py",
+            "sha256": "ee973a4e742a9f7315806c6e6de1fbba4255e3faeab1f2e50822cb1f6c39ec40"
+          },
+          {
+            "path": "tools/asset-studio/fitted_motion.py",
+            "sha256": "92f1a8113576e035d846e6c770cf533d07884e8ef8b08f1a75a3c6aa725bbe66"
+          },
+          {
+            "path": "tools/asset-studio/fitted_quality.py",
+            "sha256": "a5e541b675996a700920804ebb0b419761f514b3b8886a08035f6cb825479936"
+          },
+          {
+            "path": "tools/asset-studio/instantmesh_worker.py",
+            "sha256": "1fbc38d3faf4304db4e1fd2b56980897a2f5393467d73710b7758448936695e0"
+          },
+          {
+            "path": "tools/asset-studio/launch.ps1",
+            "sha256": "08913bb39bad157fd841af3d11caa2b6804bff21eb20624a29bf0ff4a006fad1"
+          },
+          {
+            "path": "tools/asset-studio/mesh_reduction.py",
+            "sha256": "7b3adacc1bb0d8d6b422358c0120f2d738a466058115492619ff6d2712ba002e"
+          },
+          {
+            "path": "tools/asset-studio/mesh_worker.py",
+            "sha256": "1b1c716fdc92757dcf2df168a99eebb9097e7523e724a566ee14d6c03f846c5d"
+          },
+          {
+            "path": "tools/asset-studio/mia_bind.py",
+            "sha256": "3e32b22cf814e46db4cd926a962e4cb2723884b5b85bcc4e8b90b71190ab3fbc"
+          },
+          {
+            "path": "tools/asset-studio/mia_worker.py",
+            "sha256": "d8f9b7b26f6082cf0f5de94d27ab8d2e32c9f5f15f746a819015e969e11c8b69"
+          },
+          {
+            "path": "tools/asset-studio/mixamo_contact.py",
+            "sha256": "31096393daf9bac50215394d13ba982f7444871603d4ff4bda12d71c154c0d49"
+          },
+          {
+            "path": "tools/asset-studio/mixamo_extract.py",
+            "sha256": "f69d92edf6b9d79d036152738601f2058a5526521f1005e72c4c4eb9dba81ea3"
+          },
+          {
+            "path": "tools/asset-studio/mixamo_retarget.py",
+            "sha256": "55e0b51b586f3b83f44df1f3458c8fc9e5f0f0b61fb622118ed3320890c1b5f5"
+          },
+          {
+            "path": "tools/asset-studio/model_worker.py",
+            "sha256": "e3e1450da5398e836eb150852eac38cfd061271dcd8039f426f97eb8d1db241b"
+          },
+          {
+            "path": "tools/asset-studio/motion_catalogue.py",
+            "sha256": "e3e0bea684d511a47f637cc38a627383954897583dc561e05b9defcb604fe674"
+          },
+          {
+            "path": "tools/asset-studio/motion_contact.py",
+            "sha256": "747b8dee3a6cce87f65e0e2b17d375b9849ffd6f333c5fa88d56cad26b8f5235"
+          },
+          {
+            "path": "tools/asset-studio/motion_guides.py",
+            "sha256": "6518af05baedb0fe21aca8fc550bedd81c6b148436430b7bfa9b5ed337a137cc"
+          },
+          {
+            "path": "tools/asset-studio/motion_metrics.py",
+            "sha256": "cdd31a27d9089614dfe3f12c9dfaff58e611da39d59711c16b8715e07fc55905"
+          },
+          {
+            "path": "tools/asset-studio/motion_quality.py",
+            "sha256": "1fbaba49d335f38d905e80405c570e1aeab8e71164933a64fb613bb9d5d8f37a"
+          },
+          {
+            "path": "tools/asset-studio/palette_worker.py",
+            "sha256": "81783c82d44101f281889473fc07fb89a1cdcee655cb496c4837527dc90d6589"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/README.md",
+            "sha256": "54a2a1dfb14e5f0367388b04d0c5c78a39a650b643bba5549a7184b60bc5baab"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/browser-steps.cjs",
+            "sha256": "467cac46703eb1a3be27a35b466ef94773278f36d3fc01f400af698a8e3ff6fd"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/finish-details.py",
+            "sha256": "66bd1490d7b3f2c3ef782c211af71747cce0c782f7add73f535c8ffc74fbb921"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/finish-palette.py",
+            "sha256": "a3b3fc704c176dab7dc6adf62d30d6bc0fd3facadbaac63015739e5f93c24866"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/prepare-rig.py",
+            "sha256": "69eabbc376cea544671ebd19e8f413a29db17e74e04f5df3e9fb6bf7157869ae"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/prepare-shape.py",
+            "sha256": "9b9ee0dd5e2b7a174ab76a7a799f3c29e94c664020d891abc2d13c7f1a5d2fe9"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/refine-articulation.py",
+            "sha256": "82c51ba26bdd28f1130f8b84454e1cfda48b863c9b51a32dc623dcd48d4c494a"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/refine-motion.py",
+            "sha256": "3ea55a44c05a38226aef559760e485ecfd9049f3f079b856ae95d938cd0a7d42"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/refine-paint.py",
+            "sha256": "4a0d19d38ecba1080dbc2028ae80ce1ca20a918838b2d0370aed86569a64d9d2"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/refinement-browser-steps.cjs",
+            "sha256": "b2d2ba4ace382e9b6648cc30939a818c1fab3460af9d1656af33992a1b150c61"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/refinement-profile.json",
+            "sha256": "902b0b1bf55da0ad871bef064f4d86e66fe7f3e70233c49b75fa7393093f6172"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/repair-cuda.py",
+            "sha256": "b4677314b5f3e1925abbd113d690e4ecfc4c8d89624f46b899225a7e67c35d64"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/repair-shape.py",
+            "sha256": "227accd789d674455684be9042dffa06ac9619e85cb71c4272ee961fcef41209"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/repair-wheel-metadata.py",
+            "sha256": "0eb6b1b313f530c80fd5b8039e8040dedcdbe24d049ff8d40baefbfc5a1b970f"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/solidify-surface.py",
+            "sha256": "01df4ea1f62feb6ac1899abd8afce4e1011e2cf45bd26f606d2302a94ca3ab04"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/studio-browser-steps.cjs",
+            "sha256": "51d5e966ac5688cc26ffaca07f44c929a6ca74fc0497b462e979dc55696c21bf"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey-trellis/vey_regions.py",
+            "sha256": "5b71b7cd57d4fabada93def171730d7d220b17ce5e5ea823c778531e147540d0"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey/README.md",
+            "sha256": "546a0b591003fc691afdddbcf4f4fd2129e244cc3541b3a7815addd37eb8182d"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey/browser-steps.cjs",
+            "sha256": "c1672a53cf7405b12335329dc889bfe972690c05355931885c28ab95abbaf37e"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey/check-deformation.py",
+            "sha256": "fd55d966c0b1c99eb78b030323f3a26875b3bed6ac2fe47b55bf0895e9285839"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey/mocap.py",
+            "sha256": "d4e983576ff119ba762ae9736c69e2f70a1d24a676be6133135fe2f36b72bd04"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey/package.py",
+            "sha256": "84e6cca8a051168870383306350eb4fea9bb9e356b038f4a25b2bb21c36155ce"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey/paint.py",
+            "sha256": "b27164caeb9cd98166eba43d3fb77020374210300d3e5c5219f83c328ed1ff8e"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey/prepare.py",
+            "sha256": "420d3c2b4ce3fba47ffa879482bf89b285c853246b815650ff442e07f5674c0a"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey/rig.py",
+            "sha256": "ab8659b26fcee9a96308d3e3bc2caca35593450d6c6ce0e1a9d990a6aec46f8b"
+          },
+          {
+            "path": "tools/asset-studio/pilots/vey/runtime-review.js",
+            "sha256": "b2eb5c86a0dce12cdb445dd6941eaa7a5926f094b7ae901f20107757f9e013f1"
+          },
+          {
+            "path": "tools/asset-studio/prepare_motion.py",
+            "sha256": "ae31d2053a23b25c97b4203a017e0a8ae266f4d2d24feb026d6003635c8130ab"
+          },
+          {
+            "path": "tools/asset-studio/reference_pack.py",
+            "sha256": "df336aa3b8c0ae7b08074237b60180890e21da4b6acc7d43d172e14ac3fe5f71"
+          },
+          {
+            "path": "tools/asset-studio/render_references.py",
+            "sha256": "a72d375d6df8d7a8c9feb5cf9a39325caa69471b4cba84c1a81b5dda355c894c"
+          },
+          {
+            "path": "tools/asset-studio/requirements-instantmesh.txt",
+            "sha256": "c5c050d0ad944381542f6232aec60bef9a9f75ea6aafc18e908ba9d133dfb71d"
+          },
+          {
+            "path": "tools/asset-studio/requirements-mia.txt",
+            "sha256": "155aa7f38979fb0cc9ca36ddadd269d06ace90331f87066f142e1848fe9b7a03"
+          },
+          {
+            "path": "tools/asset-studio/requirements-studio.txt",
+            "sha256": "a71e863f9d294fd92149442991f82dd3538a41289766d7d13c44c1a7ebe5156b"
+          },
+          {
+            "path": "tools/asset-studio/research-lock.json",
+            "sha256": "a924bd02e290e1b307fa2f3c4bc06026ad19ddfad94be71a9864f0e1fec5d5f8"
+          },
+          {
+            "path": "tools/asset-studio/research_pipeline.py",
+            "sha256": "8734dfc94f244872de28043bd8b8f143a0ee7527e9f6da8e3a852bd0a367fc8c"
+          },
+          {
+            "path": "tools/asset-studio/retarget_quality.py",
+            "sha256": "f0a68387e1ee6066c1cb970ac60dad91260fc3f33cc98021af3e320c09ca65ab"
+          },
+          {
+            "path": "tools/asset-studio/rig_bridges.py",
+            "sha256": "36a0df34cb478a147dc76f70bfa2834dd655095595ff45a252950a0f858b1d34"
+          },
+          {
+            "path": "tools/asset-studio/rig_contract.py",
+            "sha256": "0c23503aeaf303f3217813e60ce4ff5cb1736904748b2d1c86f1e401974698a6"
+          },
+          {
+            "path": "tools/asset-studio/run_logged.py",
+            "sha256": "ab0f89a56d08e23828cf5bd9c5230fb218766aa53fb4feeb172a077b190b4668"
+          },
+          {
+            "path": "tools/asset-studio/runtime-versions.txt",
+            "sha256": "a8cbe16e6729398def19dc370d7038c547c735eb34ebceec26bff87c559a2b60"
+          },
+          {
+            "path": "tools/asset-studio/server.py",
+            "sha256": "91fe60922a43228fa4251b10ce3ab1c962ef8828dddde93cfb3644eeb48a35b1"
+          },
+          {
+            "path": "tools/asset-studio/setup-research.ps1",
+            "sha256": "6fad76cbb47f3d8302d8c96a17c11e48c59aa1ebad21da80db1b09be3681a102"
+          },
+          {
+            "path": "tools/asset-studio/setup.ps1",
+            "sha256": "34651343b93a597513b5995e22986fa89412fefe25d5de426a27d0fbad68739f"
+          },
+          {
+            "path": "tools/asset-studio/setup_hunyuan_mv.py",
+            "sha256": "24b5089ede36e6c62054068d7f30dc2d837c4190ba1d35ad6da60aabe67d5820"
+          },
+          {
+            "path": "tools/asset-studio/setup_identity_edit.py",
+            "sha256": "295b909c17497b8b17392f07c7e1b7ebeb52d842c5451ee519f8d91279c529ab"
+          },
+          {
+            "path": "tools/asset-studio/setup_research.py",
+            "sha256": "0bd13885fa559915cb5fc7ba75b273f0c3b177f2c877a201195c865427ce3aff"
+          },
+          {
+            "path": "tools/asset-studio/setup_video_motion.py",
+            "sha256": "a41894393a9e4c6f0200eb746147f8db61e7350e7ece31e2b9b61fedd96d4dfa"
+          },
+          {
+            "path": "tools/asset-studio/shape_budget.py",
+            "sha256": "2baded8d922a47682fbc0a875dcc654d31de9d29693ab9892d32b888d3d41f9b"
+          },
+          {
+            "path": "tools/asset-studio/shape_images.py",
+            "sha256": "179a2c4a338cf40115c23b47f61a7cf8ce0f86a2f3282a628a7ad77065e62e8c"
+          },
+          {
+            "path": "tools/asset-studio/shape_inputs.py",
+            "sha256": "2b5a1766ad7e0f2e30727d3823618fb95bdad4063e0e40509fadd8cee7151714"
+          },
+          {
+            "path": "tools/asset-studio/sole_quality.py",
+            "sha256": "48316e04f08d2fd2fb95ebfcb68b39a2cb9cf3cd8456ffd309c61960c9e1920b"
+          },
+          {
+            "path": "tools/asset-studio/status.py",
+            "sha256": "40a4c0324413bf0cb464ccb8bdb093353bde8b661e0978e236cdd9744a23954a"
+          },
+          {
+            "path": "tools/asset-studio/surface_bake.py",
+            "sha256": "00037028b3ce5523aa675122d3b26a4f926140671686ca4afa414862498ce6f7"
+          },
+          {
+            "path": "tools/asset-studio/surface_quality.py",
+            "sha256": "06a0a007be60bbbf3efb7ad45f65e6c7640e5407e287a2e7448ab58a612b4fed"
+          },
+          {
+            "path": "tools/asset-studio/sync_mixamo.py",
+            "sha256": "9097663f4384db46cfee5e0d44ae81160189449fc90db4debe04b7a4a199ad89"
+          },
+          {
+            "path": "tools/asset-studio/test_articulation_quality.py",
+            "sha256": "cdcb18106899e505b4379d30c9e36f193afa78d15601a0c7c47b9c19624e61e1"
+          },
+          {
+            "path": "tools/asset-studio/test_asset_quality.py",
+            "sha256": "5b9e86dbce78358842bc4f91070c0eb3074a5f21a70d89b4f385bb2e67f6f2f0"
+          },
+          {
+            "path": "tools/asset-studio/test_identity_workflow.py",
+            "sha256": "d3148c58638305da94646e190384471f6fb159df4aa47b05f942b081283bc960"
+          },
+          {
+            "path": "tools/asset-studio/test_motion_contract.py",
+            "sha256": "5048b53830c0e8ae184274c0c73d1663bbd0ecf3bf90392bd3e6aabd70eb3443"
+          },
+          {
+            "path": "tools/asset-studio/test_reference_pack.py",
+            "sha256": "c8d4d12005b20a9be8bc8cdb68f97fa804aee660fb7e0e3de5530fbb2dfa1797"
+          },
+          {
+            "path": "tools/asset-studio/test_rig_bridges.py",
+            "sha256": "380cd137d281a17467ea5ac3bd940df12cbdc6c1e7824335c023f50942434087"
+          },
+          {
+            "path": "tools/asset-studio/test_server.py",
+            "sha256": "ae71d135e0e8e01316bd1dbfea7097e58750ed74c916f3ef586cf11de523d836"
+          },
+          {
+            "path": "tools/asset-studio/test_shape_budget.py",
+            "sha256": "38f057640ad3066a6cd62080aae966cb405b860f6e4ffc9a217495c07679841d"
+          },
+          {
+            "path": "tools/asset-studio/test_shape_images.py",
+            "sha256": "4022a5054c76f2ee32d8bd5acd91c9c003789acd9766701495d749034af62891"
+          },
+          {
+            "path": "tools/asset-studio/test_shape_inputs.py",
+            "sha256": "1aa9509acec6d2e7f8aafff4981b2b31bebd88764bf04cf07a842d63f5258252"
+          },
+          {
+            "path": "tools/asset-studio/test_surface_quality.py",
+            "sha256": "f66b6571ea62c140db4374b444fceed47d0e018d3029cb959428615ccb96abe8"
+          },
+          {
+            "path": "tools/asset-studio/test_video_pipeline.py",
+            "sha256": "e784d0432c42165d413eb1102369ec7469bca7e93ac164b53c81400fe3afbcd2"
+          },
+          {
+            "path": "tools/asset-studio/trellis_worker.py",
+            "sha256": "8f68224b6de8c6c4dee233a484617f1a139e9e37afbda20138275cff273d8c5c"
+          },
+          {
+            "path": "tools/asset-studio/ui/app.js",
+            "sha256": "539516e320ae32af438989a4949d7a56d94fe94a002302f82f73e673e0480e19"
+          },
+          {
+            "path": "tools/asset-studio/ui/fit.html",
+            "sha256": "9be34bc4540f293ae001100ee30f0f76cad9ad13a91580ea2f29de4316d20c68"
+          },
+          {
+            "path": "tools/asset-studio/ui/fit.js",
+            "sha256": "96511b456d686e308b0bc0bbcf371ce8b9bf5ed0eccae32a03caeb897b41ae1e"
+          },
+          {
+            "path": "tools/asset-studio/ui/index.html",
+            "sha256": "3c935f706d34b6e38f0410d750c23180f31952e15a6510ed61b9511739a955c4"
+          },
+          {
+            "path": "tools/asset-studio/ui/motion-guide.js",
+            "sha256": "4db516bfe647fe9f5d383b8ab6695a1d55d40e8a5396b6bcee58ba1b290ffc22"
+          },
+          {
+            "path": "tools/asset-studio/ui/motion.html",
+            "sha256": "4e69a0326125974141286795ea72aeeb2f8005644e1a9d234540bd2c94bad8aa"
+          },
+          {
+            "path": "tools/asset-studio/ui/motion.js",
+            "sha256": "06b5af337d79ac8caa1acd58fd93681d3a66d8ab1ba84af6a18f262181507aa9"
+          },
+          {
+            "path": "tools/asset-studio/ui/reference-render.html",
+            "sha256": "751a609edb714890d29cf73a9b54c79569c9a766044ab97b0005fdfa0914a393"
+          },
+          {
+            "path": "tools/asset-studio/ui/reference-render.js",
+            "sha256": "3849dd29d8db64014480c481c714b3052429bd3d28b9f9f95e1391f0091ff7ed"
+          },
+          {
+            "path": "tools/asset-studio/ui/style.css",
+            "sha256": "c8f4e694d0009b6b3d7a332c8604dc0070ebb03582cf28ca06cb9ab61cdd2a32"
+          },
+          {
+            "path": "tools/asset-studio/video_loops.py",
+            "sha256": "8665480e16dd307fa85d9887e2b4a5742f148d911ff66d8550a87e4c63e682a0"
+          },
+          {
+            "path": "tools/asset-studio/video_pipeline.py",
+            "sha256": "addb320dd441b28428a142824e60ecc20b56778863d068407ee0ced9a8558519"
+          },
+          {
+            "path": "tools/asset-studio/video_pose.py",
+            "sha256": "7adc7388cb6496b831615ea2f33b6742d908f3a783e67b37b9e8a072a8f0b405"
+          },
+          {
+            "path": "tools/asset-studio/video_retarget.py",
+            "sha256": "e157b38dcf5a33ec9582562627d038a7bb75b7dcb6110132a06506f9e1442c54"
+          },
+          {
+            "path": "tools/asset-studio/workflows.py",
+            "sha256": "a2ec08d734ab2608ceeb26d6407de71a9f65b77e255ced057b928cc6053f97ed"
+          },
+          {
+            "path": "tools/atlas-performance-check.mjs",
+            "sha256": "0851e63d315b827ccc5da44c478cf5bf76e1414498175e3ec2eac350fb88681a"
+          },
+          {
+            "path": "tools/base-loot-check.mjs",
+            "sha256": "686c96b9d4b5c1ddf971c08bef5415c30619649ea53098bb45ba59c366589a6a"
+          },
+          {
+            "path": "tools/browser-check.mjs",
+            "sha256": "272b24dfc92251cd4da39bc24e54a29fb07bafe1a41db46f7160584b93c31fd2"
+          },
+          {
+            "path": "tools/browser-regression.mjs",
+            "sha256": "53edfbc9197358752505d17bce1c8b6497cb9dd1238ff6f0a00c4ec3b85bad70"
+          },
+          {
+            "path": "tools/build-99-art.mjs",
+            "sha256": "a81cc307a4088e2803c680c58d339b10fca0eb82be3d438a5169ab362c7a17e6"
+          },
+          {
+            "path": "tools/build-comfort-check.mjs",
+            "sha256": "aaa74cbdcac5b6b1634c0592ce80db0f4a4de6d7f239c957bcc4763f8271c34a"
+          },
+          {
+            "path": "tools/build-earth-coast.mjs",
+            "sha256": "e07b2e903d3aca5f26007b7d034cb71fb5c0525472638e4828209646b9aa46aa"
+          },
+          {
+            "path": "tools/build-faction-catalogue.mjs",
+            "sha256": "7061728bbbdbbf8d08311a9518a6f2524643b54e497d30463e8041249766d604"
+          },
+          {
+            "path": "tools/build-material-audio.py",
+            "sha256": "318ce9c0b1a19b3d653afd17b63af8a50a43524b549f1b13e5e5389ba8cd765a"
+          },
+          {
+            "path": "tools/build.mjs",
+            "sha256": "69f0679445352446b8cc7e96305f9858e010bdc5f0bf1166160e41f8553be542"
+          },
+          {
+            "path": "tools/camera-check.mjs",
+            "sha256": "1ef21cd2941f8dc110492ecf3dd70c934144168641713e2dcbac8b68eb4766fb"
+          },
+          {
+            "path": "tools/camera-terrain-diagnose.mjs",
+            "sha256": "5326417efb054bb3daa94b50a4a0e75452dc2c7bfed322f8229add28e2afebe2"
+          },
+          {
+            "path": "tools/campaign-boundaries.mjs",
+            "sha256": "11bade7e884adbefb1624a5500b3c998c423a284458d743615c1fd9b68f596ad"
+          },
+          {
+            "path": "tools/campaign-check.mjs",
+            "sha256": "06a41b873e3a585ac98674b9552ae3e6fe3ef2f16ad2a7e35d75a0b598befc49"
+          },
+          {
+            "path": "tools/capture-poses.mjs",
+            "sha256": "a1a43d2f122b235f8199239421d4134c55dc80fc86ecb8921a60fa83198ee242"
+          },
+          {
+            "path": "tools/capture-terrain.mjs",
+            "sha256": "24d75f543c0b8709c59b9a8e710cbddbd8cf1592e7df72d75aeba974d75a082b"
+          },
+          {
+            "path": "tools/catalogue-sheets.mjs",
+            "sha256": "7d97692e839b0ea92b1c26ba79bf07fa77adc1ae298f156c26eb0683ab7d3360"
+          },
+          {
+            "path": "tools/combat-music-recipes.json",
+            "sha256": "580a3131a87d0f580837abf9226b94ab80e5d342993929bcf45327f3bd62f72e"
+          },
+          {
+            "path": "tools/commander-feedback-baseline.mjs",
+            "sha256": "83e272c66348de076ae8ced028a2047b776d925b36150074889609c504f98a98"
+          },
+          {
+            "path": "tools/commander-feedback-check.mjs",
+            "sha256": "46a6d80967f1c905dbfb35eef5f49268c0bb0314d96e29883eaa7bcb1840c1ef"
+          },
+          {
+            "path": "tools/commander-surface-check.mjs",
+            "sha256": "3bf19efdbd9b2c1a3b3c4f556276e9247d6ea6dbc3ae712a8125d6912018ecfa"
+          },
+          {
+            "path": "tools/context-edges-check.mjs",
+            "sha256": "723b42c2d1a47eb65d738c92c0902016a0a997849d9e3f0697def95833376856"
+          },
+          {
+            "path": "tools/cosmic-landform-check.mjs",
+            "sha256": "e2c210c7d493b8c151ec5761c7c6974752d29385a19b1c5a3f88d1b403ae9b41"
+          },
+          {
+            "path": "tools/crystal-check.mjs",
+            "sha256": "a74d2c4215c119f35f1742b65360fd7f5bb3ae809c9950db537f54f039d1aeca"
+          },
+          {
+            "path": "tools/debug-inspection-check.mjs",
+            "sha256": "0f4221d75213ac3ca737e6e4313faa3c3a350f3cff3c3d018bed3e00076519a9"
+          },
+          {
+            "path": "tools/debug-performance-check.mjs",
+            "sha256": "6e15561bcc7f12b866a5962e9173a4669579b3dae79bd79f7be3ce680071a843"
+          },
+          {
+            "path": "tools/debug-world-check.mjs",
+            "sha256": "5cd53494f828ebbadfd602e496a91884316058b0a840729b59b5e4b84a3b70c7"
+          },
+          {
+            "path": "tools/decor-clearance-check.mjs",
+            "sha256": "1ccb133dc074ea64b979c3f19d931fc357f1ef39e4efa691340d69c96d2f77fd"
+          },
+          {
+            "path": "tools/deploy.mjs",
+            "sha256": "3214ea14e86d85858a1482b83db136e66b9be10eda0015487422a38aaf7b55bf"
+          },
+          {
+            "path": "tools/ending-input-check.mjs",
+            "sha256": "3ef40e026a050de86536ca504fed017543612facdef8a004ce3de5f8762ddd76"
+          },
+          {
+            "path": "tools/expedition-cameras.mjs",
+            "sha256": "ba6a9139479f5724b0686612c87872c8817f091c7795c0cf1aab0ce0b40845cd"
+          },
+          {
+            "path": "tools/expedition-check.mjs",
+            "sha256": "c4818e49c4da5a7943e25cdcfc33564ea4d1346222502eaa1d0a66e8bf964034"
+          },
+          {
+            "path": "tools/expedition-playcheck.mjs",
+            "sha256": "c584a05ee6059c428d4f05036043d8338a7580900e4e20eed45387606c8ed80b"
+          },
+          {
+            "path": "tools/extreme-world-check.mjs",
+            "sha256": "2cef940713c0e14b1c909be02433fa2afdf50b8dd68a9765f43c88b155efc05a"
+          },
+          {
+            "path": "tools/feedback-preferences-check.mjs",
+            "sha256": "66daf726270688b030d0dbebb1800b00d67e79ce964583b5f06c9453b2d9780e"
+          },
+          {
+            "path": "tools/fixtures/combat-motion.html",
+            "sha256": "c3f85970d578e0b0d27552f6bd7f07d4429d13af8adb1c68570903aa12799a5b"
+          },
+          {
+            "path": "tools/foliage-audit.mjs",
+            "sha256": "689212fc9be0c420e2bbeef49c4ed6ca737d99990d106abaa054b1f22a1e3926"
+          },
+          {
+            "path": "tools/foliage-check.mjs",
+            "sha256": "10562ff25c3605dcca3ff4414df7ee3bc080811bc8d6b6b2a03354d56782fd3c"
+          },
+          {
+            "path": "tools/formation-check.mjs",
+            "sha256": "5137d0687e9b19e36ea7b2c87fb0d7b18527f85be51cac96c8a36a7efd11944b"
+          },
+          {
+            "path": "tools/formation-gallery.mjs",
+            "sha256": "c8d0df3c459bc59ec40b4574732e4579f151a6744f6adaefacc5325ec38a7542"
+          },
+          {
+            "path": "tools/generate-planet-auditions.py",
+            "sha256": "c3de0db2082904c3723809ae3b0f933f3dc24b72aa6bfa7740504ad06099d894"
+          },
+          {
+            "path": "tools/instance-upload-check.mjs",
+            "sha256": "6689c7aeb36433ad37ac72e8883adf339e10af6a5257e6623867ce1c3db691d6"
+          },
+          {
+            "path": "tools/integrate-faction-art.mjs",
+            "sha256": "47f9643e9f460b81df6ffd6d23f04880efa4902db1039a759a345362dd230b4e"
+          },
+          {
+            "path": "tools/knockback-check.mjs",
+            "sha256": "b6392bf97795c2c52c4a342be463e9e69f2ba8c3e46cdffed878babb5f6b74bc"
+          },
+          {
+            "path": "tools/landform-biome-check.mjs",
+            "sha256": "b116f2f32c4aade83438cd341f0b09bef0aaf5ec72897124ca481d3ccbfbe840"
+          },
+          {
+            "path": "tools/landform-check.mjs",
+            "sha256": "a9f896c05f7b111eb10481fb77f3ea4aa492af8a9556e8031a8b5499e96edbad"
+          },
+          {
+            "path": "tools/landform-showcase.mjs",
+            "sha256": "2572ce5e81cdd23c007f4ec53d4c5ab41ecbd7dbe1c7bb7acf04632078978bd6"
+          },
+          {
+            "path": "tools/living-equipment-check.mjs",
+            "sha256": "b02617e090f9a76fac9c5b65462a4bba6ff50fa6f7c0527bf868e8279d9a57d0"
+          },
+          {
+            "path": "tools/living-worlds-check.mjs",
+            "sha256": "50fa39ca4070bedb2cb6dac733da1ae80f6f1d1cfbd0536a30a0ab8038183a2c"
+          },
+          {
+            "path": "tools/lobby-check.mjs",
+            "sha256": "fae53b89563789eefb845e9cdabdcd43b8d112eb1013cd1bdc30ba15845ad154"
+          },
+          {
+            "path": "tools/locomotion-feel-check.mjs",
+            "sha256": "8af972856ab9c1e3cecac4b401dc0d0ca6c1e4f6e21f4c3c64da75c50f6e8156"
+          },
+          {
+            "path": "tools/loot-distribution.mjs",
+            "sha256": "d83f608c8be31ae9824f7a3ff2ba5128205f929d2e398bbdd7de2216ab147ba6"
+          },
+          {
+            "path": "tools/master-planet-auditions.py",
+            "sha256": "6cf47929835f63835eb46116fa6ef1a33540f6615e2841f9b9e1f5dde7d67aee"
+          },
+          {
+            "path": "tools/measure-combat-audio.py",
+            "sha256": "34a7242a5e3fc1ef0b81b3af02c0d20a1986cd35cc89e3c9325863fd8a4917ea"
+          },
+          {
+            "path": "tools/mobile-check.mjs",
+            "sha256": "aa7b0756b41b28d6ff8f0fae3153a0c2e851f8f34f76642500b5f63749c3e538"
+          },
+          {
+            "path": "tools/mobile-inspect.mjs",
+            "sha256": "bc93a777051fa93add136f5d03a89cb16be4c8fb44f00f2ad3e032d21421de5b"
+          },
+          {
+            "path": "tools/mobile-orders.mjs",
+            "sha256": "f3cbb46097f22580ac39ea3e3dd091e6280efb8a84ec5df77c885d88aab76e58"
+          },
+          {
+            "path": "tools/mobile-overlays.mjs",
+            "sha256": "9e46a4576cdc82bd8e824b4ce6b7d99fd83cb004b07778e6c6652c8bcbace8a8"
+          },
+          {
+            "path": "tools/mobile-performance-compare.mjs",
+            "sha256": "48a4157250ada26fd5c1b903616fa4f832c69be65ddf4c66432ba10511378d26"
+          },
+          {
+            "path": "tools/mobile-performance.mjs",
+            "sha256": "9cb879d024577b92eeede7e7fa26108ffa0b090244b3e93663e5b0612943ea04"
+          },
+          {
+            "path": "tools/mobile-polish-check.mjs",
+            "sha256": "a472cbdeba7e947e3c9a5d65c3fb431d84418c8dd9606da7de7c0bb930f62884"
+          },
+          {
+            "path": "tools/mobile-scenes.mjs",
+            "sha256": "0f302d2d95a22e0dc3c482c3b45fc9d61a20f0027ce4a42e254101584c49573f"
+          },
+          {
+            "path": "tools/mobile-transactions.mjs",
+            "sha256": "25fb5337b51fc7574e2bb4ff99beb69134199a263ce556f48302bd97af101cae"
+          },
+          {
+            "path": "tools/natural-worlds-check.mjs",
+            "sha256": "b5add2e4eb1ce6eab9e856c3b1f92b84e43170035e972fe723a4f1e84171a1cf"
+          },
+          {
+            "path": "tools/natural-worlds-visual.mjs",
+            "sha256": "3fb3e6b0ca4198b142570af92529a2a202615c073cc5f5f0a2abce48b070b797"
+          },
+          {
+            "path": "tools/nest-nav-check.mjs",
+            "sha256": "17a3931889cf31b7b2daeabefab00a166ee0ce571c1669944421062d6dcf6949"
+          },
+          {
+            "path": "tools/nest-target-check.mjs",
+            "sha256": "7a844a88e4276de5cf7e69f44fd5ae02d45f24ab3a29d758e0c0655b7717c17b"
+          },
+          {
+            "path": "tools/nest-wave-check.mjs",
+            "sha256": "17ae91905585624f55315fc936dcae65f4680b7e68361a9a9f18e8f2b5be6d29"
+          },
+          {
+            "path": "tools/pages-site.mjs",
+            "sha256": "bbf219f2f124a5bd9f212a38f0320f5e208d3cb2a7914ca0ca2d42759d0546db"
+          },
+          {
+            "path": "tools/path-search-check.mjs",
+            "sha256": "39af18a9172a761d45bd4537818ee301ed8204e2d0298c30b8d47692f1b34dac"
+          },
+          {
+            "path": "tools/performance-check.mjs",
+            "sha256": "d2127e7c9d12a6a549848e4569e9b8402bafc4f739a72c9a5cf6e95f647cb1bd"
+          },
+          {
+            "path": "tools/placement-preview-check.mjs",
+            "sha256": "51023adf6361b0fd2b45c5f330558db4d9cdecfabe330a82963fbc74473d98f4"
+          },
+          {
+            "path": "tools/planet-nav-check.mjs",
+            "sha256": "eafe36b44f0990406a24c33bf45ef7cce2e74a3e418b0fafffc4d5dd40dcd4aa"
+          },
+          {
+            "path": "tools/polar-camera-check.mjs",
+            "sha256": "0ae7597fdd44dedb2ada2b2a160e6d36d421f66494946631425dec413e83a8b8"
+          },
+          {
+            "path": "tools/pose-sheet.mjs",
+            "sha256": "471a6ec8e0362f4c6c477fb1f2dae7f778b0e824baa4b5ed25a0001997984efe"
+          },
+          {
+            "path": "tools/preview-check.mjs",
+            "sha256": "44af30eef9471e918c623bd81c7146cfd21640dc150a2a20e773c7470a8630bb"
+          },
+          {
+            "path": "tools/probes/99-art-direction.mjs",
+            "sha256": "8d3e9459ef775765a44f6377ab0164125e8c3fef1e9bb725c957897f43f474e6"
+          },
+          {
+            "path": "tools/probes/99-factions.mjs",
+            "sha256": "39d668d44b7f6a0008419b2d03aec5207f1eefded166d4342b24fd220fe21ea1"
+          },
+          {
+            "path": "tools/probes/99-identity.mjs",
+            "sha256": "89589adffaffce6c76e858d65b68de0aa575703dbedfaf200381a3b7fcfda488"
+          },
+          {
+            "path": "tools/probes/99-unified-artbook.mjs",
+            "sha256": "64b6cef3e4ede5328e0608ff8d596b664e1da6bcfa5898e177f00e892b47a2a9"
+          },
+          {
+            "path": "tools/probes/arena-live.mjs",
+            "sha256": "7656128370f791a69f1f68b7c00bb120c4adcc864705e43163ea33f186e64f63"
+          },
+          {
+            "path": "tools/probes/atmospheric-combat.mjs",
+            "sha256": "237381d7540a1eb7db5163441b8058ed5dd933e388e7e0d5a8cfbc95a29e6e6e"
+          },
+          {
+            "path": "tools/probes/first-expedition.mjs",
+            "sha256": "887fce241f1f295fbaba7b53ae00bafcefcbc1850e6f37fc4143e0096aeafe67"
+          },
+          {
+            "path": "tools/probes/guided-game.mjs",
+            "sha256": "74cfdcd9acda2d463b3f8a541bb526ccfb467c0c8ddd5fb25f5ef94770f5f42a"
+          },
+          {
+            "path": "tools/probes/hard-cel.mjs",
+            "sha256": "58991ca48a7d58ac34bba491d7be54dd057939295ef9b50b972a5ba89e9b0104"
+          },
+          {
+            "path": "tools/probes/ink-artboard.mjs",
+            "sha256": "334726a4fce0c5116aa3413d0ff9862d78a183e841705e11a9c960fce63b6ea1"
+          },
+          {
+            "path": "tools/probes/ink-asset-stage.mjs",
+            "sha256": "471b8e89bb7a98587703d1aeb7f1d1e771932a3d1ed944ee3febf536d4e9654b"
+          },
+          {
+            "path": "tools/probes/ink-handling.mjs",
+            "sha256": "5e099ddd21c708d300ab0987ac5b1c95e1b15a4a4c5478be290422933a4a9874"
+          },
+          {
+            "path": "tools/probes/ink-motion-review.mjs",
+            "sha256": "f81ff7064a90ee58c9f8c5406730426f13a39c3d85911196fcc07e07b44dc256"
+          },
+          {
+            "path": "tools/probes/local-asset-studio.mjs",
+            "sha256": "c48c0dbc6d80b63e64303b8c232de9d544d4480ec88ef15fe804fdc3b50f1306"
+          },
+          {
+            "path": "tools/probes/playground.mjs",
+            "sha256": "a87d61197ba34188eb5ad14188bffdab9478c3b287f11a9ba070e5974cb5a91e"
+          },
+          {
+            "path": "tools/probes/procgen-kit.mjs",
+            "sha256": "78562422746a049040e93018741db14da333d0139fba5f022e4cc67c66233f96"
+          },
+          {
+            "path": "tools/probes/world-performance.mjs",
+            "sha256": "a56b249d10b6190c2b1fc69e1ceb5e6c45be5e48eee08d134f4b7613c529f1ba"
+          },
+          {
+            "path": "tools/production/combat-music.batch.json",
+            "sha256": "7e92e713a8b00932164b70a43b2134a08cc0ce9c2c12e8109888506021a6fde3"
+          },
+          {
+            "path": "tools/publish-preview.mjs",
+            "sha256": "b98532cf3d132952d64e1779147c13487df919eb1464a1ea5cbb9e496cf093d1"
+          },
+          {
+            "path": "tools/qa-combat-motion.mjs",
+            "sha256": "c838dbd7b9fd008b627acd35abae8e6426e19b4a7eea85d3e7f3ce3aa0e05ccd"
+          },
+          {
+            "path": "tools/qa-generation-lab.mjs",
+            "sha256": "1385db10532eb00c1da95eb50faac057e2fc8e5570b8618adb2492beb23038ca"
+          },
+          {
+            "path": "tools/qa-generation-live.mjs",
+            "sha256": "c24d665a983ebdfa6c1c8df06a8a6d7030a988978a6b333517e5873a901d84e7"
+          },
+          {
+            "path": "tools/qa-home-boss.mjs",
+            "sha256": "ef08fb55b36ba6e6d70369cb8ddaf5313cfd6eb0f7c57afda6d3df2f18cc4191"
+          },
+          {
+            "path": "tools/qa-home-planet.mjs",
+            "sha256": "e42da01f7dcacd22040306603f83a5e6f721c06814ca96abf1f4c7eff626e19b"
+          },
+          {
+            "path": "tools/qa-main-release.mjs",
+            "sha256": "11ee02ee7f4234db44c3d6e85bcf6750ae64cd71d0064a194aaa7f7f8a18029a"
+          },
+          {
+            "path": "tools/qa-manufacturers.mjs",
+            "sha256": "e307084d354e770c4a7fd0dbf32bb91426ad8177ba5053f352b28897e452469c"
+          },
+          {
+            "path": "tools/qa-material-audio.mjs",
+            "sha256": "9d43b1bb93257e7b2ec646f47d933aba4a688e0348d5a789a5a2b6c8d8d4272b"
+          },
+          {
+            "path": "tools/qa-painted-earth.mjs",
+            "sha256": "b1fd5a23a812f07ece804374b639a7e6b079fbd2e66a88ecc0a37fe7c373ec94"
+          },
+          {
+            "path": "tools/qa-painted-integration.mjs",
+            "sha256": "655848d07b2cdb6c19a0c093976cb6b4fc838d83d9ab7fb0d0ded03bf71ffca7"
+          },
+          {
+            "path": "tools/qa-painted-lab.mjs",
+            "sha256": "c6b270ab95368afea0a33ca6a282ea4bd7570d1ad5001401af9cfa81e1934d0f"
+          },
+          {
+            "path": "tools/qa-quake-forecast.mjs",
+            "sha256": "c3c96831ce59e188a484cf89c949b830626ecd0320d532cfeff9f53cb92e49ec"
+          },
+          {
+            "path": "tools/qa-style-lab.mjs",
+            "sha256": "38d57eb0568927a1c7da7119d417cd15cbcdcc815ad0bef3d8d761d69164c053"
+          },
+          {
+            "path": "tools/qa-world-optimization.mjs",
+            "sha256": "e9c22ad6faae098dc9c4b14bd91847001697ed86c2571d5c8c5871b4c8c15558"
+          },
+          {
+            "path": "tools/qa-world-polish.mjs",
+            "sha256": "0c62f5731ca8ab6a69961cf203717e5f36259eb0c1afc48d30f0940f45d4b290"
+          },
+          {
+            "path": "tools/range-performance-check.mjs",
+            "sha256": "a436c05c0ec95bac9b08ddf7128cb8be233f481256c9f7763a6fc879415ce203"
+          },
+          {
+            "path": "tools/ridge-gallery.mjs",
+            "sha256": "7faef28ba23dc7146c7e02e986a453f9066ecf26bca6fdc27ef805f899e0c10f"
+          },
+          {
+            "path": "tools/route-check.mjs",
+            "sha256": "71cf9753060ad31899252aeee03536003cf87c4c6b45868eadcd334248373250"
+          },
+          {
+            "path": "tools/route-corner-check.mjs",
+            "sha256": "3d4b6f5d3d718226aa03f92dbb1604443e9b227f4886518f691e234c0b9da3cf"
+          },
+          {
+            "path": "tools/runtime-recovery-check.mjs",
+            "sha256": "e1db88d2d9f0db9fb4d4fde60b6a235da20e6672c1e47a0c5ec18e469e683b5d"
+          },
+          {
+            "path": "tools/self-play.mjs",
+            "sha256": "d2a12524913527a0fbdeffc620a88227d3b3d8c99d3828521c60ac4de1d2c2d4"
+          },
+          {
+            "path": "tools/serve.mjs",
+            "sha256": "f730fb45cd71c94b9342374a2e59fdbdcce81505305e45466d375f6279c5a136"
+          },
+          {
+            "path": "tools/slash-review.mjs",
+            "sha256": "8a8eebdb5d62895e9667b9550c7d19e55ffb277c8f5e975c63f4f60a075202a4"
+          },
+          {
+            "path": "tools/spawn-clearance-check.mjs",
+            "sha256": "cdac6e2a39d2496918173990de436200a6ee6ed9b741de71407529d8a241f2d8"
+          },
+          {
+            "path": "tools/style.mjs",
+            "sha256": "29e2875a236b1d603aa6766e2461cfad0bb87c8ee695027571c6544390cfc5c7"
+          },
+          {
+            "path": "tools/surface-gameplay-check.mjs",
+            "sha256": "0164162377f0465bdc21e1988cef0a5cce353e432d251cd34f1a062477cc7a28"
+          },
+          {
+            "path": "tools/syntax.mjs",
+            "sha256": "79f81372ae6240ab0162354d7c8f77186f0a7684c25ce04a4cc840424096ffe7"
+          },
+          {
+            "path": "tools/talent-launch-check.mjs",
+            "sha256": "fd9aac6c492d4fe733eb90b376bc78dbf8be48eee7a7257e33cb7113f540b9e1"
+          },
+          {
+            "path": "tools/terrain-atlas-check.mjs",
+            "sha256": "3dea06d1cc822167cd7d43d5887a053eb8378cbd3b1ad100c6ffda9916c8d423"
+          },
+          {
+            "path": "tools/terrain-check.mjs",
+            "sha256": "2551d730144d6fbfc9f36c36bc09e8d615f6a0fe181045f5c0d04ae842d362c7"
+          },
+          {
+            "path": "tools/terrain-diagnose.mjs",
+            "sha256": "3adae730867ecb868b8e0ad58a479ece3ad268340f0d73d68143e265611816c2"
+          },
+          {
+            "path": "tools/terrain-expansion-check.mjs",
+            "sha256": "4a8390a2284270ac5d0228e7bff5855afbbabc0276edd735a9ee2556ff398179"
+          },
+          {
+            "path": "tools/terrain-strike-check.mjs",
+            "sha256": "7eccd5605088a4728a8d6888fddc6e26743a7e58c09048799f26c1b82d46c2a5"
+          },
+          {
+            "path": "tools/test.mjs",
+            "sha256": "e60ec5e420a984e10658b2406a38a377faa6ff0429175f375d9298ad69ec5e16"
+          },
+          {
+            "path": "tools/tower-gap-check.mjs",
+            "sha256": "c38d187912c68db613aeb8a852e8793861013200138a248ad1d2cb04ba61835c"
+          },
+          {
+            "path": "tools/update-style-study.mjs",
+            "sha256": "4bbd0dda5eae39e04026276f8375c1218d48f83f8b78fd3d26a8dd3567f50615"
+          },
+          {
+            "path": "tools/verify-preview.mjs",
+            "sha256": "65f926297b18dedbd213a92ad3b3446b62671c58ee418ed7615dfc499fe85d57"
+          },
+          {
+            "path": "tools/viewmodel-proportion-check.mjs",
+            "sha256": "75e1c9b850066ab4a217cac88eda94cfab797cafa06b220280044d063a3d4de5"
+          },
+          {
+            "path": "tools/visibility-check.mjs",
+            "sha256": "1a33102e2d46136f08093996770b899945b8f026d7a79b91ee86f6e1903ceaca"
+          },
+          {
+            "path": "tools/weapon-finish-check.mjs",
+            "sha256": "806ea0bf6eb9b219e871832aba7108fb88c80def578c531450205eaebb89fc82"
+          },
+          {
+            "path": "tools/weapon-poses.mjs",
+            "sha256": "ff1f1aeb418ceb12a7756486eb4963f33e6533c1cf931dbaf47113ce269c4b8e"
+          },
+          {
+            "path": "tools/weapons-check.mjs",
+            "sha256": "e5a2f88c02e16cf0bf0637c710b06cbfc5785154cfbe1d6765df415909cc1dc6"
+          },
+          {
+            "path": "tools/weather-check.mjs",
+            "sha256": "f18394e0cd0270d1e5d527cbd2eee8818532f1a821d7170e124fcf5e1ac76991"
+          },
+          {
+            "path": "tools/worldgen-check.mjs",
+            "sha256": "321d864d000242b7a5ea2e59cf9f98c6b44b42f6087c2feffdf225e96b41f212"
+          },
+          {
+            "path": "adapter:adapter.cjs",
+            "sha256": "863878339be68735cf5958e7682c581b462d0d21c1d0ca528924972ad0e3dec4"
+          }
+        ],
+        "sha256": "1c866dc69ec507fb5e98b5656a8f3b8c159ec7661155ceb93285c36f4096b3a7"
+      },
+      "startedAt": "2026-09-19T22:19:14.612Z",
+      "finishedAt": "2026-09-19T22:20:17.180Z",
+      "command": "exploration",
+      "requirement": "curved wall joints, rotation, saved anchors and directional touch pinch",
+      "scenario": "wall-and-touch-input",
+      "seed": 12345,
+      "inputMethod": "fixture",
+      "lane": "integration",
+      "acceptance": {
+        "owner": "untested",
+        "publication": "untested"
+      },
+      "host": {
+        "platform": "win32",
+        "arch": "x64",
+        "node": "v24.14.0"
+      },
+      "process": {
+        "exitCode": 0,
+        "reason": null,
+        "durationMs": 59785,
+        "outputBytes": 460,
+        "previewTruncated": false,
+        "logs": {
+          "stdout": {
+            "path": "C:\\Users\\Majied LaFleur\\Documents\\GPTProjects\\worldheart\\artifacts\\world-polish\\aegis-installed\\00-exploration\\stdout.log",
+            "bytes": 460
+          },
+          "stderr": {
+            "path": "C:\\Users\\Majied LaFleur\\Documents\\GPTProjects\\worldheart\\artifacts\\world-polish\\aegis-installed\\00-exploration\\stderr.log",
+            "bytes": 0
+          }
+        }
+      },
+      "resultFile": "C:\\Users\\Majied LaFleur\\Documents\\GPTProjects\\worldheart\\artifacts\\world-polish\\aegis-installed\\00-exploration\\result.json"
+    }
+  ]
+}

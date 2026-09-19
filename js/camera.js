@@ -407,6 +407,13 @@ export class OrbitRig {
   // one notch always covers the same fraction of the range whatever the planet
   // size or how narrow the height limits are. Sizing steps against absolute
   // distance instead made a notch jump half the band on a colossal world.
+  pinchBy(logRatio) {
+    // A finger spread has an absolute geometric meaning, independent of the
+    // mouse-wheel sensitivity and the current size of the zoom band.
+    this.cancelFlight();this.interactionAge=0;
+    this.targetDist=clamp(this.targetDist*Math.exp(clamp(logRatio,-.4,.4)),this.distMin,this.distMax);
+  }
+
   zoomBy(amount) {
     this.cancelFlight();
     const dMin = this.distMin, dMax = this.distMax;

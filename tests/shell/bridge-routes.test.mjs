@@ -13,6 +13,12 @@ function walk(nav,from,to,height=null){
 for(const type of ['valley','grotto','caverns','arcade'])test(type+': autonomous units traverse both the continuous roof and its open underpass',()=>{
  const {f,s,nav}=fixture(type),banks=[];for(let i=nav.baseCount;i<nav.n;i++)for(let e=nav.adjOff[i];e<nav.adjOff[i+1];e++){const b=nav.adj[e];if(b<nav.baseCount&&Number.isFinite(nav.cost[e]))banks.push({i,b,p:f.field.coordinates(s.m,nav.nodeDir(b,new T.Vector3()).toArray())});}
  const centre=new T.Vector3(...s.dir),top=nav.nearestNode(centre,s.top(0,0)),floor=nav.nearestNode(centre,w.terrainHeight(...s.dir)),footprint=nav.towerNodes(centre.clone().multiplyScalar(w.R+nav.height[top]),2);
+ const hit=new T.Vector3(),roof=s.top(0,0),under=s.bottom(0,0),origin=centre.clone().multiplyScalar(w.R+roof+20);
+ assert.ok(w.raycastTerrain(origin,centre.clone().negate(),hit),'the visible roof is pickable');
+ assert.ok(Math.abs(hit.length()-w.R-roof)<.15,'selection lands on the roof, not its floor');
+ assert.ok(w.terrainFootprint(centre,.6,'bolt',roof).ok,'the picked bridge deck accepts a supported footprint');
+ assert.ok(w.raycastTerrain(centre.clone().multiplyScalar(w.R+under-1),centre.clone().negate(),hit),'the underpass floor remains pickable');
+ assert.ok(hit.length()-w.R<under-1,'an underpass click does not jump to its roof');
  assert.ok(footprint.includes(top)&&!footprint.includes(floor),'a tower footprint occupies only its physical level');
  const a=banks.find(x=>x.p.v<0),b=banks.find(x=>x.p.v>0);assert.ok(a&&b,'both natural banks have traversable connections');
  const upper=walk(nav,a.b,b.b);assert.ok(upper.distance<.16&&upper.peak>2&&upper.jump<1,type+' top '+JSON.stringify(upper));

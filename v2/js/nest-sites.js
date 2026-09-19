@@ -27,7 +27,12 @@ function siteCache(nav) {
   if (!field) return null;
   let cache = nav._nestSites;
   if (!cache || cache.revision !== nav.revision) {
-    cache = nav._nestSites = { revision: nav.revision, candidates: [], clear: new Map(), wetDistance: new Float64Array(nav.n).fill(-1) };
+    cache = nav._nestSites = { revision: nav.revision, candidates: [], clear: new Map(), wetDistance: new Float64Array(nav.n).fill(-1),flank:new Uint8Array(nav.n) };
+    // Multi-source expansion from raised terrain, once per graph revision.
+    // Favour clearings beside useful hills without ever relaxing route safety.
+    const queue=[];for(let i=0;i<nav.n;i++)if(!nav.layer?.[i]&&nav.baseHeight[i]>8+(nav.floorDatum||0)){cache.flank[i]=1;queue.push(i);}
+    const reach=Math.max(2,Math.min(10,Math.ceil(18/(nav.spacing||3))));
+    for(let k=0;k<queue.length;k++){const a=queue[k],step=cache.flank[a];if(step>=reach)continue;for(let e=nav.adjOff[a];e<nav.adjOff[a+1];e++){const b=nav.adj[e];if(!cache.flank[b]&&!nav.layer?.[b]){cache.flank[b]=step+1;queue.push(b);}}}
     for (let i = 0; i < nav.n; i++) {
       if (!dryFloor(nav, i)) continue;
       let safe = true;
@@ -97,7 +102,8 @@ export function nestSite(nav, original, centre, theta, used, scratch, wave = 1) 
     // Prefer the requested azimuth near the frontier, but a shorter healthy
     // approach inside expanded territory beats a remote ocean detour.
     const bearing = Math.acos(Math.max(-1, Math.min(1, scratch.x * ox + scratch.y * oy + scratch.z * oz)));
-    const score = Math.abs(arc - target) + Math.max(0, outward * .8 - arc) * 6 + bearing * radius * .08 + field.dist[i] * .1 + cache.wetDistance[i] * 2 + Math.max(0,field.dist[i]-Math.max(NEST_ROUTE_LIMIT,target*2.5))*4;
+    const tactical=cache.flank[i]>1?Math.max(0,7-cache.flank[i]*.6):0;
+    const score = Math.abs(arc - target) + Math.max(0, outward * .8 - arc) * 6 + bearing * radius * .08 + field.dist[i] * .1 + cache.wetDistance[i] * 2 + Math.max(0,field.dist[i]-Math.max(NEST_ROUTE_LIMIT,target*2.5))*4-tactical;
     if (score >= best) continue;
     nav.nodePos(i, scratch);
     let separate = true;

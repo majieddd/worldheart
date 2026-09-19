@@ -1,0 +1,73 @@
+{
+  "checks": [
+    {
+      "name": "Starter home remains direct, peaceful, clear and in third person",
+      "ok": true
+    },
+    {
+      "name": "Home fixture autosaves walls and opened supplies without manual save flags",
+      "ok": true,
+      "detail": {
+        "bought": true,
+        "placed": true,
+        "opened": true,
+        "saved": true,
+        "walls": {
+          "stock": 4,
+          "sequence": 1,
+          "items": [
+            {
+              "id": 1,
+              "dir": [
+                0.9137636895629702,
+                0.19501016175618086,
+                -0.3563803536224972
+              ],
+              "angle": 0,
+              "hp": 111
+            }
+          ]
+        },
+        "structures": {
+          "claimed": [
+            "site-12345-0"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Home reload preserves stock, damaged wall HP and chest claims",
+      "ok": true,
+      "detail": {
+        "walls": {
+          "stock": 4,
+          "sequence": 1,
+          "items": [
+            {
+              "id": 1,
+              "dir": [
+                0.9137636895629702,
+                0.19501016175618086,
+                -0.3563803536224972
+              ],
+              "angle": 0,
+              "hp": 111
+            }
+          ]
+        },
+        "structures": {
+          "claimed": [
+            "site-12345-0"
+          ]
+        },
+        "closed": true
+      }
+    },
+    {
+      "name": "No browser runtime or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

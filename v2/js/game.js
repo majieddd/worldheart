@@ -336,8 +336,7 @@ export class Game {
       return;
     }
     this.cursorDir.copy(_hit).normalize();
-    surfacePoint(this.cursorDir, this.cursorPos);
-    if(!this.buildType&&this.world.featureArt){const roof=this.raycaster.intersectObjects(this.world.featureArt.children.filter(o=>o.userData.surface),false)[0];if(roof&&roof.distance<ray.origin.distanceTo(_hit)){this.cursorPos.copy(roof.point);this.cursorDir.copy(roof.point).normalize();}}
+    this.cursorPos.copy(_hit);
     this.cursorValid = true;
     if (this.buildType) this._updateGhost();
   }
@@ -378,6 +377,7 @@ export class Game {
       return;
     }
     this.buildType = typeKey;
+    this.walls?.cancel();
     this.select(null);
     this._mountGhost(typeKey);
     this._pathT = 0;
@@ -459,7 +459,7 @@ export class Game {
       this.possession.allies.worldPos(this.possession.unit, _v2);
       if (_v2.distanceTo(this.cursorPos) > FP_BUILD_REACH) return { ok: false, reason: 'reach' };
     }
-    const ground = terrainFootprint(this.cursorDir, this._fp(def), this.buildType);
+    const ground = terrainFootprint(this.cursorDir, this._fp(def), this.buildType,this.cursorPos.length()-R);
     if (!ground.ok) return ground;
     // 99 Planets: the frontier masks a world that was built at its FINAL size,
     // so ground can be perfectly walkable and still be out of bounds.

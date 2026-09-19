@@ -1,0 +1,24 @@
+/* The approved meadow's charcoal ink, warm paper and muted jade, shared by
+   battle, catalogue and courtyard. Hierarchy stays in shape and spacing. */
+:root{--ground:#16252d;--surface:#1b303aed;--surface-raised:#2c444cf5;--text:#f0f0dc;--text-muted:#b7c9c5;--text-faint:#8daba5;--accent:#9bdfc7;--accent-hover:#c6eed9;--accent-dim:#94ddc523;--gold:#f0cd81;--danger:#e87978;--danger-text:#ffb4a5;--hairline:#86a8a338;--hairline-strong:#87a99b80;--touch-panel:#1c3039;--touch-line:#71958e;--font-display:'Barlow Condensed','Segoe UI',sans-serif;--font-body:Barlow,'Segoe UI',sans-serif}
+.panel,.overlay-card,#weapon-dialog,.world-context,.settings-pop,#worldgen-panel{border:2px solid #415b61;box-shadow:4px 5px 0 #0c191f99;background:var(--surface);border-radius:8px}
+.panel::before,.overlay-card::before{background:var(--accent)}
+.btn,button.build-card{border-width:2px;border-color:#5b7779;background:#243c46;color:var(--text);font-weight:600}
+.btn:hover,button.build-card:hover{border-color:#c1ddc1;background:#344d51}
+.btn:active,button.build-card:active{transform:translateY(1px)}
+.btn.primary,.btn.accent{background:#a9d9b4;color:#19352d;border-color:#d0e2bd}
+.build-card.selected{background:#3d574f;outline:2px solid #edd390;outline-offset:1px}
+.build-name,.t-name{font-family:var(--font-display);font-weight:700;letter-spacing:.015em}
+.build-cost{color:var(--gold)}
+.weapon-card{font:14px/1.45 Barlow,'Segoe UI',sans-serif;background:#1c3039;border:2px solid #41565e;border-top:5px solid var(--rarity);border-radius:7px;box-shadow:3px 4px 0 #0d1c23a8}
+.weapon-card .wc-heading h3{font-family:'Barlow Condensed','Segoe UI',sans-serif;font-size:25px;line-height:1.06;color:#f0efdc;letter-spacing:.2px}
+.wc-heading{padding:12px 16px 0}.wc-rarity{font-size:11px;letter-spacing:.1em}.wc-family{font-size:12px;color:#b6cabe}
+.wc-showcase{background:#d5d5b5;margin:12px 12px 0;padding:12px;border:1px solid #16292c;min-height:110px;border-radius:3px;box-shadow:inset 0 -8px 0 #b3bea380}
+.wc-dps{color:#20363e}.wc-dps>strong{font-family:'Barlow Condensed','Segoe UI',sans-serif;font-size:37px;letter-spacing:0}.wc-dps>span{color:#355652;font-size:11px}
+.wc-stats{background:#243e46;border-color:#5a7876;margin:0 12px}.wc-stats>div{padding:8px 4px;border-color:#4a6769}.wc-stat-label{font-size:11px;color:#d0e0d1;margin:2px 0}.wc-stats strong{font-size:21px}.wc-symbol{font-size:17px;line-height:20px}
+.wc-traits{padding:0 16px}.weapon-card .wc-traits p{font-size:13px;margin:10px 0}.wc-traits b{font-size:14px;color:#e9d1a1}.wc-traits span{color:#d3dfd7}.wc-skill{border:0;padding:0}.weapon-card .wc-skill small{color:#b0c8bb;font-size:12px}
+.wc-details{margin:0 12px;border-top:1px solid #65807d!important}.wc-details summary{font-size:12px;color:#bfdbc7;min-height:44px;display:flex;align-items:center;cursor:pointer;padding:8px 3px!important}.wc-details[open] summary{color:#f1d49a}.wc-details .wc-traits{padding-inline:4px}
+.wc-footer{background:#142a32;border-color:#496469;padding:10px 12px}.wc-footer strong{font-size:14px}.wc-footer>span:last-child{font-size:12px;color:#e5d2a2}.wc-mark{border-radius:2px}.wc-method{color:#a9c2bb;font-size:11px}
+.weapon-card .wc-heading h3,.weapon-card .wc-traits b{overflow-wrap:anywhere}.wc-compact .wc-heading h3{font-size:22px}.weapon-card .wc-up{color:#b7efc5}.wc-showcase .wc-up{color:#22563d}.wc-showcase .wc-down{color:#8c3342}
+#weapon-dialog header h2,.overlay-card .o-mark{font-family:var(--font-display);letter-spacing:.02em}#weapon-dialog header h2{font-size:32px}
+@media(prefers-reduced-motion:reduce){.btn:active,button.build-card:active{transform:none}}

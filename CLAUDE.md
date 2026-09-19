@@ -40,8 +40,9 @@ composed from main; V2 has separate browser saves and defaults to the campaign.
 
 Two things will confuse you if nobody says them:
 
-- **Map and seed persist to `localStorage`** (`whMap`, `whSeed`). A bare URL boots
-  whatever you played last, not the default.
+- **A bare URL enters the saved Earth-first campaign.** The old `whMap` and
+  `whSeed` keys may still exist. Use explicit `?map=...&campaign=0&seed=...`
+  for repeatable sandbox measurements and inspect `WH.CONFIG` after boot.
 - **`?seed=N` is not the seed the game runs on.** Worldgen retries by advancing
   `CONFIG.seed` by 7919 per attempt (`js/nav.js`), so `?seed=771` reports 40366.
   It is deterministic, so sharing a seed still works.
