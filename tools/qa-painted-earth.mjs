@@ -32,6 +32,8 @@ try{
   await page.evaluate(()=>{const t=WH.game.towerMgr.towers[0];if(!t)return;WH.game.context.target={kind:'tower',object:t};WH.game.context.open();});await pause(page);
   await page.locator('#tp-upgrade').click();await pause(page);
   check('Contextual upgrade advances while waves remain frozen',await page.evaluate(()=>WH.game.towerMgr.towers[0].tier===1&&WH.onboarding.lesson==='crystal'&&WH.onboarding.holding));
+  check('Tower inspection remains open after upgrading',await page.evaluate(()=>WH.game.context.editing));
+  await page.locator('#tp-close').click();await pause(page);
   await page.evaluate(()=>{const c=WH.mode99.commander,cache=WH.caches.caches.find(x=>!x.taken);c.dir.copy(cache.dir);c.height=WH.nav.height[cache.node];c.moveNode=cache.node;c._renderDir.copy(c.dir);WH.allies._ground(c);});await pause(page,700);
   await page.waitForFunction(()=>WH.mode99.crystals.carried.length>0&&WH.onboarding.lesson==='deposit');
   check('Fixture proximity collects a real seeded crystal',true);
@@ -69,7 +71,7 @@ try{
   await mobile.getByRole('button',{name:'Begin first defense'}).tap();await pause(mobile);await shot(mobile,'first-defense-mobile');
   check('Mobile starts in first person with touch controls',await mobile.evaluate(()=>WH.mobile.enabled&&WH.possession.boomWant===0&&WH.onboarding.holding));
   check('Mobile guide leaves movement and combat controls clear',await mobile.locator('.first-guide').evaluate(el=>{const g=el.getBoundingClientRect(),r=document.querySelector('.touch-right').getBoundingClientRect(),l=document.querySelector('.touch-left').getBoundingClientRect();return g.bottom<=Math.min(r.top,l.top)-4;}));
-  await mobile.locator('#touch-build').tap();await pause(mobile);check('Build menu highlights the real first card',await mobile.locator('.build-card.first-tutorial-target').count()===1);
+  check('Action bar highlights the real first card',await mobile.locator('.touch-hotbar .build-card.first-tutorial-target').count()===1);
   await mobile.locator('.build-card[data-type="bolt"]').tap();await pause(mobile);check('Touch selection advances the tutorial',await mobile.evaluate(()=>WH.onboarding.lesson==='tower'));
   await mobile.setViewportSize({width:844,height:390});await pause(mobile);await shot(mobile,'guide-landscape');
   const overlaps=await mobile.locator('.first-guide').evaluate(el=>{const a=el.getBoundingClientRect();return [...document.querySelectorAll('#touch-hud button,#touch-stick')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0&&a.right>r.left&&a.left<r.right&&a.bottom>r.top&&a.top<r.bottom;}).map(b=>b.id);});

@@ -1,0 +1,335 @@
+{
+  "model": "convaiinnovations/laya",
+  "snapshot": "7c76b622dfc5cac71b2dc1c29873efe2ce509a05",
+  "sourceCommit": "fcf127c57176d7b8354510ed9124fc098560600a",
+  "device": "CPU / 4 threads",
+  "coldLoadSeconds": 82.6312132000021,
+  "count": 20,
+  "correct": 15,
+  "baselineCorrect": 19,
+  "medianMs": 741.1807000025874,
+  "baselineMedianMs": 0.025249999453080818,
+  "rows": [
+    {
+      "kind": "terrain",
+      "request": "A wall of enormous peaks dominates the skyline. Travel winds through snowy mountain passes.",
+      "expected": "alpine",
+      "baseline": "alpine",
+      "baselineMs": 0.040099999750964344,
+      "choice": "alpine",
+      "probabilities": {
+        "alpine": 0.8535,
+        "canyon": 0.0463,
+        "ocean": 0.0389,
+        "varied": 0.0613
+      },
+      "confidence": 0.5854,
+      "milliseconds": 838.544099999126
+    },
+    {
+      "kind": "terrain",
+      "request": "The routes cut down into the crust, far below the original plain. Narrow branching trenches connect them.",
+      "expected": "canyon",
+      "baseline": "canyon",
+      "baselineMs": 0.03040000592591241,
+      "choice": "canyon",
+      "probabilities": {
+        "alpine": 0.1844,
+        "canyon": 0.6495,
+        "ocean": 0.0344,
+        "varied": 0.1318
+      },
+      "confidence": 0.2968,
+      "milliseconds": 723.0651999998372
+    },
+    {
+      "kind": "terrain",
+      "request": "Most of the surface is sea. Small islands each have a different silhouette.",
+      "expected": "ocean",
+      "baseline": "ocean",
+      "baselineMs": 0.019999999494757503,
+      "choice": "ocean",
+      "probabilities": {
+        "alpine": 0.0278,
+        "canyon": 0.0346,
+        "ocean": 0.8884,
+        "varied": 0.0491
+      },
+      "confidence": 0.6615,
+      "milliseconds": 742.3132000039914
+    },
+    {
+      "kind": "terrain",
+      "request": "Wooded low hills, open fields and occasional rocks with varied scenery.",
+      "expected": "varied",
+      "baseline": "alpine",
+      "baselineMs": 0.028099995688535273,
+      "choice": "varied",
+      "probabilities": {
+        "alpine": 0.0235,
+        "canyon": 0.0183,
+        "ocean": 0.0138,
+        "varied": 0.9444
+      },
+      "confidence": 0.8019,
+      "milliseconds": 671.0206999996444
+    },
+    {
+      "kind": "terrain",
+      "request": "I want the Grand Canyon: a very deep incision in the ground, not two high mountains.",
+      "expected": "canyon",
+      "baseline": "canyon",
+      "baselineMs": 0.021500003640539944,
+      "choice": "canyon",
+      "probabilities": {
+        "alpine": 0.0971,
+        "canyon": 0.8443,
+        "ocean": 0.0138,
+        "varied": 0.0448
+      },
+      "confidence": 0.5905,
+      "milliseconds": 703.4606000015629
+    },
+    {
+      "kind": "terrain",
+      "request": "Everest scale, sharp high peaks, ridgelines and a few traversable saddles.",
+      "expected": "alpine",
+      "baseline": "alpine",
+      "baselineMs": 0.02699999458855018,
+      "choice": "varied",
+      "probabilities": {
+        "alpine": 0.3289,
+        "canyon": 0.1045,
+        "ocean": 0.0525,
+        "varied": 0.5141
+      },
+      "confidence": 0.2077,
+      "milliseconds": 743.1702999965637
+    },
+    {
+      "kind": "terrain",
+      "request": "Explore a chain of islands surrounded by water, with occasional connected peninsulas.",
+      "expected": "ocean",
+      "baseline": "ocean",
+      "baselineMs": 0.02040000254055485,
+      "choice": "ocean",
+      "probabilities": {
+        "alpine": 0.0294,
+        "canyon": 0.0361,
+        "ocean": 0.8817,
+        "varied": 0.0528
+      },
+      "confidence": 0.6466,
+      "milliseconds": 740.0482000011834
+    },
+    {
+      "kind": "terrain",
+      "request": "No one landform should dominate this garden. A little of everything.",
+      "expected": "varied",
+      "baseline": "varied",
+      "baselineMs": 0.027399997634347528,
+      "choice": "varied",
+      "probabilities": {
+        "alpine": 0.0563,
+        "canyon": 0.0457,
+        "ocean": 0.0494,
+        "varied": 0.8485
+      },
+      "confidence": 0.5736,
+      "milliseconds": 709.4041000018478
+    },
+    {
+      "kind": "terrain",
+      "request": "Almost all dry ground, deep eroded slots and connected ravines, no island chain.",
+      "expected": "canyon",
+      "baseline": "canyon",
+      "baselineMs": 0.04920000355923548,
+      "choice": "ocean",
+      "probabilities": {
+        "alpine": 0.0792,
+        "canyon": 0.1913,
+        "ocean": 0.6287,
+        "varied": 0.1008
+      },
+      "confidence": 0.2496,
+      "milliseconds": 911.6024000031757
+    },
+    {
+      "kind": "terrain",
+      "request": "There is one deep trench but it is mostly a vast ocean dotted with tiny atolls.",
+      "expected": "ocean",
+      "baseline": "ocean",
+      "baselineMs": 0.02179999864893034,
+      "choice": "ocean",
+      "probabilities": {
+        "alpine": 0.0095,
+        "canyon": 0.0244,
+        "ocean": 0.9457,
+        "varied": 0.0205
+      },
+      "confidence": 0.8074,
+      "milliseconds": 824.1109000009601
+    },
+    {
+      "kind": "terrain",
+      "request": "A green plain below a single mountain. The rest should be gentle and diverse.",
+      "expected": "varied",
+      "baseline": "varied",
+      "baselineMs": 0.024400003894697875,
+      "choice": "alpine",
+      "probabilities": {
+        "alpine": 0.4355,
+        "canyon": 0.0962,
+        "ocean": 0.0862,
+        "varied": 0.3821
+      },
+      "confidence": 0.1588,
+      "milliseconds": 721.1498999968171
+    },
+    {
+      "kind": "terrain",
+      "request": "Few beaches and no great trenches: almost continuous alpine chains at immense height.",
+      "expected": "alpine",
+      "baseline": "alpine",
+      "baselineMs": 0.025999994250014424,
+      "choice": "alpine",
+      "probabilities": {
+        "alpine": 0.599,
+        "canyon": 0.1389,
+        "ocean": 0.1008,
+        "varied": 0.1613
+      },
+      "confidence": 0.2017,
+      "milliseconds": 680.5362999948557
+    },
+    {
+      "kind": "weapon",
+      "request": "Give me a blade that slashes several close enemies in a broad arc.",
+      "expected": "sword",
+      "baseline": "sword",
+      "baselineMs": 0.14039999950909987,
+      "choice": "sword",
+      "probabilities": {
+        "sword": 0.9593,
+        "spear": 0.0096,
+        "carbine": 0.0198,
+        "lobber": 0.0113
+      },
+      "confidence": 0.8464,
+      "milliseconds": 719.3339000004926
+    },
+    {
+      "kind": "weapon",
+      "request": "Keep enemies at the end of a long point and thrust straight ahead.",
+      "expected": "spear",
+      "baseline": "spear",
+      "baselineMs": 0.02510000194888562,
+      "choice": "lobber",
+      "probabilities": {
+        "sword": 0.1702,
+        "spear": 0.2947,
+        "carbine": 0.2106,
+        "lobber": 0.3245
+      },
+      "confidence": 0.0227,
+      "milliseconds": 710.0741000031121
+    },
+    {
+      "kind": "weapon",
+      "request": "A rifle firing precise fast direct shots across the battlefield.",
+      "expected": "carbine",
+      "baseline": "carbine",
+      "baselineMs": 0.0208000055863522,
+      "choice": "carbine",
+      "probabilities": {
+        "sword": 0.0356,
+        "spear": 0.0381,
+        "carbine": 0.8812,
+        "lobber": 0.0452
+      },
+      "confidence": 0.6433,
+      "milliseconds": 862.2288999977172
+    },
+    {
+      "kind": "weapon",
+      "request": "Throw explosive shells in an arc over the wall at a clustered horde.",
+      "expected": "lobber",
+      "baseline": "lobber",
+      "baselineMs": 0.025699999241624027,
+      "choice": "lobber",
+      "probabilities": {
+        "sword": 0.0645,
+        "spear": 0.0813,
+        "carbine": 0.1959,
+        "lobber": 0.6583
+      },
+      "confidence": 0.2964,
+      "milliseconds": 837.153300002683
+    },
+    {
+      "kind": "weapon",
+      "request": "I want the melee reach of a polearm, sacrificing sideways coverage.",
+      "expected": "spear",
+      "baseline": "spear",
+      "baselineMs": 0.024499997380189598,
+      "choice": "spear",
+      "probabilities": {
+        "sword": 0.2177,
+        "spear": 0.3887,
+        "carbine": 0.1889,
+        "lobber": 0.2046
+      },
+      "confidence": 0.0343,
+      "milliseconds": 743.1108999953722
+    },
+    {
+      "kind": "weapon",
+      "request": "Sweep a sharp edge from left to right, cleaving the nearby pack.",
+      "expected": "sword",
+      "baseline": "sword",
+      "baselineMs": 0.02220000169472769,
+      "choice": "lobber",
+      "probabilities": {
+        "sword": 0.2185,
+        "spear": 0.1747,
+        "carbine": 0.2925,
+        "lobber": 0.3144
+      },
+      "confidence": 0.0187,
+      "milliseconds": 790.2553999956581
+    },
+    {
+      "kind": "weapon",
+      "request": "I need rapid precise projectiles against one distant target, without a blast.",
+      "expected": "carbine",
+      "baseline": "carbine",
+      "baselineMs": 0.0242000023717992,
+      "choice": "carbine",
+      "probabilities": {
+        "sword": 0.0185,
+        "spear": 0.0189,
+        "carbine": 0.9193,
+        "lobber": 0.0433
+      },
+      "confidence": 0.7387,
+      "milliseconds": 761.919399999897
+    },
+    {
+      "kind": "weapon",
+      "request": "Slow high arcing shots that explode over an area, even behind cover.",
+      "expected": "lobber",
+      "baseline": "lobber",
+      "baselineMs": 0.025399996957276016,
+      "choice": "lobber",
+      "probabilities": {
+        "sword": 0.0921,
+        "spear": 0.1062,
+        "carbine": 0.1848,
+        "lobber": 0.6169
+      },
+      "confidence": 0.2298,
+      "milliseconds": 721.5729000017745
+    }
+  ],
+  "boundary": "Small hand-authored English intent-selection diagnostic. Not a quality metric, terrain generation benchmark, mobile inference test or equivalence claim with Jev. Numeric constraints and seed replay remain deterministic."
+}

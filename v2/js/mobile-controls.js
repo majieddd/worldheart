@@ -23,7 +23,8 @@ export class MobileControls {
     <div class="touch-left"><div class="touch-stick" id="touch-stick" role="group" aria-label="Movement joystick. Drag in the direction you want to move."><span class="touch-stick-thumb"></span><small>Move</small></div>${button('sprint','Run','aria-pressed="false"')}</div>
     <div class="touch-right">${button('fire','Attack','aria-label="Hold to attack. Drag this button to aim while attacking."')}${button('jump','Jump','aria-label="Jump. Hold to rise on a flying mount."')}${button('aim','Aim','aria-pressed="false"')}${abilityButton('special','Skill')}${abilityButton('power','Power')}${button('switch','Swap','aria-label="Switch weapon"')}</div>
     <div class="touch-vitals"><strong></strong><span></span></div>
-    <div class="touch-placement" hidden><span role="status"></span>${button('confirm','Place')}${button('cancel','Cancel')}</div>
+    <nav class="touch-hotbar" aria-label="Build action bar"><div id="touch-tower-cards"></div>${button('wall','🪵<small>Walls</small>','aria-label="Select wooden walls"')}</nav>
+    <div class="touch-placement" hidden><span role="status"></span>${button('wall-rotate','↻','aria-label="Rotate wall" hidden')}${button('confirm','Place')}${button('cancel','Cancel')}</div>
     <div class="touch-orders" hidden><span role="status"></span>${button('order-move','Move here')}${button('order-done','Done')}</div>`;
     ui.root.append(this.root);
     const elements=new Map([...this.root.querySelectorAll('[id]')].map(e=>[e.id.slice(6),e]));this.el=id=>elements.get(id);
@@ -34,7 +35,7 @@ export class MobileControls {
       <section data-section="base" hidden><h3>Base and expedition</h3><p id="touch-expedition-name"></p>${button('receipt','Planet results and extraction','hidden')}</section>
       <section data-section="squad" hidden><h3>Commander and squad</h3><div class="touch-menu-actions">${button('view','Third / first person')}${button('release','Return to strategy')}${button('rally','Rally nearby units')}${button('dismiss','Dismiss followers')}${button('select','Select on map')}${button('visible','Select visible units')}${button('patrol','Post barracks patrol')}</div><div id="touch-roster"></div></section>
       <section data-section="options" hidden><h3>Controls and settings</h3><label class="touch-pause-choice"><input id="touch-keep-paused" type="checkbox"> Keep battle paused after closing</label><div class="touch-menu-actions" id="touch-options-actions"></div></section>
-      <details class="touch-help"><summary>How to play by touch</summary><p>Strategy: drag with one finger to move around the planet. Pinch to zoom; drag with two fingers to turn and tilt. Tap a tower to manage it or a unit to control it.</p><p>Commander: left thumb moves; drag the scene or Attack to look. Hold Attack to fight. Aim and Run toggle. Jump hops, or hold it to rise on a flying mount. Skill uses the commander ability; Power uses the weapon ability. Swap cycles equipped weapons and native attacks.</p><p>Use Base for upgrades, deposits, mounts and scrap forging. Use Weapons for equipment, parts, infusion, salvaging and full-backpack replacement. Squad gives selection, move orders and patrols. Going outside base range still severs the strategy link.</p><p>Menus pause this solo battle. Nearby weapons enter your bag automatically and are never auto-equipped. Crystal cargo stays with your commander until deposited.</p></details>`;
+      <details class="touch-help"><summary>How to play by touch</summary><p>Strategy: drag with one finger to move around the planet. Spread two fingers to zoom in; pinch them together to zoom out. Tap a tower to manage it or a unit to control it.</p><p>Commander: left thumb moves; drag the scene or Attack to look. Hold Attack to fight. Aim and Run toggle. Jump hops, or hold it to rise on a flying mount. Skill uses the commander ability; Power uses the weapon ability. Swap cycles equipped weapons and native attacks.</p><p>Use Base for upgrades, deposits, mounts and scrap forging. Use Weapons for equipment, parts, infusion, salvaging and full-backpack replacement. Squad gives selection, move orders and patrols. Going outside base range still severs the strategy link.</p><p>Menus pause this solo battle. Nearby weapons enter your bag automatically and are never auto-equipped. Crystal cargo stays with your commander until deposited.</p></details>`;
     ui.root.append(this.menu);this.page=k=>this.menu.querySelector(`[data-section="${k}"]`);
     this.menu.addEventListener('cancel',e=>{e.preventDefault();this.closeMenu();});
     this.menu.querySelector('#touch-close').onclick=()=>this.closeMenu();
@@ -47,7 +48,9 @@ export class MobileControls {
     this.menu.addEventListener('click',e=>{
       if(e.target.closest('.build-card:not(:disabled),#btn-call:not(:disabled),#heart-panel:not(:disabled),#btn-deposit:not(:disabled),#craft-tower:not(:disabled),#mount-toggle:not(:disabled),#endless-extract:not(:disabled),.worldgen-launch'))this.closeMenu();
     },true);
-    this.el('menu-open').onclick=()=>this.openMenu();this.el('status').onclick=()=>this.openMenu('base');this.el('build').onclick=()=>this.openMenu('build');
+    this.el('menu-open').onclick=()=>this.openMenu();this.el('status').onclick=()=>this.openMenu('base');this.el('build').onclick=()=>{this.root.querySelector('.touch-hotbar .build-card')?.focus();};
+    this.el('wall').onclick=()=>{if(!this.canAct())return;const walls=mode?.walls;if(!walls)return;if(walls.placing){walls.cancel();return;}if(!walls.stock&&!walls.buy())return;this.reset();game.context.close();walls.start();this.preview=false;};
+    this.el('wall-rotate').onclick=()=>mode?.walls.rotate();
     this.el('commander').onclick=()=>possession.active?this.release():mode?.focusCommander();this.el('resume').onclick=()=>{game.paused=false;ui.reflectPause();};
     this.el('camera').onclick=()=>{this.reset();possession.boomWant=possession.boomWant>.35?0:4;};
     this.el('interact').onclick=()=>{this.reset();game.context.open();};
@@ -64,8 +67,8 @@ export class MobileControls {
     this.hold(this.el('fire'),held=>{possession.firing=held&&!this.pendingPower;if(possession.firing)possession.attack(0);},true);
     this.hold(this.el('jump'),held=>possession.touchJump(held));
     this.stick=new TouchStick(this.el('stick'),(x,y)=>{possession.touchInput.forward=y;possession.touchInput.strafe=x;},()=>this.canDrive(),{floating:true});
-    this.el('confirm').onclick=()=>{if(this.canAct()&&game.buildType){if(possession.active)game.hoverCenter();game._tryPlace();}};
-    this.el('cancel').onclick=()=>{game.cancelBuild();this.preview=false;};
+    this.el('confirm').onclick=()=>{if(!this.canAct())return;const walls=mode?.walls;if(walls?.placing){if(walls.ghost.visible)walls.place(walls.dir,walls.angle);}else if(game.buildType){if(possession.active)game.hoverCenter();game._tryPlace();}};
+    this.el('cancel').onclick=()=>{game.cancelBuild();mode?.walls.cancel();this.preview=false;};
     this.el('order-move').onclick=()=>{this.orderMode='move';};
     this.el('order-done').onclick=()=>{this.orderMode=null;mode?.orders.clear();};
     const action=(id,fn)=>this.menu.querySelector('#touch-'+id).onclick=()=>{this.closeMenu();fn();};
@@ -78,8 +81,8 @@ export class MobileControls {
     const intro=document.createElement('p');intro.className='touch-only touch-intro';intro.textContent='Drag to move around the planet; pinch to zoom. Tap a tower to manage it or Commander to explore. During possession, use the movement stick and drag the scene to look. Hold Attack, or drag Attack to aim while firing. Menu opens building, weapons, base tools and squad orders.';ui.el['title-overlay'].querySelector('.o-controls').append(intro);
     this.gesture=new TouchGesture(rig.canvas,{
       accept:()=>this.enabled&&this.canScene(),start:p=>this.panStart(p),drag:(dx,dy,p)=>this.drag(dx,dy,p),
-      multiStart:()=>{this.box=null;this.showBox();},
-      pinch:(zoom,dx,dy)=>{if(!possession.active){rig.zoomBy(zoom);rig.viewYaw-=dx*.006;rig.tiltOffset=clamp(rig.tiltOffset+dy*.004,-.55,.75);}else this.look(dx,dy);},
+      multiStart:()=>{this.box=null;this.showBox();rig.dragging=false;rig.grabValid=false;rig.velLon=rig.velLat=0;},
+      pinch:zoom=>{if(!possession.active)rig.pinchBy(zoom);},
       tap:(x,y)=>this.tap(x,y),end:(used,cancelled)=>{if(this.box&&used&&!cancelled)mode?.orders.selectIn(this.box.x,this.box.y,this.box.x1,this.box.y1);this.box=null;this.showBox();rig.dragging=false;rig.dragFocusRadius=null;},
       cancel:()=>{this.box=null;this.showBox();rig.dragging=false;rig.dragFocusRadius=null;}
     });
@@ -114,7 +117,7 @@ export class MobileControls {
     document.body.classList.toggle('touch-mode',on);document.body.classList.toggle('touch-left-handed',this.leftHanded);this.possession.touchEnabled=on;
     if(on){
       if(document.pointerLockElement)document.exitPointerLock?.();
-      this.move('build-bar',this.page('build'));
+      this.move('build-bar',this.el('tower-cards'));
       for(const id of ['heart-panel','crystal-panel','expedition-tools','campaign-save'])this.move(id,this.page('base'));
       this.move('settings-pop',this.page('options'));
       for(const id of ['btn-speed','btn-home','btn-sound']){this.move(id,this.menu.querySelector('#touch-options-actions'));const b=document.getElementById(id);b.setAttribute('aria-label',b.title);}
@@ -134,7 +137,7 @@ export class MobileControls {
   hold(element,change,look=false) {
     element.dataset.touchHold='true';
     element.addEventListener('pointerdown',e=>{
-      if(!this.canDrive()||this.game.buildType&&look||this.holds.has(element))return;
+      if(!this.canDrive()||(this.game.buildType||this.mode?.walls.placing)&&look||this.holds.has(element))return;
       e.preventDefault();e.stopPropagation();element.setPointerCapture(e.pointerId);
       this.holds.set(element,{id:e.pointerId,x:e.clientX,y:e.clientY,change});element.classList.add('touch-held');change(true);
     });
@@ -166,6 +169,7 @@ export class MobileControls {
   showBox(){const el=document.getElementById('sel-box');if(!el)return;el.style.display=this.box?'block':'none';if(this.box){const b=this.box;Object.assign(el.style,{left:Math.min(b.x,b.x1)+'px',top:Math.min(b.y,b.y1)+'px',width:Math.abs(b.x-b.x1)+'px',height:Math.abs(b.y-b.y1)+'px'});}}
   tap(x,y) {
     if(CONFIG.worldgen||this.possession.active)return;
+    if(this.mode?.walls.placing){this.mode.walls.pointer.set(x,y);this.mode.walls.update();this.preview=this.mode.walls.ghost.visible;return;}
     const g=this.game;g._hover(x,y);
     if(g.buildType){this.preview=g.cursorValid;return;}
     if(this.orderMode&&g.cursorValid){
@@ -249,7 +253,11 @@ export class MobileControls {
     this.receiptWeapons.hidden=!m?.weapons.canInteract();this.receiptSaves.hidden=!m?.campaign;
     this.menu.querySelector('#touch-receipt').hidden=!m||!['victory','complete'].includes(m.campaign?.state()?.status||m.run.getPhase());
     const drive=p.active&&!p.suspended&&!g.paused&&!g.context.editing;
-    this.root.classList.toggle('touch-possessed',drive);this.root.classList.toggle('touch-building',!!g.buildType);
+    const walls=m?.walls,building=!!g.buildType||!!walls?.placing;
+    this.root.classList.toggle('touch-possessed',drive);this.root.classList.toggle('touch-building',building);
+    this.root.querySelector('.touch-hotbar').hidden=g.context.editing;
+    this.el('wall').hidden=!walls;
+    if(walls){this.el('wall').querySelector('small').textContent=walls.stock?`Walls ${walls.stock}`:'5 / 1 scrap';this.el('wall').setAttribute('aria-pressed',String(walls.placing));}
     text(this.el('status'),`Heart ${g.lives}\n${Math.floor(g.gold)} gold`);
     const wave=this.root.querySelector('.touch-wave'),expedition=m?.campaign?.state();text(wave.querySelector('strong'),(expedition?`P${expedition.planet}/${expedition.limit} · `:'')+this.ui.el['wave-label'].textContent);text(wave.querySelector('span'),this.ui.el['wave-sub'].textContent);text(wave.querySelector('small'),this.ui.el['nest-count'].textContent);
     const boss=g.enemies.active.find(e=>e.type.boss&&!e.dead),bossBar=this.root.querySelector('.touch-boss');bossBar.hidden=!boss;if(boss){bossBar.querySelector('span').textContent=boss.type.name;bossBar.querySelector('meter').value=Math.max(0,boss.hp/boss.hpMax);}
@@ -257,8 +265,8 @@ export class MobileControls {
     const save=document.querySelector('.campaign-save');this.el('status').classList.toggle('touch-save-failed',!!save?.classList.contains('save-failed'));
     this.el('commander').hidden=!m;this.el('commander').disabled=!p.active&&(!m?.commander.active||m?.commander.dead);text(this.el('commander'),p.active?'Strategy':'Commander');
     this.el('camera').hidden=!drive;text(this.el('camera'),p.boomWant>.35?'1st person':'3rd person');
-    this.el('build').hidden=!!g.buildType||g.context.editing;this.el('resume').hidden=!g.paused;
-    this.el('interact').hidden=!drive||!!g.buildType||!g.context.target;
+    this.el('build').hidden=true;this.el('resume').hidden=!g.paused;
+    this.el('interact').hidden=!drive||building||!g.context.target;
     this.el('interact').textContent=g.context.target?.kind==='loot'?'Inspect loot':g.context.target?.kind==='base'?'Manage base':'Manage tower';
     this.el('deposit').hidden=!drive||!m?.crystals.carried.length||this.ui.el['btn-deposit'].disabled;
     this.el('sprint').setAttribute('aria-pressed',String(p.touchInput.sprint));this.el('aim').setAttribute('aria-pressed',String(p.aiming));this.el('aim').hidden=p.boomWant>.35;
@@ -277,8 +285,9 @@ export class MobileControls {
     this.el('switch').hidden=!m||p.unit!==m.commander;
     const vitals=this.root.querySelector('.touch-vitals');vitals.hidden=!a;
     if(a){vitals.querySelector('strong').textContent=a.dead?`Respawn ${Math.ceil(m?.respawn.remaining||0)}s`:`${Math.ceil(a.hp)} / ${a.hpMax} HP`;vitals.querySelector('span').textContent=p.active?(p.linked?'Base linked':'Outside base range'):'Commander';if(a.mountKey==='skyray')vitals.querySelector('span').textContent+=` · Flight ${Math.ceil(m.mounts.energy)}s`;}
-    const placement=this.root.querySelector('.touch-placement');placement.hidden=!g.buildType;
-    if(g.buildType){const valid=g.cursorValid&&(p.active||this.preview)&&g.validity.ok;placement.querySelector('span').textContent=!(p.active||this.preview)?'Tap ground to preview':valid?'Ready to place':reasons[g.validity.reason]||'Choose a location';this.el('confirm').disabled=!valid||g.paused;}else this.preview=false;
+    const placement=this.root.querySelector('.touch-placement');placement.hidden=!building;this.el('wall-rotate').hidden=!walls?.placing;
+    if(walls?.placing){const valid=walls.ghost.visible&&(p.active||this.preview)&&walls.valid(walls.dir,walls.angle);placement.querySelector('span').textContent=!(p.active||this.preview)?'Tap ground to preview':valid?walls.snapped?'Connected · Ready':'Ready to place':'Choose clear ground';this.el('confirm').disabled=!valid||g.paused;}
+    else if(g.buildType){const valid=g.cursorValid&&(p.active||this.preview)&&g.validity.ok;placement.querySelector('span').textContent=!(p.active||this.preview)?'Tap ground to preview':valid?'Ready to place':reasons[g.validity.reason]||'Choose a location';this.el('confirm').disabled=!valid||g.paused;}else this.preview=false;
     const orders=this.root.querySelector('.touch-orders');orders.hidden=!this.orderMode;
     if(this.orderMode){orders.querySelector('span').textContent=this.orderMode==='select'?`Tap units or box-select · ${m.orders.selection.length} selected`:this.orderMode==='patrol'?'Tap a patrol destination':`Tap destination · ${m.orders.selection.length} selected`;this.el('order-move').hidden=this.orderMode!=='select';this.el('order-move').disabled=!m.orders.selection.length;}
     // Wave calling belongs in the build drawer, leaving the skyline clear.

@@ -5,6 +5,10 @@ export const STRUCTURES=Object.freeze({
   ruin:{name:'Overgrown watchtower',note:'A broken stone lookout with a chest behind its open arch.',color:0x939783,roof:0x64715a,reward:'weapon'},
   observatory:{name:'Abandoned observatory',note:'A hilltop telescope station with a crystal cache.',color:0xc2b796,roof:0x446c87,reward:'crystals'},
   bunker:{name:'Planetary defense bunker',note:'An open reinforced defense store. Salvage the supplies within.',color:0x87929a,roof:0x394655,reward:'mixed'},
+  cottage:{name:'Frontier cottage',note:'A timber-framed homestead with a covered porch and abandoned supplies.',color:0xc8b99b,roof:0x58706c,reward:'mixed'},
+  tenement:{name:'Evacuated city block',note:'A narrow townhouse with a breached ground-floor shop and salvage inside.',color:0xa69584,roof:0x425b6b,reward:'scraps'},
+  temple:{name:'Broken star sanctuary',note:'A pillared ruin around a silent celestial altar. Its cache holds a weapon.',color:0xb3b59e,roof:0x7f997e,reward:'weapon'},
+  relay:{name:'Orbital relay station',note:'A collapsed communications dish overlooks a crystal supply locker.',color:0x8bafb5,roof:0x415d70,reward:'crystals'},
 });
 export function structureReward(seed,index,kind){
   const rng=makeRng((seed^Math.imul(index+1,0x45d9f3b))>>>0),type=STRUCTURES[kind]?.reward;

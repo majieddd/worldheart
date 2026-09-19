@@ -5,13 +5,14 @@ import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './b
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
 import { isSwimming, travelFactor, climatePermission } from './traversal.js';
 import { createFormationField } from './terrain/formations.js';
+import {solarTerrainSeed} from './run/solar-tactics.js';
 import {createGuidedSurface,protectedLandforms} from './terrain/spherical-kit.js';
 import {createTerrainFeatures} from './terrain/features.js';
 import {placeActiveFeatures} from './terrain/active-features.js';
 import { formationHeightLimit, formationDepthLimit } from './terrain/recipes.js';
 import { createEcology } from './terrain/ecology.js';
 import {createSolarSampler} from './run/solar-worlds.js';
-import {faultProfile} from './run/environment-catalogue.js';
+import {faultProfile,ACTIVE_FEATURE_SCALE} from './run/environment-catalogue.js';
 import {buildPlanetAdornment} from './planet-adornment.js';
 import { createCoastClearance } from './terrain/coast-clearance.js';
 import {
@@ -213,10 +214,11 @@ function initSpaceLayout(seed) {
 }
 
 export function initTerrainField(seed) {
+  if(CONFIG.environment?.solar&&CONFIG.terrainVersion>=3)seed=solarTerrainSeed(CONFIG.environment.theme);
   heightValid.fill(0);regionalLast.x=NaN;
   R=CONFIG.planetRadius;FEATURES=null;GUIDED=null;analyticHeightUpper=Infinity;clearanceMetrics.shortcuts=0;
   FA=R/30;F_ROLL=4.3*FA;F_MOIST=4.6*(1+(FA-1)*.8);
-  solarSample=CONFIG.environment?.solar?createSolarSampler(CONFIG.environment.theme):null;
+  solarSample=CONFIG.environment?.solar?createSolarSampler(CONFIG.environment.theme,{version:CONFIG.terrainVersion,radius:R}):null;
   TERRAIN_FAULTS.length=0;
   for(const saved of CONFIG.homeSnapshot?.checkpoint.faults||[]){
     const f={...saved};for(const key of ['dir','axis','side','protectedDir'])f[key]=new THREE.Vector3(...saved[key]);
@@ -232,13 +234,13 @@ export function initTerrainField(seed) {
   nGap = makeNoise3D(seed ^ 0x85ebca6b);
   const authored=CONFIG.terrain?.formations;
   FORMATIONS = CONFIG.terrain ? createFormationField(seed,R,CONFIG.terrain,CONFIG.terrainKey,
-    {...authored,...(CONFIG.terrainKey==='varied'?{composition:CONFIG.environment}:{}),weights:{...authored?.weights}}) : null;
+    {...authored,...(CONFIG.environment?.solar&&CONFIG.terrainVersion>=3?{spacing:84,valley:8}:{}),...(CONFIG.terrainKey==='varied'?{composition:CONFIG.environment}:{}),weights:{...authored?.weights}}) : null;
   coastClearance=CONFIG.terrain?createCoastClearance(R,(x,y,z)=>continentalityAt(x,y,z)<.37+CONFIG.terrain.ocean):null;
   if(CONFIG.terrain&&CONFIG.terrainVersion>=1&&!floatingWorld())GUIDED=createGuidedSurface(seed,R,(x,y,z)=>basePlanetHeight(x,y,z,false),{water:oceanAt,protectedSites:protectedLandforms(FORMATIONS)});
   ECOLOGY = CONFIG.terrain ? createEcology(seed,CONFIG.biomeKey,CONFIG.environment,FORMATIONS,solarSample) : null;
-  FEATURES=FORMATIONS?createTerrainFeatures(FORMATIONS,R,(x,y,z)=>terrainHeight(x,y,z,false),{seed,theme:CONFIG.environment?.theme,biome:biomeAt,water:oceanAt,floating:floatingWorld()}):null;
+  FEATURES=FORMATIONS?createTerrainFeatures(FORMATIONS,R,(x,y,z)=>terrainHeight(x,y,z,false),{seed,version:CONFIG.terrainVersion,theme:CONFIG.environment?.theme,biome:biomeAt,water:oceanAt,floating:floatingWorld()}):null;
   if(FEATURES&&floatingWorld()){
-    FEATURES.active.splice(0,FEATURES.active.length,...placeActiveFeatures(FORMATIONS,R,(x,y,z)=>navigationHeight(x,y,z,false),biomeAt,oceanAt,seed).filter(s=>s.key!=='trunks'));
+    FEATURES.active.splice(0,FEATURES.active.length,...placeActiveFeatures(FORMATIONS,R,(x,y,z)=>navigationHeight(x,y,z,false),biomeAt,oceanAt,seed,CONFIG.terrainVersion>=3?ACTIVE_FEATURE_SCALE:1).filter(s=>s.key!=='trunks'));
     FEATURES.vents.splice(0,FEATURES.vents.length,...FEATURES.active.filter(s=>s.key==='geyser'));
   }
   // Four bounded simplex gradient terms give |noise| < 3. Guided blending
@@ -545,7 +547,7 @@ export function biomeAt(dir, height = terrainHeight(dir.x,dir.y,dir.z,false)) {
 }
 
 const _footDir = new THREE.Vector3(), _footA = new THREE.Vector3(), _footB = new THREE.Vector3();
-export function terrainFootprint(dir, radius, type) {
+export function terrainFootprint(dir, radius, type, selectedHeight=null) {
   if (!CONFIG.terrain) return { ok: isBuildableDir(dir), reason: 'terrain', climate: 'neutral' };
   const climates = [];
   let low = Infinity, high = -Infinity;
@@ -555,12 +557,13 @@ export function terrainFootprint(dir, radius, type) {
     _footDir.copy(dir).multiplyScalar(Math.cos(arc))
       .addScaledVector(_footA, Math.sin(arc) * Math.cos(angle))
       .addScaledVector(_footB, Math.sin(arc) * Math.sin(angle)).normalize();
-    const h = navigationHeight(_footDir.x, _footDir.y, _footDir.z, false);
+    const h = selectedHeight===null?navigationHeight(_footDir.x, _footDir.y, _footDir.z, false):supportHeight(_footDir,selectedHeight+radius*.55);
     if (waterDepthAt(_footDir,h)>0 || !inBattlefield(_footDir.x, _footDir.y, _footDir.z)) return { ok: false, reason: 'water' };
     low = Math.min(low, h); high = Math.max(high, h);
     climates.push(climateAt(_footDir, h));
   }
-  if (high - low > radius * 1.1 || slopeAt(dir) > 0.55) return { ok: false, reason: 'unstable' };
+  if (high - low > radius * 1.1 || selectedHeight===null&&slopeAt(dir) > 0.55 || selectedHeight!==null&&Math.abs((high+low)/2-selectedHeight)>radius*.55+.2) return { ok: false, reason: 'unstable' };
+  if(selectedHeight!==null&&solidTerrainAt(dir,selectedHeight+.15,2))return {ok:false,reason:'unstable'};
   return climatePermission(type, climates);
 }
 
@@ -622,7 +625,7 @@ export function raycastTerrain(origin, dir, out) {
     const inv = 1 / len;
     const h = navigationHeight(_rp.x * inv, _rp.y * inv, _rp.z * inv);
     const height = CONFIG.terrain && !oceanAt(_rp.x*inv,_rp.y*inv,_rp.z*inv) ? h : Math.max(h,floor);
-    return len - (R + height);
+    return Math.min(len - (R + height),FEATURES?.depth([_rp.x*inv,_rp.y*inv,_rp.z*inv],len-R)??Infinity);
   };
 
   const span = t1 - t0;
@@ -1485,10 +1488,10 @@ export function makePineGeometry() {
   const p1 = new THREE.Color(PALETTE.pineDark);
   const p2 = new THREE.Color(PALETTE.pine);
   return mergeGeoms([
-    { geo: new THREE.CylinderGeometry(0.055, 0.09, 0.5, 5), matrix: _m4.clone().makeTranslation(0, 0.24, 0), color: trunkC },
-    { geo: new THREE.ConeGeometry(0.44, 0.72, 6), matrix: _m4.clone().makeTranslation(0, 0.72, 0), color: p1 },
-    { geo: new THREE.ConeGeometry(0.33, 0.64, 6), matrix: _m4.clone().makeTranslation(0, 1.08, 0), color: p2 },
-    { geo: new THREE.ConeGeometry(0.21, 0.55, 6), matrix: _m4.clone().makeTranslation(0, 1.42, 0), color: p2 },
+    { geo: new THREE.CylinderGeometry(0.055, 0.09, 0.5, 8), matrix: _m4.clone().makeTranslation(0, 0.24, 0), color: trunkC },
+    { geo: new THREE.ConeGeometry(0.44, 0.72, 10,2), matrix: _m4.clone().makeTranslation(0, 0.72, 0), color: p1 },
+    { geo: new THREE.ConeGeometry(0.33, 0.64, 10,2), matrix: _m4.clone().makeTranslation(0, 1.08, 0), color: p2 },
+    { geo: new THREE.ConeGeometry(0.21, 0.55, 9,2), matrix: _m4.clone().makeTranslation(0, 1.42, 0), color: p2 },
   ]);
 }
 
@@ -1500,9 +1503,9 @@ export function makeBroadleafGeometry() {
   const m2 = new THREE.Matrix4().makeTranslation(-0.25, 0.76, -0.08).multiply(new THREE.Matrix4().makeScale(1.05, .65, 1));
   return mergeGeoms([
     { geo: new THREE.CylinderGeometry(0.06, 0.1, 0.65, 5), matrix: _m4.clone().makeTranslation(0, 0.3, 0), color: trunkC },
-    { geo: new THREE.SphereGeometry(.43,9,6), matrix: m1, color: leaf },
-    { geo: new THREE.SphereGeometry(.36,8,5), matrix: m2, color: leaf2 },
-    { geo: new THREE.SphereGeometry(.31,8,5), matrix: new THREE.Matrix4().makeTranslation(.29,.72,.21).multiply(new THREE.Matrix4().makeScale(1,.7,.9)), color: leaf.clone().lerp(new THREE.Color(0xc3c976),.14) },
+    { geo: new THREE.SphereGeometry(.43,12,8), matrix: m1, color: leaf },
+    { geo: new THREE.SphereGeometry(.36,12,8), matrix: m2, color: leaf2 },
+    { geo: new THREE.SphereGeometry(.31,10,7), matrix: new THREE.Matrix4().makeTranslation(.29,.72,.21).multiply(new THREE.Matrix4().makeScale(1,.7,.9)), color: leaf.clone().lerp(new THREE.Color(0xc3c976),.14) },
   ]);
 }
 

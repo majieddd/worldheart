@@ -11,6 +11,9 @@ await page.addInitScript(()=>{const key=location.pathname.includes('/v2/')?'whV2
 const ready=async()=>{await page.waitForFunction(()=>window.WH?.game&&document.querySelector('#boot.done'),null,{timeout:180000});};
 const check=(name,ok,detail)=>{checks.push({name,ok:!!ok,detail});console.log((ok?'PASS ':'FAIL ')+name);if(!ok)throw Error(name);};
 try{
+  if(process.argv.includes('--polish')){
+    const {worldPolish}=await import('./qa-world-polish.mjs');await worldPolish({page,browser,base,out,check,ready,visualOnly:process.argv.includes('--visual-only'),interactionOnly:process.argv.includes('--interaction-only'),effectsOnly:process.argv.includes('--effects-only')});
+  }else{
   if(!process.argv.includes('--home-only')){
   for(const map of ['pocket','giant','titan','reach']){
     await page.goto(base+'/?map='+map+'&seed=12345');await ready();await page.locator('#btn-begin').click();await page.waitForTimeout(500);
@@ -41,6 +44,7 @@ try{
   await page.reload();await ready();await page.waitForFunction(()=>WH.mode99.home.quiet);
   const after=await page.evaluate(()=>({walls:WH.mode99.walls.snapshot(),structures:WH.mode99.structures.snapshot(),closed:WH.mode99.structures.items.filter(s=>WH.mode99.structures.claimed.has(s.id)).every(s=>s.lid.rotation.x< -1)}));
   check('Home reload preserves stock, damaged wall HP and chest claims',JSON.stringify(before.walls)===JSON.stringify(after.walls)&&JSON.stringify(before.structures)===JSON.stringify(after.structures)&&after.closed,after);
+  }
   check('No browser runtime or shader errors',errors.length===0,errors);
 }catch(e){checks.push({name:'Integration completed',ok:false,detail:String(e)});console.log(String(e));}
 writeFileSync(resolve(out,'report.json'),JSON.stringify({checks,errors},null,2));await browser.close();process.exitCode=checks.some(c=>!c.ok)?1:0;

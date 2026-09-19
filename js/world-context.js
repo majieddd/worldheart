@@ -52,10 +52,10 @@ export class WorldContext {
     if(wasEditing&&!this.wasSuspended&&this.game.state==='playing'&&!document.querySelector('dialog[open],#end-overlay.show'))this.possession.suspend(false);
   }
   completeTowerAction() {
-    // Restore the mouse inside the successful purchase/sale click. Waiting
-    // for update() loses the browser's activation and leaves look unlocked.
-    // Board inspection remains open for repeated upgrades.
-    if(this.editing&&this.possession.active)this.close();
+    // Keep the real tower selected for consecutive upgrades. Closing or selling
+    // explicitly returns the FPS cursor; a price change must not dismiss it.
+    if(this.target?.kind==='tower'&&this.game.towerMgr.towers.includes(this.target.object)){this.towerStamp='';this.update();return;}
+    if(this.editing)this.close();
   }
   panel(){return this.target?.kind==='base'?this.basePanel:this.target?.kind==='loot'?this.lootPanel:this.towerPanel;}
   pickup(equip) {
@@ -117,7 +117,7 @@ export class WorldContext {
         const valid=this.validTower(tower);
         ui.el['tp-sell'].disabled=!valid;
         if(!valid)ui.el['tp-upgrade'].disabled=true;
-        this.hint.textContent=p.active?(!valid?'Move within 14m to manage':this.editing?'Upgrade / Sell resumes control. F / Escape closes.':'F: manage tower'):'Click Upgrade or Sell';
+        this.hint.textContent=p.active?(!valid?'Move within 14m to manage':this.editing?'Keep upgrading. F / Escape or Close resumes control.':'F: manage tower'):'Click Upgrade or Sell';
       }else if(this.target.kind==='base'){
         const level=this.mode.run.getHeartLevel();
         this.basePanel.querySelector('#base-info').textContent=`Base level ${level} · ${this.mode.crystals.carried.length} carried crystals · ${this.mode.forge.balance} scraps`;

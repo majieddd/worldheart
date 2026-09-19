@@ -60,14 +60,14 @@ export function firstGuide({game,ui,waves,mode,possession,allies,nav,config},pre
       card=key;const info=danger?['Field warning','Be careful outside your base','Dying outside the base makes it crumble and ends the attempt. Dying within its range respawns your commander after 30 seconds.']:context?['Field briefing',context.title,context.text]:lessons[lesson];
       guide.innerHTML='<div class="first-progress"></div><h2 role="status" aria-live="polite"></h2><p></p><footer><small class="guide-cursor">T: guide cursor</small><button data-minimize>Minimize</button><button data-skip>Skip guide</button></footer>';
       guide.querySelector('.first-progress').textContent=info[0];guide.querySelector('h2').textContent=info[1];guide.querySelector('p').textContent=info[2];guide.querySelector('p').hidden=collapsed;
-      if(lesson==='select'&&!context&&!danger&&game.mobile?.enabled)guide.querySelector('p').textContent='This is a fast-paced Planetary Tower Defense with Survival and Adventure. Tap the highlighted Build button, then choose your first tower card.';
+      if(lesson==='select'&&!context&&!danger&&game.mobile?.enabled)guide.querySelector('p').textContent='This is a fast-paced Planetary Tower Defense with Survival and Adventure. Tap the highlighted tower card in your action bar.';
       if(lesson==='tower'&&!context&&!danger&&game.mobile?.enabled)guide.querySelector('p').textContent='Place near your base to defend it. Aim at a green footprint, then tap Place. The left stick moves.';
       guide.querySelector('[data-minimize]').textContent=collapsed?'Show details':'Minimize';
       guide.querySelector('[data-skip]').onclick=()=>{state.skipped=true;save();context=null;game.onboardingHold=false;release();render();};
       guide.querySelector('[data-minimize]').onclick=()=>{collapsed=!collapsed;guide.querySelector('p').hidden=collapsed;guide.querySelector('[data-minimize]').textContent=collapsed?'Show details':'Minimize';release();};
       if(context&&!danger){const b=document.createElement('button');b.textContent='Got it';b.onclick=()=>{state.seen.push(context.id);context=null;card='';save();release();render();};guide.querySelector('footer').prepend(b);}
     }
-    const target=danger||context?null:lesson==='select'?(game.mobile?.enabled?'#touch-build':'.build-card:not(.locked):not(.disabled)'):lesson==='towerUpgrade'?'#tp-upgrade':lesson==='upgrade'?'#base-upgrade':lesson==='deposit'?'#base-deposit':null;
+    const target=danger||context?null:lesson==='select'?'.build-card:not(.locked):not(.disabled)':lesson==='towerUpgrade'?'#tp-upgrade':lesson==='upgrade'?'#base-upgrade':lesson==='deposit'?'#base-deposit':null;
     focus(target,lesson==='select'&&!context&&!danger);
   }
   function update(){

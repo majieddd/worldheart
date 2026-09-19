@@ -3,6 +3,16 @@
 This is the front door. If you are new to the repo, read this page first, then
 `CLAUDE.md`, then whichever document below matches what you are about to touch.
 
+Exploration/courtyard contributors: read [U262-U271](docs/qa/implementation/WORLD-EXPLORATION-POLISH.md)
+for version 3 Solar geography, layered bridge support, wall sockets, shared
+touch placement, saved weapon transactions and evidence. Keep older terrain
+versions stable. Runtime and Debug World use the same builders; screenshots
+cannot replace route or save checks. Add bounded scenarios to
+`tools/qa-painted-integration.mjs` rather than another browser launcher. Aegis
+3.18.14 includes matching exploration/catalogue profiles and preserves browser
+errors even when interaction assertions pass. Learned recipe trials stay
+offline unless measured quality, latency and determinism justify promotion.
+
 Terrain contributors: the owner selected [Guided Terrain Kit 1.0.0](terrain-baselines/GUIDED-KIT.md)
 on 2026-09-16. Preserve its reference tag and manifest. Future V2 terrain work
 should carry its approved shelves, connected passages and irregular shared-corner

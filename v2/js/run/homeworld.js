@@ -24,7 +24,8 @@ export function starterEarthHome(){
   const seed=12345,environment=planetEnvironment(seed,'earth'),run=createRunState({seed,playerIds:['solo']});
   Object.assign(run,{heartLevel:MAX_HEART_LEVEL,frontierSteps:10,endless:true,conquest:'won',hand:['bolt','cryo','mortar'],unlockedTowers:['bolt','cryo','mortar','tesla','helios','warden'],coins:0,rngState:seed});
   // The starter world's certified anchors avoid repeating the expensive seed
-  // search on every new device. Same Earth recipe and navigation as a saved home.
+  // search on every new device. Recertified against v3: all five portal routes
+  // remain finite and the heart retains its buildable opening courtyard.
   const centre=[.9078024509717959,.15408265393676962,-.3900682578285518];
   const portals=[[.6801780331007379,.6080736400562928,-.40939503118125603],[.8955682196225241,-.34300387963419166,-.2833829609521985],[.9667618343511912,.23208756910083342,.10727029370140632],[.6846683613657987,.059442877702197174,-.7264267197970857],[.837718025117125,.5415445664233771,-.07041301705778767]];
   return {version:HOME_VERSION,id:EARTH_HOME_ID,name:'Earth',starter:false,decorations:[],

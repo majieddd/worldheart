@@ -104,8 +104,9 @@ function weaponExhibit(assembly){
 }
 
 function terrainPaint(c,dir,h,slope){
-  paintBiome(c,h>3||h<-.8?'desert':'meadow',h,slope,.5);
-  if(h>3)c.lerp(new THREE.Color(0x937765),.45+.15*Math.sin(h*.6));
+  paintBiome(c,'meadow',h,slope,.5);
+  const rock=new THREE.Color();paintBiome(rock,'desert',h,slope,.5);rock.lerp(new THREE.Color(0x937765),.45+.15*Math.sin(h*.6));
+  const blend=Math.max(THREE.MathUtils.smoothstep(h,1.6,4.6),1-THREE.MathUtils.smoothstep(h,-1.8,.5),THREE.MathUtils.smoothstep(slope,.08,.4));c.lerp(rock,blend);
 }
 
 function terrainTile(type,seed){

@@ -1,4 +1,5 @@
 import {earthCoastDistance} from './earth-coast.js';
+import {createSolarTactics} from './solar-tactics.js';
 // Readable, exaggerated analogues, not scale models or claims of habitable
 // surfaces. The four giants use fictional walkable cloud decks.
 const body=(name,orbit,biomes,weights,extra={})=>({name,orbit,wetness:-.5,activity:0,pack:'varied',coverage:1,exclusive:true,biomes,weights,water:0x3d5666,shore:0x9eacac,tags:['rock','airless'],solar:true,...extra});
@@ -52,7 +53,8 @@ function earthRelief(lng,lat){let height=0;for(let b=0;b<mountainBelts.length;b+
  const [ax,ay]=mountainBelts[b][i-1],[bx,by]=mountainBelts[b][i],sx=Math.cos(lat*rad),dx=(bx-ax)*sx,dy=by-ay,px=wrap(lng-ax)*sx,py=lat-ay,t=clamp((px*dx+py*dy)/(dx*dx+dy*dy)),d=Math.hypot(px-t*dx,py-t*dy);
  height=Math.max(height,[14,17,22,9,6,5][b]*Math.exp(-((d/[3,2.2,3,1.4,1.8,1.5][b])**2)));
  }return height;}
-export function createSolarSampler(theme){
+export function createSolarSampler(theme,{version=2,radius=240}={}){
+ const tactics=version>=3?createSolarTactics(theme,radius):null;
  // Fixed direct-mapped cache: bounded storage, no whole-Map clear/rehash or
  // boxed numeric keys during millions of navigation probes. Full keys are
  // compared, so collisions only evict; the quantized geography stays exact.
@@ -69,6 +71,7 @@ export function createSolarSampler(theme){
   const slot=(Math.imul(qx,73856093)^Math.imul(qy,19349663)^Math.imul(qz,83492791))&(size-1);
   if(keys[slot]===key)return lastValue=values[slot];
   const a=qx/65535-1,b=qy/65535-1,c=qz/65535-1,length=Math.hypot(a,b,c)||1,g=solarGeography(theme,a/length,b/length,c/length);
+  if(tactics){const coastal=theme==='earth'?smooth(.3,.62,g.land):1;g.extra+=tactics.height(a/length,b/length,c/length)*coastal;g.relief*=({earth:1.65,moon:1.25,mercury:1.2,venus:1.15,io:1.05,callisto:1.25})[theme]??(SOLAR_THEMES[theme]?.cloud?5:1.5);}
   keys[slot]=key;values[slot]=g;return lastValue=g;
  };
 }

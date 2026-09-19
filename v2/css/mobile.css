@@ -88,6 +88,24 @@
 .touch-placement span, .touch-orders span { min-width: 70px; max-width: 220px; }
 .touch-possessed .touch-placement { bottom: calc(var(--touch-bottom) + 230px); }
 .touch-building .touch-vitals, .touch-building #touch-fire, .touch-building #touch-aim, .touch-building #touch-special, .touch-building #touch-power, .touch-building #touch-switch { display: none; }
+.touch-hotbar { position:absolute; bottom:var(--touch-bottom); left:var(--touch-left); right:var(--touch-right); display:flex; gap:6px; padding:5px; background:#172832ed; border:2px solid #344d59; border-radius:8px; pointer-events:auto; }
+#touch-tower-cards { min-width:0; flex:1; overflow-x:auto; overscroll-behavior:contain; scrollbar-width:thin; }
+.touch-mode #touch-hud #build-bar { position:static; display:flex; align-items:stretch; gap:5px; width:max-content; transform:none; opacity:1; pointer-events:auto; }
+.touch-mode #touch-hud .build-card { flex:0 0 65px; width:65px; min-height:67px; padding:3px; transform:none; pointer-events:auto; }
+.touch-hotbar .build-thumb { width:31px; height:31px; margin:0 auto; }
+.touch-hotbar .build-name, .touch-hotbar .build-cost { font-size:11px; line-height:1.2; }
+.touch-hotbar .build-key { display:none; }
+#touch-hud #touch-wall { flex:0 0 65px; padding:4px; font-size:25px; border-color:#b99c67; }
+#touch-wall small { display:block; font-size:11px; }
+.touch-mode .touch-placement, .touch-mode .touch-orders { bottom:calc(var(--touch-bottom) + 86px); }
+.touch-mode .touch-possessed .touch-placement { bottom:calc(var(--touch-bottom) + 258px); }
+@media (max-width:699px) { .touch-mode .touch-left, .touch-mode .touch-right { bottom:calc(var(--touch-bottom) + 86px); } }
+@media (min-width:700px) and (max-height:600px) {
+  .touch-hotbar { left:236px; right:216px; }
+  .touch-mode .touch-vitals { display:none; }
+  .touch-mode .touch-possessed .touch-placement { left:auto; right:var(--touch-right); transform:none; bottom:calc(var(--touch-bottom) + 100px); width:176px; display:flex; flex-wrap:wrap; justify-content:center; }
+  .touch-mode .touch-possessed .touch-placement span { width:100%; text-align:center; }
+}
 .touch-left-handed .touch-left { left: auto; right: var(--touch-right); }
 .touch-left-handed .touch-right { right: auto; left: var(--touch-left); transform: scaleX(-1); }
 .touch-left-handed .touch-right .btn { transform: scaleX(-1); }
