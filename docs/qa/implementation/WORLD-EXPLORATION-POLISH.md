@@ -2,7 +2,15 @@
 
 Owner: Codex. Branch: `feature/world-exploration-polish`.
 Base: preview/v2 `0036b84`. September 19, 2026. V2 only.
-Status: implemented and locally verified; publishing.
+Status: published and publicly verified. [PR #78](https://github.com/majieddd/worldheart/pull/78).
+
+Runtime checkpoint: `7f13b0d48807e13e3129034b6802387749608322`.
+[Successful V2 deployment](https://github.com/majieddd/worldheart/actions/runs/35474014980).
+All 870 deployed/source identities pass, including preserved main files. Public
+opening (33), construction/chest/touch (9), and two responsive shop audits pass.
+Nine initial audio downloads timed out or lost their connection; all nine
+matched on a targeted retry. Both attempts are retained. Documentation-only
+follow-ups may advance the preview SHA with the same runtime asset hashes.
 
 | ID | Requested outcome | State / acceptance |
 | --- | --- | --- |
@@ -15,7 +23,7 @@ Status: implemented and locally verified; publishing.
 | U268 | Painted simple HUD and readable weapon panels | Implemented: three primary stats, emoji labels and expandable details; three-size contrast/focus/overflow audit passes |
 | U269 | Laya/Jev recipe experiment | Complete, negative runtime result: 15/20 vs rules 19/20; 741 ms vs 0.025 ms median; retained offline |
 | U270 | Aegis and contributors | Plugin 3.18.14 installed; seven tools discovered; installed exploration workflow passes; [PR #15](https://github.com/majieddd/claude-plugins-custom/pull/15) |
-| U271 | Regression, evidence and V2 publication | Local checks complete; public verification follows deployment |
+| U271 | Regression, evidence and V2 publication | Complete: CI, live asset identity, public desktop/touch flow and shop checks pass |
 
 User-approved Painted-Anime-Inkline 1.3.2 remains the visual contract. The lobby
 references define spatial proportions and station layout, not a copy of another

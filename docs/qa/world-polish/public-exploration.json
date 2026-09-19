@@ -1,0 +1,189 @@
+{
+  "checks": [
+    {
+      "name": "Revised Earth home retains connected anchor routes",
+      "ok": true,
+      "detail": {
+        "ms": 110713.29999999702,
+        "stages": [
+          {
+            "label": "seeding the noise fields",
+            "start": 81244.29999999702,
+            "ms": 599.5
+          },
+          {
+            "label": "charting the ley lines",
+            "start": 81843.79999999702,
+            "ms": 20545.30000000447
+          },
+          {
+            "label": "carving the continents",
+            "start": 102389.10000000149,
+            "ms": 3128.89999999851
+          },
+          {
+            "label": "pouring the oceans",
+            "start": 105518,
+            "ms": 516.8999999985099
+          },
+          {
+            "label": "hanging the stars",
+            "start": 106034.89999999851,
+            "ms": 11.899999998509884
+          },
+          {
+            "label": "planting the forests",
+            "start": 106046.79999999702,
+            "ms": 1144.3000000044703
+          },
+          {
+            "label": "raising the light",
+            "start": 107191.10000000149,
+            "ms": 168.60000000149012
+          },
+          {
+            "label": "waking the worldheart",
+            "start": 107359.70000000298,
+            "ms": 3221.2999999970198
+          }
+        ],
+        "centre": [
+          0.9078024509717959,
+          0.15408265393676962,
+          -0.3900682578285518
+        ],
+        "heart": [
+          0.9078024625778198,
+          0.15408265590667725,
+          -0.39006826281547546
+        ],
+        "portals": [
+          [
+            0.6801780462265015,
+            0.6080736517906189,
+            -0.4093950390815735
+          ],
+          [
+            0.8955681920051575,
+            -0.34300386905670166,
+            -0.28338295221328735
+          ],
+          [
+            0.9667618274688721,
+            0.23208756744861603,
+            0.10727029293775558
+          ],
+          [
+            0.6846683621406555,
+            0.059442877769470215,
+            -0.7264267206192017
+          ],
+          [
+            0.8377180099487305,
+            0.5415445566177368,
+            -0.0704130157828331
+          ]
+        ],
+        "healthy": true,
+        "attempts": 1,
+        "loadMs": 110726
+      }
+    },
+    {
+      "name": "Walls join on the globe and reject duplicates",
+      "ok": true,
+      "detail": {
+        "first": true,
+        "second": true,
+        "gap": 0.020997867812573814,
+        "duplicate": false,
+        "count": 2
+      }
+    },
+    {
+      "name": "A rotated corner snaps without blocking its own adjoining segment",
+      "ok": true,
+      "detail": {
+        "gap": 0.005145662674884705,
+        "snapped": true,
+        "placed": true
+      }
+    },
+    {
+      "name": "Wheel rotates the selected wall without zooming",
+      "ok": true,
+      "detail": {
+        "before": {
+          "turn": 0,
+          "zoom": 1148.5607762323696
+        },
+        "after": {
+          "turn": 0.7853981633974483,
+          "zoom": 1148.5607762323696
+        }
+      }
+    },
+    {
+      "name": "Opening a real chest button animates its lid and ejects reward models",
+      "ok": true,
+      "detail": {
+        "bursts": 3,
+        "flight": 1,
+        "lids": 1
+      }
+    },
+    {
+      "name": "Touch action bar has usable towers and a wall card",
+      "ok": true,
+      "detail": {
+        "enabled": true,
+        "paused": false,
+        "worldgen": false,
+        "hidden": false,
+        "blocked": false,
+        "cards": 3,
+        "mode": true,
+        "wall": true,
+        "wallHidden": false
+      }
+    },
+    {
+      "name": "Touch wall card enters the same placement flow",
+      "ok": true,
+      "detail": {
+        "placing": true,
+        "canAct": true,
+        "stock": 5,
+        "paused": false,
+        "overlay": false
+      }
+    },
+    {
+      "name": "Two-finger spreading zooms in; pinching zooms out without rotating the map",
+      "ok": true,
+      "detail": {
+        "initial": {
+          "distance": 150,
+          "lon": 0.8766277184733138,
+          "lat": 0.4346989545623505
+        },
+        "spread": {
+          "distance": 92.85714285714285,
+          "lon": 0.8766277184733138,
+          "lat": 0.4346989545623505
+        },
+        "pinched": {
+          "distance": 149.99999999999997,
+          "lon": 0.8766277184733138,
+          "lat": 0.4346989545623505
+        }
+      }
+    },
+    {
+      "name": "No browser runtime or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

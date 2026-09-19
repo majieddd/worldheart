@@ -5,7 +5,8 @@ Runtime source: `feature/world-exploration-polish`, baseline `0036b84`.
 The publication record in the implementation ledger identifies the deployed commit.
 
 Reports preserve their original details, including fixture setup and failures.
-`manifest.json` hashes the bundled raw reports and compressed image copies.
+`manifest.json` hashes the bundled reports (Git-normalized LF line endings) and
+compressed image copies.
 Original PNGs, all intermediate attempts and logs remain in `artifacts/world-polish/`.
 Local paths in reports identify captures; the review images below are portable.
 
@@ -23,6 +24,10 @@ Local paths in reports identify captures; the review images below are portable.
 | [Laya trial](laya-recipes.json) | 20 authored recipe choices; model 15/20 vs rules 19/20; all errors and timings retained |
 | [Installed Aegis](aegis-installed.json) | Eight exploration checks run through the installed 3.18.14 workflow |
 | [Negative control](negative-control.json) | Baseline cannot pass the new wall endpoint scenario |
+| [Public identity](public-identity.json) | 870 deployed/source hashes match; includes targeted retry history for nine failed audio downloads |
+| [Public opening](public-opening.json) | All 33 opening and touch checks pass on the deployed site |
+| [Public exploration](public-exploration.json) | All nine wall, chest and pinch checks pass on the deployed site |
+| [Public lobby](public-lobby.json) | Both deployed shop audits pass with no measured failures |
 
 Earlier input/catalogue failures and the native input's default-color warning
 are retained as `failed-*.json`. The implementation ledger explains corrections.
