@@ -13,7 +13,7 @@ test('orbital flux, themes and campaign environments are deterministic and used'
   assert.equal(stellarFlux(1,2),.25);assert.equal(stellarFlux(4,2),1);
   const themes=new Set(),stars=new Set();
   for(let i=1;i<=99;i++){
-    const p=planetDefinition(i,4206018157),e=planetEnvironment(p.seed);
+    const p=planetDefinition(i,4206018157),e=planetEnvironment(p.seed,i===1?'earth':'auto');
     assert.deepEqual(e,p.environment);themes.add(e.theme);stars.add(e.star.type);
     assert.ok(Math.abs(e.flux*e.orbitAU**2-e.star.luminosity)<1e-10);
   }

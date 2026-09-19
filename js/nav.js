@@ -855,7 +855,7 @@ export class NavGraph {
         if (done[b]===mark || !walk[b]) continue;
         if (block && block[b] !== 0 && b !== source) continue;
         if (blockFilter && blockFilter.has(b)) continue;
-        const nd = da + cost[e];
+        const nd = da + cost[e] + (block&&this.wallPenalty?Math.max(this.wallPenalty[a]||0,this.wallPenalty[b]||0):0);
         if (Number.isFinite(nd) && (sparse&&field.seen[b]!==generation || nd < dist[b])) {
           dist[b] = nd;
           next[b] = a;

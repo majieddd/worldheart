@@ -20,6 +20,7 @@ import { WaveDirector, portalCount } from './waves.js';
 import { HUD } from './ui.js';
 import { AudioEngine } from './audio.js';
 import { WorldContext } from './world-context.js';
+import {productionPaint} from './production-paint.js';
 
 const canvas = document.getElementById('view');
 const renderer = new THREE.WebGLRenderer({
@@ -131,6 +132,7 @@ let possession = null;  // direct control of a unit, first person
 let viewModel = null;   // the first-person weapon overlay
 let combatFx = null;    // tracers, beams, shells and melee tells
 let caches = null;      // gold hidden in the fog
+let painted = null;
 
 /* ---- environment map and sun shadows ---------------------------------- */
 const _shadowFocus = new THREE.Vector3();
@@ -267,6 +269,8 @@ async function finishBootSteps(steps){
 }
 
 async function boot() {
+  painted=await productionPaint(renderer);
+  window.WH.paint=painted;
   resize();
   const totalSteps = world.buildStepCount + 2;
   let step = 0;const bootStages=[];
@@ -538,6 +542,8 @@ async function boot() {
   }
   window.WH.heartPos = heartPos;
   game.context = new WorldContext({game,ui,rig,possession,mode:mode99});
+  viewModel.scene.userData.heldEquipment=true;
+  painted.apply(scene);painted.apply(viewModel.scene);
   const { MobileControls } = await import('./mobile-controls.js');
   window.WH.mobile = new MobileControls({game,ui,rig,possession,mode:mode99});
   window.WH.portalPositions = portalPositions;
@@ -717,7 +723,7 @@ function stepFrame(dt, render) {
     // on; the beam is gated on being fed this frame, not on dt.
     combatFx?.update(simDt);
   }
-  if (render) {world.syncDecorBatches();post.render(scene, rig.camera, dt);}
+  if (render) {world.syncDecorBatches();painted?.update(performance.now()/1000,scene,viewModel?.scene);post.render(scene, rig.camera, dt);}
 }
 
 // Every tower needs an entry or the strategic layer lies about what is on the
@@ -1101,7 +1107,7 @@ window.WH = {
   step(seconds = 1, fps60 = 60, draw = true) {
     const n = Math.round(seconds * fps60);
     for (let i = 0; i < n; i++) stepFrame(1 / fps60, false);
-    if (draw) {world.syncDecorBatches();post.render(scene, rig.camera, 1 / fps60);}
+    if (draw) {world.syncDecorBatches();painted?.update(performance.now()/1000,scene,viewModel?.scene);post.render(scene, rig.camera, 1 / fps60);}
   },
   // Scripted placement for testing: drop a tower N hops down a portal's path,
   // offset sideways so it shapes the route instead of blocking it.

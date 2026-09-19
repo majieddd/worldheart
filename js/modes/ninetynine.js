@@ -1,4 +1,6 @@
 import { HomePlanet } from '../home-planet.js';
+import {WoodenWalls} from '../wooden-walls.js';
+import {StructureField} from '../structures.js';
 import { TERRAIN_FAULTS } from '../world.js';
 import {GeyserField} from '../terrain/geysers.js';
 // The 99 Planets shell. The ONLY file that knows both the pure run core and
@@ -524,15 +526,21 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const previousKill = enemies.onKill;
   enemies.onKill = e => {
     previousKill?.(e);
+    if(e.type.boss)game.firstBossDefeated=true;
     if(e.conquestWave&&run.defeatConquestBoss(e.conquestWave)){
       for(const p of world.portals)p.guardianPending=false;
       // The sovereign's death wins the planet; escorts do not delay the unlock.
       waves.queues=[];waves.raidQueue=[];waves.pendingSpawns=0;
       for(const other of [...enemies.active])if(other!==e)enemies._release(other);
     }
-    if (!shouldDrop({boss:!!e.type.boss,elite:e.typeKey === 'aegis'},lootRng)) return;
+    const killedWave=waves.assaultIds.get(e.id)??waves.wave;
+    const firstWeapon=!game.tutorialWeaponDropped&&killedWave===2
+      &&!waves.queues.some(q=>(q.wave??waves.wave)===2)&&!waves.raidQueue.length
+      &&!enemies.active.some(x=>x!==e&&x.active&&!x.dead&&(waves.assaultIds.get(x.id)??waves.wave)===2);
+    if (!firstWeapon&&!shouldDrop({boss:!!e.type.boss,elite:e.typeKey === 'aegis'},lootRng)) return;
     const item = generateWeapon({id:`weapon-${assaultId || CONFIG.seed}-${++lootSequence}`,seed:(lootRng()*0x100000000)>>>0,tier:CONFIG.planetIndex || 1,rng:lootRng,maxRarity:home?.active?'rare':'relic'});
     if (inventory.register(item)) {
+      if(firstWeapon)game.tutorialWeaponDropped=true;
       let node = nav.nearestWalkableNode(e.dir,true,e.height);
       if (node < 0 || !Number.isFinite(nav.dist[node])) node = nav.heartNode;
       if (node >= 0) nav.nodeDir(node,_up); else _up.copy(e.dir);
@@ -809,11 +817,11 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   // Seeded fresh each expansion, on the ring between the new frontier and the
   // far edge, so there is always something worth walking into the dark for.
   function seedCaches(theta) {
-    if (!caches || !centre || caches.caches.length >= 60) return;
+    if (!caches || !centre || caches.caches.length >= 24) return;
     const inner = theta * 1.12, outer = Math.min(theta * 1.8, CONFIG.map.fieldTheta * .97);
     if (inner >= outer) return;
     let added = 0;
-    for (let tries = 0; tries < 180 && added < 6 && caches.caches.length < 60; tries++) {
+    for (let tries = 0; tries < 180 && added < 2 && caches.caches.length < 24; tries++) {
       _up.set(crystalRng() - .5, crystalRng() - .5, crystalRng() - .5);
       _axis.crossVectors(centre, _up);
       if (_axis.lengthSq() < 1e-9) continue;
@@ -824,7 +832,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       nav.nodeDir(node, _sdir);
       const angle = Math.acos(Math.max(-1, Math.min(1, _sdir.dot(centre))));
       if (angle < inner || angle > outer) continue;
-      if (caches.caches.some(c => Math.acos(Math.min(1, c.dir.dot(_sdir))) * CONFIG.planetRadius < 3)) continue;
+      if (caches.caches.some(c => Math.acos(Math.min(1, c.dir.dot(_sdir))) * CONFIG.planetRadius < 9)) continue;
       const id = `crystal-${CONFIG.seed}-${caches.caches.length}`;
       crystals.register(id);
       caches.caches.push({ id, node, dir: _sdir.clone(), taken: false, gold: 0 });
@@ -880,6 +888,8 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   const requestedMount=homeCheckpoint?.mount||new URLSearchParams(location.search).get('mount');
   const mounts=new MountController({scene:game.scene,allies,possession,commander:()=>commander,choice:Object.hasOwn(MOUNTS,requestedMount)?requestedMount:preparation().mount,ui});
   const forge=createScrapForge(inventory,homeCheckpoint?.forged||0);
+  const walls=new WoodenWalls({game,ui,nav,rig,possession,inventory,nearBase:homeDistance,saved:homeCheckpoint?.walls});
+  const structures=new StructureField({game,ui,nav,rig,commander:()=>commander,inventory,loot,crystals,caches,saved:homeCheckpoint?.structures,home:()=>!!home?.active});
   game.freeTowerCredits=new Map();
   function craft(){
     if(game.state!=='playing'||game.paused||game.terrainBusy||run.getPhase()!=='building')return false;
@@ -922,6 +932,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
       environment:structuredClone(CONFIG.environment),planetIndex:CONFIG.planetIndex,centre:nav.fieldCenter.toArray(),
       heart:centre.toArray(),portals:sourcePortals.map(n=>nav.nodeDir(n,new THREE.Vector3()).toArray())},
       checkpoint:{run:state,commander:commander.typeKey,mount:mounts.choice,inventory:inventory.snapshot(),
+        walls:walls.snapshot(),structures:structures.snapshot(),
         gold:game.gold,lives:Math.max(1,game.lives),maxLives:game.maxLives,kills:game.kills,score:game.score,forged:forge.forged,
         lootSequence,loot:salvageSnapshot().drops,crystals:crystals.snapshot(),caches:caches?.caches.map(c=>({id:c.id,node:c.node,dir:c.dir.toArray(),taken:!!c.taken,gold:c.gold||0}))||[],
         rng:rng.state(),crystalRng:crystalRng.state(),lootRng:lootRng.state(),simRng:SIM_RANDOM.next.state?.(),
@@ -931,7 +942,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
         faults:TERRAIN_FAULTS.map(f=>({...f,...Object.fromEntries(['dir','axis','side','protectedDir'].map(k=>[k,f[k].toArray()]))}))}};
   }
   home=new HomePlanet({game,ui,world,nav,rig,possession,run,weather,snapshot:homeSnapshot,equipment:()=>{
-    inventory.settle(false);return {inventory:inventory.snapshot(),lootSequence,lootRng:lootRng.state(),forged:forge.forged};
+    inventory.settle(false);return {inventory:inventory.snapshot(),lootSequence,lootRng:lootRng.state(),forged:forge.forged,structures:structures.snapshot()};
   }});
   if(homeCheckpoint){
     game.gold=homeCheckpoint.gold;game.lives=homeCheckpoint.lives;game.maxLives=homeCheckpoint.maxLives;
@@ -954,8 +965,14 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
   }
   const previousEnd=game.onGameEnd;game.onGameEnd=won=>{if(!won&&home.active){home.defeat();return;}previousEnd?.(won);};
   const previousLeak=enemies.onLeak;enemies.onLeak=e=>{
-    // A sovereign reaching the heart is a loss, never a free capture.
-    if(e.conquestWave)game.lives=0;previousLeak?.(e);
+    // Boss contact costs half the maximum base health, regardless of current HP.
+    // The normal leak handler still owns VFX, defeat and releasing the enemy.
+    if(e.type.boss){const amount=Math.ceil(game.maxLives*.5);game.lives-=Math.max(0,amount-e.type.damage);}
+    if(e.conquestWave&&run.retryConquestBoss(e.conquestWave)){
+      waves.conquestWave=run.getConquestWave();
+      ui.toast('The guardian breached the heart. It will return next wave; defeat it to claim this planet.','warn');
+    }
+    previousLeak?.(e);
   };
   function enterHome(){
     if(!home.active)return false;
@@ -983,7 +1000,7 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     run,home,enterHome,
     get commander() { return commander; },
     respawn,
-    mounts,forge,weather,geysers,abilities,focusCommander,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
+    mounts,forge,walls,structures,weather,geysers,abilities,focusCommander,craft,startEndless:startEndlessRun,finishEndless:finishEndlessRun,
     crystals,
     depositCrystals,
     inventory,
@@ -1001,12 +1018,13 @@ export function createNinetyNine({ game, waves, world, nav, rig, ui, enemies, al
     // Driven from stepFrame. dt is injected; the core never reads a clock.
     update(dt) {
       home.update(dt);
+      walls.update();structures.update(dt);
       const activeDt=run.getPhase()==='building'?dt*game.speed:0;
       for(const e of enemies.active)if(e.conquestWave&&!e.dead){
         e.summonClock+=activeDt;
         if(e.summonClock>=12){e.summonClock%=12;for(let i=0;i<3;i++)enemies._spawnReinforcement(e);}
       }
-      mounts.update(activeDt);if(!home.quiet)weather.update(activeDt);
+      mounts.update(activeDt);if(!home.quiet&&!game.onboardingHold)weather.update(activeDt);
       if(game.terrainBusy)return;
       abilities.update(activeDt);
       geysers.update(activeDt);

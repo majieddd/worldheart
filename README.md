@@ -2,7 +2,9 @@
 
 Play the [stable game](https://majieddd.github.io/worldheart/) or test current
 development in the [live V2 preview](https://majieddd.github.io/worldheart/v2/).
-V2 uses separate saves and starts the 99-planet campaign. Collaborators should
+V2 uses separate saves and starts the Earth-first 99-planet campaign directly,
+with a skippable illustrated opening and action guide. The lobby remains at
+`lobby.html` for Homeworlds and loadouts. Collaborators should
 follow [the preview publication workflow](docs/PREVIEW.md) at each tested checkpoint.
 
 A 3D tower defense fought across the surface of living procedural planets. Raise defenses anywhere on the globe, bend the void swarm through your maze, and keep the Worldheart alight.

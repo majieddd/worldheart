@@ -18,9 +18,9 @@ alongside the stable game without merging gameplay PRs into main.
 | Route | Source | Purpose |
 |---|---|---|
 | [Main game](https://majieddd.github.io/worldheart/) | main | Released game and lobby; preview publishes preserve its tracked file bytes |
-| [V2 preview](https://majieddd.github.io/worldheart/v2/) | preview/v2 | Latest integrated, verified work; opens the preparation lobby |
+| [V2 preview](https://majieddd.github.io/worldheart/v2/) | preview/v2 | Direct Earth-first campaign entry; preparation lobby remains at lobby.html |
 | [Campaign](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=1) | preview/v2 | Direct entry to the saved 99-planet campaign |
-| [Debug World](https://majieddd.github.io/worldheart/v2/debug.html) | preview/v2 | Production models, mounts, formations, combined terrain, biomes, active features, disasters and theme globes; no save access |
+| [Debug World](https://majieddd.github.io/worldheart/v2/debug.html) | preview/v2 | Painted production models, mounts, formations, terrain, biomes, explorable structures, active features, disasters and theme globes; no save access |
 | [Illustration lab](https://majieddd.github.io/worldheart/v2/style-lab.html) | preview/v2 | Separate three-style 3D graphics experiment; no campaign save access |
 | [Painted frontier](https://majieddd.github.io/worldheart/v2/painted-lab.html) | preview/v2 | Fourth graphics study: soft painted cel, fine ink, textured Meshy reference models |
 | [Hard Cel candidates](https://majieddd.github.io/worldheart/v2/hard-cel-lab.html) | preview/v2 | Preserved owner-selected 1.0 and three separately versioned experiments |

@@ -74,8 +74,9 @@ for you to install from.
 node tools/serve.mjs 8137
 ```
 
-Open http://127.0.0.1:8137, pick **99 Planets** on the title screen, and press
-Begin the defense. That is the mode most of the recent work targets.
+Open http://127.0.0.1:8137 for the Earth-first **99 Planets** campaign. Fresh
+players see the skippable prologue and action guide. `lobby.html` remains available
+for loadouts and Homeworlds; explicit `?map=pocket` selects a classic map.
 
 Node 24 is what this is developed and tested against. It auto-detects ES modules
 in `.js` files, which is the reason the repo needs no manifest. `npm install`
@@ -184,10 +185,9 @@ The full rules are in `CLAUDE.md` and `DESIGN.md`. The short version:
 Each of these has cost real time. `CLAUDE.md` carries the full list with the
 reasons.
 
-- **A bare URL boots whatever you last played.** Map and seed persist to
-  `localStorage`. Without `?map=`, you are on Pocket World, a radius 30 planetoid
-  with about 10,000 navigation nodes, not the radius 240 world the campaign uses.
-  An afternoon of measurements has been taken on the wrong planet this way.
+- **A bare URL now enters the saved 99-planet campaign.** Before September 19
+  it restored the previous map. Use explicit `?map=...&campaign=0&seed=...`
+  for reproducible classic/sandbox measurements and inspect `WH.CONFIG`.
 - **`?seed=N` is not the seed the world runs on.** Worldgen retries by advancing
   the seed per attempt, so `?seed=771` may report 40366. Still deterministic.
 - **`js/run/` imports nothing.** No Three, no DOM, no `Math.random`, no

@@ -8,6 +8,15 @@ import {canClaimHome,validateHome,starterEarthHome,homeDefeatCheckpoint} from '.
 import {createHomeStore} from '../../js/modes/home-store.js';
 import {makeRng} from '../../js/run/rng.js';
 const core=()=>createRun({seed:123,playerIds:['solo'],startGold:400});
+test('a leaked guardian is owed next wave and cannot unlock a home',()=>{
+  const r=core();for(let i=0;i<10;i++)r.upgradeHeart();r.queueConquest(1);
+  assert.equal(r.retryConquestBoss(9),false);assert.equal(r.retryConquestBoss(1),true);
+  assert.equal(r.getConquestWave(),2);assert.equal(r.defeatConquestBoss(1),false);
+  assert.equal(r.claimHome(),false);assert.ok(!r.completeWave().some(e=>e.type==='planetConquered'));
+  if(r.getDraft()){r.vote('solo',0);r.tick(0);}
+  assert.deepEqual(r.completeWave(),[]);assert.equal(r.defeatConquestBoss(2),true);
+  assert.ok(r.completeWave().some(e=>e.type==='planetConquered'));assert.equal(r.claimHome(),true);
+});
 function fixture(){const r=core();for(let i=0;i<10;i++)r.upgradeHeart();r.queueConquest(1);r.defeatConquestBoss(1);r.completeWave();r.claimHome();return {version:1,id:'home-123-1',name:'Test home',decorations:[],world:{seed:123,radius:240,terrain:'varied',environment:{theme:'temperate'},centre:[0,1,0],heart:[0,1,0],portals:[[1,0,0]]},checkpoint:{run:r.checkpoint(),commander:'commander',inventory:createInventory('commander').snapshot(),gold:400,lives:20,maxLives:20,forged:4,towers:[],faults:[]}};}
 test('home capture requires maximum base, scheduled boss kill and stable completion',()=>{
  const r=core();assert.equal(r.queueConquest(1),false);for(let i=0;i<10;i++)r.upgradeHeart();

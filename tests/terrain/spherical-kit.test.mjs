@@ -47,11 +47,11 @@ test('Guided height preserves real low routes and dry canyon floors, continuousl
   const deep=createGuidedSurface(7,240,()=>-18,{landmarks:false});assert.equal(deep.height(0,1,0),-18);
 });
 test('Terrain versions preserve old home/assault geometry and identify new saves',()=>{
-  const home=starterEarthHome();assert.equal(home.world.terrainVersion,1);assert.ok(validateHome(home));
+  const home=starterEarthHome();assert.equal(home.world.terrainVersion,2);assert.ok(validateHome(home));
   delete home.world.terrainVersion;assert.ok(validateHome(home));assert.equal(savedTerrainVersion(home.world),0);
-  home.world.terrainVersion=2;assert.equal(validateHome(home),false);
+  home.world.terrainVersion=1;assert.ok(validateHome(home));home.world.terrainVersion=3;assert.equal(validateHome(home),false);
   const save=freshSave();startExpedition(save,{seed:12345});beginAssault(save,{commander:'commander',inventory:createInventory('commander').snapshot(),effectiveSeed:12345});
-  assert.equal(save.expedition.assault.terrainVersion,1);assert.ok(validSave(save));
+  assert.equal(save.expedition.assault.terrainVersion,2);assert.ok(validSave(save));
   delete save.expedition.assault.terrainVersion;assert.ok(validSave(save));assert.equal(savedTerrainVersion(save.expedition.assault),0);
   save.expedition.assault.terrainVersion=-1;assert.equal(validSave(save),false);
 });

@@ -157,6 +157,7 @@ class Enemy {
     this.dir.copy(dirVec);
     this.node = node;
     this.routeCenter = -1; this.routeExit = -1;
+    this.wallAttack=0;
     this.bridgeFrom=-1;this.bridgeTo=-1;
     this.hpMax = Math.round(type.hp * hpScale);
     this.hp = this.hpMax;
@@ -1589,7 +1590,8 @@ export class EnemyManager {
       const ang = (stepSpeed * dt) / R;
       _moveAxis.crossVectors(e.dir, e.fwd).normalize();
       _nextDir.copy(e.dir).applyAxisAngle(_moveAxis, ang).normalize();
-      if ((!type.flying || canFlyAt(_nextDir)) && (bridge|| (type.flying?this.nav.canStep(e.dir,_nextDir,true,e.node):this.nav.canMarchStep(e.dir,_nextDir,e.node)))) {
+      if(this.wallStep?.(e,_nextDir,dt))stepSpeed=0;
+      else if ((!type.flying || canFlyAt(_nextDir)) && (bridge|| (type.flying?this.nav.canStep(e.dir,_nextDir,true,e.node):this.nav.canMarchStep(e.dir,_nextDir,e.node)))) {
         e.dir.copy(_nextDir);
         e.fwd.applyAxisAngle(_moveAxis, ang).addScaledVector(e.dir, -e.fwd.dot(e.dir)).normalize();
       } else stepSpeed = 0;
