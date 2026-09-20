@@ -3,7 +3,8 @@ const wet=['wetland','mangrove','jungle','woodland','cloudforest','bamboo','carn
 const hot=['volcanic','sulfur','obsidian','basalt','venusrock','ioplains'];
 const cold=['tundra','alpine','aurora','nitrogen','waterice','fracturedice','tholins'];
 const low=['basin','hills','dunes','delta','fan','cells','shields','grotto','valley','oxbow','scablands','forest','mesa','plateau','sky','skyreef','skycrown','skyshards','arcade','caverns','ribbons'];
-const feature=(name,biomes,formations,extra)=>Object.freeze({name,biomes,formations,water:false,slope:.45,radius:3,period:12,on:3,damage:0,slow:1,lift:0,heal:0,...extra});
+export const ACTIVE_FEATURE_SCALE=1.6;
+const feature=(name,biomes,formations,extra)=>Object.freeze({name,biomes,formations,water:false,slope:.45,period:12,on:3,damage:0,slow:1,lift:0,heal:0,...extra,baseRadius:extra.radius??3,radius:(extra.radius??3)*ACTIVE_FEATURE_SCALE});
 export const ACTIVE_FEATURES=Object.freeze({
  geyser:feature('Geyser pockets',[...wet,...hot,...cold],low,{color:0xb0e7e6,radius:3.8,lift:14,note:'Quiet flat mineral pockets erupt, launching bodies that cross them.'}),
  trunks:feature('Fallen tree bridge',['redwood','woodland','jungle','cloudforest','autumn','cherry','fungal','lichen'],low,{color:0x8c7355,radius:7,period:1,on:0,note:'A weathered fallen trunk spans a shallow hollow; its upper surface is walkable.'}),

@@ -1,0 +1,153 @@
+{
+  "version": "1.0.0",
+  "file": "paint-articulated.glb",
+  "sha256": "ad8e52d82f996b4a2afedf02a9bfd04d34d20d63da6375afce3eb068bd9c4e53",
+  "stage": "paint",
+  "checks": [
+    {
+      "name": "container",
+      "status": "pass",
+      "detail": "Embedded buffers and chunk bounds are valid"
+    },
+    {
+      "name": "finite_geometry",
+      "status": "pass",
+      "detail": {
+        "vertices": 42488,
+        "triangles": 65000
+      }
+    },
+    {
+      "name": "degenerate_faces",
+      "status": "pass",
+      "detail": {
+        "count": 0,
+        "maximumRatio": 0.001
+      }
+    },
+    {
+      "name": "uv_coordinates",
+      "status": "pass",
+      "detail": "Every mesh primitive needs finite UV coordinates"
+    },
+    {
+      "name": "bound_color_textures",
+      "status": "pass",
+      "detail": "Every mesh primitive must bind its painted base-color texture"
+    },
+    {
+      "name": "embedded_texture_resolution",
+      "status": "pass",
+      "detail": {
+        "sizes": [
+          [
+            4096,
+            4096
+          ]
+        ],
+        "minimum": 1024,
+        "note": "Resolution alone does not prove crisp reference detail"
+      }
+    },
+    {
+      "name": "Bound refinement evidence: articulate-055c7b9557/surface-quality.json",
+      "status": "pass",
+      "detail": "Checks must describe the current model bytes"
+    },
+    {
+      "name": "Rear mantle paint",
+      "status": "pass",
+      "metrics": {
+        "samples": 4396,
+        "darkContaminationRatio": 0.022747952684258416,
+        "maximum": 0.05,
+        "medianRGB": [
+          79.0,
+          98.0,
+          108.0
+        ]
+      }
+    },
+    {
+      "name": "Left hand skin",
+      "status": "pass",
+      "metrics": {
+        "samples": 1085,
+        "darkContaminationRatio": 0.0,
+        "maximum": 0.04,
+        "medianRGB": [
+          177.0,
+          173.0,
+          170.0
+        ]
+      }
+    },
+    {
+      "name": "Right hand skin",
+      "status": "pass",
+      "metrics": {
+        "samples": 1053,
+        "darkContaminationRatio": 0.0,
+        "maximum": 0.04,
+        "medianRGB": [
+          173.0,
+          169.0,
+          166.0
+        ]
+      }
+    },
+    {
+      "name": "Rear head skin",
+      "status": "pass",
+      "metrics": {
+        "samples": 2956,
+        "darkContaminationRatio": 0.0,
+        "maximum": 0.03,
+        "medianRGB": [
+          175.0,
+          171.0,
+          168.0
+        ]
+      }
+    },
+    {
+      "name": "Consistent surface winding",
+      "status": "pass",
+      "metrics": {}
+    },
+    {
+      "name": "Closed reconstructed surface",
+      "status": "pass",
+      "metrics": {}
+    }
+  ],
+  "metrics": {
+    "vertices": 42488,
+    "triangles": 65000,
+    "degenerateTriangles": 0,
+    "textureSizes": [
+      [
+        4096,
+        4096
+      ]
+    ],
+    "clips": []
+  },
+  "visualAcceptance": "pending",
+  "promotionAllowed": false,
+  "reviewRequired": [
+    "Compare silhouette, face and material boundaries against the approved reference",
+    "Inspect six rendered views, rear details, seams and hands",
+    "Watch full walk/run cycles and transitions; measure planted-foot drift against the intended ground speed",
+    "Confirm target platform triangle/texture budget and import"
+  ],
+  "status": "review_required",
+  "referenceSha256": "670f30a50a1cfdc2f31f3b5bb52514e37a229b6ff0a8ef8b9dc6143b814d9ec3",
+  "evidence": [
+    [
+      "articulate-055c7b9557/surface-quality.json",
+      "8097b1a692d7375f6d6983d7c9269645812177f4a209d4b36aaafb4e4a78fab6"
+    ]
+  ],
+  "reportFile": "articulate-055c7b9557/paint-articulated.quality.json"
+}

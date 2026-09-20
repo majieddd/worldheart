@@ -38,13 +38,13 @@ export function climatePermission(type, climates) {
   return { ok: true, climate };
 }
 
-// Vantage adds up to 60% horizontal reach over the first 30 m of elevation.
+// A 5 m shelf adds 20% horizontal reach, growing to 100% at 25 m.
 // The sphere also includes the drop to sea level, so a tall emplacement can
 // actually reach the valley below it. This is slant distance, not a second
 // planar targeting rule. Minimum range and secondary chain hops stay fixed.
 export function elevatedRange(range, height = 0) {
   const h = Number.isFinite(height) ? Math.max(0, height) : 0;
-  return Math.hypot(range * (1 + Math.min(.6, h * .02)), h);
+  return Math.hypot(range * (1 + Math.min(1, h * .04)), h);
 }
 
 export function terrainTowerStats(stats, type, climate, height = 0) {
@@ -54,6 +54,6 @@ export function terrainTowerStats(stats, type, climate, height = 0) {
   if (stats.range !== undefined) out.range = elevatedRange(stats.range, height);
   // Garrison movement uses surface distance, so its leash gets the horizontal
   // advantage without adding the vertical drop to a ground travel radius.
-  if (stats.leash !== undefined) out.leash = stats.leash * (1 + Math.min(.6, Math.max(0, height) * .02));
+  if (stats.leash !== undefined) out.leash = stats.leash * (1 + Math.min(1, Math.max(0, height) * .04));
   return out;
 }

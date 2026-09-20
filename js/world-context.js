@@ -13,6 +13,10 @@ export class WorldContext {
     this.hint=document.createElement('div');this.hint.className='context-hint';this.towerPanel.append(this.hint);
     this.lootPanel=document.createElement('div');this.lootPanel.id='loot-inspect';this.lootPanel.className='panel raised world-context';
     this.lootPanel.hidden=true;ui.root.append(this.lootPanel);
+    this.basePanel=document.createElement('section');this.basePanel.className='panel raised world-context';this.basePanel.id='base-context';this.basePanel.hidden=true;ui.root.append(this.basePanel);
+    this.basePanel.innerHTML='<h2>Worldheart</h2><p id="base-info"></p><div class="t-actions"><button class="btn primary" id="base-upgrade">Upgrade base</button><button class="btn" id="base-deposit">Deposit crystals</button><button class="btn" id="base-forge">Forge tower</button><button class="btn" id="base-walls">Buy 5 walls / 1 scrap</button><button class="btn ghost" id="base-close">Close</button></div><div class="context-hint">F to interact. Purchases return camera control.</div>';
+    for(const [id,action]of [['base-upgrade',()=>mode?.upgradeHeart()],['base-deposit',()=>mode?.depositCrystals()],['base-forge',()=>mode?.craft()],['base-walls',()=>mode?.walls?.buy()]])this.basePanel.querySelector('#'+id).onclick=()=>{if(action())this.close();};
+    this.basePanel.querySelector('#base-close').onclick=()=>this.close();
     this.lootPanel.innerHTML='<div id="loot-card"></div><div class="t-name" id="loot-name"></div><div id="loot-preview"></div><div id="loot-stats"></div><p id="loot-compatibility"></p><div class="t-actions"><button class="btn primary" id="loot-pickup">Pick up</button><button class="btn" id="loot-equip">Pick up + equip</button><button class="btn ghost" id="loot-close">Close</button></div><div class="context-hint" id="loot-hint"></div>';
     this.markers=new Map();
     rig.canvas.addEventListener('pointermove',e=>{this.pointer.x=e.clientX;this.pointer.y=e.clientY;});
@@ -20,6 +24,8 @@ export class WorldContext {
     this.lootPanel.querySelector('#loot-equip').onclick=()=>this.pickup(true);
     this.lootPanel.querySelector('#loot-close').onclick=()=>this.close();
     ui.el['tp-close'].onclick=()=>this.close();
+    addEventListener('pointerdown',e=>{if(e.button!==0||document.pointerLockElement!==rig.canvas||!this.gazeButton)return;e.preventDefault();e.stopImmediatePropagation();possession.firing=false;this.gazeButton.click();},true);
+    addEventListener('mousedown',e=>{if(e.button===0&&document.pointerLockElement===rig.canvas&&this.gazeButton){e.preventDefault();e.stopImmediatePropagation();}},true);
     addEventListener('keydown',e=>{
       if(e.repeat||e.target?.matches?.('input,textarea,select,[contenteditable="true"]'))return;
       if(e.code==='Escape'&&this.editing){e.preventDefault();e.stopImmediatePropagation();this.close();return;}
@@ -44,16 +50,16 @@ export class WorldContext {
     const wasEditing=this.editing;this.editing=false;
     if(this.panel()?.contains(document.activeElement))document.activeElement.blur();
     this.dismissed=this.target?.object;this.target=null;this.game.contextTower=null;
-    this.game.select(null);this.lootPanel.hidden=true;
+    this.game.select(null);this.lootPanel.hidden=true;this.basePanel.hidden=true;
     if(wasEditing&&!this.wasSuspended&&this.game.state==='playing'&&!document.querySelector('dialog[open],#end-overlay.show'))this.possession.suspend(false);
   }
   completeTowerAction() {
-    // Restore the mouse inside the successful purchase/sale click. Waiting
-    // for update() loses the browser's activation and leaves look unlocked.
-    // Board inspection remains open for repeated upgrades.
-    if(this.editing&&this.possession.active)this.close();
+    // Keep the real tower selected for consecutive upgrades. Closing or selling
+    // explicitly returns the FPS cursor; a price change must not dismiss it.
+    if(this.target?.kind==='tower'&&this.game.towerMgr.towers.includes(this.target.object)){this.towerStamp='';this.update();return;}
+    if(this.editing)this.close();
   }
-  panel(){return this.target?.kind==='loot'?this.lootPanel:this.towerPanel;}
+  panel(){return this.target?.kind==='base'?this.basePanel:this.target?.kind==='loot'?this.lootPanel:this.towerPanel;}
   pickup(equip) {
     const t=this.target,api=this.mode?.weapons;
     if(t?.kind!=='loot'||!api?.nearby().some(x=>x.id===t.object.item.id))return;
@@ -64,7 +70,7 @@ export class WorldContext {
     this.close();
   }
   _pick(ray) {
-    if(!this.game.towerMgr.towers.length&&!this.mode?.loot.entries.size)return null;
+    if(!this.mode&&!this.game.towerMgr.towers.length)return null;
     let best=null,distance=Infinity;
     let groundDistance;
     const consider=(kind,object,position,radius)=>{
@@ -80,6 +86,7 @@ export class WorldContext {
     for(const t of this.game.towerMgr.towers) {
       _pos.copy(t.pos).addScaledVector(_up.copy(t.pos).normalize(),1.1);consider('tower',t,_pos,1.35);
     }
+    if(this.mode){_pos.copy(this.game.world.heart.group.position);_pos.addScaledVector(_up.copy(_pos).normalize(),2);if(ray.origin.distanceTo(_pos)<18)consider('base',this.game.world.heart,_pos,3.2);}
     if(this.mode)for(const e of this.mode.loot.entries.values()) {
       _pos.copy(e.position).addScaledVector(_up.copy(e.position).normalize(),.8);consider('loot',e,_pos,.9);
     }
@@ -87,12 +94,17 @@ export class WorldContext {
   }
   update() {
     const {game,possession:p,ui}=this;
-    const blocked=game.state!=='playing'||game.buildType||document.querySelector('dialog[open],#end-overlay.show');
+    const blocked=game.state!=='playing'||game.buildType||game.walls?.placing||document.querySelector('dialog[open],#end-overlay.show');
     if(blocked){if(this.editing)this.close();this.target=null;}
     else if(!this.editing&&(!this.target||p.active||!this.panel().matches(':hover'))) {
       const r=this.rig.canvas.getBoundingClientRect();
       this.rig.raycaster(p.active?r.left+r.width/2:this.pointer.x,p.active?r.top+r.height/2:this.pointer.y,this.ray);
       let next=game.mobile?.enabled&&!p.active?null:this._pick(this.ray.ray);
+      if(next)this.lastLook=performance.now();
+      if(!next&&p.active&&this.target&&!blocked){
+        const box=this.panel().getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;
+        if(performance.now()-(this.lastLook||0)<800||(x>box.left-40&&x<box.right+40&&y>box.top-40&&y<box.bottom+40))next=this.target;
+      }
       if(!next&&!p.active&&game.selectedTower)next={kind:'tower',object:game.selectedTower};
       if(next?.object!==this.dismissed)this.dismissed=null;
       this.target=next?.object===this.dismissed?null:next;
@@ -106,14 +118,25 @@ export class WorldContext {
     const display=!game.mobile?.enabled||this.editing;
     this.towerPanel.classList.toggle('show',!!tower&&display);
     this.lootPanel.hidden=this.target?.kind!=='loot'||!display;
+    this.basePanel.hidden=this.target?.kind!=='base'||!display;
     if(this.target){
       if(tower){
         const valid=this.validTower(tower);
         ui.el['tp-sell'].disabled=!valid;
         if(!valid)ui.el['tp-upgrade'].disabled=true;
-        this.hint.textContent=p.active?(!valid?'Move within 14m to manage':this.editing?'Upgrade / Sell resumes control. F / Escape closes.':'F: manage tower'):'Click Upgrade or Sell';
+        this.hint.textContent=p.active?(!valid?'Move within 14m to manage':this.editing?'Keep upgrading. F / Escape or Close resumes control.':'F: manage tower'):'Click Upgrade or Sell';
+      }else if(this.target.kind==='base'){
+        const level=this.mode.run.getHeartLevel();
+        this.basePanel.querySelector('#base-info').textContent=`Base level ${level} · ${this.mode.crystals.carried.length} carried crystals · ${this.mode.forge.balance} scraps`;
+        this.basePanel.querySelector('#base-upgrade').textContent=`Upgrade base / ${this.mode.run.getHeartCost()??'MAX'} credit or gold`;
+        this.basePanel.querySelector('#base-forge').textContent=`Forge tower / ${this.mode.forge.cost} scraps`;
       }else this.renderLoot();
-      this.place(this.panel(),tower?tower.pos:this.target.object.position);
+      this.place(this.panel(),tower?tower.pos:this.target.kind==='base'?this.game.world.heart.group.position:this.target.object.position);
+    }
+    this.gazeButton?.classList.remove('gaze-hover');this.gazeButton=null;
+    if(this.target&&!blocked&&p.active&&!p.suspended&&document.pointerLockElement===this.rig.canvas){
+      const r=this.rig.canvas.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;
+      for(const button of this.panel().querySelectorAll('button:not(:disabled)')){const b=button.getBoundingClientRect();if(b.width&&b.height&&x>=b.left&&x<=b.right&&y>=b.top&&y<=b.bottom){this.gazeButton=button;button.classList.add('gaze-hover');break;}}
     }
     this.updateMarkers();
   }

@@ -1,9 +1,9 @@
 import {ecologyScatter} from './scatter.js';
-import * as THREE from 'three';
+import * as THREE from '../../lib/three.module.min.js';
 import {mulberry32} from '../noise.js';
-import {ACTIVE_FEATURES,featureFits,environmentalPulse} from '../run/environment-catalogue.js';
+import {ACTIVE_FEATURES,ACTIVE_FEATURE_SCALE,featureFits,environmentalPulse} from '../run/environment-catalogue.js';
 
-export function placeActiveFeatures(field,radius,ground,biome,water,seed){
+export function placeActiveFeatures(field,radius,ground,biome,water,seed,featureScale=ACTIVE_FEATURE_SCALE){
  const scatter=ecologyScatter(seed),rng=mulberry32(seed^0x18ea673b),sites=[],keys=Object.keys(ACTIVE_FEATURES),dir=new THREE.Vector3();
  // Shuffle the full globe before the budget is consumed; a polar-first module
  // array must not leave the other hemisphere empty on larger worlds.
@@ -18,8 +18,9 @@ export function placeActiveFeatures(field,radius,ground,biome,water,seed){
    const context={biome:biome(dir.set(...d),height),formation:m.type,water:water(...d)&&height<0,slope};
    const choices=keys.filter(k=>featureFits(k,context));if(!choices.length)continue;
    const key=choices[Math.floor(rng()*choices.length)],recipe=ACTIVE_FEATURES[key];
-   if(sites.some(s=>s.dir.dot(dir)>Math.cos((s.radius+recipe.radius+5)/radius)))continue;
-   sites.push({id:sites.length,key,m,u,v,dir:dir.clone(),height,radius:recipe.radius,phase:rng()*recipe.period,context});
+   const size=recipe.baseRadius*featureScale;
+   if(sites.some(s=>s.dir.dot(dir)>Math.cos((s.radius+size+5)/radius)))continue;
+   sites.push({id:sites.length,key,m,u,v,dir:dir.clone(),height,radius:size,phase:rng()*recipe.period,context});
   }
  }
  return sites;
@@ -27,8 +28,8 @@ export function placeActiveFeatures(field,radius,ground,biome,water,seed){
 
 // Shared by the actual planet and Debug World. Static details are merged into
 // one coloured mesh and moving particles into one instance batch per feature.
-export function buildActiveFeature(key){
- const f=ACTIVE_FEATURES[key],root=new THREE.Group(),parts=[],c=new THREE.Color(),matrix=new THREE.Matrix4();
+export function buildActiveFeature(key,featureScale=ACTIVE_FEATURE_SCALE){
+ const f={...ACTIVE_FEATURES[key],radius:ACTIVE_FEATURES[key].baseRadius},root=new THREE.Group(),parts=[],c=new THREE.Color(),matrix=new THREE.Matrix4();
  root.name='active-'+key;root.userData.feature=key;
  const add=(geo,color,x=0,y=0,z=0,rx=0)=>{geo.rotateX(rx);geo.translate(x,y,z);parts.push([geo.index?geo.toNonIndexed():geo,color]);};
  const ring=(r,color,y=.08)=>add(new THREE.TorusGeometry(r,.16,5,24),color,0,y,0,Math.PI/2);
@@ -60,11 +61,19 @@ export function buildActiveFeature(key){
   if(key==='geyser')for(const [x,z,r]of [[2.3,1.3,.55],[-1.8,1.1,.4],[-.5,-2.1,.65]])add(new THREE.CylinderGeometry(r,r,.04,12),0xa5c5bd,x,.03,z);
   if(key==='whirlpool')for(let j=0;j<3;j++)ring(1.3+j*1.4,0x93dddd,.1+j*.04);
  }
+ // Mineral shelves, bark seams and lichen have volume at commander distance.
+ // They are merged into the existing mesh, not one draw call per detail.
+ if(!['trunks','updraft','whirlpool'].includes(key))for(let i=0;i<18;i++){
+  const a=i*2.399,r=(key==='spores'?2.1:key==='crystal'?1.9:2.5)+Math.sin(i*4.7)*.45;
+  const g=new THREE.IcosahedronGeometry(.18+(i%4)*.06,1);g.scale(1.3,.45+(i%3)*.2,1);g.rotateY(a);
+  add(g,key==='cryovent'?0xb0d0d9:key==='seep'?0x403b46:key==='spores'?0x75794b:0x9f9576,Math.cos(a)*r,.1,Math.sin(a)*r);
+ }
+ if(key==='trunks')for(let i=0;i<11;i++){const a=i*2.4,g=new THREE.TorusGeometry(.97,.045,4,16);add(g,0x554536,0,1.35,-5+i,Math.PI/2);if(i%2)add(new THREE.SphereGeometry(.23,8,6),0x789759,Math.cos(a)*.7,2.15,-5+i);}
  const pos=[],colors=[];
  for(const [g,hex]of parts){c.setHex(hex);for(let i=0;i<g.attributes.position.count;i++){pos.push(g.attributes.position.getX(i),g.attributes.position.getY(i),g.attributes.position.getZ(i));colors.push(c.r,c.g,c.b);}g.dispose();}
- const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geo.computeVertexNormals();
+ const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));geo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geo.scale(featureScale,featureScale,featureScale);geo.computeVertexNormals();
  root.add(new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.85,flatShading:true})));
- const particles=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,0),new THREE.MeshBasicMaterial({color:f.color,transparent:true,opacity:key==='boulder'?.95:.48,depthWrite:false}),12);root.add(particles);
+ const particles=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,1),new THREE.MeshBasicMaterial({color:f.color,transparent:true,opacity:key==='boulder'?.95:.48,depthWrite:false}),12);particles.scale.setScalar(featureScale);root.add(particles);
  // This fixed local bound contains every animation phase, including a full
  // geyser/updraft. Keep offscreen features alive, but do not draw their mist
  // through the entire planet just because their instance matrices animate.

@@ -38,7 +38,8 @@ test('high-ground spheres reach the valley, grow monotonically and cap horizonta
     const range = elevatedRange(base, h);
     assert.ok(range > previous && range > h);
     const groundReach = Math.sqrt(range * range - h * h);
-    assert.ok(groundReach > base && groundReach <= base * 1.6 + 1e-9);
+    assert.ok(groundReach > base && groundReach <= base * 2 + 1e-9);
+    if(h>=5)assert.ok(groundReach>=base*1.2-1e-9);
     previous = range;
   }
   assert.equal(elevatedRange(base, NaN), base);
@@ -46,7 +47,7 @@ test('high-ground spheres reach the valley, grow monotonically and cap horizonta
 test('elevation composes with elements without changing minimum distance or secondary hops', () => {
   const template = { range:10, dmg:100, minRange:2.3, hop:3.6, leash:10 };
   const a = terrainTowerStats(template,'mortar','hot',30);
-  assert.ok(a.range>30 && a.dmg>100);assert.equal(a.leash,16);
+  assert.ok(a.range>30 && a.dmg>100);assert.equal(a.leash,20);
   assert.equal(a.minRange,2.3);assert.equal(a.hop,3.6);assert.equal(template.range,10);
   assert.deepEqual(terrainTowerStats(template,'mortar','hot',30),a);
 });

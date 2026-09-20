@@ -1,0 +1,181 @@
+{
+  "checks": [
+    {
+      "name": "Bare entry bypasses lobby and generates Earth",
+      "ok": true,
+      "detail": {
+        "loadMs": 33707
+      }
+    },
+    {
+      "name": "Four-panel story is centered",
+      "ok": true,
+      "detail": {
+        "x": 100,
+        "y": 96.421875,
+        "width": 1240,
+        "height": 767.140625
+      }
+    },
+    {
+      "name": "All four authored paintings load",
+      "ok": true
+    },
+    {
+      "name": "Story closes into first person and held first wave",
+      "ok": true
+    },
+    {
+      "name": "Paint covers world, units and held models",
+      "ok": true,
+      "detail": {
+        "meshes": 799,
+        "materials": 110,
+        "contours": 560,
+        "version": "Painted-Anime-Inkline 1.3.2"
+      }
+    },
+    {
+      "name": "Real tower selection removes tutorial blur",
+      "ok": true
+    },
+    {
+      "name": "Initial foothold offers a legal first-person tower placement",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "climate": "neutral"
+      }
+    },
+    {
+      "name": "Real placement advances to tower upgrade",
+      "ok": true
+    },
+    {
+      "name": "Contextual upgrade advances while waves remain frozen",
+      "ok": true
+    },
+    {
+      "name": "Fixture proximity collects a real seeded crystal",
+      "ok": true
+    },
+    {
+      "name": "Real deposit key advances the base objective",
+      "ok": true
+    },
+    {
+      "name": "Base interaction upgrades and releases the countdown",
+      "ok": true
+    },
+    {
+      "name": "Wave guidance replaces an undismissed growth tip",
+      "ok": true,
+      "detail": "Destroy the nests"
+    },
+    {
+      "name": "Boss warning replaces lower-priority guide text",
+      "ok": true,
+      "detail": "A boss approaches"
+    },
+    {
+      "name": "Boss defeat advances to the claim explanation",
+      "ok": true,
+      "detail": "Amazing! Claim this planet"
+    },
+    {
+      "name": "Tab releases to strategy",
+      "ok": true
+    },
+    {
+      "name": "Tab returns to commander",
+      "ok": true
+    },
+    {
+      "name": "Fixture: one scrap buys exactly five walls",
+      "ok": true,
+      "detail": {
+        "bought": true,
+        "spent": 1,
+        "stock": 5
+      }
+    },
+    {
+      "name": "Fixture: walls place with HP and route penalties",
+      "ok": true,
+      "detail": {
+        "placed": true,
+        "stock": 4,
+        "hp": 180,
+        "penalty": true
+      }
+    },
+    {
+      "name": "Fixture: flyers pass; ground enemies break walls and restore routes",
+      "ok": true,
+      "detail": {
+        "flies": false,
+        "hits": 6,
+        "gone": true,
+        "penaltyCleared": true
+      }
+    },
+    {
+      "name": "Fixture: explorable chests reward once",
+      "ok": true,
+      "detail": {
+        "count": 11,
+        "first": true,
+        "repeat": false,
+        "claimed": 1
+      }
+    },
+    {
+      "name": "Fixture: boss leak removes half maximum base HP",
+      "ok": true,
+      "detail": 50
+    },
+    {
+      "name": "Reload does not force lore on a returning assault",
+      "ok": true
+    },
+    {
+      "name": "Mobile story has no horizontal overflow",
+      "ok": true
+    },
+    {
+      "name": "Mobile starts in first person with touch controls",
+      "ok": true
+    },
+    {
+      "name": "Mobile guide leaves movement and combat controls clear",
+      "ok": true
+    },
+    {
+      "name": "Build menu highlights the real first card",
+      "ok": true
+    },
+    {
+      "name": "Touch selection advances the tutorial",
+      "ok": true
+    },
+    {
+      "name": "Landscape guide clears active touch controls",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "Landscape guide leaves the aiming reticle visible",
+      "ok": true
+    },
+    {
+      "name": "Touch skip releases beginner hold",
+      "ok": true
+    },
+    {
+      "name": "No runtime or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,82 @@
+{
+  "checks": [
+    {
+      "name": "Revised Earth home retains connected anchor routes",
+      "ok": true,
+      "detail": {
+        "ms": 23751.39999999851,
+        "centre": [
+          0.9078024509717959,
+          0.15408265393676962,
+          -0.3900682578285518
+        ],
+        "heart": [
+          0.9078024625778198,
+          0.15408265590667725,
+          -0.39006826281547546
+        ],
+        "portals": [
+          [
+            0.6801780462265015,
+            0.6080736517906189,
+            -0.4093950390815735
+          ],
+          [
+            0.8955681920051575,
+            -0.34300386905670166,
+            -0.28338295221328735
+          ],
+          [
+            0.9667618274688721,
+            0.23208756744861603,
+            0.10727029293775558
+          ],
+          [
+            0.6846683621406555,
+            0.059442877769470215,
+            -0.7264267206192017
+          ],
+          [
+            0.8377180099487305,
+            0.5415445566177368,
+            -0.0704130157828331
+          ]
+        ],
+        "healthy": true,
+        "attempts": 1,
+        "loadMs": 23760
+      }
+    },
+    {
+      "name": "Walls join on the globe and reject duplicates",
+      "ok": true,
+      "detail": {
+        "first": true,
+        "second": true,
+        "gap": 0.1477104893642495,
+        "duplicate": false,
+        "count": 2
+      }
+    },
+    {
+      "name": "Wheel rotates the selected wall without zooming",
+      "ok": true,
+      "detail": {
+        "before": {
+          "turn": 0,
+          "zoom": 1148.5607762323696
+        },
+        "after": {
+          "turn": 0.7853981633974483,
+          "zoom": 1148.5607762323696
+        }
+      }
+    },
+    {
+      "name": "No browser runtime or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,176 @@
+{
+  "fps": 30,
+  "bones": 40,
+  "rigged_meshes": 18,
+  "animations": [
+    {
+      "name": "Idle",
+      "duration": 2.4,
+      "loop": true,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Alert",
+      "duration": 1.2,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Walk",
+      "duration": 1.2,
+      "loop": true,
+      "speed": 1.75,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Run",
+      "duration": 0.7333333333333333,
+      "loop": true,
+      "speed": 4.0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Sprint",
+      "duration": 0.5666666666666667,
+      "loop": true,
+      "speed": 6.3,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "CrawlIdle",
+      "duration": 2.4,
+      "loop": true,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Crawl",
+      "duration": 1.3,
+      "loop": true,
+      "speed": 1.2,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "CrawlDown",
+      "duration": 0.9,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "StandUp",
+      "duration": 0.9,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "SwipeLeft",
+      "duration": 0.9333333333333333,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "SwipeRight",
+      "duration": 0.9333333333333333,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "DoubleSwipe",
+      "duration": 1.7,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Lunge",
+      "duration": 1.1,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Roar",
+      "duration": 1.6,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "HitReact",
+      "duration": 0.6,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Jump",
+      "duration": 1.2,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Land",
+      "duration": 0.5,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "DodgeLeft",
+      "duration": 0.7,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "DodgeRight",
+      "duration": 0.7,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Death",
+      "duration": 1.8,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    },
+    {
+      "name": "Recover",
+      "duration": 1.8,
+      "loop": false,
+      "speed": 0,
+      "max_ik_reach_clamp": 0,
+      "arm_reach_clamp": 0
+    }
+  ],
+  "in_place": true
+}

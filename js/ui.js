@@ -591,7 +591,7 @@ export class HUD {
       // body was possessed, which is the key every player presses to jump, so
       // the owner reported "you cannot jump". On the ground Space is the jump
       // (js/possess.js) and P pauses; on the board both pause.
-      if (e.code === 'Space') { e.preventDefault(); if (!this.possession?.active) this.togglePause(); }
+      if (e.code === 'Space'&&!this.possession?.active) { e.preventDefault(); this.togglePause(); }
       else if (e.code === 'KeyP') { e.preventDefault(); this.togglePause(); }
       else if (e.code === 'KeyF') { if (!this.possession?.active) this.cycleSpeed(); }
       else if (e.code === (CONFIG.map.mode === 'ninetynine' ? 'KeyN' : 'KeyM')) this.toggleSound();
@@ -600,6 +600,7 @@ export class HUD {
       // is not even visible, and spending 450 gold from inside a body with no
       // readout of what it bought would be a surprise, not a purchase.
       else if (e.code === 'KeyB') { if (!this.possession?.active) this.requestHeartUpgrade(); }
+      else if (e.code === 'Tab'&&!this.possession?.active&&this.game.state==='playing') { e.preventDefault();this.game.mode99?.focusCommander(); }
     });
 
     this.waves.onWaveStart = (n) => {
@@ -703,6 +704,7 @@ export class HUD {
   // correct and be completely unclickable.
   showDraft(offers, onPick) {
     const host = document.getElementById('draft-cards');
+    document.getElementById('draft-sub').textContent = 'Every other wave, starting with the first, choose a powerup. Your enemies evolve too. The next wave waits while you choose.';
     host.textContent = '';
     offers.forEach((power, i) => {
       const card = document.createElement('button');
@@ -1123,6 +1125,7 @@ export class HUD {
       sub=next?`wave ${w.conquestWave} in ${Math.max(0,Math.ceil(w.countdown))}s`:'Defeat the sovereign to unlock this homeworld';
       showCall=next&&!this.game.paused&&w.state!=='idle'&&!w.siteBlocked;
     }
+    if(this.game.onboardingHold){label='FIRST DEFENSE';sub='Upgrade the base to begin waves';showCall=false;}
     if (e['wave-label'].textContent !== label) e['wave-label'].textContent = label;
     if (e['wave-sub'].textContent !== sub) e['wave-sub'].textContent = sub;
     // Live nests: woken breaches outside the frontier, each trickling raids.

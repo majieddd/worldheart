@@ -92,7 +92,7 @@ export class WeaponPanel {
       <h3>Nearby drops <small>Automatic pickup within 2.8 units</small></h3>${this.api.nearby().map(x=>card(x,true)).join('') || '<p>Nearby weapons enter your backpack while playing. Full backpack? Drops stay on the ground.</p>'}
       <p class="weapon-footnote">Compatible parts are free to swap in this prototype. ${this.api.campaign?'Three infusions let a favorite weapon catch up to your current planet power. Extract after victory to bank items and changes; defeat or a mid-assault reload restores the previous checkpoint.':'This single-planet sandbox does not retain weapon loot between runs.'} ${touch?'Use Inspect loot for a nearby drop, or Swap during combat.':'R pickup and X switch apply while possessing a commander.'}</p>`;
     for (const d of this.dialog.querySelectorAll('details')) {
-      d.dataset.item = d.querySelector('select').dataset.id;
+      if(d.querySelector('select'))d.dataset.item = d.querySelector('select').dataset.id;
       if (expanded.has(d.dataset.item)) d.open = true;
     }
     this.dialog.scrollTop = scroll;

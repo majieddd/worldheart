@@ -1,0 +1,76 @@
+{
+  "version": "surface-regions-1.0",
+  "sha256": "ad8e52d82f996b4a2afedf02a9bfd04d34d20d63da6375afce3eb068bd9c4e53",
+  "profileSha256": "62a659907e111e0859933e397c13c5c192fee72875d7879f3041037fd31f1fab",
+  "checks": [
+    {
+      "name": "Rear mantle paint",
+      "status": "pass",
+      "metrics": {
+        "samples": 4396,
+        "darkContaminationRatio": 0.022747952684258416,
+        "maximum": 0.05,
+        "medianRGB": [
+          79.0,
+          98.0,
+          108.0
+        ]
+      }
+    },
+    {
+      "name": "Left hand skin",
+      "status": "pass",
+      "metrics": {
+        "samples": 1085,
+        "darkContaminationRatio": 0.0,
+        "maximum": 0.04,
+        "medianRGB": [
+          177.0,
+          173.0,
+          170.0
+        ]
+      }
+    },
+    {
+      "name": "Right hand skin",
+      "status": "pass",
+      "metrics": {
+        "samples": 1053,
+        "darkContaminationRatio": 0.0,
+        "maximum": 0.04,
+        "medianRGB": [
+          173.0,
+          169.0,
+          166.0
+        ]
+      }
+    },
+    {
+      "name": "Rear head skin",
+      "status": "pass",
+      "metrics": {
+        "samples": 2956,
+        "darkContaminationRatio": 0.0,
+        "maximum": 0.03,
+        "medianRGB": [
+          175.0,
+          171.0,
+          168.0
+        ]
+      }
+    },
+    {
+      "name": "Consistent surface winding",
+      "status": "pass",
+      "metrics": {}
+    },
+    {
+      "name": "Closed reconstructed surface",
+      "status": "pass",
+      "metrics": {}
+    }
+  ],
+  "status": "review_required",
+  "visualAcceptance": "pending",
+  "scope": "Declared material contamination checks, not automatic likeness or style approval"
+}

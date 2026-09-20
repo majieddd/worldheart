@@ -1,0 +1,123 @@
+{
+  "source": "animation-1789676226.blend",
+  "clips": {
+    "Idle": {
+      "seconds": 2.4,
+      "frames": 145,
+      "floorMinimum": 0.0009999223984777927,
+      "floorMaximum": 0.004999990109354258,
+      "loopSurfaceMaxMetres": 0.0,
+      "feet": {
+        "L": {
+          "floorMin": 0.0009999223984777927,
+          "liftMax": 0.004999990109354258,
+          "contactFraction": 1.0,
+          "stanceSpeedMedian": null
+        },
+        "R": {
+          "floorMin": 0.0029973802156746387,
+          "liftMax": 0.006997447926551104,
+          "contactFraction": 1.0,
+          "stanceSpeedMedian": null
+        }
+      },
+      "contactSpeedMedian": 0
+    },
+    "Run": {
+      "seconds": 0.7333333333333333,
+      "frames": 45,
+      "floorMinimum": 0.0029999613761901855,
+      "floorMaximum": 0.09462545067071915,
+      "loopSurfaceMaxMetres": 0.0015310813768825385,
+      "feet": {
+        "L": {
+          "floorMin": 0.0029999613761901855,
+          "liftMax": 0.3897051513195038,
+          "contactFraction": 0.08888888888888889,
+          "stanceSpeedMedian": 2.769153201006313
+        },
+        "R": {
+          "floorMin": 0.003000020980834961,
+          "liftMax": 0.35811281204223633,
+          "contactFraction": 0.17777777777777778,
+          "stanceSpeedMedian": 3.179708011736607
+        }
+      },
+      "contactSpeedMedian": 2.997952128402039
+    },
+    "Walk": {
+      "seconds": 1.0833333333333333,
+      "frames": 66,
+      "floorMinimum": 0.0029999157413840294,
+      "floorMaximum": 0.0030000817496329546,
+      "loopSurfaceMaxMetres": 0.0005502917160396047,
+      "feet": {
+        "L": {
+          "floorMin": 0.0029999264515936375,
+          "liftMax": 0.16045211255550385,
+          "contactFraction": 0.5151515151515151,
+          "stanceSpeedMedian": 1.3831499928140385
+        },
+        "R": {
+          "floorMin": 0.0029999169055372477,
+          "liftMax": 0.1796552538871765,
+          "contactFraction": 0.4696969696969697,
+          "stanceSpeedMedian": 1.2891089638453734
+        }
+      },
+      "contactSpeedMedian": 1.3427657877060182
+    }
+  },
+  "ownerApproved": false,
+  "visualReviewStillRequired": true,
+  "seconds": 0.8717095000320114,
+  "passed": true,
+  "sha256": "f32d4816a110c79eedae1d066b824dfdd5cb4116baffd98c87659ba19163a9a4",
+  "checks": [
+    {
+      "name": "Idle / Surface above floor",
+      "status": "pass",
+      "detail": "0.0009999223984777927 m"
+    },
+    {
+      "name": "Idle / Loop surface seam",
+      "status": "pass",
+      "detail": "0.0 m"
+    },
+    {
+      "name": "Idle / Both feet make contact",
+      "status": "pass",
+      "detail": "Measured deformed sole vertices"
+    },
+    {
+      "name": "Run / Surface above floor",
+      "status": "pass",
+      "detail": "0.0029999613761901855 m"
+    },
+    {
+      "name": "Run / Loop surface seam",
+      "status": "pass",
+      "detail": "0.0015310813768825385 m"
+    },
+    {
+      "name": "Run / Both feet make contact",
+      "status": "pass",
+      "detail": "Measured deformed sole vertices"
+    },
+    {
+      "name": "Walk / Surface above floor",
+      "status": "pass",
+      "detail": "0.0029999157413840294 m"
+    },
+    {
+      "name": "Walk / Loop surface seam",
+      "status": "pass",
+      "detail": "0.0005502917160396047 m"
+    },
+    {
+      "name": "Walk / Both feet make contact",
+      "status": "pass",
+      "detail": "Measured deformed sole vertices"
+    }
+  ]
+}

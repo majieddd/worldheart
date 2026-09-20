@@ -1,0 +1,56 @@
+{
+  "checks": [
+    {
+      "name": "Courtyard opens in commander follow view with seven spatial stations",
+      "ok": true
+    },
+    {
+      "name": "Commander moves through the courtyard",
+      "ok": true
+    },
+    {
+      "name": "Roller explains real pack, currency and home rarity cap",
+      "ok": true
+    },
+    {
+      "name": "Real roller click spends 3 scrap and shows a rendered weapon",
+      "ok": true
+    },
+    {
+      "name": "Real merge persists a stronger weapon without spending extra scrap",
+      "ok": true
+    },
+    {
+      "name": "Roller result survives reload",
+      "ok": true
+    },
+    {
+      "name": "Start pad explicitly selects a fresh route",
+      "ok": true
+    },
+    {
+      "name": "Continue pad protects the saved route",
+      "ok": true
+    },
+    {
+      "name": "Join pad launches the selected commander into the campaign",
+      "ok": true,
+      "detail": {
+        "map": "ninetynine",
+        "campaign": true,
+        "state": "playing",
+        "commander": "commander"
+      }
+    },
+    {
+      "name": "Debug World renders production scenery and Solar System miniatures",
+      "ok": true
+    },
+    {
+      "name": "No browser runtime or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

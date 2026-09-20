@@ -1,0 +1,22 @@
+{
+  "version": "0.1.0",
+  "name": "Albino Reptilian",
+  "faction": "Xeno",
+  "model": "reptilian-motion.glb",
+  "hero": "hero.png",
+  "style": "Painted-Anime-Inkline",
+  "rendererVersion": "1.3.2",
+  "status": "Local production candidate \u00b7 owner review pending. Idle, Walk and Run; strike remains a pose guide.",
+  "groundSpeeds": {
+    "Idle": 0,
+    "Run": 2.997952128402039,
+    "Walk": 1.3427657877060182
+  },
+  "ownerApproved": false,
+  "modelSha256": "f32d4816a110c79eedae1d066b824dfdd5cb4116baffd98c87659ba19163a9a4",
+  "limitations": [
+    "Single-image reconstruction simplifies fine anatomy and costume detail.",
+    "Back and unseen surfaces are reconstructed proposals.",
+    "New anatomy needs its own fit; saved recipe is identity-bound."
+  ]
+}

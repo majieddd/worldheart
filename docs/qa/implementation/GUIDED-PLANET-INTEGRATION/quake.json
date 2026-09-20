@@ -1,0 +1,93 @@
+{
+  "liveForecast": {
+    "simAdvanced": true,
+    "notBusy": true,
+    "warningSeconds": 7.966666666666667
+  },
+  "oracle": {
+    "height": {
+      "count": 0,
+      "max": 0
+    },
+    "baseHeight": {
+      "count": 0,
+      "max": 0
+    },
+    "walk": {
+      "count": 0,
+      "max": 0
+    },
+    "floorWalk": {
+      "count": 0,
+      "max": 0
+    },
+    "airWalk": {
+      "count": 0,
+      "max": 0
+    },
+    "cost": {
+      "count": 0,
+      "max": 0
+    },
+    "airCost": {
+      "count": 0,
+      "max": 0
+    },
+    "dist": {
+      "count": 0,
+      "max": 0
+    },
+    "next": {
+      "count": 0,
+      "max": 0
+    }
+  },
+  "events": [
+    {
+      "event": {
+        "kind": "quake",
+        "forecastReused": true,
+        "terrainReused": true,
+        "strength": 0.5111378868072642,
+        "changedNodes": 23990,
+        "vertices": 17256,
+        "disruptedNests": [
+          369766
+        ],
+        "revisionBefore": 2,
+        "revisionAfter": 3,
+        "footprintsPreserved": true
+      },
+      "commitMs": 951.6000000238419,
+      "maxSlice": 13.100000023841858,
+      "nestDestroyed": true,
+      "editedFootprintRetained": true,
+      "editedFootprintExcluded": true,
+      "resumed": true
+    },
+    {
+      "event": {
+        "kind": "quake",
+        "forecastReused": false,
+        "terrainReused": true,
+        "strength": 0.2555689434036321,
+        "changedNodes": 18129,
+        "vertices": 17220,
+        "disruptedNests": [
+          207798
+        ],
+        "revisionBefore": 4,
+        "revisionAfter": 5,
+        "footprintsPreserved": true
+      },
+      "commitMs": 3996.600000023842,
+      "maxSlice": 6.199999988079071,
+      "nestDestroyed": true,
+      "editedFootprintRetained": true,
+      "editedFootprintExcluded": true,
+      "resumed": true
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

@@ -309,7 +309,7 @@ export class Possession {
 
   _bind() {
     addEventListener('keydown', (e) => {
-      if (!this.active) return;
+      if (!this.active || e.defaultPrevented) return;
       // Never swallow keys aimed at a text field.
       const t = e.target;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
@@ -334,8 +334,8 @@ export class Possession {
       // which is the key every player presses first to jump, so "you cannot
       // jump" was the owner's read of a jump that was bound to F alone. The
       // pause is on P everywhere and on Space only on the board (js/ui.js
-      // checks possession before it toggles). F stays as an alias.
-      if ((e.code === 'Space' || e.code === 'KeyF') && !e.repeat) {
+      // checks possession before it toggles). F is reserved for interaction.
+      if (e.code === 'Space' && !e.repeat) {
         e.preventDefault();
         if (this.unit.mountKey !== 'skyray' && !this.jump()) this.jumpBuffer = JUMP_BUFFER;
       }
@@ -355,6 +355,7 @@ export class Possession {
     this.canvas.addEventListener('mousedown', (e) => {
       if (e.sourceCapabilities?.firesTouchEvents) return;
       if (!this.active || this.suspended) return;
+      if(this.game.mode99?.walls?.placing)return;
       if (e.button === 2 && this.boom < .35 && !this.game.buildType) { e.preventDefault(); this.aiming = true; }
       if (e.button === 0) {
         e.preventDefault();

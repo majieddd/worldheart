@@ -18,9 +18,9 @@ alongside the stable game without merging gameplay PRs into main.
 | Route | Source | Purpose |
 |---|---|---|
 | [Main game](https://majieddd.github.io/worldheart/) | main | Released game and lobby; preview publishes preserve its tracked file bytes |
-| [V2 preview](https://majieddd.github.io/worldheart/v2/) | preview/v2 | Latest integrated, verified work; opens the preparation lobby |
+| [V2 preview](https://majieddd.github.io/worldheart/v2/) | preview/v2 | Direct Earth-first campaign entry; preparation lobby remains at lobby.html |
 | [Campaign](https://majieddd.github.io/worldheart/v2/?map=ninetynine&campaign=1) | preview/v2 | Direct entry to the saved 99-planet campaign |
-| [Debug World](https://majieddd.github.io/worldheart/v2/debug.html) | preview/v2 | Production models, mounts, formations, combined terrain, biomes, active features, disasters and theme globes; no save access |
+| [Debug World](https://majieddd.github.io/worldheart/v2/debug.html) | preview/v2 | Painted production models, mounts, formations, terrain, biomes, explorable structures, active features, disasters and theme globes; no save access |
 | [Illustration lab](https://majieddd.github.io/worldheart/v2/style-lab.html) | preview/v2 | Separate three-style 3D graphics experiment; no campaign save access |
 | [Painted frontier](https://majieddd.github.io/worldheart/v2/painted-lab.html) | preview/v2 | Fourth graphics study: soft painted cel, fine ink, textured Meshy reference models |
 | [Hard Cel candidates](https://majieddd.github.io/worldheart/v2/hard-cel-lab.html) | preview/v2 | Preserved owner-selected 1.0 and three separately versioned experiments |
@@ -28,7 +28,9 @@ alongside the stable game without merging gameplay PRs into main.
 | [Atmospheric Ink proving ground](https://majieddd.github.io/worldheart/v2/atmospheric-arena.html) | preview/v2 | Locked 1.3.1, FPS sword/plasma, moving units, three environments, infinite-life rounds, flight and graphics tuning |
 | [Atmospheric Ink asset stage](https://majieddd.github.io/worldheart/v2/asset-stage.html) | preview/v2 | Seventeen specimens, exact presets, clip scrubbing, FPS weapon and effects inspection |
 | [Worldheart artboard](https://majieddd.github.io/worldheart/v2/artboard.html) | preview/v2 | Six concept plates, Roblox units/UI, three weapon manufacturers and embedded live 3D |
+| [Commander method comparison](https://majieddd.github.io/worldheart/v2/design-demos/99-planets/commander-research.html) | preview/v2 | Retained fitted Reptilian, captured Mixamo walk/run, and labeled InstantMesh experiment; owner review pending |
 | [Live build identity](https://majieddd.github.io/worldheart/v2/build.json) | Deployment artifact | Exact preview/main commits and preview asset hashes |
+| [Terrain workshop](https://majieddd.github.io/worldheart/v2/procgen-lab.html) | preview/v2 | Seeded current/guided terrain A/B; shared-corner profiles, routes and fitted overlooks; local experiment only |
 | /worldheart/dist/worldheart.html | main | Stable single-file download |
 
 ## Publish each working checkpoint
@@ -60,7 +62,7 @@ GitHub Pages uses the GitHub Actions publishing source. The workflow in
 .github/workflows/preview-pages.yml checks out main and preview/v2 separately,
 validates the preview and creates one combined artifact with tools/pages-site.mjs.
 All public tracked main files except its old v2 mirror retain their bytes.
-Only index.html, lobby.html, debug.html, audio-lab.html, style-lab.html, painted-lab.html, hard-cel-lab.html, style-playground.html, atmospheric-arena.html, asset-stage.html, artboard.html, js, css, lib, audio and art-candidates from preview source are installed under v2.
+Only index.html, lobby.html, debug.html, audio-lab.html, style-lab.html, painted-lab.html, hard-cel-lab.html, style-playground.html, atmospheric-arena.html, asset-stage.html, artboard.html, procgen-lab.html, js, css, lib, audio and art-candidates from preview source are installed under v2.
 No feature code is copied to the stable root. The artifact includes .nojekyll
 and a machine-readable build identity. No deploy branch or force push is needed.
 

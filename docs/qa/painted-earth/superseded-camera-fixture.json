@@ -1,0 +1,170 @@
+{
+  "checks": [
+    {
+      "name": "pocket renders and passes camera regression",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "giant renders and passes camera regression",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "titan renders and passes camera regression",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "reach renders and passes camera regression",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "Wave-one draft and wave-two guaranteed weapon survive actual director queues",
+      "ok": true,
+      "detail": [
+        {
+          "wave": 0,
+          "cleared": 0,
+          "draft": false,
+          "weapon": false,
+          "phase": "building"
+        },
+        {
+          "wave": 1,
+          "cleared": 0,
+          "draft": false,
+          "weapon": false,
+          "phase": "building"
+        },
+        {
+          "wave": 1,
+          "cleared": 1,
+          "draft": true,
+          "weapon": false,
+          "phase": "drafting"
+        },
+        {
+          "wave": 2,
+          "cleared": 1,
+          "draft": false,
+          "weapon": false,
+          "phase": "building"
+        },
+        {
+          "wave": 3,
+          "cleared": 2,
+          "draft": false,
+          "weapon": true,
+          "phase": "building"
+        },
+        {
+          "wave": 3,
+          "cleared": 3,
+          "draft": true,
+          "weapon": true,
+          "phase": "drafting"
+        },
+        {
+          "wave": 4,
+          "cleared": 3,
+          "draft": false,
+          "weapon": true,
+          "phase": "building"
+        },
+        {
+          "wave": 5,
+          "cleared": 4,
+          "draft": false,
+          "weapon": true,
+          "phase": "building"
+        },
+        {
+          "wave": 5,
+          "cleared": 5,
+          "draft": true,
+          "weapon": true,
+          "phase": "drafting"
+        },
+        {
+          "wave": 6,
+          "cleared": 5,
+          "draft": false,
+          "weapon": true,
+          "phase": "building"
+        },
+        {
+          "wave": 7,
+          "cleared": 6,
+          "draft": false,
+          "weapon": true,
+          "phase": "building"
+        },
+        {
+          "wave": 7,
+          "cleared": 7,
+          "draft": true,
+          "weapon": true,
+          "phase": "drafting"
+        },
+        {
+          "wave": 8,
+          "cleared": 7,
+          "draft": false,
+          "weapon": true,
+          "phase": "building"
+        },
+        {
+          "wave": 9,
+          "cleared": 8,
+          "draft": false,
+          "weapon": true,
+          "phase": "building"
+        },
+        {
+          "wave": 9,
+          "cleared": 9,
+          "draft": true,
+          "weapon": true,
+          "phase": "drafting"
+        },
+        {
+          "wave": 10,
+          "cleared": 9,
+          "draft": false,
+          "weapon": true,
+          "phase": "building"
+        },
+        {
+          "wave": 10,
+          "cleared": 10,
+          "draft": false,
+          "weapon": true,
+          "phase": "victory"
+        }
+      ]
+    },
+    {
+      "name": "Accelerated fixture completes the ten-wave defense",
+      "ok": true
+    },
+    {
+      "name": "Earth strategy camera regression",
+      "ok": false,
+      "detail": [
+        "grabbed point stays under cursor under rotation",
+        "cursor tracking holds across zoom",
+        "keyboard pan moves and releases without drift",
+        "view rotation applies and click-resets",
+        "flick inertia settles"
+      ]
+    },
+    {
+      "name": "Integration completed",
+      "ok": false,
+      "detail": "Error: Earth strategy camera regression"
+    }
+  ],
+  "errors": []
+}

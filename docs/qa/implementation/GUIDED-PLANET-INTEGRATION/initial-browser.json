@@ -1,0 +1,692 @@
+{
+  "base": "http://127.0.0.1:8141",
+  "checks": [
+    {
+      "name": "varied/temperate: full production generator and all portal routes",
+      "ok": true,
+      "detail": {
+        "seed": 36102,
+        "version": 1,
+        "theme": "temperate",
+        "stages": [
+          {
+            "label": "seeding the noise fields",
+            "start": 838.1999999880791,
+            "ms": 277.30000001192093
+          },
+          {
+            "label": "charting the ley lines",
+            "start": 1115.5,
+            "ms": 18328.80000001192
+          },
+          {
+            "label": "carving the continents",
+            "start": 19444.30000001192,
+            "ms": 1652.699999988079
+          },
+          {
+            "label": "pouring the oceans",
+            "start": 21097,
+            "ms": 233.19999998807907
+          },
+          {
+            "label": "hanging the stars",
+            "start": 21330.19999998808,
+            "ms": 10.800000011920929
+          },
+          {
+            "label": "planting the forests",
+            "start": 21341,
+            "ms": 636.1000000238419
+          },
+          {
+            "label": "raising the light",
+            "start": 21977.100000023842,
+            "ms": 127.89999997615814
+          },
+          {
+            "label": "waking the worldheart",
+            "start": 22105,
+            "ms": 429.30000001192093
+          }
+        ],
+        "attempts": 4,
+        "nodes": 426335,
+        "kit": {
+          "quads": 10848,
+          "vertices": 10850,
+          "landmarks": 24
+        },
+        "floating": false,
+        "surfaces": 16,
+        "routes": [
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          }
+        ],
+        "maxTask": 675,
+        "overlooks": 24,
+        "bootMs": 22645
+      }
+    },
+    {
+      "name": "Fitted overlooks appear in the real world inspector",
+      "ok": true,
+      "detail": {
+        "count": 24
+      }
+    },
+    {
+      "name": "Fitted shelves accept their climate-compatible tower footprint",
+      "ok": true,
+      "detail": [
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.603512273372319
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.429107213807324
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.635138559403131
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.434467843703663
+        },
+        {
+          "type": "cryo",
+          "ok": true,
+          "height": 8.600284393265827
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.761220215640439
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.41098938686682
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.58054715255535
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.68211743838302
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.65457808048556
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.609954978967654
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.520754341314726
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.641767262898716
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.520507680423037
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.430349598130531
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.50065616685111
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.49310606128925
+        },
+        {
+          "type": "cryo",
+          "ok": true,
+          "height": 8.659048770560823
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.587317634301453
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.570920940551968
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.428038381124747
+        },
+        {
+          "type": "bolt",
+          "ok": true,
+          "height": 8.685390185897274
+        },
+        {
+          "type": "cryo",
+          "ok": true,
+          "height": 8.558056111763857
+        },
+        {
+          "type": "cryo",
+          "ok": true,
+          "height": 8.664362729369563
+        }
+      ]
+    },
+    {
+      "name": "canyon/arid: full production generator and all portal routes",
+      "ok": true,
+      "detail": {
+        "seed": 24975,
+        "version": 1,
+        "theme": "arid",
+        "stages": [
+          {
+            "label": "seeding the noise fields",
+            "start": 192.89999997615814,
+            "ms": 369
+          },
+          {
+            "label": "charting the ley lines",
+            "start": 561.8999999761581,
+            "ms": 80813.19999998808
+          },
+          {
+            "label": "carving the continents",
+            "start": 81375.09999996424,
+            "ms": 1810
+          },
+          {
+            "label": "pouring the oceans",
+            "start": 83185.09999996424,
+            "ms": 266.4000000357628
+          },
+          {
+            "label": "hanging the stars",
+            "start": 83451.5,
+            "ms": 4.799999952316284
+          },
+          {
+            "label": "planting the forests",
+            "start": 83456.29999995232,
+            "ms": 412.5
+          },
+          {
+            "label": "raising the light",
+            "start": 83868.79999995232,
+            "ms": 23.200000047683716
+          },
+          {
+            "label": "waking the worldheart",
+            "start": 83892,
+            "ms": 221.19999998807907
+          }
+        ],
+        "attempts": 3,
+        "nodes": 416248,
+        "kit": {
+          "quads": 10850,
+          "vertices": 10852,
+          "landmarks": 24
+        },
+        "floating": false,
+        "surfaces": 0,
+        "routes": [
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          }
+        ],
+        "maxTask": 1008,
+        "overlooks": 24,
+        "bootMs": 84698
+      }
+    },
+    {
+      "name": "alpine/frozen: full production generator and all portal routes",
+      "ok": true,
+      "detail": {
+        "seed": 44021,
+        "version": 1,
+        "theme": "frozen",
+        "stages": [
+          {
+            "label": "seeding the noise fields",
+            "start": 161.69999998807907,
+            "ms": 340.19999998807907
+          },
+          {
+            "label": "charting the ley lines",
+            "start": 501.89999997615814,
+            "ms": 21346.19999998808
+          },
+          {
+            "label": "carving the continents",
+            "start": 21848.099999964237,
+            "ms": 1434.9000000357628
+          },
+          {
+            "label": "pouring the oceans",
+            "start": 23283,
+            "ms": 204.0999999642372
+          },
+          {
+            "label": "hanging the stars",
+            "start": 23487.099999964237,
+            "ms": 4
+          },
+          {
+            "label": "planting the forests",
+            "start": 23491.099999964237,
+            "ms": 315.60000002384186
+          },
+          {
+            "label": "raising the light",
+            "start": 23806.69999998808,
+            "ms": 26.599999964237213
+          },
+          {
+            "label": "waking the worldheart",
+            "start": 23833.299999952316,
+            "ms": 204.20000004768372
+          }
+        ],
+        "attempts": 1,
+        "nodes": 415927,
+        "kit": {
+          "quads": 10862,
+          "vertices": 10864,
+          "landmarks": 24
+        },
+        "floating": false,
+        "surfaces": 0,
+        "routes": [
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          }
+        ],
+        "maxTask": 1278,
+        "overlooks": 24,
+        "bootMs": 24665
+      }
+    },
+    {
+      "name": "ocean/oceanic: full production generator and all portal routes",
+      "ok": true,
+      "detail": {
+        "seed": 20264,
+        "version": 1,
+        "theme": "oceanic",
+        "stages": [
+          {
+            "label": "seeding the noise fields",
+            "start": 151.30000001192093,
+            "ms": 354.5
+          },
+          {
+            "label": "charting the ley lines",
+            "start": 505.80000001192093,
+            "ms": 38209.10000002384
+          },
+          {
+            "label": "carving the continents",
+            "start": 38714.90000003576,
+            "ms": 2066.899999976158
+          },
+          {
+            "label": "pouring the oceans",
+            "start": 40781.80000001192,
+            "ms": 462.30000001192093
+          },
+          {
+            "label": "hanging the stars",
+            "start": 41244.10000002384,
+            "ms": 5.300000011920929
+          },
+          {
+            "label": "planting the forests",
+            "start": 41249.40000003576,
+            "ms": 501.39999997615814
+          },
+          {
+            "label": "raising the light",
+            "start": 41750.80000001192,
+            "ms": 26.600000023841858
+          },
+          {
+            "label": "waking the worldheart",
+            "start": 41777.40000003576,
+            "ms": 294.39999997615814
+          }
+        ],
+        "attempts": 2,
+        "nodes": 415902,
+        "kit": {
+          "quads": 10850,
+          "vertices": 10852,
+          "landmarks": 3
+        },
+        "floating": false,
+        "surfaces": 1,
+        "routes": [
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          }
+        ],
+        "maxTask": 1104,
+        "overlooks": 3,
+        "bootMs": 42757
+      }
+    },
+    {
+      "name": "varied/io: full production generator and all portal routes",
+      "ok": true,
+      "detail": {
+        "seed": 2919286854,
+        "version": 1,
+        "theme": "io",
+        "stages": [
+          {
+            "label": "seeding the noise fields",
+            "start": 197.4000000357628,
+            "ms": 392.69999998807907
+          },
+          {
+            "label": "charting the ley lines",
+            "start": 590.1000000238419,
+            "ms": 30601
+          },
+          {
+            "label": "carving the continents",
+            "start": 31191.100000023842,
+            "ms": 1878.699999988079
+          },
+          {
+            "label": "pouring the oceans",
+            "start": 33069.80000001192,
+            "ms": 316.10000002384186
+          },
+          {
+            "label": "hanging the stars",
+            "start": 33385.90000003576,
+            "ms": 4.699999988079071
+          },
+          {
+            "label": "planting the forests",
+            "start": 33390.60000002384,
+            "ms": 643.5
+          },
+          {
+            "label": "raising the light",
+            "start": 34034.10000002384,
+            "ms": 26.099999964237213
+          },
+          {
+            "label": "waking the worldheart",
+            "start": 34060.19999998808,
+            "ms": 216
+          }
+        ],
+        "attempts": 1,
+        "nodes": 415027,
+        "kit": {
+          "quads": 10842,
+          "vertices": 10844,
+          "landmarks": 24
+        },
+        "floating": false,
+        "surfaces": 0,
+        "routes": [
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          }
+        ],
+        "maxTask": 1427,
+        "overlooks": 24,
+        "bootMs": 34861
+      }
+    },
+    {
+      "name": "sky/skyarchipelago: full production generator and all portal routes",
+      "ok": true,
+      "detail": {
+        "seed": 12345,
+        "version": 1,
+        "theme": "skyarchipelago",
+        "stages": [
+          {
+            "label": "seeding the noise fields",
+            "start": 186.30000001192093,
+            "ms": 51.69999998807907
+          },
+          {
+            "label": "charting the ley lines",
+            "start": 238,
+            "ms": 22953.400000035763
+          },
+          {
+            "label": "carving the continents",
+            "start": 23191.400000035763,
+            "ms": 572.8000000119209
+          },
+          {
+            "label": "pouring the oceans",
+            "start": 23764.200000047684,
+            "ms": 39.299999952316284
+          },
+          {
+            "label": "hanging the stars",
+            "start": 23803.5,
+            "ms": 5.100000023841858
+          },
+          {
+            "label": "planting the forests",
+            "start": 23808.600000023842,
+            "ms": 2805.899999976158
+          },
+          {
+            "label": "raising the light",
+            "start": 26614.5,
+            "ms": 27.400000035762787
+          },
+          {
+            "label": "waking the worldheart",
+            "start": 26641.900000035763,
+            "ms": 338.30000001192093
+          }
+        ],
+        "attempts": 1,
+        "nodes": 415081,
+        "floating": true,
+        "surfaces": 156,
+        "routes": [
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          },
+          {
+            "ground": true,
+            "air": true
+          }
+        ],
+        "maxTask": 2662,
+        "overlooks": 0,
+        "bootMs": 28035
+      }
+    },
+    {
+      "name": "New campaign assault saves the guided terrain version",
+      "ok": true
+    },
+    {
+      "name": "Capture snapshot carries the terrain version",
+      "ok": true
+    },
+    {
+      "name": "New Earth Homeworld opens on guided terrain in peaceful third person",
+      "ok": true
+    },
+    {
+      "name": "Earth starter anchors still have complete ground routes",
+      "ok": true,
+      "detail": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "name": "Real held movement moves the commander on the new surface",
+      "ok": true,
+      "detail": {
+        "metres": 7.478853838017443
+      }
+    },
+    {
+      "name": "Home defense starts nests on the integrated world",
+      "ok": true
+    },
+    {
+      "name": "A pre-kit saved home reloads the legacy field",
+      "ok": true
+    },
+    {
+      "name": "Debug terrain and themed globes use production version one",
+      "ok": true
+    },
+    {
+      "name": "No game, debug or shader errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "httpFailures": []
+}

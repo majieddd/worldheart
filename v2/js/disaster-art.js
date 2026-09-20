@@ -1,13 +1,20 @@
 import * as THREE from 'three';
 import {DISASTERS,environmentalPulse,disasterTargets,faultProfile,FAULT_BRANCHES} from './run/environment-catalogue.js';
 import {buildArcStorm,buildSurge} from './storm-art.js';
+import {buildMeteorShower,buildWeatherFront} from './disaster-weather-art.js';
 export function buildTornadoArt(){
- const root=new THREE.Group(),rings=[],material=new THREE.MeshBasicMaterial({color:0xd9e9d9,transparent:true,opacity:.3,depthWrite:false});
- for(let i=0;i<12;i++){const mesh=new THREE.Mesh(new THREE.TorusGeometry(1.3+i*.39,.16+i*.013,4,22),material);mesh.rotation.x=Math.PI/2;mesh.position.y=i;root.add(mesh);rings.push(mesh);}
- const cone=new THREE.Mesh(new THREE.CylinderGeometry(5.5,1.3,12,14,8,true),new THREE.MeshBasicMaterial({color:0xa2bcaf,transparent:true,opacity:.12,side:THREE.DoubleSide,depthWrite:false}));cone.position.y=6;root.add(cone);
- root.userData.rings=rings;root.userData.update=time=>{for(let i=0;i<rings.length;i++){rings[i].position.x=Math.sin(time*5+i*.6)*.5;rings[i].position.z=Math.cos(time*5+i*.6)*.5;}};return root;
+ const root=new THREE.Group(),rings=[],material=new THREE.MeshStandardMaterial({color:0xb4c4bb,roughness:1,flatShading:true,transparent:true,opacity:.68,depthWrite:false,side:THREE.DoubleSide});
+ const profile=Array.from({length:20},(_,i)=>new THREE.Vector2(.8+Math.pow(i/19,1.4)*5.6,i*.76));
+ const cone=new THREE.Mesh(new THREE.LatheGeometry(profile,28),material);root.add(cone);
+ for(let k=0;k<6;k++){const points=[];for(let i=0;i<100;i++){const t=i/99,a=t*Math.PI*6+k,rad=1+Math.pow(t,1.4)*5.8;points.push(new THREE.Vector3(Math.cos(a)*rad,t*14,Math.sin(a)*rad));}
+  const mesh=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),100,.075+(k%2)*.045,4,false),new THREE.MeshBasicMaterial({color:k%2?0xe0e7cf:0x647e78,transparent:true,opacity:.6,depthWrite:false}));root.add(mesh);rings.push(mesh);}
+ const debris=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.2,1),new THREE.MeshStandardMaterial({color:0x887e5e,roughness:1}),26);root.add(debris);const matrix=new THREE.Matrix4();
+ root.userData.rings=rings;root.userData.update=time=>{cone.rotation.y=time*.7;for(let i=0;i<rings.length;i++){rings[i].rotation.y=time*(i%2?1.7:1.3);rings[i].position.x=Math.sin(time*2+i)*.15;}
+  for(let i=0;i<26;i++){const t=(time*.22+i/26)%1,a=time*4+i*2.399,r=1.2+t*5;matrix.makeRotationY(a);matrix.setPosition(Math.cos(a)*r,t*13,Math.sin(a)*r);debris.setMatrixAt(i,matrix);}debris.instanceMatrix.needsUpdate=true;};return root;
 }
 export function buildDisasterArt(key,ground=()=>0){
+ if(key==='meteor'||key==='eruption')return buildMeteorShower(key,ground);
+ if(['hail','blizzard','sandstorm'].includes(key))return buildWeatherFront(key,ground);
  if(key==='tornado')return buildTornadoArt();
  if(key==='thunder'||key==='solar')return buildArcStorm(key,ground);
  if(key==='tsunami')return buildSurge(ground);

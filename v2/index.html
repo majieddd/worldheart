@@ -11,7 +11,10 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/mobile.css">
 <link rel="stylesheet" href="css/weapon-cards.css">
-</head>
+<link rel="stylesheet" href="css/first-expedition.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/painted-hud.css"></head>
 <body>
 <canvas id="view"></canvas>
 
@@ -30,9 +33,7 @@
 { "imports": { "three": "./lib/three.module.min.js" } }
 </script>
 <script type="module">
-const entry=new URLSearchParams(location.search);
-if(location.protocol!=='file:'&&!['map','seed','campaign','worldgen'].some(k=>entry.has(k)))location.replace(new URL('lobby.html',location.href));
-else import('./js/main.js');
+import('./js/main.js');
 </script>
 </body>
 </html>

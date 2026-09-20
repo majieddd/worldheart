@@ -1,0 +1,38 @@
+{
+  "checks": [
+    {
+      "name": "Courtyard opens in commander follow view with seven spatial stations",
+      "ok": true
+    },
+    {
+      "name": "Commander moves through the courtyard",
+      "ok": true
+    },
+    {
+      "name": "Roller explains real pack, currency and home rarity cap",
+      "ok": true
+    },
+    {
+      "name": "Real roller click spends 3 scrap and shows a rendered weapon",
+      "ok": true
+    },
+    {
+      "name": "Real merge persists a stronger weapon without spending extra scrap",
+      "ok": true
+    },
+    {
+      "name": "Roller result survives reload",
+      "ok": true
+    },
+    {
+      "name": "Debug World renders production scenery and Solar System miniatures",
+      "ok": true
+    },
+    {
+      "name": "Integration completed",
+      "ok": false,
+      "detail": "Error: page.evaluate: TypeError: WH.nav.dirs[WH.nav.heartNode]?.toArray is not a function\n    at eval (eval at evaluate (:311:30), <anonymous>:1:101)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,99 @@
+{
+  "checks": [
+    {
+      "name": "Revised Earth home retains connected anchor routes",
+      "ok": true,
+      "detail": {
+        "ms": 24101.89999999851,
+        "stages": [
+          {
+            "label": "seeding the noise fields",
+            "start": 947.2999999970198,
+            "ms": 456.1000000014901
+          },
+          {
+            "label": "charting the ley lines",
+            "start": 1403.3999999985099,
+            "ms": 17810.5
+          },
+          {
+            "label": "carving the continents",
+            "start": 19213.89999999851,
+            "ms": 2507.89999999851
+          },
+          {
+            "label": "pouring the oceans",
+            "start": 21721.79999999702,
+            "ms": 375.3999999985099
+          },
+          {
+            "label": "hanging the stars",
+            "start": 22097.19999999553,
+            "ms": 10.800000004470348
+          },
+          {
+            "label": "planting the forests",
+            "start": 22108,
+            "ms": 640.1999999955297
+          },
+          {
+            "label": "raising the light",
+            "start": 22748.19999999553,
+            "ms": 133
+          },
+          {
+            "label": "waking the worldheart",
+            "start": 22881.19999999553,
+            "ms": 1097.4000000059605
+          }
+        ],
+        "centre": [
+          0.9078024509717959,
+          0.15408265393676962,
+          -0.3900682578285518
+        ],
+        "heart": [
+          0.9078024625778198,
+          0.15408265590667725,
+          -0.39006826281547546
+        ],
+        "portals": [
+          [
+            0.6801780462265015,
+            0.6080736517906189,
+            -0.4093950390815735
+          ],
+          [
+            0.8955681920051575,
+            -0.34300386905670166,
+            -0.28338295221328735
+          ],
+          [
+            0.9667618274688721,
+            0.23208756744861603,
+            0.10727029293775558
+          ],
+          [
+            0.6846683621406555,
+            0.059442877769470215,
+            -0.7264267206192017
+          ],
+          [
+            0.8377180099487305,
+            0.5415445566177368,
+            -0.0704130157828331
+          ]
+        ],
+        "healthy": true,
+        "attempts": 1,
+        "loadMs": 24112
+      }
+    },
+    {
+      "name": "Integration completed",
+      "ok": false,
+      "detail": "Error: page.evaluate: TypeError: w.endpoints is not a function\n    at eval (eval at evaluate (:311:30), <anonymous>:1:398)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+    }
+  ],
+  "errors": []
+}
