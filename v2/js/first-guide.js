@@ -2,7 +2,7 @@ import {browserStorage} from './storage.js';
 import {freshOpening,readOpening,saveOpening,nextLesson,completeLesson,holdsFirstWave} from './run/first-expedition.js';
 
 const lessons={
-  select:['Welcome to 99 Planets To Defend','Build Your First Defense','This is a fast-paced Planetary Tower Defense with Survival and Adventure. Select the highlighted tower in your hotbar to build your first defense.'],
+  select:['Welcome to 99 Planets To Defend','Build Your First Defense','This is a fast-paced Planetary Tower Defense with Survival and Adventure. Press 1 to select the highlighted tower without unlocking your camera, or tap its hotbar card on touch.'],
   tower:['Build Your First Defense','Place your tower','Place your tower close enough to your base to defend it. Aim at a green footprint, then click or tap Place. WASD moves; the left touch stick moves on mobile.'],
   towerUpgrade:['Build Your First Defense','Upgrade your tower','Great! Look at your tower, press F to interact, then click Upgrade. On touch, tap Interact. A stronger tower will help hold the first wave.'],
   crystal:['Explore Earth','Find a crystal','Now look around the area for blue crystals to help upgrade your base. Walk close to collect one. Use WASD and Space to move and jump, or the touch stick and Jump.'],
@@ -99,12 +99,12 @@ export function firstGuide({game,ui,waves,mode,possession,allies,nav,config},pre
   ui.beginGame=()=>{originalBegin();if(game.state!=='playing'||started)return;started=true;
     const c=mode.commander,arrival=game.frontier.centre.clone().addScaledVector(c.fwd,8/config.planetRadius).normalize(),node=nav.nearestWalkableNode(arrival);
     if(node>=0&&Number.isFinite(nav.dist[node])){nav.nodeDir(node,c.dir);c.height=nav.height[node];c.moveNode=node;c._renderDir.copy(c.dir);c.fwd.addScaledVector(c.dir,-c.fwd.dot(c.dir)).normalize();}
-    possession.enter(c,{lock:false});possession.boom=possession.boomWant=0;lastScan=-Infinity;update();
+    possession.enter(c,{lock:true});possession.boom=possession.boomWant=0;lastScan=-Infinity;update();
   };
   async function arrive(){
     ui.el['title-overlay'].classList.remove('show');
-    if(eligible&&!state.story){await presentation.playOpening();await presentation.showStory();state.intro=true;state.story=true;save();}
-    ui.beginGame();
+    if(eligible&&!state.story){await presentation.playOpening();await presentation.showStory(()=>ui.beginGame());state.intro=true;state.story=true;save();}
+    if(!started)ui.beginGame();
   }
   return {state,update,arrive,get holding(){return !!game.onboardingHold;},get lesson(){return nextLesson(state);}};
 }

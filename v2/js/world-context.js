@@ -24,6 +24,8 @@ export class WorldContext {
     this.lootPanel.querySelector('#loot-equip').onclick=()=>this.pickup(true);
     this.lootPanel.querySelector('#loot-close').onclick=()=>this.close();
     ui.el['tp-close'].onclick=()=>this.close();
+    addEventListener('pointerdown',e=>{if(e.button!==0||document.pointerLockElement!==rig.canvas||!this.gazeButton)return;e.preventDefault();e.stopImmediatePropagation();possession.firing=false;this.gazeButton.click();},true);
+    addEventListener('mousedown',e=>{if(e.button===0&&document.pointerLockElement===rig.canvas&&this.gazeButton){e.preventDefault();e.stopImmediatePropagation();}},true);
     addEventListener('keydown',e=>{
       if(e.repeat||e.target?.matches?.('input,textarea,select,[contenteditable="true"]'))return;
       if(e.code==='Escape'&&this.editing){e.preventDefault();e.stopImmediatePropagation();this.close();return;}
@@ -92,12 +94,17 @@ export class WorldContext {
   }
   update() {
     const {game,possession:p,ui}=this;
-    const blocked=game.state!=='playing'||game.buildType||document.querySelector('dialog[open],#end-overlay.show');
+    const blocked=game.state!=='playing'||game.buildType||game.walls?.placing||document.querySelector('dialog[open],#end-overlay.show');
     if(blocked){if(this.editing)this.close();this.target=null;}
     else if(!this.editing&&(!this.target||p.active||!this.panel().matches(':hover'))) {
       const r=this.rig.canvas.getBoundingClientRect();
       this.rig.raycaster(p.active?r.left+r.width/2:this.pointer.x,p.active?r.top+r.height/2:this.pointer.y,this.ray);
       let next=game.mobile?.enabled&&!p.active?null:this._pick(this.ray.ray);
+      if(next)this.lastLook=performance.now();
+      if(!next&&p.active&&this.target&&!blocked){
+        const box=this.panel().getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;
+        if(performance.now()-(this.lastLook||0)<800||(x>box.left-40&&x<box.right+40&&y>box.top-40&&y<box.bottom+40))next=this.target;
+      }
       if(!next&&!p.active&&game.selectedTower)next={kind:'tower',object:game.selectedTower};
       if(next?.object!==this.dismissed)this.dismissed=null;
       this.target=next?.object===this.dismissed?null:next;
@@ -125,6 +132,11 @@ export class WorldContext {
         this.basePanel.querySelector('#base-forge').textContent=`Forge tower / ${this.mode.forge.cost} scraps`;
       }else this.renderLoot();
       this.place(this.panel(),tower?tower.pos:this.target.kind==='base'?this.game.world.heart.group.position:this.target.object.position);
+    }
+    this.gazeButton?.classList.remove('gaze-hover');this.gazeButton=null;
+    if(this.target&&!blocked&&p.active&&!p.suspended&&document.pointerLockElement===this.rig.canvas){
+      const r=this.rig.canvas.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;
+      for(const button of this.panel().querySelectorAll('button:not(:disabled)')){const b=button.getBoundingClientRect();if(b.width&&b.height&&x>=b.left&&x<=b.right&&y>=b.top&&y<=b.bottom){this.gazeButton=button;button.classList.add('gaze-hover');break;}}
     }
     this.updateMarkers();
   }

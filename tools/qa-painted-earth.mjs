@@ -20,17 +20,24 @@ try{
   check('All four authored paintings load',await page.evaluate(async()=>{const images=[...document.querySelectorAll('.first-art')].map(el=>getComputedStyle(el).backgroundImage.slice(5,-2));return images.length===4&&(await Promise.all(images.map(src=>new Promise(r=>{const im=new Image();im.onload=()=>r(im.width>500);im.onerror=()=>r(false);im.src=src;})))).every(Boolean);}));await shot(page,'story-desktop');
   await page.getByRole('button',{name:'Begin first defense'}).click();await pause(page);
   check('Story closes into first person and held first wave',await page.evaluate(()=>WH.possession.active&&WH.possession.boomWant===0&&WH.onboarding.holding&&WH.onboarding.lesson==='select'));
+  check('Tutorial begins with actual pointer capture',await page.evaluate(()=>document.pointerLockElement===WH.rig.canvas&&!WH.possession.suspended));
+  await page.keyboard.press('Space');await pause(page,70);
+  check('Real Space jumps without pausing',await page.evaluate(()=>WH.mode99.commander.airT>0&&!WH.game.paused));await pause(page,900);
   check('Paint covers world, units and held models',await page.evaluate(()=>WH.paint.stats.materials>70&&WH.paint.stats.contours>100),await page.evaluate(()=>WH.paint.stats));
   await shot(page,'first-defense');
-  await page.locator('.build-card[data-type="bolt"]').click();await pause(page);
+  await page.keyboard.press('Digit1');await pause(page);
   check('Real tower selection removes tutorial blur',await page.evaluate(()=>WH.onboarding.lesson==='tower'&&document.querySelector('.first-spotlight').hidden));
   // Camera aim is a fixture; the purchase goes through the real canvas click.
   let valid=false;for(const pitch of [-.65,-.9,-1.1]){await page.evaluate(p=>{WH.possession.pitch=p;},pitch);await pause(page);valid=await page.evaluate(()=>WH.game.validity.ok);if(valid)break;}
   check('Initial foothold offers a legal first-person tower placement',valid,await page.evaluate(()=>WH.game.validity));
-  if(valid){await page.locator('#view').click({position:{x:720,y:480}});await pause(page);}
+  if(valid){await page.mouse.click(720,480);await pause(page);}
   check('Real placement advances to tower upgrade',await page.evaluate(()=>WH.game.towerMgr.towers.length===1&&WH.onboarding.lesson==='towerUpgrade'));
-  await page.evaluate(()=>{const t=WH.game.towerMgr.towers[0];if(!t)return;WH.game.context.target={kind:'tower',object:t};WH.game.context.open();});await pause(page);
-  await page.locator('#tp-upgrade').click();await pause(page);
+  // Panel alignment is a fixture; pointer capture and purchase use real inputs.
+  await page.evaluate(()=>{const ctx=WH.game.context;ctx.target={kind:'tower',object:WH.game.towerMgr.towers[0]};ctx.lastLook=performance.now()+2000;ctx.qaPlace=ctx.place;ctx.place=function(panel,pos){this.qaPlace(panel,pos);const b=panel.querySelector('#tp-upgrade').getBoundingClientRect(),p=panel.getBoundingClientRect();panel.style.transform=`translate(${p.x+innerWidth/2-(b.x+b.width/2)}px,${p.y+innerHeight/2-(b.y+b.height/2)}px)`;};});await pause(page,120);
+  check('Locked crosshair highlights tower upgrade',await page.locator('#tp-upgrade').evaluate(el=>el.classList.contains('gaze-hover')));
+  await page.mouse.click(720,480);await pause(page,120);
+  check('Crosshair click upgrades without releasing pointer lock',await page.evaluate(()=>WH.game.towerMgr.towers[0].tier===1&&document.pointerLockElement===WH.rig.canvas));
+  await page.evaluate(()=>{const c=WH.game.context;c.place=c.qaPlace;delete c.qaPlace;c.open();});await pause(page);
   check('Contextual upgrade advances while waves remain frozen',await page.evaluate(()=>WH.game.towerMgr.towers[0].tier===1&&WH.onboarding.lesson==='crystal'&&WH.onboarding.holding));
   check('Tower inspection remains open after upgrading',await page.evaluate(()=>WH.game.context.editing));
   await page.locator('#tp-close').click();await pause(page);

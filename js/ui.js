@@ -591,7 +591,7 @@ export class HUD {
       // body was possessed, which is the key every player presses to jump, so
       // the owner reported "you cannot jump". On the ground Space is the jump
       // (js/possess.js) and P pauses; on the board both pause.
-      if (e.code === 'Space') { e.preventDefault(); if (!this.possession?.active) this.togglePause(); }
+      if (e.code === 'Space'&&!this.possession?.active) { e.preventDefault(); this.togglePause(); }
       else if (e.code === 'KeyP') { e.preventDefault(); this.togglePause(); }
       else if (e.code === 'KeyF') { if (!this.possession?.active) this.cycleSpeed(); }
       else if (e.code === (CONFIG.map.mode === 'ninetynine' ? 'KeyN' : 'KeyM')) this.toggleSound();

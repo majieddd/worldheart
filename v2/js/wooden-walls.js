@@ -12,6 +12,9 @@ export class WoodenWalls {
     this.ghost=buildWall();this.ghost.traverse(m=>{if(m.isMesh){m.material=new THREE.MeshBasicMaterial({color:0x8bdfae,transparent:true,opacity:.4,depthWrite:false});}});this.ghost.visible=false;game.scene.add(this.ghost);
     const control=document.createElement('div');control.id='wall-tools';control.innerHTML='<button class="btn" data-wall-buy>5 walls / 1 scrap</button><button class="btn" data-wall-build>Place wall</button><button class="btn" data-wall-turn hidden>Rotate</button><button class="btn" data-wall-confirm hidden>Place here</button><button class="btn" data-wall-cancel hidden>Cancel</button>';ui.root.append(control);this.control=control;
     control.querySelector('[data-wall-buy]').onclick=()=>this.buy();control.querySelector('[data-wall-build]').onclick=()=>this.start();control.querySelector('[data-wall-turn]').onclick=()=>{this.turn=(this.turn||0)+Math.PI/4;};control.querySelector('[data-wall-cancel]').onclick=()=>this.cancel();control.querySelector('[data-wall-confirm]').onclick=()=>this.ghost.visible&&this.place(this.dir,this.angle);
+    this.card=document.createElement('button');this.card.className='build-card wall-card';this.card.title='Wooden walls: 5 per scrap. Wheel rotates. J selects.';this.card.innerHTML='<div class="build-thumb build-thumb-fallback">🪵</div><div class="build-name">Walls</div><div class="build-cost"></div><span class="kbd build-key">J</span>';
+    this.card.onclick=()=>{if(this.placing)this.cancel();else if(this.stock||this.buy()){this.game.context?.close();this.start();}};
+    addEventListener('keydown',e=>{if(e.code==='KeyJ'&&!e.repeat&&!e.target?.matches?.('input,textarea,select')&&!document.querySelector('dialog[open]')){e.preventDefault();this.card.click();}});
     rig.canvas.addEventListener('pointermove',e=>this.pointer.set(e.clientX,e.clientY));
     rig.canvas.addEventListener('pointerdown',e=>{if(!this.placing||e.pointerType==='touch')return;e.preventDefault();e.stopImmediatePropagation();if(e.button===2)this.cancel();else if(e.button===0&&this.ghost.visible)this.place(this.dir,this.angle);},true);
     rig.canvas.addEventListener('wheel',e=>{if(!this.placing)return;e.preventDefault();e.stopImmediatePropagation();this.rotate(Math.sign(e.deltaY));},{capture:true,passive:false});
@@ -59,7 +62,22 @@ export class WoodenWalls {
     for(const wall of this.items){const ids=nav.towerNodes(wall.root.position,2.2);for(const n of ids)nav.wallPenalty[n]=Math.max(nav.wallPenalty[n],90);}
     // Finite cost means a sealed route still leads to a breakable wall; nests
     // never fail the permanent-path test merely because of wooden defenses.
-    nav.march=null;nav.recomputeFlow();nav.revision++;this.revision=nav.terrainRevision;
+    nav.revision++;this.revision=nav.terrainRevision;
+    this.routeRevision=nav.revision;this.routeJob=this.routeSteps();
+  }
+  *routeSteps(){
+    const nav=this.nav,draft=Object.assign(Object.create(Object.getPrototypeOf(nav)),nav);
+    draft._heap=null;draft._done=null;draft.march=null;
+    for(const key of ['dist','next','flow','airDist','airNext']){if(nav[key])draft[key]=new nav[key].constructor(nav[key]);yield;}
+    yield* draft.recomputeFlowSteps();
+    for(const key of ['dist','next','flow','march','airDist','airNext','_airReady'])nav[key]=draft[key];
+    nav.revision++;this.routeRevision=nav.revision;
+  }
+  updateRoutes(){
+    if(!this.routeJob||this.game.terrainBusy)return;
+    if(this.routeRevision!==this.nav.revision){this.routeRevision=this.nav.revision;this.routeJob=this.routeSteps();}
+    const until=performance.now()+2;
+    do{if(this.routeJob.next().done){this.routeJob=null;break;}}while(performance.now()<until);
   }
   stopEnemy(e,next,dt){
     if(!this.items.length||e.type.flying||e.dead)return false;
@@ -75,10 +93,13 @@ export class WoodenWalls {
     return false;
   }
   update(){
-    this.control.hidden=this.game.mobile?.enabled||(!this.stock&&!this.placing)||this.game.state!=='playing'||this.game.paused||!!document.querySelector('dialog[open]');
+    this.updateRoutes();
+    const bar=this.ui.el['build-bar'];if(this.card.parentNode!==bar)bar.append(this.card);
+    this.card.hidden=!!this.game.mobile?.enabled;this.card.classList.toggle('selected',this.placing);this.card.querySelector('.build-cost').textContent=this.stock?`${this.stock} ready`:'5 / 1 scrap';
+    this.control.hidden=this.game.mobile?.enabled||!this.placing||this.game.state!=='playing'||this.game.paused||!!document.querySelector('dialog[open]');
+    this.control.querySelector('[data-wall-build]').hidden=true;this.control.querySelector('[data-wall-buy]').hidden=true;
     this.control.querySelector('[data-wall-build]').textContent=`Place wall (${this.stock})`;
     this.control.querySelector('[data-wall-build]').disabled=!this.stock;
-    this.control.querySelector('[data-wall-buy]').hidden=this.nearBase()>6;
     for(const id of ['turn','confirm','cancel'])this.control.querySelector(`[data-wall-${id}]`).hidden=!this.placing;
     if(this.revision!==this.nav.terrainRevision&&this.items.length){for(const w of this.items){orientOnSurface(w.root,surfacePoint(w.dir,new THREE.Vector3()));w.root.rotateY(w.angle);w.root.updateMatrixWorld(true);w.inverse.copy(w.root.matrixWorld).invert();}this.rebuild();}
     if(!this.placing)return;const r=this.rig.canvas.getBoundingClientRect();

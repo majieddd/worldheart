@@ -334,8 +334,8 @@ export class Possession {
       // which is the key every player presses first to jump, so "you cannot
       // jump" was the owner's read of a jump that was bound to F alone. The
       // pause is on P everywhere and on Space only on the board (js/ui.js
-      // checks possession before it toggles). F stays as an alias.
-      if ((e.code === 'Space' || e.code === 'KeyF') && !e.repeat) {
+      // checks possession before it toggles). F is reserved for interaction.
+      if (e.code === 'Space' && !e.repeat) {
         e.preventDefault();
         if (this.unit.mountKey !== 'skyray' && !this.jump()) this.jumpBuffer = JUMP_BUFFER;
       }

@@ -38,7 +38,7 @@ export async function playOpening({replay=false}={}){
     raf=requestAnimationFrame(tick);
   };raf=requestAnimationFrame(tick);await done;
 }
-export function showStory(){
+export function showStory(onBegin){
   const el=dialog('first-story','The story of 99 Planets To Defend');
   el.innerHTML='<div class="first-kicker">99 Planets To Defend / Prologue</div><h1>BASED ON TRUE EVENTS - SOME DETAILS HYPERBOLIZED</h1><div class="first-panels"></div><div class="first-actions"><button class="first-primary" data-close>Begin first defense</button></div><p class="first-note">A fictional adventure inspired by the real Apophis flyby. The hidden arsenal and humanity’s departure belong to our story.</p>';
   for(const [i,[title,text]] of copy.entries()){
@@ -47,7 +47,7 @@ export function showStory(){
     b.textContent=title;caption.append(b,document.createTextNode(text));figure.append(art,caption);el.querySelector('.first-panels').append(figure);
   }
   const done=new Promise(resolve=>el.addEventListener('close',resolve,{once:true}));
-  el.querySelector('button').onclick=()=>el.close();el.showModal();return done;
+  el.querySelector('button').onclick=()=>{el.close();if(typeof onBegin==='function')onBegin();};el.showModal();return done;
 }
 
 
