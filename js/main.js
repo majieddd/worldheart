@@ -6,6 +6,8 @@ import { PostPipeline } from './postfx.js';
 import { World, R, surfacePoint, setBattlefield, raycastTerrain, SUN_DIR, terrainHeight, TERRAIN_TOP, surfaceElevation } from './world.js';
 import { NavGraph } from './nav.js';
 import {TerrainSamplePool} from './terrain-sample-pool.js';
+import {tryRestoreNav} from './nav-restore.js';
+import {savePayload,navBuffersFrom,meshBuffersFrom} from './payload-store.js';
 import { SIM_RANDOM } from './noise.js';
 import { makeRng } from './run/rng.js';
 import { EnemyManager, EVO as ENEMY_EVO } from './enemies.js';
@@ -269,6 +271,20 @@ async function finishBootSteps(steps){
 }
 
 async function boot() {
+  // Start the terrain sampler workers before anything else. Their cold start is
+  // ~578 ms per worker (three.module.min.js is 339 KB and every worker imports
+  // it, plus world.js/config.js/traversal.js and the terrain field init), and it
+  // used to land inside the first vertices batch. Firing it here lets the whole
+  // fetch/parse/eval overlap productionPaint, buildStep(0) and the point list
+  // build. Nothing is awaited - the warm-up job just queues ahead of the first
+  // real batch. Terminated by the same finally that owns the pool.
+  const parallel=new URLSearchParams(location.search).get('generation')!=='sync'&&CONFIG.terrain;
+  const pool=parallel?new TerrainSamplePool():null;
+  if(pool)pool.prewarm({config:CONFIG,n:1,floorDatum:0,coarse:false,walkAll:false});
+  // index.html starts the sampler workers at parse time so their cold start never lands
+  // inside the first sampling batch (see the note there and _spawn()'s). Nothing else
+  // consumes them, so a boot that will not use the pool has to stop them.
+  else if(window.__WH_SAMPLERS){for(const worker of window.__WH_SAMPLERS)worker.terminate();window.__WH_SAMPLERS=null;}
   painted=await productionPaint(renderer);
   window.WH.paint=painted;
   resize();
@@ -284,12 +300,88 @@ async function boot() {
   await progress(BOOT_LABELS[0]);
   world.buildStep(0);
   await progress(BOOT_LABELS[1]);
-  const parallel=new URLSearchParams(location.search).get('generation')==='parallel'&&CONFIG.terrain;
   CONFIG.fastGeneration=!!parallel;
-  const pool=parallel?new TerrainSamplePool():null;
   if(pool)nav.parallelMetrics=pool.metrics;
   if(pool)nav.sampleTerrain=(points,options)=>pool.sample(points,options);
-  try{await finishBootSteps(nav.buildSteps());}finally{pool?.dispose();delete nav.sampleTerrain;}
+  let restored=false;
+  // Default ON, opt out with ?restore=0. Safe because the restore REFUSES unless every
+  // one of the 23 arrays validates (name, kind, byte length) and the spatial hash
+  // rebuilds; on any doubt it returns null and the graph is built as before. So a
+  // missing payload, a different map/seed, or a bad file costs speed, never correctness.
+  // Verified by tools/cdp_arrays.py: all 22 world arrays byte-identical to a built
+  // graph, identity scalars equal, only the _done scratch marker differs (every
+  // search overwrites it).
+  if(new URLSearchParams(location.search).get('restore')!=='0'){
+    const t0=performance.now();
+    // Single attempt: payloads are keyed on CONFIG.worldSeed, which is settled in
+    // config.js before any restore runs. (The nav build's seed search advances
+    // CONFIG.seed later, and in campaign mode requestedSeed never changes at all, so
+    // neither of those can be the key.) Retrying here was measured to cost 2.6 s by
+    // delaying the disk fallback, so it is deliberately not done.
+    restored=await tryRestoreNav(nav,CONFIG).catch(()=>false);
+    if(restored)window.WH.restoreMs=performance.now()-t0;
+  }
+  try{
+    if(restored){
+      // The payload already carries flow/next/dist/airNext/airDist, which is exactly
+      // what recomputeFlowSteps() would rebuild (~0.4-0.5 s of Dijkstra + flow work).
+      // Skip it and keep the restored values; tools/cdp_arrays.py verifies the result
+      // is still byte-identical to a built graph. Anything missing means we did not
+      // really restore, so fall back to the normal build instead.
+      const haveFlow=restored.includes('flow')&&restored.includes('next')&&restored.includes('dist');
+      // ...AND the derived anchors the boot actually consumes. A payload can carry
+      // all 23 typed arrays and still be unusable: the numeric-array half of the
+      // record is a separate field, and any producer that writes it under another
+      // name (or omits it) yields a graph with no portalNodes. Without this check
+      // the boot dies at `for (const pn of nav.portalNodes)` with "nav.portalNodes
+      // is not iterable" - a hard crash instead of the promised "a bad payload
+      // costs speed, never correctness". Reproduced on this copy with a fresh
+      // profile by re-writing the store entry under the pre-fix field name.
+      const haveAnchors=Array.isArray(nav.portalNodes)&&nav.portalNodes.length>0
+        &&Number.isFinite(nav.heartNode)&&nav.heartNode>=0&&!!nav.fieldCenter;
+      if(!(haveFlow&&haveAnchors)){restored=false;await finishBootSteps(nav.buildSteps());}
+    }else await finishBootSteps(nav.buildSteps());
+  }finally{pool?.dispose();delete nav.sampleTerrain;}
+
+  // ROUTE 1: remember this planet. After any cold build, persist the nav graph and
+  // the terrain mesh so the NEXT boot of this planet is a restore (~3 s) instead of a
+  // rebuild (~16 s). Deferred and fire-and-forget: it waits for the terrain mesh
+  // (built later in the step loop), never blocks the boot, and any failure is
+  // swallowed - caching must never be able to break play.
+  // The snapshot below is taken at exactly the moment it always was (as soon as the
+  // terrain mesh exists) so the bytes that reach the store are unchanged. Only the
+  // IndexedDB hand-off is deferred past end-of-generation: measured with an
+  // IDBObjectStore.put wrapper (bench/xidb.py) the save is 102.6 MB in two puts
+  // costing 140 ms of main-thread structured clone, 100 % of it before genDone.
+  // Nothing needs it until the next visit to the planet.
+  let bootEnded;const bootEndedP=new Promise(r=>bootEnded=r);
+  if(!restored){
+    (async()=>{
+      try{
+        for(let i=0;i<400 && !world.terrain;i++)await new Promise(r=>setTimeout(r,50));
+        if(!world.terrain)return;
+        const navP=navBuffersFrom(nav), meshP=meshBuffersFrom(world.terrain);
+        await bootEndedP;               // past end-of-generation
+        // KEY ON CONFIG.worldSeed - the seed that actually determines this world,
+        // captured in config.js before any restore or build. NOT requestedSeed (in
+        // campaign mode it is frozen at the player's ?seed/whSeed, so all 99 planets
+        // filed under one key and every planet from the second restored the first),
+        // and NOT the post-build CONFIG.seed (the nav seed search advances it, measured
+        // 20365559 -> 20389316 on planet 2, so the settled value names no world).
+        const keySeed=(CONFIG.worldSeed!==undefined&&CONFIG.worldSeed!==null)?CONFIG.worldSeed:
+          ((CONFIG.requestedSeed!==undefined&&CONFIG.requestedSeed!==null)?CONFIG.requestedSeed:CONFIG.seed);
+        if(navP){
+          navP.record.mapKey=CONFIG.mapKey; navP.record.seed=keySeed; navP.record.worldSeed=keySeed;
+          await savePayload('nav',CONFIG.mapKey,keySeed,navP.record,navP.buffers,keySeed);
+        }
+        if(meshP){
+          meshP.record.mapKey=CONFIG.mapKey; meshP.record.seed=keySeed; meshP.record.worldSeed=keySeed;
+          await savePayload('mesh',CONFIG.mapKey,keySeed,meshP.record,meshP.buffers,keySeed);
+        }
+        window.WH.cachedPlanet=`${CONFIG.mapKey}/${keySeed}`;
+      }catch{}
+    })();
+  }
   if (CONFIG.terrain) {
     rig.heightProbe = dir => surfaceElevation(dir);
     rig.terrainTop = TERRAIN_TOP;
@@ -369,7 +461,12 @@ async function boot() {
   towerMgr.audio = audio;
   waves = new WaveDirector(game, enemies, nav);
   ui = new HUD({ game, waves, world, nav, rig, renderer, audio });
-  ui.makeThumbnails();
+  // ui.makeThumbnails() is deliberately NOT called here. All six tower thumbs in
+  // one go is ~400 ms cold (the tower shader compiles on the first one, then six
+  // synchronous readRenderTargetPixels round-trips) and it lands squarely in the
+  // player's boot wait. makeThumbnailsProgressive() at the end of boot builds them
+  // one per frame, after the world is already playable; renderHand() falls back to
+  // a styled initial for any thumb that does not exist yet.
   game.soundtrack = new Soundtrack(audio, () => ({ state: game.state, homeQuiet:game.mode99?.home.quiet,
     boss: enemies.active.some(e => e.active && !e.dead && e.type.boss),
     theme: CONFIG.environment?.theme || CONFIG.planetKey || '', planet: CONFIG.planetIndex, wave: waves.wave,
@@ -552,6 +649,7 @@ async function boot() {
   await nextFrame();
 
   bootStages.at(-1).ms=performance.now()-bootStages.at(-1).start;window.WH.bootStages=bootStages;
+  bootEnded();                          // release the payload save-back (see ROUTE 1)
   bootChannel?.port1.close();bootChannel?.port2.close();bootChannel=null;
   document.getElementById('boot').classList.add('done');
   rig.introFlight(heartPos.clone().normalize());
@@ -608,6 +706,10 @@ async function boot() {
     fpsCount++;
   }
   requestAnimationFrame(frame);
+  // Registered AFTER the frame loop's first rAF on purpose: the game's frame
+  // callback then always sits ahead of ours in the queue, so each thumbnail is
+  // built after the world has already drawn that frame, never before it.
+  void ui.makeThumbnailsProgressive();
 }
 
 // Pause the simulation whenever the tab is hidden: a background tab gets no

@@ -1,5 +1,6 @@
 import {ecologyScatter} from './terrain/scatter.js';
 import * as THREE from '../lib/three.module.min.js';
+import {restoreTerrainGeometry} from './mesh-restore.js';
 import {TerrainChunks,DecorChunks} from './terrain-chunks.js';
 import {BIOME_VISUALS,THEME_SURFACES,paintBiome,biomeDressingGeometry} from './biome-visuals.js';
 import { CONFIG, PALETTE, REDUCED_MOTION } from './config.js';
@@ -860,8 +861,29 @@ function* displaceGeometrySteps(geo) {
   return geo;
 }
 
+function* tryRestoreTerrainGeometrySteps() {
+  try { return yield restoreTerrainGeometry(CONFIG); }
+  catch { return null; }
+}
+
 function buildTerrainMesh(...args){const steps=buildTerrainMeshSteps(...args);let step;do{step=steps.next();}while(!step.done);return step.value;}
 function* buildTerrainMeshSteps() {
+  // Captured geometry is a pure function of (map, seed). With a validated payload we
+  // take it and skip displaceGeometrySteps + the 983k-vertex colour and thermal loop
+  // (~2,292 ms). SPACE maps take a different branch and always build. Any doubt ->
+  // fall through to the normal build below.
+  // ?restore=0 must disable the MESH restore too, not just nav. Without this, a
+  // ?restore=0 "build" arm still restored the mesh from disk/store, so mesh
+  // identity checks compared a restore against its own source and could never fail.
+  if(!SPACE&&new URLSearchParams(location.search).get('restore')!=='0'){
+    const baked=yield* tryRestoreTerrainGeometrySteps();
+    if(baked){
+      // same constructor as the normal path: painted/toon materials are applied later
+      // by the art pass, so anything else here would be a needless visual risk
+      const bakedMat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.95,metalness:0});
+      return new THREE.Mesh(baked,bakedMat);
+    }
+  }
   const geo = yield* displaceGeometrySteps(yield* buildIcoGeometrySteps(CONFIG.terrainDetail));
   const pos = geo.attributes.position;
   const colors = new Float32Array(pos.count * 3);

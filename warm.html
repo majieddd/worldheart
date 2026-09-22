@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WORLDHEART warmer</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; padding:18px 20px; background:#0a0e21; color:#cfe3ff;
+         font:13px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
+  h1 { font:600 15px/1.3 Inter, system-ui, sans-serif; margin:0 0 4px; letter-spacing:.04em; }
+  .sub { color:#7f93b8; font-size:12px; margin-bottom:12px; }
+  #bar { height:8px; background:#1b2440; border-radius:4px; overflow:hidden; margin:10px 0 6px; }
+  #fill { height:100%; width:0; background:#59f2ff; transition:width .25s ease; }
+  #state { font-weight:600; margin-bottom:12px; }
+  #log { white-space:pre-wrap; margin:0; font-size:12.5px; }
+  .warn { color:#ffc857; }
+  .bad { color:#ff5470; }
+  .ok { color:#4ec98a; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js" } }
+</script>
+</head>
+<body>
+<h1>WORLDHEART warmer</h1>
+<div class="sub">background planet pre-generation &mdash; builds a planet's nav graph + terrain mesh and
+writes them to the payload store, so a FIRST visit to that planet restores instead of building.</div>
+<div id="bar"><div id="fill"></div></div>
+<div id="state">starting</div>
+<pre id="log"></pre>
+<script type="module">
+// ---------------------------------------------------------------------------
+// ROUTE 2: background pre-generation.
+//
+// The game builds a planet in js/main.js::boot() as:
+//     world.buildStep(0)                        -> initTerrainField(CONFIG.seed)
+//     nav.buildSteps()                          -> the walkability graph  (~13.5 s)
+//     for i=1..5: world.buildSteps(i)           -> step 1 is the terrain mesh (~2.5 s)
+// This page does exactly steps 0 and 1 plus the nav graph, with the same CONFIG the
+// game would derive from the same URL and the same saved campaign, and saves the
+// result through js/payload-store.js under the same key the game's restore path
+// looks up: ('nav'|'mesh', CONFIG.mapKey, CONFIG.worldSeed) - the seed that actually
+// determines the world (config.js). Filing under CONFIG.requestedSeed instead is the bug
+// that made campaign planets share one payload key; an entry must also carry the world
+// stamp, or the game's store guard refuses to serve it.
+//
+// WHY ONE PAGE LOAD PER SEED. js/world.js resolves RANGE_HEIGHT, CANYON_HALF,
+// RAMP_RUN, F_FINE, TERRAIN_TOP, FLIGHT_CEILING and friends from CONFIG at MODULE
+// LOAD, and initTerrainField() only refreshes a subset of them (R, FA, F_ROLL,
+// F_MOIST). CONFIG.terrain / planetRadius / environment are per-planet, so a second
+// seed inside one page would build against the first seed's constants and produce a
+// DIFFERENT world. `?seeds=a,b,c` is therefore processed one seed per load: this page
+// builds seeds[i], then navigates itself to seeds[i+1] with `seed=` set to that seed,
+// which re-derives CONFIG exactly the way a fresh game page would.
+//
+// WHY CONFIG IS NEVER OVERRIDDEN. The planet a seed maps to is not just
+// `planetEnvironment(seed)`: js/config.js derives it from the saved campaign
+// (config.js:140 `seed: homeSnapshot?.world.seed || campaign?.seed || requestedSeed`).
+// Hand-deriving it here would be a second source of truth that can drift, so the page
+// imports the real js/config.js and lets it do the derivation, then REFUSES rather than
+// building if the URL seed is not the seed CONFIG resolved to.
+//
+// NOTHING IS WRITTEN UNLESS IT VALIDATES. Every array in both payloads is checked for
+// kind, length, byte length and NaN poisoning, and both payloads are validated BEFORE
+// either is saved; after saving, both are read back and byte-compared. A refusal costs
+// one build; a bad payload would break a planet, so refusal is always preferred.
+// ---------------------------------------------------------------------------
+
+import * as THREE from 'three';
+import { CONFIG } from './js/config.js';
+import { NavGraph } from './js/nav.js';
+import { World } from './js/world.js';
+import { TerrainSamplePool } from './js/terrain-sample-pool.js';
+import {
+  savePayload, loadPayload, deletePayload, navBuffersFrom, meshBuffersFrom, PAYLOAD_FORMAT,
+} from './js/payload-store.js';
+
+const params = new URLSearchParams(location.search);
+const byId = id => document.getElementById(id);
+const fill = byId('fill'), stateEl = byId('state'), logEl = byId('log');
+const WARM = {
+  state: 'starting', version: 1, format: PAYLOAD_FORMAT,
+  mapKey: CONFIG.mapKey, requestedSeed: CONFIG.requestedSeed, seed: null,
+  campaign: CONFIG.campaign ? { index: CONFIG.campaign.index, seed: CONFIG.campaign.seed } : null,
+  problems: [], log: [], auto: params.get('auto') !== '0',
+};
+window.WARM = WARM;
+
+function log(msg, cls = '') {
+  const line = `${((performance.now() / 1000).toFixed(1)).padStart(7)}s  ${msg}`;
+  WARM.log.push(line);
+  if (WARM.log.length > 400) WARM.log.shift();
+  const el = document.createElement('div');
+  if (cls) el.className = cls;
+  el.textContent = line;
+  logEl.appendChild(el);
+  console.log('[warm]', line);
+}
+function setState(s, cls = '') { WARM.state = s; stateEl.textContent = s; stateEl.className = cls; }
+function progress(frac) { fill.style.width = `${Math.max(0, Math.min(1, frac)) * 100}%`; }
+function finish(state, cls = '') {
+  // persist a compact record for a driver / the user, then publish the final state
+  try {
+    const key = 'whWarmLog';
+    const arr = JSON.parse(localStorage.getItem(key) || '[]');
+    arr.push({ at: Date.now(), ...WARM.summary() });
+    localStorage.setItem(key, JSON.stringify(arr.slice(-60)));
+  } catch { /* diagnostics only */ }
+  setState(state, cls);
+  progress(1);
+}
+
+// ---- the game's own step driver, copied from js/main.js so the yielding matches ----
+let bootChannel;
+function yieldBootTask() {
+  if (globalThis.scheduler?.yield) return globalThis.scheduler.yield();
+  bootChannel ||= new MessageChannel();
+  return new Promise(resolve => { bootChannel.port1.onmessage = resolve; bootChannel.port2.postMessage(0); });
+}
+async function finishBootSteps(steps) {
+  let step, input;
+  do {
+    const slice = performance.now();
+    do { step = steps.next(input); input = undefined; if (step.value?.then) { input = await step.value; break; } }
+    while (!step.done && performance.now() - slice < 8);
+    if (!step.done) await yieldBootTask();
+  } while (!step.done);
+}
+
+// ---- byte hashing (FNV-1a, the same fold tools/cdp_arrays.py and cdp_warm_gate.py use,
+//      so a record's hash32 can be compared directly with a live page's nav/mesh hash) ----
+function hashBuffer(buf) {
+  const u8 = new Uint8Array(buf);
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < u8.length; i++) { h ^= u8[i]; h = Math.imul(h, 16777619) >>> 0; }
+  return h >>> 0;
+}
+function foldBuffers(entries) {         // entries: [{name, buffer}] - folded in sorted-name order
+  let h = 2166136261 >>> 0;
+  for (const { buffer } of entries) {
+    const u8 = new Uint8Array(buffer);
+    for (let i = 0; i < u8.length; i++) { h ^= u8[i]; h = Math.imul(h, 16777619) >>> 0; }
+  }
+  return h >>> 0;
+}
+function sortedBuffers(buffers) {
+  return Object.keys(buffers).sort().map(name => ({ name, buffer: buffers[name] }));
+}
+function nanCount(view) {               // NaN only: +/-Infinity is legitimate in dist/airDist
+  let bad = 0;
+  for (let i = 0; i < view.length; i++) if (view[i] !== view[i]) bad++;
+  return bad;
+}
+
+// ---- validation: the 23 arrays the restore path requires, by name ----
+const REQUIRED_NAV = ['_done', '_mark', 'adj', 'adjOff', 'airCost', 'airDist', 'airNext', 'airWalk',
+  'baseHeight', 'block', 'cost', 'deckIndex', 'dirs', 'dist', 'floorWalk', 'flow', 'height', 'layer',
+  'next', 'pos', 'region', 'walk', 'waterDepth'];
+const NAV_FINITE = ['pos', 'height', 'baseHeight', 'waterDepth', 'flow', 'cost', 'dist', 'airDist', 'dirs'];
+const MESH_FINITE = ['position', 'color', 'normal'];
+
+function validateNavPayload(nav, packed) {
+  const problems = [];
+  if (!(typeof nav.n === 'number' && nav.n > 0)) problems.push(`nav.n=${nav.n}`);
+  if (!(nav.heartNode >= 0)) problems.push(`nav.heartNode=${nav.heartNode}`);
+  if (!Array.isArray(nav.portalNodes) || !nav.portalNodes.length || nav.portalNodes.some(n => !(n >= 0)))
+    problems.push(`nav.portalNodes=${JSON.stringify(nav.portalNodes)}`);
+  const byName = new Map(packed.record.arrays.map(a => [a.name, a]));
+  for (const name of REQUIRED_NAV) if (!byName.has(name)) problems.push(`missing array ${name}`);
+  for (const a of packed.record.arrays) {
+    const Ctor = globalThis[a.kind];
+    const buf = packed.buffers[a.name];
+    if (typeof Ctor !== 'function') { problems.push(`unknown kind ${a.kind} for ${a.name}`); continue; }
+    if (!buf) { problems.push(`no buffer for ${a.name}`); continue; }
+    if (buf.byteLength !== a.bytes) problems.push(`${a.name}: buffer ${buf.byteLength} != record ${a.bytes}`);
+    if (a.length * Ctor.BYTES_PER_ELEMENT !== a.bytes) problems.push(`${a.name}: length*size != bytes`);
+  }
+  for (const name of NAV_FINITE) {
+    const v = nav[name];
+    if (!ArrayBuffer.isView(v)) { problems.push(`${name} is not a typed array`); continue; }
+    const bad = nanCount(v);
+    if (bad) problems.push(`${name}: ${bad} NaN values`);
+  }
+  if (!(ArrayBuffer.isView(nav.flow) && ArrayBuffer.isView(nav.next) && ArrayBuffer.isView(nav.dist)))
+    problems.push('flow/next/dist missing (the restore skips the Dijkstra only when all three exist)');
+  return problems;
+}
+
+function validateMeshPayload(mesh, packed, cfg) {
+  const problems = [];
+  if (!mesh || !mesh.geometry) { problems.push('no terrain mesh geometry'); return problems; }
+  const byName = new Map(packed.record.attributes.map(a => [a.name, a]));
+  for (const name of ['position', 'color', 'normal']) if (!byName.has(name)) problems.push(`mesh missing ${name}`);
+  if (cfg.terrain && !byName.has('aLava')) problems.push('mesh missing aLava on a terrain map');
+  for (const a of packed.record.attributes) {
+    const Ctor = globalThis[a.kind];
+    const buf = packed.buffers[a.name];
+    if (typeof Ctor !== 'function') { problems.push(`mesh unknown kind ${a.kind} for ${a.name}`); continue; }
+    if (!buf) { problems.push(`mesh no buffer for ${a.name}`); continue; }
+    if (buf.byteLength !== a.bytes) problems.push(`mesh ${a.name}: buffer ${buf.byteLength} != ${a.bytes}`);
+    if (a.count * a.itemSize * Ctor.BYTES_PER_ELEMENT !== a.bytes) problems.push(`mesh ${a.name}: count*itemSize != bytes`);
+  }
+  const pos = mesh.geometry.attributes.position;
+  if (!(pos && pos.count > 0)) problems.push(`mesh position count=${pos && pos.count}`);
+  for (const name of MESH_FINITE) {
+    const attr = mesh.geometry.attributes[name];
+    if (!attr || !attr.array) { problems.push(`mesh ${name} attribute absent`); continue; }
+    const bad = nanCount(attr.array);
+    if (bad) problems.push(`mesh ${name}: ${bad} NaN values`);
+  }
+  return problems;
+}
+
+// ---- read the saved payload back and compare it byte for byte ----
+async function verifyStored(kind, mapKey, seed, packed) {
+  const back = await loadPayload(kind, mapKey, seed);
+  if (!back) return [`${kind}: not readable after save`];
+  const problems = [];
+  const expected = kind === 'nav' ? packed.record.arrays : packed.record.attributes;
+  for (const a of expected) {
+    const buf = back.buffers[a.name];
+    if (!buf) { problems.push(`${kind}.${a.name}: absent from the stored payload`); continue; }
+    if (buf.byteLength !== packed.buffers[a.name].byteLength) { problems.push(`${kind}.${a.name}: size changed in the store`); continue; }
+    if (hashBuffer(buf) !== hashBuffer(packed.buffers[a.name])) problems.push(`${kind}.${a.name}: bytes changed in the store`);
+  }
+  if (back.record.format !== undefined && back.record.format !== PAYLOAD_FORMAT) problems.push(`${kind}: format stamp changed`);
+  return problems;
+}
+
+WARM.summary = () => ({
+  state: WARM.state, mapKey: WARM.mapKey, seed: WARM.seed, requestedSeed: WARM.requestedSeed,
+  ms: WARM.ms || null, bytes: WARM.bytes || null, hash: WARM.hash || null,
+  restoredFrom: 'warmer', problems: WARM.problems.slice(0, 6),
+});
+
+// ===========================================================================
+// seeds to warm
+// ===========================================================================
+function parseSeeds() {
+  const list = params.get('seeds');
+  if (list) {
+    const out = list.split(/[,\s]+/).map(Number).filter(n => Number.isInteger(n) && n > 0 && n <= 0xffffffff);
+    if (out.length) return out;
+  }
+  const one = Number(params.get('seed'));
+  if (Number.isInteger(one) && one > 0 && one <= 0xffffffff) return [one];
+  const base = Number.isInteger(CONFIG.worldSeed) ? CONFIG.worldSeed : 20260830;
+  return [base, (base + 1) >>> 0, (base + 2) >>> 0];   // this planet and the next two
+}
+function selfUrl(seeds, index, auto) {
+  const u = new URL(location.href);
+  u.searchParams.set('seeds', seeds.join(','));
+  u.searchParams.set('seed', String(seeds[index]));
+  u.searchParams.delete('i');
+  if (index) u.searchParams.set('i', String(index));
+  if (!auto) u.searchParams.set('auto', '0');
+  if (params.get('force') === '1') u.searchParams.set('force', '1');
+  if (params.get('generation')) u.searchParams.set('generation', params.get('generation'));
+  return u.href;
+}
+
+async function run() {
+  const seeds = parseSeeds();
+  const index = Math.max(0, Number(params.get('i')) || 0);
+  const seed = seeds[index];
+  const mapKey = CONFIG.mapKey;
+  const force = params.get('force') === '1';
+  WARM.seeds = seeds; WARM.index = index; WARM.seed = seed;
+
+  log(`warmer: mapKey=${mapKey} seed=${seed} (list ${seeds.join(',')} @ ${index}) controller=${document.visibilityState}`);
+  log(`CONFIG: requestedSeed=${CONFIG.requestedSeed} seed=${CONFIG.seed} terrainKey=${CONFIG.terrainKey} ` +
+      `environment=${CONFIG.environment ? CONFIG.environment.theme : 'null'} radius=${CONFIG.planetRadius} ` +
+      `terrainVersion=${CONFIG.terrainVersion} detail=${CONFIG.terrainDetail}/${CONFIG.navDetail}`);
+
+  // The URL seed must be the seed CONFIG resolved to, or the payload would be filed
+  // under a key that does not describe the planet that was built.
+  // The URL seed must be the seed CONFIG resolved the WORLD to, or the payload would be
+  // filed (and stamped) with a seed that does not describe the planet that was built.
+  // requestedSeed is NOT that value in campaign mode: it is frozen at the player's
+  // ?seed/whSeed for all 99 planets, which is exactly how the game's own cache filed
+  // every planet under one key.
+  if (CONFIG.worldSeed !== seed) {
+    WARM.problems.push(`URL seed ${seed} != CONFIG.worldSeed ${CONFIG.worldSeed}`);
+    log(`REFUSING: URL seed ${seed} but the world CONFIG resolved is seed ${CONFIG.worldSeed} ` +
+        `(campaign planet ${CONFIG.planetIndex}: campaign.seed). Pass that seed to warm this ` +
+        `planet, or clear localStorage to address planet 1 of a fresh campaign.`, 'bad');
+    return finish('refused', 'bad');
+  }
+  if (CONFIG.campaign && CONFIG.campaign.index !== 1) {
+    WARM.problems.push(`campaign is on planet ${CONFIG.campaign.index}: ?seed= no longer addresses it`);
+    log(`REFUSING: a saved campaign is on planet ${CONFIG.campaign.index}. ?seed= builds the CAMPAIGN's ` +
+        `current planet, so a payload keyed on this seed would describe a different world. Clear ` +
+        `localStorage (or use a fresh profile) to warm planet 1 for this seed.`, 'bad');
+    return finish('refused', 'bad');
+  }
+  // CONFIG.seed is advanced by nav's own seed search (nav.js), so it is NOT the world's
+  // name either - everything below keys on CONFIG.worldSeed, which the check above has
+  // already proven equals the URL seed.
+  const worldSeed = CONFIG.worldSeed;
+
+  // ---- already warmed? ----
+  if (!force) {
+    const [n, m] = [await loadPayload('nav', mapKey, worldSeed), await loadPayload('mesh', mapKey, worldSeed)];
+    if (n && m) {
+      log(`already stored (nav ${n.record.total_bytes} B, mesh ${m.record.total_bytes} B) - nothing to do. ` +
+          `Pass ?force=1 to rebuild.`, 'ok');
+      WARM.bytes = { nav: n.record.total_bytes, mesh: m.record.total_bytes };
+      await advance(seeds, index);
+      return finish('skipped', 'ok');
+    }
+    if (n || m) log(`only ${n ? 'nav' : 'mesh'} is stored - rebuilding BOTH so the pair is consistent.`, 'warn');
+  }
+
+  // Build fresh: remove any existing entry first, so what lands in the store is provably
+  // this build's output (and so the mesh step cannot "restore" its own old payload).
+  await deletePayload('nav', mapKey, seed);
+  await deletePayload('mesh', mapKey, seed);
+
+  const t0 = performance.now();
+  WARM.ms = {};
+
+  // ---- step 0 + nav graph, mirroring js/main.js::boot() ----
+  const scene = new THREE.Scene();
+  const world = new World(scene);
+  world.buildStep(0);
+  progress(0.04);
+  log(`terrain field seeded for CONFIG.seed=${CONFIG.seed}`);
+
+  const parallel = params.get('generation') !== 'sync' && !!CONFIG.terrain;
+  CONFIG.fastGeneration = !!parallel;      // main.js:290 - it changes which seeds are accepted
+  const pool = parallel ? new TerrainSamplePool() : null;
+  const nav = new NavGraph();
+  if (pool) { nav.parallelMetrics = pool.metrics; nav.sampleTerrain = (points, options) => pool.sample(points, options); }
+  log(`generation=${parallel ? 'parallel' : 'sync'} (fastGeneration=${CONFIG.fastGeneration})`);
+
+  const tNav = performance.now();
+  try {
+    await finishBootSteps(nav.buildSteps());
+  } finally {
+    if (pool) pool.dispose();
+    delete nav.sampleTerrain;
+  }
+  WARM.ms.nav = Math.round(performance.now() - tNav);
+  progress(0.72);
+  log(`nav graph built in ${WARM.ms.nav} ms: n=${nav.n} heart=${nav.heartNode} portals=${JSON.stringify(nav.portalNodes)} ` +
+      `attempts=${nav.attempts} settled seed=${CONFIG.seed}` + (pool ? ` poolBatches=${nav.parallelMetrics.batches} points=${nav.parallelMetrics.points} failures=${nav.parallelMetrics.failures.length}` : ''));
+
+  // ---- step 1: the terrain mesh ----
+  const tMesh = performance.now();
+  await finishBootSteps(world.buildSteps(1));
+  WARM.ms.mesh = Math.round(performance.now() - tMesh);
+  progress(0.9);
+  log(`terrain mesh built in ${WARM.ms.mesh} ms`);
+  const mesh = world.terrain;
+  if (!mesh) {
+    WARM.problems.push('world.terrain is null after step 1');
+    log('REFUSING: no terrain mesh was produced.', 'bad');
+    return finish('refused', 'bad');
+  }
+
+  // ---- pack, VALIDATE BOTH, then save both ----
+  const navP = navBuffersFrom(nav);
+  const meshP = meshBuffersFrom(mesh);
+  const problems = [
+    ...validateNavPayload(nav, navP),
+    ...validateMeshPayload(mesh, meshP, CONFIG),
+  ];
+  if (!meshP) problems.push('meshBuffersFrom returned null');
+  navP.record.hash32 = foldBuffers(sortedBuffers(navP.buffers));
+  meshP.record.hash32 = foldBuffers(sortedBuffers(meshP.buffers));
+  WARM.hash = { nav: navP.record.hash32, mesh: meshP.record.hash32 };
+  WARM.bytes = { nav: navP.record.total_bytes, mesh: meshP.record.total_bytes };
+
+  log(`packed: nav ${navP.record.arrays.length} arrays ${(navP.record.total_bytes / 1048576).toFixed(1)} MB hash=${navP.record.hash32}; ` +
+      `mesh ${meshP.record.attributes.length} attributes ${(meshP.record.total_bytes / 1048576).toFixed(1)} MB hash=${meshP.record.hash32}`);
+  if (navP.record.skipped && navP.record.skipped.length) log(`nav fields not serialised: ${navP.record.skipped.join(' ')}`);
+
+  if (problems.length) {
+    WARM.problems = problems;
+    log(`REFUSING TO SAVE - validation failed:`, 'bad');
+    for (const p of problems.slice(0, 12)) log(`  - ${p}`, 'bad');
+    return finish('refused', 'bad');
+  }
+  log('validation passed (kinds, lengths, byte lengths, NaN scan) - saving', 'ok');
+  setState('saving');
+
+  navP.record.mapKey = mapKey; navP.record.seed = seed;
+  navP.record.requestedSeed = seed; navP.record.settledSeed = CONFIG.seed;
+  navP.record.worldSeed = worldSeed;
+  navP.record.source = 'warmer'; navP.record.warmedAt = Date.now();
+  meshP.record.mapKey = mapKey; meshP.record.seed = seed;
+  meshP.record.requestedSeed = seed; meshP.record.settledSeed = CONFIG.seed;
+  meshP.record.worldSeed = worldSeed;
+  meshP.record.source = 'warmer'; meshP.record.warmedAt = Date.now();
+
+  const tSave = performance.now();
+  const okNav = await savePayload('nav', mapKey, worldSeed, navP.record, navP.buffers, worldSeed);
+  const okMesh = await savePayload('mesh', mapKey, worldSeed, meshP.record, meshP.buffers, worldSeed);
+  WARM.ms.save = Math.round(performance.now() - tSave);
+  if (!okNav || !okMesh) {
+    WARM.problems.push(`savePayload returned nav=${okNav} mesh=${okMesh}`);
+    log(`REFUSING: the store did not accept the payload (nav=${okNav} mesh=${okMesh}). Existing entry left alone.`, 'bad');
+    return finish('refused', 'bad');
+  }
+
+  // ---- read both back and compare byte for byte ----
+  const backProblems = [
+    ...await verifyStored('nav', mapKey, seed, navP),
+    ...await verifyStored('mesh', mapKey, seed, meshP),
+  ];
+  if (backProblems.length) {
+    WARM.problems = backProblems;
+    log('REFUSING: the stored payload does not read back byte-identical.', 'bad');
+    for (const p of backProblems.slice(0, 12)) log(`  - ${p}`, 'bad');
+    return finish('refused', 'bad');
+  }
+
+  WARM.ms.total = Math.round(performance.now() - t0);
+  log(`stored + verified byte-identical on read-back: nav/${mapKey}/${seed} and mesh/${mapKey}/${seed} ` +
+      `(save ${WARM.ms.save} ms, total ${WARM.ms.total} ms)`, 'ok');
+  log(`a first-ever boot of index.html?seed=${seed} should now restore instead of building.`, 'ok');
+
+  await advance(seeds, index);
+  return finish('done', 'ok');
+}
+
+// ---- one seed per page load: navigate to the next seed's URL ----
+async function advance(seeds, index) {
+  if (index + 1 >= seeds.length) { log('all seeds in the list are done.', 'ok'); return; }
+  if (!WARM.auto) { log(`?auto=0 - not advancing to seed ${seeds[index + 1]}.`, 'warn'); return; }
+  const url = selfUrl(seeds, index + 1, true);
+  log(`advancing to seeds[${index + 1}]=${seeds[index + 1]} -> ${url}`);
+  await new Promise(r => setTimeout(r, 400));      // let the DOM show this line
+  location.replace(url);                            // fresh module registry = fresh CONFIG
+}
+
+run().catch(error => {
+  WARM.problems.push(String(error && error.stack || error).slice(0, 400));
+  log(`ERROR: ${error && error.stack || error}`, 'bad');
+  finish('error', 'bad');
+});
+</script>
+</body>
+</html>

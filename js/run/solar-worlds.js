@@ -39,7 +39,14 @@ export const ASTRONOMICAL_BIOMES=Object.freeze({
 });
 
 const PI=Math.PI,rad=PI/180,clamp=x=>Math.max(0,Math.min(1,x)),smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
-const lon=(x,z)=>Math.atan2(z,x)/rad,wrap=a=>(a+540)%360-180;
+const lon=(x,z)=>Math.atan2(z,x)/rad;
+// wrap() is the hottest arithmetic helper in the geography path and the 360
+// modulo costs more than the rest of its expression. Every caller passes a
+// longitude difference inside +-360, where the remainder is one or two
+// subtractions and both are exact (360 and 720 lie in [v/2,2v] for every v in
+// range, so no rounding can occur). Outside that range it falls back to the
+// modulo, so the value is the same expression everywhere.
+const wrap=a=>{const t=a+540;if(t>=180){if(t<360)return t-180;if(t<720)return t-540;if(t<900)return t-900;}return t%360-180;};
 const oval=(lng,lat,cx,cy,w,h)=>Math.hypot(wrap(lng-cx)/w,(lat-cy)/h);
 const mountainBelts=[
  [[-150,61],[-130,53],[-119,44],[-111,36],[-105,26]],
@@ -49,10 +56,44 @@ const mountainBelts=[
  [[144,-18],[150,-28],[148,-37]],
  [[-85,34],[-78,41],[-67,48]],
 ];
-function earthRelief(lng,lat){let height=0;for(let b=0;b<mountainBelts.length;b++)for(let i=1;i<mountainBelts[b].length;i++){
- const [ax,ay]=mountainBelts[b][i-1],[bx,by]=mountainBelts[b][i],sx=Math.cos(lat*rad),dx=(bx-ax)*sx,dy=by-ay,px=wrap(lng-ax)*sx,py=lat-ay,t=clamp((px*dx+py*dy)/(dx*dx+dy*dy)),d=Math.hypot(px-t*dx,py-t*dy);
- height=Math.max(height,[14,17,22,9,6,5][b]*Math.exp(-((d/[3,2.2,3,1.4,1.8,1.5][b])**2)));
- }return height;}
+const BELT_H=[14,17,22,9,6,5],BELT_W=[3,2.2,3,1.4,1.8,1.5];
+// Per-belt bounding box in (lng,lat) plus the log of its peak height. Every
+// segment test below runs in the plane (lng*sx, lat) with the belt vertices at
+// (ax*sx, ay), so the distance from the point to a belt's box is a lower bound
+// on its distance to every segment in that belt. A belt is dropped only when
+// that bound proves it cannot raise the running maximum, so the maximum this
+// returns is bit for bit the one the full scan returned.
+const BELT_BOX=mountainBelts.map(belt=>{let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+ for(let i=0;i<belt.length;i++){const p=belt[i];if(p[0]<x0)x0=p[0];if(p[0]>x1)x1=p[0];if(p[1]<y0)y0=p[1];if(p[1]>y1)y1=p[1];}
+ return [x0,y0,y1,x1-x0];});
+const BELT_LOG=BELT_H.map(Math.log);
+const BELT_Z=new Float64Array(6),BELT_SC=new Float64Array(6),BELT_ORD=new Int32Array(6);
+function earthRelief(lng,lat){let height=0;const sx=Math.cos(lat*rad);
+ for(let b=0;b<mountainBelts.length;b++){
+  const box=BELT_BOX[b];let dl=wrap(lng-box[0]);
+  if(dl<0)dl=-dl;else if(dl>box[3])dl-=box[3];else dl=0;
+  dl*=sx;let dt=lat-box[2];if(dt<0){dt=box[1]-lat;if(dt<0)dt=0;}
+  const lb=dl>dt?dl:dt,z=lb/BELT_W[b];
+  BELT_Z[b]=z*z;BELT_SC[b]=BELT_LOG[b]-z*z;BELT_ORD[b]=b;}
+ let lh=-Infinity;
+ // Best bound first: the sooner the running maximum rises, the more of the
+ // remaining belts the test below can prove irrelevant.
+ for(let k=0;k<mountainBelts.length;k++){
+  let pick=k;for(let j=k+1;j<mountainBelts.length;j++)if(BELT_SC[j]>BELT_SC[pick])pick=j;
+  if(pick!==k){let t=BELT_Z[k];BELT_Z[k]=BELT_Z[pick];BELT_Z[pick]=t;t=BELT_SC[k];BELT_SC[k]=BELT_SC[pick];BELT_SC[pick]=t;const o=BELT_ORD[k];BELT_ORD[k]=BELT_ORD[pick];BELT_ORD[pick]=o;}
+  const b=BELT_ORD[k],hb=BELT_H[b],z=BELT_Z[k];
+  // exp(-746) is 0, so a belt beyond that bound can only ever contribute 0.
+  if(z>=746)continue;
+  // hb*exp(-zTrue) <= hb*exp(-z) <= height: it cannot beat the maximum already
+  // found, so skipping it leaves the result of the max() chain unchanged.
+  if(height>0&&BELT_LOG[b]-lh<=z*.999999999)continue;
+  const belt=mountainBelts[b],wb=BELT_W[b];
+  for(let i=1;i<belt.length;i++){const p0=belt[i-1],p1=belt[i],ax=p0[0],ay=p0[1],bx=p1[0],by=p1[1];
+   const dx=(bx-ax)*sx,dy=by-ay,px=wrap(lng-ax)*sx,py=lat-ay,t=clamp((px*dx+py*dy)/(dx*dx+dy*dy)),d=Math.hypot(px-t*dx,py-t*dy);
+   height=Math.max(height,hb*Math.exp(-((d/wb)**2)));}
+  lh=height>0?Math.log(height):-Infinity;
+ }
+ return height;}
 export function createSolarSampler(theme,{version=2,radius=240}={}){
  const tactics=version>=3?createSolarTactics(theme,radius):null;
  // Fixed direct-mapped cache: bounded storage, no whole-Map clear/rehash or
@@ -63,48 +104,47 @@ export function createSolarSampler(theme,{version=2,radius=240}={}){
  return (x,y,z)=>{
   // Height, geology and biome probes often ask for the exact same direction
   // consecutively. Avoid another large-Map lookup for that immediate reuse.
-  if(x===lastX&&y===lastY&&z===lastZ)return lastValue;
+  if(x===lastX&&y===lastY&&z===lastZ){if(globalThis.__WHC)__WHC.imm++;return lastValue;}
   lastX=x;lastY=y;lastZ=z;
   // Millimetre-scale angular quantisation shares geology between height,
   // ecology and rendering queries without moving a visible coastline.
   const qx=Math.round((x+1)*65535),qy=Math.round((y+1)*65535),qz=Math.round((z+1)*65535),key=qx*17179869184+qy*131072+qz;
   const slot=(Math.imul(qx,73856093)^Math.imul(qy,19349663)^Math.imul(qz,83492791))&(size-1);
-  if(keys[slot]===key)return lastValue=values[slot];
+  if(keys[slot]===key){if(globalThis.__WHC)__WHC.hit++;return lastValue=values[slot];}
   const a=qx/65535-1,b=qy/65535-1,c=qz/65535-1,length=Math.hypot(a,b,c)||1,g=solarGeography(theme,a/length,b/length,c/length);
   if(tactics){const coastal=theme==='earth'?smooth(.3,.62,g.land):1;g.extra+=tactics.height(a/length,b/length,c/length)*coastal;g.relief*=({earth:1.65,moon:1.25,mercury:1.2,venus:1.15,io:1.05,callisto:1.25})[theme]??(SOLAR_THEMES[theme]?.cloud?5:1.5);}
-  keys[slot]=key;values[slot]=g;return lastValue=g;
+  keys[slot]=key;values[slot]=g;if(globalThis.__WHC)__WHC.miss++;return lastValue=g;
  };
 }
 export function solarGeography(theme,x,y,z){
  // East runs toward -Z on an outward-facing, north-up Three.js globe.
  const lng=lon(x,theme==='earth'?-z:z),lat=Math.asin(Math.max(-1,Math.min(1,y)))/rad,abs=Math.abs(lat);let biome=null,land=.8,relief=1,extra=0,tint=null;
- const q=(a,b,w,h)=>oval(lng,lat,a,b,w,h);
- switch(theme){
+  switch(theme){
   case 'earth':{const distance=earthCoastDistance(lng,lat);land=.3+distance*.08;
-   const mountains=earthRelief(lng,lat),ice=lat< -65||q(-42,74,17,13)<1;
+   const mountains=earthRelief(lng,lat),ice=lat< -65||oval(lng,lat,-42,74,17,13)<1;
    const border=Math.sin(lng*.17+lat*.23)*.13+Math.sin(lng*.31-lat*.16)*.07;
-   const sahara=lat>14+border*12&&lat<34+border*7&&lng>-18&&lng<59,aridAustralia=q(133,-25,17,10)<1,atacama=q(-70,-24,3,9)<1;
-   const rainforest=q(-61,-4,17,12)<1+border||q(22,-1,10,7)<1+border||q(-5,6,7,3.5)<1+border||lat> -11&&lat<14&&lng>92&&lng<153;
+   const sahara=lat>14+border*12&&lat<34+border*7&&lng>-18&&lng<59,aridAustralia=oval(lng,lat,133,-25,17,10)<1,atacama=oval(lng,lat,-70,-24,3,9)<1;
+   const rainforest=oval(lng,lat,-61,-4,17,12)<1+border||oval(lng,lat,22,-1,10,7)<1+border||oval(lng,lat,-5,6,7,3.5)<1+border||lat> -11&&lat<14&&lng>92&&lng<153;
    biome=ice?'waterice':mountains>11?'alpine':abs>64?'tundra':sahara||aridAustralia||atacama?'desert':rainforest?'jungle':abs>48?'woodland':abs<24?'savanna':abs<45&&(lng> -90&&lng< -65||lng> -12&&lng<50||lng>100&&lng<150)?'woodland':'meadow';
    relief=.065;extra=mountains*smooth(0,1.5,distance);break;}
-  case 'moon':{const maria=Math.min(q(-20,20,28,24),q(22,10,25,23),q(0,48,16,13),q(55,-20,13,12));biome=maria<1?'basalt':'regolith';relief=maria<1?.12:.4;extra=-3*(1-smooth(.65,1,maria));break;}
-  case 'mercury':{const basin=q(160,30,27,24),angle=Math.atan2((lat-30)/24,wrap(lng-160)/27),passes=smooth(.08,.32,Math.abs(Math.sin(angle*1.5)));biome=basin<.8?'basalt':'regolith';tint=0x9b8d79;relief=.5;extra=5*Math.exp(-(((basin-1)/.11)**2))*passes-4*(1-smooth(.7,1,basin));break;}
-  case 'mars':{biome=abs>76?'waterice':lat>20+Math.sin(lng*.06)*7+Math.sin(lng*.18)*2?'marsdust':'ferrous';relief=.25;const trench=Math.abs(lat+12+2*Math.sin(lng*.06)),end=1-smooth(35,50,Math.abs(wrap(lng+65))),cut=(1-smooth(2,12,trench))*end;relief*=1-.8*cut;extra=-15*cut+26*Math.exp(-(q(-134,18,15,13)**2));break;}
-  case 'venus':biome=Math.sin(lng*.03)*Math.cos(lat*.05)>.18?'venusrock':'basalt';relief=.4;extra=8*(1-smooth(.5,1,q(125,-7,38,16)));break;
+  case 'moon':{const maria=Math.min(oval(lng,lat,-20,20,28,24),oval(lng,lat,22,10,25,23),oval(lng,lat,0,48,16,13),oval(lng,lat,55,-20,13,12));biome=maria<1?'basalt':'regolith';relief=maria<1?.12:.4;extra=-3*(1-smooth(.65,1,maria));break;}
+  case 'mercury':{const basin=oval(lng,lat,160,30,27,24),angle=Math.atan2((lat-30)/24,wrap(lng-160)/27),passes=smooth(.08,.32,Math.abs(Math.sin(angle*1.5)));biome=basin<.8?'basalt':'regolith';tint=0x9b8d79;relief=.5;extra=5*Math.exp(-(((basin-1)/.11)**2))*passes-4*(1-smooth(.7,1,basin));break;}
+  case 'mars':{biome=abs>76?'waterice':lat>20+Math.sin(lng*.06)*7+Math.sin(lng*.18)*2?'marsdust':'ferrous';relief=.25;const trench=Math.abs(lat+12+2*Math.sin(lng*.06)),end=1-smooth(35,50,Math.abs(wrap(lng+65))),cut=(1-smooth(2,12,trench))*end;relief*=1-.8*cut;extra=-15*cut+26*Math.exp(-(oval(lng,lat,-134,18,15,13)**2));break;}
+  case 'venus':biome=Math.sin(lng*.03)*Math.cos(lat*.05)>.18?'venusrock':'basalt';relief=.4;extra=8*(1-smooth(.5,1,oval(lng,lat,125,-7,38,16)));break;
   case 'jupiter':case 'saturn':case 'uranus':case 'neptune':{
    const axis=theme==='uranus'?Math.asin(x)/rad:lat,bands=Math.sin(axis*(theme==='jupiter'?.36:.22)+Math.sin(lng*.035)*.18);
    biome=theme==='neptune'?(bands>-.6?'bluecloud':'cyancloud'):theme==='uranus'?(Math.abs(axis)>64?'ammonia':'cyancloud'):bands>0?'ammonia':'ochrecloud';
-   if(theme==='jupiter'&&q(-50,-22,20,9)<1)biome='stormcloud';
+   if(theme==='jupiter'&&oval(lng,lat,-50,-22,20,9)<1)biome='stormcloud';
    if(theme==='saturn'&&lat>60&&Math.abs(Math.hypot(x,z)-.31*(1+.065*Math.cos(lng*rad*6)))<.025)biome='ochrecloud';
-   if(theme==='neptune'&&q(45,-28,14,7)<1)tint=0x334c77;
+   if(theme==='neptune'&&oval(lng,lat,45,-28,14,7)<1)tint=0x334c77;
    relief=.035;extra=1.5+Math.sin(axis*.5)*.55;break;}
-  case 'titan':{const lakes=Math.min(q(45,73,32,12),q(116,69,24,10),q(-45,-74,25,8));land=.3+(lakes-1)*.35;biome=abs<34?'tholins':'waterice';relief=abs<34?.35:.18;break;}
+  case 'titan':{const lakes=Math.min(oval(lng,lat,45,73,32,12),oval(lng,lat,116,69,24,10),oval(lng,lat,-45,-74,25,8));land=.3+(lakes-1)*.35;biome=abs<34?'tholins':'waterice';relief=abs<34?.35:.18;break;}
   case 'europa':{const lines=Math.min(Math.abs(Math.sin(lng*.06+lat*.04)),Math.abs(Math.sin(lng*.023-lat*.08+1)));biome=lines<.17?'fracturedice':'waterice';relief=.1;extra=-3*(1-smooth(.02,.15,lines));break;}
   case 'ganymede':biome=Math.sin(lng*.044+Math.sin(lat*.04)*2)*Math.cos(lat*.06)>.1?'basalt':'fracturedice';relief=.22;break;
   case 'triton':{biome=lat<-25?'nitrogen':Math.cos(lng*.033)*Math.cos(lat*.07)>.3?'tholins':'fracturedice';relief=.23;
    for(const centre of [-125,-45,38,110]){const along=lat+58,across=wrap(lng-centre)-along*.35;if(along>0&&along<18&&Math.abs(across)<1+along*.18)tint=0x716d6b;}break;}
   case 'io':biome=Math.sin(lng*.09+lat*.03)*Math.cos(lat*.06)>.5?'sulfur':'ioplains';relief=.45;break;
-  case 'callisto':{biome='basalt';const qv=q(60,20,32,28);if(Math.abs(Math.sin(qv*22))<.11&&qv<1.5)biome='waterice';relief=.35;extra=2*Math.sin(qv*22)*Math.exp(-qv*qv);break;}
+  case 'callisto':{biome='basalt';const qv=oval(lng,lat,60,20,32,28);if(Math.abs(Math.sin(qv*22))<.11&&qv<1.5)biome='waterice';relief=.35;extra=2*Math.sin(qv*22)*Math.exp(-qv*qv);break;}
   case 'pluto':{const px=wrap(lng-100)/32,py=(lat-12)/32;const heart=(px*px+py*py-1)**3-px*px*py**3;biome=heart<0?'nitrogen':abs>60?'waterice':'tholins';relief=heart<0?.12:.35;break;}
  }
  return {biome,land,relief,extra,tint};

@@ -356,12 +356,40 @@ export class NavGraph {
     this._airReady = false;
     this.revision = (this.revision || 0) + 1;this.terrainRevision=(this.terrainRevision||0)+1;
 
+    // CSR adjacency from unique triangle edges (kept nodes only).
+    //
+    // MOVED ABOVE THE FIRST BATCH DISPATCH (owner: cold-generation idle). The face->edge
+    // extraction and the per-node degree count read NOTHING that comes back from a worker:
+    // only `keep`/`oldToNew` (cap mask), the icosphere's face list and `n`. They used to run
+    // in the gap after the vertices batch returned, i.e. while the workers sat idle. Issuing
+    // the batch first and running this in the resulting window costs no extra work and hides
+    // it behind 200+ ms of worker latency. Insertion order into `edgeSet` is unchanged
+    // (face edges first, then the connect() pass below), so the CSR layout is identical.
     let sampled=null;
+    let cellsDone=false;
+    const stride=Math.max(1048576,2**Math.ceil(Math.log2(n+1)));
+    const edgeSet = new OrderedEdgeSet(Math.ceil(faces.length*1.5)+decks.length*6);
+    const deg = new Int32Array(n);
+    const addEdge = (a0, b0) => {
+      let a = a0, b = b0;
+      if (keep) {
+        if (!keep[a0] || !keep[b0]) return;
+        a = oldToNew[a0]; b = oldToNew[b0];
+      }
+      const key = a < b ? a * stride + b : b * stride + a;
+      if (!edgeSet.add(key)) return;
+      deg[a]++; deg[b]++;
+    };
     if(this.sampleTerrain){
       const points=new SamplePoints(total);
       for(let i=0;i<total;i++){if(keep&&!keep[i])continue;const v=verts[i];if(reused?.get(...v)!==undefined)continue;points.push(keep?oldToNew[i]:i,...v);}
-      sampled=yield this.sampleTerrain(points.finish(),{config:CONFIG,n,floorDatum:this.floorDatum,coarse,walkAll});
+      // DISPATCH, do not await yet: the topology below runs while the workers sample.
+      sampled=this.sampleTerrain(points.finish(),{config:CONFIG,n,floorDatum:this.floorDatum,coarse,walkAll});
     }
+    let faceIndex=0;for (const [a, b, c] of faces) {if(faceIndex++%2048===0)yield;addEdge(a, b); addEdge(b, c); addEdge(c, a);}
+    const groundEdgeCount=edgeSet.size;
+    if(sampled)sampled=yield sampled;
+
     for (let i = 0; i < total; i++) {
       if(i%256===0)yield;
       if (keep && !keep[i]) continue;
@@ -396,22 +424,8 @@ export class NavGraph {
       _v.set(...d);const radius=R+h;this.pos[idx*3]=d[0]*radius;this.pos[idx*3+1]=d[1]*radius;this.pos[idx*3+2]=d[2]*radius;
       this.walk[idx]=WORLD.solidTerrainAt(_v,h,1.7)?0:1;this.floorWalk[idx]=this.walk[idx];this.airWalk[idx]=this.airWalk[base];
     }
-    // CSR adjacency from unique triangle edges (kept nodes only)
-    const stride=Math.max(1048576,2**Math.ceil(Math.log2(n+1)));
-    const edgeSet = new OrderedEdgeSet(Math.ceil(faces.length*1.5)+decks.length*6);
-    const deg = new Int32Array(n);
-    const addEdge = (a0, b0) => {
-      let a = a0, b = b0;
-      if (keep) {
-        if (!keep[a0] || !keep[b0]) return;
-        a = oldToNew[a0]; b = oldToNew[b0];
-      }
-      const key = a < b ? a * stride + b : b * stride + a;
-      if (!edgeSet.add(key)) return;
-      deg[a]++; deg[b]++;
-    };
-    let faceIndex=0;for (const [a, b, c] of faces) {if(faceIndex++%2048===0)yield;addEdge(a, b); addEdge(b, c); addEdge(c, a);}
-    const groundEdgeCount=edgeSet.size;
+    // (CSR setup and the face->edge extraction now run before the first batch is awaited,
+    //  above: the same code, moved into the worker window.)
     const connect=(a,b)=>{
       if(a<0||b<0||!this.walk[a]||!this.walk[b])return;
       this.nodeDir(a,_v);this.nodeDir(b,_v2);const distance=_v.distanceTo(_v2)*R;
@@ -446,8 +460,15 @@ export class NavGraph {
         for(let e=this.adjOff[i];!near&&e<this.adjOff[i+1];e++)near=this.baseHeight[this.adj[e]]>WORLD.FLIGHT_CEILING*.2;
         if(near)points.push(i,this.dirs[i*3],this.dirs[i*3+1],this.dirs[i*3+2]);
       }
-      if(points.length)airSamples=yield this.sampleTerrain(points.finish(),{config:CONFIG,n,width:1,kind:'air',spacing:this.spacing});
+      // The direction-cell hash reads ONLY this.dirs, which the vertex and deck passes above
+      // have already finished writing, so it can be built while the air workers run instead
+      // of afterwards. `dirs` is untouched from here to the end of the method.
+      const pendingAir=points.length?this.sampleTerrain(points.finish(),{config:CONFIG,n,width:1,kind:'air',spacing:this.spacing}):null;
+      yield* this._cellsSteps();
+      cellsDone=true;
+      if(pendingAir)airSamples=yield pendingAir;
     }
+    if(!cellsDone)yield* this._cellsSteps();
     if (this.airWalk) {
       const centre = new THREE.Vector3(), a = new THREE.Vector3(), b = new THREE.Vector3(), probe = new THREE.Vector3();
       const offsets=Array.from({length:24},(_,sample)=>{const angle=sample%8*Math.PI/4,distance=(1+Math.floor(sample/8))*this.spacing*.3;return[Math.cos(angle)*distance/R,Math.sin(angle)*distance/R];});
@@ -520,16 +541,22 @@ export class NavGraph {
       }
     }
 
-    // Spatial hash on direction cells for nearest-node lookups
+    // (the direction-cell hash is built in the air-batch window, above)
+    this._sourcePoints=capCenter?{verts,keep,oldToNew,center:capCenter,theta:capTheta}:null;
+  }
+
+  // Direction-cell hash for nearest-node lookups. Split out because it reads only this.dirs
+  // and this.n, so the parallel path can build it INSIDE the air-batch window while the
+  // synchronous path builds it in place at the same point in the step order as before.
+  *_cellsSteps() {
     this.cells = new Map();
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < this.n; i++) {
       if(i%256===0)yield;
       const key = this._cellKey(this.dirs[i * 3], this.dirs[i * 3 + 1], this.dirs[i * 3 + 2]);
       let arr = this.cells.get(key);
       if (!arr) this.cells.set(key, arr = []);
       arr.push(i);
     }
-    this._sourcePoints=capCenter?{verts,keep,oldToNew,center:capCenter,theta:capTheta}:null;
   }
 
   _cellKey(x, y, z) {

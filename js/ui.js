@@ -427,7 +427,8 @@ export class HUD {
     }
   }
 
-  makeThumbnails() {
+  // Offscreen scene + render target + readback buffer for the build-card thumbs.
+  _thumbnailSetup() {
     const size = 112;
     const rt = new THREE.WebGLRenderTarget(size, size);
     const scene = new THREE.Scene();
@@ -444,40 +445,67 @@ export class HUD {
     cv.width = cv.height = size;
     const ctx = cv.getContext('2d');
     const img = ctx.createImageData(size, size);
+    return { size, rt, scene, cam, px, cv, ctx, img };
+  }
 
-    for (const typeKey of Object.keys(TOWER_TYPES)) {
-      const built = buildTowerVisual(typeKey, 0);
-      scene.add(built.group);
-      this.renderer.setRenderTarget(rt);
-      this.renderer.setClearColor(0x000000, 0);
-      this.renderer.clear();
-      this.renderer.render(scene, cam);
-      this.renderer.readRenderTargetPixels(rt, 0, 0, size, size, px);
-      this.renderer.setRenderTarget(null);
-      // flip Y and gamma-correct the linear buffer
-      for (let y = 0; y < size; y++) {
-        for (let x = 0; x < size; x++) {
-          const src = ((size - 1 - y) * size + x) * 4;
-          const dst = (y * size + x) * 4;
-          img.data[dst] = Math.pow(px[src] / 255, 1 / 2.2) * 255;
-          img.data[dst + 1] = Math.pow(px[src + 1] / 255, 1 / 2.2) * 255;
-          img.data[dst + 2] = Math.pow(px[src + 2] / 255, 1 / 2.2) * 255;
-          img.data[dst + 3] = px[src + 3];
-        }
+  // One tower, rendered offscreen and read back. Split out of makeThumbnails so
+  // the boot can build them one per frame instead of all at once (see
+  // makeThumbnailsProgressive).
+  _thumbnailFor(st, typeKey) {
+    const { size, rt, scene, cam, px, cv, ctx, img } = st;
+    const built = buildTowerVisual(typeKey, 0);
+    scene.add(built.group);
+    this.renderer.setRenderTarget(rt);
+    this.renderer.setClearColor(0x000000, 0);
+    this.renderer.clear();
+    this.renderer.render(scene, cam);
+    this.renderer.readRenderTargetPixels(rt, 0, 0, size, size, px);
+    this.renderer.setRenderTarget(null);
+    // flip Y and gamma-correct the linear buffer
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const src = ((size - 1 - y) * size + x) * 4;
+        const dst = (y * size + x) * 4;
+        img.data[dst] = Math.pow(px[src] / 255, 1 / 2.2) * 255;
+        img.data[dst + 1] = Math.pow(px[src + 1] / 255, 1 / 2.2) * 255;
+        img.data[dst + 2] = Math.pow(px[src + 2] / 255, 1 / 2.2) * 255;
+        img.data[dst + 3] = px[src + 3];
       }
-      ctx.putImageData(img, 0, 0);
-      // Cache it. This used to write straight into this.cards[typeKey], the
-      // classic shop card, and nothing else ever saw it - so the 99 Planets
-      // hand, which reads this.thumbs, rendered every card as a broken image,
-      // and in card mode this.cards is empty so the write threw as well.
-      this.thumbs[typeKey] = cv.toDataURL();
-      this.cards[typeKey]?.querySelector('img')?.setAttribute('src', this.thumbs[typeKey]);
-      scene.remove(built.group);
-      built.group.traverse((o) => o.geometry?.dispose());
     }
-    rt.dispose();
+    ctx.putImageData(img, 0, 0);
+    // Cache it. This used to write straight into this.cards[typeKey], the
+    // classic shop card, and nothing else ever saw it - so the 99 Planets
+    // hand, which reads this.thumbs, rendered every card as a broken image,
+    // and in card mode this.cards is empty so the write threw as well.
+    this.thumbs[typeKey] = cv.toDataURL();
+    this.cards[typeKey]?.querySelector('img')?.setAttribute('src', this.thumbs[typeKey]);
+    scene.remove(built.group);
+    built.group.traverse((o) => o.geometry?.dispose());
+  }
+
+  makeThumbnails() {
+    const st = this._thumbnailSetup();
+    for (const typeKey of Object.keys(TOWER_TYPES)) this._thumbnailFor(st, typeKey);
+    st.rt.dispose();
     // The mode shell renders its opening hand during setup, which can happen
     // before this runs. Back-fill rather than depending on the order.
+    if (this.hand && this.hand.length) this.renderHand(this.hand);
+  }
+
+  // Same thumbnails, byte for byte, but one tower per animation frame and only
+  // after the world is already playable. All six at once costs ~400 ms cold
+  // (shader compile + six synchronous readRenderTargetPixels round-trips) and
+  // ~110 ms warm, and it used to sit inside boot() before the boot overlay came
+  // down - i.e. entirely on the player's wait. Nothing on screen needs a thumb
+  // while the overlay is up: renderHand falls back to a styled initial until
+  // one exists, and the hand is re-rendered here once they are all in.
+  async makeThumbnailsProgressive() {
+    const st = this._thumbnailSetup();
+    for (const typeKey of Object.keys(TOWER_TYPES)) {
+      await new Promise((r) => requestAnimationFrame(r));
+      this._thumbnailFor(st, typeKey);
+    }
+    st.rt.dispose();
     if (this.hand && this.hand.length) this.renderHand(this.hand);
   }
 

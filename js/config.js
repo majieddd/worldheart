@@ -127,6 +127,24 @@ let environment=MAP.mode==='ninetynine'?homeSnapshot?.world.environment||campaig
 if(environment&&!environment.pack){const recipe=planetEnvironment(environment.seed,environment.theme);environment={...environment,pack:recipe.pack,coverage:recipe.coverage,biomes:recipe.biomes};}
 const terrainProfile=TERRAIN_PROFILES[terrainKey]||TERRAIN_PROFILES.varied;
 
+/* THE WORLD SEED - the value that actually determines which planet this is, captured
+   ONCE here, before any restore or any build. Everything that has to name the world
+   (the payload store's key, and what a restore is allowed to serve) uses THIS.
+
+   It is not `requestedSeed`: in campaign mode the world is defined by `campaign.seed`
+   (= expedition.seed + (planet-1)*104729, js/run/planets.js), while requestedSeed is
+   only `?seed=` / localStorage.whSeed / the 20260830 default - and the campaign's own
+   reload path (js/modes/ninetynine.js `campaignApi.reload`) deletes `?seed` and never
+   writes whSeed, so requestedSeed stays CONSTANT for all 99 planets. Keying the payload
+   store on it made every planet save and load under one key, so planet 2 restored
+   planet 1's nav graph and terrain - silently (restored:true, no miss marker).
+
+   It is not the settled `CONFIG.seed` either: the nav build's seed search advances it
+   (js/nav.js `CONFIG.seed = (CONFIG.seed + 7919) >>> 0`), so after a build it is no
+   longer the seed the world was asked for. Measured on campaign planet 2: 20365559
+   before the build, 20389316 after. */
+const worldSeed=homeSnapshot?.world.seed || campaign?.seed || requestedSeed;
+
 export const CONFIG = {
   worldgen,
   homeSnapshot,
@@ -137,7 +155,8 @@ export const CONFIG = {
   biomeKey: 'auto',
   planetKey,
   environment,
-  seed: homeSnapshot?.world.seed || campaign?.seed || requestedSeed,
+  seed: worldSeed,
+  worldSeed,
   campaign,
   planetIndex:homeSnapshot?.world.planetIndex || campaign?.index || 1,
   mapKey,

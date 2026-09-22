@@ -4,6 +4,34 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>WORLDHEART</title>
+<!-- Start the terrain sampler workers at PARSE time, before the main module graph is
+     even fetched. Two things go wrong if this waits until boot():
+     1. the worker's own cold start (module graph + initTerrainField, ~530 ms) can only
+        begin once the pool posts a job to it, and
+     2. that job is posted before the worker global exists, so it lands in the worker's
+        early-message queue and is only drained when the main thread's task queue is
+        free - which, at that moment, is the middle of productionPaint's first long task.
+     Measured on this box: worker globals were created 6-11 ms after new Worker(),
+     module evaluation finished 3-5 ms after that, yet the queued job was delivered
+     260-320 ms late to the last-created workers, in one batch when the long task ended.
+     Those workers then finished their field init 140-160 ms AFTER the first sampling
+     batch was posted, so their chunk - and therefore the whole batch - waited on it:
+     first batch 337-475 ms, and 630-866 ms in the worst boots, against ~250 ms when
+     every worker was warm.
+     Creating them here moves worker-thread creation and module evaluation inside the
+     page's own module-loading window, so the pool's job arrives as an ordinary message
+     on a worker that already exists. Adopted by TerrainSamplePool._spawn(), which still
+     creates its own workers if these are missing. ?early=0 disables this for A/B. -->
+<script>
+(function(){
+  try{
+    if(/[?&]early=0/.test(location.search))return;
+    var n=Math.min(8,Math.max(1,(navigator.hardwareConcurrency||2)-1)),w=[];
+    for(var i=0;i<n;i++){var u=new URL('js/terrain-sample-worker.js',location.href);u.search=location.search;w.push(new Worker(u,{type:'module'}));}
+    window.__WH_SAMPLERS=w;
+  }catch(e){window.__WH_SAMPLERS=null;}
+})();
+</script>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
