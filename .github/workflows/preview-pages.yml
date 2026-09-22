@@ -2,7 +2,7 @@ name: Publish V2 preview
 
 on:
   push:
-    branches: [preview/v2, main]
+    branches: [preview/v2, main, v3]
   workflow_dispatch:
 
 # Serialize the whole artifact build, so an older preview cannot finish after
@@ -41,8 +41,31 @@ jobs:
           node tools/style.mjs
           node tools/deploy.mjs
           git diff --exit-code -- v2 dist
+      # The v3 optimisation branch, served read-only at /v3/ for live testing.
+      # Separate checkout, separate directory: it never touches the root or /v2/.
+      - name: Check out the v3 branch
+        uses: actions/checkout@v4
+        with:
+          ref: v3
+          path: v3src
+          persist-credentials: false
       - name: Compose main at root and preview under v2
         run: node preview/tools/pages-site.mjs production preview site
+      # Add the v3 route. Only what a running game needs - the same shape the root
+      # route uses, plus art-candidates/ (js/hard-cel-materials.js imports from it,
+      # so omitting it kills the module graph and the page hangs on "waking the
+      # planet"). .git, tests, tools, docs, dist, bench and bake are not published.
+      - name: Add the v3 route under /v3/
+        run: |
+          mkdir -p site/v3
+          for p in index.html warm.html lobby.html procgen-lab.html generation-lab.html \
+                   asset-stage.html atmospheric-arena.html artboard.html debug.html \
+                   audio-lab.html style-lab.html hard-cel-lab.html painted-lab.html \
+                   style-playground.html 99-art.html 99-factions.html \
+                   css js lib audio art-candidates; do
+            if [ -e "v3src/$p" ]; then cp -r "v3src/$p" "site/v3/"; fi
+          done
+          echo "v3 route contents:"; ls site/v3 | head -30
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site
